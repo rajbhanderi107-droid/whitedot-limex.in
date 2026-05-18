@@ -203,7 +203,7 @@ function App() {
       <HeroScene />
       <nav className="site-nav" aria-label="Primary navigation">
         <a className="brand" href="#home" aria-label="White Dot LLP home">
-          <img className="brand-symbol" src={assetPath("assets/whitedot-symbol.svg")} alt="" />
+          <img className="brand-symbol" src={assetPath("assets/whitedot-logo-enhanced.svg")} alt="" />
           <span className="brand-wordmark">
             <span className="brand-name">White Dot</span>
             <small>LLP</small>
@@ -250,7 +250,7 @@ function App() {
             <MapPin size={22} />
             <div>
               <strong>Designated authorized states</strong>
-              <span>Pan-India-ready marketing structure with current regional focus</span>
+              <span>Pan-India-ready marketing structure with defined state coverage</span>
             </div>
           </div>
           <div className="territory-map" aria-hidden="true">
