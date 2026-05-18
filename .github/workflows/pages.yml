@@ -18,14 +18,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.1.2
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: pnpm
       - name: Install dependencies
-        run: npm install
+        run: pnpm install --frozen-lockfile
       - name: Build site
-        run: npm run build
+        run: pnpm run build
       - name: Deploy static site to gh-pages branch
         run: |
           git config --global user.name "github-actions[bot]"
