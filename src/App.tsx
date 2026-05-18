@@ -575,7 +575,7 @@ function App() {
           <div className="traction-list">
             <div>
               <strong>Sample programs</strong>
-              <span>Havmor Plast, Amul, Astral Pipes, and manufacturing-bag discussions.</span>
+              <span>Confidential sample discussions with packaging, processing, and industrial product buyers.</span>
             </div>
             <div>
               <strong>Market orders</strong>
