@@ -2,6 +2,18 @@
   scroll-margin-top: 5.5rem;
 }
 
+.brand-symbol {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: contain;
+  filter:
+    drop-shadow(0 0 0.25rem rgba(21, 136, 166, 0.98))
+    drop-shadow(0 0 0.72rem rgba(21, 136, 166, 0.58))
+    drop-shadow(0 0.72rem 1rem rgba(0, 0, 0, 0.42));
+  transform: perspective(360px) rotateX(4deg) translateZ(0);
+}
+
 .reference-grid,
 .accordion-grid {
   display: grid;
@@ -177,6 +189,15 @@
 }
 
 @media (max-width: 620px) {
+  .nav-action {
+    display: none;
+  }
+
+  .brand-symbol {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
   .reference-grid,
   .accordion-grid {
     grid-template-columns: 1fr;
