@@ -2,6 +2,7 @@ import {
   ArrowRight,
   Building2,
   BookOpen,
+  ChevronDown,
   Factory,
   Globe2,
   Landmark,
@@ -33,31 +34,32 @@ const authorizationChain = [
     title: "Seven Dot Company",
     role: "Sole Authorized Distributor in India",
     text: "Authorized directly by TBM Co., Ltd., Japan to distribute LIMEX material for the Indian market.",
-    action: "Exclusive Supply Agreement",
+    action: "Supply Agreement",
   },
   {
     title: "White Dot LLP",
     role: "Authorized Marketing and Sales Firm",
-    text: "Exclusively formed to market, distribute, and sell LIMEX raw material across designated Indian states.",
+    text: "Formed to market, distribute, and sell LIMEX raw material across designated Indian states.",
     action: "Sells to",
   },
   {
     title: "Industries and Businesses",
     role: "Authorized-State End Clients",
-    text: "Industrial buyers, processors, institutions, and businesses seeking certified LIMEX supply.",
+    text: "Industrial buyers, processors, institutions, and businesses seeking authorized LIMEX supply.",
     action: "",
   },
 ];
 
-const applications = [
-  "Garbage bags",
-  "Shopping and grocery bags",
-  "Nonwoven fabric",
-  "Backlit signage film",
-  "POP, menus, and sheets",
-  "Sealant packaging film",
-  "Purging compound",
-  "Industrial molded goods",
+const productCategories = [
+  "Injection Mould",
+  "Blow Mould [Bottle, Cans and Drums]",
+  "Blow Mould [Bags]",
+  "Thermoforming",
+  "Woven Sac",
+  "Non Woven Sac",
+  "Sealant Packing",
+  "Industrial Molded Goods",
+  "FMCG Packing",
 ];
 
 const proofCards = [
@@ -87,6 +89,39 @@ const scaleMetrics = [
     value: "10,000+",
     label: "companies and municipalities",
     text: "TBM references social implementation across more than 10,000 companies and municipalities for LIMEX materials and products.",
+  },
+];
+
+const limexReferences = [
+  {
+    title: "File folders and document products",
+    text: "LIMEX Sheet can be formed into file folders and document items where durability, water resistance, and plastic reduction are important.",
+    tag: "Office and institutional use",
+  },
+  {
+    title: "Bags and daily-use packaging",
+    text: "Product references include garbage bags, shopping bags, square-bottom bags, and other formats where plastic replacement can be studied.",
+    tag: "Retail and municipal use",
+  },
+  {
+    title: "Printed media and POP",
+    text: "Menu cards, POP displays, posters, maps, calendars, labels, and stickers show the material's use in print and sales-promotion formats.",
+    tag: "Print and display",
+  },
+  {
+    title: "Containers and molded products",
+    text: "Food containers, cups, spray bottles, cosmetic containers, fans, and daily-use goods show how LIMEX can be evaluated beyond sheet products.",
+    tag: "Molded applications",
+  },
+  {
+    title: "Film and packing formats",
+    text: "Sealant film and related packing formats provide useful reference points for manufacturers exploring plastic-like applications.",
+    tag: "Packaging development",
+  },
+  {
+    title: "Industrial and partner-led development",
+    text: "The product references show a broad development path across sheets, bags, containers, signage, and practical business-ready formats.",
+    tag: "Product qualification",
   },
 ];
 
@@ -133,82 +168,32 @@ const audience = [
 
 const materialExplainers = [
   {
-    title: "Material composition",
-    text: "LIMEX is an innovative and eco-friendly raw material developed by TBM Co., Ltd., Japan. It is primarily composed of limestone and is designed for paper-like and plastic-like applications depending on the selected product format.",
-  },
-  {
-    title: "Application potential",
-    text: "LIMEX can support packaging, printing, sheet, film, nonwoven, and selected industrial applications where material performance, sustainability, and supply reliability must be evaluated together.",
-  },
-  {
-    title: "Exclusive Indian marketing",
-    text: "In India, LIMEX material is represented through Seven Dot Company's certified distributing and marketing supply chain, established under its distributor dealership from TBM Tokyo, Japan, and executed commercially by White Dot LLP for designated states.",
-  },
-  {
     title: "Product qualification",
-    text: "Every industrial discussion should begin with the buyer's application, thickness, resin system, machinery, annual volume, quality requirements, and target commercial structure.",
+    text: "Start with the buyer's product, thickness, resin system, machine setup, volume, quality needs, and target price.",
   },
   {
-    title: "Circularity pathway",
-    text: "TBM's material circulation work focuses on collecting, sorting, mechanically recycling, and regenerating used plastics and LIMEX products, so the future conversation is not only substitution but recovery and reuse.",
+    title: "Circular Pathway",
+    text: "Plan early for collection, sorting, reuse, and recycling so the material change can support a practical circular path later.",
   },
   {
     title: "Future development",
-    text: "TBM also discusses Bio LIMEX, CR LIMEX made with carbon-recycled calcium carbonate, and CirculeX recycled materials. This makes LIMEX part of a wider path: plastic reduction, carbon utilization, and circular material use.",
+    text: "Keep future options open, including plastic reduction, recycled content, carbon-reduced materials, and new product formats.",
   },
 ];
 
 const educationSteps = [
-  "Current product study: size, thickness, resin, grade, price, use case, and yearly quantity.",
-  "Material fit: identify whether sheet, pellet, bag, nonwoven, film, purging, or molded-goods use cases are realistic.",
-  "Sample and trial: run controlled samples before making public claims or large production commitments.",
-  "Impact estimate: compare plastic, water, and GHG reduction potential using product-specific assumptions.",
-  "Adoption plan: prepare procurement, production, labeling, communication, and circularity steps.",
-];
-
-const tbmChannels = [
-  {
-    title: "CCU / Carbon Recycling",
-    text: "TBM positions CCU as the work of transforming CO2 into valuable materials and supporting carbon-neutral infrastructure.",
-    india:
-      "For India, this helps explain why CR LIMEX is more than a replacement material: it points toward using captured carbon as an input for future manufacturing.",
-    points: ["CO2 capture and utilization", "CR LIMEX direction", "Long-term decarbonization story"],
-  },
-  {
-    title: "Material Development",
-    text: "TBM develops materials from limestone, CO2-derived calcium carbonate, and recycled resources using proprietary material technology.",
-    india:
-      "This is the technical heart of the White Dot LLP education pitch: manufacturers should understand the grade, formulation, performance, and product fit before adoption.",
-    points: ["LIMEX from limestone", "CR LIMEX from carbon-recycled calcium carbonate", "CirculeX recycled material"],
-  },
-  {
-    title: "Product Sales",
-    text: "TBM sells useful final products such as purging materials, bags, sheet products, and other business-ready formats through factories and partners.",
-    india:
-      "For Gujarat, Rajasthan, Diu, Daman, and Goa, this means practical entry products: bags, nonwoven fabric, signage film, POP sheets, packaging film, and factory purging applications.",
-    points: ["Samples for sales visits", "Cost and performance comparison", "Market-ready product education"],
-  },
-  {
-    title: "Material Circulation",
-    text: "TBM frames material circulation around collecting, sorting, mechanically recycling, and regenerating used plastics into higher-value resources.",
-    india:
-      "This is relevant for Indian policy and industrial clusters because plastic reduction should move beyond one-time substitution toward collection, sorting, and reuse systems.",
-    points: ["Collection and sorting", "Mechanical recycling", "Circular economy infrastructure"],
-  },
-  {
-    title: "New Business",
-    text: "TBM lists AI promotion and decarbonization management support as new-business areas that help companies operate more efficiently and manage CO2 reduction.",
-    india:
-      "For government and large buyers, this connects materials to measurable transition work: emissions visibility, reduction plans, and operational education.",
-    points: ["AI-enabled efficiency", "GHG accounting support", "Decarbonization planning"],
-  },
+  "Understand product requirement",
+  "Check LIMEX suitability",
+  "Sample / trial development",
+  "Product testing",
+  "Commercial adoption",
+  "Future circular pathway",
 ];
 
 const sourceLinks = [
-  { label: "TBM business areas", href: "https://tb-m.com/eng/business/" },
-  { label: "LIMEX composition FAQ", href: "https://tb-m.com/faq/faq-271/" },
-  { label: "LIMEX product definition FAQ", href: "https://tb-m.com/faq/faq-345/" },
-  { label: "LIMEX Sheet details", href: "https://tb-m.com/eng/business/material/products-sheet/" },
+  { label: "LIMEX product cases", href: "https://limex.tb-m.com/en/case/" },
+  { label: "LIMEX product site", href: "https://limex.tb-m.com/en/" },
+  { label: "LIMEX Sheet guide", href: "https://tb-m.com/doc/limex_sheet_guide_eng.pdf" },
   { label: "LIMEX label guideline", href: "https://tb-m.com/doc/guidelines_limexlabel_en.pdf" },
 ];
 
@@ -241,13 +226,13 @@ function App() {
 
       <section className="hero" id="home">
         <div className="hero-copy">
-          <p className="eyebrow">Exclusively Authorized. Sustainably Supplied.</p>
+          <p className="eyebrow">Authorized supply. Clear material guidance.</p>
           <h1>India's authorized gateway to LIMEX by TBM Japan.</h1>
           <p className="hero-text">
             White Dot LLP is the authorized marketing and sales firm for LIMEX raw material across
-            designated Indian states, operating through Seven Dot Company's certified distributing
-            and marketing supply chain, established under its distributor dealership from TBM Tokyo,
-            Japan.
+            designated Indian states, operating through our authorized partner's distributing and
+            marketing supply chain, established under distributor dealership from the LIMEX technology
+            provider in Japan.
           </p>
           <div className="hero-actions">
             <a className="button primary" href={whatsappHref} target="_blank" rel="noreferrer">
@@ -296,55 +281,15 @@ function App() {
         </div>
         <div className="section-grid">
           <div>
-            <h2>Established as the dedicated commercial platform for LIMEX in India.</h2>
+            <h2>A focused commercial platform for LIMEX material in India.</h2>
           </div>
           <div className="section-copy">
             <p>
-              White Dot LLP has been established as a specialized marketing, distribution, and sales
-              firm for LIMEX raw material across authorized states in India. The company does not
-              manufacture LIMEX. Its role is to represent the material commercially, educate
-              industries, coordinate qualified supply discussions, and support client adoption through
-              Seven Dot Company's certified distributing and marketing supply chain.
-            </p>
-            <p>
-              The authorization structure begins with TBM Co., Ltd., Japan, the original manufacturer
-              and global licensor of LIMEX material. TBM Japan has granted the exclusive distributor
-              dealership for the Indian market to Seven Dot Company. Seven Dot Company is exclusively
-              authorized to supply LIMEX material only to White Dot LLP, and to no other entity or firm.
-            </p>
-            <p>
-              Through this chain of authorization, White Dot LLP serves as the sole firm authorized to
-              market and sell LIMEX material to end clients, industries, and businesses across
-              designated Indian states. White Dot LLP is committed to delivering premium raw material
-              solutions, transparent technical communication, and dependable commercial coordination
-              for businesses evaluating sustainable material alternatives.
-            </p>
-            <p>
-              Industries, processors, institutions, and business buyers are invited to partner with
-              White Dot LLP for professional LIMEX material consultation, sampling, and supply
-              coordination.
+              White Dot LLP helps Indian industries evaluate LIMEX material for plastic replacement
+              and selected sustainable product applications. The company focuses on material
+              guidance, product-fit discussions, sampling coordination, and authorized sales support.
             </p>
           </div>
-        </div>
-        <div className="credential-grid">
-          <article className="credential-card">
-            <ShieldCheck size={23} />
-            <h3>Exclusively authorized</h3>
-            <p>
-              White Dot LLP operates through Seven Dot Company's certified distributing and marketing
-              supply chain, backed by distributor dealership from TBM Tokyo, Japan.
-            </p>
-          </article>
-          <article className="credential-card">
-            <Globe2 size={23} />
-            <h3>Strategic marketing partner</h3>
-            <p>The firm is focused on B2B market development, technical education, and client conversion.</p>
-          </article>
-          <article className="credential-card">
-            <Factory size={23} />
-            <h3>Industrial supply focus</h3>
-            <p>All discussions are structured around material fit, commercial viability, and authorized supply.</p>
-          </article>
         </div>
       </section>
 
@@ -354,12 +299,11 @@ function App() {
           Certification and authorization
         </div>
         <div className="split-heading">
-          <h2>A certified Seven Dot Company distribution and marketing chain for Indian industries.</h2>
+          <h2>An authorized distribution and marketing chain for Indian industries.</h2>
           <p>
-            White Dot LLP's market position is defined by a formal authorization chain: TBM Tokyo,
-            Japan has granted distributor dealership to Seven Dot Company, and Seven Dot Company
-            maintains the certified distributing and marketing supply chain through which LIMEX is
-            supplied exclusively to White Dot LLP for authorized marketing and sales.
+            The market structure is defined by a formal authorization chain from the LIMEX technology
+            provider in Japan to the authorized Indian distributor and then to our company for
+            marketing and sales in designated states.
           </p>
         </div>
         <div className="authorization-chain" aria-label="TBM Japan to White Dot LLP authorization chain">
@@ -381,20 +325,13 @@ function App() {
         </div>
         <div className="section-grid">
           <div>
-            <h2>A globally recognized sustainable raw material developed by TBM Japan.</h2>
+            <h2>A globally recognized sustainable raw material developed in Japan.</h2>
           </div>
           <div className="section-copy">
             <p>
               LIMEX is an innovative, eco-friendly raw material developed by TBM Co., Ltd., Japan.
               It is primarily composed of limestone and is recognized globally as a sustainable
-              material platform for paper-like and plastic-like applications.
-            </p>
-            <p>
-              LIMEX is suitable for packaging, printing, sheet, film, nonwoven, and selected
-              industrial use cases where performance, quality, and sustainability must work together.
-              In India, LIMEX is marketed and supplied exclusively through White Dot LLP under the
-              Seven Dot Company's certified distributing and marketing supply chain, established
-              under distributor dealership from TBM Tokyo, Japan.
+              material platform for plastic-like and paper-like applications.
             </p>
           </div>
         </div>
@@ -423,10 +360,10 @@ function App() {
           Client education for adoption
         </div>
         <div className="split-heading">
-          <h2>Manufacturers and government buyers need a clear material roadmap, not only a product sample.</h2>
+          <h2>A simple adoption path helps buyers decide with confidence.</h2>
           <p>
-            White Dot LLP uses LIMEX education to connect factory trials, procurement discussions,
-            plastic-reduction policy, and future circularity work into one understandable story for India.
+            Our team explains LIMEX in practical terms: what product you make, whether the material
+            may fit, how trials should run, and what steps are needed before commercial adoption.
           </p>
         </div>
         <div className="education-grid">
@@ -440,13 +377,13 @@ function App() {
         <div className="adoption-panel">
           <div>
             <Target size={24} />
-            <h3>White Dot LLP adoption conversation</h3>
+            <h3>LIMEX adoption conversation</h3>
             <p>
-              Every serious buyer should move through a structured discussion before claiming
-              environmental impact or changing production.
+              A buyer should test the material step by step before changing production or making
+              product claims. This keeps the decision clear and practical.
             </p>
           </div>
-          <ol>
+          <ol className="roadmap" aria-label="LIMEX adoption roadmap">
             {educationSteps.map((step) => (
               <li key={step}>{step}</li>
             ))}
@@ -485,36 +422,25 @@ function App() {
         </p>
       </section>
 
-      <section className="section tbm-tree" id="tbm-channels">
+      <section className="section limex-references" id="limex-references">
         <div className="section-kicker">
           <Split size={18} />
-          TBM global reference model
+          LIMEX references
         </div>
         <div className="split-heading">
-          <h2>TBM connects five business channels into one sustainability system.</h2>
+          <h2>Practical LIMEX product references for industrial discussion.</h2>
           <p>
-            Based on TBM Tokyo's official business introduction, White Dot LLP uses this structure as a
-            reference lens for explaining how LIMEX, CR LIMEX, product adoption, circularity, and
-            decarbonization planning fit into larger industrial change.
+            These references focus on product formats and use cases shown in official LIMEX material.
+            They are useful starting points for manufacturers exploring plastic replacement and
+            sustainable product development.
           </p>
         </div>
-        <div className="channel-tree" aria-label="TBM five business channels">
-          <div className="tree-core">
-            <span>TBM</span>
-            <strong>5 business areas</strong>
-          </div>
-          {tbmChannels.map((channel, index) => (
-            <article className={`channel-node node-${index + 1}`} key={channel.title}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <h3>{channel.title}</h3>
-              <p>{channel.text}</p>
-              <strong>India relevance</strong>
-              <p>{channel.india}</p>
-              <ul>
-                {channel.points.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
+        <div className="reference-grid" aria-label="LIMEX application and product references">
+          {limexReferences.map((reference) => (
+            <article className="reference-card" key={reference.title}>
+              <span>{reference.tag}</span>
+              <h3>{reference.title}</h3>
+              <p>{reference.text}</p>
             </article>
           ))}
         </div>
@@ -541,51 +467,26 @@ function App() {
           Product possibilities
         </div>
         <div className="split-heading">
-          <h2>From shop bags to industrial lines, the pitch starts with the product you already make.</h2>
+          <h2>Plastic Replacement Possibilities with LIMEX Material</h2>
           <p>
-            White Dot LLP can organize focused sample discussions for high-volume manufacturing,
-            government procurement, local shop demand, and brand-facing sustainable packaging.
+            Use these categories to plan focused sample discussions for high-volume manufacturing,
+            packaging, molded goods, and brand-facing product replacement.
           </p>
         </div>
-        <div className="application-grid">
-          {applications.map((item) => (
-            <article className="application-card" key={item}>
-              <span />
-              <h3>{item}</h3>
-            </article>
+        <div className="accordion-grid" aria-label="LIMEX product possibility categories">
+          {productCategories.map((category) => (
+            <details className="product-accordion" key={category}>
+              <summary>
+                <span>{category}</span>
+                <ChevronDown size={19} aria-hidden="true" />
+              </summary>
+              <ul>
+                <li>Product item 1</li>
+                <li>Product item 2</li>
+                <li>Product item 3</li>
+              </ul>
+            </details>
           ))}
-        </div>
-      </section>
-
-      <section className="section traction" id="traction">
-        <div className="section-kicker">
-          <ShieldCheck size={18} />
-          Regional traction
-        </div>
-        <div className="traction-layout">
-          <div>
-            <h2>Samples, approvals, and market education for western India.</h2>
-            <p>
-              White Dot LLP is building LIMEX awareness with factory owners, manufacturing-bag
-              companies, city markets, village shops, and major infrastructure conversations.
-              Mentioned names are handled as sample and approval references unless written
-              permission is available for public endorsement.
-            </p>
-          </div>
-          <div className="traction-list">
-            <div>
-              <strong>Sample programs</strong>
-              <span>Confidential sample discussions with packaging, processing, and industrial product buyers.</span>
-            </div>
-            <div>
-              <strong>Market orders</strong>
-              <span>Small shops in village and city markets for practical daily-use products.</span>
-            </div>
-            <div>
-              <strong>Education focus</strong>
-              <span>Material comparisons, sample quality, product fit, and environmental reporting.</span>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -611,9 +512,9 @@ function App() {
           <h2>Start a formal LIMEX material inquiry with White Dot LLP.</h2>
           <p>
             Share your application, size, thickness, current material, annual quantity, target unit
-            price, and procurement objective. White Dot LLP will coordinate the next stage of LIMEX
-            material consultation, sampling, and commercial discussion through Seven Dot Company's
-            certified distributing and marketing supply chain.
+            price, and procurement objective. Our team will coordinate the next stage of LIMEX
+            material consultation, sampling, and commercial discussion through the authorized supply
+            chain.
           </p>
         </div>
         <div className="contact-card">
@@ -652,9 +553,7 @@ function App() {
 
       <footer>
         <span>White Dot LLP</span>
-        <span>
-          India's Authorized Gateway to LIMEX by TBM Japan. Exclusively Authorized. Sustainably Supplied.
-        </span>
+        <span>India's authorized gateway to LIMEX material. Clear guidance for practical adoption.</span>
       </footer>
     </main>
   );
