@@ -26,6 +26,10 @@ import {
 } from "./vfx-wd";
 import "./vfx-wd/vfx-wd.css";
 // VFX-WD-END imports
+// CONTINUITY-WD-BEGIN imports
+import { ContinuityShell } from "./continuity-wd";
+import "./continuity-wd/continuity-wd.css";
+// CONTINUITY-WD-END imports
 
 const whatsappNumber = "918849728938";
 const whatsappMessage =
@@ -216,6 +220,9 @@ function App() {
       {/* VFX-WD-BEGIN hero-scene */}
       <MineralHeroScene />
       {/* VFX-WD-END hero-scene */}
+      {/* CONTINUITY-WD-BEGIN overlay */}
+      <ContinuityShell />
+      {/* CONTINUITY-WD-END overlay */}
       <nav className="site-nav" aria-label="Primary navigation">
         <a className="brand" href="#home" aria-label="White Dot LLP home">
           <img className="brand-symbol" src={assetPath("assets/whitedot-logo-enhanced.svg")} alt="" />
