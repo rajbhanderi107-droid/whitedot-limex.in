@@ -2,6 +2,30 @@
   scroll-margin-top: 5.5rem;
 }
 
+:root {
+  --muted: #efe7d8;
+  --warm-text: #fff0cc;
+  --warm-soft: #f8dfaa;
+}
+
+.eyebrow,
+.section-kicker,
+.brand small,
+.territory-head span,
+.proof-card strong,
+.tree-core strong,
+dt {
+  color: var(--warm-text);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+}
+
+.nav-links,
+.proof-card span,
+.scale-strip span,
+dd {
+  color: #fff6e7;
+}
+
 .brand-symbol {
   width: 2.5rem;
   height: 2.5rem;
