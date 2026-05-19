@@ -8,6 +8,7 @@ export interface ContinuityOverlayProps {
   open: boolean;
   secondsOffline: number;
   hasPendingForm: boolean;
+  onRetry?: () => void;
 }
 
 const STATUS_MESSAGES = [
@@ -22,6 +23,7 @@ export function ContinuityOverlay({
   open,
   secondsOffline,
   hasPendingForm,
+  onRetry,
 }: ContinuityOverlayProps) {
   const [messageIndex, setMessageIndex] = useState(0);
 
@@ -74,6 +76,15 @@ export function ContinuityOverlay({
       <p className="continuity-wd-timer" aria-hidden="true">
         Last connected {secondsOffline}s ago
       </p>
+      {hasPendingForm && secondsOffline >= 10 && onRetry && (
+        <button
+          className="continuity-wd-retry"
+          type="button"
+          onClick={onRetry}
+        >
+          Try sending now
+        </button>
+      )}
       {secondsOffline >= FALLBACK_THRESHOLD_SECONDS && (
         <a className="continuity-wd-fallback" href="#material">
           Continue browsing offline

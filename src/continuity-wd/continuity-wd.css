@@ -100,6 +100,27 @@
   letter-spacing: 0.04em;
 }
 
+.continuity-wd-retry {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 3rem;
+  padding: 0.5rem 1.2rem;
+  font-size: 13px;
+  font-family: inherit;
+  color: #050706;
+  background: rgba(245, 241, 232, 0.88);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.continuity-wd-retry:hover,
+.continuity-wd-retry:focus-visible {
+  background: #f5f1e8;
+  outline: none;
+}
+
 .continuity-wd-fallback {
   position: fixed;
   right: 1.25rem;
