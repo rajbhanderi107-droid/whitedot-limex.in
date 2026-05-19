@@ -14,6 +14,58 @@
   transform: perspective(360px) rotateX(4deg) translateZ(0);
 }
 
+.hero {
+  isolation: isolate;
+}
+
+.hero::after {
+  position: absolute;
+  inset: clamp(6rem, 12vh, 8rem) -2rem clamp(1.8rem, 5vh, 3.5rem);
+  z-index: 0;
+  border-radius: 8px;
+  content: "";
+  pointer-events: none;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.72) 0%,
+      rgba(0, 0, 0, 0.5) 45%,
+      rgba(0, 0, 0, 0.18) 100%
+    ),
+    radial-gradient(circle at 18% 30%, rgba(5, 7, 6, 0.72), transparent 34rem);
+}
+
+.hero-copy,
+.territory-panel {
+  position: relative;
+  z-index: 2;
+}
+
+.hero .eyebrow {
+  color: #ffffff;
+  font-weight: 800;
+  text-shadow: 0 3px 18px rgba(0, 0, 0, 0.78);
+}
+
+.hero h1 {
+  max-width: 820px;
+  color: #ffffff;
+  font-size: 5.45rem;
+  font-weight: 800;
+  line-height: 0.98;
+  text-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.62),
+    0 18px 54px rgba(0, 0, 0, 0.54);
+}
+
+.hero-text {
+  max-width: 680px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 450;
+  line-height: 1.7;
+  text-shadow: 0 3px 22px rgba(0, 0, 0, 0.64);
+}
+
 .reference-grid,
 .accordion-grid {
   display: grid;
@@ -182,6 +234,23 @@
 }
 
 @media (max-width: 920px) {
+  .hero::after {
+    inset: 5.5rem -1rem 1.5rem;
+    background:
+      linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.74) 0%,
+        rgba(0, 0, 0, 0.58) 54%,
+        rgba(0, 0, 0, 0.22) 100%
+      ),
+      radial-gradient(circle at 22% 20%, rgba(5, 7, 6, 0.72), transparent 26rem);
+  }
+
+  .hero h1 {
+    font-size: 3.85rem;
+    line-height: 1.02;
+  }
+
   .reference-grid,
   .accordion-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -196,6 +265,29 @@
   .brand-symbol {
     width: 2.2rem;
     height: 2.2rem;
+  }
+
+  .hero::after {
+    inset: 5.2rem -0.35rem 0.75rem;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.76) 0%,
+        rgba(0, 0, 0, 0.62) 60%,
+        rgba(0, 0, 0, 0.22) 100%
+      ),
+      radial-gradient(circle at 26% 20%, rgba(5, 7, 6, 0.76), transparent 22rem);
+  }
+
+  .hero h1 {
+    font-size: 2.72rem;
+    line-height: 1.06;
+  }
+
+  .hero-text {
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 1.02rem;
+    line-height: 1.68;
   }
 
   .reference-grid,

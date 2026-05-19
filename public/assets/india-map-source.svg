@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 700" role="img" aria-labelledby="title desc">
-  <title id="title">Bright outline map of India</title>
-  <desc id="desc">Stylized glowing India map used as a territory reference for WhiteDot's regional dealership states.</desc>
+  <title id="title">Bright outline regional market map</title>
+  <desc id="desc">Stylized glowing regional map used as a territory reference for WhiteDot's dealership states.</desc>
   <defs>
     <filter id="mapGlow" x="-40%" y="-40%" width="180%" height="180%">
       <feGaussianBlur stdDeviation="4" result="blur" />

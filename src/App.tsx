@@ -32,14 +32,14 @@ const authorizationChain = [
   },
   {
     title: "Seven Dot Company",
-    role: "Sole Authorized Distributor in India",
-    text: "Authorized directly by TBM Co., Ltd., Japan to distribute LIMEX material for the Indian market.",
+    role: "Sole Authorized Distributor",
+    text: "Authorized directly by TBM Co., Ltd., Japan to distribute LIMEX material through the defined market channel.",
     action: "Supply Agreement",
   },
   {
     title: "White Dot LLP",
     role: "Authorized Marketing and Sales Firm",
-    text: "Formed to market, distribute, and sell LIMEX raw material across designated Indian states.",
+    text: "Formed to market, distribute, and sell LIMEX raw material across designated states.",
     action: "Sells to",
   },
   {
@@ -115,7 +115,7 @@ const limexReferences = [
   },
   {
     title: "Film and packing formats",
-    text: "Sealant film and related packing formats provide useful reference points for manufacturers exploring plastic-like applications.",
+    text: "Sealant film and related packing formats provide useful reference points for manufacturers exploring resin-based applications.",
     tag: "Packaging development",
   },
   {
@@ -227,12 +227,11 @@ function App() {
       <section className="hero" id="home">
         <div className="hero-copy">
           <p className="eyebrow">Authorized supply. Clear material guidance.</p>
-          <h1>India's authorized gateway to LIMEX by TBM Japan.</h1>
+          <h1>Authorized Access to LIMEX Material Technology by TBM Japan.</h1>
           <p className="hero-text">
-            White Dot LLP is the authorized marketing and sales firm for LIMEX raw material across
-            designated Indian states, operating through our authorized partner's distributing and
-            marketing supply chain, established under distributor dealership from the LIMEX technology
-            provider in Japan.
+            Sevendot connects businesses with authorized access to LIMEX material technology by TBM
+            Japan, helping manufacturers explore smarter, high-performance material solutions for
+            industrial and commercial applications.
           </p>
           <div className="hero-actions">
             <a className="button primary" href={whatsappHref} target="_blank" rel="noreferrer">
@@ -250,7 +249,7 @@ function App() {
             <MapPin size={22} />
             <div>
               <strong>Designated authorized states</strong>
-              <span>Pan-India-ready marketing structure with defined state coverage</span>
+              <span>Market-ready structure with defined state coverage</span>
             </div>
           </div>
           <div className="territory-map" aria-hidden="true">
@@ -281,11 +280,11 @@ function App() {
         </div>
         <div className="section-grid">
           <div>
-            <h2>A focused commercial platform for LIMEX material in India.</h2>
+            <h2>A focused commercial platform for LIMEX material.</h2>
           </div>
           <div className="section-copy">
             <p>
-              White Dot LLP helps Indian industries evaluate LIMEX material for plastic replacement
+              White Dot LLP helps industries evaluate LIMEX material for plastic replacement
               and selected sustainable product applications. The company focuses on material
               guidance, product-fit discussions, sampling coordination, and authorized sales support.
             </p>
@@ -299,10 +298,10 @@ function App() {
           Certification and authorization
         </div>
         <div className="split-heading">
-          <h2>An authorized distribution and marketing chain for Indian industries.</h2>
+          <h2>An authorized distribution and marketing chain for industries.</h2>
           <p>
             The market structure is defined by a formal authorization chain from the LIMEX technology
-            provider in Japan to the authorized Indian distributor and then to our company for
+            provider in Japan to the authorized distributor and then to our company for
             marketing and sales in designated states.
           </p>
         </div>
@@ -329,9 +328,9 @@ function App() {
           </div>
           <div className="section-copy">
             <p>
-              LIMEX is an innovative, eco-friendly raw material developed by TBM Co., Ltd., Japan.
-              It is primarily composed of limestone and is recognized globally as a sustainable
-              material platform for plastic-like and paper-like applications.
+              Developed by TBM Co., Ltd., Japan, LIMEX can be adapted for resin-based and
+              paper-substrate applications, offering businesses a versatile material platform for
+              packaging, printing, industrial products, and commercial use cases.
             </p>
           </div>
         </div>
@@ -553,7 +552,7 @@ function App() {
 
       <footer>
         <span>White Dot LLP</span>
-        <span>India's authorized gateway to LIMEX material. Clear guidance for practical adoption.</span>
+        <span>Authorized access to LIMEX material. Clear guidance for practical adoption.</span>
       </footer>
     </main>
   );
