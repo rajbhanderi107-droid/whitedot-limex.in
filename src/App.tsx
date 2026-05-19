@@ -16,6 +16,16 @@ import {
   Target,
 } from "lucide-react";
 import HeroScene from "./HeroScene";
+// VFX-WD-BEGIN imports
+import {
+  LottieMicroIcon,
+  MaterialJourney,
+  MineralHeroScene,
+  PremiumCalculator,
+  VfxInteractionController,
+} from "./vfx-wd";
+import "./vfx-wd/vfx-wd.css";
+// VFX-WD-END imports
 
 const whatsappNumber = "918849728938";
 const whatsappMessage =
@@ -199,8 +209,13 @@ const sourceLinks = [
 
 function App() {
   return (
-    <main>
-      <HeroScene />
+    <main className="vfx-wd-shell">
+      {/* VFX-WD-BEGIN app-controller */}
+      <VfxInteractionController />
+      {/* VFX-WD-END app-controller */}
+      {/* VFX-WD-BEGIN hero-scene */}
+      <MineralHeroScene />
+      {/* VFX-WD-END hero-scene */}
       <nav className="site-nav" aria-label="Primary navigation">
         <a className="brand" href="#home" aria-label="White Dot LLP home">
           <img className="brand-symbol" src={assetPath("assets/whitedot-logo-enhanced.svg")} alt="" />
@@ -213,36 +228,56 @@ function App() {
           <a href="#about">About</a>
           <a href="#authorization">Authorization</a>
           <a href="#material">Material</a>
+          {/* VFX-WD-BEGIN nav-links */}
+          <a href="#mineral-journey">Journey</a>
+          <a href="#limex-calculator">Calculator</a>
+          {/* VFX-WD-END nav-links */}
           <a href="#education">Education</a>
           <a href="#impact-data">Impact</a>
           <a href="#applications">Applications</a>
           <a href="#contact">Contact</a>
         </div>
-        <a className="nav-action" href={whatsappHref} target="_blank" rel="noreferrer">
+        <a className="nav-action vfx-wd-magnetic" href={whatsappHref} target="_blank" rel="noreferrer">
           <MessageCircle size={18} />
           WhatsApp
         </a>
       </nav>
 
       <section className="hero" id="home">
-        <div className="hero-copy">
+        <div className="hero-copy vfx-wd-hero-panel">
           <p className="eyebrow">Authorized supply. Clear material guidance.</p>
-          <h1>Authorized Access to LIMEX Material Technology by TBM Japan.</h1>
+          <h1>Mineral Intelligence for LIMEX industrial material adoption.</h1>
           <p className="hero-text">
             Sevendot connects businesses with authorized access to LIMEX material technology by TBM
-            Japan, helping manufacturers explore smarter, high-performance material solutions for
-            industrial and commercial applications.
+            Japan, helping manufacturers evaluate mineral-based material routes for smarter,
+            high-performance industrial and commercial applications.
           </p>
           <div className="hero-actions">
-            <a className="button primary" href={whatsappHref} target="_blank" rel="noreferrer">
+            <a className="button primary vfx-wd-magnetic" href={whatsappHref} target="_blank" rel="noreferrer">
               <MessageCircle size={20} />
               Start a LIMEX inquiry
             </a>
-            <a className="button secondary" href="#authorization">
+            <a className="button secondary vfx-wd-magnetic" href="#authorization">
               View authorization
               <ArrowRight size={19} />
             </a>
           </div>
+          {/* VFX-WD-BEGIN hero-proof */}
+          <div className="vfx-wd-hero-metrics" aria-label="White Dot LIMEX commercial signals">
+            <span>
+              <strong>Mineral Intelligence</strong>
+              Technical story from limestone to industrial material use.
+            </span>
+            <span>
+              <strong>Buyer-ready</strong>
+              Built for sampling, trial planning, and commercial qualification.
+            </span>
+            <span>
+              <strong>Authorized route</strong>
+              Trust-first sales path for defined regional markets.
+            </span>
+          </div>
+          {/* VFX-WD-END hero-proof */}
         </div>
         <div className="territory-panel" aria-label="White Dot LLP authorized territory">
           <div className="territory-head">
@@ -307,8 +342,14 @@ function App() {
         </div>
         <div className="authorization-chain" aria-label="TBM Japan to White Dot LLP authorization chain">
           {authorizationChain.map((item) => (
-            <article className="authorization-card" key={item.title}>
+            <article className="authorization-card vfx-wd-trust-card" data-vfx-tilt key={item.title}>
               <span className="chain-step">{item.action}</span>
+              {/* VFX-WD-BEGIN trust-badge */}
+              <span className="vfx-wd-verified-badge">
+                <LottieMicroIcon variant="check" />
+                Verified channel
+              </span>
+              {/* VFX-WD-END trust-badge */}
               <h3>{item.title}</h3>
               <strong>{item.role}</strong>
               <p>{item.text}</p>
@@ -352,6 +393,10 @@ function App() {
           ))}
         </div>
       </section>
+
+      {/* VFX-WD-BEGIN journey-section */}
+      <MaterialJourney />
+      {/* VFX-WD-END journey-section */}
 
       <section className="section education" id="education">
         <div className="section-kicker">
@@ -421,6 +466,10 @@ function App() {
         </p>
       </section>
 
+      {/* VFX-WD-BEGIN calculator-section */}
+      <PremiumCalculator />
+      {/* VFX-WD-END calculator-section */}
+
       <section className="section limex-references" id="limex-references">
         <div className="section-kicker">
           <Split size={18} />
@@ -474,11 +523,14 @@ function App() {
         </div>
         <div className="accordion-grid" aria-label="LIMEX product possibility categories">
           {productCategories.map((category) => (
-            <details className="product-accordion" key={category}>
+            <details className="product-accordion vfx-wd-tilt vfx-wd-product-card" data-vfx-tilt key={category}>
               <summary>
                 <span>{category}</span>
                 <ChevronDown size={19} aria-hidden="true" />
               </summary>
+              {/* VFX-WD-BEGIN product-visual */}
+              <div className="product-mineral-visual" aria-hidden="true" />
+              {/* VFX-WD-END product-visual */}
               <ul>
                 <li>Product item 1</li>
                 <li>Product item 2</li>
@@ -505,7 +557,7 @@ function App() {
         </div>
       </section>
 
-      <section className="contact" id="contact">
+      <section className="contact vfx-wd-final-cta" id="contact">
         <div>
           <p className="eyebrow">White Dot LLP | Authorized Marketing and Sales</p>
           <h2>Start a formal LIMEX material inquiry with White Dot LLP.</h2>
@@ -517,10 +569,37 @@ function App() {
           </p>
         </div>
         <div className="contact-card">
-          <a className="button primary wide" href={whatsappHref} target="_blank" rel="noreferrer">
+          <a className="button primary wide vfx-wd-magnetic" href={whatsappHref} target="_blank" rel="noreferrer">
             <MessageCircle size={21} />
             WhatsApp White Dot LLP
           </a>
+          {/* VFX-WD-BEGIN contact-form */}
+          <form
+            className="vfx-wd-quote-form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              window.open(whatsappHref, "_blank", "noreferrer");
+            }}
+          >
+            <label>
+              <span>Application</span>
+              <select defaultValue="Industrial molded goods">
+                <option>Industrial molded goods</option>
+                <option>Packaging and bags</option>
+                <option>Sheet and print material</option>
+                <option>Nonwoven or fabric route</option>
+              </select>
+            </label>
+            <label>
+              <span>Monthly volume</span>
+              <input placeholder="Example: 20 tons/month" />
+            </label>
+            <button className="button primary wide vfx-wd-magnetic" type="submit">
+              Request quote review
+              <ArrowRight size={18} />
+            </button>
+          </form>
+          {/* VFX-WD-END contact-form */}
           <dl>
             <div>
               <dt>Company</dt>
