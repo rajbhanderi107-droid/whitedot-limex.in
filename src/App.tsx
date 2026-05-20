@@ -21,10 +21,7 @@ import HeroScene from "./HeroScene";
 import { ContinuityShell } from "./continuity-wd";
 import "./continuity-wd/continuity-wd.css";
 // CONTINUITY-WD-END imports
-// SOUND-WD-BEGIN imports
-import { SoundToggle, SoundTriggers } from "./sound-wd";
-import "./sound-wd/sound-wd.css";
-// SOUND-WD-END imports
+
 // AGGREGATION-WD-BEGIN imports
 import { AggregationLoader } from "./aggregation-wd";
 import "./aggregation-wd/aggregation-wd.css";
@@ -219,9 +216,6 @@ function App() {
       {/* CONTINUITY-WD-BEGIN overlay */}
       <ContinuityShell />
       {/* CONTINUITY-WD-END overlay */}
-      {/* SOUND-WD-BEGIN triggers */}
-      <SoundTriggers />
-      {/* SOUND-WD-END triggers */}
       {/* AGGREGATION-WD-BEGIN loader */}
       <AggregationLoader />
       {/* AGGREGATION-WD-END loader */}
@@ -577,9 +571,6 @@ function App() {
       <footer>
         <span>White Dot LLP</span>
         <span>Authorized access to LIMEX material. Clear guidance for practical adoption.</span>
-        {/* SOUND-WD-BEGIN toggle */}
-        <SoundToggle />
-        {/* SOUND-WD-END toggle */}
       </footer>
     </main>
   );

@@ -54,10 +54,6 @@ export function AggregationLoader() {
     }
     setDone(true);
     markReturning();
-
-    import("../sound-wd/audioEngine")
-      .then(({ audioEngine }) => audioEngine.play("settle"))
-      .catch(() => {});
   }, []);
 
   useEffect(() => {
