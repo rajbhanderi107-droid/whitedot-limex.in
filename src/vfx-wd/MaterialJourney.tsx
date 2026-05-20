@@ -33,6 +33,7 @@ const particleMarks = Array.from({ length: 42 }, (_, index) => {
     y: `${Math.sin(angle) * radius * 0.72}rem`,
     r: `${index * 11}deg`,
     s: `${0.72 + (index % 5) * 0.08}`,
+    delay: `${(index % 11) * -0.41}s`,
   };
 });
 
@@ -44,6 +45,7 @@ const pelletMarks = Array.from({ length: 22 }, (_, index) => {
     y: `${(row - 1.55) * 1.18}rem`,
     r: `${index * 17}deg`,
     s: `${0.92 + (index % 4) * 0.05}`,
+    delay: `${(index % 7) * -0.78}s`,
   };
 });
 
@@ -144,6 +146,7 @@ export default function MaterialJourney() {
                     "--y": style.y,
                     "--r": style.r,
                     "--s": style.s,
+                    "--delay": style.delay,
                   } as CSSProperties
                 }
               />
@@ -160,6 +163,7 @@ export default function MaterialJourney() {
                     "--y": style.y,
                     "--r": style.r,
                     "--s": style.s,
+                    "--delay": style.delay,
                   } as CSSProperties
                 }
               />

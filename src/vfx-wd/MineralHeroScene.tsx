@@ -4,6 +4,18 @@ import type { Texture } from "three";
 const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path}`.replace(/\/{2,}/g, "/");
 const ROCK_TEXTURE = assetPath("assets/limex-rock.webp");
 
+function randomWaypoint(
+  xRange: number,
+  yRange: number,
+  zRange: number,
+): { x: number; y: number; z: number } {
+  return {
+    x: (Math.random() - 0.5) * 2 * xRange,
+    y: (Math.random() - 0.5) * 2 * yRange,
+    z: (Math.random() - 0.5) * 2 * zRange,
+  };
+}
+
 export default function MineralHeroScene() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -52,7 +64,10 @@ export default function MineralHeroScene() {
       scene.add(warmCore);
 
       const mineralGroup = new THREE.Group();
-      mineralGroup.position.set(mobile ? 0.68 : 1.88, mobile ? 0.78 : 0.08, 0);
+      // Centered anchor so the mineral can roam to every edge and corner.
+      const baseX = 0;
+      const baseY = 0;
+      mineralGroup.position.set(baseX, baseY, 0);
       scene.add(mineralGroup);
 
       const geometry = new THREE.IcosahedronGeometry(mobile ? 1.55 : 2.04, mobile ? 3 : 5);
@@ -151,15 +166,20 @@ export default function MineralHeroScene() {
       ringOne.rotation.set(Math.PI / 2.25, 0.16, 0.24);
       mineralGroup.add(ringOne);
 
-      const target = { x: 0, y: 0 };
-      const current = { x: 0, y: 0 };
+      // Random antigravity drift — full-viewport waypoint system.
+      // The mineral wanders to every edge and corner, never on a fixed path.
+      const roamX = mobile ? 1.7 : 3.2;
+      const roamY = mobile ? 2.7 : 2.2;
+      const roamZ = mobile ? 0.7 : 1.1;
+      let waypointFrom = { x: 0, y: 0, z: 0 };
+      let waypointTo = randomWaypoint(roamX, roamY, roamZ);
+      let waypointProgress = 0;
+      // Each leg gets its own random speed so the motion never feels metronomic.
+      let waypointSpeed = 0.05 + Math.random() * 0.06;
+      const current = { x: 0, y: 0, z: 0 };
+
       const clock = new THREE.Clock();
       let frame = 0;
-
-      const onPointerMove = (event: PointerEvent) => {
-        target.x = (event.clientX / window.innerWidth - 0.5) * 2;
-        target.y = -(event.clientY / window.innerHeight - 0.5) * 2;
-      };
 
       const resize = () => {
         const nextMobile = window.innerWidth < 760;
@@ -177,29 +197,56 @@ export default function MineralHeroScene() {
         }
 
         const elapsed = clock.getElapsedTime();
-        current.x = THREE.MathUtils.lerp(current.x, target.x, 0.045);
-        current.y = THREE.MathUtils.lerp(current.y, target.y, 0.045);
+        const dt = Math.min(clock.getDelta(), 0.05);
 
-        mineralGroup.position.x = (mobile ? 0.68 : 1.88) + current.x * (mobile ? 0.09 : 0.18);
-        mineralGroup.position.y = (mobile ? 0.78 : 0.08) + current.y * 0.1;
-        mineralGroup.rotation.y = elapsed * 0.075 + current.x * 0.18;
-        mineralGroup.rotation.x = -0.08 + current.y * 0.1;
+        // Advance waypoint progress; on arrival pick a fresh random target
+        // anywhere on screen with a new random travel speed.
+        waypointProgress += dt * waypointSpeed;
+        if (waypointProgress >= 1) {
+          waypointFrom = { ...waypointTo };
+          waypointTo = randomWaypoint(roamX, roamY, roamZ);
+          waypointSpeed = 0.05 + Math.random() * 0.06;
+          waypointProgress = 0;
+        }
 
-        mineral.rotation.y = elapsed * 0.09 + 0.42;
-        mineral.rotation.x = Math.sin(elapsed * 0.18) * 0.05 - 0.13;
-        mineral.rotation.z = -0.23 + Math.sin(elapsed * 0.13) * 0.045;
+        // Smooth hermite interpolation between waypoints
+        const t = waypointProgress;
+        const ease = t * t * (3 - 2 * t);
+        const driftX = waypointFrom.x + (waypointTo.x - waypointFrom.x) * ease;
+        const driftY = waypointFrom.y + (waypointTo.y - waypointFrom.y) * ease;
+        const driftZ = waypointFrom.z + (waypointTo.z - waypointFrom.z) * ease;
+
+        // Layer organic wobble on top of drift for a weightless feel
+        const wobbleX = Math.sin(elapsed * 0.31) * 0.08 + Math.sin(elapsed * 0.73) * 0.04;
+        const wobbleY = Math.cos(elapsed * 0.27) * 0.07 + Math.sin(elapsed * 0.61) * 0.035;
+
+        current.x = THREE.MathUtils.lerp(current.x, driftX + wobbleX, 0.03);
+        current.y = THREE.MathUtils.lerp(current.y, driftY + wobbleY, 0.03);
+        current.z = THREE.MathUtils.lerp(current.z, driftZ, 0.03);
+
+        mineralGroup.position.x = baseX + current.x;
+        mineralGroup.position.y = baseY + current.y;
+        mineralGroup.position.z = current.z;
+
+        // Slow organic rotation — no fixed axis, feels weightless
+        mineralGroup.rotation.y = elapsed * 0.042 + Math.sin(elapsed * 0.19) * 0.12;
+        mineralGroup.rotation.x = -0.08 + Math.sin(elapsed * 0.15) * 0.08 + Math.cos(elapsed * 0.23) * 0.04;
+
+        mineral.rotation.y = elapsed * 0.065 + 0.42;
+        mineral.rotation.x = Math.sin(elapsed * 0.13) * 0.06 - 0.13;
+        mineral.rotation.z = -0.23 + Math.sin(elapsed * 0.09) * 0.05 + Math.cos(elapsed * 0.17) * 0.03;
         facets.rotation.copy(mineral.rotation);
-        facets.rotation.y -= elapsed * 0.02;
+        facets.rotation.y -= elapsed * 0.015;
 
-        dust.rotation.y = -elapsed * 0.026;
-        dust.rotation.z = Math.sin(elapsed * 0.16) * 0.035;
-        ringOne.rotation.z = elapsed * 0.05;
+        dust.rotation.y = -elapsed * 0.018;
+        dust.rotation.z = Math.sin(elapsed * 0.11) * 0.025;
+        ringOne.rotation.z = elapsed * 0.035;
 
         const attribute = dustGeometry.getAttribute("position");
         for (let i = 0; i < dustCount; i += 1) {
           const idx = i * 3;
-          const angle = dustAngles[i] + elapsed * (0.035 + (i % 7) * 0.002);
-          const wave = Math.sin(elapsed * 0.42 + i * 0.17) * 0.075;
+          const angle = dustAngles[i] + elapsed * (0.025 + (i % 7) * 0.0015);
+          const wave = Math.sin(elapsed * 0.32 + i * 0.17) * 0.06;
           attribute.setXYZ(
             i,
             Math.cos(angle) * dustRadius[i],
@@ -212,13 +259,11 @@ export default function MineralHeroScene() {
         renderer.render(scene, camera);
       };
 
-      window.addEventListener("pointermove", onPointerMove, { passive: true });
       window.addEventListener("resize", resize);
       animate();
 
       cleanup = () => {
         window.cancelAnimationFrame(frame);
-        window.removeEventListener("pointermove", onPointerMove);
         window.removeEventListener("resize", resize);
         texture?.dispose();
         geometry.dispose();
