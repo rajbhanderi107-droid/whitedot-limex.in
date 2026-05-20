@@ -36,7 +36,7 @@ function EnabledContinuityShell() {
   const wasOffline = useRef(false);
 
   useEffect(() => {
-    const form = document.querySelector<HTMLFormElement>(".vfx-wd-quote-form");
+    const form = document.querySelector<HTMLFormElement>("[data-continuity-form]");
     formRef.current = form;
   }, []);
 

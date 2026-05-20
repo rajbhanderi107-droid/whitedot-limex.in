@@ -16,16 +16,7 @@ import {
   Target,
 } from "lucide-react";
 import HeroScene from "./HeroScene";
-// VFX-WD-BEGIN imports
-import {
-  LottieMicroIcon,
-  MaterialJourney,
-  MineralHeroScene,
-  PremiumCalculator,
-  VfxInteractionController,
-} from "./vfx-wd";
-import "./vfx-wd/vfx-wd.css";
-// VFX-WD-END imports
+
 // CONTINUITY-WD-BEGIN imports
 import { ContinuityShell } from "./continuity-wd";
 import "./continuity-wd/continuity-wd.css";
@@ -219,65 +210,12 @@ const sourceLinks = [
   { label: "LIMEX label guideline", href: "https://tb-m.com/doc/guidelines_limexlabel_en.pdf" },
 ];
 
-// VFX-WD-BEGIN product-data
-const vfxProductDetails: Record<string, { tag: string; signal: string; items: string[] }> = {
-  "Injection Mould": {
-    tag: "Precision molding",
-    signal: "Mineral-loaded resin trials for rigid industrial components.",
-    items: ["Dimensional stability review", "Cycle-time discussion", "Sample mold qualification"],
-  },
-  "Blow Mould [Bottle, Cans and Drums]": {
-    tag: "Container route",
-    signal: "Structured evaluation for bottles, cans, and industrial drums.",
-    items: ["Wall-thickness planning", "Drop-test pathway", "Volume-led price model"],
-  },
-  "Blow Mould [Bags]": {
-    tag: "Flexible packaging",
-    signal: "Film and bag conversations for plastic-reduction trials.",
-    items: ["Gauge and strength target", "Sealing behavior", "Load-bearing checks"],
-  },
-  Thermoforming: {
-    tag: "Formed sheet",
-    signal: "Sheet conversion pathway for trays, panels, and rigid packs.",
-    items: ["Sheet gauge selection", "Heat profile review", "Finish quality checks"],
-  },
-  "Woven Sac": {
-    tag: "Bulk packing",
-    signal: "High-volume sack and woven packaging discussion.",
-    items: ["Denier and gsm review", "Load class mapping", "Cost-room estimate"],
-  },
-  "Non Woven Sac": {
-    tag: "PP fabric route",
-    signal: "Nonwoven trial pathway for PP-heavy business formats.",
-    items: ["Dosage planning", "Fabric hand-feel", "GHG example review"],
-  },
-  "Sealant Packing": {
-    tag: "Film layer",
-    signal: "Packing-layer conversations for sealant and laminated formats.",
-    items: ["Seal temperature window", "Layer compatibility", "Trial batch checklist"],
-  },
-  "Industrial Molded Goods": {
-    tag: "Industrial parts",
-    signal: "Commercial qualification for repeated molded product lines.",
-    items: ["Part-fit review", "Machine setup planning", "Defect tracking"],
-  },
-  "FMCG Packing": {
-    tag: "Brand packaging",
-    signal: "Consumer-pack evaluation with clear claim discipline.",
-    items: ["Shelf presentation", "Label claim control", "Procurement volume model"],
-  },
-};
-// VFX-WD-END product-data
+
 
 function App() {
   return (
-    <main className="vfx-wd-shell">
-      {/* VFX-WD-BEGIN app-controller */}
-      <VfxInteractionController />
-      {/* VFX-WD-END app-controller */}
-      {/* VFX-WD-BEGIN hero-scene */}
-      <MineralHeroScene />
-      {/* VFX-WD-END hero-scene */}
+    <main>
+      <HeroScene />
       {/* CONTINUITY-WD-BEGIN overlay */}
       <ContinuityShell />
       {/* CONTINUITY-WD-END overlay */}
@@ -299,23 +237,19 @@ function App() {
           <a href="#about">About</a>
           <a href="#authorization">Authorization</a>
           <a href="#material">Material</a>
-          {/* VFX-WD-BEGIN nav-links */}
-          <a href="#mineral-journey">Journey</a>
-          <a href="#limex-calculator">Calculator</a>
-          {/* VFX-WD-END nav-links */}
           <a href="#education">Education</a>
           <a href="#impact-data">Impact</a>
           <a href="#applications">Applications</a>
           <a href="#contact">Contact</a>
         </div>
-        <a className="nav-action vfx-wd-magnetic" href={whatsappHref} target="_blank" rel="noreferrer">
+        <a className="nav-action" href={whatsappHref} target="_blank" rel="noreferrer">
           <MessageCircle size={18} />
           WhatsApp
         </a>
       </nav>
 
       <section className="hero" id="home">
-        <div className="hero-copy vfx-wd-hero-panel">
+        <div className="hero-copy">
           <p className="eyebrow">Authorized supply. Clear material guidance.</p>
           <h1>Mineral Intelligence for LIMEX industrial material adoption.</h1>
           <p className="hero-text">
@@ -324,31 +258,15 @@ function App() {
             high-performance industrial and commercial applications.
           </p>
           <div className="hero-actions">
-            <a className="button primary vfx-wd-magnetic" href={whatsappHref} target="_blank" rel="noreferrer">
+            <a className="button primary" href={whatsappHref} target="_blank" rel="noreferrer">
               <MessageCircle size={20} />
               Start a LIMEX inquiry
             </a>
-            <a className="button secondary vfx-wd-magnetic" href="#authorization">
+            <a className="button secondary" href="#authorization">
               View authorization
               <ArrowRight size={19} />
             </a>
           </div>
-          {/* VFX-WD-BEGIN hero-proof */}
-          <div className="vfx-wd-hero-metrics" aria-label="White Dot LIMEX commercial signals">
-            <span>
-              <strong>Mineral Intelligence</strong>
-              Technical story from limestone to industrial material use.
-            </span>
-            <span>
-              <strong>Buyer-ready</strong>
-              Built for sampling, trial planning, and commercial qualification.
-            </span>
-            <span>
-              <strong>Authorized route</strong>
-              Trust-first sales path for defined regional markets.
-            </span>
-          </div>
-          {/* VFX-WD-END hero-proof */}
         </div>
         <div className="territory-panel" aria-label="White Dot LLP authorized territory">
           <div className="territory-head">
@@ -413,14 +331,8 @@ function App() {
         </div>
         <div className="authorization-chain" aria-label="TBM Japan to White Dot LLP authorization chain">
           {authorizationChain.map((item) => (
-            <article className="authorization-card vfx-wd-trust-card" data-vfx-tilt key={item.title}>
+            <article className="authorization-card" key={item.title}>
               <span className="chain-step">{item.action}</span>
-              {/* VFX-WD-BEGIN trust-badge */}
-              <span className="vfx-wd-verified-badge">
-                <LottieMicroIcon variant="check" />
-                Verified channel
-              </span>
-              {/* VFX-WD-END trust-badge */}
               <h3>{item.title}</h3>
               <strong>{item.role}</strong>
               <p>{item.text}</p>
@@ -464,10 +376,6 @@ function App() {
           ))}
         </div>
       </section>
-
-      {/* VFX-WD-BEGIN journey-section */}
-      <MaterialJourney />
-      {/* VFX-WD-END journey-section */}
 
       <section className="section education" id="education">
         <div className="section-kicker">
@@ -537,10 +445,6 @@ function App() {
         </p>
       </section>
 
-      {/* VFX-WD-BEGIN calculator-section */}
-      <PremiumCalculator />
-      {/* VFX-WD-END calculator-section */}
-
       <section className="section limex-references" id="limex-references">
         <div className="section-kicker">
           <Split size={18} />
@@ -594,23 +498,12 @@ function App() {
         </div>
         <div className="accordion-grid" aria-label="LIMEX product possibility categories">
           {productCategories.map((category) => (
-            <details className="product-accordion vfx-wd-tilt vfx-wd-product-card" data-vfx-tilt key={category}>
+            <details className="product-accordion" key={category}>
               <summary>
                 <span>{category}</span>
                 <ChevronDown size={19} aria-hidden="true" />
               </summary>
-              {/* VFX-WD-BEGIN product-visual */}
-              <div className="product-mineral-visual" aria-hidden="true">
-                <span>{vfxProductDetails[category]?.tag}</span>
-              </div>
-              <p className="vfx-wd-product-signal">{vfxProductDetails[category]?.signal}</p>
               <ul>
-                {(vfxProductDetails[category]?.items ?? ["Trial planning", "Sample review", "Commercial fit"]).map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-              {/* VFX-WD-END product-visual */}
-              <ul className="vfx-wd-fallback-list">
                 <li>Product item 1</li>
                 <li>Product item 2</li>
                 <li>Product item 3</li>
@@ -636,7 +529,7 @@ function App() {
         </div>
       </section>
 
-      <section className="contact vfx-wd-final-cta" id="contact">
+      <section className="contact" id="contact">
         <div>
           <p className="eyebrow">White Dot LLP | Authorized Marketing and Sales</p>
           <h2>Start a formal LIMEX material inquiry with White Dot LLP.</h2>
@@ -648,37 +541,10 @@ function App() {
           </p>
         </div>
         <div className="contact-card">
-          <a className="button primary wide vfx-wd-magnetic" href={whatsappHref} target="_blank" rel="noreferrer">
+          <a className="button primary wide" href={whatsappHref} target="_blank" rel="noreferrer">
             <MessageCircle size={21} />
             WhatsApp White Dot LLP
           </a>
-          {/* VFX-WD-BEGIN contact-form */}
-          <form
-            className="vfx-wd-quote-form"
-            onSubmit={(event) => {
-              event.preventDefault();
-              window.open(whatsappHref, "_blank", "noreferrer");
-            }}
-          >
-            <label>
-              <span>Application</span>
-              <select defaultValue="Industrial molded goods">
-                <option>Industrial molded goods</option>
-                <option>Packaging and bags</option>
-                <option>Sheet and print material</option>
-                <option>Nonwoven or fabric route</option>
-              </select>
-            </label>
-            <label>
-              <span>Monthly volume</span>
-              <input placeholder="Example: 20 tons/month" />
-            </label>
-            <button className="button primary wide vfx-wd-magnetic" type="submit">
-              Request quote review
-              <ArrowRight size={18} />
-            </button>
-          </form>
-          {/* VFX-WD-END contact-form */}
           <dl>
             <div>
               <dt>Company</dt>
