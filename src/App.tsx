@@ -219,6 +219,56 @@ const sourceLinks = [
   { label: "LIMEX label guideline", href: "https://tb-m.com/doc/guidelines_limexlabel_en.pdf" },
 ];
 
+// VFX-WD-BEGIN product-data
+const vfxProductDetails: Record<string, { tag: string; signal: string; items: string[] }> = {
+  "Injection Mould": {
+    tag: "Precision molding",
+    signal: "Mineral-loaded resin trials for rigid industrial components.",
+    items: ["Dimensional stability review", "Cycle-time discussion", "Sample mold qualification"],
+  },
+  "Blow Mould [Bottle, Cans and Drums]": {
+    tag: "Container route",
+    signal: "Structured evaluation for bottles, cans, and industrial drums.",
+    items: ["Wall-thickness planning", "Drop-test pathway", "Volume-led price model"],
+  },
+  "Blow Mould [Bags]": {
+    tag: "Flexible packaging",
+    signal: "Film and bag conversations for plastic-reduction trials.",
+    items: ["Gauge and strength target", "Sealing behavior", "Load-bearing checks"],
+  },
+  Thermoforming: {
+    tag: "Formed sheet",
+    signal: "Sheet conversion pathway for trays, panels, and rigid packs.",
+    items: ["Sheet gauge selection", "Heat profile review", "Finish quality checks"],
+  },
+  "Woven Sac": {
+    tag: "Bulk packing",
+    signal: "High-volume sack and woven packaging discussion.",
+    items: ["Denier and gsm review", "Load class mapping", "Cost-room estimate"],
+  },
+  "Non Woven Sac": {
+    tag: "PP fabric route",
+    signal: "Nonwoven trial pathway for PP-heavy business formats.",
+    items: ["Dosage planning", "Fabric hand-feel", "GHG example review"],
+  },
+  "Sealant Packing": {
+    tag: "Film layer",
+    signal: "Packing-layer conversations for sealant and laminated formats.",
+    items: ["Seal temperature window", "Layer compatibility", "Trial batch checklist"],
+  },
+  "Industrial Molded Goods": {
+    tag: "Industrial parts",
+    signal: "Commercial qualification for repeated molded product lines.",
+    items: ["Part-fit review", "Machine setup planning", "Defect tracking"],
+  },
+  "FMCG Packing": {
+    tag: "Brand packaging",
+    signal: "Consumer-pack evaluation with clear claim discipline.",
+    items: ["Shelf presentation", "Label claim control", "Procurement volume model"],
+  },
+};
+// VFX-WD-END product-data
+
 function App() {
   return (
     <main className="vfx-wd-shell">
@@ -550,9 +600,17 @@ function App() {
                 <ChevronDown size={19} aria-hidden="true" />
               </summary>
               {/* VFX-WD-BEGIN product-visual */}
-              <div className="product-mineral-visual" aria-hidden="true" />
-              {/* VFX-WD-END product-visual */}
+              <div className="product-mineral-visual" aria-hidden="true">
+                <span>{vfxProductDetails[category]?.tag}</span>
+              </div>
+              <p className="vfx-wd-product-signal">{vfxProductDetails[category]?.signal}</p>
               <ul>
+                {(vfxProductDetails[category]?.items ?? ["Trial planning", "Sample review", "Commercial fit"]).map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              {/* VFX-WD-END product-visual */}
+              <ul className="vfx-wd-fallback-list">
                 <li>Product item 1</li>
                 <li>Product item 2</li>
                 <li>Product item 3</li>

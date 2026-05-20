@@ -6,11 +6,17 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const appPath = join(root, "src", "App.tsx");
 const packagePath = join(root, "package.json");
 const vfxDir = join(root, "src", "vfx-wd");
+const vfxAssets = [join(root, "public", "assets", "limex-mineral-real.webp")];
 const scriptPath = fileURLToPath(import.meta.url);
 
 function removeJsxBlock(source, name) {
   const pattern = new RegExp(`\\n?\\s*\\{\\/\\* VFX-WD-BEGIN ${name} \\*\\/\\}[\\s\\S]*?\\{\\/\\* VFX-WD-END ${name} \\*\\/\\}`, "g");
   return source.replace(pattern, "");
+}
+
+function removeTsBlock(source, name) {
+  const pattern = new RegExp(`\\n?\\/\\/ VFX-WD-BEGIN ${name}[\\s\\S]*?\\/\\/ VFX-WD-END ${name}\\n?`, "g");
+  return source.replace(pattern, "\n");
 }
 
 function stripClassToken(source, token) {
@@ -23,6 +29,7 @@ function stripClassToken(source, token) {
 if (existsSync(appPath)) {
   let app = readFileSync(appPath, "utf8");
   app = app.replace(/\n?\/\/ VFX-WD-BEGIN imports[\s\S]*?\/\/ VFX-WD-END imports\n?/g, "\n");
+  app = removeTsBlock(app, "product-data");
   app = app.replace(
     /\n?\s*\{\/\* VFX-WD-BEGIN hero-scene \*\/\}\s*<MineralHeroScene \/>\s*\{\/\* VFX-WD-END hero-scene \*\/\}/g,
     "\n      <HeroScene />",
@@ -73,6 +80,10 @@ if (existsSync(packagePath)) {
 if (existsSync(vfxDir)) {
   rmSync(vfxDir, { recursive: true, force: true });
 }
+
+vfxAssets.forEach((assetPath) => {
+  rmSync(assetPath, { force: true });
+});
 
 rmSync(scriptPath, { force: true });
 

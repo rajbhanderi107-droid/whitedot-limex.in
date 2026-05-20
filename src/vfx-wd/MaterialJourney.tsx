@@ -137,6 +137,11 @@ export default function MaterialJourney() {
           <div className="vfx-wd-journey-grid" aria-hidden="true" />
 
           <div className="vfx-wd-journey-material vfx-wd-stage-particles">
+            <div className="vfx-wd-material-label">
+              <strong>Raw mineral input</strong>
+              <span>CaCO3-rich limestone feedstock</span>
+            </div>
+            <span className="vfx-wd-ore-core" aria-hidden="true" />
             {particleMarks.map((style, index) => (
               <span
                 key={index}
@@ -154,6 +159,11 @@ export default function MaterialJourney() {
           </div>
 
           <div className="vfx-wd-journey-material vfx-wd-stage-pellets">
+            <div className="vfx-wd-material-label">
+              <strong>Compounded pellet route</strong>
+              <span>Controlled resin-compatible format</span>
+            </div>
+            <div className="vfx-wd-pellet-tray" aria-hidden="true" />
             {pelletMarks.map((style, index) => (
               <span
                 key={index}
@@ -172,13 +182,17 @@ export default function MaterialJourney() {
 
           <div className="vfx-wd-journey-material vfx-wd-stage-sheet">
             <span />
+            <i aria-hidden="true" />
             <strong>LIMEX sheet</strong>
+            <em>Engineered substrate for print, signage, and packaging trials</em>
           </div>
 
           <div className="vfx-wd-journey-material vfx-wd-stage-product">
             <span className="vfx-wd-product-body" />
             <span className="vfx-wd-product-label" />
+            <span className="vfx-wd-product-cap" />
             <strong>Industrial product</strong>
+            <em>Qualified commercial output</em>
           </div>
         </div>
 

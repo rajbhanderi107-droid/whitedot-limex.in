@@ -5,23 +5,29 @@ import LottieMicroIcon from "./LottieMicroIcon";
 const grades = {
   molding: {
     label: "Molding route",
+    shortLabel: "Molding",
     load: 54,
     ppOffset: 38,
     marginRoom: 0.16,
+    fit: "Dimension-led trials",
     recommendation: "Start with molded sample trials and dimensional stability checks.",
   },
   sheet: {
     label: "Sheet route",
+    shortLabel: "Sheet",
     load: 62,
     ppOffset: 46,
     marginRoom: 0.2,
+    fit: "Best sales fit",
     recommendation: "Best fit for sheet, print, signage, folder, and rigid packaging conversations.",
   },
   nonwoven: {
     label: "Nonwoven route",
+    shortLabel: "Nonwoven",
     load: 70,
     ppOffset: 53,
     marginRoom: 0.18,
+    fit: "PP-heavy formats",
     recommendation: "Strong route for PP-heavy formats where mineral loading and fabric behavior can be tested.",
   },
 } as const;
@@ -90,6 +96,12 @@ export default function PremiumCalculator() {
       grade,
     };
   }, [grade, monthlyTons, ppPrice]);
+  const graphBars = [
+    { label: "PP base", value: 46 },
+    { label: "PP offset", value: grade.ppOffset },
+    { label: "Mineral", value: grade.load },
+    { label: "Fit", value: Math.round(metrics.conversionFit) },
+  ];
 
   return (
     <section className="section vfx-wd-calculator" id="limex-calculator">
@@ -120,7 +132,7 @@ export default function PremiumCalculator() {
           </label>
           <label>
             <span>Current PP reference</span>
-            <strong>₹{ppPrice}/kg</strong>
+            <strong>INR {ppPrice}/kg</strong>
             <input
               type="range"
               min="70"
@@ -142,6 +154,14 @@ export default function PremiumCalculator() {
               </button>
             ))}
           </div>
+        </div>
+
+        <div className="vfx-wd-dashboard-summary" data-vfx-tilt>
+          <span>Active recommendation</span>
+          <strong>{grade.fit}</strong>
+          <p>
+            {grade.shortLabel} path modeled at {grade.load}% mineral loading for {formatNumber(metrics.monthlyKg)} kg/month.
+          </p>
         </div>
 
         <div className="vfx-wd-metric-grid">
@@ -168,7 +188,7 @@ export default function PremiumCalculator() {
           <article className="vfx-wd-metric-card" data-vfx-tilt>
             <span>Projected cost room</span>
             <strong>
-              <AnimatedNumber value={metrics.costRoom} prefix="₹" suffix="/mo" />
+              <AnimatedNumber value={metrics.costRoom} prefix="INR " suffix="/mo" />
             </strong>
             <div className="vfx-wd-meter" style={{ "--meter": metrics.conversionFit / 100 } as CSSProperties}>
               <i />
@@ -180,12 +200,16 @@ export default function PremiumCalculator() {
           <div>
             <span>PP grade comparison</span>
             <strong>{grade.label}</strong>
+            <p>Indicative planning mix for the selected commercial route.</p>
           </div>
-          <div className="vfx-wd-bars" aria-hidden="true">
-            <i style={{ "--bar": 0.46 } as CSSProperties} />
-            <i style={{ "--bar": grade.ppOffset / 100 } as CSSProperties} />
-            <i style={{ "--bar": grade.load / 100 } as CSSProperties} />
-            <i style={{ "--bar": metrics.conversionFit / 100 } as CSSProperties} />
+          <div className="vfx-wd-bars" aria-label="PP grade comparison graph">
+            {graphBars.map((bar) => (
+              <span key={bar.label} style={{ "--bar": bar.value / 100 } as CSSProperties}>
+                <i />
+                <small>{bar.label}</small>
+                <b>{bar.value}%</b>
+              </span>
+            ))}
           </div>
         </div>
 
@@ -195,7 +219,7 @@ export default function PremiumCalculator() {
           <h3>{grade.recommendation}</h3>
           <p>
             Model output: {formatNumber(metrics.mineralKg)} kg/month mineral-led material planning,
-            with an annual buying-room estimate of ₹{formatNumber(metrics.annualCostRoom)}.
+            with an annual buying-room estimate of INR {formatNumber(metrics.annualCostRoom)}.
           </p>
         </div>
       </div>

@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import type { Texture } from "three";
 
 const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path}`.replace(/\/{2,}/g, "/");
-const ROCK_TEXTURE = assetPath("assets/limex-rock.webp");
+const ROCK_TEXTURE = assetPath("assets/limex-mineral-real.webp");
 
 function randomWaypoint(
   xRange: number,
@@ -64,7 +64,6 @@ export default function MineralHeroScene() {
       scene.add(warmCore);
 
       const mineralGroup = new THREE.Group();
-      // Centered anchor so the mineral can roam to every edge and corner.
       const baseX = 0;
       const baseY = 0;
       mineralGroup.position.set(baseX, baseY, 0);
@@ -105,10 +104,12 @@ export default function MineralHeroScene() {
         loadedTexture.colorSpace = THREE.SRGBColorSpace;
         loadedTexture.wrapS = THREE.RepeatWrapping;
         loadedTexture.wrapT = THREE.RepeatWrapping;
-        loadedTexture.repeat.set(1.35, 1.35);
+        loadedTexture.repeat.set(1.08, 1.08);
+        loadedTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
         material.map = loadedTexture;
         material.bumpMap = loadedTexture;
-        material.bumpScale = 0.16;
+        material.roughnessMap = loadedTexture;
+        material.bumpScale = 0.22;
         material.needsUpdate = true;
       });
 
@@ -166,15 +167,12 @@ export default function MineralHeroScene() {
       ringOne.rotation.set(Math.PI / 2.25, 0.16, 0.24);
       mineralGroup.add(ringOne);
 
-      // Random antigravity drift — full-viewport waypoint system.
-      // The mineral wanders to every edge and corner, never on a fixed path.
       const roamX = mobile ? 1.7 : 3.2;
       const roamY = mobile ? 2.7 : 2.2;
       const roamZ = mobile ? 0.7 : 1.1;
       let waypointFrom = { x: 0, y: 0, z: 0 };
       let waypointTo = randomWaypoint(roamX, roamY, roamZ);
       let waypointProgress = 0;
-      // Each leg gets its own random speed so the motion never feels metronomic.
       let waypointSpeed = 0.05 + Math.random() * 0.06;
       const current = { x: 0, y: 0, z: 0 };
 
@@ -196,11 +194,11 @@ export default function MineralHeroScene() {
           frame = window.requestAnimationFrame(animate);
         }
 
-        const elapsed = clock.getElapsedTime();
         const dt = Math.min(clock.getDelta(), 0.05);
+        const elapsed = clock.elapsedTime;
+        const heroFade = THREE.MathUtils.clamp(window.scrollY / Math.max(window.innerHeight, 1), 0, 1);
+        canvas.style.opacity = String(1 - heroFade * 0.78);
 
-        // Advance waypoint progress; on arrival pick a fresh random target
-        // anywhere on screen with a new random travel speed.
         waypointProgress += dt * waypointSpeed;
         if (waypointProgress >= 1) {
           waypointFrom = { ...waypointTo };
@@ -209,14 +207,12 @@ export default function MineralHeroScene() {
           waypointProgress = 0;
         }
 
-        // Smooth hermite interpolation between waypoints
         const t = waypointProgress;
         const ease = t * t * (3 - 2 * t);
         const driftX = waypointFrom.x + (waypointTo.x - waypointFrom.x) * ease;
         const driftY = waypointFrom.y + (waypointTo.y - waypointFrom.y) * ease;
         const driftZ = waypointFrom.z + (waypointTo.z - waypointFrom.z) * ease;
 
-        // Layer organic wobble on top of drift for a weightless feel
         const wobbleX = Math.sin(elapsed * 0.31) * 0.08 + Math.sin(elapsed * 0.73) * 0.04;
         const wobbleY = Math.cos(elapsed * 0.27) * 0.07 + Math.sin(elapsed * 0.61) * 0.035;
 
@@ -228,7 +224,6 @@ export default function MineralHeroScene() {
         mineralGroup.position.y = baseY + current.y;
         mineralGroup.position.z = current.z;
 
-        // Slow organic rotation — no fixed axis, feels weightless
         mineralGroup.rotation.y = elapsed * 0.042 + Math.sin(elapsed * 0.19) * 0.12;
         mineralGroup.rotation.x = -0.08 + Math.sin(elapsed * 0.15) * 0.08 + Math.cos(elapsed * 0.23) * 0.04;
 
