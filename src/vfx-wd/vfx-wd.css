@@ -203,6 +203,8 @@
   background: radial-gradient(circle at 30% 30%, #f5ead4, #c9b896);
   box-shadow: 0 0 0.8rem rgba(216, 178, 122, 0.5);
   transform: translate3d(var(--x), var(--y), 0) rotate(var(--r)) scale(var(--s));
+  animation: vfxWdParticleFloat 4.5s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
 }
 
 .vfx-wd-stage-pellets span {
@@ -217,6 +219,8 @@
     0 0 12px rgba(216, 178, 122, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.55);
   transform: translate3d(var(--x), var(--y), 0) rotate(var(--r)) scale(var(--s));
+  animation: vfxWdPelletDrift 5.5s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
 }
 
 .vfx-wd-stage-sheet span {
@@ -233,6 +237,7 @@
     0 0 24px rgba(245, 241, 232, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.42);
   transform: rotateX(58deg) rotateZ(-18deg);
+  animation: vfxWdSheetSway 6.5s ease-in-out infinite;
 }
 
 .vfx-wd-stage-product .vfx-wd-product-body {
@@ -247,6 +252,7 @@
     0 36px 86px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.54);
   transform: rotateX(8deg) rotateY(-13deg);
+  animation: vfxWdProductTurn 7.5s ease-in-out infinite;
 }
 
 .vfx-wd-stage-sheet strong,
@@ -678,6 +684,50 @@
   }
 }
 
+@keyframes vfxWdParticleFloat {
+  0%,
+  100% {
+    transform: translate3d(var(--x), var(--y), 0) rotate(var(--r)) scale(var(--s));
+  }
+
+  50% {
+    transform: translate3d(calc(var(--x) + 0.3rem), calc(var(--y) - 0.55rem), 0) rotate(calc(var(--r) + 22deg)) scale(var(--s));
+  }
+}
+
+@keyframes vfxWdPelletDrift {
+  0%,
+  100% {
+    transform: translate3d(var(--x), var(--y), 0) rotate(var(--r)) scale(var(--s));
+  }
+
+  50% {
+    transform: translate3d(var(--x), calc(var(--y) - 0.28rem), 0) rotate(calc(var(--r) - 14deg)) scale(var(--s));
+  }
+}
+
+@keyframes vfxWdSheetSway {
+  0%,
+  100% {
+    transform: rotateX(58deg) rotateZ(-18deg);
+  }
+
+  50% {
+    transform: rotateX(53deg) rotateZ(-14deg);
+  }
+}
+
+@keyframes vfxWdProductTurn {
+  0%,
+  100% {
+    transform: rotateX(8deg) rotateY(-13deg);
+  }
+
+  50% {
+    transform: rotateX(6deg) rotateY(-5deg);
+  }
+}
+
 @media (max-width: 920px) {
   .vfx-wd-hero-panel {
     max-width: 100%;
@@ -749,7 +799,11 @@
   .product-mineral-visual::after,
   .vfx-wd-trust-card::before,
   .vfx-wd-verified-badge,
-  .vfx-wd-quote-form {
+  .vfx-wd-quote-form,
+  .vfx-wd-stage-particles span,
+  .vfx-wd-stage-pellets span,
+  .vfx-wd-stage-sheet span,
+  .vfx-wd-stage-product .vfx-wd-product-body {
     animation: none !important;
   }
 

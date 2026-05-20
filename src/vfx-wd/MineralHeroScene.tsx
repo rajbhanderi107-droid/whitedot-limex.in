@@ -4,11 +4,15 @@ import type { Texture } from "three";
 const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path}`.replace(/\/{2,}/g, "/");
 const ROCK_TEXTURE = assetPath("assets/limex-rock.webp");
 
-function randomWaypoint(range: number): { x: number; y: number; z: number } {
+function randomWaypoint(
+  xRange: number,
+  yRange: number,
+  zRange: number,
+): { x: number; y: number; z: number } {
   return {
-    x: (Math.random() - 0.5) * range,
-    y: (Math.random() - 0.5) * range * 0.6,
-    z: (Math.random() - 0.5) * range * 0.3,
+    x: (Math.random() - 0.5) * 2 * xRange,
+    y: (Math.random() - 0.5) * 2 * yRange,
+    z: (Math.random() - 0.5) * 2 * zRange,
   };
 }
 
@@ -60,8 +64,9 @@ export default function MineralHeroScene() {
       scene.add(warmCore);
 
       const mineralGroup = new THREE.Group();
-      const baseX = mobile ? 0.68 : 1.88;
-      const baseY = mobile ? 0.78 : 0.08;
+      // Centered anchor so the mineral can roam to every edge and corner.
+      const baseX = 0;
+      const baseY = 0;
       mineralGroup.position.set(baseX, baseY, 0);
       scene.add(mineralGroup);
 
@@ -161,12 +166,16 @@ export default function MineralHeroScene() {
       ringOne.rotation.set(Math.PI / 2.25, 0.16, 0.24);
       mineralGroup.add(ringOne);
 
-      // Random antigravity drift — waypoint system
-      const driftRange = mobile ? 0.4 : 0.7;
+      // Random antigravity drift — full-viewport waypoint system.
+      // The mineral wanders to every edge and corner, never on a fixed path.
+      const roamX = mobile ? 1.7 : 3.2;
+      const roamY = mobile ? 2.7 : 2.2;
+      const roamZ = mobile ? 0.7 : 1.1;
       let waypointFrom = { x: 0, y: 0, z: 0 };
-      let waypointTo = randomWaypoint(driftRange);
+      let waypointTo = randomWaypoint(roamX, roamY, roamZ);
       let waypointProgress = 0;
-      const waypointSpeed = 0.08 + Math.random() * 0.04;
+      // Each leg gets its own random speed so the motion never feels metronomic.
+      let waypointSpeed = 0.05 + Math.random() * 0.06;
       const current = { x: 0, y: 0, z: 0 };
 
       const clock = new THREE.Clock();
@@ -190,11 +199,13 @@ export default function MineralHeroScene() {
         const elapsed = clock.getElapsedTime();
         const dt = Math.min(clock.getDelta(), 0.05);
 
-        // Advance waypoint progress
+        // Advance waypoint progress; on arrival pick a fresh random target
+        // anywhere on screen with a new random travel speed.
         waypointProgress += dt * waypointSpeed;
         if (waypointProgress >= 1) {
           waypointFrom = { ...waypointTo };
-          waypointTo = randomWaypoint(driftRange);
+          waypointTo = randomWaypoint(roamX, roamY, roamZ);
+          waypointSpeed = 0.05 + Math.random() * 0.06;
           waypointProgress = 0;
         }
 
@@ -205,13 +216,13 @@ export default function MineralHeroScene() {
         const driftY = waypointFrom.y + (waypointTo.y - waypointFrom.y) * ease;
         const driftZ = waypointFrom.z + (waypointTo.z - waypointFrom.z) * ease;
 
-        // Layer organic wobble on top of drift
-        const wobbleX = Math.sin(elapsed * 0.31) * 0.06 + Math.sin(elapsed * 0.73) * 0.03;
-        const wobbleY = Math.cos(elapsed * 0.27) * 0.05 + Math.sin(elapsed * 0.61) * 0.025;
+        // Layer organic wobble on top of drift for a weightless feel
+        const wobbleX = Math.sin(elapsed * 0.31) * 0.08 + Math.sin(elapsed * 0.73) * 0.04;
+        const wobbleY = Math.cos(elapsed * 0.27) * 0.07 + Math.sin(elapsed * 0.61) * 0.035;
 
-        current.x = THREE.MathUtils.lerp(current.x, driftX + wobbleX, 0.02);
-        current.y = THREE.MathUtils.lerp(current.y, driftY + wobbleY, 0.02);
-        current.z = THREE.MathUtils.lerp(current.z, driftZ, 0.02);
+        current.x = THREE.MathUtils.lerp(current.x, driftX + wobbleX, 0.03);
+        current.y = THREE.MathUtils.lerp(current.y, driftY + wobbleY, 0.03);
+        current.z = THREE.MathUtils.lerp(current.z, driftZ, 0.03);
 
         mineralGroup.position.x = baseX + current.x;
         mineralGroup.position.y = baseY + current.y;
