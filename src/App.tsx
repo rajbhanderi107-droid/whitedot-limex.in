@@ -30,6 +30,10 @@ import "./vfx-wd/vfx-wd.css";
 import { ContinuityShell } from "./continuity-wd";
 import "./continuity-wd/continuity-wd.css";
 // CONTINUITY-WD-END imports
+// SOUND-WD-BEGIN imports
+import { SoundToggle, SoundTriggers } from "./sound-wd";
+import "./sound-wd/sound-wd.css";
+// SOUND-WD-END imports
 
 const whatsappNumber = "918849728938";
 const whatsappMessage =
@@ -223,6 +227,9 @@ function App() {
       {/* CONTINUITY-WD-BEGIN overlay */}
       <ContinuityShell />
       {/* CONTINUITY-WD-END overlay */}
+      {/* SOUND-WD-BEGIN triggers */}
+      <SoundTriggers />
+      {/* SOUND-WD-END triggers */}
       <nav className="site-nav" aria-label="Primary navigation">
         <a className="brand" href="#home" aria-label="White Dot LLP home">
           <img className="brand-symbol" src={assetPath("assets/whitedot-logo-enhanced.svg")} alt="" />
@@ -639,6 +646,9 @@ function App() {
       <footer>
         <span>White Dot LLP</span>
         <span>Authorized access to LIMEX material. Clear guidance for practical adoption.</span>
+        {/* SOUND-WD-BEGIN toggle */}
+        <SoundToggle />
+        {/* SOUND-WD-END toggle */}
       </footer>
     </main>
   );
