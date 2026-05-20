@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { SupplyFlow } from "./SupplyFlow";
 import { MaterialIntelligence } from "./MaterialIntelligence";
 import { IndustryApplications } from "./IndustryApplications";
-import { AiEngine } from "./AiEngine";
+import { MaterialCore } from "./MaterialCore";
 import { useLenis } from "./useLenis";
 
 // Heavy three.js scene is lazy-loaded so the page shell paints immediately.
@@ -99,8 +99,8 @@ export default function CinematicApp() {
       </section>
 
       <MaterialIntelligence />
+      <MaterialCore />
       <IndustryApplications />
-      <AiEngine />
     </main>
   );
 }
