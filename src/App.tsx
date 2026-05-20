@@ -15,7 +15,6 @@ import {
   Split,
   Target,
 } from "lucide-react";
-import HeroScene from "./HeroScene";
 
 // CONTINUITY-WD-BEGIN imports
 import { ContinuityShell } from "./continuity-wd";
@@ -26,6 +25,10 @@ import "./continuity-wd/continuity-wd.css";
 import { AggregationLoader } from "./aggregation-wd";
 import "./aggregation-wd/aggregation-wd.css";
 // AGGREGATION-WD-END imports
+// GOD-WD-BEGIN imports
+import { LegalBriefs, LimexComposition, LimexComparison } from "./god-wd";
+import "./god-wd/god-wd.css";
+// GOD-WD-END imports
 
 const whatsappNumber = "918849728938";
 const whatsappMessage =
@@ -212,7 +215,6 @@ const sourceLinks = [
 function App() {
   return (
     <main>
-      <HeroScene />
       {/* CONTINUITY-WD-BEGIN overlay */}
       <ContinuityShell />
       {/* CONTINUITY-WD-END overlay */}
@@ -231,6 +233,9 @@ function App() {
           <a href="#about">About</a>
           <a href="#authorization">Authorization</a>
           <a href="#material">Material</a>
+          {/* GOD-WD-BEGIN nav-link */}
+          <a href="#limex-vs-fillers">vs Fillers</a>
+          {/* GOD-WD-END nav-link */}
           <a href="#education">Education</a>
           <a href="#impact-data">Impact</a>
           <a href="#applications">Applications</a>
@@ -290,6 +295,10 @@ function App() {
           </div>
         </div>
       </section>
+
+      {/* GOD-WD-BEGIN briefs */}
+      <LegalBriefs />
+      {/* GOD-WD-END briefs */}
 
       <section className="section about" id="about">
         <div className="section-kicker">
@@ -370,6 +379,14 @@ function App() {
           ))}
         </div>
       </section>
+
+      {/* GOD-WD-BEGIN composition */}
+      <LimexComposition />
+      {/* GOD-WD-END composition */}
+
+      {/* GOD-WD-BEGIN comparison */}
+      <LimexComparison />
+      {/* GOD-WD-END comparison */}
 
       <section className="section education" id="education">
         <div className="section-kicker">

@@ -125,7 +125,7 @@ export function createParticles(
 
       const fadeOut = pt > 0.7 ? 1 - (pt - 0.7) / 0.3 : 1;
       ctx.globalAlpha = p.alpha * fadeOut;
-      ctx.fillStyle = "#f5f1e8";
+      ctx.fillStyle = "#b15a3a";
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
       ctx.fill();

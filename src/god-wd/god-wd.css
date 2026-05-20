@@ -1,0 +1,586 @@
+/* GOD-WD — legal briefs + LIMEX vs local filler comparison.
+   Extends the existing dark mineral palette. All classes prefixed god-wd-. */
+
+.god-wd-briefs,
+.god-wd-compare {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Legal briefs ---------- */
+.god-wd-brief-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.1rem;
+  margin-top: 2.4rem;
+}
+
+.god-wd-brief-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.6rem 1.5rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--panel);
+  backdrop-filter: blur(8px);
+  overflow: visible;
+}
+
+.god-wd-brief-step {
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  color: var(--steel);
+  font-variant-numeric: tabular-nums;
+}
+
+.god-wd-brief-icon {
+  color: var(--white);
+  opacity: 0.85;
+  margin-top: 0.1rem;
+}
+
+.god-wd-brief-card h3 {
+  margin: 0.35rem 0 0;
+  font-size: 1.08rem;
+  line-height: 1.3;
+  color: var(--white);
+}
+
+.god-wd-brief-card strong {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.god-wd-brief-card p {
+  margin: 0.4rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* connecting arrow between brief cards */
+.god-wd-brief-arrow {
+  position: absolute;
+  top: 50%;
+  right: -0.85rem;
+  width: 1.7rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--steel));
+  z-index: 2;
+}
+.god-wd-brief-arrow::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-top: 1px solid var(--steel);
+  border-right: 1px solid var(--steel);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.god-wd-brief-note {
+  margin-top: 1.5rem;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--muted);
+  opacity: 0.7;
+  max-width: 60ch;
+}
+
+/* ---------- Comparison: metric strip ---------- */
+.god-wd-metric-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 2.4rem;
+}
+
+.god-wd-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.3rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: linear-gradient(160deg, #ffffff, #f7f2e9);
+}
+
+.god-wd-metric-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.god-wd-metric-values {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.god-wd-metric-limex {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.1;
+}
+
+.god-wd-metric-vs {
+  font-size: 0.72rem;
+  color: var(--steel);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.god-wd-metric-local {
+  font-size: 0.95rem;
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: rgba(201, 194, 180, 0.4);
+}
+
+.god-wd-metric p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* ---------- Comparison: filter tabs ---------- */
+.god-wd-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 2.4rem;
+  padding: 0.35rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  width: fit-content;
+  max-width: 100%;
+}
+
+.god-wd-filter-tab {
+  position: relative;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-family: inherit;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+.god-wd-filter-tab:hover {
+  color: var(--white);
+}
+.god-wd-filter-tab.is-active {
+  color: var(--on-accent);
+}
+.god-wd-filter-tab span {
+  position: relative;
+  z-index: 1;
+}
+.god-wd-filter-pill {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  z-index: 0;
+}
+.god-wd-filter-tab:focus-visible {
+  outline: 2px solid var(--steel);
+  outline-offset: 2px;
+}
+
+/* ---------- Comparison: table ---------- */
+.god-wd-compare-head {
+  display: grid;
+  grid-template-columns: 1.1fr 1.4fr 1.4fr;
+  gap: 1rem;
+  margin-top: 1.8rem;
+  padding: 0 1.2rem 0.6rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+}
+.god-wd-col-limex {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--white);
+}
+
+.god-wd-compare-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-top: 0.9rem;
+}
+
+.god-wd-row {
+  display: grid;
+  grid-template-columns: 1.1fr 1.4fr 1.4fr;
+  gap: 1rem;
+  align-items: start;
+  padding: 1.05rem 1.2rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.god-wd-row:hover {
+  border-color: rgba(177, 90, 58, 0.3);
+  background: #fffdf8;
+}
+
+.god-wd-row-aspect {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--white);
+}
+.god-wd-row-aspect svg {
+  color: var(--steel);
+  flex-shrink: 0;
+}
+
+.god-wd-row-limex,
+.god-wd-row-local {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.god-wd-row-limex p,
+.god-wd-row-local p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.god-wd-row-limex p {
+  color: var(--white);
+}
+.god-wd-row-local p {
+  color: var(--muted);
+}
+
+.god-wd-tag {
+  display: none;
+  width: fit-content;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+}
+.god-wd-tag-limex {
+  background: var(--accent-tint);
+  color: var(--accent-deep);
+}
+.god-wd-tag-local {
+  background: rgba(201, 194, 180, 0.1);
+  color: var(--muted);
+}
+
+/* left rail accent: highlight the LIMEX column */
+.god-wd-row-limex {
+  position: relative;
+  padding-left: 0.9rem;
+}
+.god-wd-row-limex::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+  bottom: 0.1rem;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-soft));
+}
+
+.god-wd-compare-note {
+  margin-top: 1.6rem;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--muted);
+  opacity: 0.7;
+  max-width: 70ch;
+}
+
+/* ---------- Inside LIMEX: composition ---------- */
+.god-wd-comp-bar-wrap {
+  margin-top: 2.4rem;
+}
+.god-wd-comp-bar {
+  display: flex;
+  height: 64px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.god-wd-comp-caco3 {
+  display: flex;
+  align-items: center;
+  padding-left: 1.1rem;
+  background: linear-gradient(120deg, #f5f1e8, #cfc8b6);
+  min-width: 38%;
+}
+.god-wd-comp-resin {
+  display: flex;
+  align-items: center;
+  padding-left: 1.1rem;
+  flex: 1;
+  background: linear-gradient(120deg, #efe8da, #e4dccb);
+}
+.god-wd-comp-tag {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.god-wd-comp-caco3 .god-wd-comp-tag {
+  color: #10140f;
+}
+.god-wd-comp-resin .god-wd-comp-tag {
+  color: var(--white);
+}
+
+/* process flow */
+.god-wd-flow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.1rem;
+  margin-top: 1.6rem;
+}
+.god-wd-flow-step {
+  position: relative;
+  padding: 1.5rem 1.4rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+}
+.god-wd-flow-num {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: var(--steel);
+  font-variant-numeric: tabular-nums;
+}
+.god-wd-flow-icon {
+  display: block;
+  margin: 0.6rem 0 0.5rem;
+  color: var(--white);
+  opacity: 0.9;
+}
+.god-wd-flow-step h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.02rem;
+  color: var(--white);
+}
+.god-wd-flow-step p {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.god-wd-flow-arrow {
+  position: absolute;
+  top: 50%;
+  right: -0.85rem;
+  color: var(--steel);
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+/* property chips */
+.god-wd-props {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+}
+.god-wd-prop {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.god-wd-prop strong {
+  font-size: 0.92rem;
+  color: var(--white);
+}
+.god-wd-prop span {
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+/* ---------- Verdict callout ---------- */
+.god-wd-verdict {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 2.2rem;
+  padding: 1.9rem 1.9rem;
+  border: 1px solid rgba(177, 90, 58, 0.2);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 88% 0%, var(--accent-tint), transparent 60%),
+    linear-gradient(150deg, #ffffff, #f7f1e7);
+  box-shadow: 0 16px 40px rgba(42, 37, 30, 0.08);
+}
+.god-wd-verdict-body {
+  flex: 1 1 360px;
+}
+.god-wd-verdict-kicker {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+.god-wd-verdict-body h3 {
+  margin: 0.5rem 0 1rem;
+  font-size: 1.4rem;
+  line-height: 1.25;
+  color: var(--white);
+}
+.god-wd-verdict-body ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.god-wd-verdict-body li {
+  display: flex;
+  gap: 0.6rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.god-wd-verdict-body li svg {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  color: var(--accent);
+}
+.god-wd-verdict-note {
+  margin: 1rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--muted);
+  opacity: 0.78;
+  max-width: 60ch;
+}
+.god-wd-verdict-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  padding: 0.85rem 1.5rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  color: var(--on-accent);
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.god-wd-verdict-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(177, 90, 58, 0.3);
+}
+.god-wd-verdict-cta:focus-visible {
+  outline: 2px solid var(--steel);
+  outline-offset: 3px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .god-wd-brief-grid {
+    grid-template-columns: 1fr;
+  }
+  .god-wd-brief-arrow {
+    top: auto;
+    bottom: -0.85rem;
+    right: 50%;
+    width: 1px;
+    height: 1.7rem;
+    background: linear-gradient(180deg, transparent, var(--steel));
+    transform: translateX(50%);
+  }
+  .god-wd-brief-arrow::after {
+    right: 50%;
+    top: auto;
+    bottom: 0;
+    transform: translateX(50%) rotate(135deg);
+  }
+  .god-wd-metric-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .god-wd-flow {
+    grid-template-columns: 1fr;
+  }
+  .god-wd-flow-arrow {
+    top: auto;
+    bottom: -0.85rem;
+    right: 50%;
+    transform: translateX(50%) rotate(90deg);
+  }
+}
+
+@media (max-width: 680px) {
+  .god-wd-compare-head {
+    display: none;
+  }
+  .god-wd-row {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+  }
+  .god-wd-row-aspect {
+    font-size: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .god-wd-tag {
+    display: inline-block;
+  }
+  .god-wd-row-limex {
+    padding-left: 0;
+  }
+  .god-wd-row-limex::before {
+    display: none;
+  }
+}
+
+@media (max-width: 460px) {
+  .god-wd-metric-strip {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .god-wd-row,
+  .god-wd-filter-tab,
+  .god-wd-brief-card {
+    transition: none;
+  }
+}
