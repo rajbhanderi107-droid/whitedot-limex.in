@@ -1,19 +1,19 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App";
-import "./styles.css";
-import "./corporate.css";
-import "./content-updates.css";
-// CONTINUITY-WD-BEGIN bootstrap
-import { registerContinuityServiceWorker } from "./continuity-wd/registerServiceWorker";
-// CONTINUITY-WD-END bootstrap
+import CinematicApp from "./cinematic/CinematicApp";
+import "./cinematic/cinematic.css";
+
+// Retire any previously-registered service worker (from the prior site) so it
+// cannot serve stale cached content over the new experience.
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .getRegistrations()
+    .then((regs) => regs.forEach((r) => r.unregister()))
+    .catch(() => {});
+}
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <CinematicApp />
   </StrictMode>,
 );
-
-// CONTINUITY-WD-BEGIN sw-register
-registerContinuityServiceWorker();
-// CONTINUITY-WD-END sw-register
