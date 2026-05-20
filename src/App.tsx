@@ -34,6 +34,10 @@ import "./continuity-wd/continuity-wd.css";
 import { SoundToggle, SoundTriggers } from "./sound-wd";
 import "./sound-wd/sound-wd.css";
 // SOUND-WD-END imports
+// AGGREGATION-WD-BEGIN imports
+import { AggregationLoader } from "./aggregation-wd";
+import "./aggregation-wd/aggregation-wd.css";
+// AGGREGATION-WD-END imports
 
 const whatsappNumber = "918849728938";
 const whatsappMessage =
@@ -230,6 +234,9 @@ function App() {
       {/* SOUND-WD-BEGIN triggers */}
       <SoundTriggers />
       {/* SOUND-WD-END triggers */}
+      {/* AGGREGATION-WD-BEGIN loader */}
+      <AggregationLoader />
+      {/* AGGREGATION-WD-END loader */}
       <nav className="site-nav" aria-label="Primary navigation">
         <a className="brand" href="#home" aria-label="White Dot LLP home">
           <img className="brand-symbol" src={assetPath("assets/whitedot-logo-enhanced.svg")} alt="" />

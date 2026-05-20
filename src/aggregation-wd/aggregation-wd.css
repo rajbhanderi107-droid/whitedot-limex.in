@@ -1,0 +1,7 @@
+/* Aggregation Sequence — canvas layer sits above inline loader */
+.agg-wd-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;
+}
