@@ -1,21 +1,37 @@
-import { Suspense, useMemo, useRef, type RefObject } from "react";
+import {
+  Component,
+  Suspense,
+  useMemo,
+  useRef,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Sparkles } from "@react-three/drei";
+import { Sparkles, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
 const ACCENT = "#9aa893";
-type ScrollRef = RefObject<number>;
+// Drop your model here (Draco-compressed GLB recommended): public/models/limex-core.glb
+const MODEL_URL = `${import.meta.env.BASE_URL}models/limex-core.glb`;
 
+type ScrollRef = RefObject<number>;
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-// progress within [from,to] mapped to 0..1
 const seg = (p: number, from: number, to: number) => clamp((p - from) / (to - from));
 const ease = (t: number) => 1 - Math.pow(1 - t, 3);
 
-function Core({ scroll }: { scroll: ScrollRef }) {
-  const group = useRef<THREE.Group>(null);
-  const shells = useRef<THREE.Group>(null);
-  const rings = useRef<THREE.Group>(null);
+/** Catches a missing/failed GLB and renders the procedural fallback instead. */
+class ModelBoundary extends Component<{ fallback: ReactNode; children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    return this.state.failed ? this.props.fallback : this.props.children;
+  }
+}
 
+/** Procedural calcium-carbonate crystal (default + fallback). */
+function ProceduralMesh() {
   const geo = useMemo(() => {
     const g = new THREE.IcosahedronGeometry(1.45, 5);
     const pos = g.attributes.position as THREE.BufferAttribute;
@@ -29,84 +45,74 @@ function Core({ scroll }: { scroll: ScrollRef }) {
     g.computeVertexNormals();
     return g;
   }, []);
-
-  useFrame((state, delta) => {
-    const p = scroll.current ?? 0;
-    const g = group.current;
-    if (!g) return;
-
-    // continuous + scroll rotation (faster around stage 3)
-    const spin = 0.1 + seg(p, 0.5, 0.72) * 0.5;
-    g.rotation.y += delta * spin;
-    g.rotation.x = Math.sin(p * Math.PI) * 0.18;
-
-    // Stage 1 (0..0.25): form / scale up from a seed
-    const form = ease(seg(p, 0, 0.25));
-    const baseScale = 0.35 + form * 0.65;
-    g.scale.setScalar(baseScale);
-
-    // cursor parallax (subtle)
-    g.position.x += (state.pointer.x * 0.25 - g.position.x) * 0.04;
-
-    // Stage 2 (0.25..0.5): shells separate outward, then merge back by 0.55
-    const open = seg(p, 0.28, 0.5) * (1 - seg(p, 0.5, 0.62));
-    if (shells.current) {
-      shells.current.children.forEach((child, i) => {
-        const m = child as THREE.Mesh;
-        const k = 1 + open * (0.18 + i * 0.16);
-        m.scale.setScalar(k);
-        const mat = m.material as THREE.MeshBasicMaterial;
-        mat.opacity = open * (0.5 - i * 0.1);
-      });
-    }
-
-    // Stage 4 (0.75..1): rings tilt into a flat aligned orbit + fade in
-    const settle = ease(seg(p, 0.72, 1));
-    if (rings.current) {
-      rings.current.rotation.x = (1 - settle) * 1.1 + Math.PI / 2 * settle;
-      rings.current.rotation.z += delta * 0.15;
-      rings.current.children.forEach((child) => {
-        const m = child as THREE.Mesh;
-        (m.material as THREE.MeshBasicMaterial).opacity = 0.12 + settle * 0.35;
-      });
-    }
-  });
-
   return (
-    <group ref={group}>
-      {/* main mineral core */}
+    <>
       <mesh geometry={geo}>
-        <meshStandardMaterial
-          color="#e8e4da"
-          metalness={0.12}
-          roughness={0.5}
-          flatShading
-          emissive={ACCENT}
-          emissiveIntensity={0.06}
-        />
+        <meshStandardMaterial color="#e8e4da" metalness={0.12} roughness={0.5} flatShading emissive={ACCENT} emissiveIntensity={0.06} />
       </mesh>
-      {/* inner glow seed */}
       <mesh scale={0.6}>
         <icosahedronGeometry args={[1, 1]} />
         <meshBasicMaterial color={ACCENT} transparent opacity={0.18} />
       </mesh>
-      {/* engineered shells (separate in stage 2) */}
-      <group ref={shells}>
-        {[0, 1, 2].map((i) => (
-          <mesh key={i} geometry={geo}>
-            <meshBasicMaterial color={i === 1 ? "#cfcabd" : ACCENT} wireframe transparent opacity={0} />
-          </mesh>
-        ))}
-      </group>
-      {/* technical rings (align in stage 4) */}
-      <group ref={rings}>
-        {[2.5, 2.9, 3.3].map((r, i) => (
-          <mesh key={r} rotation={[0, 0, (i * Math.PI) / 5]}>
-            <torusGeometry args={[r, 0.012, 8, 120]} />
-            <meshBasicMaterial color={ACCENT} transparent opacity={0.12} />
-          </mesh>
-        ))}
-      </group>
+    </>
+  );
+}
+
+/** User-supplied GLB model, normalized to a consistent size + centered. */
+function ModelMesh() {
+  const { scene } = useGLTF(MODEL_URL, true);
+  const obj = useMemo(() => {
+    const clone = scene.clone();
+    const box = new THREE.Box3().setFromObject(clone);
+    const size = box.getSize(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+    const k = 3 / maxDim; // normalize largest dimension to ~3 units
+    clone.scale.setScalar(k);
+    const center = box.getCenter(new THREE.Vector3()).multiplyScalar(k);
+    clone.position.sub(center);
+    return clone;
+  }, [scene]);
+  return <primitive object={obj} />;
+}
+
+/** Shared scroll-driven group: forms, rotates, parallax, settles. */
+function CoreGroup({ scroll, children }: { scroll: ScrollRef; children: ReactNode }) {
+  const group = useRef<THREE.Group>(null);
+  useFrame((state, delta) => {
+    const p = scroll.current ?? 0;
+    const g = group.current;
+    if (!g) return;
+    g.rotation.y += delta * (0.1 + seg(p, 0.5, 0.72) * 0.5);
+    g.rotation.x = Math.sin(p * Math.PI) * 0.16;
+    const form = ease(seg(p, 0, 0.25));
+    const open = seg(p, 0.28, 0.5) * (1 - seg(p, 0.5, 0.62));
+    g.scale.setScalar(0.4 + form * 0.6 + open * 0.12);
+    g.position.x += (state.pointer.x * 0.25 - g.position.x) * 0.04;
+  });
+  return <group ref={group}>{children}</group>;
+}
+
+function Rings({ scroll }: { scroll: ScrollRef }) {
+  const rings = useRef<THREE.Group>(null);
+  useFrame((_, delta) => {
+    const p = scroll.current ?? 0;
+    const settle = ease(seg(p, 0.72, 1));
+    const g = rings.current;
+    if (!g) return;
+    g.rotation.x = (1 - settle) * 1.1 + (Math.PI / 2) * settle;
+    g.rotation.z += delta * 0.15;
+    g.children.forEach((c) => {
+      ((c as THREE.Mesh).material as THREE.MeshBasicMaterial).opacity = 0.12 + settle * 0.35;
+    });
+  });
+  return (
+    <group ref={rings}>
+      {[2.5, 2.9, 3.3].map((r, i) => (
+        <mesh key={r} rotation={[0, 0, (i * Math.PI) / 5]}>
+          <torusGeometry args={[r, 0.012, 8, 120]} />
+          <meshBasicMaterial color={ACCENT} transparent opacity={0.12} />
+        </mesh>
+      ))}
     </group>
   );
 }
@@ -119,7 +125,14 @@ function Scene({ scroll }: { scroll: ScrollRef }) {
       <directionalLight position={[-3, 4, 5]} intensity={1.9} color="#f6f7f4" />
       <directionalLight position={[5, -2, -3]} intensity={1.8} color={ACCENT} />
       <pointLight position={[0, -3, 4]} intensity={0.9} color="#cfcabd" />
-      <Core scroll={scroll} />
+      <CoreGroup scroll={scroll}>
+        <ModelBoundary fallback={<ProceduralMesh />}>
+          <Suspense fallback={<ProceduralMesh />}>
+            <ModelMesh />
+          </Suspense>
+        </ModelBoundary>
+      </CoreGroup>
+      <Rings scroll={scroll} />
       <Sparkles count={70} scale={[9, 7, 5]} size={2.2} speed={0.25} opacity={0.5} color={ACCENT} />
     </>
   );
@@ -133,9 +146,7 @@ export default function LimexCore3D({ scroll }: { scroll: ScrollRef }) {
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       camera={{ position: [0, 0, 6], fov: 42 }}
     >
-      <Suspense fallback={null}>
-        <Scene scroll={scroll} />
-      </Suspense>
+      <Scene scroll={scroll} />
     </Canvas>
   );
 }
