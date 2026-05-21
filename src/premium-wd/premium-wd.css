@@ -87,3 +87,44 @@
   transition-duration: 0.2s !important;
   will-change: auto !important;
 }
+
+/* ── Round-2 premium additions: neutralize in simple mode ── */
+
+/* Scroll-progress bar — hidden entirely in simple mode */
+:root[data-premium="off"] .wd-scroll-progress {
+  display: none !important;
+}
+
+/* Scroll-tone backdrop — invisible in simple mode (body bg is enough) */
+:root[data-premium="off"] .wd-tone-layer {
+  display: none !important;
+}
+
+/* Drifting hero atmosphere — premium only, already conditionally rendered
+   in JSX but belt-and-suspenders here */
+:root[data-premium="off"] .cine-hero-atmosphere {
+  display: none !important;
+}
+
+/* Section dividers — hidden in simple mode (already gated above but explicit) */
+:root[data-premium="off"] .wd-section-divider {
+  display: none !important;
+}
+
+/* CTA sheen pseudo-element — no ::after sheen in simple mode */
+:root[data-premium="off"] .cine-btn-primary::after {
+  display: none !important;
+}
+
+/* Hero h1 — revert to the comfortable simple-mode scale */
+:root[data-premium="off"] .cine-hero h1 {
+  font-size: clamp(2.4rem, 7vw, 6rem) !important;
+  letter-spacing: -0.03em !important;
+  filter: none !important;
+}
+
+/* "Replace Plastic" gradient — simpler in plain mode */
+:root[data-premium="off"] .cine-hero h1 .grad {
+  background: linear-gradient(120deg, var(--c-accent), #e4ded4 60%, var(--c-accent-2)) !important;
+  filter: none !important;
+}

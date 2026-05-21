@@ -17,8 +17,14 @@
   --c-accent-glow: rgba(154, 168, 147, 0.45);
   --c-eco: #8fa389; /* sage / sustainability */
   --c-eco-soft: rgba(122, 133, 124, 0.2);
+  /* Limestone-cream highlight — second accent for key words (on-brand, mineral) */
+  --c-cream: #f5f1e8;
+  --c-cream-2: #efe9dd;
   --c-maxw: 1240px;
   --c-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Scroll-tone journey custom properties — set by JS in CinematicApp */
+  --wd-scroll: 0;
+  --wd-scroll-warm: 0;
 }
 
 * {
@@ -303,21 +309,51 @@ a {
 .cine-hero h1 {
   margin: 0 0 1.4rem;
   max-width: 16ch;
-  font-size: clamp(3rem, 8.5vw, 8.2rem);
+  /* DRAMATIC display scale — obviously bigger than before */
+  font-size: clamp(3.4rem, 11vw, 10rem);
   font-weight: 800;
-  line-height: 0.94;
-  letter-spacing: -0.035em;
+  line-height: 0.91;
+  letter-spacing: -0.04em;
   color: #fff;
-  /* Sharpen rendering on the large display size */
   text-rendering: geometricPrecision;
-  /* Optical size hint for variable fonts */
   font-optical-sizing: auto;
 }
+
+/* Premium: extra tightness on the headline for maximum visual weight */
+:root[data-premium="on"] .cine-hero h1 {
+  font-size: clamp(3.4rem, 11vw, 10rem);
+  letter-spacing: -0.045em;
+}
+
+/* "Replace Plastic" — limestone-cream → sage gradient. Clearly reads as special. */
 .cine-hero h1 .grad {
-  background: linear-gradient(120deg, var(--c-accent), #e4ded4 60%, var(--c-accent-2));
+  background: linear-gradient(
+    115deg,
+    var(--c-cream) 0%,
+    #ddd8c4 28%,
+    var(--c-accent) 60%,
+    var(--c-accent-2) 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* Premium: stronger, more luminous cream-to-sage on "Replace Plastic" */
+:root[data-premium="on"] .cine-hero h1 .grad {
+  background: linear-gradient(
+    112deg,
+    var(--c-cream) 0%,
+    var(--c-cream-2) 22%,
+    #c8c2ae 42%,
+    var(--c-accent) 64%,
+    var(--c-accent-2) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Subtle shimmer aura behind the gradient text in premium */
+  filter: drop-shadow(0 0 40px rgba(245, 241, 232, 0.18));
 }
 .cine-hero-sub {
   max-width: 56ch;
@@ -580,6 +616,224 @@ a {
   opacity: 0.045;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   BOLD PREMIUM ADDITIONS — ROUND 2
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Scroll-progress bar — 2px sage/cream line fixed at top ── */
+.wd-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 2px;
+  transform-origin: left center;
+  /* transform and opacity set by JS; initial state collapses it */
+  background: linear-gradient(
+    90deg,
+    var(--c-accent) 0%,
+    var(--c-cream) 55%,
+    var(--c-accent) 100%
+  );
+  pointer-events: none;
+  will-change: transform;
+  /* Soft glow under the progress line */
+  box-shadow: 0 0 8px rgba(245, 241, 232, 0.5), 0 0 18px rgba(154, 168, 147, 0.35);
+  transition: opacity 0.3s var(--c-ease);
+}
+
+/* ── 2. Scroll-tone journey — fixed tinted backdrop driven by --wd-scroll ── */
+.wd-tone-layer {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  /* Base: deep graphite canvas */
+  background: #0a0c0b;
+  /* The warm limestone tone is driven by the CSS custom property.
+     Since pure CSS cannot interpolate via a custom-property number without
+     @property or Houdini, we use a layered approach: a warm overlay whose
+     opacity responds to a CSS animation pause + a JS-driven style property.
+     For maximum compatibility we drive the overlay opacity directly via a
+     CSS custom property that JS updates as an inline style on <html>. */
+  /* Warm limestone overlay — opacity controlled via --wd-scroll-warm */
+  /* We implement this using a pseudo-element below */
+}
+
+.wd-tone-layer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Warm limestone centre that blooms at mid-scroll */
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 45%,
+    rgba(239, 233, 221, 0.055) 0%,
+    rgba(154, 168, 147, 0.04) 40%,
+    transparent 70%
+  );
+  opacity: calc(var(--wd-scroll-warm, 0) * 1);
+  will-change: opacity;
+}
+
+.wd-tone-layer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Cool vignette that deepens at start and end */
+  background: radial-gradient(
+    ellipse 100% 80% at 50% 50%,
+    transparent 30%,
+    rgba(5, 7, 6, 0.38) 100%
+  );
+  opacity: calc(1 - var(--wd-scroll-warm, 0) * 0.4);
+}
+
+/* ── 3. Hero: drifting mineral atmosphere — slow breathing radial glow ── */
+:root[data-premium="on"] .cine-hero-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  /* Two slow radials: one warm cream, one sage — they drift at different rates */
+  background:
+    radial-gradient(ellipse 55% 48% at 62% 38%, rgba(245, 241, 232, 0.09) 0%, transparent 65%),
+    radial-gradient(ellipse 42% 52% at 72% 52%, rgba(154, 168, 147, 0.11) 0%, transparent 60%);
+  animation: wd-atmos-drift 14s ease-in-out infinite;
+}
+
+@keyframes wd-atmos-drift {
+  0%   { transform: translate(0, 0) scale(1); opacity: 0.7; }
+  33%  { transform: translate(-18px, 12px) scale(1.04); opacity: 1; }
+  66%  { transform: translate(14px, -10px) scale(0.97); opacity: 0.85; }
+  100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-premium="on"] .cine-hero-atmosphere {
+    animation: none;
+    opacity: 0.8;
+  }
+}
+
+/* ── 4. Editorial section dividers — mineral hairlines that draw in ── */
+.wd-section-divider {
+  position: relative;
+  width: min(var(--c-maxw), calc(100% - 2.2rem));
+  margin: 0 auto;
+  height: 1px;
+  overflow: hidden;
+}
+
+:root[data-premium="on"] .wd-section-divider::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--c-line-strong) 20%,
+    var(--c-accent) 50%,
+    var(--c-line-strong) 80%,
+    transparent 100%
+  );
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0s; /* will be overridden by animation */
+  animation: wd-hairline-draw 0.8s var(--c-ease) both;
+  animation-play-state: paused;
+}
+
+/* Fire the hairline animation when the divider enters the viewport.
+   We use the CSS animation-timeline when supported; fall back to JS-free
+   scroll-driven entry via @supports. */
+@supports (animation-timeline: view()) {
+  :root[data-premium="on"] .wd-section-divider::before {
+    animation: wd-hairline-draw 0.8s var(--c-ease) both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 20%;
+    animation-play-state: running;
+  }
+}
+
+/* Fallback for browsers without scroll-driven animations: use IntersectionObserver
+   via the .is-visible class toggled in JS, OR just always play the animation since
+   the divider starts at scaleX(0) and the page loads with them invisible anyway. */
+:root[data-premium="on"] .wd-section-divider.is-visible::before {
+  animation: wd-hairline-draw 0.8s var(--c-ease) both;
+  animation-play-state: running;
+}
+
+@keyframes wd-hairline-draw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* Simple/premium-off: hairlines are invisible (they are decorative only) */
+:root[data-premium="off"] .wd-section-divider {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-premium="on"] .wd-section-divider::before {
+    animation: none;
+    transform: scaleX(1);
+    opacity: 0.5;
+  }
+}
+
+/* ── 5. CTA sheen sweep — premium hover polish on primary CTAs ── */
+/* A diagonal light sweep that crosses the button once on hover entry.
+   Uses a ::after pseudo-element so it stacks above the existing ::before. */
+:root[data-premium="on"] .cine-btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(245, 241, 232, 0.22) 48%,
+    transparent 72%
+  );
+  transform: translateX(-130%);
+  transition: transform 0s;
+  pointer-events: none;
+}
+
+:root[data-premium="on"] .cine-btn-primary:hover::after {
+  transform: translateX(130%);
+  transition: transform 0.55s var(--c-ease);
+}
+
+/* Push primary CTA glow further than before */
+:root[data-premium="on"] .cine-btn-primary:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow:
+    0 0 0 1px rgba(245, 241, 232, 0.45),
+    0 8px 28px rgba(154, 168, 147, 0.38),
+    0 24px 60px rgba(154, 168, 147, 0.28),
+    0 0 80px rgba(154, 168, 147, 0.12);
+}
+
+/* Ghost button: stronger inset glow on hover */
+:root[data-premium="on"] .cine-btn-ghost:hover {
+  border-color: rgba(245, 241, 232, 0.35);
+  color: var(--c-cream);
+  transform: translateY(-3px);
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.32),
+    0 0 40px rgba(154, 168, 147, 0.1),
+    inset 0 1px 0 rgba(245, 241, 232, 0.12);
+}
+
+/* ── Stronger hero scrim in premium — ensures big type is crisp ── */
+:root[data-premium="on"] .cine-hero-copy-scrim {
+  background:
+    radial-gradient(ellipse 90% 100% at 22% 52%, rgba(5, 7, 6, 0.66) 0%, transparent 75%),
+    radial-gradient(ellipse 60% 70% at 10% 50%, rgba(5, 7, 6, 0.45) 0%, transparent 60%);
 }
 
 /* ---------- Material Intelligence ---------- */
