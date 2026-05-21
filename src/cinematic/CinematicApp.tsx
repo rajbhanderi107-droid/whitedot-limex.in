@@ -4,6 +4,8 @@ import { SupplyFlow } from "./SupplyFlow";
 import { MaterialIntelligence } from "./MaterialIntelligence";
 import { IndustryApplications } from "./IndustryApplications";
 import { MaterialCore } from "./MaterialCore";
+import { Consultation } from "./Consultation";
+import { SiteFooter } from "./SiteFooter";
 import { useLenis } from "./useLenis";
 
 // Heavy three.js scene is lazy-loaded so the page shell paints immediately.
@@ -50,9 +52,8 @@ export default function CinematicApp() {
         </a>
         <div className="cine-nav-links">
           <a href="#material">Material</a>
+          <a href="#material-core">Process</a>
           <a href="#applications">Applications</a>
-          <a href="#engine">AI Engine</a>
-          <a href="#story">Story</a>
           <a href="#consult">Consultation</a>
         </div>
         <a className="cine-btn cine-btn-primary" href={whatsappHref} target="_blank" rel="noreferrer">
@@ -101,6 +102,8 @@ export default function CinematicApp() {
       <MaterialIntelligence />
       <MaterialCore />
       <IndustryApplications />
+      <Consultation />
+      <SiteFooter />
     </main>
   );
 }
