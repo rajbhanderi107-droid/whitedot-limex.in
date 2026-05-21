@@ -395,7 +395,7 @@ a {
   .cine-hero-copy {
     /* The copy wrapper is already max-width:1240px centered.
        Apply a max-width to the copy itself to pin it left. */
-    max-width: 46%;
+    max-width: min(680px, 54%);
     margin: 0 clamp(1.1rem, 4vw, 3.2rem);
   }
 }
@@ -424,9 +424,9 @@ a {
   margin: 0 0 1.4rem;
   max-width: 16ch;
   /* DRAMATIC display scale — obviously bigger than before */
-  font-size: clamp(3.4rem, 11vw, 10rem);
+  font-size: clamp(3rem, 8vw, 7.4rem);
   font-weight: 800;
-  line-height: 0.91;
+  line-height: 0.98;
   letter-spacing: -0.04em;
   color: #fff;
   text-rendering: geometricPrecision;
@@ -435,7 +435,7 @@ a {
 
 /* Premium: extra tightness on the headline for maximum visual weight */
 :root[data-premium="on"] .cine-hero h1 {
-  font-size: clamp(3.4rem, 11vw, 10rem);
+  font-size: clamp(3rem, 8vw, 7.4rem);
   letter-spacing: -0.045em;
 }
 
@@ -623,7 +623,8 @@ a {
 .cine-hero-h1-line {
   display: block;
   overflow: hidden;
-  padding-bottom: 0.06em; /* prevent descender clip */
+  padding: 0.08em 0 0.13em; /* prevent tall display glyph clipping */
+  margin: -0.08em 0 -0.06em;
 }
 
 /* Each word is inline-block so the clip is per-word, not per-line */

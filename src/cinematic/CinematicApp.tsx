@@ -149,8 +149,9 @@ function useScrollTone(enabled: boolean) {
  * Hero headline — split into semantic lines, each line's words slide up
  * from behind a clip mask for a clean editorial reveal.
  *
- * Line 1: "The Sustainable Way to"
- * Line 2: "Replace Plastic"  (already wrapped in .grad span)
+ * Line 1: "Mineral"
+ * Line 2: "Intelligence"
+ * Line 3: "for LIMEX Adoption"  (already wrapped in .grad span)
  *
  * Premium: grander, slower, more cinematic than before.
  * When premium is off or motion is reduced we render the plain h1 so the
@@ -182,44 +183,39 @@ function HeroHeadline({
 
   // Premium path — each word slides up from clip, staggered per word.
   // Slower, grander durations compared to previous version.
-  const line1Words = ["Mineral", "Intelligence"];
-  const line2Words = ["for", "LIMEX", "Adoption"];
+  const headlineLines = [
+    { words: ["Mineral"], grad: false },
+    { words: ["Intelligence"], grad: false },
+    { words: ["for", "LIMEX", "Adoption"], grad: true },
+  ];
   const wordDelay = 0.095; // slightly wider stagger for cinematic weight
+  let wordIndex = 0;
 
   return (
     <h1 aria-label="Mineral Intelligence for LIMEX Adoption">
-      <span className="cine-hero-h1-line" aria-hidden="true">
-        {line1Words.map((word, i) => (
-          <motion.span
-            key={word + i}
-            className="cine-hero-h1-word"
-            initial={{ opacity: 0, y: "115%" }}
-            animate={{ opacity: 1, y: "0%" }}
-            transition={{ duration: 0.9, delay: delay + i * wordDelay, ease }}
-          >
-            {word}
-            {i < line1Words.length - 1 ? " " : ""}
-          </motion.span>
-        ))}
-      </span>
-      <span className="cine-hero-h1-line" aria-hidden="true">
-        {line2Words.map((word, i) => (
-          <motion.span
-            key={word + i}
-            className="cine-hero-h1-word grad"
-            initial={{ opacity: 0, y: "115%" }}
-            animate={{ opacity: 1, y: "0%" }}
-            transition={{
-              duration: 0.95,
-              delay: delay + (line1Words.length + i) * wordDelay,
-              ease,
-            }}
-          >
-            {word}
-            {i < line2Words.length - 1 ? " " : ""}
-          </motion.span>
-        ))}
-      </span>
+      {headlineLines.map((line, lineIndex) => (
+        <span className="cine-hero-h1-line" aria-hidden="true" key={line.words.join("-")}>
+          {line.words.map((word, i) => {
+            const currentWordIndex = wordIndex++;
+            return (
+              <motion.span
+                key={word + i}
+                className={`cine-hero-h1-word${line.grad ? " grad" : ""}`}
+                initial={{ opacity: 0, y: "115%" }}
+                animate={{ opacity: 1, y: "0%" }}
+                transition={{
+                  duration: lineIndex === 2 ? 0.95 : 0.9,
+                  delay: delay + currentWordIndex * wordDelay,
+                  ease,
+                }}
+              >
+                {word}
+                {i < line.words.length - 1 ? " " : ""}
+              </motion.span>
+            );
+          })}
+        </span>
+      ))}
     </h1>
   );
 }
