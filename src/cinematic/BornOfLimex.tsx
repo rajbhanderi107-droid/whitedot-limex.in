@@ -30,7 +30,7 @@ import {
   useMemo,
   type RefObject,
 } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import {
   EffectComposer,
   Bloom,
@@ -427,9 +427,15 @@ function LatticeField({ progress, tier, isMobile }: { progress: RefObject<number
 }
 
 // ─── Scene root ───────────────────────────────────────────────────────────────
-function BornScene({ progress, tier }: { progress: RefObject<number>; tier: DeviceTier }) {
-  const { size } = useThree();
-  const isMobile = size.width < 480;
+function BornScene({
+  progress,
+  tier,
+  isMobile,
+}: {
+  progress: RefObject<number>;
+  tier: DeviceTier;
+  isMobile: boolean;
+}) {
   const high = tier === "high";
 
   return (
@@ -528,6 +534,12 @@ export function BornOfLimex() {
   const progress = useRef(0);
   const { canvasRef, frameloop } = useFrameloopOnVisible();
   const tier = useDeviceTier();
+  // One-time mobile check (stable) — avoids a useThree size subscription inside
+  // the canvas that would re-render the scene/composer on orientation change.
+  const isMobile = useMemo(
+    () => typeof window !== "undefined" && window.innerWidth < 480,
+    [],
+  );
 
   useEffect(() => {
     let rafId = 0;
@@ -574,7 +586,7 @@ export function BornOfLimex() {
               camera={{ position: [0, 0.35, 7.6], fov: 46 }}
             >
               <Suspense fallback={null}>
-                <BornScene progress={progress} tier={tier} />
+                <BornScene progress={progress} tier={tier} isMobile={isMobile} />
               </Suspense>
             </Canvas>
           </div>

@@ -247,9 +247,11 @@ export const stoneFragGLSL = /* glsl */ `
                mix(mix(hash(i + vec3(0,0,1)), hash(i + vec3(1,0,1)), f.x),
                    mix(hash(i + vec3(0,1,1)), hash(i + vec3(1,1,1)), f.x), f.y), f.z);
   }
+  // 3-octave fbm — one octave fewer than before; visually indistinguishable on
+  // this surface but ~25% cheaper per call.
   float fbm(vec3 p) {
     float a = 0.0, w = 0.5;
-    for (int i = 0; i < 4; i++) { a += w * vnoise(p); p *= 2.02; w *= 0.5; }
+    for (int i = 0; i < 3; i++) { a += w * vnoise(p); p *= 2.02; w *= 0.5; }
     return a;
   }
 
@@ -258,19 +260,26 @@ export const stoneFragGLSL = /* glsl */ `
     float ndv = clamp(dot(normalize(vNormal), viewDir), 0.0, 1.0);
     float rim = pow(1.0 - ndv, 2.6);
 
-    // Mineral grain — only legible once light reveals it.
-    float grain = fbm(vPos * 3.4);
-    float micro = fbm(vPos * 9.0) * 0.5;
-    float surface = (grain + micro) * uReveal;
+    // Mineral grain — single fbm (collapsed from two), and skipped entirely
+    // until light begins revealing the surface. The branch is uniform-coherent
+    // (uReveal is the same for every fragment) so there is no divergence cost.
+    float surface = 0.0;
+    if (uReveal > 0.001) {
+      surface = fbm(vPos * 3.8) * uReveal;
+    }
 
     // Key-light lambert term, soft.
     float key = clamp(dot(normalize(vNormal), normalize(uKeyDir)), 0.0, 1.0);
     float lit = mix(0.18, 1.0, key) * (0.45 + 0.55 * uReveal);
 
-    // Ridged crack network — emissive sage lines, fade in via uCracks.
-    float ridge = fbm(vPos * 5.5 + vec3(0.0, uTime * 0.02, 0.0));
-    float lines = 1.0 - smoothstep(0.0, 0.06, abs(ridge - 0.52));
-    float cracksGlow = lines * uCracks * (0.6 + 0.4 * sin(uTime * 0.4 + ridge * 8.0));
+    // Ridged crack network — emissive sage lines. Only computed once cracks
+    // start fading in (uniform-coherent branch → saves the fbm for R01-R02).
+    float cracksGlow = 0.0;
+    if (uCracks > 0.001) {
+      float ridge = fbm(vPos * 5.5 + vec3(0.0, uTime * 0.02, 0.0));
+      float lines = 1.0 - smoothstep(0.0, 0.06, abs(ridge - 0.52));
+      cracksGlow = lines * uCracks * (0.6 + 0.4 * sin(uTime * 0.4 + ridge * 8.0));
+    }
 
     vec3 baseCol = mix(vec3(0.30, 0.31, 0.29), vec3(0.74, 0.73, 0.68), surface) * lit;
     vec3 rimCol  = uColor * rim * (0.4 + 0.6 * uReveal);
