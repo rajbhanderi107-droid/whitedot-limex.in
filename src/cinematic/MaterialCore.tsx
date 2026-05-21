@@ -1,7 +1,6 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-
-const LimexCore3D = lazy(() => import("./LimexCore3D"));
+import { LimexRock } from "./LimexRock";
 
 const whatsappHref =
   "https://wa.me/918849728938?text=" +
@@ -111,15 +110,9 @@ export function MaterialCore() {
           </AnimatePresence>
         </div>
 
-        {/* Right: 3D core */}
+        {/* Right: LIMEX rock — the material object */}
         <div className={`cine-core-stage${stage === 3 ? " is-settled" : ""}`}>
-          {reduce ? (
-            <div className="cine-core-fallback" aria-hidden="true" />
-          ) : (
-            <Suspense fallback={<div className="cine-core-fallback" aria-hidden="true" />}>
-              <LimexCore3D scroll={progress} />
-            </Suspense>
-          )}
+          <LimexRock variant="is-core" />
           <span className="cine-core-platform" aria-hidden="true" />
         </div>
       </div>
