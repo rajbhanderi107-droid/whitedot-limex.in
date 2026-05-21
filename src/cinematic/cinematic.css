@@ -61,6 +61,27 @@ a {
   isolation: isolate;
 }
 
+/* ── Atmospheric depth — global fixed graphite gradient behind all sections ── */
+/* Visible under data-premium="on" only */
+:root[data-premium="on"] .cine::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  /* Layered: very subtle radial warm-centre, cool edges, soft vignette */
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 20%, rgba(28, 32, 26, 0.9) 0%, transparent 100%),
+    radial-gradient(ellipse 100% 60% at 50% 100%, rgba(8, 10, 9, 0.95) 0%, transparent 100%),
+    linear-gradient(160deg, #0d0f0e 0%, #131611 40%, #0a0c0b 100%);
+  /* Faint grain baked into this layer — different frequency from cine::after grain */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.028'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 80% 70% at 50% 20%, rgba(28, 32, 26, 0.9) 0%, transparent 100%),
+    radial-gradient(ellipse 100% 60% at 50% 100%, rgba(8, 10, 9, 0.95) 0%, transparent 100%),
+    linear-gradient(160deg, #0d0f0e 0%, #131611 40%, #0a0c0b 100%);
+}
+
 /* ---------- Top nav ---------- */
 .cine-nav {
   position: fixed;
@@ -73,6 +94,19 @@ a {
   padding: 1.1rem clamp(1.1rem, 4vw, 3.2rem);
   background: linear-gradient(180deg, rgba(8, 9, 11, 0.85), transparent);
   backdrop-filter: blur(6px);
+  transition: padding 0.4s var(--c-ease), background 0.4s var(--c-ease),
+    backdrop-filter 0.4s var(--c-ease), border-color 0.4s var(--c-ease);
+  border-bottom: 1px solid transparent;
+}
+
+/* Scrolled state — tighter padding, stronger frost glass, hairline separator */
+:root[data-premium="on"] .cine-nav.is-scrolled {
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+  background: rgba(8, 9, 11, 0.78);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  border-bottom-color: var(--c-line);
 }
 .cine-brand {
   display: flex;
@@ -123,32 +157,83 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.85rem 1.4rem;
+  padding: 0.85rem 1.55rem;
   border-radius: 999px;
   font-size: 0.92rem;
   font-weight: 650;
+  letter-spacing: 0.01em;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: transform 0.2s var(--c-ease), box-shadow 0.2s var(--c-ease),
-    background 0.2s var(--c-ease), color 0.2s var(--c-ease);
+  transition: transform 0.25s var(--c-ease), box-shadow 0.25s var(--c-ease),
+    background 0.25s var(--c-ease), color 0.25s var(--c-ease),
+    border-color 0.25s var(--c-ease);
+  position: relative;
+  overflow: hidden;
 }
+
+/* Primary — sage fill, tactile lift, glow halo on hover */
 .cine-btn-primary {
   color: #1a1d1b;
-  background: linear-gradient(135deg, var(--c-accent), var(--c-accent-2));
-  box-shadow: 0 0 0 1px rgba(154, 168, 147, 0.3), 0 14px 34px rgba(154, 168, 147, 0.22);
+  background: linear-gradient(135deg, var(--c-accent) 0%, #b5c2ae 50%, var(--c-accent-2) 100%);
+  background-size: 200% 100%;
+  background-position: 0% 0%;
+  box-shadow:
+    0 0 0 1px rgba(154, 168, 147, 0.3),
+    0 4px 14px rgba(154, 168, 147, 0.18),
+    0 14px 34px rgba(154, 168, 147, 0.14);
 }
-.cine-btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 0 1px rgba(154, 168, 147, 0.5), 0 18px 44px rgba(154, 168, 147, 0.34);
+
+:root[data-premium="on"] .cine-btn-primary:hover {
+  transform: translateY(-3px) scale(1.015);
+  background-position: 100% 0%;
+  box-shadow:
+    0 0 0 1px rgba(154, 168, 147, 0.55),
+    0 6px 20px rgba(154, 168, 147, 0.28),
+    0 20px 50px rgba(154, 168, 147, 0.22);
 }
+
+:root[data-premium="on"] .cine-btn-primary:active {
+  transform: translateY(-1px) scale(0.995);
+  transition-duration: 0.1s;
+}
+
+/* Ghost — borderlight, inner shimmer on hover */
 .cine-btn-ghost {
-  color: var(--c-text);
+  color: var(--c-muted);
   border-color: var(--c-line-strong);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.025);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
-.cine-btn-ghost:hover {
-  border-color: var(--c-accent);
-  color: var(--c-accent);
+
+.cine-btn-ghost::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(154, 168, 147, 0.0) 0%,
+    rgba(154, 168, 147, 0.08) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s var(--c-ease);
+}
+
+:root[data-premium="on"] .cine-btn-ghost:hover {
+  border-color: rgba(154, 168, 147, 0.55);
+  color: var(--c-text);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(154, 168, 147, 0.12);
+}
+
+:root[data-premium="on"] .cine-btn-ghost:hover::before {
+  opacity: 1;
+}
+
+:root[data-premium="on"] .cine-btn-ghost:active {
+  transform: translateY(-1px);
+  transition-duration: 0.1s;
 }
 
 /* ---------- Hero ---------- */
@@ -164,7 +249,7 @@ a {
   inset: 0;
   z-index: 0;
 }
-/* vignette + grain for cinematic depth */
+/* vignette + edge-darken for cinematic depth */
 .cine-hero::after {
   content: "";
   position: absolute;
@@ -172,8 +257,20 @@ a {
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 42%, transparent 0 38%, rgba(0, 0, 0, 0.55) 100%),
-    linear-gradient(180deg, transparent 60%, var(--c-bg) 98%);
+    radial-gradient(ellipse 70% 60% at 50% 42%, transparent 0%, rgba(0, 0, 0, 0.52) 100%),
+    radial-gradient(ellipse 120% 40% at 50% 100%, rgba(0, 0, 0, 0.72) 0%, transparent 100%),
+    linear-gradient(180deg, rgba(8, 9, 11, 0.28) 0%, transparent 22%, transparent 62%, var(--c-bg) 98%);
+}
+
+/* Adaptive contrast scrim behind hero copy — isolates text from the 3D scene */
+.cine-hero-copy-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  /* Deep left-side shadow: text lives left-of-center, 3D rock lives right */
+  background:
+    radial-gradient(ellipse 78% 90% at 28% 50%, rgba(8, 9, 11, 0.54) 0%, transparent 100%);
 }
 .cine-hero-copy {
   position: relative;
@@ -206,11 +303,15 @@ a {
 .cine-hero h1 {
   margin: 0 0 1.4rem;
   max-width: 16ch;
-  font-size: clamp(2.6rem, 7vw, 6rem);
+  font-size: clamp(3rem, 8.5vw, 8.2rem);
   font-weight: 800;
-  line-height: 0.98;
-  letter-spacing: -0.02em;
+  line-height: 0.94;
+  letter-spacing: -0.035em;
   color: #fff;
+  /* Sharpen rendering on the large display size */
+  text-rendering: geometricPrecision;
+  /* Optical size hint for variable fonts */
+  font-optical-sizing: auto;
 }
 .cine-hero h1 .grad {
   background: linear-gradient(120deg, var(--c-accent), #e4ded4 60%, var(--c-accent-2));
@@ -366,6 +467,26 @@ a {
 @media (prefers-reduced-motion: reduce) {
   .cine-flow-pulse { animation: none; opacity: 1; }
   .cine-flow-node strong { animation: none; }
+}
+
+/* Word-split headline container — clips overflow so masked words slide up cleanly */
+.cine-hero-h1-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em; /* prevent descender clip */
+}
+
+/* Each word is inline-block so the clip is per-word, not per-line */
+.cine-hero-h1-word {
+  display: inline-block;
+  /* Preserve word spacing between spans */
+  white-space: pre;
+}
+
+/* In simple/reduced-motion mode, word spans collapse to static inline */
+:root[data-premium="off"] .cine-hero-h1-word {
+  display: inline;
+  white-space: normal;
 }
 
 /* sustainability credibility strip under hero CTAs */
