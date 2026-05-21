@@ -14,23 +14,29 @@ export interface StageText {
 }
 
 export const STAGE_TEXTS: readonly StageText[] = [
-  { eyebrow: "Origin", heading: "Everything begins with CO₂." },
+  { eyebrow: "Origin", heading: "A single mineral form, suspended in the dark." },
   {
-    eyebrow: "Transformation",
-    heading:
-      "Captured carbon is transformed into calcium carbonate through advanced CCU technology.",
+    eyebrow: "Carbon",
+    heading: "Captured CO₂ gathers, and the surface draws it inward.",
   },
   {
-    eyebrow: "Engineering",
-    heading: "Calcium carbonate is bonded with specialized plastic resin.",
+    eyebrow: "Conversion",
+    heading:
+      "Within, captured carbon is transformed into calcium carbonate.",
+  },
+  {
+    eyebrow: "Composition",
+    heading:
+      "Calcium carbonate resolves into an ordered molecular structure.",
   },
   {
     eyebrow: "The Material",
-    heading: "Born from captured CO₂. Engineered through carbon innovation.",
+    heading: "Bonded into a stable material — LIMEX.",
   },
   {
     eyebrow: "Applications",
-    heading: "Creating sustainable alternatives for plastic and paper products.",
+    heading:
+      "A direct replacement for conventional plastic and paper products.",
   },
 ] as const;
 

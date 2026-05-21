@@ -200,3 +200,205 @@ export const morphFragGLSL = /* glsl */ `
     gl_FragColor = vec4(uColor, soft * vAlpha * 0.85);
   }
 `;
+
+// ─── Living-stone surface shader (R01–R03) ────────────────────────────────────
+// A second shell over the stone core. Three uniforms layer cinematically:
+//   uReveal  — 0..1 environmental light reveal (R02). Lifts surface texture out
+//              of the dark by modulating fresnel + a procedural mineral grain.
+//   uCracks  — 0..1 emissive mineral crack lines fade in (R03). Pure GPU value
+//              noise ridges, no texture fetch, sage emissive that Bloom catches.
+// Cheap: one fbm (4 octaves) + one ridged-noise call. No per-frame allocations.
+export const stoneVertGLSL = /* glsl */ `
+  varying vec3 vNormal;
+  varying vec3 vWorldPos;
+  varying vec3 vPos;
+  void main() {
+    vec4 worldPos = modelMatrix * vec4(position, 1.0);
+    vec4 mvPos    = viewMatrix * worldPos;
+    vNormal   = normalize(normalMatrix * normal);
+    vWorldPos = worldPos.xyz;
+    vPos      = position;
+    gl_Position = projectionMatrix * mvPos;
+  }
+`;
+
+export const stoneFragGLSL = /* glsl */ `
+  uniform float uTime;
+  uniform float uReveal;   // 0..1 light reveal (R02)
+  uniform float uCracks;   // 0..1 crack emergence (R03)
+  uniform vec3  uColor;     // sage rim/crack tint
+  uniform vec3  uKeyDir;    // normalized key-light direction
+  varying vec3  vNormal;
+  varying vec3  vWorldPos;
+  varying vec3  vPos;
+
+  // Cheap value noise + fbm (no texture, deterministic).
+  float hash(vec3 p) {
+    p = fract(p * 0.3183099 + 0.1);
+    p *= 17.0;
+    return fract(p.x * p.y * p.z * (p.x + p.y + p.z));
+  }
+  float vnoise(vec3 x) {
+    vec3 i = floor(x);
+    vec3 f = fract(x);
+    f = f * f * (3.0 - 2.0 * f);
+    return mix(mix(mix(hash(i + vec3(0,0,0)), hash(i + vec3(1,0,0)), f.x),
+                   mix(hash(i + vec3(0,1,0)), hash(i + vec3(1,1,0)), f.x), f.y),
+               mix(mix(hash(i + vec3(0,0,1)), hash(i + vec3(1,0,1)), f.x),
+                   mix(hash(i + vec3(0,1,1)), hash(i + vec3(1,1,1)), f.x), f.y), f.z);
+  }
+  float fbm(vec3 p) {
+    float a = 0.0, w = 0.5;
+    for (int i = 0; i < 4; i++) { a += w * vnoise(p); p *= 2.02; w *= 0.5; }
+    return a;
+  }
+
+  void main() {
+    vec3 viewDir = normalize(cameraPosition - vWorldPos);
+    float ndv = clamp(dot(normalize(vNormal), viewDir), 0.0, 1.0);
+    float rim = pow(1.0 - ndv, 2.6);
+
+    // Mineral grain — only legible once light reveals it.
+    float grain = fbm(vPos * 3.4);
+    float micro = fbm(vPos * 9.0) * 0.5;
+    float surface = (grain + micro) * uReveal;
+
+    // Key-light lambert term, soft.
+    float key = clamp(dot(normalize(vNormal), normalize(uKeyDir)), 0.0, 1.0);
+    float lit = mix(0.18, 1.0, key) * (0.45 + 0.55 * uReveal);
+
+    // Ridged crack network — emissive sage lines, fade in via uCracks.
+    float ridge = fbm(vPos * 5.5 + vec3(0.0, uTime * 0.02, 0.0));
+    float lines = 1.0 - smoothstep(0.0, 0.06, abs(ridge - 0.52));
+    float cracksGlow = lines * uCracks * (0.6 + 0.4 * sin(uTime * 0.4 + ridge * 8.0));
+
+    vec3 baseCol = mix(vec3(0.30, 0.31, 0.29), vec3(0.74, 0.73, 0.68), surface) * lit;
+    vec3 rimCol  = uColor * rim * (0.4 + 0.6 * uReveal);
+    vec3 crackCol = uColor * 1.6 * cracksGlow;
+
+    vec3 col = baseCol + rimCol + crackCol;
+    // Slightly transparent so the GLB/procedural core PBR reads underneath.
+    float alpha = clamp(0.10 + surface * 0.35 + rim * 0.5 + cracksGlow, 0.0, 0.92);
+    gl_FragColor = vec4(col, alpha);
+  }
+`;
+
+// ─── Inner calcium glow (R06) ─────────────────────────────────────────────────
+// An inner shell (slightly smaller than the stone) whose crystalline glow grows
+// from the core outward. Reuses the crystal facet feel but reads as "internal".
+export const calciumVertGLSL = /* glsl */ `
+  uniform float uGrow;   // 0..1 inner structure emergence
+  uniform float uTime;
+  varying vec3  vNormal;
+  varying vec3  vPos;
+  void main() {
+    vec3 p = position;
+    float disp = sin(p.x * 5.0 + uTime * 0.25) * cos(p.y * 4.4) * sin(p.z * 5.2);
+    p += normal * disp * 0.05 * uGrow;
+    p *= 0.55 + 0.42 * uGrow;   // grows outward from the core
+    vec4 mvPos = modelViewMatrix * vec4(p, 1.0);
+    gl_Position = projectionMatrix * mvPos;
+    vNormal = normalize(normalMatrix * normal);
+    vPos    = p;
+  }
+`;
+
+export const calciumFragGLSL = /* glsl */ `
+  uniform float uGrow;
+  uniform float uTime;
+  uniform vec3  uColor;
+  varying vec3  vNormal;
+  varying vec3  vPos;
+  void main() {
+    vec3 viewDir = normalize(cameraPosition - vPos);
+    float rim = 1.0 - clamp(dot(normalize(vNormal), viewDir), 0.0, 1.0);
+    float fresnel = pow(rim, 2.2);
+    float pulse = 0.7 + 0.3 * sin(uTime * 0.5 + vPos.y * 4.0);
+    // Crystalline cream→sage inner light.
+    vec3 col = mix(vec3(0.86, 0.84, 0.78), uColor * 1.4, fresnel);
+    float alpha = uGrow * (0.18 + fresnel * 0.55) * pulse;
+    gl_FragColor = vec4(col, alpha);
+  }
+`;
+
+// ─── Molecular lattice points (R08–R09) ───────────────────────────────────────
+// A point cloud arranged on a jittered grid that "orders" as uOrder→1: the
+// jitter collapses toward an exact lattice. Soft additive sage dots + faint
+// inter-node shimmer. uReveal gates overall opacity.
+export const latticeVertGLSL = /* glsl */ `
+  attribute vec3  aOrdered;   // exact lattice position
+  attribute vec3  aJitter;    // disordered offset
+  attribute float aPhase;
+  attribute float aSize;
+  uniform float   uOrder;     // 0=disordered 1=ordered
+  uniform float   uTime;
+  varying float   vAlpha;
+  void main() {
+    float e = uOrder * uOrder * (3.0 - 2.0 * uOrder);
+    vec3 pos = mix(aOrdered + aJitter, aOrdered, e);
+    // gentle breathing drift while disordered
+    pos += (1.0 - e) * vec3(
+      sin(uTime * 0.3 + aPhase * 6.28) * 0.12,
+      cos(uTime * 0.27 + aPhase * 4.0) * 0.12,
+      sin(uTime * 0.21 + aPhase * 7.0) * 0.12
+    );
+    vec4 mvPos = modelViewMatrix * vec4(pos, 1.0);
+    gl_Position = projectionMatrix * mvPos;
+    float dist = length(mvPos.xyz);
+    gl_PointSize = aSize * (200.0 / max(dist, 0.1));
+    vAlpha = 0.4 + 0.6 * e;
+  }
+`;
+
+export const latticeFragGLSL = /* glsl */ `
+  uniform vec3  uColor;
+  uniform float uReveal;
+  varying float vAlpha;
+  void main() {
+    vec2  uv = gl_PointCoord * 2.0 - 1.0;
+    float d  = dot(uv, uv);
+    if (d > 1.0) discard;
+    float soft = 1.0 - smoothstep(0.2, 1.0, d);
+    gl_FragColor = vec4(uColor, soft * vAlpha * uReveal * 0.8);
+  }
+`;
+
+// ─── Limestone dust points (always-on, R01+) ──────────────────────────────────
+// Tiny slow-rising motes that orbit the stone — the "living" environmental VFX.
+export const dustVertGLSL = /* glsl */ `
+  attribute float aSize;
+  attribute float aPhase;
+  uniform float   uTime;
+  varying float   vAlpha;
+  varying float   vPhase;
+  void main() {
+    vec3 pos = position;
+    float t = uTime * 0.08 + aPhase * 6.28;
+    pos.x += sin(t * 0.9 + aPhase * 5.0) * 0.22;
+    pos.y += t * 0.05;                 // slow rise
+    pos.y = mod(pos.y + 3.0, 6.0) - 3.0; // wrap so the field never empties
+    pos.z += cos(t * 0.7 + aPhase * 3.0) * 0.22;
+    vec4 mvPos = modelViewMatrix * vec4(pos, 1.0);
+    gl_Position = projectionMatrix * mvPos;
+    float dist = length(mvPos.xyz);
+    gl_PointSize = aSize * (140.0 / max(dist, 0.1));
+    vAlpha = clamp(1.1 - dist * 0.1, 0.0, 1.0);
+    vPhase = aPhase;
+  }
+`;
+
+export const dustFragGLSL = /* glsl */ `
+  uniform float uTime;
+  uniform float uOpacity;
+  varying float vAlpha;
+  varying float vPhase;
+  void main() {
+    vec2  uv = gl_PointCoord * 2.0 - 1.0;
+    float d  = dot(uv, uv);
+    if (d > 1.0) discard;
+    float soft = 1.0 - smoothstep(0.3, 1.0, d);
+    float twinkle = 0.6 + 0.4 * sin(uTime * 0.6 + vPhase * 6.28);
+    vec3 col = vec3(0.82, 0.80, 0.74);
+    gl_FragColor = vec4(col, soft * vAlpha * twinkle * uOpacity * 0.5);
+  }
+`;
