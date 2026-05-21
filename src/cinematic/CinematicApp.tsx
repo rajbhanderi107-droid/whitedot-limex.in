@@ -9,6 +9,9 @@ import { LimexComparison } from "./LimexComparison";
 import { Consultation } from "./Consultation";
 import { SiteFooter } from "./SiteFooter";
 import { useLenis } from "./useLenis";
+// PREMIUM-WD-BEGIN import
+import { usePremium } from "../premium-wd";
+// PREMIUM-WD-END import
 
 // Heavy three.js scene is lazy-loaded so the page shell paints immediately.
 const LimestoneHero = lazy(() =>
@@ -33,15 +36,26 @@ function useDismissBootLoader() {
 }
 
 export default function CinematicApp() {
-  useLenis();
+  const premium = usePremium();
+  useLenis(premium);
   useDismissBootLoader();
   const reduce = useReducedMotion();
 
-  const rise = (delay: number) => ({
-    initial: reduce ? { opacity: 0 } : { opacity: 0, y: 24 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] as const },
-  });
+  // Simple mode (premium off) reverts choreography to a quiet, near-instant fade.
+  const rise = (delay: number) => {
+    if (!premium || reduce) {
+      return {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        transition: { duration: 0.3, delay: 0 },
+      };
+    }
+    return {
+      initial: { opacity: 0, y: 24 },
+      animate: { opacity: 1, y: 0 },
+      transition: { duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] as const },
+    };
+  };
 
   return (
     <main className="cine">
@@ -73,12 +87,12 @@ export default function CinematicApp() {
       </nav>
 
       <section className="cine-hero" id="top">
-        {reduce ? (
-          <div className="cine-hero-fallback" aria-hidden="true" />
-        ) : (
+        {premium && !reduce ? (
           <Suspense fallback={<div className="cine-hero-fallback" aria-hidden="true" />}>
             <LimestoneHero />
           </Suspense>
+        ) : (
+          <div className="cine-hero-fallback" aria-hidden="true" />
         )}
         <div className="cine-hero-copy">
           <motion.span className="cine-eyebrow" {...rise(0.1)}>

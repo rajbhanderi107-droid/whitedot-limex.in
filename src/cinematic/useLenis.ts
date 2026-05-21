@@ -1,9 +1,11 @@
 import { useEffect } from "react";
 import Lenis from "lenis";
 
-/** Premium inertia smooth-scroll. Respects prefers-reduced-motion. */
-export function useLenis() {
+/** Premium inertia smooth-scroll. Respects prefers-reduced-motion.
+ *  Pass `enabled = false` (e.g. when premium mode is off) for native scroll. */
+export function useLenis(enabled = true) {
   useEffect(() => {
+    if (!enabled) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
 
@@ -24,5 +26,5 @@ export function useLenis() {
       cancelAnimationFrame(raf);
       lenis.destroy();
     };
-  }, []);
+  }, [enabled]);
 }
