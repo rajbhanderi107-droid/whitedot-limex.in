@@ -123,11 +123,11 @@ export function LimexDetail() {
       >
         <div className="cine-detail-copy">
           <motion.span className="cine-detail-tag" variants={rise(0)}>
-            Limestone-based material technology
+            CO₂-based material technology
           </motion.span>
           <motion.h2 variants={rise(0.05)}>More than a filler.</motion.h2>
           <motion.p className="lead" variants={rise(0.12)}>
-            LIMEX / TBM material is developed as a limestone-based alternative that can reduce
+            LIMEX / TBM material is developed as a CO₂-based alternative that can reduce
             plastic consumption while supporting selected technical properties. It is not positioned
             as a basic filler added only for weight.
           </motion.p>
