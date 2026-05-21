@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import CinematicApp from "./cinematic/CinematicApp";
+import "./brand-fonts.css";
 import "./cinematic/cinematic.css";
 // PREMIUM-WD-BEGIN imports
 import { PremiumProvider } from "./premium-wd";

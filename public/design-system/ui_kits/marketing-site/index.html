@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>White Dot LLP — Authorized LIMEX Marketing & Sales</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/whitedot-symbol.svg">
+  <link rel="stylesheet" href="site.css">
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="Icon.jsx"></script>
+  <script type="text/babel" src="SupplyFlow.jsx"></script>
+  <script type="text/babel" src="Nav.jsx"></script>
+  <script type="text/babel" src="Hero.jsx"></script>
+  <script type="text/babel" src="MaterialIntelligence.jsx"></script>
+  <script type="text/babel" src="IndustryApplications.jsx"></script>
+  <script type="text/babel" src="LimexComparison.jsx"></script>
+  <script type="text/babel" src="Consultation.jsx"></script>
+  <script type="text/babel" src="Footer.jsx"></script>
+
+  <script type="text/babel">
+    const App = () => {
+      const [active, setActive] = React.useState("top");
+      const onNav = (id) => {
+        setActive(id);
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      };
+
+      // Track scroll to update active link
+      React.useEffect(() => {
+        const sections = ["top", "material", "applications", "comparison", "consult"];
+        const handler = () => {
+          const y = window.scrollY + 200;
+          for (let i = sections.length - 1; i >= 0; i--) {
+            const el = document.getElementById(sections[i]);
+            if (el && el.offsetTop <= y) {
+              setActive(sections[i]);
+              return;
+            }
+          }
+        };
+        window.addEventListener("scroll", handler, { passive: true });
+        return () => window.removeEventListener("scroll", handler);
+      }, []);
+
+      const onSubmit = () => {
+        // Open the same WhatsApp deep-link the real site uses
+        const msg = encodeURIComponent("Hello White Dot LLP, I'd like a LIMEX material optimization consultation.");
+        window.open(`https://wa.me/918849728938?text=${msg}`, "_blank", "noopener");
+      };
+
+      return (
+        <main className="cine">
+          <window.Nav active={active} onNav={onNav}/>
+          <window.Hero onCTA={onNav}/>
+          <div className="wd-section-divider" aria-hidden="true"/>
+          <window.MaterialIntelligence/>
+          <div className="wd-section-divider" aria-hidden="true"/>
+          <window.IndustryApplications/>
+          <div className="wd-section-divider" aria-hidden="true"/>
+          <window.LimexComparison/>
+          <div className="wd-section-divider" aria-hidden="true"/>
+          <window.Consultation onSubmit={onSubmit}/>
+          <window.Footer/>
+        </main>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+  </script>
+</body>
+</html>

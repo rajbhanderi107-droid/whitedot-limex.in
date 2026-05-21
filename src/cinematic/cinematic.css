@@ -29,6 +29,8 @@
     -apple-system, "Segoe UI", sans-serif;
   --wd-font-display: "Boska", "Satoshi", ui-serif, Georgia, serif;
   --wd-font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --wd-font-jp: "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", "Meiryo",
+    var(--wd-font-sans);
   /* Scroll-tone journey custom properties — set by JS in CinematicApp */
   --wd-scroll: 0;
   --wd-scroll-warm: 0;
