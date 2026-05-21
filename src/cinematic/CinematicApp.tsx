@@ -4,6 +4,8 @@ import { SupplyFlow } from "./SupplyFlow";
 import { MaterialIntelligence } from "./MaterialIntelligence";
 import { IndustryApplications } from "./IndustryApplications";
 import { MaterialCore } from "./MaterialCore";
+import { LimexDetail } from "./LimexDetail";
+import { LimexComparison } from "./LimexComparison";
 import { Consultation } from "./Consultation";
 import { SiteFooter } from "./SiteFooter";
 import { useLenis } from "./useLenis";
@@ -45,7 +47,14 @@ export default function CinematicApp() {
     <main className="cine">
       <nav className="cine-nav">
         <a className="cine-brand" href="#top" aria-label="White Dot LLP">
-          <span className="dot" aria-hidden="true" />
+          <img
+            className="cine-brand-logo"
+            src={`${import.meta.env.BASE_URL}assets/whitedot-logo-enhanced.svg`}
+            alt=""
+            width={30}
+            height={30}
+            aria-hidden="true"
+          />
           <span>
             White Dot <small>LLP</small>
           </span>
@@ -53,6 +62,8 @@ export default function CinematicApp() {
         <div className="cine-nav-links">
           <a href="#material">Material</a>
           <a href="#material-core">Process</a>
+          <a href="#limex">LIMEX</a>
+          <a href="#comparison">Compare</a>
           <a href="#applications">Applications</a>
           <a href="#consult">Consultation</a>
         </div>
@@ -101,6 +112,8 @@ export default function CinematicApp() {
 
       <MaterialIntelligence />
       <MaterialCore />
+      <LimexDetail />
+      <LimexComparison />
       <IndustryApplications />
       <Consultation />
       <SiteFooter />

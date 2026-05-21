@@ -16,7 +16,14 @@ export function SiteFooter() {
       <div className="cine-footer-inner">
         <div className="cine-footer-brand">
           <a className="cine-brand" href="#top" aria-label="White Dot LLP — back to top">
-            <span className="dot" aria-hidden="true" />
+            <img
+              className="cine-brand-logo"
+              src={`${import.meta.env.BASE_URL}assets/whitedot-logo-enhanced.svg`}
+              alt=""
+              width={30}
+              height={30}
+              aria-hidden="true"
+            />
             <span>
               White Dot <small>LLP</small>
             </span>
