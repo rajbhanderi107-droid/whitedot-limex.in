@@ -22,6 +22,13 @@
   --c-cream-2: #efe9dd;
   --c-maxw: 1240px;
   --c-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Brand type system (white-dot-design-system; Inter retired May 2026).
+     Satoshi = sans (display/UI/body), Boska = editorial display only
+     (hero H1, stat numerals — "cut limestone"), JetBrains Mono = data. */
+  --wd-font-sans: "Satoshi", "Satoshi Variable", ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", sans-serif;
+  --wd-font-display: "Boska", "Satoshi", ui-serif, Georgia, serif;
+  --wd-font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
   /* Scroll-tone journey custom properties — set by JS in CinematicApp */
   --wd-scroll: 0;
   --wd-scroll-warm: 0;
@@ -49,7 +56,7 @@ body {
   min-height: 100vh;
   background: var(--c-bg);
   color: var(--c-text);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: var(--wd-font-sans);
   font-synthesis: none;
   line-height: 1.5;
   text-rendering: optimizeLegibility;
@@ -60,6 +67,19 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* Brand type roles — Boska (editorial display, used sparingly) for the
+   material-story title; JetBrains Mono for index / step / flow data markers. */
+.born-static-title {
+  font-family: var(--wd-font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.cine-consult-num,
+.born-timeline-num,
+.cine-flow-step {
+  font-family: var(--wd-font-mono);
 }
 
 .cine {
@@ -263,29 +283,49 @@ a {
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 70% 60% at 50% 42%, transparent 0%, rgba(0, 0, 0, 0.52) 100%),
+    radial-gradient(ellipse 70% 60% at 50% 42%, transparent 0%, rgba(0, 0, 0, 0.45) 100%),
     radial-gradient(ellipse 120% 40% at 50% 100%, rgba(0, 0, 0, 0.72) 0%, transparent 100%),
     linear-gradient(180deg, rgba(8, 9, 11, 0.28) 0%, transparent 22%, transparent 62%, var(--c-bg) 98%);
 }
 
-/* Adaptive contrast scrim behind hero copy — isolates text from the 3D scene */
+/* Adaptive contrast scrim behind hero copy — isolates text from the 3D scene.
+   Left-anchored gradient: covers the left copy column, fades to transparent
+   before crossing 50% so the 3D rock on the right is never obscured. */
 .cine-hero-copy-scrim {
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  /* Deep left-side shadow: text lives left-of-center, 3D rock lives right */
   background:
-    radial-gradient(ellipse 78% 90% at 28% 50%, rgba(8, 9, 11, 0.54) 0%, transparent 100%);
+    radial-gradient(ellipse 55% 100% at 12% 50%, rgba(8, 9, 11, 0.72) 0%, transparent 100%),
+    radial-gradient(ellipse 40% 80% at 0% 50%, rgba(8, 9, 11, 0.5) 0%, transparent 100%);
 }
+
+/* Hero copy container: on desktop pinned to the left ~45% of the viewport.
+   The 3D canvas fills the full hero; the copy floats over the left column
+   only, leaving the right 55% entirely clear for the limestone model.
+   On mobile the copy spans full width and the model renders behind it. */
 .cine-hero-copy {
   position: relative;
   z-index: 2;
+  /* Full-bleed wrapper up to maxw */
   width: min(var(--c-maxw), calc(100% - 2.2rem));
   margin: 0 auto;
   padding-top: 8vh;
   pointer-events: none;
 }
+
+/* Desktop: constrain the copy content to the left 46% so the right column
+   is clear for the 3D model. Achieved by capping the inner content width. */
+@media (min-width: 768px) {
+  .cine-hero-copy {
+    /* The copy wrapper is already max-width:1240px centered.
+       Apply a max-width to the copy itself to pin it left. */
+    max-width: 46%;
+    margin: 0 clamp(1.1rem, 4vw, 3.2rem);
+  }
+}
+
 .cine-hero-copy > * {
   pointer-events: auto;
 }
@@ -829,11 +869,14 @@ a {
     inset 0 1px 0 rgba(245, 241, 232, 0.12);
 }
 
-/* ── Stronger hero scrim in premium — ensures big type is crisp ── */
+/* ── Stronger hero scrim in premium — ensures big type is crisp.
+   Left-anchored: covers the left copy column only, fades before 55% so the
+   right-side 3D model is never darkened by the scrim. ── */
 :root[data-premium="on"] .cine-hero-copy-scrim {
   background:
-    radial-gradient(ellipse 90% 100% at 22% 52%, rgba(5, 7, 6, 0.66) 0%, transparent 75%),
-    radial-gradient(ellipse 60% 70% at 10% 50%, rgba(5, 7, 6, 0.45) 0%, transparent 60%);
+    radial-gradient(ellipse 52% 110% at 8% 50%, rgba(5, 7, 6, 0.78) 0%, rgba(5, 7, 6, 0.0) 100%),
+    radial-gradient(ellipse 38% 90% at 0% 50%, rgba(5, 7, 6, 0.55) 0%, transparent 100%),
+    linear-gradient(90deg, rgba(5, 7, 6, 0.42) 0%, rgba(5, 7, 6, 0.1) 38%, transparent 52%);
 }
 
 /* ---------- Material Intelligence ---------- */
@@ -1043,9 +1086,228 @@ a {
   }
 }
 
+/* ---------- Phase 3: interactive cards (tilt / glow / CTA) ---------- */
+.cine-app-magnetic {
+  display: flex;
+  width: 100%;
+  will-change: transform;
+}
+.ia-card-tilt {
+  transform-style: preserve-3d;
+}
+/* The interactive button fills the card; reset native chrome */
+.ia-card-btn {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transform-style: preserve-3d;
+}
+.ia-card-btn:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+.ia-card-icon {
+  will-change: transform;
+}
+.ia-card-text {
+  display: block;
+}
+.ia-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34rem;
+  margin-top: 1rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s var(--c-ease), transform 0.3s var(--c-ease);
+}
+.ia-card-cta svg {
+  transition: transform 0.3s var(--c-ease);
+}
+.cine-app-block:hover .ia-card-cta,
+.ia-card-btn:focus-visible .ia-card-cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+.cine-app-block:hover .ia-card-cta svg {
+  transform: translateX(3px);
+}
+/* Cursor-tracked glow — overrides the static glow anchor, centres on pointer */
+.ia-card-glow {
+  inset: auto;
+  width: 62%;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.28s var(--c-ease);
+}
+
+/* ---------- Phase 3: product-showcase modal ---------- */
+.ia-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(5, 7, 6, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.ia-dialog {
+  position: fixed;
+  z-index: 1201;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(960px, calc(100vw - 2.4rem));
+  max-height: calc(100vh - 2.4rem);
+  overflow-y: auto;
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+  border: 1px solid var(--c-line-strong);
+  border-radius: 20px;
+  background: linear-gradient(165deg, #1c211e 0%, #141815 100%);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6);
+}
+.ia-dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: clamp(1.4rem, 3vw, 2rem);
+}
+.ia-dialog-kicker {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+.ia-dialog-title {
+  margin: 0;
+  font-size: clamp(1.4rem, 3.4vw, 2rem);
+  line-height: 1.1;
+  color: #fff;
+}
+.ia-dialog-close {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--c-line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--c-muted);
+  cursor: pointer;
+  transition: color 0.2s var(--c-ease), border-color 0.2s var(--c-ease),
+    background 0.2s var(--c-ease);
+}
+.ia-dialog-close:hover {
+  color: #fff;
+  border-color: var(--c-accent);
+  background: rgba(154, 168, 147, 0.12);
+}
+.ia-dialog-close:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 3px;
+}
+.ia-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.ia-tile {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--c-line);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--c-surface);
+}
+.ia-tile-visual {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+.ia-tile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.ia-tile-procedural {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: var(--c-accent);
+}
+.ia-tile-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+.ia-tile-icon-wrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  color: var(--c-accent);
+}
+.ia-tile-proc-label {
+  position: absolute;
+  bottom: 0.7rem;
+  left: 0.8rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-faint);
+}
+.ia-tile-body {
+  padding: 0.95rem 1rem 1.1rem;
+}
+.ia-tile-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.98rem;
+  color: #fff;
+}
+.ia-tile-detail {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--c-muted);
+}
+.ia-dialog-note {
+  margin: clamp(1.3rem, 3vw, 1.8rem) 0 0;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--c-line);
+  font-size: 0.8rem;
+  color: var(--c-faint);
+}
+@media (max-width: 720px) {
+  .ia-tiles {
+    grid-template-columns: 1fr;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .cine-scroll-hint { animation: none; }
+  .ia-card-cta { transition: opacity 0.2s linear; transform: none; }
+  .ia-card-glow { display: none; }
 }
 
 /* ---------- LIMEX Material Core Experience (scroll-driven) ---------- */
@@ -1616,4 +1878,203 @@ a {
 }
 @media (max-width: 620px) {
   .cine-cmp-pair { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BORN OF LIMEX — scroll-driven cinematic narrative
+   All selectors are prefixed .born-* — no existing selectors touched.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Outer section wrapper — sits in normal document flow */
+.born-section {
+  position: relative;
+  background: #050706;
+  /* No overflow:hidden here — the sticky child needs to escape */
+}
+
+/* Tall scroll driver — 500vh gives scroll room for 5 stages */
+.born-scroll-driver {
+  position: relative;
+  height: 500vh;
+}
+
+/* Sticky stage — the actual 100vh canvas + overlay */
+.born-sticky {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #050706;
+}
+
+/* Canvas fill */
+.born-canvas-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.born-canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ── Captions overlay ────────────────────────────────────────────────────── */
+.born-captions {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(2rem, 7vh, 5rem) clamp(1.5rem, 7vw, 6rem);
+}
+
+.born-caption {
+  position: absolute;
+  bottom: clamp(2rem, 7vh, 5rem);
+  left:   clamp(1.5rem, 7vw, 6rem);
+  right:  clamp(1.5rem, 7vw, 6rem);
+  max-width: 72ch;
+  /* opacity + transform driven by JS rAF loop — no CSS transition needed
+     (would fight the direct DOM writes). Will-change for compositor promotion. */
+  will-change: opacity, transform;
+  opacity: 0;
+}
+
+.born-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+.born-eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 22px;
+  height: 1px;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.born-heading {
+  margin: 0;
+  font-size: clamp(1.6rem, 4.5vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: var(--c-cream);
+  text-rendering: geometricPrecision;
+  /* Subtle text shadow for legibility over the dark canvas */
+  text-shadow: 0 2px 32px rgba(5, 7, 6, 0.72);
+}
+
+/* ── Static fallback (no canvas — reduced-motion / non-premium) ─────────── */
+.born-static {
+  padding: clamp(4rem, 10vw, 8rem) clamp(1.5rem, 7vw, 6rem);
+  background: #050706;
+}
+
+.born-static-inner {
+  max-width: var(--c-maxw);
+  margin: 0 auto;
+}
+
+.born-static-title {
+  margin: 0.6rem 0 clamp(2.5rem, 6vw, 4.5rem);
+  font-size: clamp(2.2rem, 6vw, 4.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--c-cream);
+  line-height: 1.05;
+}
+
+/* Vertical mineral timeline */
+.born-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid var(--c-line);
+}
+
+.born-timeline-item {
+  display: flex;
+  gap: clamp(1.2rem, 3vw, 2.4rem);
+  padding: clamp(1.4rem, 3vw, 2.2rem) 0 clamp(1.4rem, 3vw, 2.2rem) clamp(1.4rem, 3vw, 2.4rem);
+  border-bottom: 1px solid var(--c-line);
+  position: relative;
+}
+.born-timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--c-accent);
+}
+
+.born-timeline-num {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--c-faint);
+  padding-top: 0.25em;
+  min-width: 2ch;
+}
+
+.born-timeline-eyebrow {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+
+.born-timeline-text {
+  margin: 0;
+  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+  line-height: 1.55;
+  color: var(--c-muted);
+  max-width: 68ch;
+}
+
+/* ── Reduced-motion override ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  /* If somehow the canvas version renders, kill any transform animations */
+  .born-caption {
+    transition: opacity 0.3s linear !important;
+    transform: none !important;
+    will-change: auto;
+  }
+}
+
+/* ── Mobile tweaks ───────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .born-heading {
+    font-size: clamp(1.3rem, 6.5vw, 2rem);
+  }
+  .born-caption {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1.5rem;
+  }
+  .born-timeline-item {
+    gap: 1rem;
+    padding-left: 1rem;
+  }
 }
