@@ -19,6 +19,16 @@ const LimestoneHero = lazy(() =>
   import("./LimestoneHero").then((m) => ({ default: m.LimestoneHero })),
 );
 
+// Born of LIMEX cinematic narrative — lazy-imported; canvas import is fully
+// gated behind the premium && !reduce check so the heavy R3F bundle is never
+// parsed on the fallback path.
+const BornOfLimexLazy = lazy(() =>
+  import("./BornOfLimex").then((m) => ({ default: m.BornOfLimex })),
+);
+// Static fallback is dependency-light (no three.js) and imported eagerly so the
+// simple / reduced-motion / low-end path never touches the WebGL chunk.
+import { BornStatic } from "./BornStatic";
+
 const whatsappHref =
   "https://wa.me/918849728938?text=" +
   encodeURIComponent(
@@ -331,6 +341,21 @@ export default function CinematicApp() {
       <div className="wd-section-divider" aria-hidden="true" />
       <MaterialIntelligence />
       <div className="wd-section-divider" aria-hidden="true" />
+
+      {/* Born of LIMEX — scroll-driven cinematic narrative.
+          Gated at the call site: only premium && !reduce mounts the lazy WebGL
+          component, so the heavy three.js / postprocessing chunk is never
+          fetched on the simple, reduced-motion, or low-end path. Everyone else
+          gets the dependency-light static mineral timeline. */}
+      {premium && !reduce ? (
+        <Suspense fallback={null}>
+          <BornOfLimexLazy />
+        </Suspense>
+      ) : (
+        <BornStatic />
+      )}
+      <div className="wd-section-divider" aria-hidden="true" />
+
       <MaterialCore />
       <div className="wd-section-divider" aria-hidden="true" />
       <LimexDetail />

@@ -1640,3 +1640,202 @@ a {
 @media (max-width: 620px) {
   .cine-cmp-pair { grid-template-columns: 1fr; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BORN OF LIMEX — scroll-driven cinematic narrative
+   All selectors are prefixed .born-* — no existing selectors touched.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Outer section wrapper — sits in normal document flow */
+.born-section {
+  position: relative;
+  background: #050706;
+  /* No overflow:hidden here — the sticky child needs to escape */
+}
+
+/* Tall scroll driver — 500vh gives scroll room for 5 stages */
+.born-scroll-driver {
+  position: relative;
+  height: 500vh;
+}
+
+/* Sticky stage — the actual 100vh canvas + overlay */
+.born-sticky {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #050706;
+}
+
+/* Canvas fill */
+.born-canvas-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.born-canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ── Captions overlay ────────────────────────────────────────────────────── */
+.born-captions {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(2rem, 7vh, 5rem) clamp(1.5rem, 7vw, 6rem);
+}
+
+.born-caption {
+  position: absolute;
+  bottom: clamp(2rem, 7vh, 5rem);
+  left:   clamp(1.5rem, 7vw, 6rem);
+  right:  clamp(1.5rem, 7vw, 6rem);
+  max-width: 72ch;
+  /* opacity + transform driven by JS rAF loop — no CSS transition needed
+     (would fight the direct DOM writes). Will-change for compositor promotion. */
+  will-change: opacity, transform;
+  opacity: 0;
+}
+
+.born-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+.born-eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 22px;
+  height: 1px;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.born-heading {
+  margin: 0;
+  font-size: clamp(1.6rem, 4.5vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: var(--c-cream);
+  text-rendering: geometricPrecision;
+  /* Subtle text shadow for legibility over the dark canvas */
+  text-shadow: 0 2px 32px rgba(5, 7, 6, 0.72);
+}
+
+/* ── Static fallback (no canvas — reduced-motion / non-premium) ─────────── */
+.born-static {
+  padding: clamp(4rem, 10vw, 8rem) clamp(1.5rem, 7vw, 6rem);
+  background: #050706;
+}
+
+.born-static-inner {
+  max-width: var(--c-maxw);
+  margin: 0 auto;
+}
+
+.born-static-title {
+  margin: 0.6rem 0 clamp(2.5rem, 6vw, 4.5rem);
+  font-size: clamp(2.2rem, 6vw, 4.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--c-cream);
+  line-height: 1.05;
+}
+
+/* Vertical mineral timeline */
+.born-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid var(--c-line);
+}
+
+.born-timeline-item {
+  display: flex;
+  gap: clamp(1.2rem, 3vw, 2.4rem);
+  padding: clamp(1.4rem, 3vw, 2.2rem) 0 clamp(1.4rem, 3vw, 2.2rem) clamp(1.4rem, 3vw, 2.4rem);
+  border-bottom: 1px solid var(--c-line);
+  position: relative;
+}
+.born-timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--c-accent);
+}
+
+.born-timeline-num {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--c-faint);
+  padding-top: 0.25em;
+  min-width: 2ch;
+}
+
+.born-timeline-eyebrow {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+
+.born-timeline-text {
+  margin: 0;
+  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+  line-height: 1.55;
+  color: var(--c-muted);
+  max-width: 68ch;
+}
+
+/* ── Reduced-motion override ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  /* If somehow the canvas version renders, kill any transform animations */
+  .born-caption {
+    transition: opacity 0.3s linear !important;
+    transform: none !important;
+    will-change: auto;
+  }
+}
+
+/* ── Mobile tweaks ───────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .born-heading {
+    font-size: clamp(1.3rem, 6.5vw, 2rem);
+  }
+  .born-caption {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1.5rem;
+  }
+  .born-timeline-item {
+    gap: 1rem;
+    padding-left: 1rem;
+  }
+}
