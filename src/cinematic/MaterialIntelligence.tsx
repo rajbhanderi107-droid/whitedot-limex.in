@@ -1,4 +1,5 @@
 import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { LimexRock } from "./LimexRock";
 
 const leftLabels = [
   { t: "Mineral composition", d: "50%+ calcium carbonate (CaCO₃), formed from captured CO₂." },
@@ -51,9 +52,7 @@ export function MaterialIntelligence() {
         <motion.div className="cine-mi-core" variants={core}>
           <span className="cine-mi-ring" aria-hidden="true" />
           <span className="cine-mi-ring two" aria-hidden="true" />
-          <span className="cine-mi-orb">
-            <span className="cine-mi-orb-label">LIMEX</span>
-          </span>
+          <LimexRock variant="is-mi" />
         </motion.div>
 
         <div className="cine-mi-col">
