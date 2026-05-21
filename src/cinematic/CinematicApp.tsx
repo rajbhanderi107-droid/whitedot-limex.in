@@ -9,6 +9,7 @@ import { LimexComparison } from "./LimexComparison";
 import { Consultation } from "./Consultation";
 import { SiteFooter } from "./SiteFooter";
 import { useLenis } from "./useLenis";
+import { ScrollProgress } from "./ScrollProgress";
 // PREMIUM-WD-BEGIN import
 import { usePremium } from "../premium-wd";
 // PREMIUM-WD-END import
@@ -63,12 +64,85 @@ function useNavScroll(navRef: RefObject<HTMLElement | null>, enabled: boolean) {
 }
 
 /**
+ * Section divider IntersectionObserver — fires .is-visible on .wd-section-divider
+ * elements as they enter the viewport. Provides the CSS animation trigger for
+ * browsers that don't support animation-timeline: view(). Premium-only.
+ */
+function useDividerReveal(enabled: boolean) {
+  useEffect(() => {
+    if (!enabled) return;
+    // Skip if browser supports scroll-driven animations natively
+    if (CSS.supports("animation-timeline", "view()")) return;
+
+    const dividers = document.querySelectorAll<HTMLElement>(".wd-section-divider");
+    if (!dividers.length) return;
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-visible");
+            obs.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+
+    dividers.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, [enabled]);
+}
+
+/**
+ * Scroll-tone journey: writes --wd-scroll (0–1) and --wd-scroll-warm (0–1)
+ * to <html> so the fixed background layer can shift tone cheaply via CSS.
+ * One rAF-throttled listener shared across the whole app.
+ * Premium-only — no-ops when disabled.
+ */
+function useScrollTone(enabled: boolean) {
+  useEffect(() => {
+    if (!enabled) return;
+
+    let ticking = false;
+    const root = document.documentElement;
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const scrollTop = window.scrollY;
+        const docHeight =
+          document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0;
+        // Warm peak in the middle of the page journey (~40–60% scroll)
+        const warm = Math.sin(progress * Math.PI);
+        root.style.setProperty("--wd-scroll", String(progress.toFixed(4)));
+        root.style.setProperty("--wd-scroll-warm", String(warm.toFixed(4)));
+        ticking = false;
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    root.style.setProperty("--wd-scroll", "0");
+    root.style.setProperty("--wd-scroll-warm", "0");
+    onScroll();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      root.style.removeProperty("--wd-scroll");
+      root.style.removeProperty("--wd-scroll-warm");
+    };
+  }, [enabled]);
+}
+
+/**
  * Hero headline — split into semantic lines, each line's words slide up
  * from behind a clip mask for a clean editorial reveal.
  *
  * Line 1: "The Sustainable Way to"
  * Line 2: "Replace Plastic"  (already wrapped in .grad span)
  *
+ * Premium: grander, slower, more cinematic than before.
  * When premium is off or motion is reduced we render the plain h1 so the
  * simple-mode site stays zero-overhead.
  */
@@ -97,9 +171,10 @@ function HeroHeadline({
   }
 
   // Premium path — each word slides up from clip, staggered per word.
+  // Slower, grander durations compared to previous version.
   const line1Words = ["The", "Sustainable", "Way", "to"];
   const line2Words = ["Replace", "Plastic"];
-  const wordDelay = 0.072; // seconds between each word
+  const wordDelay = 0.095; // slightly wider stagger for cinematic weight
 
   return (
     <h1 aria-label="The Sustainable Way to Replace Plastic">
@@ -108,12 +183,12 @@ function HeroHeadline({
           <motion.span
             key={word + i}
             className="cine-hero-h1-word"
-            initial={{ opacity: 0, y: "110%" }}
+            initial={{ opacity: 0, y: "115%" }}
             animate={{ opacity: 1, y: "0%" }}
-            transition={{ duration: 0.72, delay: delay + i * wordDelay, ease }}
+            transition={{ duration: 0.9, delay: delay + i * wordDelay, ease }}
           >
             {word}
-            {i < line1Words.length - 1 ? " " : ""}
+            {i < line1Words.length - 1 ? " " : ""}
           </motion.span>
         ))}
       </span>
@@ -122,16 +197,16 @@ function HeroHeadline({
           <motion.span
             key={word + i}
             className="cine-hero-h1-word grad"
-            initial={{ opacity: 0, y: "110%" }}
+            initial={{ opacity: 0, y: "115%" }}
             animate={{ opacity: 1, y: "0%" }}
             transition={{
-              duration: 0.76,
+              duration: 0.95,
               delay: delay + (line1Words.length + i) * wordDelay,
               ease,
             }}
           >
             {word}
-            {i < line2Words.length - 1 ? " " : ""}
+            {i < line2Words.length - 1 ? " " : ""}
           </motion.span>
         ))}
       </span>
@@ -147,6 +222,8 @@ export default function CinematicApp() {
 
   const navRef = useRef<HTMLElement>(null);
   useNavScroll(navRef, premium);
+  useScrollTone(premium && !reduce);
+  useDividerReveal(premium && !reduce);
 
   // Simple mode (premium off) reverts choreography to a quiet, near-instant fade.
   const rise = (delay: number) => {
@@ -166,6 +243,14 @@ export default function CinematicApp() {
 
   return (
     <main className="cine">
+      {/* Scroll-progress bar — premium only, self-contained, aria-hidden */}
+      <ScrollProgress />
+
+      {/* Scroll-tone backdrop — fixed layer driven by --wd-scroll CSS var */}
+      {premium && !reduce && (
+        <div className="wd-tone-layer" aria-hidden="true" />
+      )}
+
       <nav className="cine-nav" ref={navRef}>
         <a className="cine-brand" href="#top" aria-label="White Dot LLP">
           <img
@@ -202,6 +287,12 @@ export default function CinematicApp() {
           <div className="cine-hero-fallback" aria-hidden="true" />
         )}
 
+        {/* Drifting mineral atmosphere — slow GPU-cheap radial glow that breathes.
+            Premium-only, behind the 3D canvas, pointer-events:none, aria-hidden. */}
+        {premium && !reduce && (
+          <div className="cine-hero-atmosphere" aria-hidden="true" />
+        )}
+
         {/* Adaptive contrast scrim — softens the 3D scene behind the copy block.
             Defined in CSS under data-premium="on"; aria-hidden as it is decorative. */}
         <div className="cine-hero-copy-scrim" aria-hidden="true" />
@@ -213,13 +304,13 @@ export default function CinematicApp() {
 
           <HeroHeadline premium={premium} reduce={reduce} delay={0.22} />
 
-          <motion.p className="cine-hero-sub" {...rise(0.35)}>
+          <motion.p className="cine-hero-sub" {...rise(0.42)}>
             Invented by TBM in Japan, LIMEX is a limestone-based material that replaces plastic
             and lowers carbon — running on your existing machines. Seven Dot distributes it as the
             authorized dealer, and our sister company White Dot LLP markets and sells it to industry.
           </motion.p>
           <SupplyFlow />
-          <motion.div className="cine-hero-actions" {...rise(0.5)}>
+          <motion.div className="cine-hero-actions" {...rise(0.58)}>
             <a className="cine-btn cine-btn-primary" href="#material">
               Explore LIMEX
             </a>
@@ -227,7 +318,7 @@ export default function CinematicApp() {
               Request Material Consultation
             </a>
           </motion.div>
-          <motion.div className="cine-hero-eco" {...rise(0.62)} aria-label="Sustainability signals">
+          <motion.div className="cine-hero-eco" {...rise(0.72)} aria-label="Sustainability signals">
             <span>50%+ limestone, less plastic</span>
             <span>Lower carbon footprint</span>
             <span>Runs on existing production lines</span>
@@ -236,11 +327,18 @@ export default function CinematicApp() {
         <span className="cine-scroll-hint">Scroll</span>
       </section>
 
+      {/* Editorial section dividers — mineral hairlines that draw in as you scroll */}
+      <div className="wd-section-divider" aria-hidden="true" />
       <MaterialIntelligence />
+      <div className="wd-section-divider" aria-hidden="true" />
       <MaterialCore />
+      <div className="wd-section-divider" aria-hidden="true" />
       <LimexDetail />
+      <div className="wd-section-divider" aria-hidden="true" />
       <LimexComparison />
+      <div className="wd-section-divider" aria-hidden="true" />
       <IndustryApplications />
+      <div className="wd-section-divider" aria-hidden="true" />
       <Consultation />
       <SiteFooter />
     </main>
