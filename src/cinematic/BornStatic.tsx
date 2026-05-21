@@ -30,8 +30,19 @@ export const STAGE_TEXTS: readonly StageText[] = [
       "Calcium carbonate resolves into an ordered molecular structure.",
   },
   {
-    eyebrow: "The Material",
-    heading: "Bonded into a stable material — LIMEX.",
+    eyebrow: "Bonding",
+    heading:
+      "A clear resin flows through the structure and the composition stabilizes.",
+  },
+  {
+    eyebrow: "Refinement",
+    heading:
+      "The material refines and its surface smooths to a finished mineral skin.",
+  },
+  {
+    eyebrow: "Forms",
+    heading:
+      "The same material takes a thin, paper-like form — and a production-ready plastic replacement.",
   },
   {
     eyebrow: "Applications",

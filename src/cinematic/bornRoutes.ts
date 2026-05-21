@@ -31,14 +31,19 @@ export interface BornRoute {
 }
 
 export type BornSystem =
-  | "stone"   // the living stone — always on, every route
-  | "dust"    // tiny floating limestone dust
-  | "light"   // environmental light reveal (R02)
-  | "cracks"  // microscopic mineral cracks (R03)
-  | "co2"     // orbiting / absorbed CO₂ particles (R04–R05)
-  | "calcium" // inner crystalline glow (R06)
-  | "sheets"  // layered mineral sheets split (R07)
-  | "lattice";// molecular line lattice (R08–R09)
+  | "stone"     // the living stone — always on, every route
+  | "dust"      // tiny floating limestone dust
+  | "light"     // environmental light reveal (R02)
+  | "cracks"    // microscopic mineral cracks (R03)
+  | "co2"       // orbiting / absorbed CO₂ particles (R04–R05)
+  | "calcium"   // inner crystalline glow (R06)
+  | "sheets"    // layered mineral sheets split (R07)
+  | "lattice"   // molecular line lattice (R08–R09)
+  | "resin"     // translucent resin flow through the structure (R10)
+  | "stabilize" // motion quiets, layers consolidate into one solid (R11)
+  | "refine"    // surface refines: low roughness, glassy mineral skin (R12–R13)
+  | "paper"     // thin paper-like refined sheet emerges (R14)
+  | "plastic";  // clean translucent polymer-like blank, production-ready (R15)
 
 // ─── Fade width (in progress units) shared by all routes ──────────────────────
 export const FADE_W = 0.012;
@@ -122,44 +127,44 @@ export const ROUTES: readonly BornRoute[] = [
   {
     id: 10,
     window: slice(9),
-    systems: ["stone", "dust", "light"],
+    systems: ["stone", "dust", "light", "lattice", "resin"],
     eyebrow: "Bonding",
-    heading: "A clear resin moves through the ordered structure.",
+    heading: "A clear resin flows through the ordered structure.",
   },
   {
     id: 11,
     window: slice(10),
-    systems: ["stone", "dust", "light"],
+    systems: ["stone", "dust", "light", "resin", "stabilize"],
     eyebrow: "Stabilized",
-    heading: "The LIMEX composition settles into a stable material.",
+    heading: "The composition settles into a single, stable material.",
   },
   {
     id: 12,
     window: slice(11),
-    systems: ["stone", "dust", "light"],
+    systems: ["stone", "dust", "light", "stabilize", "refine"],
     eyebrow: "Refinement",
-    heading: "It refines toward a precise, engineered form.",
+    heading: "It refines into a precise, engineered material.",
   },
   {
     id: 13,
     window: slice(12),
-    systems: ["stone", "dust", "light"],
+    systems: ["stone", "dust", "light", "refine"],
     eyebrow: "Surface",
     heading: "The surface smooths to a finished mineral skin.",
   },
   {
     id: 14,
     window: slice(13),
-    systems: ["stone", "dust", "light"],
+    systems: ["stone", "dust", "light", "refine", "paper"],
     eyebrow: "Paper",
-    heading: "The same material takes a paper-like structure.",
+    heading: "The same material takes a thin, paper-like form.",
   },
   {
     id: 15,
     window: slice(14),
-    systems: ["stone", "dust", "light"],
+    systems: ["stone", "dust", "light", "paper", "plastic"],
     eyebrow: "Replacement",
-    heading: "A direct replacement for conventional plastic.",
+    heading: "A production-ready replacement for conventional plastic.",
   },
   {
     id: 16,
@@ -217,12 +222,12 @@ export const CAM_KEYS: readonly {
   { pos: [0.0, 0.3, 5.1], look: [0, 0.05, 0] },   // 07 sheets, look up a touch
   { pos: [0.5, -0.05, 5.0], look: [0, 0, 0] },    // 08 lattice
   { pos: [-0.3, 0.0, 5.2], look: [0, 0, 0] },     // 09 ordered
-  { pos: [0.0, 0.05, 5.4], look: [0, 0, 0] },     // 10 resin
-  { pos: [0.2, 0.1, 5.6], look: [0, 0, 0] },      // 11 stabilized
-  { pos: [-0.2, 0.05, 5.7], look: [0, 0, 0] },    // 12 refine
-  { pos: [0.0, 0.0, 5.8], look: [0, 0, 0] },      // 13 smooth
-  { pos: [0.1, 0.1, 6.0], look: [0, 0, 0] },      // 14 paper
-  { pos: [-0.1, 0.05, 6.1], look: [0, 0, 0] },    // 15 plastic replace
+  { pos: [0.35, 0.0, 4.9], look: [0, 0, 0] },     // 10 resin — push in, watch it flow
+  { pos: [-0.25, 0.08, 4.7], look: [0, 0, 0] },   // 11 stabilized — close, calm
+  { pos: [0.2, 0.04, 4.8], look: [0, 0, 0] },     // 12 refine — slow orbit
+  { pos: [-0.15, 0.0, 5.0], look: [0, 0, 0] },    // 13 smooth — settle on the skin
+  { pos: [0.1, 0.22, 5.6], look: [0, 0.06, 0] },  // 14 paper — lift to read the flat sheet
+  { pos: [-0.1, 0.12, 5.9], look: [0, 0.03, 0] }, // 15 plastic — level off, confident
   { pos: [0.2, 0.0, 6.2], look: [0, 0, 0] },      // 16 packaging
   { pos: [0.0, 0.0, 6.3], look: [0, 0, 0] },      // 17 bottle
   { pos: [-0.2, 0.05, 6.5], look: [0, 0, 0] },    // 18 ecosystem

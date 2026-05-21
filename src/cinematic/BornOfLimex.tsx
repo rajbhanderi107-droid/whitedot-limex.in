@@ -10,13 +10,15 @@
  *
  * The story is data-driven by ROUTES + CAM_KEYS in bornRoutes.ts. The scene is a
  * thin renderer that derives a handful of scalar "drivers" each frame:
- *   reveal · cracks · co2 · calcium · sheets · lattice
+ *   reveal · cracks · co2 · calcium · sheets · lattice · resin · stabilize ·
+ *   refine · paper · plastic
  * computed by summing the alpha of every route whose `systems` include that
  * subsystem. That keeps transitions cross-blended (no hard cuts) and makes
- * Phase 2+ a pure-data exercise (extend ROUTES, no engine edits).
+ * each phase mostly a data exercise (extend ROUTES, add a thin renderer).
  *
- * Routes 01–09 are fully realised this phase; 10–20 hold gracefully on the
- * stabilized, ordered stone (so the build is shippable).
+ * Routes 01–15 are realised (Phase 1: R01–R09 living stone; Phase 2: R10–R15
+ * material-transformation arc — resin flow, stabilize, refine, paper, plastic);
+ * 16–20 hold gracefully on the finished material (Phase 3 adds products/finale).
  *
  * Tiering: useDeviceTier() → "high" | "low". Low halves particle counts, drops
  * DepthOfField + ChromaticAberration, and skips the env map. Mobile (<480px)
@@ -48,6 +50,7 @@ import {
   buildCrystalGeometry,
   buildDustParticles,
   buildLatticeGeometry,
+  buildSlabGeometry,
 } from "./bornGeometry";
 import {
   co2VertGLSL,
@@ -60,6 +63,10 @@ import {
   latticeFragGLSL,
   dustVertGLSL,
   dustFragGLSL,
+  resinVertGLSL,
+  resinFragGLSL,
+  slabVertGLSL,
+  slabFragGLSL,
 } from "./bornShaders";
 import {
   ROUTES,
@@ -165,6 +172,7 @@ function LivingStone({ progress }: { progress: RefObject<number> }) {
       uTime: { value: 0 },
       uReveal: { value: 0 },
       uCracks: { value: 0 },
+      uRefine: { value: 0 },
       uColor: { value: new THREE.Color(ACCENT) },
       uKeyDir: { value: _keyDir.clone() },
     }),
@@ -197,11 +205,17 @@ function LivingStone({ progress }: { progress: RefObject<number> }) {
     const cracks = systemDriver(p, "cracks");
     const calcium = systemDriver(p, "calcium");
     const sheets = systemDriver(p, "sheets");
+    const refine = systemDriver(p, "refine");
+    // Stabilize (R11): quiets motion + consolidates layers into one solid.
+    const calm = systemDriver(p, "stabilize");
+    // Once refined, the surface is finished — fold the residual sheet split shut.
+    const settle = calm > refine ? calm : refine;
 
     if (stoneMat.current) {
       stoneMat.current.uniforms.uTime.value = t;
       stoneMat.current.uniforms.uReveal.value = reveal;
       stoneMat.current.uniforms.uCracks.value = cracks;
+      stoneMat.current.uniforms.uRefine.value = refine;
     }
     if (calciumMat.current) {
       calciumMat.current.uniforms.uTime.value = t;
@@ -209,15 +223,19 @@ function LivingStone({ progress }: { progress: RefObject<number> }) {
     }
 
     if (spinRef.current) {
-      // Always-on slow rotation; subtly faster while the stone "works".
-      spinRef.current.rotation.y += 0.0018 + calcium * 0.0012;
-      spinRef.current.rotation.x = Math.sin(t * 0.15) * 0.05;
+      // Always-on slow rotation; subtly faster while the stone "works", then
+      // eased toward stillness as the composition stabilizes/refines (R11+).
+      const quiet = 1 - 0.7 * settle;
+      spinRef.current.rotation.y += (0.0018 + calcium * 0.0012) * quiet;
+      spinRef.current.rotation.x = Math.sin(t * 0.15) * 0.05 * quiet;
     }
     if (breatheRef.current) {
       // Subtle breathing + a gentle scroll-reactive lift through the arc.
-      const breathe = 1 + Math.sin(t * 0.6) * 0.012;
+      // Breathing amplitude collapses as the material settles (R11+).
+      const quiet = 1 - 0.8 * settle;
+      const breathe = 1 + Math.sin(t * 0.6) * 0.012 * quiet;
       breatheRef.current.scale.setScalar(breathe);
-      breatheRef.current.position.y = Math.sin(t * 0.4) * 0.06;
+      breatheRef.current.position.y = Math.sin(t * 0.4) * 0.06 * quiet;
     }
     if (sheetsRef.current) {
       sheetsRef.current.visible = sheets > 0.01;
@@ -426,6 +444,125 @@ function LatticeField({ progress, tier, isMobile }: { progress: RefObject<number
   );
 }
 
+// ─── Resin flow shell (R10 → R11) ─────────────────────────────────────────────
+// A translucent fresnel-transmission shell sitting just outside the ordered
+// structure. uResin fills a vertical flow front up the form (resin moving
+// through); uCalm (from the stabilize driver) quiets the flow wave into a still
+// film as the composition settles. Reuses the crystal shell silhouette so it
+// hugs the stone. Cheap: one fresnel + one sine ripple, all guarded by uResin.
+function ResinFlow({ progress }: { progress: RefObject<number> }) {
+  const matRef = useRef<THREE.ShaderMaterial>(null);
+  const groupRef = useRef<THREE.Group>(null);
+  // Slightly outside the surface shell (1.62) so it reads as flow through/around.
+  const geometry = useMemo(() => buildCrystalGeometry(1.66), []);
+  const uniforms = useMemo(
+    () => ({
+      uTime: { value: 0 },
+      uResin: { value: 0 },
+      uCalm: { value: 0 },
+      uColor: { value: new THREE.Color(ACCENT) },
+    }),
+    [],
+  );
+
+  useEffect(() => () => geometry.dispose(), [geometry]);
+
+  useFrame(({ clock }) => {
+    const p = progress.current ?? 0;
+    const resin = systemDriver(p, "resin");
+    const calm = systemDriver(p, "stabilize");
+    if (matRef.current) {
+      matRef.current.uniforms.uTime.value = clock.elapsedTime;
+      matRef.current.uniforms.uResin.value = resin;
+      matRef.current.uniforms.uCalm.value = calm;
+    }
+    if (groupRef.current) {
+      groupRef.current.visible = resin > 0.01;
+      // Drifts almost imperceptibly — calm, never busy.
+      groupRef.current.rotation.y += 0.0009;
+    }
+  });
+
+  return (
+    <group ref={groupRef} visible={false}>
+      <mesh geometry={geometry}>
+        <shaderMaterial
+          ref={matRef}
+          vertexShader={resinVertGLSL}
+          fragmentShader={resinFragGLSL}
+          uniforms={uniforms}
+          transparent
+          depthWrite={false}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+// ─── Refined slab — paper (R14) + plastic (R15) ───────────────────────────────
+// One thin slab geometry the refined material takes a flat form as. uEmerge
+// scales it in from a hairline; uPaper drives a matte fibrous paper read, uPlastic
+// a clean slightly-translucent polymer blank. Both looks cross-blend on the same
+// mesh so R14→R15 is a material shift, not a swap. Guarded by uPaper/uPlastic so
+// it costs nothing before R14.
+function RefinedSlab({ progress, tier }: { progress: RefObject<number>; tier: DeviceTier }) {
+  const matRef = useRef<THREE.ShaderMaterial>(null);
+  const groupRef = useRef<THREE.Group>(null);
+  // Lower-poly slab on low tier (the shader, not the mesh, carries the look).
+  const geometry = useMemo(
+    () => (tier === "low" ? buildSlabGeometry(2.6, 0.12, 1.7) : buildSlabGeometry()),
+    [tier],
+  );
+  const uniforms = useMemo(
+    () => ({
+      uTime: { value: 0 },
+      uEmerge: { value: 0 },
+      uPaper: { value: 0 },
+      uPlastic: { value: 0 },
+      uKeyDir: { value: _keyDir.clone() },
+    }),
+    [],
+  );
+
+  useEffect(() => () => geometry.dispose(), [geometry]);
+
+  useFrame(({ clock }) => {
+    const p = progress.current ?? 0;
+    const paper = systemDriver(p, "paper");
+    const plastic = systemDriver(p, "plastic");
+    const emerge = paper > plastic ? paper : plastic; // grows in for either look
+    if (matRef.current) {
+      matRef.current.uniforms.uTime.value = clock.elapsedTime;
+      matRef.current.uniforms.uEmerge.value = smoothstep(emerge);
+      matRef.current.uniforms.uPaper.value = paper;
+      matRef.current.uniforms.uPlastic.value = plastic;
+    }
+    if (groupRef.current) {
+      groupRef.current.visible = emerge > 0.01;
+      // The slab tilts to read as a flat panel, with a barely-there sway.
+      groupRef.current.rotation.x = -0.32 + Math.sin(clock.elapsedTime * 0.18) * 0.015;
+      groupRef.current.rotation.y += 0.0008;
+    }
+  });
+
+  return (
+    <group ref={groupRef} visible={false}>
+      <mesh geometry={geometry}>
+        <shaderMaterial
+          ref={matRef}
+          vertexShader={slabVertGLSL}
+          fragmentShader={slabFragGLSL}
+          uniforms={uniforms}
+          transparent
+          depthWrite={false}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+    </group>
+  );
+}
+
 // ─── Scene root ───────────────────────────────────────────────────────────────
 function BornScene({
   progress,
@@ -468,6 +605,8 @@ function BornScene({
       <DustField progress={progress} tier={tier} isMobile={isMobile} />
       <CO2Orbit progress={progress} tier={tier} isMobile={isMobile} />
       <LatticeField progress={progress} tier={tier} isMobile={isMobile} />
+      <ResinFlow progress={progress} />
+      <RefinedSlab progress={progress} tier={tier} />
 
       {/* Post-FX — single composer. Tier-aware: low drops DoF + ChromaticAb. */}
       <EffectComposer multisampling={0}>

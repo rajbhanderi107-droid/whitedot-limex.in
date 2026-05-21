@@ -229,6 +229,30 @@ export function buildLatticeGeometry(approxCount: number, radius: number): THREE
   return geo;
 }
 
+// ─── Refined thin slab (R14 paper / R15 plastic) ─────────────────────────────
+// A thin rounded-corner-feel slab lying flat (y = thin axis). Plane-subdivided
+// faces give the slab UVs for the fibre grain; a slight edge bevel via corner
+// rounding would add cost, so we keep a clean box and let the shader carry the
+// material read. Built once in useMemo.
+export function buildSlabGeometry(w = 2.6, h = 0.12, d = 1.7): THREE.BufferGeometry {
+  const geo = new THREE.BoxGeometry(w, h, d, 6, 1, 4);
+  // Soften the long edges very slightly so the silhouette is not a hard brick.
+  const pos = geo.attributes.position as THREE.BufferAttribute;
+  const v = new THREE.Vector3();
+  const hw = w * 0.5;
+  const hd = d * 0.5;
+  for (let i = 0; i < pos.count; i++) {
+    v.fromBufferAttribute(pos, i);
+    const ex = Math.max(0, Math.abs(v.x) / hw - 0.78) / 0.22; // 0..1 near edge
+    const ez = Math.max(0, Math.abs(v.z) / hd - 0.78) / 0.22;
+    const edge = Math.max(ex, ez);
+    if (edge > 0) v.y *= 1 - edge * 0.4; // taper the rim thinner
+    pos.setXYZ(i, v.x, v.y, v.z);
+  }
+  geo.computeVertexNormals();
+  return geo;
+}
+
 // ─── Sample surface points from a geometry ────────────────────────────────────
 export function sampleGeometrySurface(geo: THREE.BufferGeometry, count: number, offset: THREE.Vector3 = new THREE.Vector3()): THREE.Vector3[] {
   const pos    = geo.attributes.position as THREE.BufferAttribute;
