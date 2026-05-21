@@ -272,6 +272,78 @@ a {
   align-items: center;
   overflow: hidden;
 }
+
+.cine-hero-studio {
+  position: absolute;
+  inset: clamp(5.4rem, 9vh, 7rem) clamp(1rem, 4vw, 3.2rem) clamp(1.2rem, 4vh, 3rem);
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.92;
+}
+
+.cine-hero-studio-line {
+  position: absolute;
+  left: 0;
+  right: 42%;
+  top: 18%;
+  height: 1px;
+  transform-origin: left;
+  background: linear-gradient(90deg, transparent, rgba(154, 168, 147, 0.72), rgba(245, 241, 232, 0.34), transparent);
+  filter: drop-shadow(0 0 12px rgba(154, 168, 147, 0.38));
+  animation: cineStudioLine 7.2s var(--c-ease) infinite;
+}
+
+.cine-hero-studio-flare {
+  position: absolute;
+  left: 5%;
+  bottom: 18%;
+  width: clamp(9rem, 22vw, 18rem);
+  height: clamp(9rem, 22vw, 18rem);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle, rgba(245, 241, 232, 0.16), transparent 34%),
+    radial-gradient(circle, rgba(154, 168, 147, 0.13), transparent 62%);
+  filter: blur(6px);
+  mix-blend-mode: screen;
+  animation: cineStudioFlare 10s ease-in-out infinite;
+}
+
+.cine-hero-studio-mark {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border-color: rgba(245, 241, 232, 0.24);
+  opacity: 0.82;
+}
+
+.cine-hero-studio-mark-tl {
+  top: 0;
+  left: 0;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+
+.cine-hero-studio-mark-tr {
+  top: 0;
+  right: 0;
+  border-top: 1px solid;
+  border-right: 1px solid;
+}
+
+.cine-hero-studio-mark-bl {
+  bottom: 0;
+  left: 0;
+  border-bottom: 1px solid;
+  border-left: 1px solid;
+}
+
+.cine-hero-studio-mark-br {
+  bottom: 0;
+  right: 0;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
 .cine-hero-canvas {
   position: absolute;
   inset: 0;
@@ -591,6 +663,80 @@ a {
   box-shadow: 0 0 10px rgba(143, 163, 137, 0.7);
 }
 
+.cine-hero-proof {
+  position: absolute;
+  right: clamp(1rem, 4vw, 3.2rem);
+  bottom: clamp(5rem, 10vh, 7rem);
+  z-index: 3;
+  width: min(330px, calc(100vw - 2rem));
+  padding: 1rem;
+  border: 1px solid rgba(228, 222, 212, 0.16);
+  border-radius: 18px;
+  background:
+    linear-gradient(145deg, rgba(246, 247, 244, 0.085), rgba(246, 247, 244, 0.02)),
+    rgba(17, 20, 18, 0.68);
+  backdrop-filter: blur(18px) saturate(1.24);
+  -webkit-backdrop-filter: blur(18px) saturate(1.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 28px 70px rgba(0, 0, 0, 0.46),
+    0 0 70px rgba(154, 168, 147, 0.08);
+  overflow: hidden;
+}
+
+.cine-hero-proof::before {
+  content: "";
+  position: absolute;
+  inset: -45% -25% auto;
+  height: 90%;
+  background: linear-gradient(105deg, transparent, rgba(245, 241, 232, 0.16), transparent);
+  transform: translateX(-65%) rotate(8deg);
+  animation: cineProofSheen 8s var(--c-ease) infinite;
+}
+
+.cine-hero-proof-kicker {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: var(--c-accent);
+  font-family: var(--wd-font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.cine-hero-proof-grid {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.58rem 0.8rem;
+  align-items: baseline;
+}
+
+.cine-hero-proof-grid strong {
+  color: transparent;
+  background: linear-gradient(120deg, var(--c-cream), var(--c-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-size: clamp(1.35rem, 2.3vw, 2.15rem);
+  line-height: 0.95;
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+}
+
+.cine-hero-proof-grid span {
+  color: var(--c-muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+@media (max-width: 980px) {
+  .cine-hero-proof,
+  .cine-hero-studio {
+    display: none;
+  }
+}
+
 .cine-scroll-hint {
   position: absolute;
   left: 50%;
@@ -606,6 +752,24 @@ a {
 @keyframes cineHint {
   0%, 100% { opacity: 0.4; transform: translate(-50%, 0); }
   50% { opacity: 1; transform: translate(-50%, 6px); }
+}
+
+@keyframes cineStudioLine {
+  0% { transform: scaleX(0); opacity: 0; }
+  18% { opacity: 1; }
+  42% { transform: scaleX(1); opacity: 0.84; }
+  100% { transform: scaleX(1); opacity: 0.34; }
+}
+
+@keyframes cineStudioFlare {
+  0%, 100% { transform: scale(0.92); opacity: 0.46; }
+  50% { transform: scale(1.08); opacity: 0.82; }
+}
+
+@keyframes cineProofSheen {
+  0%, 55% { transform: translateX(-72%) rotate(8deg); opacity: 0; }
+  68% { opacity: 1; }
+  100% { transform: translateX(82%) rotate(8deg); opacity: 0; }
 }
 
 /* ---------- generic section scaffold (next phases) ---------- */

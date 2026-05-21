@@ -224,6 +224,28 @@ function HeroHeadline({
   );
 }
 
+function HeroProofPanel() {
+  return (
+    <motion.aside
+      className="cine-hero-proof"
+      initial={{ opacity: 0, y: 26, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.9, delay: 0.92, ease: [0.22, 1, 0.36, 1] }}
+      aria-label="LIMEX proof points"
+    >
+      <span className="cine-hero-proof-kicker">Material brief</span>
+      <div className="cine-hero-proof-grid">
+        <strong>50%+</strong>
+        <span>calcium carbonate content</span>
+        <strong>14d</strong>
+        <span>trial sample target window</span>
+        <strong>4</strong>
+        <span>authorized regions served</span>
+      </div>
+    </motion.aside>
+  );
+}
+
 export default function CinematicApp() {
   const premium = usePremium();
   useLenis(premium);
@@ -289,6 +311,15 @@ export default function CinematicApp() {
       </nav>
 
       <section className="cine-hero" id="top">
+        <div className="cine-hero-studio" aria-hidden="true">
+          <span className="cine-hero-studio-line" />
+          <span className="cine-hero-studio-flare" />
+          <span className="cine-hero-studio-mark cine-hero-studio-mark-tl" />
+          <span className="cine-hero-studio-mark cine-hero-studio-mark-tr" />
+          <span className="cine-hero-studio-mark cine-hero-studio-mark-bl" />
+          <span className="cine-hero-studio-mark cine-hero-studio-mark-br" />
+        </div>
+
         {premium && !reduce ? (
           <Suspense fallback={<div className="cine-hero-fallback" aria-hidden="true" />}>
             <LimestoneHero />
@@ -309,7 +340,7 @@ export default function CinematicApp() {
 
         <div className="cine-hero-copy">
           <motion.span className="cine-eyebrow" {...rise(0.1)}>
-            Sustainable Material Intelligence
+            Authorized LIMEX Material Intelligence
           </motion.span>
 
           <HeroHeadline premium={premium} reduce={reduce} delay={0.22} />
@@ -335,6 +366,7 @@ export default function CinematicApp() {
             <span>Runs on existing production lines</span>
           </motion.div>
         </div>
+        {premium && !reduce && <HeroProofPanel />}
         <span className="cine-scroll-hint">Scroll</span>
       </section>
 
