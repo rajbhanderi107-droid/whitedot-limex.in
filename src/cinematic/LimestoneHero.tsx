@@ -1,35 +1,22 @@
-import { Suspense, useEffect, useMemo, useRef, type RefObject } from "react";
+import { Suspense, useEffect, useRef, type RefObject } from "react";
 import { Canvas, useFrame, type ThreeElements } from "@react-three/fiber";
 import { Float, Sparkles } from "@react-three/drei";
 import * as THREE from "three";
+import { LimexModel, ProceduralCrystal, ModelBoundary } from "./LimexModel";
 
 const ACCENT = "#9aa893";
 
 type ScrollRef = RefObject<number>;
 
-/** Procedural calcium-carbonate crystal: faceted icosahedron with a warm rim,
- *  cursor parallax, and igloo-style scroll-driven transform. */
+/** Real limestone scan suspended in cinematic space: idle spin, cursor parallax,
+ *  and igloo-style scroll-driven transform. Falls back to the procedural crystal. */
 function Crystal({ scroll, ...props }: { scroll: ScrollRef } & ThreeElements["group"]) {
-  const group = useRef<THREE.Group>(null);
-  const mesh = useRef<THREE.Mesh>(null);
-
-  const geometry = useMemo(() => {
-    const geo = new THREE.IcosahedronGeometry(1.6, 4);
-    const pos = geo.attributes.position as THREE.BufferAttribute;
-    const v = new THREE.Vector3();
-    for (let i = 0; i < pos.count; i++) {
-      v.fromBufferAttribute(pos, i);
-      const n = Math.sin(v.x * 3.1) * Math.cos(v.y * 2.7) * Math.sin(v.z * 3.3);
-      v.multiplyScalar(1 + n * 0.06);
-      pos.setXYZ(i, v.x, v.y, v.z);
-    }
-    geo.computeVertexNormals();
-    return geo;
-  }, []);
+  const group = useRef<THREE.Group>(null); // outer: parallax + scroll transform
+  const spin = useRef<THREE.Group>(null); // inner: continuous idle rotation
 
   useFrame((state, delta) => {
     const p = scroll.current ?? 0;
-    if (mesh.current) mesh.current.rotation.y += delta * 0.12;
+    if (spin.current) spin.current.rotation.y += delta * 0.12;
     if (group.current) {
       const px = state.pointer.x * 0.35;
       const py = state.pointer.y * 0.25;
@@ -46,19 +33,13 @@ function Crystal({ scroll, ...props }: { scroll: ScrollRef } & ThreeElements["gr
   return (
     <group ref={group} {...props}>
       <Float speed={1.1} rotationIntensity={0.3} floatIntensity={0.7}>
-        <mesh ref={mesh} geometry={geometry} castShadow>
-          <meshStandardMaterial
-            color="#dcd9cf"
-            metalness={0.14}
-            roughness={0.52}
-            flatShading
-            emissive={ACCENT}
-            emissiveIntensity={0.05}
-          />
-        </mesh>
-        <mesh geometry={geometry} scale={1.012}>
-          <meshBasicMaterial color={ACCENT} wireframe transparent opacity={0.07} />
-        </mesh>
+        <group ref={spin}>
+          <ModelBoundary fallback={<ProceduralCrystal />}>
+            <Suspense fallback={<ProceduralCrystal />}>
+              <LimexModel size={3.4} />
+            </Suspense>
+          </ModelBoundary>
+        </group>
       </Float>
     </group>
   );

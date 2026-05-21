@@ -1,79 +1,15 @@
-import {
-  Component,
-  Suspense,
-  useMemo,
-  useRef,
-  type ReactNode,
-  type RefObject,
-} from "react";
+import { Suspense, useRef, type ReactNode, type RefObject } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Sparkles, useGLTF } from "@react-three/drei";
+import { Sparkles } from "@react-three/drei";
 import * as THREE from "three";
+import { LimexModel, ProceduralCrystal, ModelBoundary } from "./LimexModel";
 
 const ACCENT = "#9aa893";
-// Drop your model here (Draco-compressed GLB recommended): public/models/limex-core.glb
-const MODEL_URL = `${import.meta.env.BASE_URL}models/limex-core.glb`;
 
 type ScrollRef = RefObject<number>;
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const seg = (p: number, from: number, to: number) => clamp((p - from) / (to - from));
 const ease = (t: number) => 1 - Math.pow(1 - t, 3);
-
-/** Catches a missing/failed GLB and renders the procedural fallback instead. */
-class ModelBoundary extends Component<{ fallback: ReactNode; children: ReactNode }, { failed: boolean }> {
-  state = { failed: false };
-  static getDerivedStateFromError() {
-    return { failed: true };
-  }
-  render() {
-    return this.state.failed ? this.props.fallback : this.props.children;
-  }
-}
-
-/** Procedural calcium-carbonate crystal (default + fallback). */
-function ProceduralMesh() {
-  const geo = useMemo(() => {
-    const g = new THREE.IcosahedronGeometry(1.45, 5);
-    const pos = g.attributes.position as THREE.BufferAttribute;
-    const v = new THREE.Vector3();
-    for (let i = 0; i < pos.count; i++) {
-      v.fromBufferAttribute(pos, i);
-      const n = Math.sin(v.x * 2.6) * Math.cos(v.y * 2.3) * Math.sin(v.z * 2.9);
-      v.multiplyScalar(1 + n * 0.05);
-      pos.setXYZ(i, v.x, v.y, v.z);
-    }
-    g.computeVertexNormals();
-    return g;
-  }, []);
-  return (
-    <>
-      <mesh geometry={geo}>
-        <meshStandardMaterial color="#e8e4da" metalness={0.12} roughness={0.5} flatShading emissive={ACCENT} emissiveIntensity={0.06} />
-      </mesh>
-      <mesh scale={0.6}>
-        <icosahedronGeometry args={[1, 1]} />
-        <meshBasicMaterial color={ACCENT} transparent opacity={0.18} />
-      </mesh>
-    </>
-  );
-}
-
-/** User-supplied GLB model, normalized to a consistent size + centered. */
-function ModelMesh() {
-  const { scene } = useGLTF(MODEL_URL, true);
-  const obj = useMemo(() => {
-    const clone = scene.clone();
-    const box = new THREE.Box3().setFromObject(clone);
-    const size = box.getSize(new THREE.Vector3());
-    const maxDim = Math.max(size.x, size.y, size.z) || 1;
-    const k = 3 / maxDim; // normalize largest dimension to ~3 units
-    clone.scale.setScalar(k);
-    const center = box.getCenter(new THREE.Vector3()).multiplyScalar(k);
-    clone.position.sub(center);
-    return clone;
-  }, [scene]);
-  return <primitive object={obj} />;
-}
 
 /** Shared scroll-driven group: forms, rotates, parallax, settles. */
 function CoreGroup({ scroll, children }: { scroll: ScrollRef; children: ReactNode }) {
@@ -126,9 +62,9 @@ function Scene({ scroll }: { scroll: ScrollRef }) {
       <directionalLight position={[5, -2, -3]} intensity={1.8} color={ACCENT} />
       <pointLight position={[0, -3, 4]} intensity={0.9} color="#cfcabd" />
       <CoreGroup scroll={scroll}>
-        <ModelBoundary fallback={<ProceduralMesh />}>
-          <Suspense fallback={<ProceduralMesh />}>
-            <ModelMesh />
+        <ModelBoundary fallback={<ProceduralCrystal size={1.45} />}>
+          <Suspense fallback={<ProceduralCrystal size={1.45} />}>
+            <LimexModel size={3} />
           </Suspense>
         </ModelBoundary>
       </CoreGroup>
