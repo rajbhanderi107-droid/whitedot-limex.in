@@ -263,29 +263,49 @@ a {
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 70% 60% at 50% 42%, transparent 0%, rgba(0, 0, 0, 0.52) 100%),
+    radial-gradient(ellipse 70% 60% at 50% 42%, transparent 0%, rgba(0, 0, 0, 0.45) 100%),
     radial-gradient(ellipse 120% 40% at 50% 100%, rgba(0, 0, 0, 0.72) 0%, transparent 100%),
     linear-gradient(180deg, rgba(8, 9, 11, 0.28) 0%, transparent 22%, transparent 62%, var(--c-bg) 98%);
 }
 
-/* Adaptive contrast scrim behind hero copy — isolates text from the 3D scene */
+/* Adaptive contrast scrim behind hero copy — isolates text from the 3D scene.
+   Left-anchored gradient: covers the left copy column, fades to transparent
+   before crossing 50% so the 3D rock on the right is never obscured. */
 .cine-hero-copy-scrim {
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  /* Deep left-side shadow: text lives left-of-center, 3D rock lives right */
   background:
-    radial-gradient(ellipse 78% 90% at 28% 50%, rgba(8, 9, 11, 0.54) 0%, transparent 100%);
+    radial-gradient(ellipse 55% 100% at 12% 50%, rgba(8, 9, 11, 0.72) 0%, transparent 100%),
+    radial-gradient(ellipse 40% 80% at 0% 50%, rgba(8, 9, 11, 0.5) 0%, transparent 100%);
 }
+
+/* Hero copy container: on desktop pinned to the left ~45% of the viewport.
+   The 3D canvas fills the full hero; the copy floats over the left column
+   only, leaving the right 55% entirely clear for the limestone model.
+   On mobile the copy spans full width and the model renders behind it. */
 .cine-hero-copy {
   position: relative;
   z-index: 2;
+  /* Full-bleed wrapper up to maxw */
   width: min(var(--c-maxw), calc(100% - 2.2rem));
   margin: 0 auto;
   padding-top: 8vh;
   pointer-events: none;
 }
+
+/* Desktop: constrain the copy content to the left 46% so the right column
+   is clear for the 3D model. Achieved by capping the inner content width. */
+@media (min-width: 768px) {
+  .cine-hero-copy {
+    /* The copy wrapper is already max-width:1240px centered.
+       Apply a max-width to the copy itself to pin it left. */
+    max-width: 46%;
+    margin: 0 clamp(1.1rem, 4vw, 3.2rem);
+  }
+}
+
 .cine-hero-copy > * {
   pointer-events: auto;
 }
@@ -829,11 +849,14 @@ a {
     inset 0 1px 0 rgba(245, 241, 232, 0.12);
 }
 
-/* ── Stronger hero scrim in premium — ensures big type is crisp ── */
+/* ── Stronger hero scrim in premium — ensures big type is crisp.
+   Left-anchored: covers the left copy column only, fades before 55% so the
+   right-side 3D model is never darkened by the scrim. ── */
 :root[data-premium="on"] .cine-hero-copy-scrim {
   background:
-    radial-gradient(ellipse 90% 100% at 22% 52%, rgba(5, 7, 6, 0.66) 0%, transparent 75%),
-    radial-gradient(ellipse 60% 70% at 10% 50%, rgba(5, 7, 6, 0.45) 0%, transparent 60%);
+    radial-gradient(ellipse 52% 110% at 8% 50%, rgba(5, 7, 6, 0.78) 0%, rgba(5, 7, 6, 0.0) 100%),
+    radial-gradient(ellipse 38% 90% at 0% 50%, rgba(5, 7, 6, 0.55) 0%, transparent 100%),
+    linear-gradient(90deg, rgba(5, 7, 6, 0.42) 0%, rgba(5, 7, 6, 0.1) 38%, transparent 52%);
 }
 
 /* ---------- Material Intelligence ---------- */
