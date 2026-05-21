@@ -6,6 +6,7 @@ import { Vector2 } from "three";
 import * as THREE from "three";
 import { LimexModel, ProceduralCrystal, ModelBoundary } from "./LimexModel";
 import { ACCENT, CREAM, StudioKey, fbm1 } from "./heroCinematics";
+import { useFrameloopOnVisible } from "./useFrameloopOnVisible";
 
 // Pre-allocate once — zero per-frame GC
 const _caOffset = new Vector2(0.0005, 0.00025);
@@ -299,6 +300,7 @@ function Scene({ scroll }: { scroll: ScrollRef }) {
 
 export function LimestoneHero() {
   const scroll = useRef(0);
+  const { canvasRef, frameloop } = useFrameloopOnVisible();
 
   useEffect(() => {
     const onScroll = () => {
@@ -312,6 +314,8 @@ export function LimestoneHero() {
 
   return (
     <Canvas
+      ref={canvasRef}
+      frameloop={frameloop}
       className="cine-hero-canvas"
       dpr={[1, 1.75]}
       gl={{
