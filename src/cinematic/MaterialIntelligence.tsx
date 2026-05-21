@@ -1,7 +1,7 @@
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 
 const leftLabels = [
-  { t: "Mineral composition", d: "50%+ calcium carbonate (CaCO₃), drawn from abundant limestone." },
+  { t: "Mineral composition", d: "50%+ calcium carbonate (CaCO₃), formed from captured CO₂." },
   { t: "Reduced plastic dependency", d: "Replaces a large share of petroleum-based plastic in the blend." },
   { t: "Sustainability value", d: "Lower carbon footprint with practical recycling pathways." },
 ];
@@ -28,7 +28,7 @@ export function MaterialIntelligence() {
       <span className="cine-kicker">LIMEX Material Intelligence</span>
       <h2>Half laboratory. Half future material.</h2>
       <p className="lead">
-        A limestone-based material engineered to behave like plastic on the production line —
+        A CO₂-based material engineered to behave like plastic on the production line —
         while quietly using far less of it.
       </p>
 

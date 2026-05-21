@@ -3,6 +3,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Sparkles } from "@react-three/drei";
 import * as THREE from "three";
 import { LimexModel, ProceduralCrystal, ModelBoundary } from "./LimexModel";
+import { useFrameloopOnVisible } from "./useFrameloopOnVisible";
 
 const ACCENT = "#9aa893";
 
@@ -75,10 +76,13 @@ function Scene({ scroll }: { scroll: ScrollRef }) {
 }
 
 export default function LimexCore3D({ scroll }: { scroll: ScrollRef }) {
+  const { canvasRef, frameloop } = useFrameloopOnVisible();
   return (
     <Canvas
+      ref={canvasRef}
+      frameloop={frameloop}
       className="cine-core-canvas"
-      dpr={[1, 2]}
+      dpr={[1, 1.75]}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       camera={{ position: [0, 0, 6], fov: 42 }}
     >

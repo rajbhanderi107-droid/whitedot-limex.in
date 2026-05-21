@@ -10,8 +10,8 @@ const whatsappHref =
 const stages = [
   {
     eyebrow: "Stage 01",
-    title: "Born from Limestone",
-    body: "LIMEX begins with limestone-derived mineral content, giving it a natural and strong material foundation.",
+    title: "Born from CO₂",
+    body: "LIMEX begins with captured CO₂ that is formed into calcium carbonate, giving it a strong, abundant mineral foundation.",
   },
   {
     eyebrow: "Stage 02",

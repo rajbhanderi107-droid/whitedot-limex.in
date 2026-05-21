@@ -315,9 +315,10 @@ export default function CinematicApp() {
           <HeroHeadline premium={premium} reduce={reduce} delay={0.22} />
 
           <motion.p className="cine-hero-sub" {...rise(0.42)}>
-            Invented by TBM in Japan, LIMEX is a limestone-based material that replaces plastic
-            and lowers carbon — running on your existing machines. Seven Dot distributes it as the
-            authorized dealer, and our sister company White Dot LLP markets and sells it to industry.
+            Invented by TBM in Japan, LIMEX is a CO₂-based material — captured carbon is formed
+            into calcium carbonate — that replaces plastic and lowers carbon, running on your
+            existing machines. Seven Dot distributes it as the authorized dealer, and our sister
+            company White Dot LLP markets and sells it to industry.
           </motion.p>
           <SupplyFlow />
           <motion.div className="cine-hero-actions" {...rise(0.58)}>
@@ -329,7 +330,7 @@ export default function CinematicApp() {
             </a>
           </motion.div>
           <motion.div className="cine-hero-eco" {...rise(0.72)} aria-label="Sustainability signals">
-            <span>50%+ limestone, less plastic</span>
+            <span>50%+ calcium carbonate, less plastic</span>
             <span>Lower carbon footprint</span>
             <span>Runs on existing production lines</span>
           </motion.div>

@@ -43,7 +43,7 @@ export function Consultation() {
     <section className="cine-section cine-consult" id="consult">
       <div className="cine-consult-head">
         <span className="cine-kicker">Consultation</span>
-        <h2>Move from plastic to limestone, without re-tooling.</h2>
+        <h2>Move from plastic to LIMEX, without re-tooling.</h2>
         <p className="lead">
           Tell us your product, polymer, and monthly volume. We assess LIMEX compatibility,
           arrange trial material for your existing line, and scope a path to scale.

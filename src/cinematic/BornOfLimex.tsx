@@ -42,6 +42,7 @@ import {
   morphFragGLSL,
 } from "./bornShaders";
 import { STAGE_TEXTS } from "./BornStatic";
+import { useFrameloopOnVisible } from "./useFrameloopOnVisible";
 
 // ─── Brand tokens ─────────────────────────────────────────────────────────────
 const ACCENT = "#9aa893";
@@ -519,6 +520,7 @@ function BornCaptions({ progress }: CaptionProps) {
 export function BornOfLimex() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const progress   = useRef(0);
+  const { canvasRef, frameloop } = useFrameloopOnVisible();
 
   // rAF-throttled passive scroll listener — same pattern as LimestoneHero
   useEffect(() => {
@@ -557,6 +559,8 @@ export function BornOfLimex() {
           {/* Canvas — aria-hidden; captions are real DOM text */}
           <div className="born-canvas-wrap" aria-hidden="true">
             <Canvas
+              ref={canvasRef}
+              frameloop={frameloop}
               className="born-canvas"
               dpr={[1, 1.75]}
               gl={{
@@ -566,7 +570,6 @@ export function BornOfLimex() {
                 stencil: false,
               }}
               camera={{ position: [0, 0.5, 7.5], fov: 46 }}
-              frameloop="always"
             >
               <Suspense fallback={null}>
                 <BornScene progress={progress} />

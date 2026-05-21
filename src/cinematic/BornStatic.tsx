@@ -26,7 +26,7 @@ export const STAGE_TEXTS: readonly StageText[] = [
   },
   {
     eyebrow: "The Material",
-    heading: "Born from limestone. Engineered through carbon innovation.",
+    heading: "Born from captured CO₂. Engineered through carbon innovation.",
   },
   {
     eyebrow: "Applications",
