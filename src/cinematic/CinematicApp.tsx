@@ -175,19 +175,19 @@ function HeroHeadline({
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
       >
-        The Sustainable Way to <span className="grad">Replace Plastic</span>
+        Mineral Intelligence for <span className="grad">LIMEX Adoption</span>
       </motion.h1>
     );
   }
 
   // Premium path — each word slides up from clip, staggered per word.
   // Slower, grander durations compared to previous version.
-  const line1Words = ["The", "Sustainable", "Way", "to"];
-  const line2Words = ["Replace", "Plastic"];
+  const line1Words = ["Mineral", "Intelligence"];
+  const line2Words = ["for", "LIMEX", "Adoption"];
   const wordDelay = 0.095; // slightly wider stagger for cinematic weight
 
   return (
-    <h1 aria-label="The Sustainable Way to Replace Plastic">
+    <h1 aria-label="Mineral Intelligence for LIMEX Adoption">
       <span className="cine-hero-h1-line" aria-hidden="true">
         {line1Words.map((word, i) => (
           <motion.span
