@@ -1,0 +1,89 @@
+/* ───────────────────────────────────────────────────────────────────────────
+   PREMIUM-WD — SIMPLE-MODE CSS LAYER
+   Active only when <html data-premium="off">. Strips the cinematic VFX
+   (glows, blur, parallax, looping animations, heavy shadows) and collapses
+   motion, while leaving layout, type scale and responsiveness untouched.
+   When data-premium="on" (or absent) nothing here applies.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:root[data-premium="off"] {
+  /* Neutralise the accent glow at the source so every box/text-shadow using it
+     loses its halo without per-rule overrides. */
+  --c-accent-glow: transparent;
+}
+
+/* Stop the looping ambient animations — keep their resting state. */
+:root[data-premium="off"] .cine-flow-node strong,
+:root[data-premium="off"] .cine-flow-pulse,
+:root[data-premium="off"] .cine-mi-ring,
+:root[data-premium="off"] .cine-scroll-hint,
+:root[data-premium="off"] .cine-detail-rock img {
+  animation: none !important;
+}
+
+:root[data-premium="off"] .cine-flow-pulse {
+  opacity: 1;
+}
+
+/* Drop atmospheric blur — expensive and a "premium" cue. */
+:root[data-premium="off"] .cine-nav,
+:root[data-premium="off"] [class*="backdrop"],
+:root[data-premium="off"] .cine-mi-card,
+:root[data-premium="off"] .cine-glass,
+:root[data-premium="off"] .cine-detail-panel {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Remove glow-style drop shadows; keep flat depth shadows readable. */
+:root[data-premium="off"] .cine-brand-logo {
+  filter: none !important;
+}
+
+/* The hero rock's blurred halo + float is a premium flourish. */
+:root[data-premium="off"] .cine-detail-rock::after,
+:root[data-premium="off"] .cine-detail-rock::before {
+  filter: none !important;
+  opacity: 0.25;
+}
+
+/* Magnetic / lift micro-interactions collapse to a quiet color-only state. */
+:root[data-premium="off"] .cine-btn:hover,
+:root[data-premium="off"] .cine-mi-card:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Strip button ghost shimmer pseudo-element in simple mode. */
+:root[data-premium="off"] .cine-btn-ghost::before {
+  display: none !important;
+}
+
+/* Nav scroll-state condensing is a premium motion cue — neutralise. */
+:root[data-premium="off"] .cine-nav.is-scrolled {
+  padding-top: 1.1rem !important;
+  padding-bottom: 1.1rem !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom-color: transparent !important;
+}
+
+/* Atmospheric depth layer is premium-only (gated in CSS already via
+   :root[data-premium="on"], but declare here for explicitness). */
+:root[data-premium="off"] .cine::before {
+  display: none !important;
+}
+
+/* Copy scrim is premium-only. */
+:root[data-premium="off"] .cine-hero-copy-scrim {
+  display: none !important;
+}
+
+/* Honour the brief's "collapse to fades" rule for the reverted experience:
+   neutralise any remaining long transforms so scrolling feels plain, not
+   choreographed. Color/opacity transitions are kept for basic feedback. */
+:root[data-premium="off"] * {
+  transition-property: color, background-color, border-color, opacity !important;
+  transition-duration: 0.2s !important;
+  will-change: auto !important;
+}
