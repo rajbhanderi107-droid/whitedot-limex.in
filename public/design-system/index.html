@@ -8,9 +8,7 @@
   <link rel="stylesheet" href="./colors_and_type.css">
   <style>
     * { box-sizing: border-box; }
-
-    html,
-    body {
+    html, body {
       margin: 0;
       min-height: 100%;
       background: var(--wd-bg);
@@ -20,7 +18,6 @@
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
     }
-
     body {
       min-height: 100vh;
       background:
@@ -29,7 +26,6 @@
         linear-gradient(160deg, #0d0f0e 0%, #131611 48%, #0a0c0b 100%);
       overflow-x: hidden;
     }
-
     body::after {
       content: "";
       position: fixed;
@@ -37,11 +33,9 @@
       pointer-events: none;
       opacity: 0.045;
       mix-blend-mode: overlay;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+      background-image: var(--wd-grain);
     }
-
     a { color: inherit; text-decoration: none; }
-
     .page {
       width: min(1120px, calc(100% - 2rem));
       min-height: 100vh;
@@ -50,8 +44,9 @@
       align-content: center;
       gap: clamp(2rem, 5vw, 4.5rem);
       padding: clamp(6rem, 12vh, 9rem) 0;
+      position: relative;
+      z-index: 1;
     }
-
     .brand {
       display: flex;
       align-items: center;
@@ -62,16 +57,14 @@
       letter-spacing: 0.22em;
       text-transform: uppercase;
     }
-
     .brand img {
       width: 42px;
       height: 42px;
       border-radius: var(--wd-r-lg);
       box-shadow: 0 0 32px rgba(154, 168, 147, 0.16);
     }
-
     h1 {
-      max-width: 940px;
+      max-width: 980px;
       margin: 0.9rem 0 0;
       font-size: clamp(3.2rem, 9vw, 7.8rem);
       line-height: 0.93;
@@ -79,7 +72,6 @@
       font-weight: 900;
       color: #fff;
     }
-
     h1 span {
       display: block;
       color: transparent;
@@ -87,7 +79,6 @@
       -webkit-background-clip: text;
       background-clip: text;
     }
-
     .lead {
       max-width: 720px;
       margin: 1.4rem 0 0;
@@ -95,14 +86,8 @@
       font-size: clamp(1.02rem, 1.8vw, 1.22rem);
       line-height: 1.75;
     }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1rem;
-    }
-
     .card {
+      max-width: 760px;
       min-height: 270px;
       display: grid;
       align-content: space-between;
@@ -115,7 +100,6 @@
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 18px 44px rgba(0,0,0,0.34);
       transition: border-color 0.25s var(--wd-ease), background 0.25s var(--wd-ease), box-shadow 0.25s var(--wd-ease);
     }
-
     .card:hover {
       border-color: rgba(154, 168, 147, 0.4);
       background:
@@ -123,7 +107,6 @@
         var(--wd-surface-hi);
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 22px 58px rgba(0,0,0,0.44);
     }
-
     .kicker {
       color: var(--wd-accent);
       font-size: 0.72rem;
@@ -131,26 +114,22 @@
       letter-spacing: 0.22em;
       text-transform: uppercase;
     }
-
     .card h2 {
       margin: 1rem 0 0.75rem;
       font-size: clamp(1.8rem, 3vw, 2.7rem);
       line-height: 1;
       letter-spacing: -0.025em;
     }
-
     .card p {
       max-width: 34rem;
       margin: 0;
       color: var(--wd-muted);
       line-height: 1.65;
     }
-
     .button {
       justify-self: start;
       display: inline-flex;
       align-items: center;
-      gap: 0.55rem;
       min-height: 46px;
       padding: 0 1.1rem;
       border-radius: var(--wd-r-pill);
@@ -162,17 +141,11 @@
       box-shadow: 0 0 48px rgba(154, 168, 147, 0.12);
       transition: transform 0.25s var(--wd-ease), background-position 0.25s var(--wd-ease), box-shadow 0.25s var(--wd-ease);
     }
-
     .button:hover {
       transform: translateY(-3px) scale(1.015);
       background-position: 100% 0;
       box-shadow: 0 0 80px rgba(154, 168, 147, 0.16);
     }
-
-    .button:active {
-      transform: translateY(-1px) scale(0.995);
-    }
-
     .meta {
       display: flex;
       flex-wrap: wrap;
@@ -181,22 +154,11 @@
       font-family: var(--wd-font-mono);
       font-size: 0.78rem;
     }
-
     .meta span {
       border: 1px solid var(--wd-line);
       border-radius: var(--wd-r-pill);
       padding: 0.45rem 0.65rem;
       background: rgba(255,255,255,0.025);
-    }
-
-    @media (max-width: 760px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .card {
-        min-height: 240px;
-      }
     }
   </style>
 </head>
@@ -207,34 +169,23 @@
         <img src="./assets/whitedot-symbol.svg" alt="">
         White Dot LLP
       </div>
-      <h1>Implemented design system <span>for LIMEX adoption.</span></h1>
-      <p class="lead">This workspace contains the implemented designs from the handoff bundle: the cinematic marketing site and the procurement portal brand extension.</p>
+      <h1>Website design system <span>for LIMEX adoption.</span></h1>
+      <p class="lead">Clean website-only design implementation from the latest handoff bundle. The earlier app/portal mock has been removed.</p>
     </section>
 
-    <section class="grid" aria-label="Implemented designs">
-      <a class="card" href="./ui_kits/marketing-site/index.html">
-        <div>
-          <div class="kicker">Canonical site</div>
-          <h2>Marketing site</h2>
-          <p>Dark cinematic White Dot LIMEX site with hero, material intelligence, applications, comparison, consultation path, and footer.</p>
-        </div>
-        <span class="button">Open marketing site</span>
-      </a>
-
-      <a class="card" href="./ui_kits/web-app/index.html">
-        <div>
-          <div class="kicker">Brand extension</div>
-          <h2>Procurement portal</h2>
-          <p>Dashboard, trial requests, spec library, authorization chain, territory view, and new trial request workflow using the same brand system.</p>
-        </div>
-        <span class="button">Open portal</span>
-      </a>
-    </section>
+    <a class="card" href="./ui_kits/marketing-site/index.html">
+      <div>
+        <div class="kicker">Canonical website</div>
+        <h2>Marketing site</h2>
+        <p>Dark cinematic White Dot LIMEX site with hero, material intelligence, applications, comparison, consultation path, and footer.</p>
+      </div>
+      <span class="button">Open marketing site</span>
+    </a>
 
     <div class="meta" aria-label="Implementation details">
-      <span>Dark-mode-only brand direction</span>
-      <span>Satoshi, Boska, JetBrains Mono, Noto Sans CJK JP</span>
-      <span>Assets and tokens installed locally</span>
+      <span>Website-only system</span>
+      <span>No procurement portal mock</span>
+      <span>Satoshi, Boska, JetBrains Mono, Noto Sans JP</span>
     </div>
   </main>
 </body>

@@ -10,9 +10,8 @@ The Claude Design handoff is merged into `public/design-system/`:
 
 - `/design-system/` - entry point for the implemented designs
 - `/design-system/ui_kits/marketing-site/` - cinematic marketing-site recreation
-- `/design-system/ui_kits/web-app/` - procurement portal brand extension
 
-The live app imports `src/brand-fonts.css`, which loads the design-system type stack: Satoshi, Boska, JetBrains Mono, and self-hosted Noto Sans CJK JP.
+The live app imports `src/brand-fonts.css`, which loads the design-system type stack: Satoshi, Boska, and JetBrains Mono. The latest handoff confirms White Dot is a website, not an app, so the previous procurement portal mock has been removed.
 
 ## Local development
 
