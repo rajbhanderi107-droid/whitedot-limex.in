@@ -1021,23 +1021,23 @@ a {
 .cine-app-cell {
   display: flex;
 }
+/* Industry cards — cheap glass (8 visible at once → NO backdrop-filter).
+   Built on the .glass-panel tier; this block keeps only the layout + the
+   interactive (tilt/glow) hooks. The translucent fill, light-from-top ring,
+   sheen and elevation come from .glass-panel. */
 .cine-app-block {
   position: relative;
   overflow: hidden;
   width: 100%;
   padding: 1.5rem 1.3rem;
-  border: 1px solid var(--c-line);
-  border-radius: 16px;
-  background: var(--c-surface);
+  --gp-radius: 16px;
   cursor: pointer;
-  transition: border-color 0.25s var(--c-ease), box-shadow 0.25s var(--c-ease),
-    background 0.25s var(--c-ease);
   will-change: transform;
 }
-.cine-app-block:hover {
-  border-color: rgba(154, 168, 147, 0.45);
-  background: #2a312d;
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.42);
+/* The card already lifts via the magnetic/tilt springs in JS, so suppress the
+   glass-panel hover translate here to avoid compounding transforms. */
+.cine-app-block.glass-panel:hover {
+  transform: none;
 }
 .cine-app-icon {
   display: inline-grid;
@@ -1163,6 +1163,9 @@ a {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
+/* Modal dialog — exactly ONE on screen at a time → safe to spend real
+   backdrop-filter here via .glass-panel--feature (applied in JSX). A solid-ish
+   base layer underneath keeps text fully legible even while blurring. */
 .ia-dialog {
   position: fixed;
   z-index: 1201;
@@ -1173,10 +1176,25 @@ a {
   max-height: calc(100vh - 2.4rem);
   overflow-y: auto;
   padding: clamp(1.4rem, 3vw, 2.4rem);
-  border: 1px solid var(--c-line-strong);
-  border-radius: 20px;
-  background: linear-gradient(165deg, #1c211e 0%, #141815 100%);
-  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6);
+  --gp-radius: 20px;
+}
+/* Deep modal elevation. Compound selector (.ia-dialog.glass-panel) outranks the
+   base .glass-panel box-shadow so the dramatic drop shadow + glass lip survive. */
+.ia-dialog.glass-panel {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 40px 120px rgba(0, 0, 0, 0.6);
+}
+/* Modal needs a more opaque base than a generic feature panel so body text holds
+   WCAG AA over whatever shows through the blur. Override the feature fill's
+   second (solid) layer to a near-opaque graphite. */
+:root[data-premium="on"] .ia-dialog.glass-panel--feature {
+  background:
+    linear-gradient(165deg, rgba(246, 247, 244, 0.06) 0%, rgba(246, 247, 244, 0) 60%, transparent 100%),
+    rgba(20, 24, 22, 0.82);
+}
+.ia-dialog.glass-panel:hover {
+  transform: none; /* modal must not lift on hover */
 }
 .ia-dialog-header {
   display: flex;
@@ -1227,13 +1245,16 @@ a {
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
+/* Tiles inside the modal — cheap glass (3 at a time, and the parent already
+   carries the one real blur). overflow:hidden clips the image to the radius. */
 .ia-tile {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--c-line);
-  border-radius: 14px;
+  --gp-radius: 14px;
   overflow: hidden;
-  background: var(--c-surface);
+}
+.ia-tile.glass-panel:hover {
+  transform: none; /* image tiles stay put */
 }
 .ia-tile-visual {
   position: relative;
@@ -1468,12 +1489,12 @@ a {
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
 }
+/* Consultation steps — cheap glass (4 visible → NO backdrop-filter).
+   Layout only here; material comes from .glass-panel. */
 .cine-consult-step {
   position: relative;
   padding: 1.5rem 1.3rem 1.6rem;
-  border: 1px solid var(--c-line);
-  border-radius: 16px;
-  background: var(--c-surface);
+  --gp-radius: 16px;
 }
 .cine-consult-num {
   display: block;
@@ -1577,27 +1598,212 @@ a {
   }
 }
 
-/* ---------- Shared glassmorphism card ---------- */
+/* ───────────────────────────────────────────────────────────────────────────
+   GLASS-PANEL TOKEN SYSTEM (Phase 4b)
+   One reusable material language so content stops reading as flat B2B boxes
+   and starts floating in atmospheric depth. Three tiers:
+
+   .glass-panel          — base CHEAP glass. NO backdrop-filter. A translucent
+                           gradient fill + light-from-top gradient border + a
+                           faint inner sheen + soft elevation shadow. Safe to
+                           use on many cards at once (grids) — zero compositing
+                           cost layered over the WebGL canvas.
+   .glass-panel--soft    — lighter still; for chips / pills / small surfaces.
+   .glass-panel--feature — REAL backdrop-filter blur. Use ONLY where a handful
+                           of panels are on screen (hero / modal). Never on grids.
+
+   Tokens (overridable per-context):
+     --gp-radius   corner radius
+     --gp-fill-a   top gradient-fill alpha
+     --gp-fill-b   bottom gradient-fill alpha
+     --gp-tint     fill colour (cream by default; sage/cream variants below)
+   The light-from-top edge is a masked gradient border (border-image-free,
+   no extra DOM), and the sheen is a single inset highlight. Text colours are
+   unchanged from the solid boxes, so WCAG AA contrast over the dark canvas is
+   preserved (translucency sits over #181b19 / atmospheric graphite, not light).
+   ─────────────────────────────────────────────────────────────────────────── */
+.glass-panel {
+  --gp-radius: 16px;
+  --gp-fill-a: 0.055;
+  --gp-fill-b: 0.018;
+  --gp-tint: 246, 247, 244; /* limestone-cream / frost */
+  position: relative;
+  border-radius: var(--gp-radius);
+  /* Translucent mineral fill over the dark canvas — reads as floating glass. */
+  background:
+    linear-gradient(
+      157deg,
+      rgba(var(--gp-tint), var(--gp-fill-a)) 0%,
+      rgba(var(--gp-tint), var(--gp-fill-b)) 58%,
+      rgba(var(--gp-tint), 0) 100%
+    ),
+    rgba(20, 24, 22, 0.42);
+  /* 1px light-from-top border drawn as a masked gradient ring (no extra node):
+     brighter at the top edge, fading to near-nothing at the base. */
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  box-shadow:
+    /* inner sheen — faint top highlight, the "glass lip" */
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.015),
+    /* gentle atmospheric elevation */
+    0 14px 34px -18px rgba(0, 0, 0, 0.55);
+  transition: border-color 0.3s var(--c-ease), transform 0.3s var(--c-ease),
+    box-shadow 0.3s var(--c-ease), background 0.3s var(--c-ease);
+}
+/* Light-from-top gradient border via a masked overlay ring. Pseudo-element so
+   the gradient edge does not tint the fill. Cheap (paint-only, no blur). */
+.glass-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.28) 0%,
+    rgba(255, 255, 255, 0.06) 30%,
+    rgba(228, 222, 212, 0.04) 65%,
+    rgba(228, 222, 212, 0.1) 100%
+  );
+  /* mask out the centre so only the 1px ring shows */
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: opacity 0.3s var(--c-ease);
+}
+/* Pure-CSS pointer/hover sheen — a faint moving highlight, no JS, no blur.
+   Optional and restrained: a soft top-anchored radial that warms on hover. */
+.glass-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    120% 90% at 50% -10%,
+    rgba(154, 168, 147, 0.1) 0%,
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity 0.35s var(--c-ease);
+  pointer-events: none;
+}
+.glass-panel:hover {
+  border-color: transparent;
+  transform: translateY(-3px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 24px 48px -20px rgba(0, 0, 0, 0.6);
+}
+.glass-panel:hover::after {
+  opacity: 1;
+}
+.glass-panel:hover::before {
+  background: linear-gradient(
+    155deg,
+    rgba(154, 168, 147, 0.55) 0%,
+    rgba(255, 255, 255, 0.1) 35%,
+    rgba(154, 168, 147, 0.08) 70%,
+    rgba(154, 168, 147, 0.22) 100%
+  );
+}
+
+/* Soft variant — chips / pills / small surfaces. Lighter fill, tighter radius. */
+.glass-panel--soft {
+  --gp-fill-a: 0.04;
+  --gp-fill-b: 0.012;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 8px 20px -14px rgba(0, 0, 0, 0.5);
+}
+.glass-panel--soft:hover {
+  transform: none; /* small surfaces don't lift */
+}
+
+/* Sage-tinted glass — for accent surfaces (forms / chips on sage ground). */
+.glass-panel--sage {
+  --gp-tint: 154, 168, 147;
+  --gp-fill-a: 0.13;
+  --gp-fill-b: 0.04;
+}
+
+/* Feature variant — REAL backdrop-filter. Reserve for the FEW-ON-SCREEN
+   surfaces (hero panel, single modal dialog). Never apply to a grid of cards:
+   each blurred layer is a separate GPU composite and this site has hung from
+   stacking those over the WebGL canvas. */
+:root[data-premium="on"] .glass-panel--feature {
+  backdrop-filter: blur(16px) saturate(1.25);
+  -webkit-backdrop-filter: blur(16px) saturate(1.25);
+  background:
+    linear-gradient(
+      157deg,
+      rgba(var(--gp-tint), 0.08) 0%,
+      rgba(var(--gp-tint), 0.025) 60%,
+      rgba(var(--gp-tint), 0) 100%
+    ),
+    rgba(18, 22, 20, 0.34);
+}
+/* @supports fallback: when backdrop-filter is unsupported (older iOS / FF
+   without the flag), every variant degrades to the cheap flat-translucent
+   look — readable, on-brand, no frost. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-panel--feature {
+    background:
+      linear-gradient(
+        157deg,
+        rgba(var(--gp-tint), 0.06) 0%,
+        rgba(var(--gp-tint), 0.02) 60%,
+        rgba(var(--gp-tint), 0) 100%
+      ),
+      rgba(20, 24, 22, 0.86);
+  }
+}
+
+/* Reduced-motion: glass becomes static — no lift, no sheen fade, no transition. */
+@media (prefers-reduced-motion: reduce) {
+  .glass-panel,
+  .glass-panel::before,
+  .glass-panel::after {
+    transition: none;
+  }
+  .glass-panel:hover {
+    transform: none;
+  }
+  .glass-panel:hover::after {
+    opacity: 0;
+  }
+}
+
+/* Simple mode (data-premium="off"): strip the feature blur and the lift. The
+   cheap glass fill + hairline border remain so layout/legibility is intact. */
+:root[data-premium="off"] .glass-panel--feature {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+:root[data-premium="off"] .glass-panel:hover {
+  transform: none !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 14px 34px -18px rgba(0, 0, 0, 0.55) !important;
+}
+:root[data-premium="off"] .glass-panel:hover::after {
+  opacity: 0 !important;
+}
+
+/* ---------- Shared glassmorphism card (now built on the cheap glass tier) ---------- */
 .cine-glass-card {
   position: relative;
   padding: 1.5rem 1.4rem;
-  border: 1px solid var(--c-line);
   border-radius: 18px;
-  background: linear-gradient(
-    160deg,
-    rgba(246, 247, 244, 0.06),
-    rgba(246, 247, 244, 0.02)
-  );
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  transition: border-color 0.3s var(--c-ease), transform 0.3s var(--c-ease),
-    box-shadow 0.3s var(--c-ease);
 }
-.cine-glass-card:hover {
-  border-color: rgba(154, 168, 147, 0.4);
-  transform: translateY(-3px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+.cine-glass-card.glass-panel {
+  --gp-radius: 18px;
 }
 .cine-glass-icon {
   display: inline-grid;
@@ -1874,21 +2080,25 @@ a {
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
+/* Comparison cards — previously real backdrop-filter on a GRID (up to 6 blurred
+   layers on screen at once, stacked over the WebGL canvas — the exact compositing
+   hazard the brief warns about). Re-based on the cheap .glass-panel tier: the
+   LIMEX (warm cream) vs filler (cool ash) distinction is carried by --gp-tint,
+   so each side still reads as its own material with zero blur cost. */
 .cine-cmp-card {
   position: relative;
   padding: 1.3rem 1.4rem;
-  border-radius: 16px;
-  border: 1px solid var(--c-line);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  --gp-radius: 16px;
 }
 .cine-cmp-card.is-limex {
-  border-color: rgba(207, 196, 168, 0.4);
-  background: linear-gradient(160deg, rgba(207, 196, 168, 0.12), rgba(207, 196, 168, 0.03));
+  --gp-tint: 207, 196, 168; /* limestone cream */
+  --gp-fill-a: 0.12;
+  --gp-fill-b: 0.03;
 }
 .cine-cmp-card.is-filler {
-  border-color: rgba(140, 133, 122, 0.3);
-  background: linear-gradient(160deg, rgba(140, 133, 122, 0.1), rgba(140, 133, 122, 0.02));
+  --gp-tint: 140, 133, 122; /* ash / muted — reads as the lesser material */
+  --gp-fill-a: 0.09;
+  --gp-fill-b: 0.02;
 }
 .cine-cmp-tag {
   display: inline-flex;

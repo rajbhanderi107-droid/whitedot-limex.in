@@ -126,7 +126,7 @@ function ProductTile({
 
   return (
     <motion.article
-      className="ia-tile"
+      className="ia-tile glass-panel"
       variants={tileVariants}
       initial="hidden"
       animate="show"
@@ -246,7 +246,7 @@ export function ApplicationShowcase({ industry, triggerRef, onClose }: ShowcaseP
           {/* Dialog panel */}
           <motion.div
             ref={dialogRef}
-            className="ia-dialog"
+            className="ia-dialog glass-panel glass-panel--feature"
             role="dialog"
             aria-modal="true"
             aria-labelledby="ia-dialog-title"

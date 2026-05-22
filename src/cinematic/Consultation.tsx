@@ -73,7 +73,7 @@ export function Consultation() {
         viewport={{ once: true, amount: 0.2 }}
       >
         {steps.map((s) => (
-          <motion.li className="cine-consult-step" variants={item} key={s.n}>
+          <motion.li className="cine-consult-step glass-panel" variants={item} key={s.n}>
             <span className="cine-consult-num">{s.n}</span>
             <strong>{s.t}</strong>
             <span className="cine-consult-desc">{s.d}</span>

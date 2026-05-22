@@ -152,14 +152,14 @@ export function LimexComparison() {
             >
               <span className="cine-cmp-cat">{row.category}</span>
               <div className="cine-cmp-pair">
-                <div className="cine-cmp-card is-limex">
+                <div className="cine-cmp-card is-limex glass-panel">
                   <span className="cine-cmp-tag">
                     <Check size={15} aria-hidden="true" />
                     LIMEX / TBM
                   </span>
                   <p>{row.limex}</p>
                 </div>
-                <div className="cine-cmp-card is-filler">
+                <div className="cine-cmp-card is-filler glass-panel">
                   <span className="cine-cmp-tag">
                     <AlertTriangle size={15} aria-hidden="true" />
                     Typical local filler

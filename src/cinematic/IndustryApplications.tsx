@@ -218,7 +218,7 @@ function IndustryCard({ industry, cellVariants, onOpen }: CardProps) {
       >
         <motion.div
           ref={blockRef}
-          className="cine-app-block ia-card-tilt"
+          className="cine-app-block ia-card-tilt glass-panel"
           style={{
             rotateX: reduce ? 0 : srx,
             rotateY: reduce ? 0 : sry,

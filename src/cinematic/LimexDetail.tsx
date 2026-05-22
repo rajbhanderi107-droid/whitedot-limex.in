@@ -153,7 +153,7 @@ export function LimexDetail() {
           viewport={{ once: true, amount: 0.2 }}
         >
           {differentiators.map(({ icon: Icon, t, d }) => (
-            <motion.div className="cine-glass-card" variants={item} key={t}>
+            <motion.div className="cine-glass-card glass-panel" variants={item} key={t}>
               <span className="cine-glass-icon" aria-hidden="true">
                 <Icon size={20} />
               </span>
@@ -176,7 +176,7 @@ export function LimexDetail() {
           viewport={{ once: true, amount: 0.15 }}
         >
           {specs.map(({ icon: Icon, t, d }) => (
-            <motion.div className="cine-glass-card is-spec" variants={item} key={t}>
+            <motion.div className="cine-glass-card is-spec glass-panel" variants={item} key={t}>
               <span className="cine-glass-icon" aria-hidden="true">
                 <Icon size={18} />
               </span>
@@ -205,7 +205,7 @@ export function LimexDetail() {
           viewport={{ once: true, amount: 0.3 }}
         >
           {processes.map((p) => (
-            <motion.span className="cine-detail-chip" variants={item} key={p}>
+            <motion.span className="cine-detail-chip glass-panel glass-panel--soft glass-panel--sage" variants={item} key={p}>
               <Boxes size={15} aria-hidden="true" />
               {p}
             </motion.span>
@@ -228,7 +228,7 @@ export function LimexDetail() {
           viewport={{ once: true, amount: 0.15 }}
         >
           {applications.map((a) => (
-            <motion.div className="cine-glass-card is-app" variants={item} key={a.t}>
+            <motion.div className="cine-glass-card is-app glass-panel" variants={item} key={a.t}>
               <h4>{a.t}</h4>
               <p>{a.d}</p>
             </motion.div>
