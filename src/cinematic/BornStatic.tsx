@@ -8,6 +8,8 @@
  * any extra weight in the reverse direction.
  */
 
+import { HiggsfieldHero } from "./HiggsfieldMedia";
+
 export interface StageText {
   eyebrow: string;
   heading: string;
@@ -60,6 +62,7 @@ export function BornStatic() {
   return (
     <section className="born-static" aria-label="Born of LIMEX — the material story">
       <div className="born-static-inner">
+        <HiggsfieldHero className="born-static-media" />
         <span className="born-eyebrow">Material Origin</span>
         <h2 className="born-static-title">Born of LIMEX</h2>
         <ol className="born-timeline" aria-label="LIMEX material journey">

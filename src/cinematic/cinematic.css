@@ -2361,6 +2361,19 @@ a {
   margin: 0 auto;
 }
 
+/* Optional Higgsfield cinematic still/loop for the lightweight path. Renders
+   only when a hero asset is set; otherwise this element is absent. */
+.born-static-media {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-bottom: clamp(1.8rem, 4vw, 3rem);
+  border: 1px solid rgba(245, 241, 232, 0.08);
+  box-shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.7);
+}
+
 .born-static-title {
   margin: 0.6rem 0 clamp(2.5rem, 6vw, 4.5rem);
   font-size: clamp(2.2rem, 6vw, 4.5rem);
