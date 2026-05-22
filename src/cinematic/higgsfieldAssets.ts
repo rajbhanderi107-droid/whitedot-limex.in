@@ -40,12 +40,12 @@ export interface HiggsfieldRaw {
 
 // ─── DROP ZONE — edit these paths after placing files in public/assets/higgsfield/ ──
 const RAW: HiggsfieldRaw = {
-  heroVideo: null, // e.g. "assets/higgsfield/born-loop.mp4"
-  heroPoster: null, // e.g. "assets/higgsfield/born-poster.jpg"
-  heroImage: null, // e.g. "assets/higgsfield/born-still.jpg"
+  heroVideo: null, // Higgsfield loop slot — drop "assets/higgsfield/born-loop.mp4" here
+  heroPoster: null,
+  heroImage: "assets/higgsfield/born-still.jpg", // brand still (code-built; replace with a Higgsfield frame anytime)
   sectionImages: {},
   textures: { stone: null, paper: null, polymer: null },
-  ogImage: null, // e.g. "assets/higgsfield/og-cover.jpg"
+  ogImage: "assets/higgsfield/og-cover.jpg",
 };
 
 export const HIGGSFIELD = {
