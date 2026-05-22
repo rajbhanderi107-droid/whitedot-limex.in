@@ -3,7 +3,10 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const appPath = join(root, "src", "App.tsx");
+const appPaths = [
+  join(root, "src", "App.tsx"),
+  join(root, "src", "cinematic", "CinematicApp.tsx"),
+];
 const indexPath = join(root, "index.html");
 const packagePath = join(root, "package.json");
 const aggDir = join(root, "src", "aggregation-wd");
@@ -31,11 +34,13 @@ function stripBlock(source, tag) {
   return source;
 }
 
-if (existsSync(appPath)) {
-  let app = readFileSync(appPath, "utf8");
-  app = stripBlock(app, "AGGREGATION-WD");
-  app = app.replace(/\n{3,}/g, "\n\n");
-  writeFileSync(appPath, app);
+for (const appPath of appPaths) {
+  if (existsSync(appPath)) {
+    let app = readFileSync(appPath, "utf8");
+    app = stripBlock(app, "AGGREGATION-WD");
+    app = app.replace(/\n{3,}/g, "\n\n");
+    writeFileSync(appPath, app);
+  }
 }
 
 if (existsSync(indexPath)) {

@@ -40,7 +40,7 @@ export function buildCO2Particles(count: number): CO2Attrs {
     positions[i * 3 + 1] = offsets[i * 3 + 1];
     positions[i * 3 + 2] = offsets[i * 3 + 2];
 
-    sizes[i]  = 2.5 + rng() * 3.5;
+    sizes[i]  = 1.1 + rng() * 1.8;
     phases[i] = rng() * Math.PI * 2;
   }
 

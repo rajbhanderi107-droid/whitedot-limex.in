@@ -11,6 +11,7 @@ export const co2VertGLSL = /* glsl */ `
   uniform float   uTime;
   uniform float   uGather;   // 0=dispersed 1=gathered at centre
   uniform float   uProgress; // stage progress 0..1
+  uniform float   uStageAlpha;
   varying float   vAlpha;
   varying float   vPhase;
 
@@ -33,10 +34,10 @@ export const co2VertGLSL = /* glsl */ `
     gl_Position  = projectionMatrix * mvPos;
 
     float dist = length(mvPos.xyz);
-    gl_PointSize = aSize * (280.0 / max(dist, 0.1)) * (1.0 + uGather * 0.4);
+    gl_PointSize = aSize * (170.0 / max(dist, 0.1)) * (1.0 + uGather * 0.25);
 
     // Fade out near gather completion (they'll become the crystal)
-    vAlpha = (1.0 - uGather * uGather) * clamp(1.2 - dist * 0.12, 0.0, 1.0);
+    vAlpha = (1.0 - uGather * uGather) * clamp(1.2 - dist * 0.12, 0.0, 1.0) * uStageAlpha;
     vPhase = aPhase;
   }
 `;
@@ -59,7 +60,7 @@ export const co2FragGLSL = /* glsl */ `
 
     // Sage-tinted CO2 haze — scientific but mineral
     vec3 col = mix(vec3(0.38, 0.44, 0.4), vec3(0.62, 0.72, 0.6), pulse);
-    gl_FragColor = vec4(col, soft * vAlpha * pulse * 0.88);
+    gl_FragColor = vec4(col, soft * vAlpha * pulse * 0.38);
   }
 `;
 

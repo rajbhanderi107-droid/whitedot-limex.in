@@ -2324,15 +2324,15 @@ a {
   /* No overflow:hidden here — the sticky child needs to escape */
 }
 
-/* Tall scroll driver — 500vh gives scroll room for 5 stages */
+/* Tall scroll driver gives scroll room for the 5-route material storyboard. */
 .born-scroll-driver {
   position: relative;
-  height: 500vh;
+  height: 600vh;
 }
 
-/* 20-route engine needs more room to breathe — ~1600vh (80vh per route). */
-.born-scroll-driver--20 {
-  height: 1600vh;
+/* 5-route engine: long enough for cinematic pacing without dragging the page. */
+.born-scroll-driver--5 {
+  height: 600vh;
 }
 
 /* Visually-hidden heading — keeps the section labelled for screen readers
@@ -2370,6 +2370,34 @@ a {
   display: block;
   width: 100% !important;
   height: 100% !important;
+}
+
+.born-route-map {
+  position: absolute;
+  top: 50%;
+  right: clamp(1rem, 3vw, 2.2rem);
+  z-index: 3;
+  display: grid;
+  gap: 0.38rem;
+  width: clamp(2.8rem, 5vw, 4rem);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.born-route-map span {
+  display: block;
+  width: 100%;
+  height: 1px;
+  transform: scaleX(0.42);
+  transform-origin: right center;
+  background: linear-gradient(90deg, transparent, rgba(245, 241, 232, 0.72));
+  opacity: 0.32;
+  transition: opacity 0.28s var(--c-ease), transform 0.28s var(--c-ease);
+}
+
+.born-route-map span[data-active="true"] {
+  background: linear-gradient(90deg, transparent, var(--c-accent), var(--c-cream));
+  box-shadow: 0 0 12px rgba(154, 168, 147, 0.34);
 }
 
 /* ── Captions overlay ────────────────────────────────────────────────────── */
@@ -2525,6 +2553,15 @@ a {
   letter-spacing: -0.04em;
 }
 
+.born-detail {
+  max-width: 54ch;
+  margin: 1rem 0 0;
+  color: rgba(245, 241, 232, 0.66);
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  line-height: 1.65;
+  text-shadow: 0 2px 24px rgba(5, 7, 6, 0.72);
+}
+
 /* ── Static fallback (no canvas — reduced-motion / non-premium) ─────────── */
 .born-static {
   padding: clamp(4rem, 10vw, 8rem) clamp(1.5rem, 7vw, 6rem);
@@ -2614,6 +2651,14 @@ a {
   max-width: 68ch;
 }
 
+.born-timeline-detail {
+  max-width: 68ch;
+  margin: 0.45rem 0 0;
+  color: rgba(183, 173, 162, 0.78);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
 /* ── Reduced-motion override ─────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   /* Collapse ALL caption motion to a plain opacity fade — no blur, no translate,
@@ -2644,6 +2689,9 @@ a {
 
 /* ── Mobile tweaks ───────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
+  .born-route-map {
+    display: none;
+  }
   .born-heading {
     font-size: clamp(1.35rem, 6.4vw, 2rem);
     line-height: 1.16;

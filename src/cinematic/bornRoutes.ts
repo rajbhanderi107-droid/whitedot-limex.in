@@ -1,66 +1,49 @@
 /**
- * BORN OF LIMEX — 20-route stage engine configuration.
+ * BORN OF LIMEX - 5-route cinematic stage configuration.
  *
- * The single source of truth for the cinematic scroll-film. Everything that
- * varies route-to-route lives here as plain data so the scene component stays a
- * thin renderer driven by one 0..1 `progress` ref:
- *
- *   - ROUTES[]      — 20 normalized progress windows + per-route caption + which
- *                     visual subsystems are "active" (for cheap skip checks).
- *   - CAM_KEYS[]    — 20 camera position / look keyframes (filmic, slow).
- *
- * Routes 01–09 are implemented this phase. 10–20 share a graceful "hold on the
- * stabilized stone" so the build ships; later phases flesh them out by adding
- * subsystems and refining their windows here — no engine changes needed.
- *
- * Window math: each route owns [lo, hi]; windows overlap by ~one fade-width so
- * adjacent routes cross-blend (no hard cuts). `routeAlpha`/`routeLocal` below
- * are pure functions reused by the scene + captions.
+ * The scene remains data-driven: each route owns a normalized scroll window,
+ * caption copy, camera key, and the visual systems it activates. The renderer
+ * in BornOfLimex.tsx reads this file and blends systems by route alpha.
  */
 
 export interface BornRoute {
-  /** 1-based route id, e.g. 1 → "01". */
+  /** 1-based route id, e.g. 1 -> "01". */
   id: number;
   /** Normalized scroll window [lo, hi] in 0..1. Adjacent windows overlap. */
   window: [number, number];
-  /** Subsystems this route drives — used for cheap visibility/skip checks. */
+  /** Subsystems this route drives. */
   systems: BornSystem[];
-  /** Caption copy. Procurement-grade, no emoji except the chemical ₂ glyph. */
+  /** Caption copy. */
   eyebrow: string;
   heading: string;
 }
 
 export type BornSystem =
-  | "stone"     // the living stone — always on, every route
-  | "dust"      // tiny floating limestone dust
-  | "light"     // environmental light reveal (R02)
-  | "cracks"    // microscopic mineral cracks (R03)
-  | "co2"       // orbiting / absorbed CO₂ particles (R04–R05)
-  | "calcium"   // inner crystalline glow (R06)
-  | "sheets"    // layered mineral sheets split (R07)
-  | "lattice"   // molecular line lattice (R08–R09)
-  | "resin"     // translucent resin flow through the structure (R10)
-  | "stabilize" // motion quiets, layers consolidate into one solid (R11)
-  | "refine"    // surface refines: low roughness, glassy mineral skin (R12–R13)
-  | "paper"     // thin paper-like refined sheet emerges (R14)
-  | "plastic"   // clean translucent polymer-like blank, production-ready (R15)
-  | "packaging" // refined slab resolves into a folded carton silhouette (R16)
-  | "bottle"    // a vessel assembles from converging particles (R17)
-  | "ecosystem" // a calm family of product forms appears together (R18)
-  | "impact"    // soft ground glow as products settle; figures fade in (R19)
-  | "finale";   // a single floating LIMEX object, held + breathing (R20)
+  | "stone"
+  | "dust"
+  | "light"
+  | "cracks"
+  | "co2"
+  | "calcium"
+  | "sheets"
+  | "lattice"
+  | "resin"
+  | "stabilize"
+  | "refine"
+  | "paper"
+  | "plastic"
+  | "packaging"
+  | "bottle"
+  | "ecosystem"
+  | "impact"
+  | "finale";
 
-// ─── Fade width (in progress units) shared by all routes ──────────────────────
-export const FADE_W = 0.012;
+export const FADE_W = 0.028;
 
-// ─── 20 routes ────────────────────────────────────────────────────────────────
-// 20 even slices of 0.05 each, overlapped by FADE_W on both inner edges so the
-// scene cross-blends. Routes 01–09 carry distinct subsystems; 10–20 hold on the
-// stabilized stone (stone + dust) until later phases extend them.
 function slice(i: number): [number, number] {
-  const span = 1 / 20;
+  const span = 1 / 5;
   const lo = i * span - (i === 0 ? 0 : FADE_W);
-  const hi = (i + 1) * span + (i === 19 ? 0 : FADE_W);
+  const hi = (i + 1) * span + (i === 4 ? 0 : FADE_W);
   return [Math.max(0, lo), Math.min(1, hi)];
 }
 
@@ -68,194 +51,68 @@ export const ROUTES: readonly BornRoute[] = [
   {
     id: 1,
     window: slice(0),
-    systems: ["stone", "dust"],
-    eyebrow: "Origin",
-    heading: "A single mineral form, suspended in the dark.",
+    systems: ["stone", "dust", "light"],
+    eyebrow: "Route 01",
+    heading: "Raw limestone enters a calm graphite atmosphere.",
   },
   {
     id: 2,
     window: slice(1),
-    systems: ["stone", "dust", "light"],
-    eyebrow: "Light",
-    heading: "Soft light arrives, and the surface reveals its texture.",
+    systems: ["stone", "dust", "light", "cracks", "co2"],
+    eyebrow: "Route 02",
+    heading: "CO2 begins to orbit, settle, and become material.",
   },
   {
     id: 3,
     window: slice(2),
-    systems: ["stone", "dust", "light", "cracks"],
-    eyebrow: "Structure",
-    heading: "Microscopic mineral lines trace the form.",
+    systems: ["stone", "dust", "light", "calcium", "sheets", "lattice", "resin", "stabilize"],
+    eyebrow: "Route 03",
+    heading: "Calcium structure and resin flow become one system.",
   },
   {
     id: 4,
     window: slice(3),
-    systems: ["stone", "dust", "light", "co2"],
-    eyebrow: "Carbon",
-    heading: "Captured CO₂ gathers and orbits the stone.",
+    systems: ["stone", "dust", "light", "stabilize", "refine", "paper", "plastic"],
+    eyebrow: "Route 04",
+    heading: "LIMEX stabilizes into a refined industrial surface.",
   },
   {
     id: 5,
     window: slice(4),
-    systems: ["stone", "dust", "light", "co2"],
-    eyebrow: "Capture",
-    heading: "The surface draws the carbon inward.",
-  },
-  {
-    id: 6,
-    window: slice(5),
-    systems: ["stone", "dust", "light", "calcium"],
-    eyebrow: "Conversion",
-    heading: "Within, calcium carbonate begins to form.",
-  },
-  {
-    id: 7,
-    window: slice(6),
-    systems: ["stone", "dust", "light", "calcium", "sheets"],
-    eyebrow: "Composition",
-    heading: "The mass resolves into layered mineral sheets.",
-  },
-  {
-    id: 8,
-    window: slice(7),
-    systems: ["stone", "dust", "light", "lattice"],
-    eyebrow: "Molecular order",
-    heading: "A molecular lattice emerges, soft and exact.",
-  },
-  {
-    id: 9,
-    window: slice(8),
-    systems: ["stone", "dust", "light", "lattice"],
-    eyebrow: "Order",
-    heading: "The structure tightens into a clean, ordered geometry.",
-  },
-  // ── Routes 10–20: graceful hold on the stabilized stone (later phases) ──────
-  {
-    id: 10,
-    window: slice(9),
-    systems: ["stone", "dust", "light", "lattice", "resin"],
-    eyebrow: "Bonding",
-    heading: "A clear resin flows through the ordered structure.",
-  },
-  {
-    id: 11,
-    window: slice(10),
-    systems: ["stone", "dust", "light", "resin", "stabilize"],
-    eyebrow: "Stabilized",
-    heading: "The composition settles into a single, stable material.",
-  },
-  {
-    id: 12,
-    window: slice(11),
-    systems: ["stone", "dust", "light", "stabilize", "refine"],
-    eyebrow: "Refinement",
-    heading: "It refines into a precise, engineered material.",
-  },
-  {
-    id: 13,
-    window: slice(12),
-    systems: ["stone", "dust", "light", "refine"],
-    eyebrow: "Surface",
-    heading: "The surface smooths to a finished mineral skin.",
-  },
-  {
-    id: 14,
-    window: slice(13),
-    systems: ["stone", "dust", "light", "refine", "paper"],
-    eyebrow: "Paper",
-    heading: "The same material takes a thin, paper-like form.",
-  },
-  {
-    id: 15,
-    window: slice(14),
-    systems: ["stone", "dust", "light", "paper", "plastic"],
-    eyebrow: "Replacement",
-    heading: "A production-ready replacement for conventional plastic.",
-  },
-  {
-    id: 16,
-    window: slice(15),
-    systems: ["dust", "light", "plastic", "packaging"],
-    eyebrow: "Packaging",
-    heading: "The finished material folds into packaging form.",
-  },
-  {
-    id: 17,
-    window: slice(16),
-    systems: ["dust", "light", "packaging", "bottle"],
-    eyebrow: "Containers",
-    heading: "Particles converge, and a vessel takes shape.",
-  },
-  {
-    id: 18,
-    window: slice(17),
-    systems: ["dust", "light", "ecosystem"],
-    eyebrow: "Range",
-    heading: "One material, an industrial family of products.",
-  },
-  {
-    id: 19,
-    window: slice(18),
-    systems: ["dust", "light", "ecosystem", "impact"],
-    eyebrow: "Impact",
-    heading: "Less plastic, lower embodied carbon, at scale.",
-  },
-  {
-    id: 20,
-    window: slice(19),
-    systems: ["dust", "light", "finale"],
-    eyebrow: "The Material, Realized",
-    heading: "Built from CO₂. Designed for the Planet.",
+    systems: ["dust", "light", "plastic", "packaging", "bottle", "ecosystem", "impact", "finale"],
+    eyebrow: "Route 05",
+    heading: "Built from CO2. Designed for the Planet.",
   },
 ] as const;
 
 export const ROUTE_COUNT = ROUTES.length;
 
-// ─── Camera keyframes (one per route, filmic + slow) ──────────────────────────
-// Restrained dolly that orbits gently and breathes closer through the
-// transformation arc, then eases back out for the finale. The CameraRig adds a
-// cheap handheld micro-drift on top.
 export const CAM_KEYS: readonly {
   pos: [number, number, number];
   look: [number, number, number];
 }[] = [
-  { pos: [0.0, 0.35, 7.6], look: [0, 0.1, 0] },   // 01 wide, suspended
-  { pos: [0.4, 0.25, 6.9], look: [0, 0.05, 0] },  // 02 light reveal
-  { pos: [-0.5, 0.15, 6.4], look: [0, 0, 0] },    // 03 cracks, slight left
-  { pos: [0.6, 0.1, 6.1], look: [0.1, 0, 0] },    // 04 co2 orbit
-  { pos: [0.3, -0.1, 5.7], look: [0, 0, 0] },     // 05 absorb, closer
-  { pos: [-0.4, 0.05, 5.3], look: [0, 0, 0] },    // 06 inner calcium
-  { pos: [0.0, 0.3, 5.1], look: [0, 0.05, 0] },   // 07 sheets, look up a touch
-  { pos: [0.5, -0.05, 5.0], look: [0, 0, 0] },    // 08 lattice
-  { pos: [-0.3, 0.0, 5.2], look: [0, 0, 0] },     // 09 ordered
-  { pos: [0.35, 0.0, 4.9], look: [0, 0, 0] },     // 10 resin — push in, watch it flow
-  { pos: [-0.25, 0.08, 4.7], look: [0, 0, 0] },   // 11 stabilized — close, calm
-  { pos: [0.2, 0.04, 4.8], look: [0, 0, 0] },     // 12 refine — slow orbit
-  { pos: [-0.15, 0.0, 5.0], look: [0, 0, 0] },    // 13 smooth — settle on the skin
-  { pos: [0.1, 0.22, 5.6], look: [0, 0.06, 0] },  // 14 paper — lift to read the flat sheet
-  { pos: [-0.1, 0.12, 5.9], look: [0, 0.03, 0] }, // 15 plastic — level off, confident
-  { pos: [0.45, 0.05, 5.9], look: [0, 0.02, 0] },  // 16 packaging — product framing, slight 3/4
-  { pos: [-0.3, 0.0, 5.7], look: [0, 0.05, 0] },   // 17 bottle — look up the vessel a touch
-  { pos: [0.0, 0.18, 7.0], look: [0, -0.05, 0] },  // 18 ecosystem — pull back to read the family
-  { pos: [0.0, 0.22, 7.3], look: [0, -0.02, 0] },  // 19 impact — hold the arrangement, calm
-  { pos: [0.0, 0.2, 7.8], look: [0, 0.06, 0] },    // 20 finale — centred, wide, held + breathing
+  { pos: [0.0, 0.35, 7.6], look: [0, 0.1, 0] },
+  { pos: [0.55, 0.12, 6.2], look: [0.05, 0.02, 0] },
+  { pos: [-0.28, 0.02, 5.15], look: [0, 0, 0] },
+  { pos: [0.18, 0.1, 5.35], look: [0, 0.02, 0] },
+  { pos: [0.0, 0.2, 7.4], look: [0, 0.04, 0] },
 ] as const;
 
-// ─── Pure math helpers reused by scene + captions (no allocations) ────────────
 export function smoothstep(t: number): number {
   const x = t < 0 ? 0 : t > 1 ? 1 : t;
   return x * x * (3 - 2 * x);
 }
 
-/** Route opacity ramp — fades in over FADE_W, holds, fades out over FADE_W. */
 export function routeAlpha(progress: number, idx: number): number {
   const [lo, hi] = ROUTES[idx].window;
-  if (progress <= lo || progress >= hi) return 0;
-  const fadeIn = Math.min(1, (progress - lo) / FADE_W);
-  const fadeOut = Math.min(1, (hi - progress) / FADE_W);
+  if (idx === 0 && progress <= lo) return 1;
+  if (idx === ROUTE_COUNT - 1 && progress >= hi) return 1;
+  if (progress < lo || progress > hi) return 0;
+  const fadeIn = idx === 0 ? 1 : Math.min(1, (progress - lo) / FADE_W);
+  const fadeOut = idx === ROUTE_COUNT - 1 ? 1 : Math.min(1, (hi - progress) / FADE_W);
   return Math.min(fadeIn, fadeOut);
 }
 
-/** 0..1 position within a route's full window. */
 export function routeLocal(progress: number, idx: number): number {
   const [lo, hi] = ROUTES[idx].window;
   const span = hi - lo;
@@ -264,7 +121,6 @@ export function routeLocal(progress: number, idx: number): number {
   return t < 0 ? 0 : t > 1 ? 1 : t;
 }
 
-/** True if `progress` is anywhere inside a route's window (with margin). */
 export function routeActive(progress: number, idx: number): boolean {
   const [lo, hi] = ROUTES[idx].window;
   return progress >= lo - 0.001 && progress <= hi + 0.001;

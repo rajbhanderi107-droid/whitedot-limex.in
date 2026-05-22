@@ -10,6 +10,14 @@ import { Consultation } from "./Consultation";
 import { SiteFooter } from "./SiteFooter";
 import { useLenis } from "./useLenis";
 import { ScrollProgress } from "./ScrollProgress";
+// CONTINUITY-WD-BEGIN imports
+import { ContinuityShell } from "../continuity-wd";
+import "../continuity-wd/continuity-wd.css";
+// CONTINUITY-WD-END imports
+// AGGREGATION-WD-BEGIN imports
+import { AggregationLoader } from "../aggregation-wd";
+import "../aggregation-wd/aggregation-wd.css";
+// AGGREGATION-WD-END imports
 // PREMIUM-WD-BEGIN import
 import { usePremium } from "../premium-wd";
 // PREMIUM-WD-END import
@@ -38,6 +46,7 @@ const whatsappHref =
 /** Dismiss the inline pre-JS loader once React is alive. */
 function useDismissBootLoader() {
   useEffect(() => {
+    if (import.meta.env.VITE_WD_AGGREGATION_ENABLED !== "false") return;
     const el = document.getElementById("agg-wd-loader");
     if (!el) return;
     el.setAttribute("data-done", "");
@@ -271,6 +280,13 @@ export default function CinematicApp() {
 
   return (
     <main className="cine">
+      {/* CONTINUITY-WD-BEGIN overlay */}
+      <ContinuityShell />
+      {/* CONTINUITY-WD-END overlay */}
+      {/* AGGREGATION-WD-BEGIN loader */}
+      <AggregationLoader />
+      {/* AGGREGATION-WD-END loader */}
+
       {/* Scroll-progress bar — premium only, self-contained, aria-hidden */}
       <ScrollProgress />
 

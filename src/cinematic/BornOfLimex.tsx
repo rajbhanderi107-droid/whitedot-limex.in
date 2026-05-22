@@ -1098,7 +1098,7 @@ export function BornOfLimex() {
       aria-label="Born of LIMEX — the material origin story"
     >
       {/* Tall scroll driver — 20 routes need room to breathe (~1600vh). */}
-      <div ref={wrapperRef} className="born-scroll-driver born-scroll-driver--20">
+      <div ref={wrapperRef} className="born-scroll-driver born-scroll-driver--5">
         <div className="born-sticky">
           <div className="born-canvas-wrap" aria-hidden="true">
             <Canvas
