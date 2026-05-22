@@ -45,9 +45,14 @@ export const STAGE_TEXTS: readonly StageText[] = [
       "The same material takes a thin, paper-like form — and a production-ready plastic replacement.",
   },
   {
-    eyebrow: "Applications",
+    eyebrow: "Products",
     heading:
-      "A direct replacement for conventional plastic and paper products.",
+      "From packaging to vessels, the same material forms an industrial family of products.",
+  },
+  {
+    eyebrow: "The Material, Realized",
+    heading:
+      "Less plastic, lower embodied carbon, at scale. Built from CO₂. Designed for the Planet.",
   },
 ] as const;
 

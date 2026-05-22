@@ -51,6 +51,10 @@ import {
   buildDustParticles,
   buildLatticeGeometry,
   buildSlabGeometry,
+  buildCartonGeometry,
+  buildBottleGeometry,
+  buildMorphParticles,
+  sampleGeometrySurface,
 } from "./bornGeometry";
 import {
   co2VertGLSL,
@@ -67,6 +71,12 @@ import {
   resinFragGLSL,
   slabVertGLSL,
   slabFragGLSL,
+  productVertGLSL,
+  productFragGLSL,
+  finaleVertGLSL,
+  finaleFragGLSL,
+  morphVertGLSL,
+  morphFragGLSL,
 } from "./bornShaders";
 import {
   ROUTES,
@@ -211,6 +221,16 @@ function LivingStone({ progress }: { progress: RefObject<number> }) {
     // Once refined, the surface is finished — fold the residual sheet split shut.
     const settle = calm > refine ? calm : refine;
 
+    // Product takeover (R16+): as packaging / bottle / ecosystem / finale forms
+    // emerge, the stone recedes (shrinks away) so it never overlaps them.
+    const takeover = Math.max(
+      systemDriver(p, "packaging"),
+      systemDriver(p, "bottle"),
+      systemDriver(p, "ecosystem"),
+      systemDriver(p, "finale"),
+    );
+    const hide = 1 - smoothstep(takeover);
+
     if (stoneMat.current) {
       stoneMat.current.uniforms.uTime.value = t;
       stoneMat.current.uniforms.uReveal.value = reveal;
@@ -234,7 +254,8 @@ function LivingStone({ progress }: { progress: RefObject<number> }) {
       // Breathing amplitude collapses as the material settles (R11+).
       const quiet = 1 - 0.8 * settle;
       const breathe = 1 + Math.sin(t * 0.6) * 0.012 * quiet;
-      breatheRef.current.scale.setScalar(breathe);
+      breatheRef.current.scale.setScalar(breathe * hide);
+      breatheRef.current.visible = hide > 0.001;
       breatheRef.current.position.y = Math.sin(t * 0.4) * 0.06 * quiet;
     }
     if (sheetsRef.current) {
@@ -563,6 +584,312 @@ function RefinedSlab({ progress, tier }: { progress: RefObject<number>; tier: De
   );
 }
 
+// ─── Packaging carton (R16) ───────────────────────────────────────────────────
+// The finished material folds into a packaging silhouette. A clean carton grows
+// in (uEmerge) with the refined-product shader; uReveal gates the cross-blend.
+function PackagingForm({ progress }: { progress: RefObject<number> }) {
+  const matRef = useRef<THREE.ShaderMaterial>(null);
+  const groupRef = useRef<THREE.Group>(null);
+  const geometry = useMemo(() => buildCartonGeometry(1.5, 0.95, 1.05), []);
+  const uniforms = useMemo(
+    () => ({
+      uEmerge: { value: 0 },
+      uReveal: { value: 0 },
+      uKeyDir: { value: _keyDir.clone() },
+      uColor: { value: new THREE.Color(ACCENT) },
+      uTint: { value: new THREE.Color(1.0, 0.99, 0.96) },
+    }),
+    [],
+  );
+
+  useEffect(() => () => geometry.dispose(), [geometry]);
+
+  useFrame(({ clock }) => {
+    const p = progress.current ?? 0;
+    const pack = systemDriver(p, "packaging");
+    if (matRef.current) {
+      matRef.current.uniforms.uEmerge.value = smoothstep(localWithin(p, "packaging"));
+      matRef.current.uniforms.uReveal.value = pack;
+    }
+    if (groupRef.current) {
+      groupRef.current.visible = pack > 0.01;
+      groupRef.current.rotation.y = -0.5 + clock.elapsedTime * 0.08;
+      groupRef.current.rotation.x = -0.12;
+    }
+  });
+
+  return (
+    <group ref={groupRef} visible={false}>
+      <mesh geometry={geometry}>
+        <shaderMaterial
+          ref={matRef}
+          vertexShader={productVertGLSL}
+          fragmentShader={productFragGLSL}
+          uniforms={uniforms}
+          transparent
+          depthWrite={false}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+// ─── Bottle assembly from particles (R17) ─────────────────────────────────────
+// Particles converge from the core radius onto a bottle profile (morph shader);
+// as they arrive, the solid vessel fades in beneath them (product shader).
+function BottleAssembly({
+  progress,
+  tier,
+  isMobile,
+}: {
+  progress: RefObject<number>;
+  tier: DeviceTier;
+  isMobile: boolean;
+}) {
+  const morphMat = useRef<THREE.ShaderMaterial>(null);
+  const bottleMat = useRef<THREE.ShaderMaterial>(null);
+  const groupRef = useRef<THREE.Group>(null);
+  const count = tier === "low" || isMobile ? 360 : 720;
+  const bottleGeo = useMemo(() => buildBottleGeometry(1.8), []);
+  // Endpoints sampled once from the bottle surface (raw coords; the group is
+  // offset to centre, so mesh + particles share the same local space).
+  const toPositions = useMemo(
+    () => sampleGeometrySurface(bottleGeo, count),
+    [bottleGeo, count],
+  );
+  const morph = useMemo(
+    () => buildMorphParticles(count, 1.45, toPositions),
+    [count, toPositions],
+  );
+  const morphUniforms = useMemo(
+    () => ({ uProgress: { value: 0 }, uTime: { value: 0 }, uColor: { value: new THREE.Color(CREAM) } }),
+    [],
+  );
+  const bottleUniforms = useMemo(
+    () => ({
+      uEmerge: { value: 0 },
+      uReveal: { value: 0 },
+      uKeyDir: { value: _keyDir.clone() },
+      uColor: { value: new THREE.Color(ACCENT) },
+      uTint: { value: new THREE.Color(0.95, 0.97, 0.94) },
+    }),
+    [],
+  );
+
+  useEffect(
+    () => () => {
+      bottleGeo.dispose();
+      morph.geometry.dispose();
+    },
+    [bottleGeo, morph],
+  );
+
+  useFrame(({ clock }) => {
+    const p = progress.current ?? 0;
+    const bottle = systemDriver(p, "bottle");
+    const assemble = smoothstep(localWithin(p, "bottle"));
+    // Solid vessel forms over the back half of the assembly.
+    const solid = smoothstep(Math.max(0, (assemble - 0.5) / 0.5));
+    if (morphMat.current) {
+      morphMat.current.uniforms.uTime.value = clock.elapsedTime;
+      morphMat.current.uniforms.uProgress.value = assemble;
+    }
+    if (bottleMat.current) {
+      bottleMat.current.uniforms.uEmerge.value = solid;
+      bottleMat.current.uniforms.uReveal.value = bottle * solid;
+    }
+    if (groupRef.current) {
+      groupRef.current.visible = bottle > 0.01;
+      groupRef.current.rotation.y = clock.elapsedTime * 0.12;
+    }
+  });
+
+  return (
+    <group ref={groupRef} position={[0, -0.86, 0]} visible={false}>
+      <points geometry={morph.geometry}>
+        <shaderMaterial
+          ref={morphMat}
+          vertexShader={morphVertGLSL}
+          fragmentShader={morphFragGLSL}
+          uniforms={morphUniforms}
+          transparent
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </points>
+      <mesh geometry={bottleGeo}>
+        <shaderMaterial
+          ref={bottleMat}
+          vertexShader={productVertGLSL}
+          fragmentShader={productFragGLSL}
+          uniforms={bottleUniforms}
+          transparent
+          depthWrite={false}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+// ─── Product ecosystem + impact (R18–R19) ─────────────────────────────────────
+// A calm family of forms (carton · bottle · sheet) appears together (ecosystem).
+// On impact (R19) the arrangement settles — eases down + slows — while the
+// procurement-grade impact line fades in via the caption layer (no WebGL charts).
+function ProductEcosystem({
+  progress,
+  tier,
+}: {
+  progress: RefObject<number>;
+  tier: DeviceTier;
+}) {
+  const groupRef = useRef<THREE.Group>(null);
+  const cartonMat = useRef<THREE.ShaderMaterial>(null);
+  const bottleMat = useRef<THREE.ShaderMaterial>(null);
+  const sheetMat = useRef<THREE.ShaderMaterial>(null);
+
+  const cartonGeo = useMemo(() => buildCartonGeometry(0.95, 0.62, 0.7), []);
+  const bottleGeo = useMemo(() => buildBottleGeometry(1.3), []);
+  const sheetGeo = useMemo(() => buildSlabGeometry(1.0, 0.08, 0.7), []);
+
+  const mkUniforms = (tint: THREE.Color) => ({
+    uEmerge: { value: 0 },
+    uReveal: { value: 0 },
+    uKeyDir: { value: _keyDir.clone() },
+    uColor: { value: new THREE.Color(ACCENT) },
+    uTint: { value: tint },
+  });
+  const cartonU = useMemo(() => mkUniforms(new THREE.Color(1.0, 0.99, 0.96)), []);
+  const bottleU = useMemo(() => mkUniforms(new THREE.Color(0.95, 0.97, 0.94)), []);
+  const sheetU = useMemo(() => mkUniforms(new THREE.Color(0.99, 0.98, 0.93)), []);
+
+  useEffect(
+    () => () => {
+      cartonGeo.dispose();
+      bottleGeo.dispose();
+      sheetGeo.dispose();
+    },
+    [cartonGeo, bottleGeo, sheetGeo],
+  );
+
+  useFrame(({ clock }) => {
+    const p = progress.current ?? 0;
+    const eco = systemDriver(p, "ecosystem");
+    const impact = systemDriver(p, "impact");
+    const emerge = smoothstep(localWithin(p, "ecosystem"));
+    // Unrolled (no per-frame array allocation).
+    if (cartonMat.current) {
+      cartonMat.current.uniforms.uEmerge.value = emerge;
+      cartonMat.current.uniforms.uReveal.value = eco;
+    }
+    if (bottleMat.current) {
+      bottleMat.current.uniforms.uEmerge.value = emerge;
+      bottleMat.current.uniforms.uReveal.value = eco;
+    }
+    if (sheetMat.current) {
+      sheetMat.current.uniforms.uEmerge.value = emerge;
+      sheetMat.current.uniforms.uReveal.value = eco;
+    }
+    if (groupRef.current) {
+      groupRef.current.visible = eco > 0.01;
+      // Slow turntable; eases to stillness + settles down a touch on impact.
+      groupRef.current.rotation.y = clock.elapsedTime * 0.06 * (1 - 0.7 * impact);
+      groupRef.current.position.y = -0.1 * impact;
+    }
+  });
+
+  // Sheet hidden on low tier (keeps the family to two forms there).
+  const showSheet = tier !== "low";
+
+  return (
+    <group ref={groupRef} visible={false}>
+      <mesh geometry={cartonGeo} position={[-1.05, -0.1, 0.1]} rotation={[-0.1, 0.4, 0]}>
+        <shaderMaterial
+          ref={cartonMat}
+          vertexShader={productVertGLSL}
+          fragmentShader={productFragGLSL}
+          uniforms={cartonU}
+          transparent
+          depthWrite={false}
+        />
+      </mesh>
+      <mesh geometry={bottleGeo} position={[0.15, -0.62, 0]}>
+        <shaderMaterial
+          ref={bottleMat}
+          vertexShader={productVertGLSL}
+          fragmentShader={productFragGLSL}
+          uniforms={bottleU}
+          transparent
+          depthWrite={false}
+        />
+      </mesh>
+      {showSheet && (
+        <mesh geometry={sheetGeo} position={[1.2, -0.05, 0.05]} rotation={[-0.3, -0.35, 0.1]}>
+          <shaderMaterial
+            ref={sheetMat}
+            vertexShader={productVertGLSL}
+            fragmentShader={productFragGLSL}
+            uniforms={sheetU}
+            transparent
+            depthWrite={false}
+          />
+        </mesh>
+      )}
+    </group>
+  );
+}
+
+// ─── Finale form (R20) ────────────────────────────────────────────────────────
+// The held final frame: a single floating refined LIMEX object, breathing
+// slowly in a calm sustainable atmosphere. Minimal motion — the shader carries
+// the emotion. The tagline rides the caption layer (ROUTES[19].heading).
+function FinaleForm({ progress }: { progress: RefObject<number> }) {
+  const matRef = useRef<THREE.ShaderMaterial>(null);
+  const groupRef = useRef<THREE.Group>(null);
+  const geometry = useMemo(() => buildCrystalGeometry(1.5), []);
+  const uniforms = useMemo(
+    () => ({
+      uReveal: { value: 0 },
+      uBreath: { value: 0 },
+      uKeyDir: { value: _keyDir.clone() },
+      uColor: { value: new THREE.Color(ACCENT) },
+    }),
+    [],
+  );
+
+  useEffect(() => () => geometry.dispose(), [geometry]);
+
+  useFrame(({ clock }) => {
+    const p = progress.current ?? 0;
+    const t = clock.elapsedTime;
+    const fin = systemDriver(p, "finale");
+    if (matRef.current) {
+      matRef.current.uniforms.uReveal.value = fin;
+      matRef.current.uniforms.uBreath.value = 0.5 + 0.5 * Math.sin(t * 0.5);
+    }
+    if (groupRef.current) {
+      groupRef.current.visible = fin > 0.01;
+      groupRef.current.rotation.y += 0.0014;
+      groupRef.current.position.y = Math.sin(t * 0.4) * 0.04;
+      groupRef.current.scale.setScalar(0.97 + 0.03 * Math.sin(t * 0.5));
+    }
+  });
+
+  return (
+    <group ref={groupRef} visible={false}>
+      <mesh geometry={geometry}>
+        <shaderMaterial
+          ref={matRef}
+          vertexShader={finaleVertGLSL}
+          fragmentShader={finaleFragGLSL}
+          uniforms={uniforms}
+          transparent
+          depthWrite={false}
+        />
+      </mesh>
+    </group>
+  );
+}
+
 // ─── Scene root ───────────────────────────────────────────────────────────────
 function BornScene({
   progress,
@@ -607,6 +934,10 @@ function BornScene({
       <LatticeField progress={progress} tier={tier} isMobile={isMobile} />
       <ResinFlow progress={progress} />
       <RefinedSlab progress={progress} tier={tier} />
+      <PackagingForm progress={progress} />
+      <BottleAssembly progress={progress} tier={tier} isMobile={isMobile} />
+      <ProductEcosystem progress={progress} tier={tier} />
+      <FinaleForm progress={progress} />
 
       {/* Post-FX — single composer. Tier-aware: low drops DoF + ChromaticAb. */}
       <EffectComposer multisampling={0}>

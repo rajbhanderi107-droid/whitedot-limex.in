@@ -242,6 +242,105 @@ export const slabFragGLSL = /* glsl */ `
   }
 `;
 
+// ─── Product surface (R16 packaging / R18 ecosystem) ─────────────────────────
+// A clean refined-mineral surface shared by every product form. Reads as the
+// SAME material the slab refined into: matte cream body, soft key-light lambert,
+// one tight Blinn highlight, a clean sage rim. uEmerge scales/fades the form in
+// from a hairline so it grows out of the material rather than popping. uReveal
+// gates overall opacity for the cross-blend. Cheap: pure lighting, no noise, no
+// branches that diverge per-fragment (all uniform-coherent).
+export const productVertGLSL = /* glsl */ `
+  uniform float uEmerge;   // 0..1 grow-in
+  varying vec3  vNormal;
+  varying vec3  vWorldPos;
+  void main() {
+    // Grow from a small seed to full size as the form assembles.
+    vec3 p = position * mix(0.82, 1.0, uEmerge);
+    vec4 worldPos = modelMatrix * vec4(p, 1.0);
+    vNormal   = normalize(normalMatrix * normal);
+    vWorldPos = worldPos.xyz;
+    gl_Position = projectionMatrix * viewMatrix * worldPos;
+  }
+`;
+
+export const productFragGLSL = /* glsl */ `
+  uniform float uReveal;   // 0..1 opacity gate
+  uniform vec3  uKeyDir;   // normalized key-light direction
+  uniform vec3  uColor;    // sage rim tint
+  uniform vec3  uTint;     // per-form body tint multiplier
+  varying vec3  vNormal;
+  varying vec3  vWorldPos;
+  void main() {
+    vec3  n       = normalize(vNormal);
+    vec3  viewDir = normalize(cameraPosition - vWorldPos);
+    float ndv     = clamp(dot(n, viewDir), 0.0, 1.0);
+    float key     = clamp(dot(n, normalize(uKeyDir)), 0.0, 1.0);
+
+    // Matte refined-mineral cream body, soft-lit.
+    vec3 body = vec3(0.88, 0.86, 0.80) * uTint * (0.46 + 0.54 * key);
+
+    // One tight specular off the key light → reads as finished, low-roughness.
+    vec3  halfV = normalize(normalize(uKeyDir) + viewDir);
+    float spec  = pow(clamp(dot(n, halfV), 0.0, 1.0), 40.0);
+    body += vec3(1.0, 0.99, 0.96) * spec * 0.5;
+
+    // Clean tight sage rim.
+    body += uColor * pow(1.0 - ndv, 3.2) * 0.4;
+
+    float alpha = clamp(0.7 + pow(1.0 - ndv, 3.0) * 0.18, 0.0, 0.96) * uReveal;
+    gl_FragColor = vec4(body, alpha);
+  }
+`;
+
+// ─── Finale form (R20) ────────────────────────────────────────────────────────
+// The held final frame: a single floating refined LIMEX object. Calm, glassy
+// mineral skin with a slow internal luminance breath. Minimal motion — the
+// shader does the emotional work, not animation. uReveal fades the whole thing
+// in; uBreath is a slow 0..1 oscillation supplied per-frame (no time-driven
+// noise, so it never feels busy). Cheap: fresnel + one highlight.
+export const finaleVertGLSL = /* glsl */ `
+  varying vec3 vNormal;
+  varying vec3 vWorldPos;
+  varying vec3 vPos;
+  void main() {
+    vec4 worldPos = modelMatrix * vec4(position, 1.0);
+    vNormal   = normalize(normalMatrix * normal);
+    vWorldPos = worldPos.xyz;
+    vPos      = position;
+    gl_Position = projectionMatrix * viewMatrix * worldPos;
+  }
+`;
+
+export const finaleFragGLSL = /* glsl */ `
+  uniform float uReveal;   // 0..1 fade-in
+  uniform float uBreath;   // 0..1 slow luminance breath
+  uniform vec3  uKeyDir;
+  uniform vec3  uColor;    // sage
+  varying vec3  vNormal;
+  varying vec3  vWorldPos;
+  varying vec3  vPos;
+  void main() {
+    vec3  n       = normalize(vNormal);
+    vec3  viewDir = normalize(cameraPosition - vWorldPos);
+    float ndv     = clamp(dot(n, viewDir), 0.0, 1.0);
+    float key     = clamp(dot(n, normalize(uKeyDir)), 0.0, 1.0);
+    float fresnel = pow(1.0 - ndv, 2.4);
+
+    // Calm cream body that breathes between two close warm tones.
+    vec3 warm = mix(vec3(0.84, 0.83, 0.78), vec3(0.92, 0.90, 0.84), uBreath);
+    vec3 col  = warm * (0.5 + 0.5 * key);
+
+    // Soft polished highlight + a clean glassy sage rim that Bloom catches.
+    vec3  halfV = normalize(normalize(uKeyDir) + viewDir);
+    float spec  = pow(clamp(dot(n, halfV), 0.0, 1.0), 56.0);
+    col += vec3(1.0, 0.99, 0.96) * spec * (0.4 + 0.3 * uBreath);
+    col += uColor * fresnel * (0.5 + 0.25 * uBreath);
+
+    float alpha = clamp(0.62 + fresnel * 0.3, 0.0, 0.97) * uReveal;
+    gl_FragColor = vec4(col, alpha);
+  }
+`;
+
 // ─── Particle morph (disintegration / reassembly) ─────────────────────────────
 export const morphVertGLSL = /* glsl */ `
   attribute float aPhase;

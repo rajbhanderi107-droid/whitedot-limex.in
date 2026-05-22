@@ -43,7 +43,12 @@ export type BornSystem =
   | "stabilize" // motion quiets, layers consolidate into one solid (R11)
   | "refine"    // surface refines: low roughness, glassy mineral skin (R12–R13)
   | "paper"     // thin paper-like refined sheet emerges (R14)
-  | "plastic";  // clean translucent polymer-like blank, production-ready (R15)
+  | "plastic"   // clean translucent polymer-like blank, production-ready (R15)
+  | "packaging" // refined slab resolves into a folded carton silhouette (R16)
+  | "bottle"    // a vessel assembles from converging particles (R17)
+  | "ecosystem" // a calm family of product forms appears together (R18)
+  | "impact"    // soft ground glow as products settle; figures fade in (R19)
+  | "finale";   // a single floating LIMEX object, held + breathing (R20)
 
 // ─── Fade width (in progress units) shared by all routes ──────────────────────
 export const FADE_W = 0.012;
@@ -169,36 +174,36 @@ export const ROUTES: readonly BornRoute[] = [
   {
     id: 16,
     window: slice(15),
-    systems: ["stone", "dust", "light"],
-    eyebrow: "Form",
-    heading: "It resolves into a packaging silhouette.",
+    systems: ["dust", "light", "plastic", "packaging"],
+    eyebrow: "Packaging",
+    heading: "The finished material folds into packaging form.",
   },
   {
     id: 17,
     window: slice(16),
-    systems: ["stone", "dust", "light"],
-    eyebrow: "Product",
-    heading: "From particles, a vessel takes shape.",
+    systems: ["dust", "light", "packaging", "bottle"],
+    eyebrow: "Containers",
+    heading: "Particles converge, and a vessel takes shape.",
   },
   {
     id: 18,
     window: slice(17),
-    systems: ["stone", "dust", "light"],
-    eyebrow: "Ecosystem",
-    heading: "An industrial product family extends across uses.",
+    systems: ["dust", "light", "ecosystem"],
+    eyebrow: "Range",
+    heading: "One material, an industrial family of products.",
   },
   {
     id: 19,
     window: slice(18),
-    systems: ["stone", "dust", "light"],
+    systems: ["dust", "light", "ecosystem", "impact"],
     eyebrow: "Impact",
-    heading: "Its environmental contribution comes into view.",
+    heading: "Less plastic, lower embodied carbon, at scale.",
   },
   {
     id: 20,
     window: slice(19),
-    systems: ["stone", "dust", "light"],
-    eyebrow: "LIMEX",
+    systems: ["dust", "light", "finale"],
+    eyebrow: "The Material, Realized",
     heading: "Built from CO₂. Designed for the Planet.",
   },
 ] as const;
@@ -228,11 +233,11 @@ export const CAM_KEYS: readonly {
   { pos: [-0.15, 0.0, 5.0], look: [0, 0, 0] },    // 13 smooth — settle on the skin
   { pos: [0.1, 0.22, 5.6], look: [0, 0.06, 0] },  // 14 paper — lift to read the flat sheet
   { pos: [-0.1, 0.12, 5.9], look: [0, 0.03, 0] }, // 15 plastic — level off, confident
-  { pos: [0.2, 0.0, 6.2], look: [0, 0, 0] },      // 16 packaging
-  { pos: [0.0, 0.0, 6.3], look: [0, 0, 0] },      // 17 bottle
-  { pos: [-0.2, 0.05, 6.5], look: [0, 0, 0] },    // 18 ecosystem
-  { pos: [0.0, 0.15, 6.8], look: [0, 0.05, 0] },  // 19 impact
-  { pos: [0.0, 0.25, 7.4], look: [0, 0.1, 0] },   // 20 finale, ease out wide
+  { pos: [0.45, 0.05, 5.9], look: [0, 0.02, 0] },  // 16 packaging — product framing, slight 3/4
+  { pos: [-0.3, 0.0, 5.7], look: [0, 0.05, 0] },   // 17 bottle — look up the vessel a touch
+  { pos: [0.0, 0.18, 7.0], look: [0, -0.05, 0] },  // 18 ecosystem — pull back to read the family
+  { pos: [0.0, 0.22, 7.3], look: [0, -0.02, 0] },  // 19 impact — hold the arrangement, calm
+  { pos: [0.0, 0.2, 7.8], look: [0, 0.06, 0] },    // 20 finale — centred, wide, held + breathing
 ] as const;
 
 // ─── Pure math helpers reused by scene + captions (no allocations) ────────────
