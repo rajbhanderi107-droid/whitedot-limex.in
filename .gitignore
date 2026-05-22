@@ -4,3 +4,12 @@ dist
 .DS_Store
 *.local
 *.log
+
+# Third-party Higgsfield skills installed via `npx skills add` — kept local,
+# not committed (Snyk-flagged Critical Risk; they run with full agent perms).
+.agents/
+.claude/skills/higgsfield-generate
+.claude/skills/higgsfield-marketplace-cards
+.claude/skills/higgsfield-product-photoshoot
+.claude/skills/higgsfield-soul-id
+skills-lock.json
