@@ -167,6 +167,92 @@ export function buildMorphParticles(
   return { geometry: geo, count };
 }
 
+// ─── Limestone dust field (always-on living VFX) ──────────────────────────────
+export function buildDustParticles(count: number): THREE.BufferGeometry {
+  const rng = seededRng(123);
+  const positions = new Float32Array(count * 3);
+  const sizes     = new Float32Array(count);
+  const phases    = new Float32Array(count);
+  for (let i = 0; i < count; i++) {
+    // Loose cloud hugging the stone, biased to a tall column so rising reads.
+    const r = 1.4 + rng() * 2.2;
+    const theta = rng() * Math.PI * 2;
+    positions[i * 3]     = Math.cos(theta) * r * (0.6 + rng() * 0.4);
+    positions[i * 3 + 1] = (rng() - 0.5) * 6.0;
+    positions[i * 3 + 2] = Math.sin(theta) * r * (0.6 + rng() * 0.4);
+    sizes[i]  = 0.8 + rng() * 1.8;
+    phases[i] = rng();
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute("aSize",    new THREE.BufferAttribute(sizes, 1));
+  geo.setAttribute("aPhase",   new THREE.BufferAttribute(phases, 1));
+  return geo;
+}
+
+// ─── Molecular lattice point cloud (R08–R09) ──────────────────────────────────
+// A cubic lattice of nodes inside a sphere of `radius`, each carrying an exact
+// ordered position + a disordered jitter offset (shader lerps order→1).
+export function buildLatticeGeometry(approxCount: number, radius: number): THREE.BufferGeometry {
+  const rng = seededRng(57);
+  // Choose a grid resolution whose in-sphere node count ~= approxCount.
+  const n = Math.max(4, Math.round(Math.cbrt(approxCount * 1.9)));
+  const ordered: number[] = [];
+  const jitter:  number[] = [];
+  const phases:  number[] = [];
+  const sizes:   number[] = [];
+  const step = (2 * radius) / (n - 1);
+  for (let xi = 0; xi < n; xi++) {
+    for (let yi = 0; yi < n; yi++) {
+      for (let zi = 0; zi < n; zi++) {
+        const x = -radius + xi * step;
+        const y = -radius + yi * step;
+        const z = -radius + zi * step;
+        if (x * x + y * y + z * z > radius * radius) continue; // sphere mask
+        ordered.push(x, y, z);
+        const jr = 1.1;
+        jitter.push((rng() - 0.5) * jr, (rng() - 0.5) * jr, (rng() - 0.5) * jr);
+        phases.push(rng());
+        sizes.push(1.4 + rng() * 1.6);
+      }
+    }
+  }
+  const geo = new THREE.BufferGeometry();
+  const count = phases.length;
+  // position attr is required by three; ordered positions double as base.
+  geo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(ordered), 3));
+  geo.setAttribute("aOrdered", new THREE.BufferAttribute(new Float32Array(ordered), 3));
+  geo.setAttribute("aJitter",  new THREE.BufferAttribute(new Float32Array(jitter), 3));
+  geo.setAttribute("aPhase",   new THREE.BufferAttribute(new Float32Array(phases), 1));
+  geo.setAttribute("aSize",    new THREE.BufferAttribute(new Float32Array(sizes), 1));
+  geo.userData.count = count;
+  return geo;
+}
+
+// ─── Refined thin slab (R14 paper / R15 plastic) ─────────────────────────────
+// A thin rounded-corner-feel slab lying flat (y = thin axis). Plane-subdivided
+// faces give the slab UVs for the fibre grain; a slight edge bevel via corner
+// rounding would add cost, so we keep a clean box and let the shader carry the
+// material read. Built once in useMemo.
+export function buildSlabGeometry(w = 2.6, h = 0.12, d = 1.7): THREE.BufferGeometry {
+  const geo = new THREE.BoxGeometry(w, h, d, 6, 1, 4);
+  // Soften the long edges very slightly so the silhouette is not a hard brick.
+  const pos = geo.attributes.position as THREE.BufferAttribute;
+  const v = new THREE.Vector3();
+  const hw = w * 0.5;
+  const hd = d * 0.5;
+  for (let i = 0; i < pos.count; i++) {
+    v.fromBufferAttribute(pos, i);
+    const ex = Math.max(0, Math.abs(v.x) / hw - 0.78) / 0.22; // 0..1 near edge
+    const ez = Math.max(0, Math.abs(v.z) / hd - 0.78) / 0.22;
+    const edge = Math.max(ex, ez);
+    if (edge > 0) v.y *= 1 - edge * 0.4; // taper the rim thinner
+    pos.setXYZ(i, v.x, v.y, v.z);
+  }
+  geo.computeVertexNormals();
+  return geo;
+}
+
 // ─── Sample surface points from a geometry ────────────────────────────────────
 export function sampleGeometrySurface(geo: THREE.BufferGeometry, count: number, offset: THREE.Vector3 = new THREE.Vector3()): THREE.Vector3[] {
   const pos    = geo.attributes.position as THREE.BufferAttribute;

@@ -8,29 +8,53 @@
  * any extra weight in the reverse direction.
  */
 
+import { HiggsfieldHero } from "./HiggsfieldMedia";
+
 export interface StageText {
   eyebrow: string;
   heading: string;
 }
 
 export const STAGE_TEXTS: readonly StageText[] = [
-  { eyebrow: "Origin", heading: "Everything begins with CO₂." },
+  { eyebrow: "Origin", heading: "A single mineral form, suspended in the dark." },
   {
-    eyebrow: "Transformation",
+    eyebrow: "Carbon",
+    heading: "Captured CO₂ gathers, and the surface draws it inward.",
+  },
+  {
+    eyebrow: "Conversion",
     heading:
-      "Captured carbon is transformed into calcium carbonate through advanced CCU technology.",
+      "Within, captured carbon is transformed into calcium carbonate.",
   },
   {
-    eyebrow: "Engineering",
-    heading: "Calcium carbonate is bonded with specialized plastic resin.",
+    eyebrow: "Composition",
+    heading:
+      "Calcium carbonate resolves into an ordered molecular structure.",
   },
   {
-    eyebrow: "The Material",
-    heading: "Born from captured CO₂. Engineered through carbon innovation.",
+    eyebrow: "Bonding",
+    heading:
+      "A clear resin flows through the structure and the composition stabilizes.",
   },
   {
-    eyebrow: "Applications",
-    heading: "Creating sustainable alternatives for plastic and paper products.",
+    eyebrow: "Refinement",
+    heading:
+      "The material refines and its surface smooths to a finished mineral skin.",
+  },
+  {
+    eyebrow: "Forms",
+    heading:
+      "The same material takes a thin, paper-like form — and a production-ready plastic replacement.",
+  },
+  {
+    eyebrow: "Products",
+    heading:
+      "From packaging to vessels, the same material forms an industrial family of products.",
+  },
+  {
+    eyebrow: "The Material, Realized",
+    heading:
+      "Less plastic, lower embodied carbon, at scale. Built from CO₂. Designed for the Planet.",
   },
 ] as const;
 
@@ -38,6 +62,7 @@ export function BornStatic() {
   return (
     <section className="born-static" aria-label="Born of LIMEX — the material story">
       <div className="born-static-inner">
+        <HiggsfieldHero className="born-static-media" />
         <span className="born-eyebrow">Material Origin</span>
         <h2 className="born-static-title">Born of LIMEX</h2>
         <ol className="born-timeline" aria-label="LIMEX material journey">
