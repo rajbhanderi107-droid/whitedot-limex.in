@@ -7,23 +7,9 @@ export default defineConfig({
   server: {
     allowedHosts: true,
   },
-  build: {
-    rollupOptions: {
-      output: {
-        // Split the heavy 3D vendor code into separate named chunks so the
-        // browser parses them as smaller units (lower TBT) instead of one
-        // ~1MB monolith. These stay lazy — only fetched when a lazy R3F
-        // component (hero / Born of LIMEX) mounts.
-        manualChunks(id) {
-          if (id.includes("node_modules/three/")) return "vendor-three";
-          if (id.includes("node_modules/@react-three/")) return "vendor-r3f";
-          if (
-            id.includes("node_modules/postprocessing/") ||
-            id.includes("node_modules/n8ao/")
-          )
-            return "vendor-postprocessing";
-        },
-      },
-    },
-  },
+  // No manualChunks: Vite's default splitting keeps the three.js / R3F /
+  // postprocessing stack in lazy chunks off the entry (loaded only when a
+  // lazy()'d canvas mounts). A custom manualChunks split caused the entry to
+  // eager-import the 3D stack via a shared helper landing in a vendor chunk —
+  // correctness (lazy 3D) wins over the marginal parse-size optimisation.
 });
