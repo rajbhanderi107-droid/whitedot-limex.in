@@ -960,22 +960,81 @@ function BornScene({
 }
 
 // ─── Captions (HTML overlay, real DOM text, rAF-driven) ───────────────────────
+// Motion CHARACTER evolves with the arc. Each route's `systems` array selects a
+// data-variant ONCE on mount; the variant maps to a CSS class that defines the
+// reveal personality (settling rise / liquid flow / ordered crisp / confident
+// product / held finale). The rAF loop is allocation-free + read-free: it writes
+// ONLY a single `--a` custom property per caption node. All look (opacity, blur,
+// translateY, clip, eyebrow stagger) is derived from `--a` via CSS calc(), so the
+// JS does no DOM reads, no transform-string building, and no per-frame objects.
+type CaptionVariant = "mineral" | "liquid" | "structured" | "product" | "finale";
+
+function captionVariant(systems: readonly BornSystem[], id: number): CaptionVariant {
+  if (id === 20) return "finale";
+  // Liquid arc takes priority where resin/stabilize lead the stage (R10–R11).
+  if (systems.includes("resin") || systems.includes("stabilize")) return "liquid";
+  // Ordered/structured reveal for the lattice + refine stages (R08–R09, R12–R13).
+  if (systems.includes("lattice") || systems.includes("refine")) return "structured";
+  // Confident product framing once forms emerge (R15–R19).
+  if (
+    systems.includes("packaging") ||
+    systems.includes("bottle") ||
+    systems.includes("ecosystem") ||
+    systems.includes("impact") ||
+    systems.includes("plastic")
+  )
+    return "product";
+  // Early grounded mineral routes (light / cracks / calcium / sheets, R01–R07).
+  return "mineral";
+}
+
 function BornCaptions({ progress }: { progress: RefObject<number> }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // One-time setup: assign each caption its motion-character variant. Done once
+  // on mount so the rAF loop never has to touch classes or attributes per frame.
+  useEffect(() => {
+    const root = containerRef.current;
+    if (!root) return;
+    const nodes = root.children;
+    for (let i = 0; i < nodes.length; i++) {
+      (nodes[i] as HTMLElement).dataset.variant = captionVariant(
+        ROUTES[i].systems,
+        ROUTES[i].id,
+      );
+    }
+  }, []);
+
+  // rAF loop — ALLOCATION-FREE + READ-FREE. Writes a single custom property per
+  // node; CSS calc() turns `--a` into opacity/blur/translate/clip. Track the last
+  // "live" node so we only flip aria-hidden when it actually changes (avoids a
+  // per-frame attribute write churn on the a11y tree).
   useEffect(() => {
     let raf = 0;
+    let liveIdx = -1;
     const update = () => {
       const p = progress.current ?? 0;
       const root = containerRef.current;
       if (root) {
         const nodes = root.children;
+        let topIdx = -1;
+        let topA = 0.05;
         for (let i = 0; i < nodes.length; i++) {
           const el = nodes[i] as HTMLElement;
           const a = routeAlpha(p, i);
-          el.style.opacity = String(a);
-          el.style.transform = `translateY(${(1 - a) * 16}px)`;
-          el.setAttribute("aria-hidden", a < 0.05 ? "true" : "false");
+          el.style.setProperty("--a", a as unknown as string);
+          if (a > topA) {
+            topA = a;
+            topIdx = i;
+          }
+        }
+        // Expose only the most-visible caption to assistive tech; flip once.
+        if (topIdx !== liveIdx) {
+          if (liveIdx >= 0 && liveIdx < nodes.length)
+            (nodes[liveIdx] as HTMLElement).setAttribute("aria-hidden", "true");
+          if (topIdx >= 0)
+            (nodes[topIdx] as HTMLElement).setAttribute("aria-hidden", "false");
+          liveIdx = topIdx;
         }
       }
       raf = requestAnimationFrame(update);

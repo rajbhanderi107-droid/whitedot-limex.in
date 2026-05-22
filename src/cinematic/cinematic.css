@@ -1999,28 +1999,47 @@ a {
   padding: clamp(2rem, 7vh, 5rem) clamp(1.5rem, 7vw, 6rem);
 }
 
+/* ── Caption motion model ────────────────────────────────────────────────────
+   The rAF loop writes ONLY `--a` (alpha 0..1) per caption node. Everything else
+   — opacity, blur-in/out, translateY, eyebrow stagger, heading clip — is derived
+   here from `--a` via calc(), so the JS stays allocation-free and read-free and
+   the look lives in CSS. Per-variant data-variant tunes the character of the
+   reveal (set once on mount). All custom props have @property fallbacks via the
+   plain values so non-supporting engines still fade.                            */
+
 .born-caption {
   position: absolute;
   bottom: clamp(2rem, 7vh, 5rem);
   left:   clamp(1.5rem, 7vw, 6rem);
   right:  clamp(1.5rem, 7vw, 6rem);
-  max-width: 72ch;
-  /* opacity + transform driven by JS rAF loop — no CSS transition needed
-     (would fight the direct DOM writes). Will-change for compositor promotion. */
-  will-change: opacity, transform;
-  opacity: 0;
+  max-width: 64ch;
+  /* Per-node alpha written by the rAF loop. */
+  --a: 0;
+  /* Tunable per-variant motion constants (overridden by data-variant below). */
+  --rise: 18px;     /* heading translateY travel at a=0 */
+  --blur: 6px;      /* heading blur at a=0 */
+  --eb-lead: 0.32;  /* eyebrow leads the heading: maps --a through this pivot */
+  /* Compositor promotion. No CSS transition — would fight the per-frame writes. */
+  will-change: opacity, transform, filter;
+  opacity: var(--a);
 }
 
+/* Eyebrow leads the heading slightly: remap --a so it reaches full alpha while
+   the heading is still rising in. clamp keeps it 0..1. */
 .born-eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.9rem;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.26em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--c-accent);
+  --ae: clamp(0, calc(var(--a) / var(--eb-lead)), 1);
+  opacity: var(--ae);
+  /* slight horizontal track-in for the eyebrow, eased by --ae */
+  transform: translate3d(calc((1 - var(--ae)) * -10px), 0, 0);
 }
 .born-eyebrow::before {
   content: "";
@@ -2029,18 +2048,96 @@ a {
   height: 1px;
   background: currentColor;
   flex-shrink: 0;
+  /* the rule draws in with the eyebrow */
+  transform: scaleX(var(--ae));
+  transform-origin: left center;
 }
 
 .born-heading {
   margin: 0;
-  font-size: clamp(1.6rem, 4.5vw, 3.4rem);
+  font-size: clamp(1.55rem, 4.2vw, 3.3rem);
   font-weight: 700;
-  line-height: 1.12;
-  letter-spacing: -0.025em;
+  line-height: 1.1;
+  letter-spacing: -0.028em;
+  max-width: 22ch;
   color: var(--c-cream);
   text-rendering: geometricPrecision;
+  text-wrap: balance;
   /* Subtle text shadow for legibility over the dark canvas */
   text-shadow: 0 2px 32px rgba(5, 7, 6, 0.72);
+  /* Reveal: rise + blur-in, both eased from (1 - --a). A cinematic ease is baked
+     into the geometry by squaring the inverse alpha (slow settle near the end). */
+  --inv: calc(1 - var(--a));
+  --ease: calc(var(--inv) * var(--inv));
+  transform: translate3d(0, calc(var(--ease) * var(--rise)), 0);
+  filter: blur(calc(var(--ease) * var(--blur)));
+}
+
+/* ── Motion character per arc (data-variant set once on mount) ──────────────── */
+
+/* Early mineral routes — grounded, settling rise from below, soft blur. */
+.born-caption[data-variant="mineral"] {
+  --rise: 20px;
+  --blur: 6px;
+  --eb-lead: 0.34;
+}
+
+/* Resin / stabilize — softer, flowing: longer travel, more blur, eyebrow drifts
+   in closer to the heading (less lead) so it reads as one liquid motion. */
+.born-caption[data-variant="liquid"] {
+  --rise: 26px;
+  --blur: 9px;
+  --eb-lead: 0.5;
+}
+.born-caption[data-variant="liquid"] .born-heading {
+  /* gentler, more linear ease — flowing rather than settling */
+  --ease: var(--inv);
+}
+
+/* Lattice / refine — crisper, ordered: short travel, minimal blur, a clip-rise
+   that wipes the heading in from below like a precise reveal. */
+.born-caption[data-variant="structured"] {
+  --rise: 12px;
+  --blur: 3px;
+  --eb-lead: 0.28;
+}
+.born-caption[data-variant="structured"] .born-heading {
+  clip-path: inset(calc(var(--ease) * 100%) 0 0 0);
+}
+
+/* Products — confident, still: minimal travel, almost no blur, quick eyebrow. */
+.born-caption[data-variant="product"] {
+  --rise: 10px;
+  --blur: 2px;
+  --eb-lead: 0.26;
+}
+
+/* Finale (R20) — calm, centered, the tagline given the most space + weight. */
+.born-caption[data-variant="finale"] {
+  --rise: 14px;
+  --blur: 5px;
+  --eb-lead: 0.4;
+  left: clamp(1.5rem, 8vw, 8rem);
+  right: clamp(1.5rem, 8vw, 8rem);
+  bottom: 50%;
+  transform: translateY(50%);
+  text-align: center;
+  max-width: none;
+}
+.born-caption[data-variant="finale"] .born-eyebrow {
+  /* center the eyebrow, drop its leading rule */
+  justify-content: center;
+}
+.born-caption[data-variant="finale"] .born-eyebrow::before {
+  display: none;
+}
+.born-caption[data-variant="finale"] .born-heading {
+  margin: 0 auto;
+  max-width: 18ch;
+  font-size: clamp(2rem, 6vw, 4.6rem);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.04em;
 }
 
 /* ── Static fallback (no canvas — reduced-motion / non-premium) ─────────── */
@@ -2121,23 +2218,54 @@ a {
 
 /* ── Reduced-motion override ─────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  /* If somehow the canvas version renders, kill any transform animations */
-  .born-caption {
-    transition: opacity 0.3s linear !important;
+  /* Collapse ALL caption motion to a plain opacity fade — no blur, no translate,
+     no clip, regardless of data-variant. The rAF loop still writes --a, so
+     opacity continues to track scroll, just without transform/filter. */
+  .born-caption,
+  .born-caption[data-variant] {
+    will-change: opacity;
+    opacity: var(--a);
+  }
+  .born-caption .born-eyebrow,
+  .born-caption .born-heading,
+  .born-caption[data-variant] .born-eyebrow,
+  .born-caption[data-variant] .born-heading {
+    opacity: 1;
     transform: none !important;
-    will-change: auto;
+    filter: none !important;
+    clip-path: none !important;
+  }
+  .born-caption .born-eyebrow::before {
+    transform: none !important;
+  }
+  /* Finale keeps its centered position, just no motion. */
+  .born-caption[data-variant="finale"] {
+    transform: translateY(50%);
   }
 }
 
 /* ── Mobile tweaks ───────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
   .born-heading {
-    font-size: clamp(1.3rem, 6.5vw, 2rem);
+    font-size: clamp(1.35rem, 6.4vw, 2rem);
+    line-height: 1.16;
+    max-width: 26ch;
+    /* smaller rise/blur on mobile so reveals stay calm on short scrolls */
   }
   .born-caption {
-    left: 1rem;
-    right: 1rem;
-    bottom: 1.5rem;
+    left: 1.1rem;
+    right: 1.1rem;
+    bottom: 1.6rem;
+    --rise: 12px;
+    --blur: 4px;
+  }
+  .born-caption[data-variant="finale"] {
+    left: 1.1rem;
+    right: 1.1rem;
+  }
+  .born-caption[data-variant="finale"] .born-heading {
+    font-size: clamp(1.7rem, 8vw, 2.6rem);
+    max-width: 14ch;
   }
   .born-timeline-item {
     gap: 1rem;
