@@ -1567,7 +1567,6 @@ a {
   border-radius: 10px;
   border: 1px solid var(--c-line);
   background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(10px);
   font-size: 0.88rem;
   color: var(--c-text);
 }
@@ -1582,7 +1581,6 @@ a {
   border-radius: 999px;
   border: 1px solid rgba(154, 168, 147, 0.4);
   background: rgba(154, 168, 147, 0.12);
-  backdrop-filter: blur(10px);
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--c-text);

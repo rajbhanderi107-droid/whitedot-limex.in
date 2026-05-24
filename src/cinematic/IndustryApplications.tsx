@@ -157,8 +157,6 @@ function IndustryCard({ industry, cellVariants, onOpen }: CardProps) {
   const srx = useSpring(rx, { stiffness: 260, damping: 22 });
   const sry = useSpring(ry, { stiffness: 260, damping: 22 });
 
-  // Cursor-tracked glow position (percentage within card)
-  const [glowPos, setGlowPos] = useState({ x: 50, y: 80 });
   const [isHovered, setIsHovered] = useState(false);
 
   const onMove = useCallback((e: React.MouseEvent) => {
@@ -177,11 +175,9 @@ function IndustryCard({ industry, cellVariants, onOpen }: CardProps) {
     ry.set(((relX - cx) / cx) * 6);
     rx.set(-((relY - cy) / cy) * 6);
 
-    // Glow position as % of card
-    setGlowPos({
-      x: (relX / r.width) * 100,
-      y: (relY / r.height) * 100,
-    });
+    // Glow position — written directly to CSS custom property, no React re-render
+    blockRef.current.style.setProperty('--gp-x', `${(relX / r.width) * 100}%`);
+    blockRef.current.style.setProperty('--gp-y', `${(relY / r.height) * 100}%`);
   }, [reduce, mx, my, rx, ry]);
 
   const onLeave = useCallback(() => {
@@ -264,13 +260,13 @@ function IndustryCard({ industry, cellVariants, onOpen }: CardProps) {
             </span>
           </button>
 
-          {/* Cursor-tracked sage glow — follows pointer within card */}
+          {/* Cursor-tracked sage glow — position via CSS custom props on blockRef, no re-render */}
           <span
             className="cine-app-glow ia-card-glow"
             aria-hidden="true"
             style={{
-              left: `${glowPos.x}%`,
-              top: `${glowPos.y}%`,
+              left: 'var(--gp-x, 50%)',
+              top: 'var(--gp-y, 80%)',
               opacity: isHovered && !reduce ? 1 : 0,
             }}
           />
