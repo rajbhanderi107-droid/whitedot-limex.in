@@ -13,3 +13,20 @@ dist
 .claude/skills/higgsfield-product-photoshoot
 .claude/skills/higgsfield-soul-id
 skills-lock.json
+
+# Token Saver Context Bridge — keep state + raw transcripts local.
+# Only the skill source code + EDITABLE_CONTEXT.md ship; the rest is
+# session-generated and would just be noise in the repo.
+.claude/context/tokensaver/raw/
+.claude/context/tokensaver/.state.json
+.claude/context/tokensaver/archive/
+.claude/context/tokensaver/chunks/
+.claude/context/tokensaver/CURRENT_HANDOFF.md
+.claude/context/tokensaver/CURRENT_SUMMARY.md
+.claude/context/tokensaver/SESSION_INDEX.md
+.claude/context/tokensaver/NEW_CHAT_STARTER.md
+.claude/settings.local.json
+
+# Python bytecode caches (tokensaver scripts run via python directly).
+__pycache__/
+*.pyc

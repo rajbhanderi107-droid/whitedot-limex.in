@@ -1,0 +1,7 @@
+{
+  "chunk_size_messages": 20,
+  "handoff_max_words": 1500,
+  "redact_patterns": [],
+  "include_assistant_messages": true,
+  "include_user_messages": true
+}
