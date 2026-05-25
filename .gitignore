@@ -4,6 +4,9 @@ dist
 .DS_Store
 *.local
 *.log
+.env
+.env.*
+!.env.example
 
 # Third-party Higgsfield skills installed via `npx skills add` — kept local,
 # not committed (Snyk-flagged Critical Risk; they run with full agent perms).
