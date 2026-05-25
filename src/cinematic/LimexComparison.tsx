@@ -60,6 +60,11 @@ const data: Record<Tab, Row[]> = {
       limex: "Usage up to 80% in selected grades and applications, as per supplied data — validate via trials.",
       filler: "Practical loading often limited to around 30%.",
     },
+    {
+      category: "FMCG & bottle applications",
+      limex: "Suitable for FMCG and bottle applications where LIMEX helps reduce virgin plastic usage while maintaining required product strength.",
+      filler: "Not suitable for bottle applications; bottles generally remain dependent on 100% virgin plastic because local fillers cannot deliver the required strength, consistency and processing reliability.",
+    },
   ],
   Quality: [
     {
