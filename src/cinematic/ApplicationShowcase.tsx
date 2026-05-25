@@ -243,7 +243,16 @@ export function ApplicationShowcase({ industry, triggerRef, onClose }: ShowcaseP
             aria-hidden="true"
           />
 
-          {/* Dialog panel */}
+          {/* Dialog panel — wrapped in a fixed flex-centered positioner so
+              framer-motion's transform (scale/y) doesn't conflict with the
+              centering transform. Click on the empty area inside the
+              positioner (outside the dialog itself) also closes. */}
+          <div
+            className="ia-dialog-positioner"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) handleClose();
+            }}
+          >
           <motion.div
             ref={dialogRef}
             className="ia-dialog glass-panel glass-panel--feature"
@@ -297,6 +306,7 @@ export function ApplicationShowcase({ industry, triggerRef, onClose }: ShowcaseP
               Product samples available on request. Lead time: 14 working days from confirmation.
             </p>
           </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>

@@ -250,7 +250,7 @@ function App() {
       <section className="hero" id="home">
         <div className="hero-copy">
           <p className="eyebrow">Authorized supply. Clear material guidance.</p>
-          <h1>Mineral Intelligence for LIMEX industrial material adoption.</h1>
+          <h1>Sustainable Material to Replace Plastic.</h1>
           <p className="hero-text">
             Sevendot connects businesses with authorized access to LIMEX material technology by TBM
             Japan, helping manufacturers evaluate mineral-based material routes for smarter,

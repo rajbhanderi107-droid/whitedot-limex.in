@@ -175,23 +175,25 @@ function HeroHeadline({
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
       >
-        Mineral Intelligence for <span className="grad">LIMEX Adoption</span>
+        Sustainable Material <span className="grad">to Replace Plastic</span>
       </motion.h1>
     );
   }
 
   // Premium path — each word slides up from clip, staggered per word.
   // Slower, grander durations compared to previous version.
+  // 1/1/3 cadence matches the original layout rhythm and fits the hero column
+  // at the cinematic display font-size.
   const headlineLines = [
-    { words: ["Mineral"], grad: false },
-    { words: ["Intelligence"], grad: false },
-    { words: ["for", "LIMEX", "Adoption"], grad: true },
+    { words: ["Sustainable"], grad: false },
+    { words: ["Material"], grad: false },
+    { words: ["to", "Replace", "Plastic"], grad: true },
   ];
   const wordDelay = 0.095; // slightly wider stagger for cinematic weight
   let wordIndex = 0;
 
   return (
-    <h1 aria-label="Mineral Intelligence for LIMEX Adoption">
+    <h1 aria-label="Sustainable Material to Replace Plastic">
       {headlineLines.map((line, lineIndex) => (
         <span className="cine-hero-h1-line" aria-hidden="true" key={line.words.join("-")}>
           {line.words.map((word, i) => {

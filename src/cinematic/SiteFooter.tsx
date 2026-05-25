@@ -57,7 +57,12 @@ export function SiteFooter() {
       </div>
 
       <div className="cine-footer-base">
-        <span>© {year} White Dot LLP. All rights reserved.</span>
+        <div className="cine-footer-base-left">
+          <span>© {year} White Dot LLP. All rights reserved.</span>
+          <span className="cine-footer-disclaimer">
+            Ads are created by the use of artificial intelligence.
+          </span>
+        </div>
         <span>LIMEX is a material developed by TBM Co., Ltd. (Japan).</span>
       </div>
     </footer>

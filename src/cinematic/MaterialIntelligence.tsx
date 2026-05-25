@@ -2,7 +2,7 @@ import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { LimexRock } from "./LimexRock";
 
 const leftLabels = [
-  { t: "Mineral composition", d: "50%+ calcium carbonate (CaCO₃), formed from captured CO₂." },
+  { t: "Mineral composition", d: "80%+ calcium carbonate (CaCO₃), formed from captured CO₂." },
   { t: "Reduced plastic dependency", d: "Replaces a large share of petroleum-based plastic in the blend." },
   { t: "Sustainability value", d: "Lower carbon footprint with practical recycling pathways." },
 ];

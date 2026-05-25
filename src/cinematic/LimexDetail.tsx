@@ -73,6 +73,7 @@ const processes = [
   "Injection moulding",
   "Sheet & film",
   "Packaging",
+  "FMCG products",
   "Industrial molded products",
 ];
 
@@ -88,6 +89,10 @@ const applications = [
   {
     t: "Packaging",
     d: "Supports material differentiation for brands looking beyond conventional plastic and paper systems.",
+  },
+  {
+    t: "FMCG products",
+    d: "Supports FMCG packaging and bottle formats where reducing virgin plastic without compromising line speed or product strength matters — subject to grade and trial validation.",
   },
   {
     t: "Sheets & printing",
