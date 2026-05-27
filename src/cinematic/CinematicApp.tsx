@@ -1,5 +1,6 @@
-import { lazy, Suspense, useEffect, useRef, type RefObject } from "react";
+import { lazy, Suspense, useEffect, useRef, useState, type RefObject } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { Menu, X } from "lucide-react";
 import { SupplyFlow } from "./SupplyFlow";
 import { MaterialIntelligence } from "./MaterialIntelligence";
 import { IndustryApplications } from "./IndustryApplications";
@@ -248,11 +249,26 @@ export default function CinematicApp() {
   useLenis(premium);
   useDismissBootLoader();
   const reduce = useReducedMotion();
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const navRef = useRef<HTMLElement>(null);
   useNavScroll(navRef, premium);
   useScrollTone(premium && !reduce);
   useDividerReveal(premium && !reduce);
+
+  useEffect(() => {
+    document.body.classList.toggle("cine-menu-lock", mobileNavOpen);
+    return () => document.body.classList.remove("cine-menu-lock");
+  }, [mobileNavOpen]);
+
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileNavOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [mobileNavOpen]);
 
   // Simple mode (premium off) reverts choreography to a quiet, near-instant fade.
   const rise = (delay: number) => {
@@ -301,18 +317,45 @@ export default function CinematicApp() {
             White Dot <small>LLP</small>
           </span>
         </a>
-        <div className="cine-nav-links">
-          <a href="#material">Material</a>
-          <a href="#material-core">Process</a>
-          <a href="#limex">LIMEX</a>
-          <a href="#comparison">Compare</a>
-          <a href="#applications">Applications</a>
-          <a href="#consult">Consultation</a>
+        <button
+          className="cine-nav-toggle"
+          type="button"
+          aria-label={mobileNavOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={mobileNavOpen}
+          aria-controls="cine-mobile-nav"
+          onClick={() => setMobileNavOpen((open) => !open)}
+        >
+          {mobileNavOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+        <div className={`cine-nav-links ${mobileNavOpen ? "is-open" : ""}`} id="cine-mobile-nav">
+          <a href="#material" onClick={() => setMobileNavOpen(false)}>Material</a>
+          <a href="#material-core" onClick={() => setMobileNavOpen(false)}>Process</a>
+          <a href="#limex" onClick={() => setMobileNavOpen(false)}>LIMEX</a>
+          <a href="#comparison" onClick={() => setMobileNavOpen(false)}>Compare</a>
+          <a href="#applications" onClick={() => setMobileNavOpen(false)}>Applications</a>
+          <a href="#consult" onClick={() => setMobileNavOpen(false)}>Consultation</a>
+          <a
+            className="cine-btn cine-btn-primary cine-mobile-consult"
+            href={whatsappHref}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => setMobileNavOpen(false)}
+          >
+            Request Consultation
+          </a>
         </div>
         <a className="cine-btn cine-btn-primary" href={whatsappHref} target="_blank" rel="noreferrer">
           Request Consultation
         </a>
       </nav>
+      {mobileNavOpen && (
+        <button
+          className="cine-nav-scrim"
+          type="button"
+          aria-label="Close navigation menu"
+          onClick={() => setMobileNavOpen(false)}
+        />
+      )}
 
       <section className="cine-hero" id="top">
         <div className="cine-hero-studio" aria-hidden="true">
