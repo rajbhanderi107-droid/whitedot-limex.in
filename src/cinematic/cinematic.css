@@ -3064,3 +3064,87 @@ a {
   }
 }
 /* END: Claude Mythos Premium Ad Showcase Section */
+
+/* ── Inquiry Form ─────────────────────────────────────────── */
+.cine-inquiry-wrap {
+  margin-top: 3.5rem;
+  padding-top: 3rem;
+  border-top: 1px solid var(--c-line);
+}
+.cine-inquiry-wrap h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--c-text);
+  margin: 0 0 0.35rem;
+}
+.cine-inquiry-wrap > p {
+  font-size: 0.875rem;
+  color: var(--c-muted);
+  margin: 0 0 1.5rem;
+}
+.cine-inquiry-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 680px;
+}
+.cine-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.cine-inquiry-form input,
+.cine-inquiry-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--c-line);
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.875rem;
+  color: var(--c-text);
+  font-family: inherit;
+  transition: border-color 0.2s, background 0.2s;
+  outline: none;
+}
+.cine-inquiry-form input::placeholder,
+.cine-inquiry-form textarea::placeholder {
+  color: var(--c-faint);
+}
+.cine-inquiry-form input:focus,
+.cine-inquiry-form textarea:focus {
+  border-color: rgba(156, 175, 136, 0.5);
+  background: rgba(255, 255, 255, 0.06);
+}
+.cine-inquiry-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+.cine-form-error {
+  font-size: 0.8rem;
+  color: #e07070;
+  margin: 0;
+}
+.cine-form-success {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(156, 175, 136, 0.35);
+  border-radius: 14px;
+  background: rgba(156, 175, 136, 0.06);
+  max-width: 680px;
+}
+.cine-form-success strong {
+  font-size: 1rem;
+  color: #a8c49a;
+}
+.cine-form-success p {
+  font-size: 0.875rem;
+  color: var(--c-muted);
+  margin: 0;
+}
+@media (max-width: 620px) {
+  .cine-form-row { grid-template-columns: 1fr; }
+}
