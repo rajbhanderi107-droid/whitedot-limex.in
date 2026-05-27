@@ -1,5 +1,6 @@
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { MessageCircle, Phone } from "lucide-react";
+import { InquiryForm } from "./InquiryForm";
 
 const whatsappHref =
   "https://wa.me/918849728938?text=" +
@@ -80,6 +81,12 @@ export function Consultation() {
           </motion.li>
         ))}
       </motion.ol>
+
+      <div className="cine-inquiry-wrap">
+        <h3>Send us a direct inquiry</h3>
+        <p>Prefer email? Fill in the form below and our team will get back to you within one business day.</p>
+        <InquiryForm />
+      </div>
     </section>
   );
 }
