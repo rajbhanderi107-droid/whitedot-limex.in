@@ -1,7 +1,22 @@
 const API_BASE =
   import.meta.env.VITE_API_URL ||
   (import.meta.env.DEV ? "http://localhost:4000" : "https://whitedot-backend.onrender.com");
-const REQUEST_TIMEOUT_MS = 8000;
+const REQUEST_TIMEOUT_MS = 15_000; // 15s — Render free tier cold-starts take ~10-50s
+
+const TOKEN_KEY = "wd_admin_token";
+
+/** Persist / read / clear the JWT from localStorage.
+ *  Cross-origin cookies are blocked by modern browsers, so we use
+ *  Authorization: Bearer <token> instead. */
+export function getToken(): string | null {
+  return localStorage.getItem(TOKEN_KEY);
+}
+export function setToken(token: string) {
+  localStorage.setItem(TOKEN_KEY, token);
+}
+export function clearToken() {
+  localStorage.removeItem(TOKEN_KEY);
+}
 
 interface ApiResponse<T> {
   success: boolean;
@@ -22,24 +37,30 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<ApiR
   const controller = new AbortController();
   const timeoutId = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
+  // Build headers — include Authorization if we have a token
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...(options.headers as Record<string, string>),
+  };
+  const token = getToken();
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   let res: Response;
   try {
     res = await fetch(`${API_BASE}${path}`, {
       ...options,
-      credentials: "include",
       signal: controller.signal,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
+      headers,
     });
   } catch (err) {
     const timedOut = err instanceof DOMException && err.name === "AbortError";
     throw new ApiError(
       timedOut ? "REQUEST_TIMEOUT" : "BACKEND_UNREACHABLE",
       timedOut
-        ? "Backend request timed out. Check the deployed API URL."
-        : "Backend is not reachable. Check VITE_API_URL and backend deployment.",
+        ? "Backend is waking up (free tier). Please wait a moment and try again."
+        : "Backend is not reachable. Please try again in a few seconds.",
       0,
     );
   } finally {
@@ -52,6 +73,10 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<ApiR
   }));
 
   if (!res.ok || !json.success) {
+    // If unauthorized, clear stale token
+    if (res.status === 401) {
+      clearToken();
+    }
     throw new ApiError(
       json.error?.code || "UNKNOWN",
       json.error?.message || "Something went wrong",
