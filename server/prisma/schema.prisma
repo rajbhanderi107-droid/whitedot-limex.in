@@ -1,0 +1,410 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ───────────────────────────────────────
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  SALES
+  OPERATIONS
+  VIEWER
+}
+
+enum CompanyStatus {
+  LEAD
+  ACTIVE_CLIENT
+  INACTIVE
+  BLACKLISTED
+}
+
+enum InquiryStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL_SENT
+  WON
+  LOST
+  ARCHIVED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum QuoteStatus {
+  NEW
+  UNDER_REVIEW
+  NEED_MORE_INFO
+  QUOTED
+  NEGOTIATION
+  APPROVED
+  REJECTED
+  CLOSED
+}
+
+enum SampleStatus {
+  REQUESTED
+  APPROVED
+  REJECTED
+  DISPATCHED
+  DELIVERED
+  CANCELLED
+}
+
+enum FollowUpStatus {
+  PENDING
+  COMPLETED
+  MISSED
+  CANCELLED
+}
+
+enum DocumentCategory {
+  BROCHURE
+  TECHNICAL_DATASHEET
+  SUSTAINABILITY_REPORT
+  CASE_STUDY
+  CLIENT_DOCUMENT
+  INTERNAL
+}
+
+enum WebsiteSettingType {
+  TEXT
+  NUMBER
+  BOOLEAN
+  JSON
+  URL
+  EMAIL
+}
+
+enum ActivityEntityType {
+  USER
+  COMPANY
+  INQUIRY
+  QUOTE_REQUEST
+  SAMPLE_REQUEST
+  CALCULATOR_SUBMISSION
+  DOCUMENT
+  WEBSITE_SETTING
+}
+
+enum NotificationType {
+  INFO
+  SUCCESS
+  WARNING
+  ERROR
+  LEAD
+  QUOTE
+  SAMPLE
+  FOLLOW_UP
+}
+
+// ─── Models ──────────────────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(VIEWER)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  assignedInquiries  Inquiry[]       @relation("AssignedInquiries")
+  assignedQuotes     QuoteRequest[]  @relation("AssignedQuotes")
+  createdNotes       AdminNote[]     @relation("NoteCreator")
+  assignedFollowUps  FollowUpTask[]  @relation("AssignedFollowUps")
+  uploadedDocuments  DocumentAsset[] @relation("DocumentUploader")
+  updatedSettings    WebsiteSetting[] @relation("SettingUpdater")
+  activityLogs       ActivityLog[]
+  notifications      Notification[]
+
+  @@index([email])
+  @@index([role])
+}
+
+model Company {
+  id            String        @id @default(cuid())
+  companyName   String
+  industry      String?
+  contactPerson String?
+  email         String?
+  phone         String?
+  website       String?
+  city          String?
+  state         String?
+  country       String?       @default("India")
+  address       String?
+  gstNumber     String?
+  status        CompanyStatus @default(LEAD)
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relations
+  inquiries              Inquiry[]
+  quoteRequests          QuoteRequest[]
+  sampleRequests         SampleRequest[]
+  calculatorSubmissions  CalculatorSubmission[]
+  adminNotes             AdminNote[]
+  followUpTasks          FollowUpTask[]
+  documents              DocumentAsset[]
+
+  @@index([email])
+  @@index([status])
+  @@index([companyName])
+  @@index([createdAt])
+}
+
+model Inquiry {
+  id            String        @id @default(cuid())
+  name          String
+  email         String
+  phone         String?
+  companyName   String?
+  designation   String?
+  city          String?
+  country       String?
+  industry      String?
+  inquiryType   String?
+  message       String?
+  sourcePage    String?
+  status        InquiryStatus @default(NEW)
+  priority      Priority      @default(MEDIUM)
+  internalNotes String?
+  followUpDate  DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relations
+  assignedTo   User?       @relation("AssignedInquiries", fields: [assignedToId], references: [id], onDelete: SetNull)
+  assignedToId String?
+  company      Company?    @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  companyId    String?
+  adminNotes   AdminNote[]
+  followUpTasks FollowUpTask[]
+
+  @@index([email])
+  @@index([status])
+  @@index([priority])
+  @@index([assignedToId])
+  @@index([companyId])
+  @@index([createdAt])
+}
+
+model QuoteRequest {
+  id                    String      @id @default(cuid())
+  contactPerson         String
+  email                 String
+  phone                 String?
+  productCategory       String?
+  currentMaterial       String?
+  currentPlasticGrade   String?
+  monthlyQuantity       String?
+  targetApplication     String?
+  strengthRequirement   String?
+  foodContactRequired   Boolean?
+  colorRequirement      String?
+  sustainabilityGoal    String?
+  expectedPriceRange    String?
+  message               String?
+  status                QuoteStatus @default(NEW)
+  priority              Priority    @default(MEDIUM)
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  // Relations
+  assignedTo   User?        @relation("AssignedQuotes", fields: [assignedToId], references: [id], onDelete: SetNull)
+  assignedToId String?
+  company      Company?     @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  companyId    String?
+  adminNotes   AdminNote[]
+  followUpTasks FollowUpTask[]
+
+  @@index([email])
+  @@index([status])
+  @@index([assignedToId])
+  @@index([companyId])
+  @@index([createdAt])
+}
+
+model SampleRequest {
+  id                    String       @id @default(cuid())
+  contactPerson         String
+  email                 String
+  phone                 String?
+  requestedMaterialType String?
+  application           String?
+  quantity              String?
+  deliveryAddress       String?
+  courierTracking       String?
+  status                SampleStatus @default(REQUESTED)
+  remarks               String?
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+
+  // Relations
+  company       Company?     @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  companyId     String?
+  adminNotes    AdminNote[]
+  followUpTasks FollowUpTask[]
+
+  @@index([email])
+  @@index([status])
+  @@index([companyId])
+  @@index([createdAt])
+}
+
+model CalculatorSubmission {
+  id                          String   @id @default(cuid())
+  companyName                 String?
+  contactPerson               String?
+  email                       String?
+  phone                       String?
+  plasticType                 String?
+  currentGrade                String?
+  currentQuantity             String?
+  limexReplacementPercentage  Float?
+  estimatedCostSaving         Float?
+  estimatedPlasticReduction   Float?
+  estimatedCo2Impact          Float?
+  assumptionsUsed             Json?
+  convertedToLead             Boolean  @default(false)
+  createdAt                   DateTime @default(now())
+
+  // Relations
+  company   Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  companyId String?
+
+  @@index([email])
+  @@index([companyId])
+  @@index([createdAt])
+}
+
+model AdminNote {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  createdBy      User          @relation("NoteCreator", fields: [createdById], references: [id])
+  createdById    String
+  company        Company?      @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  companyId      String?
+  inquiry        Inquiry?      @relation(fields: [inquiryId], references: [id], onDelete: SetNull)
+  inquiryId      String?
+  quoteRequest   QuoteRequest? @relation(fields: [quoteRequestId], references: [id], onDelete: SetNull)
+  quoteRequestId String?
+  sampleRequest  SampleRequest? @relation(fields: [sampleRequestId], references: [id], onDelete: SetNull)
+  sampleRequestId String?
+}
+
+model FollowUpTask {
+  id          String         @id @default(cuid())
+  title       String
+  description String?
+  dueDate     DateTime
+  status      FollowUpStatus @default(PENDING)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  // Relations
+  assignedTo      User          @relation("AssignedFollowUps", fields: [assignedToId], references: [id])
+  assignedToId    String
+  company         Company?      @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  companyId       String?
+  inquiry         Inquiry?      @relation(fields: [inquiryId], references: [id], onDelete: SetNull)
+  inquiryId       String?
+  quoteRequest    QuoteRequest? @relation(fields: [quoteRequestId], references: [id], onDelete: SetNull)
+  quoteRequestId  String?
+  sampleRequest   SampleRequest? @relation(fields: [sampleRequestId], references: [id], onDelete: SetNull)
+  sampleRequestId String?
+
+  @@index([status])
+  @@index([assignedToId])
+  @@index([dueDate])
+}
+
+model DocumentAsset {
+  id          String           @id @default(cuid())
+  title       String
+  description String?
+  fileUrl     String
+  fileType    String?
+  fileSize    Int?
+  category    DocumentCategory @default(INTERNAL)
+  isPublic    Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  // Relations
+  uploadedBy   User     @relation("DocumentUploader", fields: [uploadedById], references: [id])
+  uploadedById String
+  company      Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  companyId    String?
+
+  @@index([category])
+  @@index([companyId])
+}
+
+model WebsiteSetting {
+  id          String             @id @default(cuid())
+  key         String             @unique
+  value       String
+  type        WebsiteSettingType @default(TEXT)
+  description String?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  // Relations
+  updatedBy   User?   @relation("SettingUpdater", fields: [updatedById], references: [id], onDelete: SetNull)
+  updatedById String?
+}
+
+model ActivityLog {
+  id         String             @id @default(cuid())
+  action     String
+  entityType ActivityEntityType
+  entityId   String?
+  metadata   Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime           @default(now())
+
+  // Relations
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId String?
+
+  @@index([entityType])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  title     String
+  message   String
+  type      NotificationType @default(INFO)
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  // Relations
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+}

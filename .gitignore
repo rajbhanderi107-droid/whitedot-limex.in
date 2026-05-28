@@ -4,8 +4,14 @@ dist
 .DS_Store
 *.local
 *.log
+.env
+.env.*
+!*.env.example
+server/.env
+server/.env.*
+!server/.env.example
 
-# Third-party Higgsfield skills installed via `npx skills add` — kept local,
+# Third-party Higgsfield skills installed via `npx skills add` - kept local,
 # not committed (Snyk-flagged Critical Risk; they run with full agent perms).
 .agents/
 .claude/skills/higgsfield-generate
