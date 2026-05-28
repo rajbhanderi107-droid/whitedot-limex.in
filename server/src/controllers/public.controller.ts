@@ -84,3 +84,12 @@ export async function submitCalculatorSubmission(req: Request, res: Response) {
 
   return sendSuccess(res, { id: submission.id }, "Calculator results saved.", 201);
 }
+
+export async function getWebsiteSettings(_req: Request, res: Response) {
+  const settings = await prisma.websiteSetting.findMany({
+    select: { key: true, value: true, type: true, updatedAt: true },
+    orderBy: { key: "asc" },
+  });
+
+  return sendSuccess(res, settings);
+}

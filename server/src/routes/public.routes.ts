@@ -18,5 +18,6 @@ router.post("/inquiry", validate(publicInquirySchema), asyncHandler(pub.submitIn
 router.post("/quote-request", validate(publicQuoteRequestSchema), asyncHandler(pub.submitQuoteRequest));
 router.post("/sample-request", validate(publicSampleRequestSchema), asyncHandler(pub.submitSampleRequest));
 router.post("/calculator-submission", validate(calculatorSubmissionSchema), asyncHandler(pub.submitCalculatorSubmission));
+router.get("/settings", asyncHandler(pub.getWebsiteSettings));
 
 export default router;

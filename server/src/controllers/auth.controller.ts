@@ -33,6 +33,7 @@ export async function login(req: Request, res: Response) {
     name: user.name,
     email: user.email,
     role: user.role,
+    token,
   }, "Login successful");
 }
 

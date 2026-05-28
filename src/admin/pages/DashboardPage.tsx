@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Settings, Users } from "lucide-react";
 import { api } from "../lib/api.js";
 
 interface DashboardData {
@@ -61,6 +63,23 @@ export function DashboardPage() {
             <div className="adm-stat-label">{s.label}</div>
           </div>
         ))}
+      </div>
+
+      <div className="adm-action-grid">
+        <Link className="adm-action-card" to="/admin/users">
+          <Users size={18} />
+          <span>
+            <strong>Create users</strong>
+            <small>Add team members and control dashboard access.</small>
+          </span>
+        </Link>
+        <Link className="adm-action-card" to="/admin/settings">
+          <Settings size={18} />
+          <span>
+            <strong>Edit website settings</strong>
+            <small>Update phone, WhatsApp, email, and company details.</small>
+          </span>
+        </Link>
       </div>
 
       <div className="adm-card">

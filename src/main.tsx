@@ -26,6 +26,9 @@ const isAdmin = isAdminHost || window.location.hash.startsWith("#/admin");
 // Dismiss the inline aggregation loader immediately for admin routes —
 // CinematicApp's useDismissBootLoader() won't run in admin mode.
 if (isAdmin) {
+  document.documentElement.style.background = "#0f1210";
+  document.body.style.margin = "0";
+  document.body.style.background = "#0f1210";
   const loader = document.getElementById("agg-wd-loader");
   if (loader) loader.remove();
 }

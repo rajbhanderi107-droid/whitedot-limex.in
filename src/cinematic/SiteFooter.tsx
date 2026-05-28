@@ -1,6 +1,4 @@
-const whatsappHref =
-  "https://wa.me/918849728938?text=" +
-  encodeURIComponent("Hello White Dot LLP, I'd like to explore LIMEX material for my business.");
+import { getPhoneHref, getWhatsappHref, useSiteSettings } from "./siteSettings";
 
 const explore = [
   { label: "Material", href: "#material" },
@@ -11,6 +9,12 @@ const explore = [
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
+  const settings = useSiteSettings();
+  const whatsappHref = getWhatsappHref(
+    settings,
+    "Hello White Dot LLP, I'd like to explore LIMEX material for my business.",
+  );
+
   return (
     <footer className="cine-footer" id="footer">
       <div className="cine-footer-inner">
@@ -45,7 +49,8 @@ export function SiteFooter() {
           <a href={whatsappHref} target="_blank" rel="noreferrer">
             WhatsApp
           </a>
-          <a href="tel:+918849728938">+91 88497 28938</a>
+          <a href={getPhoneHref(settings)}>{settings.company_phone}</a>
+          <a href={`mailto:${settings.company_email}`}>{settings.company_email}</a>
         </div>
 
         <div className="cine-footer-col">
