@@ -123,8 +123,26 @@ export function LimexModel({ size = 3 }: { size?: number }) {
           const mats = Array.isArray(m.material) ? m.material : [m.material];
           const upgraded = mats.map((mat) => {
             if (mat instanceof THREE.MeshStandardMaterial && !(mat instanceof THREE.MeshPhysicalMaterial)) {
-              const phys = new THREE.MeshPhysicalMaterial();
-              phys.copy(mat);
+              // Manual property transfer instead of phys.copy(mat) — copy()
+              // fails because MeshPhysicalMaterial.copy() reads physical-only
+              // properties (specularColor, attenuationColor) that don't exist
+              // on MeshStandardMaterial, causing Vector3.copy(undefined).
+              const phys = new THREE.MeshPhysicalMaterial({
+                map: mat.map,
+                color: mat.color.clone(),
+                normalMap: mat.normalMap,
+                normalScale: mat.normalScale?.clone(),
+                roughnessMap: mat.roughnessMap,
+                metalnessMap: mat.metalnessMap,
+                aoMap: mat.aoMap,
+                aoMapIntensity: mat.aoMapIntensity,
+                envMap: mat.envMap,
+                envMapIntensity: mat.envMapIntensity,
+                side: mat.side,
+                transparent: mat.transparent,
+                opacity: mat.opacity,
+                alphaMap: mat.alphaMap,
+              });
               // Limestone micro-roughness: slightly reduce default roughness
               phys.roughness = Math.min(mat.roughness ?? 0.85, 0.7);
               phys.metalness = Math.max(mat.metalness ?? 0, 0.04);
