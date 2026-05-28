@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState, type RefObject } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { CinematicMenu } from "./CinematicMenu";
 import { SupplyFlow } from "./SupplyFlow";
 import { MaterialIntelligence } from "./MaterialIntelligence";
 import { IndustryApplications } from "./IndustryApplications";
@@ -228,7 +229,7 @@ function HeroProofPanel() {
     >
       <span className="cine-hero-proof-kicker">Material brief</span>
       <div className="cine-hero-proof-grid">
-        <strong>50%+</strong>
+        <strong>78%+</strong>
         <span>calcium carbonate content</span>
         <strong>14d</strong>
         <span>trial sample target window</span>
@@ -249,7 +250,7 @@ export default function CinematicApp() {
   useLenis(premium);
   useDismissBootLoader();
   const reduce = useReducedMotion();
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const navRef = useRef<HTMLElement>(null);
   useNavScroll(navRef, premium);
@@ -257,18 +258,18 @@ export default function CinematicApp() {
   useDividerReveal(premium && !reduce);
 
   useEffect(() => {
-    document.body.classList.toggle("cine-menu-lock", mobileNavOpen);
+    document.body.classList.toggle("cine-menu-lock", menuOpen);
     return () => document.body.classList.remove("cine-menu-lock");
-  }, [mobileNavOpen]);
+  }, [menuOpen]);
 
   useEffect(() => {
-    if (!mobileNavOpen) return;
+    if (!menuOpen) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMobileNavOpen(false);
+      if (event.key === "Escape") setMenuOpen(false);
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [mobileNavOpen]);
+  }, [menuOpen]);
 
   // Simple mode (premium off) reverts choreography to a quiet, near-instant fade.
   const rise = (delay: number) => {
@@ -317,49 +318,38 @@ export default function CinematicApp() {
             White Dot <small>LLP</small>
           </span>
         </a>
-        <button
-          className="cine-nav-toggle"
-          type="button"
-          aria-label={mobileNavOpen ? "Close navigation menu" : "Open navigation menu"}
-          aria-expanded={mobileNavOpen}
-          aria-controls="cine-mobile-nav"
-          onClick={() => setMobileNavOpen((open) => !open)}
-        >
-          {mobileNavOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-        <div className={`cine-nav-links ${mobileNavOpen ? "is-open" : ""}`} id="cine-mobile-nav">
-          <a href="#material" onClick={() => setMobileNavOpen(false)}>Material</a>
-          <a href="#material-core" onClick={() => setMobileNavOpen(false)}>Process</a>
-          <a href="#limex" onClick={() => setMobileNavOpen(false)}>LIMEX</a>
-          <a href="#comparison" onClick={() => setMobileNavOpen(false)}>Compare</a>
-          <a href="#applications" onClick={() => setMobileNavOpen(false)}>Applications</a>
-          <a href="#consult" onClick={() => setMobileNavOpen(false)}>Consultation</a>
-          <a
-            className="cine-btn cine-btn-primary cine-mobile-consult"
-            href={whatsappHref}
-            target="_blank"
-            rel="noreferrer"
-            onClick={() => setMobileNavOpen(false)}
-          >
-            Request Consultation
-          </a>
+
+        {/* Desktop quick links — hidden on mobile (use menu) */}
+        <div className="cine-nav-links" role="navigation" aria-label="Quick navigation">
+          <a href="#material">Material</a>
+          <a href="#material-core">Process</a>
+          <a href="#limex">LIMEX</a>
+          <a href="#comparison">Compare</a>
+          <a href="#applications">Applications</a>
+          <a href="#consult">Consultation</a>
         </div>
-        <a className="cine-btn cine-btn-primary" href={whatsappHref} target="_blank" rel="noreferrer">
-          Request Consultation
-        </a>
-      </nav>
-      {mobileNavOpen && (
+
+        {/* Hamburger — always visible on the right, opens cinematic menu */}
         <button
-          className="cine-nav-scrim"
+          className="cine-nav-hamburger"
           type="button"
-          aria-label="Close navigation menu"
-          onClick={() => setMobileNavOpen(false)}
-        />
-      )}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((o) => !o)}
+        >
+          {menuOpen ? <X size={18} /> : <Menu size={18} />}
+        </button>
+      </nav>
+
+      {/* Cinematic full-screen menu overlay */}
+      <CinematicMenu
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        whatsappHref={whatsappHref}
+      />
 
       <section className="cine-hero" id="top">
         <div className="cine-hero-studio" aria-hidden="true">
-          <span className="cine-hero-studio-line" />
           <span className="cine-hero-studio-flare" />
           <span className="cine-hero-studio-mark cine-hero-studio-mark-tl" />
           <span className="cine-hero-studio-mark cine-hero-studio-mark-tr" />
@@ -408,7 +398,7 @@ export default function CinematicApp() {
             </a>
           </motion.div>
           <motion.div className="cine-hero-eco" {...rise(0.72)} aria-label="Sustainability signals">
-            <span>50%+ calcium carbonate, less plastic</span>
+            <span>78%+ calcium carbonate, less plastic</span>
             <span>Lower carbon footprint</span>
             <span>Runs on existing production lines</span>
           </motion.div>
