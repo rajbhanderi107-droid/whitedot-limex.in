@@ -1,4 +1,6 @@
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+const API_BASE =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? "http://localhost:4000" : "https://whitedot-backend.onrender.com");
 const REQUEST_TIMEOUT_MS = 8000;
 
 interface ApiResponse<T> {

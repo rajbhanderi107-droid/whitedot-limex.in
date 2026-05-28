@@ -1,7 +1,9 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+const API_BASE =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? "http://localhost:4000" : "https://whitedot-backend.onrender.com");
 
 export function InquiryForm() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", companyName: "", message: "" });
