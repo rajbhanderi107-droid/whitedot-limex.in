@@ -11,6 +11,7 @@ import { Consultation } from "./Consultation";
 import { SiteFooter } from "./SiteFooter";
 import { useLenis } from "./useLenis";
 import { ScrollProgress } from "./ScrollProgress";
+import { getWhatsappHref, useSiteSettings } from "./siteSettings";
 // CONTINUITY-WD-BEGIN imports
 import { ContinuityShell } from "../continuity-wd";
 import "../continuity-wd/continuity-wd.css";
@@ -27,12 +28,6 @@ import { usePremium } from "../premium-wd";
 const LimestoneHero = lazy(() =>
   import("./LimestoneHero").then((m) => ({ default: m.LimestoneHero })),
 );
-
-const whatsappHref =
-  "https://wa.me/918849728938?text=" +
-  encodeURIComponent(
-    "Hello White Dot LLP, I'd like a LIMEX material optimization consultation.",
-  );
 
 /** Dismiss the inline pre-JS loader once React is alive. */
 function useDismissBootLoader() {
@@ -246,6 +241,11 @@ function HeroProofPanel() {
 
 export default function CinematicApp() {
   const premium = usePremium();
+  const settings = useSiteSettings();
+  const whatsappHref = getWhatsappHref(
+    settings,
+    "Hello White Dot LLP, I'd like a LIMEX material optimization consultation.",
+  );
   useLenis(premium);
   useDismissBootLoader();
   const reduce = useReducedMotion();

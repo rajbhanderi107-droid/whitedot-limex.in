@@ -6,6 +6,8 @@ import { DashboardPage } from "./pages/DashboardPage.js";
 import { InquiriesPage } from "./pages/InquiriesPage.js";
 import { InquiryDetailPage } from "./pages/InquiryDetailPage.js";
 import { LoginPage } from "./pages/LoginPage.js";
+import { UserManagementPage } from "./pages/UserManagementPage.js";
+import { WebsiteSettingsPage } from "./pages/WebsiteSettingsPage.js";
 import { warmUpBackend } from "./lib/api.js";
 import "./admin.css";
 
@@ -165,35 +167,12 @@ export default function AdminApp() {
 
         <Route
           path="/admin/settings"
-          element={
-            <GenericListPage
-              title="Website Settings"
-              endpoint="/api/website-settings"
-              columns={[
-                { key: "key", label: "Key" },
-                { key: "value", label: "Value" },
-                { key: "type", label: "Type" },
-                { key: "description", label: "Description" },
-              ]}
-            />
-          }
+          element={<WebsiteSettingsPage />}
         />
 
         <Route
           path="/admin/users"
-          element={
-            <GenericListPage
-              title="Users"
-              endpoint="/api/users"
-              columns={[
-                { key: "name", label: "Name" },
-                { key: "email", label: "Email" },
-                { key: "role", label: "Role" },
-                { key: "isActive", label: "Active", render: (v) => (v ? "Yes" : "No") },
-                { key: "createdAt", label: "Created", render: DateCol },
-              ]}
-            />
-          }
+          element={<UserManagementPage />}
         />
 
         <Route

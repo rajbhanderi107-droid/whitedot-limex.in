@@ -1,12 +1,7 @@
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { MessageCircle, Phone } from "lucide-react";
 import { InquiryForm } from "./InquiryForm";
-
-const whatsappHref =
-  "https://wa.me/918849728938?text=" +
-  encodeURIComponent(
-    "Hello White Dot LLP, I'd like a LIMEX material consultation. Product: , current polymer: , monthly volume: .",
-  );
+import { getPhoneHref, getWhatsappHref, useSiteSettings } from "./siteSettings";
 
 const steps = [
   {
@@ -33,6 +28,11 @@ const steps = [
 
 export function Consultation() {
   const reduce = useReducedMotion();
+  const settings = useSiteSettings();
+  const whatsappHref = getWhatsappHref(
+    settings,
+    "Hello White Dot LLP, I'd like a LIMEX material consultation. Product: , current polymer: , monthly volume: .",
+  );
 
   const wrap: Variants = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } };
   const item: Variants = {
@@ -59,9 +59,9 @@ export function Consultation() {
             <MessageCircle size={18} aria-hidden="true" />
             Request a Trial
           </a>
-          <a className="cine-btn cine-btn-ghost" href="tel:+918849728938">
+          <a className="cine-btn cine-btn-ghost" href={getPhoneHref(settings)}>
             <Phone size={18} aria-hidden="true" />
-            +91 88497 28938
+            {settings.company_phone}
           </a>
         </div>
       </div>
