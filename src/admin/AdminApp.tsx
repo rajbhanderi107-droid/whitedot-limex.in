@@ -6,7 +6,14 @@ import { DashboardPage } from "./pages/DashboardPage.js";
 import { InquiriesPage } from "./pages/InquiriesPage.js";
 import { InquiryDetailPage } from "./pages/InquiryDetailPage.js";
 import { LoginPage } from "./pages/LoginPage.js";
+import { warmUpBackend } from "./lib/api.js";
 import "./admin.css";
+
+// Fire-and-forget: start waking the backend the instant admin JS loads.
+// This runs BEFORE React even mounts, so the backend is booting while
+// the login page renders. By the time the user types their password,
+// the backend is usually already warm.
+warmUpBackend();
 
 function badgeClass(status: string) {
   if (["NEW", "REQUESTED"].includes(status)) return "adm-badge adm-badge-new";
@@ -28,7 +35,12 @@ function DateCol(val: unknown) {
 export default function AdminApp() {
   const { user, loading, login, logout, isAuthenticated } = useAuth();
 
-  if (loading) return <div className="adm-loading" style={{ minHeight: "100vh" }}>Loading...</div>;
+  if (loading) return (
+    <div className="adm-loading" style={{ minHeight: "100vh" }}>
+      <div className="adm-dot-pulse"><span /><span /><span /></div>
+      Connecting to backend...
+    </div>
+  );
 
   return (
     <Routes>

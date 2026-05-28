@@ -23,7 +23,15 @@ export function DashboardPage() {
     api.get<DashboardData>("/api/dashboard").then((r) => setData(r.data)).catch(console.error).finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div className="adm-loading">Loading dashboard...</div>;
+  if (loading) return (
+    <>
+      <div className="adm-header"><h1>Dashboard</h1><p>WhiteDot LIMEX business overview</p></div>
+      <div className="adm-skeleton-stats">
+        {Array.from({ length: 10 }, (_, i) => <div key={i} className="adm-skeleton adm-skeleton-stat" />)}
+      </div>
+      <div className="adm-skeleton adm-skeleton-card" />
+    </>
+  );
   if (!data) return <div className="adm-empty">Could not load dashboard data.</div>;
 
   const stats = [

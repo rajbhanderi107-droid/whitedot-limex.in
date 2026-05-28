@@ -50,8 +50,15 @@ export function LoginPage({ onLogin }: Props) {
             <input id="password" type="password" className="adm-input" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
           <button type="submit" className="adm-btn adm-btn-primary" style={{ width: "100%", marginTop: ".8rem", justifyContent: "center" }} disabled={loading}>
-            {loading ? "Signing in..." : "Sign in"}
+            {loading ? (
+              <><span className="adm-dot-pulse" style={{ display: "inline-flex" }}><span /><span /><span /></span> Signing in...</>
+            ) : "Sign in"}
           </button>
+          {loading && (
+            <p style={{ textAlign: "center", color: "var(--adm-muted)", fontSize: ".75rem", marginTop: ".6rem" }}>
+              First request may take a few seconds while the server wakes up.
+            </p>
+          )}
         </form>
       </div>
     </div>
