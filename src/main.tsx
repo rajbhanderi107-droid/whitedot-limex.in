@@ -32,6 +32,16 @@ if (isAdminHost && !window.location.hash.startsWith("#/admin")) {
 // Otherwise, render the public cinematic website unchanged.
 const isAdmin = isAdminHost || window.location.hash.startsWith("#/admin");
 
+// Dismiss the inline aggregation loader immediately for admin routes —
+// CinematicApp's useDismissBootLoader() won't run in admin mode.
+if (isAdmin) {
+  const loader = document.getElementById("agg-wd-loader");
+  if (loader) {
+    loader.setAttribute("data-done", "");
+    setTimeout(() => loader.remove(), 400);
+  }
+}
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     {isAdmin ? (
