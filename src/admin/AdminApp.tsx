@@ -35,7 +35,7 @@ function DateCol(val: unknown) {
 }
 
 export default function AdminApp() {
-  const { user, loading, login, logout, isAuthenticated } = useAuth();
+  const { user, loading, login, googleLogin, logout, isAuthenticated } = useAuth();
 
   if (loading) return (
     <div className="adm-loading" style={{ minHeight: "100vh" }}>
@@ -48,7 +48,7 @@ export default function AdminApp() {
     <Routes>
       <Route
         path="/admin/login"
-        element={isAuthenticated ? <Navigate to="/admin/dashboard" replace /> : <LoginPage onLogin={login} />}
+        element={isAuthenticated ? <Navigate to="/admin/dashboard" replace /> : <LoginPage onLogin={login} onGoogleLogin={googleLogin} />}
       />
 
       <Route

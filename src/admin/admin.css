@@ -210,6 +210,25 @@ select.adm-input { cursor: pointer; }
 .adm-login-card .adm-form-group { margin-bottom: .8rem; }
 .adm-login-error { background: rgba(214,88,88,.1); border: 1px solid var(--adm-danger); border-radius: 6px; padding: .5rem .8rem; font-size: .82rem; color: var(--adm-danger); margin-bottom: .8rem; }
 
+/* ─── Google Sign-In button ─────────── */
+.adm-btn-google {
+  display: flex; align-items: center; justify-content: center; gap: .6rem;
+  width: 100%; padding: .6rem 1rem; border-radius: 6px;
+  background: #fff; color: #3c4043; font-size: .85rem; font-weight: 500;
+  border: 1px solid #dadce0; cursor: pointer; transition: all .15s;
+  font-family: inherit;
+}
+.adm-btn-google:hover { background: #f7f8f8; border-color: #c6c6c6; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+.adm-btn-google:disabled { opacity: .6; cursor: not-allowed; }
+
+.adm-login-divider {
+  display: flex; align-items: center; gap: .8rem; margin: 1rem 0;
+  color: var(--adm-muted); font-size: .75rem;
+}
+.adm-login-divider::before, .adm-login-divider::after {
+  content: ""; flex: 1; height: 1px; background: var(--adm-border);
+}
+
 /* ─── Loading / Empty ────────────────── */
 .adm-loading { display: flex; align-items: center; justify-content: center; padding: 3rem; color: var(--adm-muted); font-size: .85rem; flex-direction: column; gap: .8rem; }
 .adm-empty { text-align: center; padding: 3rem; color: var(--adm-muted); font-size: .85rem; }
