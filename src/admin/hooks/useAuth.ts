@@ -47,6 +47,16 @@ export function useAuth() {
     return res;
   };
 
+  /** Google OAuth: exchange a Google auth code for a session */
+  const googleLogin = async (code: string) => {
+    const res = await api.post<LoginResponse>("/api/auth/google", { code });
+    if (res.data.token) {
+      setToken(res.data.token);
+    }
+    setUser({ id: res.data.id, name: res.data.name, email: res.data.email, role: res.data.role });
+    return res;
+  };
+
   const logout = async () => {
     try {
       await api.post("/api/auth/logout", {});
@@ -57,5 +67,5 @@ export function useAuth() {
     setUser(null);
   };
 
-  return { user, loading, login, logout, isAuthenticated: !!user };
+  return { user, loading, login, googleLogin, logout, isAuthenticated: !!user };
 }
