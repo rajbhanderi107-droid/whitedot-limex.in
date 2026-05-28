@@ -188,8 +188,11 @@ a:focus-visible {
   color: var(--c-text);
 }
 .cine-nav-toggle,
-.cine-nav-scrim,
-.cine-mobile-consult {
+.cine-nav-scrim {
+  display: none;
+}
+/* Must use higher specificity to override .cine-btn { display: inline-flex } */
+.cine-nav .cine-mobile-consult {
   display: none;
 }
 @media (max-width: 820px) {
@@ -284,7 +287,7 @@ a:focus-visible {
     background: rgba(245, 241, 232, 0.065);
   }
 
-  .cine-mobile-consult {
+  .cine-nav .cine-mobile-consult {
     display: inline-flex;
     width: 100%;
     min-height: 3.25rem;
