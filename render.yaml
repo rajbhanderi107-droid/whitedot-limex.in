@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: whitedot-limex-backend
+    runtime: node
+    plan: free
+    region: singapore
+    branch: main
+    autoDeploy: true
+    healthCheckPath: /health
+    buildCommand: cd server && npm ci && npm run prisma:generate && npm run build
+    startCommand: cd server && npm run prisma:migrate:deploy && npm run seed && npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_URL
+        value: https://rajbhanderi107-droid.github.io
+      - key: FRONTEND_ORIGINS
+        value: https://rajbhanderi107-droid.github.io,https://admin.whitedot-limex.in
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_SEED_EMAIL
+        sync: false
+      - key: ADMIN_SEED_PASSWORD
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: whitedot-limex-postgres
+          property: connectionString
+
+databases:
+  - name: whitedot-limex-postgres
+    databaseName: whitedot_limex
+    user: whitedot_limex_user
+    plan: free
+    region: singapore
+    postgresMajorVersion: "15"
+    ipAllowList: []

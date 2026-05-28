@@ -17,7 +17,13 @@ app.use(helmet());
 app.use(compression());
 app.use(
   cors({
-    origin: env.FRONTEND_URL,
+    origin(origin, callback) {
+      if (!origin || env.FRONTEND_ORIGINS.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(new Error(`CORS origin not allowed: ${origin}`));
+    },
     credentials: true,
     methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
