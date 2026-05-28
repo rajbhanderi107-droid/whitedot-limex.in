@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import type { FormEvent } from "react";
 import { api } from "../lib/api.js";
@@ -59,8 +59,8 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [googleConfig, setGoogleConfig] = useState<GoogleConfig | null>(null);
+  const [gsiReady, setGsiReady] = useState(false);
   const navigate = useNavigate();
-  const gsiReady = useRef(false);
 
   /* ─── Fetch Google OAuth config from backend ─── */
   useEffect(() => {
@@ -69,7 +69,7 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
         setGoogleConfig(res.data);
         if (res.data.enabled && res.data.clientId) {
           loadGSIScript()
-            .then(() => { gsiReady.current = true; })
+            .then(() => { setGsiReady(true); })
             .catch(() => { /* GSI script failed — hide Google button */ });
         }
       })
@@ -130,7 +130,7 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
 
   const assetPath = (p: string) => `${import.meta.env.BASE_URL}${p}`.replace(/\/{2,}/g, "/");
 
-  const showGoogle = googleConfig?.enabled && googleConfig.clientId && gsiReady.current;
+  const showGoogle = googleConfig?.enabled && googleConfig.clientId && gsiReady;
   const anyLoading = loading || googleLoading;
 
   return (
