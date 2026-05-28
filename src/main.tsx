@@ -1,16 +1,7 @@
 import { StrictMode, lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { HashRouter } from "react-router-dom";
-import CinematicApp from "./cinematic/CinematicApp";
 import "./brand-fonts.css";
-import "./cinematic/cinematic.css";
-// PREMIUM-WD-BEGIN imports
-import { PremiumProvider } from "./premium-wd";
-import "./premium-wd/premium-wd.css";
-// PREMIUM-WD-END imports
-
-// Lazy-load admin so the public site bundle stays light
-const AdminApp = lazy(() => import("./admin/AdminApp"));
 
 // Retire any previously-registered service worker (from the prior site) so it
 // cannot serve stale cached content over the new experience.
@@ -36,24 +27,51 @@ const isAdmin = isAdminHost || window.location.hash.startsWith("#/admin");
 // CinematicApp's useDismissBootLoader() won't run in admin mode.
 if (isAdmin) {
   const loader = document.getElementById("agg-wd-loader");
-  if (loader) {
-    loader.setAttribute("data-done", "");
-    setTimeout(() => loader.remove(), 400);
-  }
+  if (loader) loader.remove();
 }
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    {isAdmin ? (
+if (isAdmin) {
+  // ─── Admin SPA ─────────────────────────────────────
+  // Lazy-load ONLY admin code — no Three.js, no cinematic CSS, no premium layer.
+  const AdminApp = lazy(() => import("./admin/AdminApp"));
+
+  createRoot(document.getElementById("root")!).render(
+    <StrictMode>
       <HashRouter>
-        <Suspense fallback={<div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "#0f1210", color: "#8c9488" }}>Loading admin...</div>}>
+        <Suspense
+          fallback={
+            <div style={{
+              display: "flex", alignItems: "center", justifyContent: "center",
+              minHeight: "100vh", background: "#0f1210", color: "#8c9488",
+              fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif", fontSize: ".85rem",
+            }}>
+              Loading admin...
+            </div>
+          }
+        >
           <AdminApp />
         </Suspense>
       </HashRouter>
-    ) : (
-      <PremiumProvider>
-        <CinematicApp />
-      </PremiumProvider>
-    )}
-  </StrictMode>,
-);
+    </StrictMode>,
+  );
+} else {
+  // ─── Public cinematic site ─────────────────────────
+  // Static imports are fine here — this path needs everything.
+  import("./cinematic/cinematic.css");
+  // PREMIUM-WD-BEGIN imports
+  import("./premium-wd/premium-wd.css");
+  // PREMIUM-WD-END imports
+
+  Promise.all([
+    import("./cinematic/CinematicApp"),
+    import("./premium-wd"),
+  ]).then(([{ default: CinematicApp }, { PremiumProvider }]) => {
+    createRoot(document.getElementById("root")!).render(
+      <StrictMode>
+        <PremiumProvider>
+          <CinematicApp />
+        </PremiumProvider>
+      </StrictMode>,
+    );
+  });
+}
