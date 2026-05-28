@@ -21,9 +21,16 @@ if ("serviceWorker" in navigator) {
     .catch(() => {});
 }
 
-// If hash path starts with /admin, show the admin SPA.
+const adminHosts = new Set(["admin.whitedot-limex.in"]);
+const isAdminHost = adminHosts.has(window.location.hostname.toLowerCase());
+
+if (isAdminHost && !window.location.hash.startsWith("#/admin")) {
+  window.location.hash = "#/admin/login";
+}
+
+// If the host or hash path selects admin, show the admin SPA.
 // Otherwise, render the public cinematic website unchanged.
-const isAdmin = window.location.hash.startsWith("#/admin");
+const isAdmin = isAdminHost || window.location.hash.startsWith("#/admin");
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

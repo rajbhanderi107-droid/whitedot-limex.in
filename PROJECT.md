@@ -8,6 +8,10 @@ WhiteDot India LIMEX / CR LIMEX website for regional distribution and customer e
 
 https://rajbhanderi107-droid.github.io/whitedot-limex.in/
 
+## Admin Website
+
+Target custom domain: `https://admin.whitedot-limex.in`
+
 ## GitHub Repository
 
 https://github.com/rajbhanderi107-droid/whitedot-limex.in
@@ -19,6 +23,9 @@ https://github.com/rajbhanderi107-droid/whitedot-limex.in
 - TypeScript
 - Three.js
 - Plain CSS
+- Express
+- Prisma
+- PostgreSQL
 - GitHub Pages deployment through the `gh-pages` branch
 
 ## Local Commands
@@ -27,11 +34,17 @@ https://github.com/rajbhanderi107-droid/whitedot-limex.in
 npm install
 npm run dev
 npm run build
+npm --prefix server install
+npm run backend:dev
+npm run backend:build
 ```
 
 ## Main Files
 
 - `src/App.tsx` - website content and sections
+- `src/admin` - admin dashboard frontend
+- `server/src` - merged WhiteDot backend API
+- `server/prisma/schema.prisma` - backend database schema
 - `src/HeroScene.tsx` - floating LIMEX stone and particle animation
 - `src/styles.css` - full visual theme, responsive layout, and animations
 - `public/assets/limex-rock.webp` - optimized floating stone texture
@@ -47,6 +60,7 @@ npm run build
 ## Important Notes
 
 - The public GitHub Pages link is the shareable customer link.
+- The admin dashboard should use `admin.whitedot-limex.in`; `whitedot-limex.admin.in` is a different domain.
 - Do not share `127.0.0.1`; that is only the local preview URL.
 - The website avoids unsupported endorsement wording for companies unless official permission or documents are supplied.
 - Future launch updates should include final company address, approved logos, product catalogue PDFs, and a custom domain.
