@@ -1,4 +1,5 @@
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+const REQUEST_TIMEOUT_MS = 8000;
 
 interface ApiResponse<T> {
   success: boolean;
@@ -16,14 +17,32 @@ class ApiError extends Error {
 }
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
-  });
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}${path}`, {
+      ...options,
+      credentials: "include",
+      signal: controller.signal,
+      headers: {
+        "Content-Type": "application/json",
+        ...options.headers,
+      },
+    });
+  } catch (err) {
+    const timedOut = err instanceof DOMException && err.name === "AbortError";
+    throw new ApiError(
+      timedOut ? "REQUEST_TIMEOUT" : "BACKEND_UNREACHABLE",
+      timedOut
+        ? "Backend request timed out. Check the deployed API URL."
+        : "Backend is not reachable. Check VITE_API_URL and backend deployment.",
+      0,
+    );
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
 
   const json = await res.json().catch(() => ({
     success: false,
