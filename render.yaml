@@ -7,7 +7,7 @@ services:
     branch: main
     autoDeploy: true
     healthCheckPath: /health
-    buildCommand: cd server && npm ci --include=dev && npm run prisma:generate && npm run build
+    buildCommand: cd server && NPM_CONFIG_PRODUCTION=false npm ci && npm run prisma:generate && npm run build
     startCommand: cd server && npm run prisma:migrate:deploy && npm run seed && npm run start
     envVars:
       - key: NODE_ENV
