@@ -1,7 +1,12 @@
 const API_BASE =
   import.meta.env.VITE_API_URL ||
   (import.meta.env.DEV ? "http://localhost:4000" : "https://whitedot-backend.onrender.com");
-const REQUEST_TIMEOUT_MS = 15_000; // 15s — Render free tier cold-starts take ~10-50s
+
+/** First request gets a generous timeout (cold start).
+ *  Subsequent requests use a shorter timeout. */
+const COLD_TIMEOUT_MS = 45_000;  // 45s for cold start
+const WARM_TIMEOUT_MS = 10_000;  // 10s once backend is warm
+let backendWarm = false;
 
 const TOKEN_KEY = "wd_admin_token";
 
@@ -33,9 +38,10 @@ class ApiError extends Error {
   }
 }
 
-async function request<T>(path: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
+async function request<T>(path: string, options: RequestInit = {}, _retryCount = 0): Promise<ApiResponse<T>> {
+  const timeout = backendWarm ? WARM_TIMEOUT_MS : COLD_TIMEOUT_MS;
   const controller = new AbortController();
-  const timeoutId = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const timeoutId = window.setTimeout(() => controller.abort(), timeout);
 
   // Build headers — include Authorization if we have a token
   const headers: Record<string, string> = {
@@ -55,17 +61,27 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<ApiR
       headers,
     });
   } catch (err) {
+    window.clearTimeout(timeoutId);
     const timedOut = err instanceof DOMException && err.name === "AbortError";
+
+    // Auto-retry once on timeout (backend might be waking up)
+    if (timedOut && _retryCount < 1) {
+      return request<T>(path, options, _retryCount + 1);
+    }
+
     throw new ApiError(
       timedOut ? "REQUEST_TIMEOUT" : "BACKEND_UNREACHABLE",
       timedOut
-        ? "Backend is waking up (free tier). Please wait a moment and try again."
+        ? "Backend is waking up. Please wait a moment and try again."
         : "Backend is not reachable. Please try again in a few seconds.",
       0,
     );
-  } finally {
-    window.clearTimeout(timeoutId);
   }
+
+  window.clearTimeout(timeoutId);
+
+  // Backend responded — mark as warm for faster timeouts going forward
+  backendWarm = true;
 
   const json = await res.json().catch(() => ({
     success: false,
@@ -85,6 +101,15 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<ApiR
   }
 
   return json;
+}
+
+/** Fire-and-forget warm-up ping — call on admin load so
+ *  the backend starts booting before the user even logs in. */
+export function warmUpBackend(): void {
+  if (backendWarm) return;
+  fetch(`${API_BASE}/api/health`, { method: "GET" })
+    .then(() => { backendWarm = true; })
+    .catch(() => {});
 }
 
 export const api = {

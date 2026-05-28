@@ -43,7 +43,11 @@ export function GenericListPage({ title, endpoint, columns }: {
             onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
         </div>
 
-        {loading ? <div className="adm-loading">Loading...</div> : data.length === 0 ? <div className="adm-empty">No records found.</div> : (
+        {loading ? (
+          <div style={{ padding: "1rem" }}>
+            {Array.from({ length: 5 }, (_, i) => <div key={i} className="adm-skeleton adm-skeleton-row" />)}
+          </div>
+        ) : data.length === 0 ? <div className="adm-empty">No records found.</div> : (
           <table className="adm-table">
             <thead>
               <tr>{columns.map((c) => <th key={c.key}>{c.label}</th>)}</tr>
