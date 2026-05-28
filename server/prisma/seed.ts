@@ -9,8 +9,8 @@ async function main() {
   const password = process.env.ADMIN_SEED_PASSWORD;
 
   if (!email || !password) {
-    console.error("Set ADMIN_SEED_EMAIL and ADMIN_SEED_PASSWORD before seeding.");
-    process.exit(1);
+    console.warn("Skipping admin seed because ADMIN_SEED_EMAIL or ADMIN_SEED_PASSWORD is not set.");
+    return;
   }
 
   const existing = await prisma.user.findUnique({ where: { email } });
