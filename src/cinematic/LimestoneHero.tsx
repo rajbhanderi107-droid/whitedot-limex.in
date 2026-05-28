@@ -58,41 +58,6 @@ function HeroLights() {
   );
 }
 
-// ─── Faked volumetric light shaft ───────────────────────────────────────────
-// A soft additive cone aimed through the core. Real GodRays would need a second
-// occlusion pass (cost on this already-heavy stack); the additive cone + the
-// existing Bloom reads as a dusty mineral shaft far cheaper. Cone is open-ended,
-// double-sided, additive, depth-write off, with a faint slow opacity breathe.
-function VolumetricShaft({ x }: { x: number }) {
-  const matRef = useRef<THREE.MeshBasicMaterial>(null);
-  const geo = useMemo(() => {
-    const g = new THREE.ConeGeometry(1.7, 6.5, 24, 1, true);
-    // Apex up so the wide mouth points down-forward toward the core.
-    g.translate(0, 3.25, 0);
-    return g;
-  }, []);
-
-  useFrame(({ clock }) => {
-    if (matRef.current) {
-      matRef.current.opacity = 0.05 + 0.025 * Math.sin(clock.elapsedTime * 0.4);
-    }
-  });
-
-  return (
-    <mesh geometry={geo} position={[x - 0.6, -1.5, -1.4]} rotation={[0.32, 0, 0.26]}>
-      <meshBasicMaterial
-        ref={matRef}
-        color={CREAM}
-        transparent
-        opacity={0.06}
-        depthWrite={false}
-        side={THREE.DoubleSide}
-        blending={THREE.AdditiveBlending}
-        toneMapped={false}
-      />
-    </mesh>
-  );
-}
 
 // Desktop: model sits clearly in the right ~55% of viewport.
 // The camera's narrow FOV (42°) at z=6 gives a frustum half-width of about
@@ -237,12 +202,6 @@ function Scene({ scroll }: { scroll: ScrollRef }) {
 
       {/* The limestone — Crystal.useFrame owns the x-position animation */}
       <Crystal scroll={scroll} />
-
-      {/* Faked volumetric shaft — a soft additive cone the dust drifts through.
-          Real GodRays would need a second occlusion pass (cost on this already
-          post-FX-heavy stack); the additive cone + existing Bloom reads as a
-          dusty mineral light shaft far cheaper. Sits over the model column. */}
-      <VolumetricShaft x={DESKTOP_X} />
 
       {/* Mineral particle field — two Sparkles passes for depth layering.
           Offset toward the right so particles inhabit the same space as the model. */}
