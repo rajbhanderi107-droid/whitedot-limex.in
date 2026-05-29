@@ -184,13 +184,16 @@ a:focus-visible {
   height: 48px;
   display: block;
   flex-shrink: 0;
-  /* drop the video's black background against the dark canvas */
-  mix-blend-mode: screen;
   background: transparent;
-  /* crop the empty frame so only the animated logo shows */
+  /* fill the box with the logo content, crop the dead frame */
   object-fit: cover;
-  transform: scale(1.18);
+  transform: scale(1.3);
   pointer-events: none;
+  /* screen-blend drops dark pixels; circular mask removes the square edge
+     so only the glowing dot shows regardless of the video's background */
+  mix-blend-mode: screen;
+  -webkit-mask: radial-gradient(circle at 50% 50%, #000 52%, rgba(0,0,0,0) 70%);
+  mask: radial-gradient(circle at 50% 50%, #000 52%, rgba(0,0,0,0) 70%);
 }
 .cine-brand small {
   color: var(--c-accent);
