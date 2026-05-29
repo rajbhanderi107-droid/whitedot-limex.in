@@ -2,7 +2,7 @@ import { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
   Building2, Calculator, ClipboardList, FileText,
-  Home, LogOut, Menu, MessageSquare, Package, Settings, Users, Activity, Bell, X,
+  Home, LogOut, Menu, MessageSquare, Package, Settings, Users, Activity, Bell, X, LineChart,
 } from "lucide-react";
 
 interface Props {
@@ -22,6 +22,7 @@ const navItems = [
 ];
 
 const mgmtItems = [
+  { to: "/admin/google", icon: LineChart, label: "Google" },
   { to: "/admin/settings", icon: Settings, label: "Settings" },
   { to: "/admin/users", icon: Users, label: "Users" },
   { to: "/admin/activity-log", icon: Activity, label: "Activity Log" },
