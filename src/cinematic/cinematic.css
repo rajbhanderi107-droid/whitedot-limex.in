@@ -188,9 +188,6 @@ a:focus-visible {
   object-position: center;
   background: transparent;
   pointer-events: none;
-  /* video background is now pure black (baked in ffmpeg); screen-blend
-     makes pure black invisible on the dark page — only the logo shows */
-  mix-blend-mode: screen;
 }
 .cine-brand small {
   color: var(--c-accent);
