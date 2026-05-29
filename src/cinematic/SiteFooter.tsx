@@ -20,19 +20,14 @@ export function SiteFooter() {
       <div className="cine-footer-inner">
         <div className="cine-footer-brand">
           <a className="cine-brand" href="#top" aria-label="White Dot LLP — back to top">
-            <video
+            <img
               className="cine-brand-logo"
-              autoPlay
-              loop
-              muted
-              playsInline
+              src={`${import.meta.env.BASE_URL}assets/whitedot-main-logo.png`}
+              alt=""
               aria-hidden="true"
               width={48}
               height={48}
-            >
-              <source src={`${import.meta.env.BASE_URL}assets/whitedot-logo.webm`} type="video/webm" />
-              <source src={`${import.meta.env.BASE_URL}assets/whitedot-logo.mp4`} type="video/mp4" />
-            </video>
+            />
             <span>
               White Dot <small>LLP</small>
             </span>

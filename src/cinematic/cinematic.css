@@ -369,6 +369,7 @@ a:focus-visible {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow-y: auto;
   padding: clamp(2rem, 6vw, 5rem) clamp(2rem, 5vw, 4.5rem);
   /* Apple glass — real blur on ONE panel (not a grid), safe perf-wise */
   background:
