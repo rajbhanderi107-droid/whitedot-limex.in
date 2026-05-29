@@ -204,26 +204,67 @@ select.adm-input { cursor: pointer; }
 .adm-login-card {
   width: 100%; max-width: 380px; background: var(--adm-surface);
   border: 1px solid var(--adm-border); border-radius: 12px; padding: 2rem;
+  box-shadow: 0 8px 40px rgba(0,0,0,.45), 0 1px 0 rgba(154,168,147,.12) inset;
+  position: relative;
+}
+/* hairline top accent — the white dot brand signal */
+.adm-login-card::before {
+  content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 40px; height: 2px; border-radius: 0 0 2px 2px;
+  background: linear-gradient(90deg, transparent, rgba(154,168,147,.6), transparent);
 }
 .adm-login-card h1 { font-size: 1.3rem; margin: 0 0 .3rem; text-align: center; }
 .adm-login-card p { color: var(--adm-muted); font-size: .82rem; text-align: center; margin: 0 0 1.5rem; }
 .adm-login-card .adm-form-group { margin-bottom: .8rem; }
 .adm-login-error { background: rgba(214,88,88,.1); border: 1px solid var(--adm-danger); border-radius: 6px; padding: .5rem .8rem; font-size: .82rem; color: var(--adm-danger); margin-bottom: .8rem; }
 
-/* ─── Google Sign-In button ─────────── */
+/* ─── Google Sign-In button (premium dark) ───── */
 .adm-btn-google {
-  display: flex; align-items: center; justify-content: center; gap: .6rem;
-  width: 100%; padding: .6rem 1rem; border-radius: 6px;
-  background: #fff; color: #3c4043; font-size: .85rem; font-weight: 500;
-  border: 1px solid #dadce0; cursor: pointer; transition: all .15s;
-  font-family: inherit;
+  display: flex; align-items: center; justify-content: center; gap: .8rem;
+  width: 100%; padding: .8rem 1.2rem; border-radius: 8px;
+  background: var(--adm-surface-2);
+  color: var(--adm-text); font-size: .875rem; font-weight: 500;
+  border: 1px solid rgba(154, 168, 147, 0.22);
+  cursor: pointer; font-family: inherit; letter-spacing: .01em;
+  position: relative; overflow: hidden;
+  transition: border-color .22s ease, box-shadow .22s ease, background .22s ease;
 }
-.adm-btn-google:hover { background: #f7f8f8; border-color: #c6c6c6; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
-.adm-btn-google:disabled { opacity: .6; cursor: not-allowed; }
+/* subtle mineral shimmer overlay */
+.adm-btn-google::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(154,168,147,.07) 0%, transparent 55%);
+  pointer-events: none; border-radius: inherit;
+}
+.adm-btn-google:hover:not(:disabled) {
+  border-color: rgba(154, 168, 147, 0.5);
+  box-shadow: 0 0 0 1px rgba(154, 168, 147, .08),
+              0 4px 20px rgba(0, 0, 0, .35),
+              inset 0 1px 0 rgba(154, 168, 147, .06);
+  background: #1e2521;
+}
+.adm-btn-google:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 1px 6px rgba(0,0,0,.25);
+  transition-duration: .08s;
+}
+.adm-btn-google:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--adm-bg), 0 0 0 4px rgba(154, 168, 147, 0.4);
+}
+.adm-btn-google:disabled { opacity: .4; cursor: not-allowed; }
+
+/* Google G badge — white pill isolates the colorful logo on dark surface */
+.adm-google-icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: #fff; flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,.35);
+}
 
 .adm-login-divider {
-  display: flex; align-items: center; gap: .8rem; margin: 1rem 0;
-  color: var(--adm-muted); font-size: .75rem;
+  display: flex; align-items: center; gap: .8rem; margin: 1.1rem 0;
+  color: var(--adm-muted); font-size: .7rem;
+  text-transform: uppercase; letter-spacing: .07em;
 }
 .adm-login-divider::before, .adm-login-divider::after {
   content: ""; flex: 1; height: 1px; background: var(--adm-border);
