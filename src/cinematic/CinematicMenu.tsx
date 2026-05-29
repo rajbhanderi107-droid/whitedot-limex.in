@@ -189,6 +189,22 @@ export function CinematicMenu({ open, onClose, whatsappHref }: CinematicMenuProp
                   Request Consultation
                 </a>
               </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ delay: 0.82, duration: 0.34, ease }}
+                style={{ marginTop: "1.5rem", textAlign: "right" }}
+              >
+                <a
+                  href="/#/admin/login"
+                  className="cine-menu-admin-link"
+                  onClick={onClose}
+                >
+                  Admin Panel
+                </a>
+              </motion.div>
             </nav>
           </motion.div>
         </motion.div>
