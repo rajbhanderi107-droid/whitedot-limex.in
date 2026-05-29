@@ -119,6 +119,20 @@ export function CinematicMenu({ open, onClose, whatsappHref }: CinematicMenuProp
           role="dialog"
           aria-label="Navigation menu"
         >
+          {/* ── Close — pinned to viewport top-right, above both panels ─────── */}
+          <motion.button
+            className="cine-menu-close"
+            type="button"
+            onClick={onClose}
+            aria-label="Close menu"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+          >
+            <X size={18} />
+          </motion.button>
+
           {/* ── Left panel — model + golden particles ─────────────────────── */}
           <motion.div
             className="cine-menu-left"
@@ -145,15 +159,6 @@ export function CinematicMenu({ open, onClose, whatsappHref }: CinematicMenuProp
             exit={{ opacity: 0, x: 18 }}
             transition={{ duration: 0.44, delay: 0.26, ease }}
           >
-            <button
-              className="cine-menu-close"
-              type="button"
-              onClick={onClose}
-              aria-label="Close menu"
-            >
-              <X size={18} />
-            </button>
-
             <nav aria-label="Main navigation">
               <ul className="cine-menu-list">
                 {NAV_LINKS.map((link, i) => (
