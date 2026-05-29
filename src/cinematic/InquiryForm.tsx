@@ -1,13 +1,10 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-
-const API_BASE =
-  import.meta.env.VITE_API_URL ||
-  (import.meta.env.DEV ? "http://localhost:4000" : "https://whitedot-backend.onrender.com");
+import { submitPublic, type SubmitStatus } from "./publicApi";
 
 export function InquiryForm() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", companyName: "", message: "" });
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [status, setStatus] = useState<SubmitStatus>("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
   const set = (key: string) => (e: { target: { value: string } }) =>
@@ -17,15 +14,8 @@ export function InquiryForm() {
     e.preventDefault();
     setStatus("sending");
     setErrorMsg("");
-
     try {
-      const res = await fetch(`${API_BASE}/api/public/inquiry`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, sourcePage: "consultation" }),
-      });
-      const json = await res.json();
-      if (!res.ok || !json.success) throw new Error(json.error?.message || "Submission failed");
+      await submitPublic("inquiry", { ...form, sourcePage: "consultation" });
       setStatus("sent");
       setForm({ name: "", email: "", phone: "", companyName: "", message: "" });
     } catch (err: unknown) {

@@ -3432,3 +3432,84 @@ a:focus-visible {
 @media (max-width: 620px) {
   .cine-form-row { grid-template-columns: 1fr; }
 }
+
+/* ── Form tabs (Inquiry / Quote / Sample / Calculator) ─────── */
+.cine-form-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 1.25rem;
+}
+.cine-form-tab {
+  appearance: none;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--c-line);
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+  color: var(--c-muted);
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+.cine-form-tab:hover {
+  color: var(--c-text);
+  border-color: rgba(156, 175, 136, 0.4);
+}
+.cine-form-tab.is-active {
+  color: #0f1210;
+  background: var(--c-accent, #9aa893);
+  border-color: var(--c-accent, #9aa893);
+  font-weight: 600;
+}
+.cine-form-blurb {
+  font-size: 0.875rem;
+  color: var(--c-muted);
+  margin: 0 0 1.5rem;
+  max-width: 680px;
+}
+.cine-form-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--c-muted);
+  cursor: pointer;
+}
+.cine-form-check input {
+  width: auto;
+  accent-color: var(--c-accent, #9aa893);
+}
+
+/* ── Calculator result panel ───────────────────────────────── */
+.cine-calc-result {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+  padding: 1.1rem;
+  border: 1px solid rgba(156, 175, 136, 0.3);
+  border-radius: 14px;
+  background: rgba(156, 175, 136, 0.06);
+  max-width: 680px;
+}
+.cine-calc-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.cine-calc-num {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #a8c49a;
+  letter-spacing: -0.01em;
+}
+.cine-calc-label {
+  font-size: 0.75rem;
+  color: var(--c-muted);
+}
+.cine-calc-note {
+  font-size: 0.75rem;
+  color: var(--c-faint);
+  margin: 0;
+  max-width: 680px;
+}
