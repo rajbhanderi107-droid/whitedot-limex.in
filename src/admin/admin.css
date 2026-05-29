@@ -382,3 +382,43 @@ select.adm-input { cursor: pointer; }
   .adm-setting-row { grid-template-columns: 1fr; }
   .adm-mobile-signout { display: flex !important; }
 }
+
+/* ─── Google dashboard (dynamic flow) ─────────────────────────── */
+.adm-header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.adm-google-refresh { white-space: nowrap; }
+.adm-spin { animation: adm-spin 0.9s linear infinite; }
+@keyframes adm-spin { to { transform: rotate(360deg); } }
+
+.adm-google-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1rem;
+}
+.adm-google-card { display: flex; flex-direction: column; gap: .9rem; }
+.adm-google-card.is-disconnected { opacity: .82; }
+.adm-google-card-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
+.adm-google-card-title { display: inline-flex; align-items: center; gap: .5rem; font-size: .92rem; font-weight: 700; color: var(--adm-text); }
+
+.adm-google-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: .7rem;
+}
+.adm-google-metric {
+  background: var(--adm-bg); border: 1px solid var(--adm-border);
+  border-radius: 8px; padding: .7rem .8rem;
+}
+.adm-google-metric-value { font-size: 1.45rem; font-weight: 700; color: var(--adm-accent); display: flex; align-items: baseline; gap: .4rem; }
+.adm-google-metric-label { font-size: .74rem; color: var(--adm-muted); margin-top: .15rem; }
+.adm-google-metric-hint { font-size: .68rem; color: var(--adm-muted); opacity: .7; margin-top: .1rem; }
+.adm-google-delta { font-size: .72rem; font-weight: 600; }
+.adm-google-delta.is-up { color: #7fb98a; }
+.adm-google-delta.is-down { color: #d98a8a; }
+
+.adm-google-table { width: 100%; font-size: .8rem; }
+.adm-google-setup { display: flex; flex-direction: column; align-items: flex-start; gap: .7rem; padding: .4rem 0; }
+.adm-google-setup p { font-size: .82rem; color: var(--adm-muted); margin: 0; line-height: 1.5; }
+
+@media (max-width: 640px) {
+  .adm-google-grid { grid-template-columns: 1fr; }
+}
