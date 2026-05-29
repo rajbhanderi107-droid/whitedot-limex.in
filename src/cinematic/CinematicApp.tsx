@@ -306,14 +306,19 @@ export default function CinematicApp() {
 
       <nav className="cine-nav" ref={navRef}>
         <a className="cine-brand" href="#top" aria-label="White Dot LLP">
-          <img
+          <video
             className="cine-brand-logo"
-            src={`${import.meta.env.BASE_URL}assets/whitedot-logo-enhanced.svg`}
-            alt=""
-            width={30}
-            height={30}
+            autoPlay
+            loop
+            muted
+            playsInline
             aria-hidden="true"
-          />
+            width={48}
+            height={48}
+          >
+            <source src={`${import.meta.env.BASE_URL}assets/whitedot-logo.webm`} type="video/webm" />
+            <source src={`${import.meta.env.BASE_URL}assets/whitedot-logo.mp4`} type="video/mp4" />
+          </video>
           <span>
             White Dot <small>LLP</small>
           </span>
