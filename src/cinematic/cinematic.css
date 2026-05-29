@@ -180,10 +180,12 @@ a:focus-visible {
   box-shadow: 0 0 16px var(--c-accent-glow);
 }
 .cine-brand-logo {
-  width: 30px;
-  height: 30px;
+  width: 48px;
+  height: 48px;
   display: block;
-  filter: drop-shadow(0 0 12px rgba(94, 173, 115, 0.35));
+  object-fit: cover;
+  mix-blend-mode: screen;
+  flex-shrink: 0;
 }
 .cine-brand small {
   color: var(--c-accent);
