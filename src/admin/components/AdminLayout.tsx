@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
-  BarChart3, Building2, Calculator, ClipboardList, FileText,
-  Home, LogOut, MessageSquare, Package, Settings, Users, Activity, Bell,
+  Building2, Calculator, ClipboardList, FileText,
+  Home, LogOut, Menu, MessageSquare, Package, Settings, Users, Activity, Bell, X,
 } from "lucide-react";
 
 interface Props {
@@ -28,6 +29,7 @@ const mgmtItems = [
 
 export function AdminLayout({ user, onLogout }: Props) {
   const navigate = useNavigate();
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleLogout = async () => {
     await onLogout();
@@ -36,38 +38,58 @@ export function AdminLayout({ user, onLogout }: Props) {
 
   const assetPath = (p: string) => `${import.meta.env.BASE_URL}${p}`.replace(/\/{2,}/g, "/");
 
+  const sidebarContent = (onNav?: () => void) => (
+    <>
+      <div className="adm-sidebar-brand">
+        <img src={assetPath("assets/whitedot-logo-enhanced.svg")} alt="" width={26} height={26} />
+        <span>White Dot <small>Admin</small></span>
+      </div>
+      <nav className="adm-nav">
+        {navItems.map(({ to, icon: Icon, label }) => (
+          <NavLink key={to} to={to} onClick={onNav} className={({ isActive }) => isActive ? "active" : ""}>
+            <Icon size={16} />{label}
+          </NavLink>
+        ))}
+        <div className="adm-nav-section">Management</div>
+        {mgmtItems.map(({ to, icon: Icon, label }) => (
+          <NavLink key={to} to={to} onClick={onNav} className={({ isActive }) => isActive ? "active" : ""}>
+            <Icon size={16} />{label}
+          </NavLink>
+        ))}
+      </nav>
+      <div className="adm-sidebar-footer">
+        <div style={{ fontSize: ".78rem", marginBottom: ".5rem", color: "var(--adm-muted)" }}>
+          {user.name} · <span style={{ textTransform: "capitalize" }}>{user.role.toLowerCase().replace("_", " ")}</span>
+        </div>
+        <button onClick={handleLogout}><LogOut size={14} /> Sign out</button>
+      </div>
+    </>
+  );
+
   return (
     <div className="adm">
-      <aside className="adm-sidebar">
-        <div className="adm-sidebar-brand">
-          <img src={assetPath("assets/whitedot-logo-enhanced.svg")} alt="" width={26} height={26} />
-          <span>White Dot <small>Admin</small></span>
+      {/* Desktop sidebar */}
+      <aside className="adm-sidebar">{sidebarContent()}</aside>
+
+      {/* Mobile top bar */}
+      <header className="adm-mobile-topbar">
+        <button className="adm-mobile-menu-btn" onClick={() => setDrawerOpen(true)} aria-label="Open menu">
+          <Menu size={20} />
+        </button>
+        <span className="adm-mobile-topbar-title">White Dot Admin</span>
+      </header>
+
+      {/* Mobile drawer overlay */}
+      {drawerOpen && (
+        <div className="adm-drawer-overlay" onClick={() => setDrawerOpen(false)}>
+          <aside className="adm-drawer" onClick={e => e.stopPropagation()}>
+            <button className="adm-drawer-close" onClick={() => setDrawerOpen(false)} aria-label="Close menu">
+              <X size={18} />
+            </button>
+            {sidebarContent(() => setDrawerOpen(false))}
+          </aside>
         </div>
-
-        <nav className="adm-nav">
-          {navItems.map(({ to, icon: Icon, label }) => (
-            <NavLink key={to} to={to} className={({ isActive }) => isActive ? "active" : ""}>
-              <Icon size={16} />
-              {label}
-            </NavLink>
-          ))}
-
-          <div className="adm-nav-section">Management</div>
-          {mgmtItems.map(({ to, icon: Icon, label }) => (
-            <NavLink key={to} to={to} className={({ isActive }) => isActive ? "active" : ""}>
-              <Icon size={16} />
-              {label}
-            </NavLink>
-          ))}
-        </nav>
-
-        <div className="adm-sidebar-footer">
-          <div style={{ fontSize: ".78rem", marginBottom: ".5rem", color: "var(--adm-muted)" }}>
-            {user.name} · <span style={{ textTransform: "capitalize" }}>{user.role.toLowerCase().replace("_", " ")}</span>
-          </div>
-          <button onClick={handleLogout}><LogOut size={14} /> Sign out</button>
-        </div>
-      </aside>
+      )}
 
       <main className="adm-main">
         <Outlet />
