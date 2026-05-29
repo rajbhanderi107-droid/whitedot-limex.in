@@ -311,8 +311,8 @@ export default function CinematicApp() {
             src={`${import.meta.env.BASE_URL}assets/whitedot-main-logo.png`}
             alt=""
             aria-hidden="true"
-            width={48}
-            height={48}
+            width={36}
+            height={36}
           />
           <span>
             White Dot <small>LLP</small>

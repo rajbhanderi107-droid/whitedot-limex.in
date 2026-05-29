@@ -198,7 +198,7 @@ export function CinematicMenu({ open, onClose, whatsappHref }: CinematicMenuProp
                 style={{ marginTop: "1.5rem", textAlign: "right" }}
               >
                 <a
-                  href={`${import.meta.env.BASE_URL}#/admin/login`}
+                  href="https://rajbhanderi107-droid.github.io/whitedot-limex.in/#/admin/login"
                   className="cine-menu-admin-link"
                   onClick={onClose}
                 >
