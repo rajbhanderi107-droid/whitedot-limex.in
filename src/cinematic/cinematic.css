@@ -183,9 +183,14 @@ a:focus-visible {
   width: 48px;
   height: 48px;
   display: block;
-  object-fit: cover;
-  mix-blend-mode: screen;
   flex-shrink: 0;
+  /* drop the video's black background against the dark canvas */
+  mix-blend-mode: screen;
+  background: transparent;
+  /* crop the empty frame so only the animated logo shows */
+  object-fit: cover;
+  transform: scale(1.18);
+  pointer-events: none;
 }
 .cine-brand small {
   color: var(--c-accent);
