@@ -348,4 +348,5 @@ select.adm-input { cursor: pointer; }
   .adm-form-grid { grid-template-columns: 1fr; }
   .adm-panel-head { flex-direction: column; }
   .adm-setting-row { grid-template-columns: 1fr; }
+  .adm-mobile-signout { display: flex !important; }
 }

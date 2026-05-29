@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Settings, Users } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Settings, Users, LogOut } from "lucide-react";
+import { useAuth } from "../hooks/useAuth.js";
 import { api } from "../lib/api.js";
 
 interface DashboardData {
@@ -20,6 +21,13 @@ interface DashboardData {
 export function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/admin/login");
+  };
 
   useEffect(() => {
     api.get<DashboardData>("/api/dashboard").then((r) => setData(r.data)).catch(console.error).finally(() => setLoading(false));
@@ -99,6 +107,28 @@ export function DashboardPage() {
           </div>
         )}
       </div>
+
+      <button
+        onClick={handleLogout}
+        style={{
+          display: "none",
+          width: "100%",
+          marginTop: "1.5rem",
+          padding: ".75rem",
+          background: "transparent",
+          border: "1px solid var(--adm-border)",
+          borderRadius: "6px",
+          color: "var(--adm-muted)",
+          fontSize: ".85rem",
+          cursor: "pointer",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: ".5rem",
+        }}
+        className="adm-mobile-signout"
+      >
+        <LogOut size={14} /> Sign out
+      </button>
     </>
   );
 }
