@@ -218,48 +218,50 @@ select.adm-input { cursor: pointer; }
 .adm-login-card .adm-form-group { margin-bottom: .8rem; }
 .adm-login-error { background: rgba(214,88,88,.1); border: 1px solid var(--adm-danger); border-radius: 6px; padding: .5rem .8rem; font-size: .82rem; color: var(--adm-danger); margin-bottom: .8rem; }
 
-/* ─── Google Sign-In button (premium dark) ───── */
-.adm-btn-google {
-  display: flex; align-items: center; justify-content: center; gap: .8rem;
-  width: 100%; padding: .8rem 1.2rem; border-radius: 8px;
-  background: var(--adm-surface-2);
-  color: var(--adm-text); font-size: .875rem; font-weight: 500;
-  border: 1px solid rgba(154, 168, 147, 0.22);
-  cursor: pointer; font-family: inherit; letter-spacing: .01em;
-  position: relative; overflow: hidden;
-  transition: border-color .22s ease, box-shadow .22s ease, background .22s ease;
+/* ─── Google Sign-In — Apple-glass icon button ───── */
+.adm-google-glass-wrap {
+  display: flex; flex-direction: column; align-items: center;
 }
-/* subtle mineral shimmer overlay */
-.adm-btn-google::before {
-  content: ""; position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(154,168,147,.07) 0%, transparent 55%);
-  pointer-events: none; border-radius: inherit;
+.adm-google-glass {
+  display: flex; align-items: center; justify-content: center;
+  width: 48px; height: 48px; border-radius: 15px;  /* squircle-ish glass tile */
+  padding: 0; cursor: pointer; position: relative; overflow: hidden;
+  background:
+    linear-gradient(150deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,.03) 48%, rgba(255,255,255,0) 100%),
+    rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.14);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  box-shadow:
+    0 6px 22px rgba(0,0,0,.4),
+    inset 0 1px 0 rgba(255,255,255,.3),
+    inset 0 -1px 2px rgba(0,0,0,.25);
+  transition: transform .2s ease, box-shadow .22s ease, border-color .22s ease, background .22s ease;
 }
-.adm-btn-google:hover:not(:disabled) {
-  border-color: rgba(154, 168, 147, 0.5);
-  box-shadow: 0 0 0 1px rgba(154, 168, 147, .08),
-              0 4px 20px rgba(0, 0, 0, .35),
-              inset 0 1px 0 rgba(154, 168, 147, .06);
-  background: #1e2521;
+/* top glass specular highlight */
+.adm-google-glass::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255,255,255,.22) 0%, transparent 42%);
+  pointer-events: none;
 }
-.adm-btn-google:active:not(:disabled) {
-  transform: translateY(1px);
-  box-shadow: 0 1px 6px rgba(0,0,0,.25);
+.adm-google-glass svg { position: relative; z-index: 1; }
+.adm-google-glass:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,.28);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.5),
+    0 0 0 3px rgba(154,168,147,.12),
+    inset 0 1px 0 rgba(255,255,255,.4);
+}
+.adm-google-glass:active:not(:disabled) {
+  transform: translateY(0) scale(.96);
   transition-duration: .08s;
 }
-.adm-btn-google:focus-visible {
+.adm-google-glass:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--adm-bg), 0 0 0 4px rgba(154, 168, 147, 0.4);
+  box-shadow: 0 0 0 2px var(--adm-bg), 0 0 0 4px rgba(154,168,147,.5);
 }
-.adm-btn-google:disabled { opacity: .4; cursor: not-allowed; }
-
-/* Google G badge — white pill isolates the colorful logo on dark surface */
-.adm-google-icon {
-  display: flex; align-items: center; justify-content: center;
-  width: 24px; height: 24px; border-radius: 50%;
-  background: #fff; flex-shrink: 0;
-  box-shadow: 0 1px 4px rgba(0,0,0,.35);
-}
+.adm-google-glass:disabled { opacity: .45; cursor: not-allowed; }
 
 .adm-login-divider {
   display: flex; align-items: center; gap: .8rem; margin: 1.1rem 0;
