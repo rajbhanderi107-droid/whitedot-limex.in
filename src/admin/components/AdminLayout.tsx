@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useBrandLogo } from "../../useBrandLogo";
+import { NotificationBell } from "./NotificationBell";
+import { KeyboardShortcuts } from "./KeyboardShortcuts";
 import {
   Building2, Calculator, ClipboardList, FileText,
   Home, LogOut, Menu, MessageSquare, Package, Settings, Users, Activity, Bell, X, LineChart,
@@ -40,11 +42,12 @@ export function AdminLayout({ user, onLogout }: Props) {
   };
 
 
-  const sidebarContent = (onNav?: () => void) => (
+  const sidebarContent = (onNav?: () => void, showBell = false) => (
     <>
       <div className="adm-sidebar-brand">
         <img src={brandLogo} alt="" width={30} height={30} />
         <span>White Dot <small>Admin</small></span>
+        {showBell && <NotificationBell />}
       </div>
       <nav className="adm-nav">
         {navItems.map(({ to, icon: Icon, label }) => (
@@ -70,8 +73,10 @@ export function AdminLayout({ user, onLogout }: Props) {
 
   return (
     <div className="adm">
+      <KeyboardShortcuts />
+
       {/* Desktop sidebar */}
-      <aside className="adm-sidebar">{sidebarContent()}</aside>
+      <aside className="adm-sidebar">{sidebarContent(undefined, true)}</aside>
 
       {/* Mobile top bar */}
       <header className="adm-mobile-topbar">
@@ -79,6 +84,9 @@ export function AdminLayout({ user, onLogout }: Props) {
           <Menu size={20} />
         </button>
         <span className="adm-mobile-topbar-title">White Dot Admin</span>
+        <div className="adm-mobile-topbar-actions">
+          <NotificationBell />
+        </div>
       </header>
 
       {/* Mobile drawer overlay */}
