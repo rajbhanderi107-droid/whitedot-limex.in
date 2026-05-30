@@ -122,6 +122,20 @@ export const updateWebsiteSettingSchema = z.object({
   value: z.string().max(5000),
 }).strip();
 
+// Logo can be an uploaded image (base64 data URL) or an http(s) URL, or "" to reset.
+export const updateBrandLogoSchema = z.object({
+  value: z
+    .string()
+    .max(1_500_000)
+    .refine(
+      (v) =>
+        v === "" ||
+        /^data:image\/(png|jpeg|jpg|webp|svg\+xml|gif|x-icon|vnd\.microsoft\.icon);base64,/.test(v) ||
+        /^https?:\/\//.test(v),
+      "Logo must be an uploaded image or an http(s) URL",
+    ),
+}).strip();
+
 // ─── User Management ─────────────────────────────
 export const createUserSchema = z.object({
   name: z.string().min(1, "Name is required").max(200),

@@ -20,3 +20,7 @@ server/.env.*
 .claude/skills/higgsfield-soul-id
 skills-lock.json
 .gstack/
+
+# TypeScript incremental build cache
+server/tsconfig.tsbuildinfo
+*.tsbuildinfo

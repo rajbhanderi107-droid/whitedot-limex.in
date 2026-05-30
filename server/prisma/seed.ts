@@ -39,6 +39,7 @@ async function main() {
       { key: "whatsapp_number", value: "918849728938", type: "TEXT", description: "WhatsApp number without plus sign" },
       { key: "company_address", value: "Gujarat, India", type: "TEXT", description: "Company address" },
       { key: "gst_number", value: "", type: "TEXT", description: "GST registration number" },
+      { key: "brand_logo", value: "", type: "TEXT", description: "Website logo (uploaded image, applies across the site)" },
     ],
     skipDuplicates: true,
   });

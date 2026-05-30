@@ -129,9 +129,23 @@ model User {
   updatedSettings    WebsiteSetting[] @relation("SettingUpdater")
   activityLogs       ActivityLog[]
   notifications      Notification[]
+  passwordResets     PasswordResetToken[]
 
   @@index([email])
   @@index([role])
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  @@index([userId])
 }
 
 model Company {
