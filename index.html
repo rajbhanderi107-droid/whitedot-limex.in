@@ -67,7 +67,7 @@
     </div>
     <!-- AGGREGATION-WD-END inline-loader -->
     <!-- Admin routes skip the loader entirely — it only exists for the public site -->
-    <script>if(location.hostname==="admin.whitedotindia.in"&&location.hash.indexOf("#/admin")===0){var l=document.getElementById("agg-wd-loader");if(l)l.remove()}</script>
+    <script>if(location.hash.indexOf("#/admin")===0){var l=document.getElementById("agg-wd-loader");if(l)l.remove()}</script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
