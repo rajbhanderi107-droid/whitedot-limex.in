@@ -184,12 +184,12 @@ a:focus-visible {
   height: 40px;
   display: block;
   flex-shrink: 0;
+  /* transparent PNG — show the whole logo, never crop or box it */
   object-fit: contain;
   object-position: center;
   background: transparent;
+  overflow: visible;
   pointer-events: none;
-  /* video background is pure black; screen-blend keys it out so the full logo shows */
-  mix-blend-mode: screen;
 }
 .cine-brand small {
   color: var(--c-accent);
