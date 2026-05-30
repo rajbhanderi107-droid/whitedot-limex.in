@@ -167,6 +167,23 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
           )}
         </form>
 
+        <button
+          type="button"
+          onClick={() => navigate("/admin/forgot-password")}
+          style={{
+            display: "block",
+            margin: ".9rem auto 0",
+            background: "none",
+            border: "none",
+            color: "var(--adm-muted)",
+            cursor: "pointer",
+            fontSize: ".8rem",
+            textDecoration: "underline",
+          }}
+        >
+          Forgot password?
+        </button>
+
         {/* ─── Google Sign-In — compact glass icon ─── */}
         {showGoogle && (
           <div className="adm-google-glass-wrap">
