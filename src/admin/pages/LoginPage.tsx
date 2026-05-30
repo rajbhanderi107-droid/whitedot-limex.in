@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import type { FormEvent } from "react";
 import { api } from "../lib/api.js";
+import { BRAND_LOGO_SRC } from "../../brand";
 
 /* ─── Google Identity Services type shim ─── */
 declare global {
@@ -128,7 +129,6 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
     client.requestCode();
   }, [googleConfig, onGoogleLogin, navigate]);
 
-  const assetPath = (p: string) => `${import.meta.env.BASE_URL}${p}`.replace(/\/{2,}/g, "/");
 
   const showGoogle = googleConfig?.enabled && googleConfig.clientId && gsiReady;
   const anyLoading = loading || googleLoading;
@@ -137,7 +137,7 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
     <div className="adm-login">
       <div className="adm-login-card">
         <div style={{ textAlign: "center", marginBottom: "1rem" }}>
-          <img src={assetPath("assets/whitedot-logo-enhanced.svg")} alt="" width={40} height={40} />
+          <img src={BRAND_LOGO_SRC} alt="" width={48} height={48} />
         </div>
         <h1>White Dot Admin</h1>
         <p>Sign in to manage leads, quotes, and operations.</p>

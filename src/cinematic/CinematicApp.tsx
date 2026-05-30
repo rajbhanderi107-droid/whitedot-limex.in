@@ -10,6 +10,7 @@ import { LimexDetail } from "./LimexDetail";
 import { LimexComparison } from "./LimexComparison";
 import { Consultation } from "./Consultation";
 import { SiteFooter } from "./SiteFooter";
+import { BRAND_LOGO_SRC } from "../brand";
 import { useLenis } from "./useLenis";
 import { ScrollProgress } from "./ScrollProgress";
 import { getWhatsappHref, useSiteSettings } from "./siteSettings";
@@ -308,11 +309,11 @@ export default function CinematicApp() {
         <a className="cine-brand" href="#top" aria-label="White Dot LLP">
           <img
             className="cine-brand-logo"
-            src={`${import.meta.env.BASE_URL}assets/whitedot-main-logo.png`}
+            src={BRAND_LOGO_SRC}
             alt=""
             aria-hidden="true"
-            width={36}
-            height={36}
+            width={40}
+            height={40}
           />
           <span>
             White Dot <small>LLP</small>
