@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { BRAND_LOGO_SRC } from "../../brand";
 import {
   Building2, Calculator, ClipboardList, FileText,
   Home, LogOut, Menu, MessageSquare, Package, Settings, Users, Activity, Bell, X, LineChart,
@@ -37,7 +38,6 @@ export function AdminLayout({ user, onLogout }: Props) {
     navigate("/admin/login");
   };
 
-  const assetPath = (p: string) => `${import.meta.env.BASE_URL}${p}`.replace(/\/{2,}/g, "/");
 
   const sidebarContent = (onNav?: () => void) => (
     <>
