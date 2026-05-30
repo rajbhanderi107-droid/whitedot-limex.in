@@ -96,5 +96,6 @@ router.patch("/notifications/read-all", asyncHandler(notifications.markAllRead))
 
 // ─── Activity Log (ADMIN+) ───────────────────────
 router.get("/activity-log", requireRole("SUPER_ADMIN", "ADMIN"), asyncHandler(activityLog.listActivityLogs));
+router.delete("/activity-log/:id", requireRole("SUPER_ADMIN"), asyncHandler(activityLog.deleteActivityLog));
 
 export default router;
