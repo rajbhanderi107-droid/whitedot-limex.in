@@ -61,7 +61,6 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [googleConfig, setGoogleConfig] = useState<GoogleConfig | null>(null);
-  const [gsiReady, setGsiReady] = useState(false);
   const navigate = useNavigate();
 
   /* ─── Fetch Google OAuth config from backend ─── */
@@ -69,11 +68,6 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
     api.get<GoogleConfig>("/api/auth/google/config")
       .then((res) => {
         setGoogleConfig(res.data);
-        if (res.data.enabled && res.data.clientId) {
-          loadGSIScript()
-            .then(() => { setGsiReady(true); })
-            .catch(() => { /* GSI script failed — hide Google button */ });
-        }
       })
       .catch(() => {
         // Backend unreachable — disable Google login silently
@@ -97,11 +91,28 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
   };
 
   /* ─── Google OAuth popup login ─── */
-  const handleGoogleLogin = useCallback(() => {
-    if (!googleConfig?.clientId || !window.google?.accounts) return;
+  const handleGoogleLogin = useCallback(async () => {
+    if (!googleConfig?.clientId) return;
 
     setError("");
     setGoogleLoading(true);
+
+    // Load GSI script on-demand if it hasn't loaded yet
+    if (!window.google?.accounts) {
+      try {
+        await loadGSIScript();
+      } catch {
+        setError("Failed to load Google Sign-In. Please try again.");
+        setGoogleLoading(false);
+        return;
+      }
+    }
+
+    if (!window.google?.accounts) {
+      setError("Google Sign-In is not available. Please try again.");
+      setGoogleLoading(false);
+      return;
+    }
 
     const client = window.google.accounts.oauth2.initCodeClient({
       client_id: googleConfig.clientId,
@@ -131,7 +142,7 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
   }, [googleConfig, onGoogleLogin, navigate]);
 
 
-  const showGoogle = googleConfig?.enabled && googleConfig.clientId && gsiReady;
+  const showGoogle = googleConfig?.enabled && googleConfig.clientId;
   const anyLoading = loading || googleLoading;
 
   return (
