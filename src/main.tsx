@@ -12,7 +12,7 @@ if ("serviceWorker" in navigator) {
     .catch(() => {});
 }
 
-const adminHosts = new Set(["admin.whitedot-limex.in"]);
+const adminHosts = new Set(["admin.whitedotindia.in"]);
 const isAdminHost = adminHosts.has(window.location.hostname.toLowerCase());
 
 if (isAdminHost && !window.location.hash.startsWith("#/admin")) {

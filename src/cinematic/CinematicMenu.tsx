@@ -203,7 +203,7 @@ export function CinematicMenu({ open, onClose, whatsappHref }: CinematicMenuProp
                 style={{ marginTop: "1.5rem", textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: ".55rem" }}
               >
                 <a
-                  href="https://whitedot-limex.in/#/admin/login"
+                  href="https://whitedotindia.in/#/admin/login"
                   className="cine-menu-admin-link"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -216,7 +216,7 @@ export function CinematicMenu({ open, onClose, whatsappHref }: CinematicMenuProp
                   Admin Panel
                 </a>
                 <a
-                  href="https://whitedot-limex.in/#/admin/google"
+                  href="https://whitedotindia.in/#/admin/google"
                   className="cine-menu-admin-link"
                   target="_blank"
                   rel="noopener noreferrer"
