@@ -200,7 +200,7 @@ export function CinematicMenu({ open, onClose, whatsappHref }: CinematicMenuProp
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ delay: 0.82, duration: 0.34, ease }}
-                style={{ marginTop: "1.5rem", textAlign: "right" }}
+                style={{ marginTop: "1.5rem", textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: ".55rem" }}
               >
                 <a
                   href="https://rajbhanderi107-droid.github.io/whitedot-limex.in/#/admin/login"
@@ -214,6 +214,15 @@ export function CinematicMenu({ open, onClose, whatsappHref }: CinematicMenuProp
                   }}
                 >
                   Admin Panel
+                </a>
+                <a
+                  href="https://rajbhanderi107-droid.github.io/whitedot-limex.in/#/admin/google"
+                  className="cine-menu-admin-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={onClose}
+                >
+                  Admin GoogleDash
                 </a>
               </motion.div>
             </nav>
