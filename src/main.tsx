@@ -23,14 +23,9 @@ if (isAdminHost && !window.location.hash.startsWith("#/admin")) {
   window.location.hash = "#/admin/login";
 }
 
-// Admin SPA is ONLY available on the dedicated admin subdomain.
-// On the public domain, strip any leftover #/admin hash so visitors
-// always see the public cinematic site — never the admin login.
-if (!isAdminHost && window.location.hash.startsWith("#/admin")) {
-  window.location.hash = "";
-}
-
-const isAdmin = isAdminHost;
+// If the host or hash path selects admin, show the admin SPA.
+// Otherwise, render the public cinematic website unchanged.
+const isAdmin = isAdminHost || window.location.hash.startsWith("#/admin");
 
 // Dismiss the inline aggregation loader immediately for admin routes —
 // CinematicApp's useDismissBootLoader() won't run in admin mode.
