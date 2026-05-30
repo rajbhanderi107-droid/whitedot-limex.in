@@ -31,6 +31,7 @@ export function DashboardPage() {
   };
 
   const handleDeleteActivity = async (id: string) => {
+    if (!window.confirm("Delete this activity entry?")) return;
     // Optimistic removal; restore the entry if the request fails.
     const previous = data;
     setData((d) => (d ? { ...d, recentActivity: d.recentActivity.filter((a) => a.id !== id) } : d));

@@ -3,9 +3,45 @@ import { RefreshCw, Save, Upload, RotateCcw } from "lucide-react";
 import { api, ApiError } from "../lib/api.js";
 import { BRAND_LOGO_SRC, setBrandLogo } from "../../brand";
 
-// Cap the uploaded logo so the base64 payload stays comfortably under the
-// API body limit and every public page load stays light.
-const MAX_LOGO_BYTES = 600 * 1024; // 600 KB
+// Raster logos are scaled down to this longest edge before saving, which keeps
+// the inlined base64 small regardless of the source image size.
+const MAX_LOGO_DIMENSION = 512;
+// SVGs can't be canvas-resized without rasterizing, so they keep this hard cap.
+const MAX_SVG_BYTES = 600 * 1024; // 600 KB
+// Generous bound on the source raster before we shrink it.
+const MAX_RASTER_INPUT_BYTES = 8 * 1024 * 1024; // 8 MB
+// Final safety bound vs the server's body limit.
+const MAX_OUTPUT_CHARS = 1_400_000;
+
+function readFileAsDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(new Error("read-failed"));
+    reader.readAsDataURL(file);
+  });
+}
+
+/** Scale a raster image down to MAX_LOGO_DIMENSION and re-encode as PNG (keeps transparency). */
+function resizeRasterDataUrl(dataUrl: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, MAX_LOGO_DIMENSION / Math.max(img.width, img.height));
+      const w = Math.max(1, Math.round(img.width * scale));
+      const h = Math.max(1, Math.round(img.height * scale));
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return reject(new Error("canvas-unavailable"));
+      ctx.drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.onerror = () => reject(new Error("decode-failed"));
+    img.src = dataUrl;
+  });
+}
 
 interface WebsiteSetting {
   id: string;
@@ -81,7 +117,7 @@ export function WebsiteSettingsPage() {
   const savedLogo = settings.find((s) => s.key === "brand_logo")?.value || "";
   const logoPreview = pendingLogo ?? savedLogo ?? "";
 
-  const handleLogoFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLogoFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     event.target.value = ""; // allow re-selecting the same file
     if (!file) return;
@@ -91,14 +127,28 @@ export function WebsiteSettingsPage() {
       setError("Please choose an image file (PNG, SVG, WEBP, JPG).");
       return;
     }
-    if (file.size > MAX_LOGO_BYTES) {
-      setError(`Logo is too large (${Math.round(file.size / 1024)} KB). Use an image under 600 KB.`);
+    const isSvg = file.type === "image/svg+xml";
+    const maxInput = isSvg ? MAX_SVG_BYTES : MAX_RASTER_INPUT_BYTES;
+    if (file.size > maxInput) {
+      setError(
+        isSvg
+          ? `SVG is too large (${Math.round(file.size / 1024)} KB). Use one under 600 KB.`
+          : `Image is too large (${Math.round(file.size / 1024 / 1024)} MB). Use one under 8 MB.`,
+      );
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => setPendingLogo(String(reader.result));
-    reader.onerror = () => setError("Could not read that file. Try another image.");
-    reader.readAsDataURL(file);
+    try {
+      const dataUrl = await readFileAsDataUrl(file);
+      // SVGs stay vector; raster images get scaled down for a light payload.
+      const result = isSvg ? dataUrl : await resizeRasterDataUrl(dataUrl);
+      if (result.length > MAX_OUTPUT_CHARS) {
+        setError("Logo is still too large after processing. Try a simpler image.");
+        return;
+      }
+      setPendingLogo(result);
+    } catch {
+      setError("Could not process that image. Try another file.");
+    }
   };
 
   const saveLogo = async () => {
@@ -123,6 +173,7 @@ export function WebsiteSettingsPage() {
   };
 
   const resetLogo = async () => {
+    if (!window.confirm("Reset the logo to the default White Dot mark?")) return;
     setLogoSaving(true);
     setError("");
     setNotice("");
