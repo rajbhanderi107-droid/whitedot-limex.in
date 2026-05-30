@@ -208,7 +208,6 @@ export function CinematicMenu({ open, onClose, whatsappHref }: CinematicMenuProp
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => {
-                    // Always land on the login screen — clear any saved session
                     localStorage.removeItem("wd_admin_token");
                     onClose();
                   }}
