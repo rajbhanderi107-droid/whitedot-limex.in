@@ -10,7 +10,7 @@ import { LimexDetail } from "./LimexDetail";
 import { LimexComparison } from "./LimexComparison";
 import { Consultation } from "./Consultation";
 import { SiteFooter } from "./SiteFooter";
-import { BRAND_LOGO_SRC } from "../brand";
+import { useBrandLogo } from "../useBrandLogo";
 import { useLenis } from "./useLenis";
 import { ScrollProgress } from "./ScrollProgress";
 import { getWhatsappHref, useSiteSettings } from "./siteSettings";
@@ -244,6 +244,7 @@ function HeroProofPanel() {
 export default function CinematicApp() {
   const premium = usePremium();
   const settings = useSiteSettings();
+  const brandLogo = useBrandLogo();
   const whatsappHref = getWhatsappHref(
     settings,
     "Hello White Dot LLP, I'd like a LIMEX material optimization consultation.",
@@ -309,7 +310,7 @@ export default function CinematicApp() {
         <a className="cine-brand" href="#top" aria-label="White Dot LLP">
           <img
             className="cine-brand-logo"
-            src={BRAND_LOGO_SRC}
+            src={brandLogo}
             alt=""
             aria-hidden="true"
             width={40}

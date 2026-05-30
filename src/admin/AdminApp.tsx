@@ -6,6 +6,8 @@ import { DashboardPage } from "./pages/DashboardPage.js";
 import { InquiriesPage } from "./pages/InquiriesPage.js";
 import { InquiryDetailPage } from "./pages/InquiryDetailPage.js";
 import { LoginPage } from "./pages/LoginPage.js";
+import { ForgotPasswordPage } from "./pages/ForgotPasswordPage.js";
+import { ResetPasswordPage } from "./pages/ResetPasswordPage.js";
 import { UserManagementPage } from "./pages/UserManagementPage.js";
 import { WebsiteSettingsPage } from "./pages/WebsiteSettingsPage.js";
 import { GoogleDashboardPage } from "./pages/GoogleDashboardPage.js";
@@ -51,6 +53,10 @@ export default function AdminApp() {
         path="/admin/login"
         element={isAuthenticated ? <Navigate to="/admin/dashboard" replace /> : <LoginPage onLogin={login} onGoogleLogin={googleLogin} />}
       />
+
+      {/* Public, reachable even with an active session (e.g. opening a reset email link). */}
+      <Route path="/admin/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/admin/reset-password" element={<ResetPasswordPage />} />
 
       <Route
         element={

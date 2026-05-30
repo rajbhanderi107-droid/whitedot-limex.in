@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import type { FormEvent } from "react";
 import { api } from "../lib/api.js";
-import { BRAND_LOGO_SRC } from "../../brand";
+import { useBrandLogo } from "../../useBrandLogo";
 
 /* ─── Google Identity Services type shim ─── */
 declare global {
@@ -54,6 +54,7 @@ function loadGSIScript(): Promise<void> {
 }
 
 export function LoginPage({ onLogin, onGoogleLogin }: Props) {
+  const brandLogo = useBrandLogo();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -137,7 +138,7 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
     <div className="adm-login">
       <div className="adm-login-card">
         <div style={{ textAlign: "center", marginBottom: "1rem" }}>
-          <img src={BRAND_LOGO_SRC} alt="" width={48} height={48} />
+          <img src={brandLogo} alt="" width={48} height={48} />
         </div>
         <h1>White Dot Admin</h1>
         <p>Sign in to manage leads, quotes, and operations.</p>
@@ -165,6 +166,23 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
             </p>
           )}
         </form>
+
+        <button
+          type="button"
+          onClick={() => navigate("/admin/forgot-password")}
+          style={{
+            display: "block",
+            margin: ".9rem auto 0",
+            background: "none",
+            border: "none",
+            color: "var(--adm-muted)",
+            cursor: "pointer",
+            fontSize: ".8rem",
+            textDecoration: "underline",
+          }}
+        >
+          Forgot password?
+        </button>
 
         {/* ─── Google Sign-In — compact glass icon ─── */}
         {showGoogle && (

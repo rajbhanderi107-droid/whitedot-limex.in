@@ -22,6 +22,21 @@ services:
         sync: false
       - key: ADMIN_SEED_PASSWORD
         sync: false
+      # SMTP for password-reset emails. Secrets are set in the Render dashboard
+      # (sync: false). If HOST/USER/PASS are left blank, reset links are logged
+      # to the server console instead of being emailed — the flow still works.
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_SECURE
+        value: "false"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        value: White Dot <no-reply@whitedot-limex.in>
       - key: DATABASE_URL
         fromDatabase:
           name: whitedot-limex-postgres

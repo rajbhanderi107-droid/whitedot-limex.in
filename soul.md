@@ -119,3 +119,29 @@ After push, agents should verify:
 - The live URL is `https://rajbhanderi107-droid.github.io/whitedot-limex.in/`.
 
 Do not share `127.0.0.1` as the public website link.
+
+## Token efficiency (operating habits — apply every session)
+
+Source: Charlie Hills, "How to Never Hit Your Token Limits in Claude Code." Claude Code counts tokens, not messages — every turn re-reads the live context, so a lean window is a cheaper, longer, sharper session. Agents follow these by default in this repo.
+
+**Context hygiene**
+- `/compact` at ~50% of the window — not at 95%. Compacting a degraded, near-full context bakes in the noise; compacting at the halfway mark keeps the summary clean.
+- `/clear` between unrelated tasks. Finished a system (e.g. Sound) and moving to another (e.g. Continuity)? Start fresh — stale messages cost tokens on every later turn.
+- `/context` to audit when a session feels heavy — it itemises system prompt, MCP tools, memory, and messages in tokens so you can see what's eating the window.
+
+**Read narrow, not wide**
+- Name the exact file; never read a whole directory tree to "look around." One file ≈ ~800 tokens; a folder tree ≈ ~12,000. Use Grep/Glob to locate, then Read the specific file.
+- This composes with the existing rule "read the actual source files before making assumptions": read the *right* file, not everything.
+
+**Plan before you build**
+- Planning (read-only) is far cheaper than rebuilding. One failed build burns more tokens than ten minutes of planning.
+- Problem first, not prescription: describe what's broken ("the loader never dismisses on iOS — find why"), not the fix you imagine. Prescribed solutions lock the wrong path and burn tokens implementing it.
+
+**Match effort to the task** (`/effort`, or model choice)
+- low / medium — quick edits, formatting, simple refactors, boilerplate. Lightest budget.
+- high (default) — real coding, debugging, multi-step work. The everyday setting.
+- xhigh / max — complex architecture, hard bugs, decisions costly to undo (e.g. the service worker cache strategy, the AudioContext singleton). Heaviest budget; reserve for it.
+- Rule of thumb: Sonnet executes, Opus strategises. Don't burn max-effort tokens on a CSS tweak.
+
+**Prefer the lighter tool**
+- Prefer a single focused subagent (isolates one heavy task in its own window) over multi-agent "teams" that run several full conversations back-to-back. One good subagent beats a five-agent team on most tasks here — and costs a fraction of the tokens.
