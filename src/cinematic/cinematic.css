@@ -2502,7 +2502,7 @@ a:focus-visible {
   background: rgba(154, 168, 147, 0.06);
   font-size: 0.84rem;
   line-height: 1.55;
-  color: var(--c-faint);
+  color: var(--c-muted);
 }
 .cine-detail-apps {
   display: grid;
