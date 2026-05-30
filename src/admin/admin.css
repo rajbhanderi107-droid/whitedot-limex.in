@@ -422,3 +422,82 @@ select.adm-input { cursor: pointer; }
 @media (max-width: 640px) {
   .adm-google-grid { grid-template-columns: 1fr; }
 }
+
+/* ─── Notification bell ──────────────── */
+.adm-sidebar-brand .adm-bell { margin-left: auto; }
+.adm-mobile-topbar-actions { margin-left: auto; display: flex; align-items: center; }
+.adm-bell { position: relative; }
+.adm-bell-btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; border-radius: 8px; border: 1px solid transparent;
+  background: transparent; color: var(--adm-muted); cursor: pointer; transition: all .15s;
+}
+.adm-bell-btn:hover { color: var(--adm-text); background: var(--adm-accent-soft); }
+.adm-bell-badge {
+  position: absolute; top: -2px; right: -2px; min-width: 16px; height: 16px; padding: 0 4px;
+  border-radius: 999px; background: var(--adm-danger); color: #fff;
+  font-size: .62rem; font-weight: 700; line-height: 16px; text-align: center;
+  border: 2px solid var(--adm-surface);
+}
+.adm-bell-panel {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 300;
+  width: 340px; max-width: calc(100vw - 2rem); max-height: 70vh; overflow: hidden;
+  display: flex; flex-direction: column;
+  background: var(--adm-surface-2); border: 1px solid var(--adm-border);
+  border-radius: 10px; box-shadow: 0 12px 40px rgba(0,0,0,.5);
+}
+.adm-bell-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .7rem .9rem; border-bottom: 1px solid var(--adm-border); font-size: .85rem;
+}
+.adm-bell-markall {
+  display: inline-flex; align-items: center; gap: .3rem; background: transparent; border: none;
+  color: var(--adm-accent); font-size: .74rem; cursor: pointer; padding: .2rem .3rem; border-radius: 5px;
+}
+.adm-bell-markall:hover { background: var(--adm-accent-soft); }
+.adm-bell-list { overflow-y: auto; }
+.adm-bell-empty { padding: 1.8rem 1rem; text-align: center; color: var(--adm-muted); font-size: .82rem; }
+.adm-bell-item {
+  display: flex; gap: .6rem; align-items: flex-start; padding: .7rem .9rem;
+  border-bottom: 1px solid var(--adm-border);
+}
+.adm-bell-item:last-child { border-bottom: none; }
+.adm-bell-item.is-unread { background: rgba(154,168,147,.06); }
+.adm-bell-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: .35rem; flex-shrink: 0; background: var(--adm-muted); }
+.adm-bell-dot-success, .adm-bell-dot-sample { background: var(--adm-success); }
+.adm-bell-dot-warning, .adm-bell-dot-follow_up { background: var(--adm-warning); }
+.adm-bell-dot-error { background: var(--adm-danger); }
+.adm-bell-dot-lead, .adm-bell-dot-quote { background: var(--adm-accent); }
+.adm-bell-body { flex: 1; min-width: 0; }
+.adm-bell-title { font-size: .82rem; font-weight: 600; color: var(--adm-text); }
+.adm-bell-msg { font-size: .78rem; color: var(--adm-muted); margin-top: .1rem; line-height: 1.4; }
+.adm-bell-time { font-size: .68rem; color: var(--adm-muted); opacity: .7; margin-top: .25rem; }
+.adm-bell-read {
+  background: transparent; border: none; color: var(--adm-muted); cursor: pointer;
+  padding: .25rem; border-radius: 5px; flex-shrink: 0;
+}
+.adm-bell-read:hover { color: var(--adm-accent); background: var(--adm-accent-soft); }
+
+/* ─── Keyboard shortcuts sheet ───────── */
+.adm-kbd-overlay {
+  position: fixed; inset: 0; z-index: 400; display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.55); backdrop-filter: blur(3px); padding: 1rem;
+}
+.adm-kbd-sheet {
+  width: 100%; max-width: 420px; max-height: 80vh; overflow-y: auto;
+  background: var(--adm-surface); border: 1px solid var(--adm-border);
+  border-radius: 12px; padding: 1.2rem 1.4rem; box-shadow: 0 16px 50px rgba(0,0,0,.55);
+}
+.adm-kbd-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: .8rem; }
+.adm-kbd-close { background: transparent; border: none; color: var(--adm-muted); cursor: pointer; padding: .25rem; }
+.adm-kbd-close:hover { color: var(--adm-text); }
+.adm-kbd-group-title { font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; color: var(--adm-muted); margin: 1rem 0 .4rem; }
+.adm-kbd-list { list-style: none; margin: 0; padding: 0; }
+.adm-kbd-list li { display: flex; align-items: center; justify-content: space-between; padding: .35rem 0; font-size: .84rem; color: var(--adm-text); }
+.adm-kbd-keys { display: inline-flex; gap: .25rem; }
+.adm-kbd-list kbd {
+  display: inline-block; min-width: 20px; text-align: center; padding: .12rem .4rem;
+  background: var(--adm-bg); border: 1px solid var(--adm-border); border-bottom-width: 2px;
+  border-radius: 5px; font-family: var(--wd-font-mono, ui-monospace, monospace);
+  font-size: .72rem; color: var(--adm-text);
+}
