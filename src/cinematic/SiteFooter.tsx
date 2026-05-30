@@ -1,5 +1,5 @@
 import { getPhoneHref, getWhatsappHref, useSiteSettings } from "./siteSettings";
-import { BRAND_LOGO_SRC } from "../brand";
+import { useBrandLogo } from "../useBrandLogo";
 
 const explore = [
   { label: "Material", href: "#material" },
@@ -11,6 +11,7 @@ const explore = [
 export function SiteFooter() {
   const year = new Date().getFullYear();
   const settings = useSiteSettings();
+  const brandLogo = useBrandLogo();
   const whatsappHref = getWhatsappHref(
     settings,
     "Hello White Dot LLP, I'd like to explore LIMEX material for my business.",
@@ -23,7 +24,7 @@ export function SiteFooter() {
           <a className="cine-brand" href="#top" aria-label="White Dot LLP — back to top">
             <img
               className="cine-brand-logo"
-              src={BRAND_LOGO_SRC}
+              src={brandLogo}
               alt=""
               aria-hidden="true"
               width={40}

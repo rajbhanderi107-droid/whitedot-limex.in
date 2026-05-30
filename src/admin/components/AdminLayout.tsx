@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { BRAND_LOGO_SRC } from "../../brand";
+import { useBrandLogo } from "../../useBrandLogo";
 import {
   Building2, Calculator, ClipboardList, FileText,
   Home, LogOut, Menu, MessageSquare, Package, Settings, Users, Activity, Bell, X, LineChart,
@@ -30,6 +30,7 @@ const mgmtItems = [
 ];
 
 export function AdminLayout({ user, onLogout }: Props) {
+  const brandLogo = useBrandLogo();
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -42,7 +43,7 @@ export function AdminLayout({ user, onLogout }: Props) {
   const sidebarContent = (onNav?: () => void) => (
     <>
       <div className="adm-sidebar-brand">
-        <img src={BRAND_LOGO_SRC} alt="" width={30} height={30} />
+        <img src={brandLogo} alt="" width={30} height={30} />
         <span>White Dot <small>Admin</small></span>
       </div>
       <nav className="adm-nav">

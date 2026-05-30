@@ -25,6 +25,7 @@ import {
   updateFollowUpTaskSchema,
   createDocumentSchema,
   updateWebsiteSettingSchema,
+  updateBrandLogoSchema,
   createUserSchema,
   updateUserSchema,
 } from "../validators/admin.validator.js";
@@ -82,6 +83,7 @@ router.delete("/documents/:id", requireRole("SUPER_ADMIN", "ADMIN"), asyncHandle
 
 // ─── Website Settings ────────────────────────────
 router.get("/website-settings", asyncHandler(settings.listSettings));
+router.put("/website-settings/brand-logo", requireRole("SUPER_ADMIN", "ADMIN"), validate(updateBrandLogoSchema), asyncHandler(settings.updateBrandLogo));
 router.patch("/website-settings/:key", requireRole("SUPER_ADMIN", "ADMIN"), validate(updateWebsiteSettingSchema), asyncHandler(settings.updateSetting));
 
 // ─── Users (SUPER_ADMIN only) ────────────────────
