@@ -16,7 +16,7 @@ if ("serviceWorker" in navigator) {
     .catch(() => {});
 }
 
-const adminHosts = new Set(["rajbhanderi107-droid.github.io"]);
+const adminHosts = new Set(["whitedotindia.in", "www.whitedotindia.in"]);
 const isAdminHost = adminHosts.has(window.location.hostname.toLowerCase());
 
 if (isAdminHost && !window.location.hash.startsWith("#/admin")) {
