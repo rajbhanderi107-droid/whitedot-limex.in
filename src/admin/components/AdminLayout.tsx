@@ -42,7 +42,7 @@ export function AdminLayout({ user, onLogout }: Props) {
   const sidebarContent = (onNav?: () => void) => (
     <>
       <div className="adm-sidebar-brand">
-        <img src={assetPath("assets/whitedot-logo-enhanced.svg")} alt="" width={26} height={26} />
+        <img src={BRAND_LOGO_SRC} alt="" width={30} height={30} />
         <span>White Dot <small>Admin</small></span>
       </div>
       <nav className="adm-nav">
