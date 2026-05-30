@@ -2,6 +2,10 @@ import { StrictMode, lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { HashRouter } from "react-router-dom";
 import "./brand-fonts.css";
+import { initBrandLogo } from "./brand";
+
+// Apply any Super-Admin-configured logo as early as possible.
+initBrandLogo();
 
 // Retire any previously-registered service worker (from the prior site) so it
 // cannot serve stale cached content over the new experience.

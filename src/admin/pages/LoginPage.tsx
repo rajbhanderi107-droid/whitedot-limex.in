@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import type { FormEvent } from "react";
 import { api } from "../lib/api.js";
-import { BRAND_LOGO_SRC } from "../../brand";
+import { useBrandLogo } from "../../useBrandLogo";
 
 /* ─── Google Identity Services type shim ─── */
 declare global {
@@ -54,6 +54,7 @@ function loadGSIScript(): Promise<void> {
 }
 
 export function LoginPage({ onLogin, onGoogleLogin }: Props) {
+  const brandLogo = useBrandLogo();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -137,7 +138,7 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
     <div className="adm-login">
       <div className="adm-login-card">
         <div style={{ textAlign: "center", marginBottom: "1rem" }}>
-          <img src={BRAND_LOGO_SRC} alt="" width={48} height={48} />
+          <img src={brandLogo} alt="" width={48} height={48} />
         </div>
         <h1>White Dot Admin</h1>
         <p>Sign in to manage leads, quotes, and operations.</p>
