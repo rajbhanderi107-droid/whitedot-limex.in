@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Settings, Users, LogOut } from "lucide-react";
+import { Settings, Users, LogOut, Trash2 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth.js";
 import { api } from "../lib/api.js";
 
@@ -21,12 +21,25 @@ interface DashboardData {
 export function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const isSuperAdmin = user?.role === "SUPER_ADMIN";
 
   const handleLogout = async () => {
     await logout();
     navigate("/admin/login");
+  };
+
+  const handleDeleteActivity = async (id: string) => {
+    // Optimistic removal; restore the entry if the request fails.
+    const previous = data;
+    setData((d) => (d ? { ...d, recentActivity: d.recentActivity.filter((a) => a.id !== id) } : d));
+    try {
+      await api.delete(`/api/activity-log/${id}`);
+    } catch (err) {
+      console.error(err);
+      setData(previous);
+    }
   };
 
   useEffect(() => {
@@ -97,11 +110,35 @@ export function DashboardPage() {
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: ".4rem" }}>
             {data.recentActivity.map((a) => (
-              <div key={a.id} style={{ display: "flex", justifyContent: "space-between", fontSize: ".82rem", padding: ".3rem 0", borderBottom: "1px solid var(--adm-border)" }}>
+              <div key={a.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: ".5rem", fontSize: ".82rem", padding: ".3rem 0", borderBottom: "1px solid var(--adm-border)" }}>
                 <span>
                   <strong>{a.user?.name || "System"}</strong> · {a.action.toLowerCase().replace(/_/g, " ")} ({a.entityType.toLowerCase().replace(/_/g, " ")})
                 </span>
-                <span style={{ color: "var(--adm-muted)" }}>{new Date(a.createdAt).toLocaleDateString()}</span>
+                <span style={{ display: "flex", alignItems: "center", gap: ".5rem", flexShrink: 0 }}>
+                  <span style={{ color: "var(--adm-muted)" }}>{new Date(a.createdAt).toLocaleDateString()}</span>
+                  {isSuperAdmin && (
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteActivity(a.id)}
+                      aria-label="Delete activity entry"
+                      title="Delete activity entry"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: "2px",
+                        background: "transparent",
+                        border: "none",
+                        borderRadius: "4px",
+                        color: "var(--adm-muted)",
+                        cursor: "pointer",
+                        lineHeight: 0,
+                      }}
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  )}
+                </span>
               </div>
             ))}
           </div>
