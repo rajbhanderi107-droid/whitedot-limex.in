@@ -6,7 +6,10 @@
 - Audience: Indian + global procurement, packaging, FMCG, sustainability, and municipal buyers
 - Stack: Vite + React 19 + TypeScript + Three.js (NOT Jekyll / plain HTML)
 - Hosted on GitHub Pages via `.github/workflows/pages.yml` (auto-deploys from `main`)
-- Live URL: https://rajbhanderi107-droid.github.io/whitedot-limex.in/
+- **Repo name: `whitedot-limex.in`** (GitHub: `rajbhanderi107-droid/whitedot-limex.in`)
+- **Custom domain (LIVE): `whitedotindia.in`** ⚠️ NOTE: the domain is `whitedotindia.in`, NOT `whitedot-limex.in`. The repo/folder is named `whitedot-limex.in` but the actual GoDaddy domain bought is `whitedotindia.in`. Don't confuse them.
+- DNS: GoDaddy nameservers, 4 A records → GitHub Pages IPs (185.199.108–111.153) + www. `public/CNAME` = `whitedotindia.in`.
+- GitHub Pages fallback URL: https://rajbhanderi107-droid.github.io/whitedot-limex.in/ (301-redirects to the custom domain once it's set)
 
 ## Brand rules (non-negotiable)
 - Brand mark = a single white dot = one grain of limestone (raw material itself)
