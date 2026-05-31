@@ -15,6 +15,21 @@ export const publicLimiter = rateLimit({
   },
 });
 
+/** LIMEX Assistant chat — protects the free LLM tier from abuse */
+export const chatLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,  // 15 minutes
+  max: 20,                     // 20 messages per window per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: {
+      code: "RATE_LIMIT_EXCEEDED",
+      message: "You have sent a lot of messages. Please wait a few minutes and try again.",
+    },
+  },
+});
+
 /** Auth endpoints — tighter to prevent brute force */
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,

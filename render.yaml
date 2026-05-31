@@ -37,6 +37,16 @@ services:
         sync: false
       - key: SMTP_FROM
         value: White Dot <no-reply@whitedot-limex.in>
+      # LIMEX Assistant (chat). Provider-agnostic, OpenAI-compatible endpoint.
+      # Set LLM_API_KEY in the Render dashboard (sync: false). Defaults target
+      # Groq's free tier. If the key is unset, the chat endpoint returns a
+      # graceful "unavailable" message — the site still builds and runs.
+      - key: LLM_API_KEY
+        sync: false
+      - key: LLM_BASE_URL
+        value: https://api.groq.com/openai/v1
+      - key: LLM_MODEL
+        value: llama-3.3-70b-versatile
       - key: DATABASE_URL
         fromDatabase:
           name: whitedot-limex-postgres

@@ -44,6 +44,19 @@ export const publicSampleRequestSchema = z.object({
   remarks: z.string().max(2000).optional(),
 }).strip();
 
+export const chatSchema = z.object({
+  // Full conversation so far, oldest first. Capped to keep token use bounded.
+  messages: z
+    .array(
+      z.object({
+        role: z.enum(["user", "assistant"]),
+        content: z.string().min(1, "Message cannot be empty").max(2000),
+      }),
+    )
+    .min(1, "At least one message is required")
+    .max(20, "Conversation is too long. Please start a new chat."),
+}).strip();
+
 export const calculatorSubmissionSchema = z.object({
   companyName: z.string().max(200).optional(),
   contactPerson: z.string().max(200).optional(),
