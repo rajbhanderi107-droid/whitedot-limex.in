@@ -28,6 +28,13 @@ export const env = {
   SMTP_PASS: process.env.SMTP_PASS,
   SMTP_FROM: process.env.SMTP_FROM || process.env.SMTP_USER || "no-reply@whitedot-limex.in",
 
+  // LIMEX Assistant (chat). Provider-agnostic, OpenAI-compatible endpoint.
+  // Defaults target Groq's free tier. If LLM_API_KEY is unset, the chat endpoint
+  // returns a graceful "unavailable" message instead of erroring.
+  LLM_API_KEY: process.env.LLM_API_KEY,
+  LLM_BASE_URL: process.env.LLM_BASE_URL || "https://api.groq.com/openai/v1",
+  LLM_MODEL: process.env.LLM_MODEL || "llama-3.3-70b-versatile",
+
   get isProduction() {
     return this.NODE_ENV === "production";
   },

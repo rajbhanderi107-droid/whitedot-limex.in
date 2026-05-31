@@ -18,6 +18,7 @@
     "remove:continuity:wd": "node scripts/remove-continuity-wd.mjs",
     "remove:aggregation:wd": "node scripts/remove-aggregation-wd.mjs",
     "remove:god:wd": "node scripts/remove-god-wd.mjs",
+    "remove:assistant:wd": "node scripts/remove-assistant-wd.mjs",
     "remove:allplan": "node scripts/remove-allplan.mjs",
     "wire:higgsfield:loop": "node scripts/wire-higgsfield-loop.mjs"
   },

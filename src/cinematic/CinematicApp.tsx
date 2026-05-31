@@ -22,6 +22,10 @@ import "../continuity-wd/continuity-wd.css";
 import { AggregationLoader } from "../aggregation-wd";
 import "../aggregation-wd/aggregation-wd.css";
 // AGGREGATION-WD-END imports
+// ASSISTANT-WD-BEGIN imports
+import { AssistantShell } from "../assistant-wd";
+import "../assistant-wd/assistant-wd.css";
+// ASSISTANT-WD-END imports
 // PREMIUM-WD-BEGIN import
 import { usePremium } from "../premium-wd";
 // PREMIUM-WD-END import
@@ -429,6 +433,9 @@ export default function CinematicApp() {
       <div className="wd-section-divider" aria-hidden="true" />
       <Consultation />
       <SiteFooter />
+      {/* ASSISTANT-WD-BEGIN widget */}
+      <AssistantShell />
+      {/* ASSISTANT-WD-END widget */}
     </main>
   );
 }
