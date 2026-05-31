@@ -1,0 +1,24 @@
+name: Keep WhiteDot backend alive
+
+on:
+  schedule:
+    # Ping every 10 minutes — prevents Render free tier 15-min spin-down.
+    # GitHub Actions minimum cron interval is 5 minutes.
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping backend health endpoint
+        run: |
+          STATUS=$(curl -sf -o /dev/null -w "%{http_code}" \
+            --max-time 30 \
+            "https://whitedot-limex-backend.onrender.com/health")
+          echo "Backend status: $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "Warning: backend returned $STATUS — may be cold starting"
+          else
+            echo "Backend is warm and healthy"
+          fi
