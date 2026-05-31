@@ -24,14 +24,20 @@ html, body, #root { min-height: 100%; margin: 0; background: #0f1210; }
 .adm-sidebar {
   width: 240px; flex-shrink: 0; background: var(--adm-surface);
   border-right: 1px solid var(--adm-border); padding: 1.5rem 0;
-  display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh;
 }
 .adm-sidebar-brand { display: flex; align-items: center; gap: .6rem; padding: 0 1.2rem 1.4rem; border-bottom: 1px solid var(--adm-border); margin-bottom: .5rem; }
 .adm-sidebar-brand img { width: 26px; height: 26px; }
 .adm-sidebar-brand span { font-weight: 600; font-size: .95rem; }
 .adm-sidebar-brand small { color: var(--adm-muted); font-weight: 400; font-size: .75rem; }
 
-.adm-nav { flex: 1; display: flex; flex-direction: column; gap: 2px; padding: .3rem .6rem; }
+.adm-nav {
+  flex: 1; display: flex; flex-direction: column; gap: 2px; padding: .3rem .6rem;
+  overflow-y: auto;
+}
+.adm-nav::-webkit-scrollbar { width: 4px; }
+.adm-nav::-webkit-scrollbar-thumb { background: rgba(154, 168, 147, 0.12); border-radius: 4px; }
+.adm-nav::-webkit-scrollbar-thumb:hover { background: rgba(154, 168, 147, 0.25); }
 .adm-nav a {
   display: flex; align-items: center; gap: .7rem; padding: .55rem .8rem;
   border-radius: 6px; font-size: .85rem; color: var(--adm-muted); text-decoration: none; transition: all .15s;
@@ -427,6 +433,14 @@ select.adm-input { cursor: pointer; }
 .adm-sidebar-brand .adm-bell { margin-left: auto; }
 .adm-mobile-topbar-actions { margin-left: auto; display: flex; align-items: center; }
 .adm-bell { position: relative; }
+
+/* Desktop sidebar bell adjustments to prevent clipping and off-screen panel */
+.adm-sidebar .adm-bell { position: static; }
+.adm-sidebar .adm-bell-panel {
+  left: 12px;
+  right: auto;
+  top: 74px;
+}
 .adm-bell-btn {
   position: relative; display: inline-flex; align-items: center; justify-content: center;
   width: 34px; height: 34px; border-radius: 8px; border: 1px solid transparent;
