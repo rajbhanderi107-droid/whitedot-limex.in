@@ -8,20 +8,26 @@
       content="White Dot LLP supports authorized LIMEX material marketing and sales with clear guidance for plastic replacement, product trials, and industrial adoption."
     />
     <link rel="icon" type="image/svg+xml" href="%BASE_URL%assets/whitedot-logo-enhanced.svg" />
-    <title>White Dot LLP | Authorized LIMEX Marketing and Sales</title>
+    <link rel="canonical" href="https://whitedotindia.in/" />
+    <title>White Dot LLP | Authorized LIMEX Marketing and Sales in India</title>
+    <meta name="keywords" content="White Dot, White Dot LLP, whitedot, whitedotindia, LIMEX, LIMEX India, LIMEX material, plastic replacement, limestone material, eco-friendly plastic alternative, sustainable packaging India, TBM LIMEX, industrial plastic substitute" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="White Dot LLP" />
+    <meta name="geo.region" content="IN-GJ" />
+    <meta name="geo.placename" content="Gujarat, India" />
 
     <!-- Social / Open Graph. og:image points at the Higgsfield drop slot
          (public/assets/higgsfield/og-cover.jpg) — add the file to activate. -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://whitedotindia.in/" />
-    <meta property="og:title" content="White Dot LLP | Authorized LIMEX Marketing and Sales" />
+    <meta property="og:title" content="White Dot LLP | Authorized LIMEX Marketing and Sales in India" />
     <meta
       property="og:description"
       content="Authorized LIMEX material marketing and sales — plastic replacement, product trials, and industrial adoption. Built from CO₂. Designed for the Planet."
     />
     <meta property="og:image" content="%BASE_URL%assets/higgsfield/og-cover.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="White Dot LLP | Authorized LIMEX Marketing and Sales" />
+    <meta name="twitter:title" content="White Dot LLP | Authorized LIMEX Marketing and Sales in India" />
     <meta
       name="twitter:description"
       content="Authorized LIMEX material marketing and sales — plastic replacement, product trials, and industrial adoption."
@@ -54,6 +60,44 @@
       @media(max-width:380px){.agg-wd-dot{width:8px;height:8px}.agg-wd-ring{width:24px;height:24px}}
     </style>
     <!-- AGGREGATION-WD-END critical-css -->
+
+    <!-- Structured Data (JSON-LD) for Search Engines -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "White Dot LLP",
+      "alternateName": ["WhiteDot", "White Dot India", "WhiteDotIndia"],
+      "url": "https://whitedotindia.in",
+      "logo": "https://whitedotindia.in/assets/whitedot-logo-enhanced.svg",
+      "description": "White Dot LLP is an authorized LIMEX material marketing and sales company in India, providing sustainable plastic replacement solutions for industrial adoption.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressRegion": "Gujarat",
+        "addressCountry": "IN"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+918849728938",
+        "contactType": "sales",
+        "email": "rajbhanderi107@gmail.com",
+        "areaServed": "IN",
+        "availableLanguage": ["English", "Hindi"]
+      },
+      "sameAs": [],
+      "knowsAbout": ["LIMEX material", "plastic replacement", "sustainable packaging", "limestone-based materials", "eco-friendly alternatives"]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "White Dot LLP",
+      "alternateName": "WhiteDot India",
+      "url": "https://whitedotindia.in"
+    }
+    </script>
   </head>
   <body>
     <!-- AGGREGATION-WD-BEGIN inline-loader -->
@@ -69,6 +113,13 @@
     <!-- Admin routes skip the loader entirely — it only exists for the public site -->
     <script>if(location.hash.indexOf("#/admin")===0){var l=document.getElementById("agg-wd-loader");if(l)l.remove()}</script>
     <div id="root"></div>
+    <!-- SEO: Static content for search engine crawlers (SPA fallback) -->
+    <noscript>
+      <h1>White Dot LLP — Authorized LIMEX Marketing and Sales in India</h1>
+      <p>White Dot LLP is an authorized LIMEX material marketing and sales company based in Gujarat, India. We provide sustainable, eco-friendly plastic replacement solutions using limestone-based LIMEX technology for industrial adoption, product trials, and packaging.</p>
+      <p>Contact: +91 8849728938 | Email: rajbhanderi107@gmail.com</p>
+      <p>Visit <a href="https://whitedotindia.in">whitedotindia.in</a> for more information.</p>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
