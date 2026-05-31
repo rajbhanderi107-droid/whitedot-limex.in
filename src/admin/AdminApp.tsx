@@ -39,6 +39,7 @@ function DateCol(val: unknown) {
 
 export default function AdminApp() {
   const { user, loading, login, googleLogin, logout, isAuthenticated } = useAuth();
+  const isSuperAdmin = user?.role === "SUPER_ADMIN";
 
   if (loading) return (
     <div className="adm-loading" style={{ minHeight: "100vh" }}>
@@ -198,6 +199,7 @@ export default function AdminApp() {
                 { key: "entityType", label: "Entity" },
                 { key: "createdAt", label: "Date", render: DateCol },
               ]}
+              showDeleteAll={isSuperAdmin}
             />
           }
         />

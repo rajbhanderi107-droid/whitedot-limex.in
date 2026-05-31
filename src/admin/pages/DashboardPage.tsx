@@ -43,6 +43,18 @@ export function DashboardPage() {
     }
   };
 
+  const handleDeleteAllActivity = async () => {
+    if (!window.confirm("Are you sure you want to delete all activity logs? This action cannot be undone.")) return;
+    const previous = data;
+    setData((d) => (d ? { ...d, recentActivity: [] } : d));
+    try {
+      await api.delete("/api/activity-log");
+    } catch (err) {
+      console.error(err);
+      setData(previous);
+    }
+  };
+
   useEffect(() => {
     api.get<DashboardData>("/api/dashboard").then((r) => setData(r.data)).catch(console.error).finally(() => setLoading(false));
   }, []);
@@ -105,7 +117,19 @@ export function DashboardPage() {
       </div>
 
       <div className="adm-card">
-        <h3>Recent Activity</h3>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.8rem" }}>
+          <h3 style={{ margin: 0 }}>Recent Activity</h3>
+          {isSuperAdmin && data.recentActivity.length > 0 && (
+            <button
+              type="button"
+              className="adm-btn adm-btn-danger"
+              style={{ fontSize: "0.75rem", padding: "0.2rem 0.5rem" }}
+              onClick={handleDeleteAllActivity}
+            >
+              Delete All
+            </button>
+          )}
+        </div>
         {data.recentActivity.length === 0 ? (
           <p style={{ color: "var(--adm-muted)", fontSize: ".82rem" }}>No activity yet.</p>
         ) : (
