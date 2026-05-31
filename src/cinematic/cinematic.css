@@ -2461,7 +2461,7 @@ a:focus-visible {
 }
 .cine-detail-cards {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 1rem;
   margin-top: 1.8rem;
 }
@@ -2509,6 +2509,9 @@ a:focus-visible {
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   margin-top: 1.8rem;
+}
+@media (max-width: 1200px) {
+  .cine-detail-cards { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 980px) {
   .cine-detail-cards { grid-template-columns: repeat(2, 1fr); }

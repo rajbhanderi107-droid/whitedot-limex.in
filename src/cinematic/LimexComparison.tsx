@@ -69,7 +69,7 @@ const data: Record<Tab, Row[]> = {
   Quality: [
     {
       category: "Manufacturing",
-      limex: "Produced by TBM (Japan / Vietnam) with consistent process control.",
+      limex: "Produced in Japan / Vietnam with consistent process control and quality standards.",
       filler: "Local sourcing with quality that can vary batch to batch.",
     },
     {
@@ -117,10 +117,10 @@ export function LimexComparison() {
 
   return (
     <section className="cine-section cine-cmp" id="comparison">
-      <span className="cine-kicker">LIMEX / TBM vs Local Filler</span>
+      <span className="cine-kicker">LIMEX Pellets vs Local Filler</span>
       <h2>A material system, not a weight additive.</h2>
       <p className="lead">
-        Ordinary fillers are commonly used to increase weight or reduce cost. LIMEX / TBM material
+        Ordinary fillers are commonly used to increase weight or reduce cost. LIMEX material
         is positioned differently — a CO₂-based material system with controlled quality,
         technical consistency and application support. Compare them by what actually matters on your
         line.
@@ -160,7 +160,7 @@ export function LimexComparison() {
                 <div className="cine-cmp-card is-limex glass-panel">
                   <span className="cine-cmp-tag">
                     <Check size={15} aria-hidden="true" />
-                    LIMEX / TBM
+                    LIMEX Pellets
                   </span>
                   <p>{row.limex}</p>
                 </div>
@@ -177,7 +177,7 @@ export function LimexComparison() {
       </motion.div>
 
       <p className="cine-cmp-note">
-        Choosing between LIMEX / TBM material and ordinary filler should not be based on per-kg price
+        Choosing between LIMEX Pellets and ordinary filler should not be based on per-kg price
         alone — the real value depends on processing stability, loading percentage, product
         performance, machine life, finishing quality, rejection rate and the final application.
         Final formulation, dosage and performance should always be validated through trials and
