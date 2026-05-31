@@ -441,6 +441,16 @@ select.adm-input { cursor: pointer; }
   right: auto;
   top: 74px;
 }
+
+/* Mobile top bar bell adjustments to center panel and prevent overflow */
+.adm-mobile-topbar-actions .adm-bell { position: static; }
+.adm-mobile-topbar-actions .adm-bell-panel {
+  left: 1rem;
+  right: 1rem;
+  top: 56px;
+  width: auto;
+  max-width: none;
+}
 .adm-bell-btn {
   position: relative; display: inline-flex; align-items: center; justify-content: center;
   width: 34px; height: 34px; border-radius: 8px; border: 1px solid transparent;
