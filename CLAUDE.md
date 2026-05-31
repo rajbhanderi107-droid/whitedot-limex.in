@@ -96,6 +96,15 @@ cheaper, longer, sharper session. Follow these by default in this repo.
   "teams" that run several full conversations back-to-back. One good subagent beats a five-agent
   team on most tasks here — and costs a fraction of the tokens.
 
+## Available skills (auto-matched on demand — invoke when relevant)
+- `whitedot-cinematic` / `king-queen` — cinematic 3D/motion + flagship build-and-QA work.
+- `ai-agent-build` — the Claude Code 5-layer agent architecture (CLAUDE.md / Skills / Hooks /
+  Subagents / Plugins) and a "where does this belong?" triage. Use when designing or extending
+  the agent setup itself, or deciding what belongs in CLAUDE.md vs a skill vs a hook.
+- `rag-architectures` — the 5 production RAG patterns (Hybrid, GraphRAG, Agentic, CRAG,
+  Multimodal): when to use each, their flows and trade-offs. Use when designing, choosing, or
+  debugging a retrieval/RAG pipeline.
+
 ## Out of scope (do not touch)
 - Page redesigns or new layouts
 - Copywriting beyond strings explicitly listed in @BRIEF.md
