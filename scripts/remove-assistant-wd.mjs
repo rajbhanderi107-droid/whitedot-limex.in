@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -11,9 +11,7 @@ const packagePath = join(root, "package.json");
 const assistantDir = join(root, "src", "assistant-wd");
 const scriptPath = fileURLToPath(import.meta.url);
 
-// Backend files for the LIMEX Assistant. The frontend widget is the user-facing
-// part removed here; these server files are inert without the route, but we drop
-// them too so removal is complete.
+// Backend files for the LIMEX Assistant (inert without the route, dropped for completeness).
 const serverChatService = join(root, "server", "src", "services", "chat.service.ts");
 const serverKnowledge = join(root, "server", "src", "services", "limex-knowledge.ts");
 const serverController = join(root, "server", "src", "controllers", "chat.controller.ts");
@@ -34,29 +32,32 @@ function stripBlock(source, tag) {
   return source;
 }
 
+// Use try/catch instead of existsSync to avoid TOCTOU races.
 for (const appPath of appPaths) {
-  if (existsSync(appPath)) {
+  try {
     let app = readFileSync(appPath, "utf8");
     app = stripBlock(app, "ASSISTANT-WD");
     app = app.replace(/\n{3,}/g, "\n\n");
     writeFileSync(appPath, app);
+  } catch {
+    // File absent — nothing to strip.
   }
 }
 
-if (existsSync(packagePath)) {
+try {
   const pkg = JSON.parse(readFileSync(packagePath, "utf8"));
   if (pkg.scripts) {
     delete pkg.scripts["remove:assistant:wd"];
   }
   writeFileSync(packagePath, `${JSON.stringify(pkg, null, 2)}\n`);
+} catch {
+  // package.json absent — skip.
 }
 
-if (existsSync(assistantDir)) {
-  rmSync(assistantDir, { recursive: true, force: true });
-}
-
+// rmSync with force:true is idempotent — no existsSync needed.
+rmSync(assistantDir, { recursive: true, force: true });
 for (const file of [serverChatService, serverKnowledge, serverController]) {
-  if (existsSync(file)) rmSync(file, { force: true });
+  rmSync(file, { force: true });
 }
 
 console.log(
