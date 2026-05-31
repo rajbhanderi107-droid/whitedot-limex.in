@@ -29,6 +29,7 @@ import {
   PenTool,
   ShoppingBag,
   UtensilsCrossed,
+  Wind,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -125,6 +126,17 @@ const industries: IndustryData[] = [
       { label: "Single-use cup", detail: "LIMEX-blend paper-alternative cup. Passed FDA 21 CFR food-contact criteria." },
       { label: "Meal tray", detail: "Thermoformed food tray. Ovenable to 120°C; microwave-compatible variant available." },
       { label: "Lidded portion pot", detail: "Injection-molded portion pot with snap lid. No wax or PFAS coating required." },
+    ],
+  },
+  {
+    name: "Woven & Non-Woven Sacks",
+    slug: "woven-nonwoven-sacks",
+    icon: Wind,
+    note: "Sacks and fabric-form products with reduced plastic.",
+    tiles: [
+      { label: "Woven PP sack", detail: "LIMEX-blend woven polypropylene sack for agricultural, cement and bulk-goods packaging. Comparable tensile and tear strength to conventional woven PP." },
+      { label: "Non-woven fabric sack", detail: "LIMEX-integrated non-woven sack for retail, carry and promotional use. Reduced virgin plastic content without compromising weight rating or stitchability." },
+      { label: "FIBC / bulk bag liner", detail: "LIMEX compound liner for flexible intermediate bulk containers. Supports moisture resistance and consistent sealing performance." },
     ],
   },
 ];

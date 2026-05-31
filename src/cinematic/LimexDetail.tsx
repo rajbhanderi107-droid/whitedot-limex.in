@@ -33,6 +33,11 @@ const differentiators = [
     t: "Process compatibility",
     d: "Designed to process like plastic after proper blending, depending on grade and formulation.",
   },
+  {
+    icon: Recycle,
+    t: "Recyclable & environment-friendly",
+    d: "Supports recyclability goals and lowers environmental footprint — a measurably greener alternative to conventional plastic-heavy material systems.",
+  },
 ];
 
 const specs = [
@@ -43,8 +48,8 @@ const specs = [
   },
   {
     icon: Ruler,
-    t: "Fine mesh size",
-    d: "Supplied data indicates fine sizing around 2–8 microns, depending on grade.",
+    t: "Fine mesh size — nano-particle precision",
+    d: "Nano-scale particle range of 2–8 microns (grade-dependent). Particles at this scale integrate within the polymer matrix, supporting even dispersion, consistent processing and a smooth surface finish.",
   },
   {
     icon: ShieldCheck,
@@ -75,6 +80,8 @@ const processes = [
   "Packaging",
   "FMCG products",
   "Industrial molded products",
+  "ABS products",
+  "Biodegradable products",
 ];
 
 const applications = [
@@ -132,7 +139,7 @@ export function LimexDetail() {
           </motion.span>
           <motion.h2 variants={rise(0.05)}>More than a filler.</motion.h2>
           <motion.p className="lead" variants={rise(0.12)}>
-            LIMEX / TBM material is developed as a CO₂-based alternative that can reduce
+            LIMEX material is developed as a CO₂-based alternative that can reduce
             plastic consumption while supporting selected technical properties. It is not positioned
             as a basic filler added only for weight.
           </motion.p>
