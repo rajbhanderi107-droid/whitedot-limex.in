@@ -13,9 +13,9 @@ services:
       - key: NODE_ENV
         value: production
       - key: FRONTEND_URL
-        value: https://rajbhanderi107-droid.github.io
+        value: https://whitedotindia.in
       - key: FRONTEND_ORIGINS
-        value: https://rajbhanderi107-droid.github.io,https://admin.whitedot-limex.in
+        value: https://whitedotindia.in,https://www.whitedotindia.in,https://rajbhanderi107-droid.github.io,https://admin.whitedotindia.in
       - key: JWT_SECRET
         generateValue: true
       - key: ADMIN_SEED_EMAIL
@@ -36,7 +36,7 @@ services:
       - key: SMTP_PASS
         sync: false
       - key: SMTP_FROM
-        value: White Dot <no-reply@whitedot-limex.in>
+        value: White Dot <no-reply@whitedotindia.in>
       # LIMEX Assistant (chat). Provider-agnostic, OpenAI-compatible endpoint.
       # Set LLM_API_KEY in the Render dashboard (sync: false). Defaults target
       # Groq's free tier. If the key is unset, the chat endpoint returns a
