@@ -66,6 +66,12 @@ export function UserManagementPage() {
     loadUsers();
   }, [loadUsers]);
 
+  useEffect(() => {
+    if (notice || error) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [notice, error]);
+
   const createUser = async (event: FormEvent) => {
     event.preventDefault();
     setSavingId("new");
@@ -85,7 +91,7 @@ export function UserManagementPage() {
     }
   };
 
-  const updateUser = async (id: string, body: Partial<UserRow> & { password?: string }) => {
+  const updateUser = async (id: string, body: Partial<UserRow> & { password?: string }): Promise<boolean> => {
     setSavingId(id);
     setError("");
     setNotice("");
@@ -93,8 +99,10 @@ export function UserManagementPage() {
       const res = await api.patch<UserRow>(`/api/users/${id}`, body);
       setUsers((current) => current.map((user) => (user.id === id ? { ...user, ...res.data } : user)));
       setNotice("User updated.");
+      return true;
     } catch (err) {
       setError(errorMessage(err));
+      return false;
     } finally {
       setSavingId(null);
     }
@@ -106,8 +114,14 @@ export function UserManagementPage() {
       setError("Enter a new password first.");
       return;
     }
-    await updateUser(user.id, { password });
-    setResetPasswords((current) => ({ ...current, [user.id]: "" }));
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
+      return;
+    }
+    const success = await updateUser(user.id, { password });
+    if (success) {
+      setResetPasswords((current) => ({ ...current, [user.id]: "" }));
+    }
   };
 
   const totalPages = Math.ceil(total / limit);
