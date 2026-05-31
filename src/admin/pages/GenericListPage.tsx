@@ -2,10 +2,11 @@ import { useState, useEffect, useCallback } from "react";
 import { api } from "../lib/api.js";
 
 /** Reusable list page for admin CRUD entities */
-export function GenericListPage({ title, endpoint, columns }: {
+export function GenericListPage({ title, endpoint, columns, showDeleteAll = false }: {
   title: string;
   endpoint: string;
   columns: Array<{ key: string; label: string; render?: (val: unknown, row: Record<string, unknown>) => React.ReactNode }>;
+  showDeleteAll?: boolean;
 }) {
   const [data, setData] = useState<Record<string, unknown>[]>([]);
   const [total, setTotal] = useState(0);
@@ -26,6 +27,21 @@ export function GenericListPage({ title, endpoint, columns }: {
     finally { setLoading(false); }
   }, [page, search, endpoint]);
 
+  const handleDeleteAll = async () => {
+    if (!window.confirm(`Are you sure you want to delete all entries in ${title}? This action cannot be undone.`)) {
+      return;
+    }
+    setLoading(true);
+    try {
+      await api.delete(endpoint);
+      setPage(1);
+      await load();
+    } catch (e) {
+      console.error(e);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => { load(); }, [load]);
 
   const totalPages = Math.ceil(total / limit);
@@ -38,9 +54,14 @@ export function GenericListPage({ title, endpoint, columns }: {
       </div>
 
       <div className="adm-table-wrap">
-        <div className="adm-toolbar">
+        <div className="adm-toolbar" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
           <input className="adm-search" placeholder="Search..." value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
+          {showDeleteAll && data.length > 0 && (
+            <button className="adm-btn adm-btn-danger" onClick={handleDeleteAll} disabled={loading} style={{ fontSize: ".8rem" }}>
+              Delete All
+            </button>
+          )}
         </div>
 
         {loading ? (
