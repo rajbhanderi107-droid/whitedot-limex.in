@@ -92,7 +92,10 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
 
   /* ─── Google OAuth popup login ─── */
   const handleGoogleLogin = useCallback(async () => {
-    if (!googleConfig?.clientId) return;
+    if (!googleConfig?.enabled || !googleConfig.clientId) {
+      setError("Google sign-in is not configured on the backend yet. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in Render to enable it.");
+      return;
+    }
 
     setError("");
     setGoogleLoading(true);
@@ -142,7 +145,6 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
   }, [googleConfig, onGoogleLogin, navigate]);
 
 
-  const showGoogle = googleConfig?.enabled && googleConfig.clientId;
   const anyLoading = loading || googleLoading;
 
   return (
@@ -196,8 +198,7 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
         </button>
 
         {/* ─── Google Sign-In — compact glass icon ─── */}
-        {showGoogle && (
-          <div className="adm-google-glass-wrap">
+        <div className="adm-google-glass-wrap">
             <div className="adm-login-divider"><span>or continue with</span></div>
             <button
               type="button"
@@ -218,8 +219,7 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
                 </svg>
               )}
             </button>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
