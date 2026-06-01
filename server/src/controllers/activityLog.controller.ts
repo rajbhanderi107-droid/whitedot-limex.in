@@ -27,3 +27,9 @@ export async function deleteActivityLog(req: Request, res: Response) {
   await prisma.activityLog.delete({ where: { id } });
   return sendSuccess(res, null, "Activity entry deleted");
 }
+
+/** Delete every activity-log entry. SUPER_ADMIN only (enforced at the route). */
+export async function deleteAllActivityLogs(_req: Request, res: Response) {
+  const result = await prisma.activityLog.deleteMany({});
+  return sendSuccess(res, { deletedCount: result.count }, "Activity log deleted");
+}
