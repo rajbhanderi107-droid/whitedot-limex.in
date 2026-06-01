@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 /** `g` then <key> jumps to a section. */
 const GOTO: Record<string, { to: string; label: string }> = {
   d: { to: "/admin/dashboard", label: "Dashboard" },
+  g: { to: "/admin/google", label: "Google" },
   i: { to: "/admin/inquiries", label: "Inquiries" },
   q: { to: "/admin/quote-requests", label: "Quote Requests" },
   s: { to: "/admin/sample-requests", label: "Sample Requests" },

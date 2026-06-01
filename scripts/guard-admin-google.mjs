@@ -20,6 +20,20 @@ const checks = [
     ],
   },
   {
+    file: "src/admin/pages/DashboardPage.tsx",
+    required: [
+      'to="/admin/google"',
+      "Google dashboard",
+      "LineChart",
+    ],
+  },
+  {
+    file: "src/admin/components/KeyboardShortcuts.tsx",
+    required: [
+      'g: { to: "/admin/google", label: "Google" }',
+    ],
+  },
+  {
     file: "src/admin/pages/LoginPage.tsx",
     required: [
       "/api/auth/google/config",
