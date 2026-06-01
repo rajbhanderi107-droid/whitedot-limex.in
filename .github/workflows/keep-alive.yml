@@ -15,7 +15,7 @@ jobs:
         run: |
           STATUS=$(curl -sf -o /dev/null -w "%{http_code}" \
             --max-time 30 \
-            "https://whitedot-limex-backend.onrender.com/health")
+            "https://whitedot-backend.onrender.com/health")
           echo "Backend status: $STATUS"
           if [ "$STATUS" != "200" ]; then
             echo "Warning: backend returned $STATUS — may be cold starting"
