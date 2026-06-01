@@ -14,7 +14,7 @@ BRAIN_ID="f1357002-3bff-4013-8073-6751b988b88a"
 mkdir -p "$GLOBAL_DIR/notebooklm-memory/.wrapped"
 
 # ── 1. Copy hook scripts to ~/.claude/ ────────────────────────────────────────
-for hook in auto-wrapup-stop-hook.sh session-start-brain-hook.sh; do
+for hook in auto-wrapup-stop-hook.sh session-start-brain-hook.sh auto-brain-collect-hook.sh; do
   src="$HOOKS_SRC/$hook"
   dst="$GLOBAL_DIR/$hook"
   if [[ ! -f "$dst" ]] || ! cmp -s "$src" "$dst"; then
@@ -40,6 +40,13 @@ fi
 if ! jq -e '.hooks.Stop[]?.hooks[]? | select(.command | test("auto-wrapup"))' "$GLOBAL_SETTINGS" > /dev/null 2>&1; then
   tmp=$(mktemp)
   jq '.hooks.Stop = (.hooks.Stop // []) + [{"matcher":"","hooks":[{"type":"command","command":"~/.claude/auto-wrapup-stop-hook.sh"}]}]' \
+    "$GLOBAL_SETTINGS" > "$tmp" && mv "$tmp" "$GLOBAL_SETTINGS"
+fi
+
+# Add PostToolUse auto-collect hook if not already present.
+if ! jq -e '.hooks.PostToolUse[]?.hooks[]? | select(.command | test("auto-brain-collect"))' "$GLOBAL_SETTINGS" > /dev/null 2>&1; then
+  tmp=$(mktemp)
+  jq '.hooks.PostToolUse = (.hooks.PostToolUse // []) + [{"matcher":"Write|Edit","hooks":[{"type":"command","command":"~/.claude/auto-brain-collect-hook.sh"}]}]' \
     "$GLOBAL_SETTINGS" > "$tmp" && mv "$tmp" "$GLOBAL_SETTINGS"
 fi
 

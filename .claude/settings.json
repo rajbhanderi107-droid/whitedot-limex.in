@@ -13,6 +13,15 @@
             "statusMessage": "🔍 Scanning for bugs..."
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/auto-brain-collect-hook.sh"
+          }
+        ]
       }
     ],
     "SessionStart": [
