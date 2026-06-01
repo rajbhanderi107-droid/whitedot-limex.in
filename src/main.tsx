@@ -33,6 +33,12 @@ if (gaId) {
 
 const adminHosts = new Set(["admin.whitedotindia.in"]);
 const isAdminHost = adminHosts.has(window.location.hostname.toLowerCase());
+const PREVIEW_QUERY_KEY = "wd_preview";
+const PREVIEW_STORAGE_KEY = "wd_public_preview";
+const PUBLIC_LOADING_SETTING_KEY = "public_loading_enabled";
+const API_BASE =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? "http://localhost:4000" : "https://whitedot-limex-backend.onrender.com");
 
 if (isAdminHost && !window.location.hash.startsWith("#/admin")) {
   window.location.hash = "#/admin/login";
@@ -41,6 +47,62 @@ if (isAdminHost && !window.location.hash.startsWith("#/admin")) {
 // If the host or hash path selects admin, show the admin SPA.
 // Otherwise, render the public cinematic website unchanged.
 const isAdmin = isAdminHost || window.location.hash.startsWith("#/admin");
+
+function hasPublicPreviewAccess(): boolean {
+  const params = new URLSearchParams(window.location.search);
+  const previewValue = params.get(PREVIEW_QUERY_KEY);
+
+  try {
+    if (previewValue === "1") {
+      window.localStorage.setItem(PREVIEW_STORAGE_KEY, "1");
+      params.delete(PREVIEW_QUERY_KEY);
+      const cleanSearch = params.toString();
+      const cleanUrl = `${window.location.pathname}${cleanSearch ? `?${cleanSearch}` : ""}${window.location.hash}`;
+      window.history.replaceState(null, "", cleanUrl);
+      return true;
+    }
+
+    if (previewValue === "0") {
+      window.localStorage.removeItem(PREVIEW_STORAGE_KEY);
+      params.delete(PREVIEW_QUERY_KEY);
+      const cleanSearch = params.toString();
+      const cleanUrl = `${window.location.pathname}${cleanSearch ? `?${cleanSearch}` : ""}${window.location.hash}`;
+      window.history.replaceState(null, "", cleanUrl);
+      return false;
+    }
+
+    return window.localStorage.getItem(PREVIEW_STORAGE_KEY) === "1";
+  } catch {
+    return previewValue === "1";
+  }
+}
+
+async function shouldShowPublicLoading(): Promise<boolean> {
+  if (hasPublicPreviewAccess()) return false;
+
+  try {
+    const res = await fetch(`${API_BASE}/api/public/settings`, {
+      headers: { Accept: "application/json" },
+    });
+    if (!res.ok) return true;
+
+    const json = await res.json();
+    const settings = Array.isArray(json.data) ? json.data : [];
+    const loadingSetting = settings.find((setting: { key?: string }) => setting.key === PUBLIC_LOADING_SETTING_KEY);
+    return loadingSetting?.value !== "false";
+  } catch {
+    return true;
+  }
+}
+
+function showPublicLoadingPage() {
+  document.documentElement.style.background = "#181b19";
+  document.body.style.margin = "0";
+  document.body.style.background = "#181b19";
+  document.body.setAttribute("aria-busy", "true");
+  const loader = document.getElementById("agg-wd-loader");
+  if (loader) loader.setAttribute("data-maintenance", "");
+}
 
 // Dismiss the inline aggregation loader immediately for admin routes —
 // CinematicApp's useDismissBootLoader() won't run in admin mode.
@@ -77,6 +139,12 @@ if (isAdmin) {
     </StrictMode>,
   );
 } else {
+  shouldShowPublicLoading().then((showLoading) => {
+    if (showLoading) {
+      showPublicLoadingPage();
+      return;
+    }
+
   // ─── Public cinematic site ─────────────────────────
   // Static imports are fine here — this path needs everything.
   import("./cinematic/cinematic.css");
@@ -95,5 +163,6 @@ if (isAdmin) {
         </PremiumProvider>
       </StrictMode>,
     );
+  });
   });
 }

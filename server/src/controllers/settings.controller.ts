@@ -5,7 +5,24 @@ import { logActivity } from "../services/activity.service.js";
 import { paramId } from "../utils/params.js";
 import { AppError } from "../middleware/error.middleware.js";
 
+const PUBLIC_LOADING_SETTING = {
+  key: "public_loading_enabled",
+  value: "true",
+  type: "BOOLEAN" as const,
+  description: "Show the loading page to public visitors while admins preview and work behind it",
+};
+
+async function ensurePublicLoadingSetting() {
+  await prisma.websiteSetting.upsert({
+    where: { key: PUBLIC_LOADING_SETTING.key },
+    update: {},
+    create: PUBLIC_LOADING_SETTING,
+  });
+}
+
 export async function listSettings(_req: Request, res: Response) {
+  await ensurePublicLoadingSetting();
+
   const settings = await prisma.websiteSetting.findMany({
     orderBy: { key: "asc" },
     include: { updatedBy: { select: { id: true, name: true } } },

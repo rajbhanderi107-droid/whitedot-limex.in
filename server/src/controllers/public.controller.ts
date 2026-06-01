@@ -3,6 +3,21 @@ import { prisma } from "../config/prisma.js";
 import { sendSuccess } from "../utils/apiResponse.js";
 import { notifyAdmins } from "../services/notification.service.js";
 
+const PUBLIC_LOADING_SETTING = {
+  key: "public_loading_enabled",
+  value: "true",
+  type: "BOOLEAN" as const,
+  description: "Show the loading page to public visitors while admins preview and work behind it",
+};
+
+async function ensurePublicLoadingSetting() {
+  await prisma.websiteSetting.upsert({
+    where: { key: PUBLIC_LOADING_SETTING.key },
+    update: {},
+    create: PUBLIC_LOADING_SETTING,
+  });
+}
+
 export async function submitInquiry(req: Request, res: Response) {
   const inquiry = await prisma.inquiry.create({ data: req.body });
 
@@ -86,6 +101,8 @@ export async function submitCalculatorSubmission(req: Request, res: Response) {
 }
 
 export async function getWebsiteSettings(_req: Request, res: Response) {
+  await ensurePublicLoadingSetting();
+
   const settings = await prisma.websiteSetting.findMany({
     select: { key: true, value: true, type: true, updatedAt: true },
     orderBy: { key: "asc" },

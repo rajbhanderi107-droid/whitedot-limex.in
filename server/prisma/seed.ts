@@ -40,6 +40,12 @@ async function main() {
       { key: "company_address", value: "Gujarat, India", type: "TEXT", description: "Company address" },
       { key: "gst_number", value: "", type: "TEXT", description: "GST registration number" },
       { key: "brand_logo", value: "", type: "TEXT", description: "Website logo (uploaded image, applies across the site)" },
+      {
+        key: "public_loading_enabled",
+        value: "true",
+        type: "BOOLEAN",
+        description: "Show the loading page to public visitors while admins preview and work behind it",
+      },
     ],
     skipDuplicates: true,
   });
