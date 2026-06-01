@@ -53,6 +53,16 @@ services:
         value: https://api.groq.com/openai/v1
       - key: LLM_MODEL
         value: llama-3.3-70b-versatile
+      # Google Dashboard — service account credentials + property IDs.
+      # Set GOOGLE_SERVICE_ACCOUNT_JSON in the Render dashboard (paste the
+      # full JSON key as a single-line string). GA4 and GSC env vars can be
+      # set here or in the dashboard.
+      - key: GOOGLE_SERVICE_ACCOUNT_JSON
+        sync: false
+      - key: GA4_PROPERTY_ID
+        value: "539572382"
+      - key: GSC_SITE_URL
+        value: "https://whitedotindia.in/"
       - key: DATABASE_URL
         fromDatabase:
           name: whitedot-limex-postgres
