@@ -37,6 +37,28 @@ function DateCol(val: unknown) {
   return <span style={{ color: "var(--adm-muted)" }}>{val ? new Date(String(val)).toLocaleDateString() : "-"}</span>;
 }
 
+interface AdminUser {
+  name: string;
+  email: string;
+  role: string;
+}
+
+function AuthenticatedAdminLayout({
+  isAuthenticated,
+  user,
+  onLogout,
+}: {
+  isAuthenticated: boolean;
+  user: AdminUser | null;
+  onLogout: () => void;
+}) {
+  if (!isAuthenticated || !user) {
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  return <AdminLayout user={user} onLogout={onLogout} />;
+}
+
 export default function AdminApp() {
   const { user, loading, login, googleLogin, logout, isAuthenticated } = useAuth();
   const isSuperAdmin = user?.role === "SUPER_ADMIN";
@@ -61,11 +83,7 @@ export default function AdminApp() {
 
       <Route
         element={
-          isAuthenticated && user ? (
-            <AdminLayout user={user} onLogout={logout} />
-          ) : (
-            <Navigate to="/admin/login" replace />
-          )
+          <AuthenticatedAdminLayout isAuthenticated={isAuthenticated} user={user} onLogout={logout} />
         }
       >
         <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
