@@ -32,6 +32,19 @@
 
 ---
 
+## 🏛️ Architecture Decision Records
+
+| ADR | Decision | Reason |
+|-----|----------|--------|
+| ADR-001 | React 19 + TS + Vite + Three.js + GSAP + Framer | Modern, fast, cinematic 3D, TypeScript safety |
+| ADR-002 | GitHub Pages (FE) + Render Singapore (BE) | Cost-effective, performant for South Asia |
+| ADR-003 | Apple-level minimal design, dark mode | Client-ready, trustworthy for B2B + investors |
+| ADR-004 | Obsidian vault in docs/obsidian/ | All knowledge in version control, readable by Claude |
+| ADR-005 | Dark canvas #050706 (not brief's #F7F5F1) | Site is dark; brief was overridden by implementation |
+| ADR-006 | JWT in header, not cookie | Cross-origin GitHub Pages → Render blocks cookies |
+
+---
+
 ## 📚 Lessons from Failures
 
 | Incident | Root Cause | Lesson |
