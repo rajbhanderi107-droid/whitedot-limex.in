@@ -16,6 +16,11 @@ declare global {
             ux_mode: "popup";
             callback: (resp: { code?: string; error?: string }) => void;
           }): { requestCode(): void };
+          initTokenClient(config: {
+            client_id: string;
+            scope: string;
+            callback: (resp: { access_token?: string; error?: string }) => void;
+          }): { requestAccessToken(options?: { prompt?: string }): void };
         };
       };
     };
@@ -29,7 +34,7 @@ interface GoogleConfig {
 
 interface Props {
   onLogin: (email: string, password: string) => Promise<unknown>;
-  onGoogleLogin: (code: string) => Promise<unknown>;
+  onGoogleLogin: (accessToken: string) => Promise<unknown>;
 }
 
 /* ─── Load Google Identity Services script once ─── */
@@ -93,7 +98,7 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
   /* ─── Google OAuth popup login ─── */
   const handleGoogleLogin = useCallback(async () => {
     if (!googleConfig?.enabled || !googleConfig.clientId) {
-      setError("Google sign-in is not configured on the backend yet. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in Render to enable it.");
+      setError("Google sign-in needs GOOGLE_CLIENT_ID in Render. The server secret is optional for this recovery flow.");
       return;
     }
 
@@ -117,12 +122,11 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
       return;
     }
 
-    const client = window.google.accounts.oauth2.initCodeClient({
+    const client = window.google.accounts.oauth2.initTokenClient({
       client_id: googleConfig.clientId,
       scope: "email profile",
-      ux_mode: "popup",
       callback: async (response) => {
-        if (response.error || !response.code) {
+        if (response.error || !response.access_token) {
           setGoogleLoading(false);
           if (response.error !== "access_denied") {
             setError("Google sign-in was cancelled or failed.");
@@ -131,7 +135,7 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
         }
 
         try {
-          await onGoogleLogin(response.code);
+          await onGoogleLogin(response.access_token);
           navigate("/admin/dashboard");
         } catch (err: unknown) {
           setError(err instanceof Error ? err.message : "Google login failed");
@@ -141,7 +145,7 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
       },
     });
 
-    client.requestCode();
+    client.requestAccessToken({ prompt: "select_account" });
   }, [googleConfig, onGoogleLogin, navigate]);
 
 

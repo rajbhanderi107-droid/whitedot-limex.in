@@ -11,9 +11,8 @@ import { AppError } from "../middleware/error.middleware.js";
  *
  * Flow:
  *   1. Frontend opens Google consent screen
- *   2. Google redirects to frontend with `code`
- *   3. Frontend POSTs `{ code }` to this endpoint
- *   4. We exchange the code for tokens, get user profile
+ *   2. Frontend POSTs `{ accessToken }` to this endpoint
+ *   3. We verify the access token with Google userinfo
  *   5. Match email to an existing User row (no auto-registration — admin-only)
  *   6. Issue our JWT cookie + token
  */
@@ -75,9 +74,9 @@ async function getGoogleUserInfo(accessToken: string): Promise<GoogleUserInfo> {
 
 /**
  * POST /api/auth/google
- * Body: { code: string }
+ * Body: { accessToken: string } or legacy { code: string }
  *
- * Exchanges a Google auth code for a session.
+ * Exchanges a browser-issued Google access token for a session.
  * Only allows login for existing, active users — no auto-registration.
  */
 export async function googleLogin(req: Request, res: Response) {
@@ -85,16 +84,24 @@ export async function googleLogin(req: Request, res: Response) {
     throw new AppError(501, "GOOGLE_AUTH_DISABLED", "Google authentication is not configured");
   }
 
-  const { code } = req.body;
-  if (!code || typeof code !== "string") {
-    throw new AppError(400, "INVALID_CODE", "Authorization code is required");
+  const { accessToken, code } = req.body;
+  let googleUser: GoogleUserInfo;
+
+  if (typeof accessToken === "string" && accessToken.trim()) {
+    googleUser = await getGoogleUserInfo(accessToken);
+  } else if (typeof code === "string" && code.trim()) {
+    if (!env.googleCodeOAuthEnabled) {
+      throw new AppError(
+        501,
+        "GOOGLE_CODE_AUTH_DISABLED",
+        "Google code exchange requires GOOGLE_CLIENT_SECRET. Use the browser token flow or set the secret in Render."
+      );
+    }
+    const tokens = await exchangeCodeForTokens(code);
+    googleUser = await getGoogleUserInfo(tokens.access_token);
+  } else {
+    throw new AppError(400, "INVALID_GOOGLE_CREDENTIAL", "Google access token is required");
   }
-
-  // Exchange code for tokens
-  const tokens = await exchangeCodeForTokens(code);
-
-  // Get user profile from Google
-  const googleUser = await getGoogleUserInfo(tokens.access_token);
 
   if (googleUser.email_verified === false) {
     throw new AppError(401, "EMAIL_NOT_VERIFIED", "Google email is not verified");
@@ -156,5 +163,6 @@ export async function googleConfig(_req: Request, res: Response) {
   return sendSuccess(res, {
     enabled: true,
     clientId: env.GOOGLE_CLIENT_ID,
+    flow: "token",
   });
 }

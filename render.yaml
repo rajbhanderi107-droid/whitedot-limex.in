@@ -22,8 +22,8 @@ services:
         sync: false
       - key: ADMIN_SEED_PASSWORD
         sync: false
-      # Google OAuth for the admin-panel Google sign-in button. Values are set
-      # in the Render dashboard; never commit GOOGLE_CLIENT_SECRET.
+      # Google admin sign-in. GOOGLE_CLIENT_ID is enough for the browser token
+      # flow; GOOGLE_CLIENT_SECRET is optional for the legacy code flow.
       - key: GOOGLE_CLIENT_ID
         sync: false
       - key: GOOGLE_CLIENT_SECRET

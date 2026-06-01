@@ -47,9 +47,9 @@ export function useAuth() {
     return res;
   };
 
-  /** Google OAuth: exchange a Google auth code for a session */
-  const googleLogin = async (code: string) => {
-    const res = await api.post<LoginResponse>("/api/auth/google", { code });
+  /** Google OAuth: exchange a browser-issued Google access token for a session. */
+  const googleLogin = async (accessToken: string) => {
+    const res = await api.post<LoginResponse>("/api/auth/google", { accessToken });
     if (res.data.token) {
       setToken(res.data.token);
     }
