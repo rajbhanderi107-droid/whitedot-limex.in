@@ -44,3 +44,18 @@ export const authLimiter = rateLimit({
     },
   },
 });
+
+/** Admin endpoints — reasonable for dashboard use, protects against abuse */
+export const adminLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000,   // 1 minute
+  max: 120,                    // 120 req/min — covers rapid page navigation
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: {
+      code: "RATE_LIMIT_EXCEEDED",
+      message: "Too many requests. Please slow down.",
+    },
+  },
+});

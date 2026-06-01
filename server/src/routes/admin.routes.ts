@@ -14,6 +14,7 @@ import * as settings from "../controllers/settings.controller.js";
 import * as users from "../controllers/user.controller.js";
 import * as notifications from "../controllers/notification.controller.js";
 import * as activityLog from "../controllers/activityLog.controller.js";
+import * as google from "../controllers/google.controller.js";
 import {
   updateInquirySchema,
   updateQuoteRequestSchema,
@@ -37,6 +38,9 @@ router.use(requireAuth);
 
 // ─── Dashboard ───────────────────────────────────
 router.get("/dashboard", asyncHandler(dashboard.getDashboard));
+
+// ─── Google (all-in-one overview) ────────────────
+router.get("/google/overview", asyncHandler(google.getGoogleOverview));
 
 // ─── Inquiries ───────────────────────────────────
 router.get("/inquiries", asyncHandler(inquiries.listInquiries));
