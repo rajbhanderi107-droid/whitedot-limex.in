@@ -13,6 +13,12 @@
 5. Every system killable via env var.
 6. Secrets in Render env only. Never in git.
 
+## AI Brain Integration (2026-06-01)
+- All 37 docs from Obsidian vault + brain docs are synced to NotebookLM "My AI Brain"
+- Auto-collect hook pushes any doc edit to the Brain in real-time
+- Session summaries auto-saved on every Claude Code session end
+- Query past work: `notebooklm ask "question"` from any session
+
 ## Drop Files Here
 - Post-mortem notes
 - Architecture reviews
