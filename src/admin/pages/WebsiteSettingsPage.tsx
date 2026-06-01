@@ -63,6 +63,10 @@ function errorMessage(error: unknown) {
   return "Something went wrong.";
 }
 
+function isBooleanSetting(setting: WebsiteSetting) {
+  return setting.type === "BOOLEAN";
+}
+
 function inputTypeFor(setting: WebsiteSetting) {
   if (setting.type === "EMAIL") return "email";
   if (setting.key.includes("phone") || setting.key.includes("whatsapp")) return "tel";
@@ -193,15 +197,14 @@ export function WebsiteSettingsPage() {
     }
   };
 
-  const saveSetting = async (setting: WebsiteSetting) => {
+  const saveSetting = async (setting: WebsiteSetting, nextValue = drafts[setting.key] ?? "") => {
     setSavingKey(setting.key);
     setError("");
     setNotice("");
     try {
-      const value = drafts[setting.key] ?? "";
       const res = await api.patch<WebsiteSetting>(
         `/api/website-settings/${encodeURIComponent(setting.key)}`,
-        { value },
+        { value: nextValue },
       );
       setSettings((current) =>
         current.map((item) => (item.key === setting.key ? { ...item, ...res.data } : item)),
@@ -333,7 +336,25 @@ export function WebsiteSettingsPage() {
 
                   <label className="adm-setting-control">
                     <span className="adm-sr-only">{labelFromKey(setting.key)}</span>
-                    {needsTextarea(setting) ? (
+                    {isBooleanSetting(setting) ? (
+                      <button
+                        className={`adm-toggle ${value === "true" ? "is-on" : ""}`}
+                        type="button"
+                        role="switch"
+                        aria-checked={value === "true"}
+                        disabled={savingKey === setting.key}
+                        onClick={() => {
+                          const nextValue = value === "true" ? "false" : "true";
+                          setDrafts((current) => ({ ...current, [setting.key]: nextValue }));
+                          void saveSetting(setting, nextValue);
+                        }}
+                      >
+                        <span className="adm-toggle-track" aria-hidden="true">
+                          <span className="adm-toggle-thumb" />
+                        </span>
+                        <span className="adm-toggle-text">{value === "true" ? "Loading page on" : "Loading page off"}</span>
+                      </button>
+                    ) : needsTextarea(setting) ? (
                       <textarea
                         className="adm-input adm-textarea"
                         value={value}
@@ -353,15 +374,19 @@ export function WebsiteSettingsPage() {
                     )}
                   </label>
 
-                  <button
-                    className="adm-btn adm-btn-primary"
-                    type="button"
-                    disabled={!dirty || savingKey === setting.key}
-                    onClick={() => saveSetting(setting)}
-                  >
-                    <Save size={15} />
-                    {savingKey === setting.key ? "Saving..." : "Save"}
-                  </button>
+                  {isBooleanSetting(setting) ? (
+                    <span className="adm-setting-state">{savingKey === setting.key ? "Saving..." : "Auto saved"}</span>
+                  ) : (
+                    <button
+                      className="adm-btn adm-btn-primary"
+                      type="button"
+                      disabled={!dirty || savingKey === setting.key}
+                      onClick={() => saveSetting(setting)}
+                    >
+                      <Save size={15} />
+                      {savingKey === setting.key ? "Saving..." : "Save"}
+                    </button>
+                  )}
                 </section>
               );
             })}
