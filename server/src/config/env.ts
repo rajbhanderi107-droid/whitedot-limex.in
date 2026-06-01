@@ -48,6 +48,9 @@ export const env = {
   },
 
   get googleOAuthEnabled() {
+    return Boolean(this.GOOGLE_CLIENT_ID);
+  },
+  get googleCodeOAuthEnabled() {
     return Boolean(this.GOOGLE_CLIENT_ID && this.GOOGLE_CLIENT_SECRET);
   },
 } as const;

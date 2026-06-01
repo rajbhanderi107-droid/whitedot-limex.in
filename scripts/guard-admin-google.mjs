@@ -40,7 +40,8 @@ const checks = [
       "handleGoogleLogin",
       "Sign in with Google",
       "GOOGLE_CLIENT_ID",
-      "GOOGLE_CLIENT_SECRET",
+      "initTokenClient",
+      "accessToken",
     ],
   },
   {
@@ -56,6 +57,8 @@ const checks = [
       "googleConfig",
       "googleLogin",
       "GOOGLE_CLIENT_ID",
+      "googleCodeOAuthEnabled",
+      "accessToken",
     ],
   },
   {
