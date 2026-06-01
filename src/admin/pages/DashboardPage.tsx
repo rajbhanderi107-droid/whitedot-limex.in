@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Settings, Users, LogOut, Trash2 } from "lucide-react";
+import { LineChart, Settings, Users, LogOut, Trash2 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth.js";
 import { api } from "../lib/api.js";
 
@@ -100,6 +100,13 @@ export function DashboardPage() {
       </div>
 
       <div className="adm-action-grid">
+        <Link className="adm-action-card" to="/admin/google">
+          <LineChart size={18} />
+          <span>
+            <strong>Google dashboard</strong>
+            <small>Review Search, Analytics, logins, and Ads in one place.</small>
+          </span>
+        </Link>
         <Link className="adm-action-card" to="/admin/users">
           <Users size={18} />
           <span>
