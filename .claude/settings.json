@@ -1,0 +1,18 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$raw=[Console]::In.ReadToEnd();try{$d=$raw|ConvertFrom-Json}catch{exit 0};$r=$d.tool_response;$hasErr=$false;if($r){if($r.exit_code -and $r.exit_code -ne 0){$hasErr=$true}elseif($r.exitCode -and $r.exitCode -ne 0){$hasErr=$true}elseif($r.stderr -and $r.stderr.Length -gt 0){$hasErr=$true}};if($hasErr){$cmd='';if($d.tool_input){$cmd=if($d.tool_input.command){$d.tool_input.command}else{$d.tool_input.script}};$err=if($r.stderr){$r.stderr}else{$r.output};$msg='[WHITEDOT-AUTO-DEBUG] Command failed: '+$cmd.Substring(0,[Math]::Min(300,$cmd.Length))+'`nError: '+$err.Substring(0,[Math]::Min(500,$err.Length))+'`nAuto-routing to debug-monster. Investigate root cause, trace the failure, find edge cases, propose the most robust fix.';$out=[PSCustomObject]@{hookSpecificOutput=[PSCustomObject]@{hookEventName='PostToolUse';additionalContext=$msg}};Write-Output ($out|ConvertTo-Json -Depth 5)}",
+            "shell": "powershell",
+            "timeout": 10,
+            "statusMessage": "🔍 Scanning for bugs..."
+          }
+        ]
+      }
+    ]
+  }
+}
