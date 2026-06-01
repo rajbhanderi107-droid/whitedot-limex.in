@@ -22,6 +22,12 @@ services:
         sync: false
       - key: ADMIN_SEED_PASSWORD
         sync: false
+      # Google OAuth for the admin-panel Google sign-in button. Values are set
+      # in the Render dashboard; never commit GOOGLE_CLIENT_SECRET.
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
       # SMTP for password-reset emails. Secrets are set in the Render dashboard
       # (sync: false). If HOST/USER/PASS are left blank, reset links are logged
       # to the server console instead of being emailed — the flow still works.

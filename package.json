@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "tsc -b && vite build",
+    "build": "npm run guard:admin-google && tsc -b && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "backend:dev": "npm --prefix server run dev",
     "backend:build": "npm --prefix server run build",
@@ -20,7 +20,8 @@
     "remove:god:wd": "node scripts/remove-god-wd.mjs",
     "remove:assistant:wd": "node scripts/remove-assistant-wd.mjs",
     "remove:allplan": "node scripts/remove-allplan.mjs",
-    "wire:higgsfield:loop": "node scripts/wire-higgsfield-loop.mjs"
+    "wire:higgsfield:loop": "node scripts/wire-higgsfield-loop.mjs",
+    "guard:admin-google": "node scripts/guard-admin-google.mjs"
   },
   "dependencies": {
     "@react-spring/web": "^10.0.3",

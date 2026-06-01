@@ -15,6 +15,7 @@ interface Props {
 
 const navItems = [
   { to: "/admin/dashboard", icon: Home, label: "Dashboard" },
+  { to: "/admin/google", icon: LineChart, label: "Google" },
   { to: "/admin/inquiries", icon: MessageSquare, label: "Inquiries" },
   { to: "/admin/quote-requests", icon: ClipboardList, label: "Quote Requests" },
   { to: "/admin/sample-requests", icon: Package, label: "Sample Requests" },
@@ -25,7 +26,6 @@ const navItems = [
 ];
 
 const mgmtItems = [
-  { to: "/admin/google", icon: LineChart, label: "Google" },
   { to: "/admin/settings", icon: Settings, label: "Settings" },
   { to: "/admin/users", icon: Users, label: "Users" },
   { to: "/admin/activity-log", icon: Activity, label: "Activity Log" },
