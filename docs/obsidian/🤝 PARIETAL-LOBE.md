@@ -79,4 +79,21 @@ LLM_API_KEY         → Groq
 
 ---
 
+---
+
+## 🤝 Client Notes
+
+- Sister company of Sevendot
+- Authorized LIMEX marketing and sales
+- Territory: Gujarat, Rajasthan, Daman, Diu, Silvassa
+- LIMEX = limestone-based plastic/paper alternative by TBM Japan
+
+### Presentation Requirements
+> Add requirements from client presentations here
+
+### Client Feedback
+> Add client feedback here after meetings
+
+---
+
 ← [[🔊 TEMPORAL-LOBE]] | → [[⚙️ CEREBELLUM]]

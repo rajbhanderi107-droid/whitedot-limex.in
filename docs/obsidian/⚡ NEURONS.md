@@ -16,20 +16,30 @@
 
 ## 🧪 Next Build Tasks
 
-### High Priority
+### Priority 1 — Core Systems (In Progress)
 - [ ] Mineral Sound System — 4 audio cues (`src/sound-wd/`)
-- [ ] Continuity Layer — offline overlay (`src/continuity-wd/`)
+- [ ] Continuity Layer — offline overlay + form persistence (`src/continuity-wd/`)
 - [ ] Google Dashboard admin page (`/admin/google`)
 
-### Medium Priority
+### Priority 2 — Forms & Features
 - [ ] Quote form frontend (backend endpoints exist)
 - [ ] Sample request form
 - [ ] Calculator frontend
+- [ ] Premium hero section
+- [ ] LIMEX material storytelling section
+- [ ] Mobile responsiveness audit
+- [ ] Animation optimization
 
-### Low Priority
+### Priority 3 — Business & Growth
+- [ ] Adobe asset integration
+- [ ] SEO metadata improvements
+- [ ] Analytics integration (GA4)
+- [ ] Multi-language (EN/GU/HI)
 - [ ] Self-host Satoshi + Boska fonts (currently CDN)
 - [ ] Service worker (stale-while-revalidate)
 - [ ] LIMEX spec sheet PDFs in SW cache
+- [ ] 3D LIMEX material model enhancements (Three.js)
+- [ ] Interactive material comparison
 
 ---
 

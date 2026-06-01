@@ -16,6 +16,15 @@
 
 ---
 
+## 🌍 Territory & Context
+
+- **Company:** WhiteDot LLP (sister of Sevendot)
+- **Territory:** Gujarat, Rajasthan, Daman, Diu, Silvassa
+- **LIMEX story:** CO2 → Calcium Carbonate → LIMEX → Plastic/Paper Replacement → FMCG → Sustainability → Premium Material Innovation
+- **Audience:** Real clients, investors, industry partners, civil engineering companies, FMCG brands
+
+---
+
 ## 🗺️ Roadmap
 
 ### ✅ Done

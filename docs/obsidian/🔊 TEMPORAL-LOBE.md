@@ -45,4 +45,20 @@
 
 ---
 
+---
+
+## 📋 Session / Meeting Notes
+
+### Template
+```
+### Session — [Date]
+Topics:
+Decisions:
+Next Steps:
+```
+
+> Add session notes here
+
+---
+
 ← [[👁️ OCCIPITAL-LOBE]] | → [[🤝 PARIETAL-LOBE]]
