@@ -2,7 +2,7 @@
 
 This WhiteDot project is connected to the Common AI Brain located at:
 
-`C:/Users/rbhan/whitedot-limex.in/docs/00_COMMON_AI_BRAIN/`
+`C:/Users/rbhan/claude-brain/00_COMMON_AI_BRAIN/`
 
 Before working on WhiteDot, Codex must read:
 
