@@ -60,6 +60,24 @@ export function SiteFooter() {
           <span className="cine-footer-note">TBM Co., Ltd. — Japan · inventor &amp; manufacturer</span>
           <span className="cine-footer-note">Seven Dot — authorized distributor</span>
           <span className="cine-footer-note">White Dot LLP — marketing &amp; sales</span>
+          <div
+            className="cine-footer-marks"
+            aria-label="LIMEX material by TBM Co., Ltd., Japan"
+            data-no-wordmark
+          >
+            <img
+              src={`${import.meta.env.BASE_URL}assets/tbm-logo.png`}
+              alt="TBM Co., Ltd."
+              loading="lazy"
+              decoding="async"
+            />
+            <img
+              src={`${import.meta.env.BASE_URL}assets/limex-wordmark.png`}
+              alt="LIMEX material"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
         </div>
       </div>
 

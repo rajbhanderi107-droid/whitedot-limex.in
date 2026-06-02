@@ -3,9 +3,15 @@ import { createRoot } from "react-dom/client";
 import { HashRouter } from "react-router-dom";
 import "./brand-fonts.css";
 import { initBrandLogo } from "./brand";
+import { initBrandWordmark } from "./brand-wordmark";
 
 // Apply any Super-Admin-configured logo as early as possible.
 initBrandLogo();
+
+// Render every LIMEX / TBM brand word in the Cinzel wordmark font everywhere,
+// including copy stored as plain strings in *.ts data files. Runs after mount
+// and re-applies on DOM changes; skips inputs, code blocks, and already-styled words.
+initBrandWordmark();
 
 // Retire any previously-registered service worker (from the prior site) so it
 // cannot serve stale cached content over the new experience.

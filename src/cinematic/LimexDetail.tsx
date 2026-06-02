@@ -139,7 +139,7 @@ export function LimexDetail() {
           </motion.span>
           <motion.h2 variants={rise(0.05)}>More than a filler.</motion.h2>
           <motion.p className="lead" variants={rise(0.12)}>
-            LIMEX material is developed as a CO₂-based alternative that can reduce
+            <span className="wd-limex">LIMEX</span> material is developed as a CO₂-based alternative that can reduce
             plastic consumption while supporting selected technical properties. It is not positioned
             as a basic filler added only for weight.
           </motion.p>
@@ -206,7 +206,7 @@ export function LimexDetail() {
           Runs through conventional plastic processing — after proper blending.
         </h3>
         <p className="cine-detail-sub">
-          Subject to grade, dosage, machine condition and product requirement, LIMEX is designed to
+          Subject to grade, dosage, machine condition and product requirement, <span className="wd-limex">LIMEX</span> is designed to
           process on existing lines.
         </p>
         <motion.div

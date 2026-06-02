@@ -271,7 +271,7 @@ export function ApplicationShowcase({ industry, triggerRef, onClose }: ShowcaseP
                   Industry Application
                 </span>
                 <h3 id="ia-dialog-title" className="ia-dialog-title">
-                  LIMEX for {industry.name}
+                  <span className="wd-limex">LIMEX</span> for {industry.name}
                 </h3>
               </div>
               <button

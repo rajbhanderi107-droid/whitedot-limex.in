@@ -15,7 +15,7 @@ export function BornStatic() {
       <div className="born-static-inner">
         <HiggsfieldHero className="born-static-media" />
         <span className="born-eyebrow">Material Origin</span>
-        <h2 className="born-static-title">Born of LIMEX</h2>
+        <h2 className="born-static-title">Born of <span className="wd-limex">LIMEX</span></h2>
         <ol className="born-timeline" aria-label="LIMEX material journey">
           {ROUTES.map((route) => (
             <li key={route.id} className="born-timeline-item">
