@@ -222,7 +222,7 @@ select.adm-input { cursor: pointer; }
 /* ─── Login ──────────────────────────── */
 .adm-login {
   display: flex; align-items: center; justify-content: center; min-height: 100vh;
-  background: var(--adm-bg); padding: 1rem;
+  background: var(--adm-bg); color: var(--adm-text); padding: 1rem;
 }
 .adm-login-card {
   width: 100%; max-width: 380px; background: var(--adm-surface);
@@ -236,7 +236,7 @@ select.adm-input { cursor: pointer; }
   width: 40px; height: 2px; border-radius: 0 0 2px 2px;
   background: linear-gradient(90deg, transparent, rgba(154,168,147,.6), transparent);
 }
-.adm-login-card h1 { font-size: 1.3rem; margin: 0 0 .3rem; text-align: center; }
+.adm-login-card h1 { color: var(--adm-text); font-size: 1.3rem; margin: 0 0 .3rem; text-align: center; }
 .adm-login-card p { color: var(--adm-muted); font-size: .82rem; text-align: center; margin: 0 0 1.5rem; }
 .adm-login-card .adm-form-group { margin-bottom: .8rem; }
 .adm-login-error { background: rgba(214,88,88,.1); border: 1px solid var(--adm-danger); border-radius: 6px; padding: .5rem .8rem; font-size: .82rem; color: var(--adm-danger); margin-bottom: .8rem; }
