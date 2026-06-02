@@ -60,11 +60,6 @@ function hasPublicPreviewAccess(): boolean {
 
   try {
     if (previewValue === "1") {
-      window.localStorage.setItem(PREVIEW_STORAGE_KEY, "1");
-      params.delete(PREVIEW_QUERY_KEY);
-      const cleanSearch = params.toString();
-      const cleanUrl = `${window.location.pathname}${cleanSearch ? `?${cleanSearch}` : ""}${window.location.hash}`;
-      window.history.replaceState(null, "", cleanUrl);
       return true;
     }
 
@@ -77,7 +72,8 @@ function hasPublicPreviewAccess(): boolean {
       return false;
     }
 
-    return window.localStorage.getItem(PREVIEW_STORAGE_KEY) === "1";
+    window.localStorage.removeItem(PREVIEW_STORAGE_KEY);
+    return false;
   } catch {
     return previewValue === "1";
   }
