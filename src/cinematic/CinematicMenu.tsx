@@ -147,7 +147,7 @@ export function CinematicMenu({ open, onClose, whatsappHref }: CinematicMenuProp
             </div>
             <div className="cine-menu-brand-tag" aria-hidden="true">
               <span className="cine-menu-brand-name">White Dot <small>LLP</small></span>
-              <p className="cine-menu-brand-sub">Authorized LIMEX Marketing &amp; Sales</p>
+              <p className="cine-menu-brand-sub">Authorized <span className="wd-limex">LIMEX</span> Marketing &amp; Sales</p>
             </div>
           </motion.div>
 

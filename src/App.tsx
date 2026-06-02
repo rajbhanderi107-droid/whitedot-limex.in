@@ -259,7 +259,7 @@ function App() {
           <div className="hero-actions">
             <a className="button primary" href={whatsappHref} target="_blank" rel="noreferrer">
               <MessageCircle size={20} />
-              Start a LIMEX inquiry
+              Start a <span className="wd-limex">LIMEX</span> inquiry
             </a>
             <a className="button secondary" href="#authorization">
               View authorization

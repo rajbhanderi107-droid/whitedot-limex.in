@@ -132,7 +132,7 @@ export function MaterialCore() {
               // Default placeholder — the production-ready "Coming Soon" plate
               <div className="cine-showcase-placeholder" role="img" aria-label="Whitedot LIMEX Launch Film — coming soon">
                 <span className="cine-showcase-placeholder-line" aria-hidden="true" />
-                <p className="cine-showcase-placeholder-title">Whitedot LIMEX Launch Film</p>
+                <p className="cine-showcase-placeholder-title">Whitedot <span className="wd-limex">LIMEX</span> Launch Film</p>
                 <p className="cine-showcase-placeholder-status">Coming Soon</p>
                 <span className="cine-showcase-placeholder-line" aria-hidden="true" />
               </div>

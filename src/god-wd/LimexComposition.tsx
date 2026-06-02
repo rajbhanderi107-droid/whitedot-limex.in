@@ -17,9 +17,9 @@ export function LimexComposition() {
         Inside the material
       </div>
       <div className="split-heading">
-        <h2>LIMEX is engineered around limestone, not padded with it.</h2>
+        <h2><span className="wd-limex">LIMEX</span> is engineered around limestone, not padded with it.</h2>
         <p>
-          A LIMEX pellet is more than half inorganic limestone (CaCO₃), compounded with a polymer
+          A <span className="wd-limex">LIMEX</span> pellet is more than half inorganic limestone (CaCO₃), compounded with a polymer
           binder so it runs on existing plastic machinery. That is the difference between an
           engineered material and a weight-adding filler.
         </p>

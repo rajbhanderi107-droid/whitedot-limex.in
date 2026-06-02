@@ -61,7 +61,7 @@ export function DashboardPage() {
 
   if (loading) return (
     <>
-      <div className="adm-header"><h1>Dashboard</h1><p>WhiteDot LIMEX business overview</p></div>
+      <div className="adm-header"><h1>Dashboard</h1><p>WhiteDot <span className="wd-limex">LIMEX</span> business overview</p></div>
       <div className="adm-skeleton-stats">
         {Array.from({ length: 10 }, (_, i) => <div key={i} className="adm-skeleton adm-skeleton-stat" />)}
       </div>
@@ -87,7 +87,7 @@ export function DashboardPage() {
     <>
       <div className="adm-header">
         <h1>Dashboard</h1>
-        <p>WhiteDot LIMEX business overview</p>
+        <p>WhiteDot <span className="wd-limex">LIMEX</span> business overview</p>
       </div>
 
       <div className="adm-stats">

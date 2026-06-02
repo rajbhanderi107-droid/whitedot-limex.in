@@ -85,12 +85,12 @@ export function LimexComparison() {
     <section className="section god-wd-compare" id="limex-vs-fillers" aria-label="LIMEX compared with local CaCO3 fillers">
       <div className="section-kicker">
         <Split size={18} />
-        LIMEX material vs local fillers
+        <span className="wd-limex">LIMEX</span> material vs local fillers
       </div>
       <div className="split-heading">
-        <h2>Why LIMEX is an engineered material, not a cheap filler.</h2>
+        <h2>Why <span className="wd-limex">LIMEX</span> is an engineered material, not a cheap filler.</h2>
         <p>
-          Local CaCO₃ fillers add weight. LIMEX is engineered to replace plastic while keeping
+          Local CaCO₃ fillers add weight. <span className="wd-limex">LIMEX</span> is engineered to replace plastic while keeping
           the way the polymer processes and performs. The differences below are drawn from
           White Dot LLP&rsquo;s technical comparison and should be confirmed per grade and trial.
         </p>
@@ -149,7 +149,7 @@ export function LimexComparison() {
       <div className="god-wd-compare-head" aria-hidden="true">
         <span className="god-wd-col-aspect">Aspect</span>
         <span className="god-wd-col-limex">
-          <ShieldCheck size={15} /> LIMEX (TBM)
+          <ShieldCheck size={15} /> <span className="wd-limex">LIMEX</span> (<span className="wd-tbm">TBM</span>)
         </span>
         <span className="god-wd-col-local">Local filler</span>
       </div>
@@ -176,7 +176,7 @@ export function LimexComparison() {
                 </div>
                 <div className="god-wd-row-limex">
                   <span className="god-wd-tag god-wd-tag-limex" aria-hidden="true">
-                    LIMEX
+                    <span className="wd-limex">LIMEX</span>
                   </span>
                   <p>{row.limex}</p>
                 </div>
@@ -214,7 +214,7 @@ export function LimexComparison() {
           <p className="god-wd-verdict-note">{verdict.note}</p>
         </div>
         <a className="god-wd-verdict-cta" href="#contact">
-          Plan a LIMEX trial
+          Plan a <span className="wd-limex">LIMEX</span> trial
           <ArrowRight size={18} aria-hidden="true" />
         </a>
       </motion.div>
