@@ -235,7 +235,7 @@ function HeroProofPanel() {
     >
       <span className="cine-hero-proof-kicker">Material brief</span>
       <div className="cine-hero-proof-grid">
-        <StatCounter value={78} suffix="%" className="wd-stat-num" aria-label="78% calcium carbonate content" />
+        <StatCounter value={50} suffix="%" className="wd-stat-num" aria-label="50% calcium carbonate content" />
         <span>calcium carbonate content</span>
         <strong>14d</strong>
         <span>trial sample target window</span>
@@ -405,7 +405,7 @@ export default function CinematicApp() {
             </a>
           </motion.div>
           <motion.div className="cine-hero-eco" {...rise(0.72)} aria-label="Sustainability signals">
-            <span>78%+ calcium carbonate, less plastic</span>
+            <span>50%+ calcium carbonate, less plastic</span>
             <span>Lower carbon footprint</span>
             <span>Runs on existing production lines</span>
           </motion.div>
