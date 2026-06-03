@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState, type RefObject } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { StatCounter } from "./StatCounter";
-import { Menu, Send, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { CinematicMenu } from "./CinematicMenu";
 import { SupplyFlow } from "./SupplyFlow";
 import { MaterialIntelligence } from "./MaterialIntelligence";
@@ -235,53 +235,13 @@ function HeroProofPanel() {
     >
       <span className="cine-hero-proof-kicker">Material brief</span>
       <div className="cine-hero-proof-grid">
-        <StatCounter value={50} suffix="%+" className="wd-stat-num" aria-label="50% plus calcium carbonate content" />
+        <strong className="wd-stat-num" aria-label="50% plus calcium carbonate content">50%+</strong>
         <span>calcium carbonate content</span>
         <strong>14d</strong>
         <span>trial sample target window</span>
         <strong className="wd-stat-num" aria-label="4 authorized regions served">4</strong>
         <span>authorized regions served</span>
       </div>
-    </motion.aside>
-  );
-}
-
-function HeroInquiryCard({ whatsappHref }: { whatsappHref: string }) {
-  return (
-    <motion.aside
-      className="cine-hero-inquiry"
-      initial={{ opacity: 0, y: 28, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.9, delay: 0.96, ease: [0.22, 1, 0.36, 1] }}
-      aria-label="Quick LIMEX inquiry"
-    >
-      <span className="cine-hero-inquiry-kicker">Start a material brief</span>
-      <div className="cine-hero-inquiry-grid">
-        <label>
-          <span>Your name</span>
-          <input name="name" autoComplete="name" />
-        </label>
-        <label>
-          <span>Email address</span>
-          <input name="email" type="email" autoComplete="email" />
-        </label>
-        <label>
-          <span>Phone number</span>
-          <input name="phone" type="tel" autoComplete="tel" />
-        </label>
-        <label>
-          <span>Company</span>
-          <input name="company" autoComplete="organization" />
-        </label>
-        <label className="is-wide">
-          <span>Product / application</span>
-          <textarea name="message" rows={3} />
-        </label>
-      </div>
-      <a className="cine-hero-inquiry-submit" href={whatsappHref} target="_blank" rel="noreferrer">
-        Submit inquiry
-        <Send size={15} aria-hidden="true" />
-      </a>
     </motion.aside>
   );
 }
@@ -451,7 +411,6 @@ export default function CinematicApp() {
           </motion.div>
         </div>
         {premium && !reduce && <HeroProofPanel />}
-        {premium && !reduce && <HeroInquiryCard whatsappHref={whatsappHref} />}
         <span className="cine-scroll-hint">Scroll</span>
       </section>
 
