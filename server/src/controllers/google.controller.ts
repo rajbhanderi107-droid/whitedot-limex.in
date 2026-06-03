@@ -125,14 +125,24 @@ async function buildAnalyticsSource(): Promise<GoogleSource> {
 async function buildSearchConsoleSource(): Promise<GoogleSource> {
   const siteUrl = process.env.GSC_SITE_URL;
   const consoleUrl = "https://search.google.com/search-console";
-  if (!googleCredsAvailable() || !has("GSC_SITE_URL")) {
+
+  // Check either OAuth refresh token OR service account creds are available
+  const hasOAuthToken = Boolean(
+    process.env.GSC_OAUTH_REFRESH_TOKEN &&
+    process.env.GSC_OAUTH_CLIENT_ID &&
+    process.env.GSC_OAUTH_CLIENT_SECRET
+  );
+  const hasServiceAccount = googleCredsAvailable();
+
+  if ((!hasOAuthToken && !hasServiceAccount) || !has("GSC_SITE_URL")) {
     return disconnectedSource(
       "search-console",
       "Search Console",
       consoleUrl,
-      "Set GSC_SITE_URL (e.g. https://whitedot-limex.in/ or sc-domain:whitedot-limex.in) + GOOGLE_SERVICE_ACCOUNT_JSON, then add that service-account email as a user in Search Console.",
+      "Set GSC_SITE_URL + either GSC_OAUTH_REFRESH_TOKEN (run save_gsc_token.cjs) or GOOGLE_SERVICE_ACCOUNT_JSON to connect.",
     );
   }
+
   try {
     const r = await fetchSearchConsole(siteUrl!);
     return {

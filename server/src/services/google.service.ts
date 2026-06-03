@@ -200,6 +200,21 @@ export interface GscResult {
 }
 
 function gscAuth() {
+  // Option 1: OAuth2 refresh token (preferred — set GSC_OAUTH_REFRESH_TOKEN in .env)
+  if (
+    process.env.GSC_OAUTH_REFRESH_TOKEN &&
+    process.env.GSC_OAUTH_CLIENT_ID &&
+    process.env.GSC_OAUTH_CLIENT_SECRET
+  ) {
+    const oauthClient = new google.auth.OAuth2(
+      process.env.GSC_OAUTH_CLIENT_ID,
+      process.env.GSC_OAUTH_CLIENT_SECRET,
+    );
+    oauthClient.setCredentials({ refresh_token: process.env.GSC_OAUTH_REFRESH_TOKEN });
+    return oauthClient;
+  }
+
+  // Option 2: Service account (requires SA email added as GSC user)
   const creds = getCredentials();
   if (creds) {
     return new google.auth.JWT({
@@ -210,6 +225,7 @@ function gscAuth() {
   }
   return new google.auth.GoogleAuth({ scopes: [GSC_SCOPE] });
 }
+
 
 export async function fetchSearchConsole(siteUrl: string): Promise<GscResult> {
   const auth = gscAuth();
