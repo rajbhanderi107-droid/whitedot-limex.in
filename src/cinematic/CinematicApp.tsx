@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState, type RefObject } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { StatCounter } from "./StatCounter";
-import { Menu, X } from "lucide-react";
+import { Menu, Send, X } from "lucide-react";
 import { CinematicMenu } from "./CinematicMenu";
 import { SupplyFlow } from "./SupplyFlow";
 import { MaterialIntelligence } from "./MaterialIntelligence";
@@ -246,6 +246,46 @@ function HeroProofPanel() {
   );
 }
 
+function HeroInquiryCard({ whatsappHref }: { whatsappHref: string }) {
+  return (
+    <motion.aside
+      className="cine-hero-inquiry"
+      initial={{ opacity: 0, y: 28, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.9, delay: 0.96, ease: [0.22, 1, 0.36, 1] }}
+      aria-label="Quick LIMEX inquiry"
+    >
+      <span className="cine-hero-inquiry-kicker">Start a material brief</span>
+      <div className="cine-hero-inquiry-grid">
+        <label>
+          <span>Your name</span>
+          <input name="name" autoComplete="name" />
+        </label>
+        <label>
+          <span>Email address</span>
+          <input name="email" type="email" autoComplete="email" />
+        </label>
+        <label>
+          <span>Phone number</span>
+          <input name="phone" type="tel" autoComplete="tel" />
+        </label>
+        <label>
+          <span>Company</span>
+          <input name="company" autoComplete="organization" />
+        </label>
+        <label className="is-wide">
+          <span>Product / application</span>
+          <textarea name="message" rows={3} />
+        </label>
+      </div>
+      <a className="cine-hero-inquiry-submit" href={whatsappHref} target="_blank" rel="noreferrer">
+        Submit inquiry
+        <Send size={15} aria-hidden="true" />
+      </a>
+    </motion.aside>
+  );
+}
+
 export default function CinematicApp() {
   const premium = usePremium();
   const settings = useSiteSettings();
@@ -390,10 +430,10 @@ export default function CinematicApp() {
           <HeroHeadline premium={premium} reduce={reduce} delay={0.22} />
 
           <motion.p className="cine-hero-sub" {...rise(0.42)}>
-            Invented by TBM in Japan, LIMEX is a CO₂-based material — captured carbon is formed
-            into calcium carbonate — that replaces plastic and lowers carbon, running on your
-            existing machines. Seven Dot distributes it as the authorized dealer, and our sister
-            company White Dot LLP markets and sells it to industry.
+            Invented by TBM in Japan, LIMEX is a limestone-based material that can reduce
+            petroleum-derived plastic while fitting practical industrial trials. Seven Dot
+            distributes it as the authorized dealer, and White Dot LLP guides applications,
+            samples, and commercial adoption.
           </motion.p>
           <SupplyFlow />
           <motion.div className="cine-hero-actions" {...rise(0.58)}>
@@ -411,6 +451,7 @@ export default function CinematicApp() {
           </motion.div>
         </div>
         {premium && !reduce && <HeroProofPanel />}
+        {premium && !reduce && <HeroInquiryCard whatsappHref={whatsappHref} />}
         <span className="cine-scroll-hint">Scroll</span>
       </section>
 

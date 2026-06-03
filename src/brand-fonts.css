@@ -4,6 +4,7 @@
    files remain available in public/design-system/fonts for the design pages. */
 
 @import url("https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&f[]=satoshi-italic@400,500,700&f[]=boska@400,500,700,900&f[]=boska-italic@400,500,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap");
 
 /* Brand wordmark face — Cinzel: a free Trajan-style Roman serif caps that
