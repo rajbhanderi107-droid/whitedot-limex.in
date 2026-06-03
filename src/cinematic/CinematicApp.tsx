@@ -460,11 +460,6 @@ export default function CinematicApp() {
       <MaterialIntelligence />
       <div className="wd-section-divider" aria-hidden="true" />
 
-      {/* Born of LIMEX section removed from site (files retained in repo
-          at src/cinematic/Born{OfLimex,Static}.tsx + bornRoutes/Geometry/Shaders
-          for easy revert). The MaterialCore section below is the new premium
-          ad showcase. */}
-
       <MaterialCore />
       <div className="wd-section-divider" aria-hidden="true" />
       <LimexDetail />
