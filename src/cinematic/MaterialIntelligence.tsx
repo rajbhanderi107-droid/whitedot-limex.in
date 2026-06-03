@@ -1,5 +1,7 @@
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { LimexRock } from "./LimexRock";
+import { useScrollReveal } from "./useScrollReveal";
+import { usePremium } from "../premium-wd";
 
 const leftLabels = [
   { t: "Mineral composition", d: "80%+ calcium carbonate (CaCO₃), formed from captured CO₂." },
@@ -13,7 +15,9 @@ const rightLabels = [
 ];
 
 export function MaterialIntelligence() {
+  const premium = usePremium();
   const reduce = useReducedMotion();
+  const headRef = useScrollReveal<HTMLDivElement>({ threshold: 0.1, disabled: !premium || !!reduce });
   const wrap: Variants = { hidden: {}, show: { transition: { staggerChildren: 0.12 } } };
   const item = (dir: number): Variants => ({
     hidden: reduce ? { opacity: 0 } : { opacity: 0, x: dir * 26 },
@@ -26,12 +30,17 @@ export function MaterialIntelligence() {
 
   return (
     <section className="cine-section cine-mi" id="material">
-      <span className="cine-kicker">LIMEX Material Intelligence</span>
-      <h2>Half laboratory. Half future material.</h2>
-      <p className="lead">
-        A CO₂-based material engineered to behave like plastic on the production line —
-        while quietly using far less of it.
-      </p>
+      {premium && !reduce && (
+        <span className="wd-section-num" aria-hidden="true">01</span>
+      )}
+      <div ref={headRef} className="wd-reveal-init">
+        <span className="cine-kicker">LIMEX Material Intelligence</span>
+        <h2>Half laboratory. Half future material.</h2>
+        <p className="lead">
+          A CO₂-based material engineered to behave like plastic on the production line —
+          while quietly using far less of it.
+        </p>
+      </div>
 
       <motion.div
         className="cine-mi-stage"

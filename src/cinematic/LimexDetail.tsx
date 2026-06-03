@@ -1,4 +1,5 @@
 import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { usePremium } from "../premium-wd";
 import {
   Atom,
   Boxes,
@@ -112,6 +113,7 @@ const applications = [
 ];
 
 export function LimexDetail() {
+  const premium = usePremium();
   const reduce = useReducedMotion();
   const wrap: Variants = { hidden: {}, show: { transition: { staggerChildren: 0.09 } } };
   const item: Variants = {
@@ -125,6 +127,9 @@ export function LimexDetail() {
 
   return (
     <section className="cine-section cine-detail" id="limex">
+      {premium && !reduce && (
+        <span className="wd-section-num" aria-hidden="true">03</span>
+      )}
       {/* More than a filler */}
       <motion.div
         className="cine-detail-hero"

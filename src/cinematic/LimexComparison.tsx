@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { usePremium } from "../premium-wd";
 import { Check, AlertTriangle } from "lucide-react";
 
 type Row = { category: string; limex: string; filler: string };
@@ -110,6 +111,7 @@ const data: Record<Tab, Row[]> = {
 };
 
 export function LimexComparison() {
+  const premium = usePremium();
   const reduce = useReducedMotion();
   const [tab, setTab] = useState<Tab>("Purpose");
 
@@ -117,6 +119,9 @@ export function LimexComparison() {
 
   return (
     <section className="cine-section cine-cmp" id="comparison">
+      {premium && !reduce && (
+        <span className="wd-section-num" aria-hidden="true">04</span>
+      )}
       <span className="cine-kicker">LIMEX Pellets vs Local Filler</span>
       <h2>A material system, not a weight additive.</h2>
       <p className="lead">

@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState, type RefObject } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { StatCounter } from "./StatCounter";
 import { Menu, X } from "lucide-react";
 import { CinematicMenu } from "./CinematicMenu";
 import { SupplyFlow } from "./SupplyFlow";
@@ -234,11 +235,11 @@ function HeroProofPanel() {
     >
       <span className="cine-hero-proof-kicker">Material brief</span>
       <div className="cine-hero-proof-grid">
-        <strong>78%+</strong>
+        <StatCounter value={78} suffix="%" className="wd-stat-num" aria-label="78% calcium carbonate content" />
         <span>calcium carbonate content</span>
         <strong>14d</strong>
         <span>trial sample target window</span>
-        <strong>4</strong>
+        <StatCounter value={4} className="wd-stat-num" aria-label="4 authorized regions served" />
         <span>authorized regions served</span>
       </div>
     </motion.aside>
