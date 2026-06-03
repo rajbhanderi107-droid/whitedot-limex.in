@@ -235,11 +235,11 @@ function HeroProofPanel() {
     >
       <span className="cine-hero-proof-kicker">Material brief</span>
       <div className="cine-hero-proof-grid">
-        <StatCounter value={50} suffix="%" className="wd-stat-num" aria-label="50% calcium carbonate content" />
+        <StatCounter value={50} suffix="%+" className="wd-stat-num" aria-label="50% plus calcium carbonate content" />
         <span>calcium carbonate content</span>
         <strong>14d</strong>
         <span>trial sample target window</span>
-        <StatCounter value={4} className="wd-stat-num" aria-label="4 authorized regions served" />
+        <strong className="wd-stat-num" aria-label="4 authorized regions served">4</strong>
         <span>authorized regions served</span>
       </div>
     </motion.aside>
