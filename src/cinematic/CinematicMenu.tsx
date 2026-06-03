@@ -106,6 +106,9 @@ interface CinematicMenuProps {
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export function CinematicMenu({ open, onClose, whatsappHref }: CinematicMenuProps) {
+  const isLocal = ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname.toLowerCase());
+  const showAdminLinks = isLocal || localStorage.getItem("wd_show_admin_button") === "true";
+
   return (
     <AnimatePresence>
       {open && (
@@ -195,35 +198,37 @@ export function CinematicMenu({ open, onClose, whatsappHref }: CinematicMenuProp
                 </a>
               </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ delay: 0.82, duration: 0.34, ease }}
-                style={{ marginTop: "1.5rem", textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: ".55rem" }}
-              >
-                <a
-                  href="https://whitedotindia.in/#/admin/login"
-                  className="cine-menu-admin-link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => {
-                    localStorage.removeItem("wd_admin_token");
-                    onClose();
-                  }}
+              {showAdminLinks && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ delay: 0.82, duration: 0.34, ease }}
+                  style={{ marginTop: "1.5rem", textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: ".55rem" }}
                 >
-                  Admin Panel
-                </a>
-                <a
-                  href="https://whitedotindia.in/#/admin/google"
-                  className="cine-menu-admin-link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={onClose}
-                >
-                  Admin GoogleDash
-                </a>
-              </motion.div>
+                  <a
+                    href="/#/admin/login"
+                    className="cine-menu-admin-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => {
+                      localStorage.removeItem("wd_admin_token");
+                      onClose();
+                    }}
+                  >
+                    Admin Panel
+                  </a>
+                  <a
+                    href="/#/admin/google"
+                    className="cine-menu-admin-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={onClose}
+                  >
+                    Admin GoogleDash
+                  </a>
+                </motion.div>
+              )}
             </nav>
           </motion.div>
         </motion.div>

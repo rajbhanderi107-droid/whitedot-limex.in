@@ -50,6 +50,30 @@ if (isAdminHost && !window.location.hash.startsWith("#/admin")) {
   window.location.hash = "#/admin/login";
 }
 
+// Check if we should toggle the visibility of the admin links in the menu
+function checkAdminQueryParam() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const val = params.get("wd_show_admin");
+    if (val === "1") {
+      window.localStorage.setItem("wd_show_admin_button", "true");
+      params.delete("wd_show_admin");
+      const cleanSearch = params.toString();
+      const cleanUrl = `${window.location.pathname}${cleanSearch ? `?${cleanSearch}` : ""}${window.location.hash}`;
+      window.history.replaceState(null, "", cleanUrl);
+    } else if (val === "0") {
+      window.localStorage.removeItem("wd_show_admin_button");
+      params.delete("wd_show_admin");
+      const cleanSearch = params.toString();
+      const cleanUrl = `${window.location.pathname}${cleanSearch ? `?${cleanSearch}` : ""}${window.location.hash}`;
+      window.history.replaceState(null, "", cleanUrl);
+    }
+  } catch {
+    // Ignore storage/history errors in isolated environments
+  }
+}
+checkAdminQueryParam();
+
 // If the host or hash path selects admin, show the admin SPA.
 // Otherwise, render the public cinematic website unchanged.
 const isAdmin = isAdminHost || window.location.hash.startsWith("#/admin");
