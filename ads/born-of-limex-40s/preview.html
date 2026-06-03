@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BORN OF LIMEX — Preview</title>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&f[]=boska@400,500,700&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Cinzel:wght@500;600&display=swap" />
+<style>
+  :root{--bg:#181b19;--bg2:#1f2421;--text:#f6f7f4;--cream:#f5f1e8;--accent:#9aa893;--line:rgba(228,222,212,.12)}
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--bg);color:var(--text);font-family:"Satoshi",system-ui,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1100px;margin:0 auto;padding:64px 24px 96px}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--accent)}
+  h1{font-family:"Boska",serif;font-weight:700;font-size:clamp(48px,9vw,104px);line-height:.98;margin:14px 0 8px}
+  h1 .lx{font-family:"Cinzel",serif;letter-spacing:.06em}
+  .sub{color:var(--cream);opacity:.82;font-size:clamp(15px,2vw,19px);max-width:680px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;margin-top:22px;font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--accent);letter-spacing:.12em}
+  .meta span{border:1px solid var(--line);border-radius:999px;padding:6px 14px}
+  .bar{height:1px;background:var(--line);margin:48px 0}
+  .timeline{display:flex;height:46px;border-radius:8px;overflow:hidden;border:1px solid var(--line);margin:10px 0 6px}
+  .timeline div{display:flex;align-items:center;justify-content:center;font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--text);border-right:1px solid rgba(0,0,0,.3);background:linear-gradient(180deg,var(--bg2),#171a18)}
+  .timeline div:last-child{border-right:0}
+  .tlabel{display:flex;justify-content:space-between;font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--accent);opacity:.7}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-top:14px}
+  .card{background:linear-gradient(180deg,var(--bg2),#1518 100%);border:1px solid var(--line);border-radius:14px;padding:20px;position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 0% 0%,rgba(154,168,147,.07),transparent 60%);pointer-events:none}
+  .sc{display:flex;justify-content:space-between;align-items:baseline}
+  .sn{font-family:"Boska",serif;font-size:22px}
+  .tc{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--accent)}
+  .dur{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--cream);opacity:.5}
+  .vd{margin:12px 0;font-size:14px;opacity:.9}
+  .vo{border-left:2px solid var(--accent);padding-left:12px;font-style:italic;color:var(--cream);font-size:14px;margin:12px 0}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .tag{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.06em;color:var(--accent);border:1px solid var(--line);border-radius:6px;padding:4px 8px}
+  .ost{margin-top:10px;font-family:"Boska",serif;color:var(--text);font-size:13px;opacity:.75}
+  footer{margin-top:60px;display:flex;align-items:center;gap:28px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:28px}
+  footer img{height:30px;width:auto;opacity:.78;filter:brightness(0) invert(.82)}
+  footer img.lx{height:24px}
+  .fnote{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--accent);opacity:.7;margin-left:auto;letter-spacing:.1em}
+  .files{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--cream);opacity:.55;margin-top:14px;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">WHITEDOT × LIMEX — LAUNCH FILM</div>
+  <h1>Born of <span class="lx">LIMEX</span></h1>
+  <p class="sub">A 40-second premium cinematic brand film — from mineral origin and limestone intelligence to real products and responsible adoption. Shaping a cleaner material future.</p>
+  <div class="meta"><span>40.0s · 24fps</span><span>16:9 hero + 9:16 cut</span><span>8 scenes</span><span>dark cinematic luxury</span></div>
+
+  <div class="bar"></div>
+  <div class="eyebrow">40-SECOND TIMELINE</div>
+  <div class="timeline" id="tl"></div>
+  <div class="tlabel"><span>0:00</span><span>0:08</span><span>0:18</span><span>0:25</span><span>0:31</span><span>0:40</span></div>
+
+  <div class="bar"></div>
+  <div class="eyebrow">SCENE BOARD</div>
+  <div class="grid" id="scenes"></div>
+
+  <footer>
+    <img src="../../public/assets/tbm-logo.png" alt="TBM Co., Ltd." />
+    <img class="lx" src="../../public/assets/limex-wordmark.png" alt="LIMEX" />
+    <span class="fnote">24-FILE PRODUCTION PACKAGE · QC PASS · 40.0s</span>
+  </footer>
+  <div class="files">README · director-treatment · master-storyboard · board-01…06 · shot-list-40sec · edit-decision-list · voiceover-script · onscreen-text · ai-image-prompts · ai-video-prompts · google-flow-transition-prompts · runway-seedance-veo-prompts · sound-design-and-music · color-grade-and-lookbook · asset-manifest · production-workflow · adobe-postproduction-workflow · final-master-prompt · quality-control-checklist · ad-timeline.json</div>
+</div>
+<script>
+fetch('ad-timeline.json').then(r=>r.json()).then(d=>{
+  const tl=document.getElementById('tl');
+  d.scenes.forEach((s,i)=>{const el=document.createElement('div');el.style.flex=s.duration;el.style.opacity=0.55+i*0.05;el.textContent='S'+s.scene;tl.appendChild(el);});
+  const g=document.getElementById('scenes');
+  d.scenes.forEach(s=>{
+    const fmt=t=>{const m=Math.floor(t/60),sec=(t%60).toFixed(0).padStart(2,'0');return m+':'+sec;};
+    const c=document.createElement('div');c.className='card';
+    c.innerHTML=`<div class="sc"><span class="sn">${s.scene}. ${s.name}</span><span class="tc">${fmt(s.start)}–${fmt(s.end)}</span></div>
+      <div class="dur">${s.duration.toFixed(1)}s</div>
+      <div class="vd">${s.visual_description}</div>
+      ${s.voiceover?`<div class="vo">"${s.voiceover}"</div>`:''}
+      <div class="row"><span class="tag">${s.camera_movement.split(',')[0]}</span><span class="tag">${s.sound_design.split(',')[0]}</span></div>
+      ${s.onscreen_text?`<div class="ost">TEXT — ${s.onscreen_text}</div>`:''}`;
+    g.appendChild(c);
+  });
+}).catch(e=>{document.getElementById('scenes').innerHTML='<div class="card">Open via a local server to load ad-timeline.json, or view the .md files directly.</div>';});
+</script>
+</body>
+</html>
