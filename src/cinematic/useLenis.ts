@@ -10,9 +10,13 @@ export function useLenis(enabled = true) {
     if (reduce) return;
 
     const lenis = new Lenis({
-      duration: 1.1,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      duration: 0.72,
+      easing: (t: number) => 1 - Math.pow(1 - t, 4),
       smoothWheel: true,
+      wheelMultiplier: 0.92,
+      touchMultiplier: 1.08,
+      syncTouch: true,
+      syncTouchLerp: 0.075,
     });
 
     let raf = 0;

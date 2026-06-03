@@ -237,7 +237,7 @@ function HeroProofPanel() {
       <div className="cine-hero-proof-grid">
         <strong className="wd-stat-num" aria-label="50% plus calcium carbonate content">50%+</strong>
         <span>calcium carbonate content</span>
-        <strong>14d</strong>
+        <strong className="wd-stat-num">14d</strong>
         <span>trial sample target window</span>
         <strong className="wd-stat-num" aria-label="4 authorized regions served">4</strong>
         <span>authorized regions served</span>

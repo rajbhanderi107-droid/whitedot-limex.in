@@ -4669,3 +4669,57 @@ body {
     margin: 1rem 1.2rem 0;
   }
 }
+
+/* Center the consultation form surface without changing form content. */
+.cine-consult {
+  display: grid;
+  justify-items: center;
+}
+
+.cine-consult-head {
+  width: min(760px, 100%);
+  max-width: 760px;
+  text-align: center;
+  margin-inline: auto;
+}
+
+.cine-consult-actions {
+  justify-content: center;
+}
+
+.cine-consult-steps {
+  width: min(var(--c-maxw), 100%);
+}
+
+.cine-inquiry-wrap {
+  width: min(920px, 100%);
+  margin-inline: auto;
+}
+
+.cine-inquiry-form,
+.cine-form-success {
+  max-width: 760px;
+  margin-inline: auto;
+}
+
+.cine-form-tabs {
+  justify-content: center;
+}
+
+.cine-form-blurb {
+  max-width: 680px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+@media (max-width: 620px) {
+  .cine-consult-head,
+  .cine-form-blurb {
+    text-align: left;
+  }
+
+  .cine-consult-actions,
+  .cine-form-tabs {
+    justify-content: flex-start;
+  }
+}
