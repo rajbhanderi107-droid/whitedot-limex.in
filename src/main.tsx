@@ -91,9 +91,11 @@ async function shouldShowPublicLoading(): Promise<boolean> {
     const json = await res.json();
     const settings = Array.isArray(json.data) ? json.data : [];
     const loadingSetting = settings.find((setting: { key?: string }) => setting.key === PUBLIC_LOADING_SETTING_KEY);
-    return loadingSetting?.value !== "false";
+    // Only show maintenance screen when EXPLICITLY set to "true"
+    return loadingSetting?.value === "true";
   } catch {
-    return true;
+    // API unreachable → show the site, not a dead maintenance screen
+    return false;
   }
 }
 
