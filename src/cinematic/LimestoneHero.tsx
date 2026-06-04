@@ -284,7 +284,7 @@ function Scene({ scroll, tier }: { scroll: ScrollRef; tier: string }) {
         size={1.6}
         speed={0.18}
         opacity={0.38}
-        color={ACCENT}
+        color="#ffffff"
       />
       <Sparkles
         count={sparkB}
@@ -293,7 +293,7 @@ function Scene({ scroll, tier }: { scroll: ScrollRef; tier: string }) {
         size={2.8}
         speed={0.12}
         opacity={0.22}
-        color={CREAM}
+        color="#f5f1e8"
       />
 
       {/* Fine limestone dust drifting in the light — cream, slow, subtle */}

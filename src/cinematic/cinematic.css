@@ -693,7 +693,7 @@ a:focus-visible {
   /* Full-bleed wrapper up to maxw */
   width: min(var(--c-maxw), calc(100% - 2.2rem));
   margin: 0 auto;
-  padding-top: 8vh;
+  padding-top: clamp(115px, 14vh, 180px);
   pointer-events: none;
 }
 

@@ -1,4 +1,3 @@
-import { lazy, Suspense, useEffect, useRef } from "react";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { usePremium } from "../premium-wd";
 import {
@@ -11,11 +10,6 @@ import {
   ShieldCheck,
   Sparkle,
 } from "lucide-react";
-
-const rockSrc = `${import.meta.env.BASE_URL}assets/limex-rock.webp`;
-
-// The detailed limestone model now lives ONLY here (the hero uses video).
-const LimexCore3D = lazy(() => import("./LimexCore3D"));
 
 const differentiators = [
   {
@@ -129,77 +123,11 @@ export function LimexDetail() {
     show: { opacity: 1, y: 0, transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] } },
   });
 
-  // Scroll progress for the model: 0 as the rock block enters from the bottom,
-  // ~0.5 when centred (model fully formed + rotating), 1 as it leaves the top.
-  const scroll = useRef(0);
-  const blockRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!(premium && !reduce)) return;
-    const el = blockRef.current;
-    if (!el) return;
-    let raf = 0;
-    const onScroll = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = 0;
-        const r = el.getBoundingClientRect();
-        const vh = window.innerHeight || 1;
-        const center = r.top + r.height / 2;
-        scroll.current = Math.min(1, Math.max(0, 1 - center / vh));
-      });
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, [premium, reduce]);
-
   return (
     <section className="cine-section cine-detail" id="limex">
       {premium && !reduce && (
         <span className="wd-section-num" aria-hidden="true">03</span>
       )}
-      {/* More than a filler */}
-      <motion.div
-        ref={blockRef}
-        className="cine-detail-hero"
-        variants={wrap}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.3 }}
-      >
-        <div className="cine-detail-copy">
-          <motion.span className="cine-detail-tag" variants={rise(0)}>
-            CO₂-based material technology
-          </motion.span>
-          <motion.h2 variants={rise(0.05)}>More than a filler.</motion.h2>
-          <motion.p className="lead" variants={rise(0.12)}>
-            <span className="wd-limex">LIMEX</span> material is developed as a CO₂-based alternative that can reduce
-            plastic consumption while supporting selected technical properties. It is not positioned
-            as a basic filler added only for weight.
-          </motion.p>
-          <motion.p className="cine-detail-sub" variants={rise(0.18)}>
-            It behaves as a performance-oriented, mineral-based material system — with controlled
-            particle size, pellet coating, processing compatibility and technical support.
-          </motion.p>
-        </div>
-        <motion.div
-          className={`cine-detail-rock${premium && !reduce ? " is-3d" : ""}`}
-          variants={rise(0.1)}
-          aria-hidden="true"
-        >
-          <span className="cine-detail-rock-glow" />
-          {premium && !reduce ? (
-            <Suspense fallback={<img src={rockSrc} alt="" loading="lazy" />}>
-              <LimexCore3D scroll={scroll} />
-            </Suspense>
-          ) : (
-            <img src={rockSrc} alt="" loading="lazy" />
-          )}
-        </motion.div>
-      </motion.div>
 
       {/* What makes LIMEX different — 4 cards */}
       <div className="cine-detail-block">

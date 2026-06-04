@@ -378,7 +378,7 @@ export default function CinematicApp() {
 
         <div className="cine-hero-copy">
           <motion.span className="cine-eyebrow" {...rise(0.1)}>
-            Authorized LIMEX Material Intelligence
+            Next-Gen Limestone Technology
           </motion.span>
 
           <HeroHeadline premium={premium} reduce={reduce} delay={0.22} />

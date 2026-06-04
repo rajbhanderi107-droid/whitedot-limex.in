@@ -2,6 +2,7 @@ import { Component, useMemo, useRef, type ReactNode, type RefObject } from "reac
 import { useGLTF, Sparkles } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useDeviceTier } from "./useDeviceTier";
 import { ACCENT, CREAM, RevealController, turntableDelta } from "./heroCinematics";
 
 // Real limestone photogrammetry scan (Draco-compressed GLB).
@@ -62,7 +63,7 @@ function FresnelRim({
 
   const uniforms = useMemo(() => ({
     uTime:      { value: 0 },
-    uColor:     { value: new THREE.Color(ACCENT) },
+    uColor:     { value: new THREE.Color("#ffffff") },
     uPower:     { value: 3.2 },
     uIntensity: { value: 0.85 },
   }), []);
@@ -95,6 +96,8 @@ function FresnelRim({
  *  centered at the origin, with shadows enabled. Shared by every LIMEX scene. */
 export function LimexModel({ size = 3 }: { size?: number }) {
   const { scene } = useGLTF(MODEL_URL, true);
+  const tier = useDeviceTier();
+  const isLowTier = tier === "low";
 
   const { obj, mergedGeo } = useMemo(() => {
     const clone = scene.clone();
@@ -129,7 +132,7 @@ export function LimexModel({ size = 3 }: { size?: number }) {
               // on MeshStandardMaterial, causing Vector3.copy(undefined).
               const phys = new THREE.MeshPhysicalMaterial({
                 map: mat.map,
-                color: mat.color.clone(),
+                color: new THREE.Color("#ffffff"),
                 normalMap: mat.normalMap,
                 normalScale: mat.normalScale?.clone(),
                 roughnessMap: mat.roughnessMap,
@@ -149,25 +152,52 @@ export function LimexModel({ size = 3 }: { size?: number }) {
               // Thin clearcoat: a polished mineral sheen catch on highlights.
               phys.clearcoat = 0.5;
               phys.clearcoatRoughness = 0.62;
-              // Sheen: soft sage retroreflection on grazing angles → mineral, not waxy.
+              // Sheen: soft white sheen
               phys.sheen = 0.55;
               phys.sheenRoughness = 0.85;
-              phys.sheenColor = new THREE.Color(ACCENT);
-              // Stronger sage emissive veins so Bloom can bloom them.
-              if (!phys.emissive || phys.emissive.getHex() === 0) {
-                phys.emissive = new THREE.Color(ACCENT);
-              }
-              phys.emissiveIntensity = 0.085;
+              phys.sheenColor = new THREE.Color("#ffffff");
+              phys.emissive = new THREE.Color("#ffffff");
+              phys.emissiveIntensity = 0.02;
+
+              // Inject shader code to desaturate/brighten texture
+              phys.onBeforeCompile = (shader) => {
+                shader.fragmentShader = shader.fragmentShader.replace(
+                  "#include <map_fragment>",
+                  `
+                  #ifdef USE_MAP
+                    vec4 texelColor = texture2D( map, vMapUv );
+                    float luma = dot(texelColor.rgb, vec3(0.299, 0.587, 0.114));
+                    texelColor.rgb = vec3(0.72 + luma * 0.28);
+                    diffuseColor *= mapTexelToLinear( texelColor );
+                  #endif
+                  `
+                );
+              };
+
               phys.needsUpdate = true;
               return phys;
             }
             if (mat instanceof THREE.MeshStandardMaterial) {
+              mat.color.setRGB(1.0, 1.0, 1.0);
               mat.roughness = Math.min(mat.roughness ?? 0.85, 0.7);
               mat.metalness = Math.max(mat.metalness ?? 0, 0.04);
-              if (!mat.emissive || mat.emissive.getHex() === 0) {
-                mat.emissive = new THREE.Color(ACCENT);
-              }
-              mat.emissiveIntensity = 0.085;
+              mat.emissive = new THREE.Color("#ffffff");
+              mat.emissiveIntensity = 0.02;
+
+              mat.onBeforeCompile = (shader) => {
+                shader.fragmentShader = shader.fragmentShader.replace(
+                  "#include <map_fragment>",
+                  `
+                  #ifdef USE_MAP
+                    vec4 texelColor = texture2D( map, vMapUv );
+                    float luma = dot(texelColor.rgb, vec3(0.299, 0.587, 0.114));
+                    texelColor.rgb = vec3(0.72 + luma * 0.28);
+                    diffuseColor *= mapTexelToLinear( texelColor );
+                  #endif
+                  `
+                );
+              };
+
               mat.needsUpdate = true;
             }
             return mat;
@@ -222,7 +252,7 @@ export function LimexModel({ size = 3 }: { size?: number }) {
         size={1.4}
         speed={0.09}
         opacity={0.55}
-        color={ACCENT}
+        color="#ffffff"
       />
       <Sparkles
         count={12}
@@ -230,8 +260,20 @@ export function LimexModel({ size = 3 }: { size?: number }) {
         size={2.2}
         speed={0.06}
         opacity={0.32}
-        color={CREAM}
+        color="#f5f1e8"
       />
+
+      {/* Saturn-like flat ring of bright white glowy particles */}
+      <group rotation={[Math.PI / 9, 0, Math.PI / 18]}>
+        <Sparkles
+          count={isLowTier ? 40 : 120}
+          scale={[size * 2.2, 0.06, size * 2.2]}
+          size={2.4}
+          speed={0.2}
+          opacity={0.8}
+          color="#ffffff"
+        />
+      </group>
     </group>
   );
 }
@@ -256,7 +298,7 @@ export function ProceduralCrystal({ size = 1.6 }: { size?: number }) {
 
   const uniforms = useMemo(() => ({
     uTime:      { value: 0 },
-    uColor:     { value: new THREE.Color(ACCENT) },
+    uColor:     { value: new THREE.Color("#ffffff") },
     uPower:     { value: 2.8 },
     uIntensity: { value: 0.9 },
   }), []);
@@ -271,12 +313,12 @@ export function ProceduralCrystal({ size = 1.6 }: { size?: number }) {
     <>
       <mesh geometry={geometry} castShadow>
         <meshStandardMaterial
-          color="#dcd9cf"
+          color="#ffffff"
           metalness={0.12}
           roughness={0.55}
           flatShading
-          emissive={ACCENT}
-          emissiveIntensity={0.06}
+          emissive="#ffffff"
+          emissiveIntensity={0.02}
         />
       </mesh>
       {/* Fresnel overlay on the procedural crystal */}
@@ -294,7 +336,7 @@ export function ProceduralCrystal({ size = 1.6 }: { size?: number }) {
       </mesh>
       {/* Wireframe accent — faint structural grid */}
       <mesh geometry={geometry} scale={1.024}>
-        <meshBasicMaterial color={ACCENT} wireframe transparent opacity={0.055} />
+        <meshBasicMaterial color="#ffffff" wireframe transparent opacity={0.055} />
       </mesh>
     </>
   );

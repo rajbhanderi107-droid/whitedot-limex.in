@@ -72,7 +72,7 @@ function Scene({ scroll, tier }: { scroll: ScrollRef; tier: string }) {
         </ModelBoundary>
       </CoreGroup>
       <Rings scroll={scroll} />
-      <Sparkles count={isLowTier ? 25 : 70} scale={[9, 7, 5]} size={2.2} speed={0.25} opacity={0.5} color={ACCENT} />
+      <Sparkles count={isLowTier ? 25 : 70} scale={[9, 7, 5]} size={2.2} speed={0.25} opacity={0.5} color="#ffffff" />
     </>
   );
 }
