@@ -22,6 +22,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VITE_API_URL: https://whitedot-limex-backend.onrender.com
+      # Mapped here so steps can detect whether Cloudflare is configured yet.
+      # (secrets can't be referenced directly in a step `if:`, env can.)
+      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -37,8 +40,15 @@ jobs:
       - name: Build site
         run: npm run build
 
+      - name: Skip notice (Cloudflare not configured)
+        if: env.CF_API_TOKEN == ''
+        run: |
+          echo "::notice::Cloudflare secrets not set — skipping preview deploy."
+          echo "Add CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID (see docs/PREVIEW_DEPLOYS.md) to enable preview URLs."
+
       - name: Deploy to Cloudflare Pages
         id: deploy
+        if: env.CF_API_TOKEN != ''
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
