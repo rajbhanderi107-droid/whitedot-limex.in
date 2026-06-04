@@ -1,4 +1,4 @@
-import { Component, useMemo, useRef, type ReactNode, type RefObject } from "react";
+import { Component, useMemo, useRef, useEffect, type ReactNode, type RefObject } from "react";
 import { useGLTF, Sparkles } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
@@ -89,6 +89,96 @@ function FresnelRim({
         blending={THREE.AdditiveBlending}
       />
     </mesh>
+  );
+}
+
+function SaturnRing({ size, count = 120 }: { size: number; count?: number }) {
+  const pointsRef = useRef<THREE.Points>(null);
+  const geometryRef = useRef<THREE.BufferGeometry>(null);
+
+  // Procedural neon white glow texture
+  const texture = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+      // High contrast neon white gradient: bright core, soft white halo
+      grad.addColorStop(0, "rgba(255, 255, 255, 1.0)");
+      grad.addColorStop(0.2, "rgba(255, 255, 255, 1.0)");
+      grad.addColorStop(0.5, "rgba(255, 255, 255, 0.6)");
+      grad.addColorStop(0.85, "rgba(255, 255, 255, 0.12)");
+      grad.addColorStop(1, "rgba(255, 255, 255, 0.0)");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 64, 64);
+    }
+    const tex = new THREE.CanvasTexture(canvas);
+    return tex;
+  }, []);
+
+  const particles = useMemo(() => {
+    const arr = [];
+    for (let i = 0; i < count; i++) {
+      // Concentric circular distribution (from 0.85 to 1.25 times size)
+      const r = size * (0.85 + Math.random() * 0.4);
+      const theta = Math.random() * Math.PI * 2;
+      // Keplerian-like speed: slower further out
+      const speed = (0.24 + Math.random() * 0.06) / Math.sqrt(r);
+      const y = (Math.random() - 0.5) * size * 0.025; // extremely flat ring
+      arr.push({ r, theta, speed, y });
+    }
+    return arr;
+  }, [count, size]);
+
+  const posAttr = useMemo(() => {
+    const arr = new Float32Array(count * 3);
+    return new THREE.BufferAttribute(arr, 3);
+  }, [count]);
+
+  useEffect(() => {
+    if (geometryRef.current) {
+      geometryRef.current.setAttribute("position", posAttr);
+    }
+  }, [posAttr]);
+
+  useFrame((_, delta) => {
+    if (!pointsRef.current) return;
+    const positions = posAttr.array as Float32Array;
+    
+    for (let i = 0; i < count; i++) {
+      const p = particles[i];
+      // Increment angle (concentric, non-intersecting orbits)
+      p.theta += p.speed * delta * 0.9;
+      
+      const x = p.r * Math.cos(p.theta);
+      const z = p.r * Math.sin(p.theta);
+      
+      const idx = i * 3;
+      positions[idx] = x;
+      positions[idx + 1] = p.y;
+      positions[idx + 2] = z;
+    }
+    
+    posAttr.needsUpdate = true;
+  });
+
+  return (
+    <group rotation={[Math.PI / 9, 0, Math.PI / 18]}>
+      <points ref={pointsRef}>
+        <bufferGeometry ref={geometryRef} />
+        <pointsMaterial
+          map={texture}
+          transparent
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+          size={0.15 * (size / 3)} // size-relative particles
+          sizeAttenuation={true}
+          color="#ffffff"
+          opacity={0.9}
+        />
+      </points>
+    </group>
   );
 }
 
@@ -263,17 +353,8 @@ export function LimexModel({ size = 3 }: { size?: number }) {
         color="#f5f1e8"
       />
 
-      {/* Saturn-like flat ring of bright white glowy particles */}
-      <group rotation={[Math.PI / 9, 0, Math.PI / 18]}>
-        <Sparkles
-          count={isLowTier ? 40 : 120}
-          scale={[size * 2.2, 0.06, size * 2.2]}
-          size={2.4}
-          speed={0.2}
-          opacity={0.8}
-          color="#ffffff"
-        />
-      </group>
+      {/* Custom concentric non-intersecting Saturn Ring of neon white glowy particles */}
+      <SaturnRing size={size} count={isLowTier ? 36 : 120} />
     </group>
   );
 }
