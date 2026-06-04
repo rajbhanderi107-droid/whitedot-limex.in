@@ -106,7 +106,12 @@ interface CinematicMenuProps {
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export function CinematicMenu({ open, onClose, whatsappHref }: CinematicMenuProps) {
-  const isLocal = ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname.toLowerCase());
+  const hostname = window.location.hostname.toLowerCase();
+  const isLocal = ["localhost", "127.0.0.1", "::1"].includes(hostname);
+  const adminBasePath =
+    hostname === "rajbhanderi107-droid.github.io" && window.location.pathname.startsWith("/whitedot-limex.in/")
+      ? "/whitedot-limex.in"
+      : "";
   const showAdminLinks = isLocal || localStorage.getItem("wd_show_admin_button") === "true";
 
   return (
@@ -207,7 +212,7 @@ export function CinematicMenu({ open, onClose, whatsappHref }: CinematicMenuProp
                   style={{ marginTop: "1.5rem", textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: ".55rem" }}
                 >
                   <a
-                    href="/#/admin/login"
+                    href={`${adminBasePath}/#/admin/login`}
                     className="cine-menu-admin-link"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -219,7 +224,7 @@ export function CinematicMenu({ open, onClose, whatsappHref }: CinematicMenuProp
                     Admin Panel
                   </a>
                   <a
-                    href="/#/admin/google"
+                    href={`${adminBasePath}/#/admin/google`}
                     className="cine-menu-admin-link"
                     target="_blank"
                     rel="noopener noreferrer"
