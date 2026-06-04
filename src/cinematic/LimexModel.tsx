@@ -168,7 +168,7 @@ export function LimexModel({ size = 3 }: { size?: number }) {
                     vec4 texelColor = texture2D( map, vMapUv );
                     float luma = dot(texelColor.rgb, vec3(0.299, 0.587, 0.114));
                     texelColor.rgb = vec3(0.72 + luma * 0.28);
-                    diffuseColor *= mapTexelToLinear( texelColor );
+                    diffuseColor *= texelColor;
                   #endif
                   `
                 );
@@ -192,7 +192,7 @@ export function LimexModel({ size = 3 }: { size?: number }) {
                     vec4 texelColor = texture2D( map, vMapUv );
                     float luma = dot(texelColor.rgb, vec3(0.299, 0.587, 0.114));
                     texelColor.rgb = vec3(0.72 + luma * 0.28);
-                    diffuseColor *= mapTexelToLinear( texelColor );
+                    diffuseColor *= texelColor;
                   #endif
                   `
                 );

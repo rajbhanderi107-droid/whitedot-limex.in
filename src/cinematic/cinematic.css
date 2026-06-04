@@ -579,6 +579,8 @@ a:focus-visible {
   display: grid;
   align-items: center;
   overflow: hidden;
+  padding-top: clamp(90px, 12vh, 120px);
+  box-sizing: border-box;
 }
 
 .cine-hero-studio {
@@ -693,7 +695,7 @@ a:focus-visible {
   /* Full-bleed wrapper up to maxw */
   width: min(var(--c-maxw), calc(100% - 2.2rem));
   margin: 0 auto;
-  padding-top: clamp(115px, 14vh, 180px);
+  padding-top: 1.5rem;
   pointer-events: none;
 }
 
