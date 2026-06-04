@@ -37,7 +37,7 @@ if (gaId) {
 }
 
 
-const adminHosts = new Set(["admin.whitedotindia.in"]);
+const adminHosts = new Set(["admin.whitedotindia.in", "admin.whitedot-limex.in"]);
 const isAdminHost = adminHosts.has(window.location.hostname.toLowerCase());
 const PREVIEW_QUERY_KEY = "wd_preview";
 const PREVIEW_STORAGE_KEY = "wd_public_preview";
@@ -74,9 +74,10 @@ function checkAdminQueryParam() {
 }
 checkAdminQueryParam();
 
-// If the host or hash path selects admin, show the admin SPA.
+// If the host or local dev hash path selects admin, show the admin SPA.
 // Otherwise, render the public cinematic website unchanged.
-const isAdmin = isAdminHost || window.location.hash.startsWith("#/admin");
+const isLocal = ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname.toLowerCase());
+const isAdmin = isAdminHost || (isLocal && window.location.hash.startsWith("#/admin"));
 
 function hasPublicPreviewAccess(): boolean {
   const params = new URLSearchParams(window.location.search);

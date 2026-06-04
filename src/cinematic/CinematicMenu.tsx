@@ -108,10 +108,7 @@ const ease = [0.22, 1, 0.36, 1] as const;
 export function CinematicMenu({ open, onClose, whatsappHref }: CinematicMenuProps) {
   const hostname = window.location.hostname.toLowerCase();
   const isLocal = ["localhost", "127.0.0.1", "::1"].includes(hostname);
-  const adminBasePath =
-    hostname === "rajbhanderi107-droid.github.io" && window.location.pathname.startsWith("/whitedot-limex.in/")
-      ? "/whitedot-limex.in"
-      : "";
+  const adminBasePath = isLocal ? "" : "https://admin.whitedotindia.in";
   const showAdminLinks = isLocal || localStorage.getItem("wd_show_admin_button") === "true";
 
   return (
