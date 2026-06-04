@@ -12,10 +12,18 @@ import { LimexComparison } from "./LimexComparison";
 import { Consultation } from "./Consultation";
 import { SiteFooter } from "./SiteFooter";
 import { VideoHero } from "./VideoHero";
+import { GlobalImpact } from "./GlobalImpact";
 import { useBrandLogo } from "../useBrandLogo";
 import { useLenis } from "./useLenis";
 import { ScrollProgress } from "./ScrollProgress";
 import { getWhatsappHref, useSiteSettings } from "./siteSettings";
+// Cinematic background-video system styles — imported AFTER cinematic.css in the
+// module graph (cinematic.css is loaded in main.tsx before CinematicApp). The
+// file's :root-prefixed selectors also guarantee it wins regardless of order.
+import "./cinematic-video.css";
+// Premium micro-interaction polish (buttons + content boxes) — loaded last so
+// its hover/sheen rules win on equal specificity.
+import "./cinematic-polish.css";
 // CONTINUITY-WD-BEGIN imports
 import { ContinuityShell } from "../continuity-wd";
 import "../continuity-wd/continuity-wd.css";
@@ -309,6 +317,11 @@ export default function CinematicApp() {
         </div>
       )}
 
+      {/* Cinematic film-grain + vignette — fixed full-screen decorative overlay.
+          Premium-only / reduced-motion-safe is handled in CSS; pointer-events:none
+          so it never blocks clicks. */}
+      <div className="wd-film-grain" aria-hidden="true" />
+
       <nav className="cine-nav" ref={navRef}>
         <a className="cine-brand" href="#top" aria-label="White Dot LLP">
           <img
@@ -422,6 +435,8 @@ export default function CinematicApp() {
       <IndustryApplications />
       <div className="wd-section-divider" aria-hidden="true" />
       <Consultation />
+      <div className="wd-section-divider" aria-hidden="true" />
+      <GlobalImpact />
       <SiteFooter />
       {/* ASSISTANT-WD-BEGIN widget */}
       <AssistantShell />

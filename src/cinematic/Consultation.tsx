@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { MessageCircle, Phone } from "lucide-react";
+import { SectionVideo } from "./SectionVideo";
 import { InquiryForm } from "./InquiryForm";
 import { QuoteRequestForm } from "./QuoteRequestForm";
 import { SampleRequestForm } from "./SampleRequestForm";
@@ -56,7 +57,10 @@ export function Consultation() {
   };
 
   return (
-    <section className="cine-section cine-consult" id="consult">
+    <section className="cine-section cine-consult cine-section--cinematic" id="consult">
+      {/* Warm welcoming brand film for the close. The cinematic override drops
+          the opaque forest fill to a translucent scrim so the video reads through. */}
+      <SectionVideo src="brand" intensity="medium" />
       <div className="cine-consult-head">
         <span className="cine-kicker">Consultation</span>
         <h2>Move from plastic to LIMEX, without re-tooling.</h2>
