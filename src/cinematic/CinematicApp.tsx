@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState, type RefObject } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { StatCounter } from "./StatCounter";
 import { Menu, X } from "lucide-react";
@@ -11,6 +11,7 @@ import { LimexDetail } from "./LimexDetail";
 import { LimexComparison } from "./LimexComparison";
 import { Consultation } from "./Consultation";
 import { SiteFooter } from "./SiteFooter";
+import { VideoHero } from "./VideoHero";
 import { useBrandLogo } from "../useBrandLogo";
 import { useLenis } from "./useLenis";
 import { ScrollProgress } from "./ScrollProgress";
@@ -30,11 +31,6 @@ import "../assistant-wd/assistant-wd.css";
 // PREMIUM-WD-BEGIN import
 import { usePremium } from "../premium-wd";
 // PREMIUM-WD-END import
-
-// Heavy three.js scene is lazy-loaded so the page shell paints immediately.
-const LimestoneHero = lazy(() =>
-  import("./LimestoneHero").then((m) => ({ default: m.LimestoneHero })),
-);
 
 /** Dismiss the inline pre-JS loader once React is alive. */
 function useDismissBootLoader() {
@@ -308,7 +304,9 @@ export default function CinematicApp() {
 
       {/* Scroll-tone backdrop — fixed layer driven by --wd-scroll CSS var */}
       {premium && !reduce && (
-        <div className="wd-tone-layer" aria-hidden="true" />
+        <div className="wd-tone-layer" aria-hidden="true">
+          <div className="wd-tone-glow" aria-hidden="true" />
+        </div>
       )}
 
       <nav className="cine-nav" ref={navRef}>
@@ -364,13 +362,9 @@ export default function CinematicApp() {
           <span className="cine-hero-studio-mark cine-hero-studio-mark-br" />
         </div>
 
-        {premium && !reduce ? (
-          <Suspense fallback={<div className="cine-hero-fallback" aria-hidden="true" />}>
-            <LimestoneHero />
-          </Suspense>
-        ) : (
-          <div className="cine-hero-fallback" aria-hidden="true" />
-        )}
+        {/* Hero film — video centerpiece (replaces the 3D model). Drop a file at
+            public/assets/videos/hero.mp4 and it auto-plays full-bleed. */}
+        <VideoHero />
 
         {/* Drifting mineral atmosphere — slow GPU-cheap radial glow that breathes.
             Premium-only, behind the 3D canvas, pointer-events:none, aria-hidden. */}

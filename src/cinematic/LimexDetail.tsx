@@ -1,3 +1,4 @@
+import { lazy, Suspense, useEffect, useRef } from "react";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { usePremium } from "../premium-wd";
 import {
@@ -12,6 +13,9 @@ import {
 } from "lucide-react";
 
 const rockSrc = `${import.meta.env.BASE_URL}assets/limex-rock.webp`;
+
+// The detailed limestone model now lives ONLY here (the hero uses video).
+const LimexCore3D = lazy(() => import("./LimexCore3D"));
 
 const differentiators = [
   {
@@ -125,6 +129,33 @@ export function LimexDetail() {
     show: { opacity: 1, y: 0, transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] } },
   });
 
+  // Scroll progress for the model: 0 as the rock block enters from the bottom,
+  // ~0.5 when centred (model fully formed + rotating), 1 as it leaves the top.
+  const scroll = useRef(0);
+  const blockRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!(premium && !reduce)) return;
+    const el = blockRef.current;
+    if (!el) return;
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const r = el.getBoundingClientRect();
+        const vh = window.innerHeight || 1;
+        const center = r.top + r.height / 2;
+        scroll.current = Math.min(1, Math.max(0, 1 - center / vh));
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [premium, reduce]);
+
   return (
     <section className="cine-section cine-detail" id="limex">
       {premium && !reduce && (
@@ -132,6 +163,7 @@ export function LimexDetail() {
       )}
       {/* More than a filler */}
       <motion.div
+        ref={blockRef}
         className="cine-detail-hero"
         variants={wrap}
         initial="hidden"
@@ -153,9 +185,19 @@ export function LimexDetail() {
             particle size, pellet coating, processing compatibility and technical support.
           </motion.p>
         </div>
-        <motion.div className="cine-detail-rock" variants={rise(0.1)} aria-hidden="true">
-          <img src={rockSrc} alt="" loading="lazy" />
+        <motion.div
+          className={`cine-detail-rock${premium && !reduce ? " is-3d" : ""}`}
+          variants={rise(0.1)}
+          aria-hidden="true"
+        >
           <span className="cine-detail-rock-glow" />
+          {premium && !reduce ? (
+            <Suspense fallback={<img src={rockSrc} alt="" loading="lazy" />}>
+              <LimexCore3D scroll={scroll} />
+            </Suspense>
+          ) : (
+            <img src={rockSrc} alt="" loading="lazy" />
+          )}
         </motion.div>
       </motion.div>
 
