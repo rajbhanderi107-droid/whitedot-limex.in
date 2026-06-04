@@ -1,7 +1,12 @@
+import { lazy, Suspense } from "react";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { LimexRock } from "./LimexRock";
+import { SectionVideo } from "./SectionVideo";
 import { useScrollReveal } from "./useScrollReveal";
 import { usePremium } from "../premium-wd";
+
+// Small detailed LIMEX model for the orb (premium only); image fallback otherwise.
+const LimexOrb = lazy(() => import("./LimexOrb"));
 
 const leftLabels = [
   { t: "Mineral composition", d: "50%+ calcium carbonate (CaCO₃), formed from captured CO₂." },
@@ -29,7 +34,8 @@ export function MaterialIntelligence() {
   };
 
   return (
-    <section className="cine-section cine-mi" id="material">
+    <section className="cine-section cine-mi cine-section--cinematic" id="material">
+      <SectionVideo src="material" intensity="strong" />
       {premium && !reduce && (
         <span className="wd-section-num" aria-hidden="true">01</span>
       )}
@@ -61,7 +67,13 @@ export function MaterialIntelligence() {
         <motion.div className="cine-mi-core" variants={core}>
           <span className="cine-mi-ring" aria-hidden="true" />
           <span className="cine-mi-ring two" aria-hidden="true" />
-          <LimexRock variant="is-mi" />
+          {premium && !reduce ? (
+            <Suspense fallback={<LimexRock variant="is-mi" />}>
+              <LimexOrb />
+            </Suspense>
+          ) : (
+            <LimexRock variant="is-mi" />
+          )}
         </motion.div>
 
         <div className="cine-mi-col">

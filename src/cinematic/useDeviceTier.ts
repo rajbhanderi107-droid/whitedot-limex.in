@@ -23,6 +23,47 @@ import { useState } from "react";
 
 export type DeviceTier = "high" | "low";
 
+function isWeakGPU(): boolean {
+  if (typeof window === "undefined" || typeof document === "undefined") return false;
+  try {
+    const canvas = document.createElement("canvas");
+    const gl = canvas.getContext("webgl") || (canvas.getContext("experimental-webgl") as WebGLRenderingContext | null);
+    if (!gl) return true; // WebGL not supported or failed -> treat as weak
+
+    const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+    if (!debugInfo) return false; // Can't query -> assume okay
+
+    const renderer = (gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || "").toLowerCase();
+
+    // Check for common integrated/weak GPU names
+    const weakKeywords = [
+      "intel",
+      "uhd",
+      "hd graphics",
+      "iris",
+      "amd radeon(tm) graphics", // Integrated AMD Radeon
+      "radeon graphics",
+      "amd radeon vega",
+      "vega",
+      "basic render driver",
+      "swiftshader",
+      "llvmpipe",
+    ];
+
+    const isDedicatedAMD = renderer.includes("radeon") && (renderer.includes("rx") || renderer.includes("pro"));
+
+    if (weakKeywords.some(keyword => renderer.includes(keyword))) {
+      if (renderer.includes("radeon") && isDedicatedAMD) {
+        return false;
+      }
+      return true;
+    }
+  } catch (e) {
+    // Fail-safe: assume okay
+  }
+  return false;
+}
+
 function detectTier(): DeviceTier {
   // SSR / no-DOM guard — assume high so the markup matches a capable client.
   if (typeof window === "undefined" || typeof navigator === "undefined") {
@@ -55,6 +96,9 @@ function detectTier(): DeviceTier {
 
   const mem = nav.deviceMemory;
   if (typeof mem === "number" && mem > 0 && mem < 4) return "low";
+
+  // WebGL integrated/weak GPU detection
+  if (isWeakGPU()) return "low";
 
   // 4. Mobile that cleared the floors above is still treated as low — the GPU,
   //    not the CPU, is the binding constraint for a full post-FX stack on

@@ -1,4 +1,5 @@
 import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { SectionVideo } from "./SectionVideo";
 import { usePremium } from "../premium-wd";
 import {
   Atom,
@@ -10,8 +11,6 @@ import {
   ShieldCheck,
   Sparkle,
 } from "lucide-react";
-
-const rockSrc = `${import.meta.env.BASE_URL}assets/limex-rock.webp`;
 
 const differentiators = [
   {
@@ -126,38 +125,11 @@ export function LimexDetail() {
   });
 
   return (
-    <section className="cine-section cine-detail" id="limex">
+    <section className="cine-section cine-detail cine-section--cinematic" id="limex">
+      <SectionVideo src="product" intensity="medium" />
       {premium && !reduce && (
         <span className="wd-section-num" aria-hidden="true">03</span>
       )}
-      {/* More than a filler */}
-      <motion.div
-        className="cine-detail-hero"
-        variants={wrap}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.3 }}
-      >
-        <div className="cine-detail-copy">
-          <motion.span className="cine-detail-tag" variants={rise(0)}>
-            CO₂-based material technology
-          </motion.span>
-          <motion.h2 variants={rise(0.05)}>More than a filler.</motion.h2>
-          <motion.p className="lead" variants={rise(0.12)}>
-            <span className="wd-limex">LIMEX</span> material is developed as a CO₂-based alternative that can reduce
-            plastic consumption while supporting selected technical properties. It is not positioned
-            as a basic filler added only for weight.
-          </motion.p>
-          <motion.p className="cine-detail-sub" variants={rise(0.18)}>
-            It behaves as a performance-oriented, mineral-based material system — with controlled
-            particle size, pellet coating, processing compatibility and technical support.
-          </motion.p>
-        </div>
-        <motion.div className="cine-detail-rock" variants={rise(0.1)} aria-hidden="true">
-          <img src={rockSrc} alt="" loading="lazy" />
-          <span className="cine-detail-rock-glow" />
-        </motion.div>
-      </motion.div>
 
       {/* What makes LIMEX different — 4 cards */}
       <div className="cine-detail-block">

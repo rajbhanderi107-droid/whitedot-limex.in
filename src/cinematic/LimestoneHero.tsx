@@ -7,6 +7,7 @@ import * as THREE from "three";
 import { LimexModel, ProceduralCrystal, ModelBoundary } from "./LimexModel";
 import { ACCENT, CREAM, StudioKey, fbm1 } from "./heroCinematics";
 import { useFrameloopOnVisible } from "./useFrameloopOnVisible";
+import { useDeviceTier } from "./useDeviceTier";
 
 // Pre-allocate once — zero per-frame GC
 const _caOffset = new Vector2(0.0005, 0.00025);
@@ -67,6 +68,73 @@ const DESKTOP_X = 2.2;
 const MOBILE_X = 0.0;
 
 type ScrollRef = RefObject<number>;
+
+// ─── Volumetric light shafts ────────────────────────────────────────────────
+// Soft additive beams in the EXACT brand palette (limestone-cream + sage) that
+// rake past the monolith like a museum spotlight. GPU-cheap: a few textured
+// planes, additive-blended, breathing on slow eased cycles. They ease OUT as the
+// visitor scrolls into the page, so the hero "releases" cleanly. No new colors.
+function makeShaftTexture(): THREE.CanvasTexture {
+  const c = document.createElement("canvas");
+  c.width = 16;
+  c.height = 256;
+  const g = c.getContext("2d")!;
+  const grad = g.createLinearGradient(0, 0, 0, 256);
+  grad.addColorStop(0, "rgba(255,255,255,0)");
+  grad.addColorStop(0.5, "rgba(255,255,255,0.95)");
+  grad.addColorStop(1, "rgba(255,255,255,0)");
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 16, 256);
+  const tex = new THREE.CanvasTexture(c);
+  tex.needsUpdate = true;
+  return tex;
+}
+
+const SHAFTS = [
+  { pos: [2.4, 0.6, -1.6] as [number, number, number], rot: 0.5, scale: [1.7, 9, 1] as [number, number, number], color: CREAM, opacity: 0.1 },
+  { pos: [1.3, 0.2, -2.2] as [number, number, number], rot: -0.34, scale: [1.1, 8, 1] as [number, number, number], color: ACCENT, opacity: 0.08 },
+  { pos: [3.1, -0.3, -1.1] as [number, number, number], rot: 0.86, scale: [0.95, 7.5, 1] as [number, number, number], color: CREAM, opacity: 0.06 },
+];
+
+function LightShafts({ scroll }: { scroll: ScrollRef }) {
+  const group = useRef<THREE.Group>(null);
+  const tex = useMemo(makeShaftTexture, []);
+  const mats = useRef<(THREE.MeshBasicMaterial | null)[]>([]);
+  useEffect(() => () => tex.dispose(), [tex]);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    const p = scroll.current ?? 0;
+    if (group.current) group.current.rotation.z = Math.sin(t * 0.06) * 0.06;
+    const fade = 1 - Math.min(1, p * 1.4); // release as the page scrolls in
+    for (let i = 0; i < mats.current.length; i++) {
+      const m = mats.current[i];
+      if (!m) continue;
+      m.opacity = SHAFTS[i].opacity * fade * (0.7 + 0.3 * Math.sin(t * 0.5 + i * 1.7));
+    }
+  });
+  return (
+    <group ref={group}>
+      {SHAFTS.map((s, i) => (
+        <mesh key={i} position={s.pos} rotation={[0, 0, s.rot]} scale={s.scale}>
+          <planeGeometry args={[1, 1]} />
+          <meshBasicMaterial
+            ref={(m) => {
+              mats.current[i] = m as THREE.MeshBasicMaterial | null;
+            }}
+            map={tex}
+            color={s.color}
+            transparent
+            opacity={s.opacity}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+            side={THREE.DoubleSide}
+            toneMapped={false}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
 
 /**
  * Real limestone scan suspended in cinematic space: idle spin, cursor parallax,
@@ -140,10 +208,10 @@ function CameraRig({ scroll }: { scroll: ScrollRef }) {
     const isMob = state.size.width < 768;
     const t = state.clock.elapsedTime;
 
-    // Filmic dolly — push in gently as user scrolls, snappy easing
-    state.camera.position.z += (6.2 - p * 1.6 - state.camera.position.z) * 0.05;
+    // Filmic dolly — stronger cinematic push-in as the user scrolls into the hero
+    state.camera.position.z += (6.2 - p * 2.2 - state.camera.position.z) * 0.05;
     // Slight upward lift on scroll
-    state.camera.position.y += (p * 0.5 - state.camera.position.y) * 0.05;
+    state.camera.position.y += (p * 0.55 - state.camera.position.y) * 0.05;
 
     // On desktop: shift camera x left so it naturally frames the right-column rock.
     // The offset is -0.5 (camera moves left), which shifts the horizon right,
@@ -166,12 +234,13 @@ function CameraRig({ scroll }: { scroll: ScrollRef }) {
   return null;
 }
 
-function Scene({ scroll }: { scroll: ScrollRef }) {
+function Scene({ scroll, tier }: { scroll: ScrollRef; tier: string }) {
   // Halve atmospheric particle counts on small viewports (<480px) per perf budget.
   const { size } = useThree();
   const low = size.width < 480;
-  const sparkA = low ? 28 : 55;
-  const sparkB = low ? 14 : 28;
+  const isLowTier = tier === "low";
+  const sparkA = isLowTier ? 16 : (low ? 28 : 55);
+  const sparkB = isLowTier ? 8 : (low ? 14 : 28);
   return (
     <>
       <color attach="background" args={["#0b0e0c"]} />
@@ -203,6 +272,9 @@ function Scene({ scroll }: { scroll: ScrollRef }) {
       {/* The limestone — Crystal.useFrame owns the x-position animation */}
       <Crystal scroll={scroll} />
 
+      {/* Volumetric limestone-light shafts — museum spotlight rake (skip low tier) */}
+      {!isLowTier && <LightShafts scroll={scroll} />}
+
       {/* Mineral particle field — two Sparkles passes for depth layering.
           Offset toward the right so particles inhabit the same space as the model. */}
       <Sparkles
@@ -212,7 +284,7 @@ function Scene({ scroll }: { scroll: ScrollRef }) {
         size={1.6}
         speed={0.18}
         opacity={0.38}
-        color={ACCENT}
+        color="#ffffff"
       />
       <Sparkles
         count={sparkB}
@@ -221,38 +293,67 @@ function Scene({ scroll }: { scroll: ScrollRef }) {
         size={2.8}
         speed={0.12}
         opacity={0.22}
-        color={CREAM}
+        color="#f5f1e8"
       />
+
+      {/* Fine limestone dust drifting in the light — cream, slow, subtle */}
+      {!isLowTier && (
+        <Sparkles
+          count={low ? 18 : 36}
+          scale={[7, 6, 6]}
+          position={[DESKTOP_X * 0.5, 0, 0]}
+          size={0.9}
+          speed={0.07}
+          opacity={0.3}
+          color={CREAM}
+        />
+      )}
 
       <CameraRig scroll={scroll} />
 
       {/* Post-processing — elegant cinematic stack. SMAA for clean edges.
           Keep resolution moderate: multisampling=0 + SMAA is cheaper than
           native MSAA. DoF runs at resolutionScale=0.5 (half-res bokeh). */}
-      <EffectComposer multisampling={0}>
-        <SMAA />
-        <DepthOfField
-          focusDistance={0.018}
-          focusRange={0.028}
-          bokehScale={2.2}
-          resolutionScale={0.5}
-        />
-        <Bloom
-          luminanceThreshold={0.52}
-          luminanceSmoothing={0.38}
-          intensity={0.62}
-          mipmapBlur
-        />
-        <ChromaticAberration
-          offset={_caOffset}
-          radialModulation={false}
-          modulationOffset={0}
-        />
-        <Vignette
-          offset={0.3}
-          darkness={0.75}
-        />
-      </EffectComposer>
+      {isLowTier ? (
+        <EffectComposer multisampling={0}>
+          <SMAA />
+          <Bloom
+            luminanceThreshold={0.52}
+            luminanceSmoothing={0.38}
+            intensity={0.62}
+            mipmapBlur
+          />
+          <Vignette
+            offset={0.3}
+            darkness={0.75}
+          />
+        </EffectComposer>
+      ) : (
+        <EffectComposer multisampling={0}>
+          <SMAA />
+          <DepthOfField
+            focusDistance={0.018}
+            focusRange={0.028}
+            bokehScale={2.2}
+            resolutionScale={0.5}
+          />
+          <Bloom
+            luminanceThreshold={0.52}
+            luminanceSmoothing={0.38}
+            intensity={0.62}
+            mipmapBlur
+          />
+          <ChromaticAberration
+            offset={_caOffset}
+            radialModulation={false}
+            modulationOffset={0}
+          />
+          <Vignette
+            offset={0.3}
+            darkness={0.75}
+          />
+        </EffectComposer>
+      )}
     </>
   );
 }
@@ -260,6 +361,7 @@ function Scene({ scroll }: { scroll: ScrollRef }) {
 export function LimestoneHero() {
   const scroll = useRef(0);
   const { canvasRef, frameloop } = useFrameloopOnVisible();
+  const tier = useDeviceTier();
 
   useEffect(() => {
     const onScroll = () => {
@@ -276,7 +378,11 @@ export function LimestoneHero() {
       ref={canvasRef}
       frameloop={frameloop}
       className="cine-hero-canvas"
-      dpr={[1, 1.75]}
+      // R3F's container defaults to position:relative inline, which beats the
+      // stylesheet's position:absolute and collapses the canvas to a 150px grid
+      // row. Force the intended full-bleed overlay so the monolith fills the hero.
+      style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
+      dpr={tier === "low" ? 1 : [1, 1.75]}
       gl={{
         antialias: false, // SMAA handles AA; native antialias wastes GPU
         alpha: false,
@@ -286,7 +392,7 @@ export function LimestoneHero() {
       camera={{ position: [0, 0, 6.2], fov: 42 }}
     >
       <Suspense fallback={null}>
-        <Scene scroll={scroll} />
+        <Scene scroll={scroll} tier={tier} />
       </Suspense>
     </Canvas>
   );

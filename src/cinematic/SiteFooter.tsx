@@ -19,6 +19,10 @@ export function SiteFooter() {
 
   return (
     <footer className="cine-footer" id="footer">
+      {/* Subtle globe glow backdrop — premium-only decorative layer (z-index:0,
+          pointer-events:none). Footer content sits above via cinematic-video.css. */}
+      <div className="wd-footer-globe-glow" aria-hidden="true" />
+
       <div className="cine-footer-inner">
         <div className="cine-footer-brand">
           <a className="cine-brand" href="#top" aria-label="White Dot LLP — back to top">

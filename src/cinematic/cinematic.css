@@ -579,6 +579,8 @@ a:focus-visible {
   display: grid;
   align-items: center;
   overflow: hidden;
+  padding-top: clamp(90px, 12vh, 120px);
+  box-sizing: border-box;
 }
 
 .cine-hero-studio {
@@ -693,7 +695,7 @@ a:focus-visible {
   /* Full-bleed wrapper up to maxw */
   width: min(var(--c-maxw), calc(100% - 2.2rem));
   margin: 0 auto;
-  padding-top: 8vh;
+  padding-top: 1.5rem;
   pointer-events: none;
 }
 
@@ -3677,15 +3679,26 @@ a:focus-visible {
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background:
-    radial-gradient(
-      ellipse 80% 60% at
-        calc(20% + calc(var(--wd-scroll) * 60%))
-        calc(30% + calc(var(--wd-scroll-warm) * 40%)),
-      rgba(122, 133, 124, calc(0.04 + var(--wd-scroll-warm) * 0.04)) 0%,
-      transparent 70%
-    );
-  transition: background 0.1s linear;
+  overflow: hidden;
+}
+
+/* GPU-accelerated scroll-tone glow element */
+.wd-tone-glow {
+  position: absolute;
+  /* Extra inset to allow translate3d without revealing edges */
+  inset: -30vh -30vw;
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 50%,
+    rgba(122, 133, 124, 0.08) 0%,
+    transparent 70%
+  );
+  opacity: calc(0.5 + var(--wd-scroll-warm, 0) * 0.5);
+  transform: translate3d(
+    calc(calc(var(--wd-scroll, 0) - 0.5) * 60vw),
+    calc(calc(var(--wd-scroll-warm, 0) - 0.5) * 40vh),
+    0
+  );
+  will-change: transform;
 }
 
 /* Subtle parallax on the section kickers via scroll var — pure CSS, no JS */
@@ -4723,3 +4736,63 @@ body {
     justify-content: flex-start;
   }
 }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   VIDEO HERO — film centerpiece (replaces the 3D model) + bolder headline.
+   Mineral palette only. Drop a film at public/assets/videos/hero.mp4.
+   ════════════════════════════════════════════════════════════════════════════ */
+.cine-hero-video {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  /* Mineral placeholder shown until a film is added (prod-safe, no text). */
+  background: radial-gradient(120% 95% at 68% 32%, #20251f 0%, #13160f 52%, #0b0e0c 100%);
+}
+.cine-hero-video-el {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.03) contrast(1.02);
+}
+/* Legibility grade over the film — mineral, left-weighted so the copy column
+   stays readable while the right stays cinematic. */
+.cine-hero-video::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(11,14,12,0.94) 0%, rgba(11,14,12,0.66) 34%, rgba(11,14,12,0.12) 68%, rgba(11,14,12,0.5) 100%),
+    linear-gradient(0deg, rgba(11,14,12,0.88) 0%, rgba(11,14,12,0) 42%);
+}
+
+/* Bolder hero headline (same display face + your cream-to-sage accent). */
+.cine-hero h1,
+:root[data-premium="on"] .cine-hero h1 {
+  font-size: clamp(3.2rem, 9vw, 8.4rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 0.9;
+}
+
+@media (max-width: 768px) {
+  .cine-hero-video::after {
+    background: linear-gradient(0deg, rgba(11,14,12,0.92) 0%, rgba(11,14,12,0.4) 55%, rgba(11,14,12,0.7) 100%);
+  }
+  .cine-hero h1,
+  :root[data-premium="on"] .cine-hero h1 {
+    font-size: clamp(2.6rem, 13vw, 4.4rem);
+  }
+}
+
+/* LIMEX model placed in the "More than a filler" section (replaces the image).
+   The model lives ONLY here; the hero uses video. */
+.cine-detail-rock.is-3d {
+  width: 100%;
+  min-height: clamp(360px, 40vw, 540px);
+}
+.cine-detail-rock.is-3d .cine-core-canvas { z-index: 2; }
+.cine-detail-rock.is-3d .cine-detail-rock-glow { z-index: 0; }

@@ -4,6 +4,7 @@ import { Sparkles } from "@react-three/drei";
 import * as THREE from "three";
 import { LimexModel, ProceduralCrystal, ModelBoundary } from "./LimexModel";
 import { useFrameloopOnVisible } from "./useFrameloopOnVisible";
+import { useDeviceTier } from "./useDeviceTier";
 
 const ACCENT = "#9aa893";
 
@@ -54,7 +55,8 @@ function Rings({ scroll }: { scroll: ScrollRef }) {
   );
 }
 
-function Scene({ scroll }: { scroll: ScrollRef }) {
+function Scene({ scroll, tier }: { scroll: ScrollRef; tier: string }) {
+  const isLowTier = tier === "low";
   return (
     <>
       <fog attach="fog" args={["#181b19", 8, 18]} />
@@ -70,23 +72,26 @@ function Scene({ scroll }: { scroll: ScrollRef }) {
         </ModelBoundary>
       </CoreGroup>
       <Rings scroll={scroll} />
-      <Sparkles count={70} scale={[9, 7, 5]} size={2.2} speed={0.25} opacity={0.5} color={ACCENT} />
+      <Sparkles count={isLowTier ? 25 : 70} scale={[9, 7, 5]} size={2.2} speed={0.25} opacity={0.5} color="#ffffff" />
     </>
   );
 }
 
 export default function LimexCore3D({ scroll }: { scroll: ScrollRef }) {
   const { canvasRef, frameloop } = useFrameloopOnVisible();
+  const tier = useDeviceTier();
   return (
     <Canvas
       ref={canvasRef}
       frameloop={frameloop}
       className="cine-core-canvas"
-      dpr={[1, 1.75]}
-      gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+      // R3F's inline position:relative collapses the canvas; force the intended fill.
+      style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+      dpr={tier === "low" ? 1 : [1, 1.75]}
+      gl={{ antialias: tier !== "low", alpha: true, powerPreference: "high-performance" }}
       camera={{ position: [0, 0, 6], fov: 42 }}
     >
-      <Scene scroll={scroll} />
+      <Scene scroll={scroll} tier={tier} />
     </Canvas>
   );
 }

@@ -15,6 +15,7 @@
 
 import { useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
+import { SectionVideo } from "./SectionVideo";
 
 /* ───────────────────────────── Video source config ─────────────────────────────
  *
@@ -66,9 +67,13 @@ export function MaterialCore() {
     <section
       ref={sectionRef}
       id="material-core"
-      className="cine-showcase"
+      className="cine-showcase cine-section--cinematic"
       aria-labelledby="cine-showcase-title"
     >
+      {/* Reused material film — subtle/darkened so it sits quietly behind the
+          launch-film showcase frame (overflow:hidden keeps parallax in-bounds). */}
+      <SectionVideo src="material" intensity="subtle" />
+
       {/* ambient atmospheric wash — limestone beige + muted lime, slow drift */}
       <div className="cine-showcase-ambient" aria-hidden="true">
         <span className="cine-showcase-glow cine-showcase-glow--warm" />
