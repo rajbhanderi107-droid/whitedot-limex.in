@@ -72,6 +72,8 @@ export function SectionVideo({
   const [mounted, setMounted] = useState<boolean>(eager);
   // settled: have we faded the layer in? Drives the opacity 0 -> 1 transition.
   const [settled, setSettled] = useState<boolean>(false);
+  // inView: is the section currently in the viewport? Controls scroll listener registration.
+  const [inView, setInView] = useState<boolean>(false);
 
   /**
    * Lazy mount + play/pause via IntersectionObserver.
@@ -91,6 +93,7 @@ export function SectionVideo({
     if (typeof IntersectionObserver === "undefined") {
       setMounted(true);
       setSettled(true);
+      setInView(true);
       return;
     }
 
@@ -113,6 +116,7 @@ export function SectionVideo({
       (entries) => {
         for (const entry of entries) {
           const video = videoRef.current;
+          setInView(entry.isIntersecting);
           if (!video) continue;
           if (entry.isIntersecting) {
             // play() returns a promise that can reject (autoplay policy / not
@@ -138,7 +142,10 @@ export function SectionVideo({
    * immediately rather than waiting for an intersection callback.
    */
   useEffect(() => {
-    if (eager) setSettled(true);
+    if (eager) {
+      setSettled(true);
+      setInView(true);
+    }
   }, [eager]);
 
   /**
@@ -147,9 +154,10 @@ export function SectionVideo({
    * top. CSS turns that into translateY + scale. rAF-throttled so we touch the
    * DOM at most once per frame. Gated entirely behind premium && !reducedMotion;
    * cleaned up (listener + pending frame) on unmount or when the gate flips off.
+   * Scoped to ONLY register event listeners when inView is true.
    */
   useEffect(() => {
-    if (!cinematic) return;
+    if (!cinematic || !inView) return;
     if (typeof window === "undefined") return;
     const node = rootRef.current;
     if (!node) return;
@@ -183,7 +191,7 @@ export function SectionVideo({
       if (frame) window.cancelAnimationFrame(frame);
       node.style.removeProperty("--sv-p");
     };
-  }, [cinematic]);
+  }, [cinematic, inView]);
 
   // Root layer class: base + intensity modifier + settled (fade) + cinematic
   // (enables parallax CSS) + caller extras.
