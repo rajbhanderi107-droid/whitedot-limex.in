@@ -1,5 +1,6 @@
 import { getPhoneHref, getWhatsappHref, useSiteSettings } from "./siteSettings";
 import { useBrandLogo } from "../useBrandLogo";
+import { SoundToggle } from "../sound-wd/SoundToggle";
 
 const explore = [
   { label: "Material", href: "#material" },
@@ -91,6 +92,7 @@ export function SiteFooter() {
           <span className="cine-footer-disclaimer">
             Ads are created by the use of artificial intelligence.
           </span>
+          <SoundToggle />
         </div>
         <span>LIMEX is a material developed by TBM Co., Ltd. (Japan).</span>
       </div>

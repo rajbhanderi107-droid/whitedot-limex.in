@@ -243,7 +243,7 @@ function Scene({ scroll, tier }: { scroll: ScrollRef; tier: string }) {
   const sparkB = isLowTier ? 8 : (low ? 14 : 28);
   return (
     <>
-      <color attach="background" args={["#0b0e0c"]} />
+      {/* Background color removed to support transparent WebGL overlay on top of video */}
       <fog attach="fog" args={["#0b0e0c", 9, 20]} />
 
       {/* Ambient — barely-there, let rim lights sculpt the form */}
@@ -385,7 +385,7 @@ export function LimestoneHero() {
       dpr={tier === "low" ? 1 : [1, 1.75]}
       gl={{
         antialias: false, // SMAA handles AA; native antialias wastes GPU
-        alpha: false,
+        alpha: true,
         powerPreference: "high-performance",
         stencil: false,
       }}

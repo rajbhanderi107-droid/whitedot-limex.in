@@ -22,7 +22,7 @@
  * Colors: none. The grade/placeholder live in cinematic.css / cinematic-video.css
  * using the brand mineral tokens only.
  */
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { usePremium } from "../premium-wd";
 
@@ -34,15 +34,45 @@ export function VideoHero() {
 
   // The hero film layer — carries the --sv-p custom property for parallax.
   const layerRef = useRef<HTMLDivElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [inView, setInView] = useState<boolean>(true);
+
+  /**
+   * Visibility observer for Hero section:
+   * - Pauses the background video when scrolled completely out of view.
+   * - Resume playing when returning to the top.
+   */
+  useEffect(() => {
+    const node = layerRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") return;
+
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+        const video = videoRef.current;
+        if (video) {
+          if (entry.isIntersecting) {
+            void video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        }
+      },
+      { threshold: 0 }
+    );
+    obs.observe(node);
+    return () => obs.disconnect();
+  }, []);
 
   /**
    * Scroll parallax + scale — writes --sv-p (0..1) on .cine-hero-video.
    * Mirrors SectionVideo so the hero shares the exact same motion language.
    * rAF-throttled (one DOM write per frame). Gated behind premium &&
    * !reduced-motion; listener + pending frame cleaned up on unmount / gate flip.
+   * Scoped to run ONLY when the Hero section is visible (inView is true).
    */
   useEffect(() => {
-    if (!cinematic) return;
+    if (!cinematic || !inView) return;
     if (typeof window === "undefined") return;
     const node = layerRef.current;
     if (!node) return;
@@ -76,11 +106,12 @@ export function VideoHero() {
       if (frame) window.cancelAnimationFrame(frame);
       node.style.removeProperty("--sv-p");
     };
-  }, [cinematic]);
+  }, [cinematic, inView]);
 
   return (
     <div className="cine-hero-video" aria-hidden="true" ref={layerRef}>
       <video
+        ref={videoRef}
         className="cine-hero-video-el"
         autoPlay
         muted

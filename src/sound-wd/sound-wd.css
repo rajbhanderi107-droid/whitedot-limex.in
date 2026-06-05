@@ -1,0 +1,55 @@
+/* White Dot LLP — sound system styles */
+
+.cine-sound-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: #c9c8c2;
+  font-family: var(--wd-font-mono, ui-monospace, monospace);
+  font-size: 0.74rem;
+  cursor: pointer;
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.4s ease,
+    color 0.3s ease;
+  will-change: transform;
+}
+
+.cine-sound-toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(154, 168, 147, 0.4);
+  color: #f3f1ea;
+  transform: translateY(-1.5px);
+}
+
+.cine-sound-toggle:active {
+  transform: translateY(-0.5px);
+}
+
+.cine-sound-toggle svg.is-pulsing {
+  color: var(--c-accent, #9aa893);
+  animation: soundPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes soundPulse {
+  0%, 100% { transform: scale(1); opacity: 0.72; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .cine-sound-toggle {
+    transition: none;
+  }
+  .cine-sound-toggle svg.is-pulsing {
+    animation: none;
+  }
+  .cine-sound-toggle:hover {
+    transform: none;
+  }
+}
