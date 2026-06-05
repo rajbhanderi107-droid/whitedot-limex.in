@@ -938,8 +938,8 @@ a:focus-visible {
 .cine-hero-h1-line {
   display: block;
   overflow: hidden;
-  padding: 0.08em 0 0.13em; /* prevent tall display glyph clipping */
-  margin: -0.08em 0 -0.06em;
+  padding: 0.08em 0 0.28em; /* prevent tall display glyph clipping */
+  margin: -0.08em 0 -0.22em;
 }
 
 /* Each word is inline-block so the clip is per-word, not per-line */
