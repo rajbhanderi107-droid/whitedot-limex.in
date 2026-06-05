@@ -163,15 +163,21 @@ export function SectionVideo({
     if (!node) return;
 
     let frame = 0;
+    let cachedTop = 0;
+    let cachedHeight = 0;
+
+    const measure = () => {
+      const rect = node.getBoundingClientRect();
+      cachedTop = rect.top + window.scrollY;
+      cachedHeight = rect.height;
+    };
 
     const update = () => {
       frame = 0;
-      const rect = node.getBoundingClientRect();
       const viewport = window.innerHeight || 1;
-      // Progress: 0 when the layer's top sits at the bottom of the viewport,
-      // 1 when the layer's bottom sits at the top. Clamped to [0,1].
-      const total = viewport + rect.height;
-      const raw = (viewport - rect.top) / total;
+      const rectTop = cachedTop - window.scrollY;
+      const total = viewport + cachedHeight;
+      const raw = (viewport - rectTop) / total;
       const progress = raw < 0 ? 0 : raw > 1 ? 1 : raw;
       node.style.setProperty("--sv-p", progress.toFixed(4));
     };
@@ -181,13 +187,20 @@ export function SectionVideo({
       frame = window.requestAnimationFrame(update);
     };
 
+    const onResize = () => {
+      measure();
+      onScroll();
+    };
+
+    measure();
     update(); // prime the value so there is no first-scroll jump
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
 
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
       if (frame) window.cancelAnimationFrame(frame);
       node.style.removeProperty("--sv-p");
     };

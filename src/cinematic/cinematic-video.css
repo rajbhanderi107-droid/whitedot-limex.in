@@ -647,3 +647,37 @@
   /* Film grain slightly fainter on mobile (battery + clarity). */
   .wd-film-grain::before { opacity: 0.04; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   SCROLLING PERFORMANCE SHIELD (60FPS SCROLL)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Hide duplicate static film grain when premium is active to avoid rendering twice */
+:root[data-premium="on"] .cine::after {
+  display: none !important;
+}
+
+/* When scrolling, completely pause dynamic SVG feTurbulence film grain repaints */
+body.is-scrolling .wd-film-grain::before,
+body.is-scrolling .cine::after {
+  animation: none !important;
+  display: none !important;
+}
+
+/* Simplify expensive fixed/absolute backdrop-filter blurs to solid colors during scroll */
+body.is-scrolling .cine-nav {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgba(8, 10, 9, 0.96) !important;
+}
+
+body.is-scrolling .glass-panel,
+body.is-scrolling .cine-cmp-card,
+body.is-scrolling .cine-app-block,
+body.is-scrolling .cine-inquiry-wrap,
+body.is-scrolling .cine-consult-step,
+body.is-scrolling .cine-mc-card {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgba(12, 14, 13, 0.94) !important;
+}

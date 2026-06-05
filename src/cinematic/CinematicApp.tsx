@@ -123,15 +123,32 @@ function useScrollTone(enabled: boolean) {
 
     let ticking = false;
     const root = document.documentElement;
+    const body = document.body;
+    let cachedDocHeight = 0;
+    let scrollTimeout: number;
+    let isScrolling = false;
+
+    const measure = () => {
+      cachedDocHeight = document.documentElement.scrollHeight - window.innerHeight;
+    };
 
     const onScroll = () => {
+      // Toggle is-scrolling class to pause heavy effects during scroll
+      if (!isScrolling) {
+        isScrolling = true;
+        body.classList.add("is-scrolling");
+      }
+      clearTimeout(scrollTimeout);
+      scrollTimeout = window.setTimeout(() => {
+        isScrolling = false;
+        body.classList.remove("is-scrolling");
+      }, 150);
+
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
         const scrollTop = window.scrollY;
-        const docHeight =
-          document.documentElement.scrollHeight - window.innerHeight;
-        const progress = docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0;
+        const progress = cachedDocHeight > 0 ? Math.min(scrollTop / cachedDocHeight, 1) : 0;
         // Warm peak in the middle of the page journey (~40–60% scroll)
         const warm = Math.sin(progress * Math.PI);
         root.style.setProperty("--wd-scroll", String(progress.toFixed(4)));
@@ -140,12 +157,24 @@ function useScrollTone(enabled: boolean) {
       });
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
+    const onResize = () => {
+      measure();
+      onScroll();
+    };
+
+    measure();
     root.style.setProperty("--wd-scroll", "0");
     root.style.setProperty("--wd-scroll-warm", "0");
     onScroll();
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
+
     return () => {
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+      clearTimeout(scrollTimeout);
+      body.classList.remove("is-scrolling");
       root.style.removeProperty("--wd-scroll");
       root.style.removeProperty("--wd-scroll-warm");
     };
