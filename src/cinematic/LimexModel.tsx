@@ -204,8 +204,8 @@ export function LimexModel({ size = 3 }: { size?: number }) {
     clone.traverse((o) => {
       const m = o as THREE.Mesh;
       if (m.isMesh) {
-        m.castShadow = true;
-        m.receiveShadow = true;
+        m.castShadow = !isLowTier;
+        m.receiveShadow = !isLowTier;
         // Capture first mesh geo for the fresnel layer (approximate shell)
         if (!firstGeo && m.geometry) firstGeo = m.geometry;
         // Upgrade material with mineral PBR properties + emissive veins.
@@ -215,6 +215,17 @@ export function LimexModel({ size = 3 }: { size?: number }) {
         if (m.material) {
           const mats = Array.isArray(m.material) ? m.material : [m.material];
           const upgraded = mats.map((mat) => {
+            if (isLowTier) {
+              if (mat instanceof THREE.MeshStandardMaterial) {
+                mat.color.setRGB(1.0, 1.0, 1.0);
+                mat.roughness = Math.min(mat.roughness ?? 0.85, 0.7);
+                mat.metalness = Math.max(mat.metalness ?? 0, 0.04);
+                mat.emissive = new THREE.Color("#ffffff");
+                mat.emissiveIntensity = 0.01;
+                mat.needsUpdate = true;
+              }
+              return mat;
+            }
             if (mat instanceof THREE.MeshStandardMaterial && !(mat instanceof THREE.MeshPhysicalMaterial)) {
               // Manual property transfer instead of phys.copy(mat) — copy()
               // fails because MeshPhysicalMaterial.copy() reads physical-only
@@ -302,7 +313,7 @@ export function LimexModel({ size = 3 }: { size?: number }) {
     const fresnelGeo = firstGeo ?? new THREE.SphereGeometry(size * 0.48, 32, 24);
 
     return { obj: clone, mergedGeo: fresnelGeo };
-  }, [scene, size]);
+  }, [scene, size, isLowTier]);
 
   // Cinematic turntable + title-card reveal. Inner group so it composes UNDER
   // the Float/parallax/scroll transforms owned by the hero scene.
@@ -337,7 +348,7 @@ export function LimexModel({ size = 3 }: { size?: number }) {
       {/* Close-in particle aura — tight, slow, minimal. Different from the
           outer atmosphere sparkles in the Scene so they read as two depth layers. */}
       <Sparkles
-        count={22}
+        count={isLowTier ? 6 : 22}
         scale={[size * 0.9, size * 0.85, size * 0.85]}
         size={1.4}
         speed={0.09}
@@ -345,7 +356,7 @@ export function LimexModel({ size = 3 }: { size?: number }) {
         color="#ffffff"
       />
       <Sparkles
-        count={12}
+        count={isLowTier ? 3 : 12}
         scale={[size * 0.6, size * 0.55, size * 0.55]}
         size={2.2}
         speed={0.06}

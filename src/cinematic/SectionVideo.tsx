@@ -104,6 +104,8 @@ export function SectionVideo({
           if (entry.isIntersecting) {
             setMounted(true);
             setSettled(true);
+          } else {
+            setMounted(false);
           }
         }
       },
@@ -111,20 +113,11 @@ export function SectionVideo({
     );
     preloadObserver.observe(node);
 
-    // Visibility observer: play when on-screen, pause when fully gone (perf).
+    // Visibility observer: tracks if the section is in the viewport.
     const playObserver = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          const video = videoRef.current;
           setInView(entry.isIntersecting);
-          if (!video) continue;
-          if (entry.isIntersecting) {
-            // play() returns a promise that can reject (autoplay policy / not
-            // yet mounted) — swallow it; muted+playsInline keeps autoplay legal.
-            void video.play().catch(() => undefined);
-          } else {
-            video.pause();
-          }
         }
       },
       { threshold: 0 },
@@ -136,6 +129,19 @@ export function SectionVideo({
       playObserver.disconnect();
     };
   }, []);
+
+  /**
+   * Sync play/pause with visibility and mount state.
+   */
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (inView) {
+      void video.play().catch(() => undefined);
+    } else {
+      video.pause();
+    }
+  }, [mounted, inView]);
 
   /**
    * Eager (hero) path: the source is mounted from the first render, so settle

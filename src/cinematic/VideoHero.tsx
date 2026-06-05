@@ -36,11 +36,12 @@ export function VideoHero() {
   const layerRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [inView, setInView] = useState<boolean>(true);
+  const [mounted, setMounted] = useState<boolean>(true);
 
   /**
    * Visibility observer for Hero section:
-   * - Pauses the background video when scrolled completely out of view.
-   * - Resume playing when returning to the top.
+   * - Pauses and unmounts the background video when scrolled completely out of view.
+   * - Remounts and plays when returning to the top.
    */
   useEffect(() => {
     const node = layerRef.current;
@@ -49,20 +50,26 @@ export function VideoHero() {
     const obs = new IntersectionObserver(
       ([entry]) => {
         setInView(entry.isIntersecting);
-        const video = videoRef.current;
-        if (video) {
-          if (entry.isIntersecting) {
-            void video.play().catch(() => {});
-          } else {
-            video.pause();
-          }
-        }
+        setMounted(entry.isIntersecting);
       },
       { threshold: 0 }
     );
     obs.observe(node);
     return () => obs.disconnect();
   }, []);
+
+  /**
+   * Sync play/pause with visibility and mount state.
+   */
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (inView) {
+      void video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  }, [mounted, inView]);
 
   /**
    * Scroll parallax + scale — writes --sv-p (0..1) on .cine-hero-video.
@@ -110,18 +117,20 @@ export function VideoHero() {
 
   return (
     <div className="cine-hero-video" aria-hidden="true" ref={layerRef}>
-      <video
-        ref={videoRef}
-        className="cine-hero-video-el"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        poster={`${base}assets/videos/hero-poster.jpg`}
-      >
-        <source src={`${base}assets/videos/hero.mp4`} type="video/mp4" />
-      </video>
+      {mounted && (
+        <video
+          ref={videoRef}
+          className="cine-hero-video-el"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster={`${base}assets/videos/hero-poster.jpg`}
+        >
+          <source src={`${base}assets/videos/hero.mp4`} type="video/mp4" />
+        </video>
+      )}
     </div>
   );
 }

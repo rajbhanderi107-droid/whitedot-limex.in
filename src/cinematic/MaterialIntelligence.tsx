@@ -67,7 +67,7 @@ export function MaterialIntelligence() {
         <motion.div className="cine-mi-core" variants={core}>
           <span className="cine-mi-ring" aria-hidden="true" />
           <span className="cine-mi-ring two" aria-hidden="true" />
-          {premium && !reduce ? (
+          {!reduce ? (
             <Suspense fallback={<LimexRock variant="is-mi" />}>
               <LimexOrb />
             </Suspense>
