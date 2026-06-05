@@ -64,8 +64,8 @@ const data: Record<Tab, Row[]> = {
     },
     {
       category: "FMCG & bottle applications",
-      limex: "Suitable for FMCG and bottle applications where LIMEX helps reduce virgin plastic usage while maintaining required product strength.",
-      filler: "Not suitable for bottle applications; bottles generally remain dependent on 100% virgin plastic because local fillers cannot deliver the required strength, consistency and processing reliability.",
+      limex: "Suitable for FMCG and bottle applications where LIMEX helps reduce conventional plastic usage while maintaining required product strength.",
+      filler: "Not suitable for bottle applications; bottles generally remain dependent on 100% conventional plastic because local fillers cannot deliver the required strength, consistency and processing reliability.",
     },
   ],
   Quality: [

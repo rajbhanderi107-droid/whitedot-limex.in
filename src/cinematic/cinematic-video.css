@@ -117,16 +117,13 @@
 }
 
 /* DARK SCRIM — sits ABOVE the video, BELOW content (z-index:2 set in §5).
-   Provides WCAG-AA contrast for body copy over the film. intensity scales it. */
+   Disabled: user requested removal of the black darken overlay. */
 .cine-svideo-scrim {
   position: absolute;
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  /* Default (medium): a vertical mineral grade + soft centre vignette. */
-  background:
-    radial-gradient(135% 120% at 50% 38%, rgba(8, 10, 9, 0) 0%, rgba(8, 10, 9, 0.42) 78%, rgba(8, 10, 9, 0.62) 100%),
-    linear-gradient(180deg, rgba(9, 11, 10, 0.62) 0%, rgba(9, 11, 10, 0.34) 30%, rgba(9, 11, 10, 0.46) 72%, rgba(9, 11, 10, 0.7) 100%);
+  background: none;
 }
 
 /* ── Intensity modifiers — darkness of the scrim + how much the video shows.
@@ -139,9 +136,7 @@
   filter: saturate(0.96) contrast(1.0) brightness(0.6);
 }
 .cine-svideo--subtle .cine-svideo-scrim {
-  background:
-    radial-gradient(130% 120% at 50% 40%, rgba(7, 9, 8, 0.4) 0%, rgba(7, 9, 8, 0.62) 70%, rgba(7, 9, 8, 0.8) 100%),
-    linear-gradient(180deg, rgba(7, 9, 8, 0.82) 0%, rgba(7, 9, 8, 0.66) 40%, rgba(7, 9, 8, 0.74) 75%, rgba(7, 9, 8, 0.88) 100%);
+  background: none;
 }
 
 .cine-svideo--strong .cine-svideo-el,
@@ -149,9 +144,7 @@
   filter: saturate(1.05) contrast(1.04) brightness(1.0);
 }
 .cine-svideo--strong .cine-svideo-scrim {
-  background:
-    radial-gradient(140% 125% at 50% 36%, rgba(8, 10, 9, 0) 0%, rgba(8, 10, 9, 0.3) 80%, rgba(8, 10, 9, 0.5) 100%),
-    linear-gradient(180deg, rgba(9, 11, 10, 0.5) 0%, rgba(9, 11, 10, 0.22) 32%, rgba(9, 11, 10, 0.34) 70%, rgba(9, 11, 10, 0.6) 100%);
+  background: none;
 }
 
 
@@ -524,7 +517,7 @@
   z-index: 9; /* above content, below modals/menus (which sit far higher) */
   pointer-events: none;
   /* Soft cinematic vignette (always on, even reduced-motion). */
-  background: radial-gradient(120% 120% at 50% 50%, transparent 58%, rgba(0, 0, 0, 0.28) 100%);
+  background: none;
 }
 /* The grain itself lives on a pseudo so the vignette stays still while grain
    drifts. Tiled fractal-noise SVG, very low opacity. */
@@ -614,15 +607,12 @@
       translateY(calc((var(--sv-p) - 0.5) * 3%))
       scale(calc(1.05 + var(--sv-p) * 0.04));
   }
-  /* A touch stronger scrim everywhere for readability on small screens. */
+  /* Scrims removed per user request — no dark overlay on mobile either. */
   .cine-svideo-scrim {
-    background:
-      radial-gradient(135% 120% at 50% 38%, rgba(8, 10, 9, 0.18) 0%, rgba(8, 10, 9, 0.5) 78%, rgba(8, 10, 9, 0.7) 100%),
-      linear-gradient(180deg, rgba(9, 11, 10, 0.7) 0%, rgba(9, 11, 10, 0.46) 32%, rgba(9, 11, 10, 0.56) 72%, rgba(9, 11, 10, 0.78) 100%);
+    background: none;
   }
   .cine-svideo--subtle .cine-svideo-scrim {
-    background:
-      linear-gradient(180deg, rgba(7, 9, 8, 0.88) 0%, rgba(7, 9, 8, 0.74) 40%, rgba(7, 9, 8, 0.82) 75%, rgba(7, 9, 8, 0.92) 100%);
+    background: none;
   }
 
   /* GlobalImpact: globe recedes to a background wash; content full-width so
@@ -662,22 +652,4 @@ body.is-scrolling .wd-film-grain::before,
 body.is-scrolling .cine::after {
   animation: none !important;
   display: none !important;
-}
-
-/* Simplify expensive fixed/absolute backdrop-filter blurs to solid colors during scroll */
-body.is-scrolling .cine-nav {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  background: rgba(8, 10, 9, 0.96) !important;
-}
-
-body.is-scrolling .glass-panel,
-body.is-scrolling .cine-cmp-card,
-body.is-scrolling .cine-app-block,
-body.is-scrolling .cine-inquiry-wrap,
-body.is-scrolling .cine-consult-step,
-body.is-scrolling .cine-mc-card {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  background: rgba(12, 14, 13, 0.94) !important;
 }

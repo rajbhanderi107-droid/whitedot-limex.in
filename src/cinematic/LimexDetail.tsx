@@ -99,7 +99,7 @@ const applications = [
   },
   {
     t: "FMCG products",
-    d: "Supports FMCG packaging and bottle formats where reducing virgin plastic without compromising line speed or product strength matters — subject to grade and trial validation.",
+    d: "Supports FMCG packaging and bottle formats where reducing conventional plastic without compromising line speed or product strength matters — subject to grade and trial validation.",
   },
   {
     t: "Sheets & printing",

@@ -71,7 +71,7 @@ const industries: IndustryData[] = [
     tiles: [
       { label: "Thin-wall container lid", detail: "Drop-in LIMEX compound on existing injection tooling. No mold modification." },
       { label: "Industrial pallet foot", detail: "High-load structural foot. Mineral fill improves creep resistance." },
-      { label: "Cap and closure", detail: "PP-LIMEX blend cap. Comparable torque values to virgin PP across ±15°C." },
+      { label: "Cap and closure", detail: "PP-LIMEX blend cap. Comparable torque values to conventional PP across ±15°C." },
     ],
   },
   {
@@ -136,7 +136,7 @@ const industries: IndustryData[] = [
     note: "Sacks and fabric-form products with reduced plastic.",
     tiles: [
       { label: "Woven PP sack", detail: "LIMEX-blend woven polypropylene sack for agricultural, cement and bulk-goods packaging. Comparable tensile and tear strength to conventional woven PP." },
-      { label: "Non-woven fabric sack", detail: "LIMEX-integrated non-woven sack for retail, carry and promotional use. Reduced virgin plastic content without compromising weight rating or stitchability." },
+      { label: "Non-woven fabric sack", detail: "LIMEX-integrated non-woven sack for retail, carry and promotional use. Reduced conventional plastic content without compromising weight rating or stitchability." },
       { label: "FIBC / bulk bag liner", detail: "LIMEX compound liner for flexible intermediate bulk containers. Supports moisture resistance and consistent sealing performance." },
     ],
   },

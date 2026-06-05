@@ -659,17 +659,14 @@ a:focus-visible {
   inset: 0;
   z-index: 0;
 }
-/* vignette + edge-darken for cinematic depth */
+/* vignette + edge-darken removed per user request */
 .cine-hero::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background:
-    radial-gradient(ellipse 70% 60% at 50% 42%, transparent 0%, rgba(0, 0, 0, 0.45) 100%),
-    radial-gradient(ellipse 120% 40% at 50% 100%, rgba(0, 0, 0, 0.72) 0%, transparent 100%),
-    linear-gradient(180deg, rgba(8, 9, 11, 0.28) 0%, transparent 22%, transparent 62%, var(--c-bg) 98%);
+  background: none;
 }
 
 /* Adaptive contrast scrim behind hero copy — isolates text from the 3D scene.
@@ -1212,13 +1209,8 @@ a:focus-visible {
   content: "";
   position: absolute;
   inset: 0;
-  /* Cool vignette that deepens at start and end */
-  background: radial-gradient(
-    ellipse 100% 80% at 50% 50%,
-    transparent 30%,
-    rgba(5, 7, 6, 0.38) 100%
-  );
-  opacity: calc(1 - var(--wd-scroll-warm, 0) * 0.4);
+  /* Cool vignette removed per user request */
+  background: none;
 }
 
 /* ── 3. Hero: drifting mineral atmosphere — slow breathing radial glow ── */
@@ -4696,6 +4688,10 @@ body {
   margin-inline: auto;
 }
 
+.cine-consult-head .lead {
+  margin-inline: auto;
+}
+
 .cine-consult-actions {
   justify-content: center;
 }
@@ -4757,16 +4753,15 @@ body {
   object-fit: cover;
   filter: saturate(1.03) contrast(1.02);
 }
-/* Legibility grade over the film — mineral, left-weighted so the copy column
-   stays readable while the right stays cinematic. */
+/* Legibility grade over the film — lightened: removed heavy black overlay. */
 .cine-hero-video::after {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(11,14,12,0.94) 0%, rgba(11,14,12,0.66) 34%, rgba(11,14,12,0.12) 68%, rgba(11,14,12,0.5) 100%),
-    linear-gradient(0deg, rgba(11,14,12,0.88) 0%, rgba(11,14,12,0) 42%);
+    linear-gradient(90deg, rgba(11,14,12,0.55) 0%, rgba(11,14,12,0.3) 34%, rgba(11,14,12,0) 68%, rgba(11,14,12,0.15) 100%),
+    linear-gradient(0deg, rgba(11,14,12,0.4) 0%, rgba(11,14,12,0) 42%);
 }
 
 /* Bolder hero headline (same display face + your cream-to-sage accent). */
@@ -4780,7 +4775,7 @@ body {
 
 @media (max-width: 768px) {
   .cine-hero-video::after {
-    background: linear-gradient(0deg, rgba(11,14,12,0.92) 0%, rgba(11,14,12,0.4) 55%, rgba(11,14,12,0.7) 100%);
+    background: linear-gradient(0deg, rgba(11,14,12,0.5) 0%, rgba(11,14,12,0.15) 55%, rgba(11,14,12,0.25) 100%);
   }
   .cine-hero h1,
   :root[data-premium="on"] .cine-hero h1 {
