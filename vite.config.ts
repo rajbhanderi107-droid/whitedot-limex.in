@@ -7,6 +7,11 @@ export default defineConfig({
   server: {
     allowedHosts: true,
   },
+  build: {
+    // Prevent source maps from being shipped to production —
+    // they expose the full source tree to any visitor with DevTools.
+    sourcemap: false,
+  },
   // No manualChunks: Vite's default splitting keeps the three.js / R3F /
   // postprocessing stack in lazy chunks off the entry (loaded only when a
   // lazy()'d canvas mounts). A custom manualChunks split caused the entry to

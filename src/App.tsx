@@ -64,15 +64,78 @@ const authorizationChain = [
 ];
 
 const productCategories = [
-  "Injection Mould",
-  "Blow Mould [Bottle, Cans and Drums]",
-  "Blow Mould [Bags]",
-  "Thermoforming",
-  "Woven Sac",
-  "Non Woven Sac",
-  "Sealant Packing",
-  "Industrial Molded Goods",
-  "FMCG Packing",
+  {
+    name: "Injection Mould",
+    items: [
+      "Sustainable amenities (hotel toothbrushes, combs, razors)",
+      "Daily stationery goods (rulers, ballpoint pens, organizers)",
+      "Food service tableware (reusable cups, trays, plates)"
+    ]
+  },
+  {
+    name: "Blow Mould [Bottle, Cans and Drums]",
+    items: [
+      "Rigid cosmetic packaging (shampoo and lotion bottles)",
+      "Household chemical containers (cleaners, detergents)",
+      "Industrial canisters, motor oil cans, and storage drums"
+    ]
+  },
+  {
+    name: "Blow Mould [Bags]",
+    items: [
+      "Eco-friendly retail carrier bags and shopping bags",
+      "Heavy-duty garbage bags and bin liners",
+      "Agricultural protective bags and film packaging"
+    ]
+  },
+  {
+    name: "Thermoforming",
+    items: [
+      "Rigid food trays (meat trays, bento boxes, fruit punnets)",
+      "Disposable cups, lids, and take-away containers",
+      "Industrial blister packaging and protective clamshells"
+    ]
+  },
+  {
+    name: "Woven Sac",
+    items: [
+      "Heavy-duty logistics sacs (fertilizer, cement, sand bags)",
+      "Bulk agricultural sacs (grain, sugar, flour packaging)",
+      "Industrial woven sheets and geo-textile coverings"
+    ]
+  },
+  {
+    name: "Non Woven Sac",
+    items: [
+      "Reusable shopping bags and promotional carry totes",
+      "Protective dust covers for garments and footwear",
+      "Disposable medical gowns and hygiene sheets"
+    ]
+  },
+  {
+    name: "Sealant Packing",
+    items: [
+      "Industrial sealant cartridges and adhesive tubes",
+      "High-precision sealing gaskets and industrial rings",
+      "Container caps, closures, and inner liners"
+    ]
+  },
+  {
+    name: "Industrial Molded Goods",
+    items: [
+      "Heavy-duty transport pallets and shipping crates",
+      "Automotive interior parts and dashboard components",
+      "Construction structural spacers and temporary blocks"
+    ]
+  },
+  {
+    name: "FMCG Packing",
+    items: [
+      "Flexible packaging films and stand-up pouches",
+      "Laminated sachets and product wrappers",
+      "Toothpaste tubes and squeezable cosmetic tubes"
+    ]
+  }
 ];
 
 const proofCards = [
@@ -322,7 +385,7 @@ function App() {
       <section className="section authorization" id="authorization">
         <div className="section-kicker">
           <ShieldCheck size={18} />
-          Certification and authorization
+          Authorization chain
         </div>
         <div className="split-heading">
           <h2>An authorized distribution and marketing chain for industries.</h2>
@@ -509,15 +572,15 @@ function App() {
         </div>
         <div className="accordion-grid" aria-label="LIMEX product possibility categories">
           {productCategories.map((category) => (
-            <details className="product-accordion" key={category}>
+            <details className="product-accordion" key={category.name}>
               <summary>
-                <span>{category}</span>
+                <span>{category.name}</span>
                 <ChevronDown size={19} aria-hidden="true" />
               </summary>
               <ul>
-                <li>Product item 1</li>
-                <li>Product item 2</li>
-                <li>Product item 3</li>
+                {category.items.map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
               </ul>
             </details>
           ))}

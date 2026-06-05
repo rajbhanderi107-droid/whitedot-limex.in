@@ -12,6 +12,7 @@ const EMPTY = {
   quantity: "",
   deliveryAddress: "",
   remarks: "",
+  _hp: "",
 };
 
 export function SampleRequestForm() {
@@ -26,8 +27,13 @@ export function SampleRequestForm() {
     e.preventDefault();
     setStatus("sending");
     setErrorMsg("");
+    if (form._hp) {
+      setStatus("sent");
+      return;
+    }
     try {
-      await submitPublic("sample-request", form);
+      const { _hp, ...payload } = form;
+      await submitPublic("sample-request", payload);
       setStatus("sent");
       setForm(EMPTY);
     } catch (err: unknown) {
@@ -51,20 +57,22 @@ export function SampleRequestForm() {
   return (
     <form className="cine-inquiry-form" onSubmit={handleSubmit}>
       <div className="cine-form-row">
-        <input placeholder="Contact person *" required value={form.contactPerson} onChange={set("contactPerson")} />
-        <input type="email" placeholder="Email address *" required value={form.email} onChange={set("email")} />
+        <input placeholder="Contact person *" required value={form.contactPerson} onChange={set("contactPerson")} aria-label="Contact person" />
+        <input type="email" placeholder="Email address *" required value={form.email} onChange={set("email")} aria-label="Email address" />
       </div>
       <div className="cine-form-row">
-        <input placeholder="Phone number" value={form.phone} onChange={set("phone")} />
-        <input placeholder="Company name" value={form.companyName} onChange={set("companyName")} />
+        <input placeholder="Phone number" value={form.phone} onChange={set("phone")} aria-label="Phone number" />
+        <input placeholder="Company name" value={form.companyName} onChange={set("companyName")} aria-label="Company name" />
       </div>
       <div className="cine-form-row">
-        <input placeholder="Material type (e.g. pellet, sheet)" value={form.requestedMaterialType} onChange={set("requestedMaterialType")} />
-        <input placeholder="Application / end product" value={form.application} onChange={set("application")} />
+        <input placeholder="Material type (e.g. pellet, sheet)" value={form.requestedMaterialType} onChange={set("requestedMaterialType")} aria-label="Material type" />
+        <input placeholder="Application / end product" value={form.application} onChange={set("application")} aria-label="Application or end product" />
       </div>
-      <input placeholder="Quantity needed (e.g. 5 kg)" value={form.quantity} onChange={set("quantity")} />
-      <textarea placeholder="Delivery address" rows={2} value={form.deliveryAddress} onChange={set("deliveryAddress")} />
-      <textarea placeholder="Remarks (optional)" rows={3} value={form.remarks} onChange={set("remarks")} />
+      <input placeholder="Quantity needed (e.g. 5 kg)" value={form.quantity} onChange={set("quantity")} aria-label="Quantity needed" />
+      <textarea placeholder="Delivery address" rows={2} value={form.deliveryAddress} onChange={set("deliveryAddress")} aria-label="Delivery address" />
+      <textarea placeholder="Remarks (optional)" rows={3} value={form.remarks} onChange={set("remarks")} aria-label="Remarks" />
+      {/* Honeypot — hidden from humans, bots auto-fill it */}
+      <input name="_hp" type="text" value={form._hp} onChange={set("_hp")} autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, width: 0 }} />
       {status === "error" && <p className="cine-form-error">{errorMsg}</p>}
       <button type="submit" className="cine-btn cine-btn-primary" disabled={status === "sending"}>
         {status === "sending" ? "Submitting..." : "Request Sample"}

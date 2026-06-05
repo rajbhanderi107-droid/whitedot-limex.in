@@ -117,7 +117,7 @@ export function VideoHero() {
         muted
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         poster={`${base}assets/videos/hero-poster.jpg`}
       >
         <source src={`${base}assets/videos/hero.mp4`} type="video/mp4" />

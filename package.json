@@ -21,7 +21,9 @@
     "remove:assistant:wd": "node scripts/remove-assistant-wd.mjs",
     "remove:allplan": "node scripts/remove-allplan.mjs",
     "wire:higgsfield:loop": "node scripts/wire-higgsfield-loop.mjs",
-    "guard:admin-google": "node scripts/guard-admin-google.mjs"
+    "guard:admin-google": "node scripts/guard-admin-google.mjs",
+    "security:audit": "npm audit && npm --prefix server audit",
+    "launch:check": "npm run security:audit && npm run build && npm run backend:build"
   },
   "dependencies": {
     "@react-spring/web": "^10.0.3",

@@ -89,6 +89,7 @@ export function SiteFooter() {
       <div className="cine-footer-base">
         <div className="cine-footer-base-left">
           <span>© {year} White Dot LLP. All rights reserved.</span>
+          <a href="#privacy" className="cine-footer-legal-link">Privacy Policy</a>
           <span className="cine-footer-disclaimer">
             Ads are created by the use of artificial intelligence.
           </span>

@@ -18,6 +18,7 @@ const EMPTY = {
   replacementPct: "50",
   currentPricePerKg: "",
   limexPricePerKg: "",
+  _hp: "",
 };
 
 interface Estimate {
@@ -57,6 +58,10 @@ export function CalculatorForm() {
     e.preventDefault();
     setStatus("sending");
     setErrorMsg("");
+    if (form._hp) {
+      setStatus("sent");
+      return;
+    }
     try {
       await submitPublic("calculator-submission", {
         companyName: form.companyName,
@@ -79,6 +84,7 @@ export function CalculatorForm() {
         },
       });
       setStatus("sent");
+      setForm(EMPTY);
     } catch (err: unknown) {
       setStatus("error");
       setErrorMsg(err instanceof Error ? err.message : "Something went wrong. Please try again.");
@@ -100,16 +106,16 @@ export function CalculatorForm() {
   return (
     <form className="cine-inquiry-form" onSubmit={handleSubmit}>
       <div className="cine-form-row">
-        <input placeholder="Plastic type (e.g. PP, PE)" value={form.plasticType} onChange={set("plasticType")} />
-        <input placeholder="Current grade (optional)" value={form.currentGrade} onChange={set("currentGrade")} />
+        <input placeholder="Plastic type (e.g. PP, PE)" value={form.plasticType} onChange={set("plasticType")} aria-label="Plastic type" />
+        <input placeholder="Current grade (optional)" value={form.currentGrade} onChange={set("currentGrade")} aria-label="Current grade" />
       </div>
       <div className="cine-form-row">
-        <input type="number" min="0" placeholder="Monthly quantity (kg) *" required value={form.monthlyQuantityKg} onChange={set("monthlyQuantityKg")} />
-        <input type="number" min="0" max="100" placeholder="LIMEX replacement %" value={form.replacementPct} onChange={set("replacementPct")} />
+        <input type="number" min="0" placeholder="Monthly quantity (kg) *" required value={form.monthlyQuantityKg} onChange={set("monthlyQuantityKg")} aria-label="Monthly quantity in kilograms" />
+        <input type="number" min="0" max="100" placeholder="LIMEX replacement %" value={form.replacementPct} onChange={set("replacementPct")} aria-label="LIMEX replacement percentage" />
       </div>
       <div className="cine-form-row">
-        <input type="number" min="0" placeholder="Current price ₹/kg (optional)" value={form.currentPricePerKg} onChange={set("currentPricePerKg")} />
-        <input type="number" min="0" placeholder="LIMEX price ₹/kg (optional)" value={form.limexPricePerKg} onChange={set("limexPricePerKg")} />
+        <input type="number" min="0" placeholder="Current price ₹/kg (optional)" value={form.currentPricePerKg} onChange={set("currentPricePerKg")} aria-label="Current price per kilogram in Rupees" />
+        <input type="number" min="0" placeholder="LIMEX price ₹/kg (optional)" value={form.limexPricePerKg} onChange={set("limexPricePerKg")} aria-label="LIMEX price per kilogram in Rupees" />
       </div>
 
       {estimate && (
@@ -133,13 +139,15 @@ export function CalculatorForm() {
       <p className="cine-calc-note">Indicative only. Figures are directional and validated against your actual line during assessment.</p>
 
       <div className="cine-form-row">
-        <input placeholder="Contact person *" required value={form.contactPerson} onChange={set("contactPerson")} />
-        <input type="email" placeholder="Email address *" required value={form.email} onChange={set("email")} />
+        <input placeholder="Contact person *" required value={form.contactPerson} onChange={set("contactPerson")} aria-label="Contact person" />
+        <input type="email" placeholder="Email address *" required value={form.email} onChange={set("email")} aria-label="Email address" />
       </div>
       <div className="cine-form-row">
-        <input placeholder="Phone number" value={form.phone} onChange={set("phone")} />
-        <input placeholder="Company name" value={form.companyName} onChange={set("companyName")} />
+        <input placeholder="Phone number" value={form.phone} onChange={set("phone")} aria-label="Phone number" />
+        <input placeholder="Company name" value={form.companyName} onChange={set("companyName")} aria-label="Company name" />
       </div>
+      {/* Honeypot — hidden from humans, bots auto-fill it */}
+      <input name="_hp" type="text" value={form._hp} onChange={set("_hp")} autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, width: 0 }} />
       {status === "error" && <p className="cine-form-error">{errorMsg}</p>}
       <button type="submit" className="cine-btn cine-btn-primary" disabled={status === "sending"}>
         {status === "sending" ? "Submitting..." : "Send My Estimate"}

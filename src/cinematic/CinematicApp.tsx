@@ -12,6 +12,7 @@ import { LimexComparison } from "./LimexComparison";
 import { Consultation } from "./Consultation";
 import { SiteFooter } from "./SiteFooter";
 import { VideoHero } from "./VideoHero";
+import { PrivacyPolicyModal } from "./PrivacyPolicyModal";
 import { GlobalImpact } from "./GlobalImpact";
 import { useBrandLogo } from "../useBrandLogo";
 import { useLenis } from "./useLenis";
@@ -262,6 +263,25 @@ export default function CinematicApp() {
   useDismissBootLoader();
   const reduce = useReducedMotion();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
+
+  useEffect(() => {
+    const checkHash = () => {
+      if (window.location.hash === "#privacy") {
+        setPrivacyOpen(true);
+      }
+    };
+    checkHash();
+    window.addEventListener("hashchange", checkHash);
+    return () => window.removeEventListener("hashchange", checkHash);
+  }, []);
+
+  const handleClosePrivacy = () => {
+    setPrivacyOpen(false);
+    if (window.location.hash === "#privacy") {
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
+  };
 
   const navRef = useRef<HTMLElement>(null);
   useNavScroll(navRef, premium);
@@ -441,6 +461,7 @@ export default function CinematicApp() {
       {/* ASSISTANT-WD-BEGIN widget */}
       <AssistantShell />
       {/* ASSISTANT-WD-END widget */}
+      <PrivacyPolicyModal open={privacyOpen} onClose={handleClosePrivacy} />
     </main>
   );
 }

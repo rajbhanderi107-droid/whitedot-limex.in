@@ -62,7 +62,7 @@ export const verdict = {
   title: "An engineered material, not a cheap filler.",
   points: [
     "Increases strength and lets you thin walls — material savings on top of plastic reduction.",
-    "Supports Extended Producer Responsibility (EPR) claims with TBM-certified data.",
+    "Supports Extended Producer Responsibility (EPR) claims with TBM-authorized data.",
     "Consistent, high-capacity supply from Japan and Vietnam — not lot-to-lot guesswork.",
   ],
   note: "Local CaCO₃ filler at ₹28–30 looks cheaper on paper, but limited loading, machine wear, and unproven data make the real cost questionable.",
@@ -246,10 +246,10 @@ export const comparisonRows: ComparisonRow[] = [
   },
   {
     category: "Quality & Compliance",
-    label: "Certification",
+    label: "Authorization",
     icon: "BadgeCheck",
-    limex: "TBM Japan certifies half-yearly or yearly — data sanity is proven.",
-    local: "Consultant-led yearly checks with data-sanity concerns.",
+    limex: "TBM Japan authorizes data half-yearly or yearly — data validation is proven.",
+    local: "Consultant-led yearly checks with data validation concerns.",
   },
   {
     category: "Quality & Compliance",

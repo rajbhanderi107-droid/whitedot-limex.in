@@ -35,6 +35,12 @@ app.use(
   }),
 );
 
+// Block access to device features since the API backend does not require them
+app.use((_req, res, next) => {
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()");
+  next();
+});
+
 app.use(compression());
 
 // ─── CORS — multi-origin support ────────────────
@@ -48,9 +54,28 @@ app.use(
     origin(origin, callback) {
       // Allow requests with no origin (server-to-server, health checks, mobile)
       if (!origin) return callback(null, true);
-      if (ALLOWED_ORIGINS.some((o) => origin.startsWith(o) || o.startsWith(origin))) {
-        return callback(null, true);
+
+      // Exact check
+      if (ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
+
+      // Safe URL-parsed check to prevent prefix/suffix domain-spoofing attacks (e.g. whitedotindia.in.attacker.com)
+      try {
+        const originUrl = new URL(origin);
+        const isAllowed = ALLOWED_ORIGINS.some((allowed) => {
+          try {
+            const allowedUrl = new URL(allowed);
+            return originUrl.protocol === allowedUrl.protocol &&
+                   originUrl.hostname === allowedUrl.hostname &&
+                   originUrl.port === allowedUrl.port;
+          } catch {
+            return false;
+          }
+        });
+        if (isAllowed) return callback(null, true);
+      } catch {
+        // Fallback to exact match
       }
+
       callback(new Error(`CORS blocked: ${origin}`));
     },
     credentials: true,
