@@ -935,7 +935,7 @@ a:focus-visible {
 .cine-hero-h1-line {
   display: block;
   overflow: hidden;
-  padding: 0.08em 0 0.28em; /* prevent tall display glyph clipping */
+  padding: 0.08em 0 0.42em; /* extra bottom padding so descenders (p, g, y) are not clipped */
   margin: -0.08em 0 -0.22em;
 }
 
@@ -4770,7 +4770,7 @@ body {
   font-size: clamp(3.2rem, 9vw, 8.4rem);
   font-weight: 800;
   letter-spacing: -0.035em;
-  line-height: 0.9;
+  line-height: 1.05;
 }
 
 @media (max-width: 768px) {
