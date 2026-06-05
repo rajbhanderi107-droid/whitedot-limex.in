@@ -37,8 +37,9 @@ if (gaId) {
 }
 
 
+const hostname = window.location.hostname.toLowerCase();
 const adminHosts = new Set(["admin.whitedotindia.in", "admin.whitedot-limex.in"]);
-const isAdminHost = adminHosts.has(window.location.hostname.toLowerCase());
+const isAdminHost = adminHosts.has(hostname);
 const PREVIEW_QUERY_KEY = "wd_preview";
 const PREVIEW_STORAGE_KEY = "wd_public_preview";
 const PUBLIC_LOADING_SETTING_KEY = "public_loading_enabled";
@@ -74,10 +75,14 @@ function checkAdminQueryParam() {
 }
 checkAdminQueryParam();
 
-// If the host or local dev hash path selects admin, show the admin SPA.
+// If the host or known public hash path selects admin, show the admin SPA.
 // Otherwise, render the public cinematic website unchanged.
-const isLocal = ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname.toLowerCase());
-const isAdmin = isAdminHost || (isLocal && window.location.hash.startsWith("#/admin"));
+const isLocal = ["localhost", "127.0.0.1", "::1"].includes(hostname);
+const isKnownPublicAdminHost =
+  hostname === "whitedotindia.in" ||
+  hostname === "www.whitedotindia.in" ||
+  (hostname === "rajbhanderi107-droid.github.io" && window.location.pathname.startsWith("/whitedot-limex.in/"));
+const isAdmin = isAdminHost || ((isLocal || isKnownPublicAdminHost) && window.location.hash.startsWith("#/admin"));
 
 function hasPublicPreviewAccess(): boolean {
   const params = new URLSearchParams(window.location.search);
