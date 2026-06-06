@@ -60,7 +60,7 @@ export function Consultation() {
     <section className="cine-section cine-consult cine-section--cinematic" id="consult">
       {/* Warm welcoming brand film for the close. The cinematic override drops
           the opaque forest fill to a translucent scrim so the video reads through. */}
-      <SectionVideo src="brand" intensity="medium" />
+      <SectionVideo src="brand" intensity="medium" loopStart={0} loopEnd={5.0} />
       <div className="cine-consult-head">
         <span className="cine-kicker">Consultation</span>
         <h2>Move from plastic to LIMEX, without re-tooling.</h2>

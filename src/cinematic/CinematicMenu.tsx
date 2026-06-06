@@ -111,7 +111,7 @@ export function CinematicMenu({ open, onClose, whatsappHref }: CinematicMenuProp
   const isPagesProjectHost =
     hostname === "rajbhanderi107-droid.github.io" && window.location.pathname.startsWith("/whitedot-limex.in/");
   const adminBasePath = isPagesProjectHost ? "/whitedot-limex.in" : "";
-  const showAdminLinks = isLocal || localStorage.getItem("wd_show_admin_button") === "true";
+  const showAdminLinks = true;
 
   return (
     <AnimatePresence>

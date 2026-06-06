@@ -43,6 +43,11 @@ interface SectionVideoProps {
   eager?: boolean;
   /** Optional extra class on the root layer. */
   className?: string;
+  /** Optional custom loop boundaries in seconds for segment looping. */
+  loopStart?: number;
+  loopEnd?: number;
+  /** Optional custom CSS object-position for video framing, e.g. "center top". */
+  objectPosition?: string;
 }
 
 export function SectionVideo({
@@ -50,6 +55,9 @@ export function SectionVideo({
   intensity = "medium",
   eager = false,
   className,
+  loopStart,
+  loopEnd,
+  objectPosition,
 }: SectionVideoProps) {
   // Premium flag + reduced-motion preference decide whether we render the film
   // at all and whether parallax runs. In simple/non-premium or reduced-motion
@@ -227,7 +235,14 @@ export function SectionVideo({
   return (
     <div ref={rootRef} className={rootClassName} aria-hidden="true">
       {/* Poster: always present as the immediate, zero-cost placeholder. */}
-      <img className="cine-svideo-poster" src={posterUrl} alt="" loading="lazy" decoding="async" />
+      <img
+        className="cine-svideo-poster"
+        src={posterUrl}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        style={objectPosition ? { objectPosition } : undefined}
+      />
 
       {/*
         Film: only in cinematic mode AND once mounted (eager, or lazily near
@@ -243,6 +258,15 @@ export function SectionVideo({
           playsInline
           preload="none"
           poster={posterUrl}
+          style={objectPosition ? { objectPosition } : undefined}
+          onTimeUpdate={(e) => {
+            if (loopEnd !== undefined) {
+              const video = e.currentTarget;
+              if (video.currentTime >= loopEnd) {
+                video.currentTime = loopStart ?? 0;
+              }
+            }
+          }}
         >
           <source src={videoUrl} type="video/mp4" />
         </video>

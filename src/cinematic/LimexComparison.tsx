@@ -122,7 +122,7 @@ export function LimexComparison() {
     <section className="cine-section cine-cmp cine-section--cinematic" id="comparison">
       {/* Very subtle, heavily darkened brand film — readability of the dense
           comparison table is the top priority here (intensity="subtle"). */}
-      <SectionVideo src="brand" intensity="subtle" />
+      <SectionVideo src="brand" intensity="subtle" loopStart={0} loopEnd={5.0} />
       {premium && !reduce && (
         <span className="wd-section-num" aria-hidden="true">04</span>
       )}
