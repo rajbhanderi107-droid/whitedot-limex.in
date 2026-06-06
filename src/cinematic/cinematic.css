@@ -783,7 +783,7 @@ a:focus-visible {
 }
 .cine-hero-sub {
   max-width: 56ch;
-  margin: 0 0 2.2rem;
+  margin: 0 0 2.2rem !important;
   font-size: clamp(1rem, 1.5vw, 1.2rem);
   line-height: 1.65;
   color: var(--c-muted);
@@ -3946,9 +3946,10 @@ body {
 
 .cine-hero-sub {
   max-width: 590px;
-  color: rgba(250, 250, 247, 0.74);
+  color: rgba(250, 250, 247, 0.88);
   font-size: clamp(1rem, 1.06rem, 1.08rem);
   line-height: 1.78;
+  margin-bottom: 2.2rem;
 }
 
 .cine-btn {
@@ -4526,6 +4527,7 @@ body {
   color: var(--c-muted);
   font-size: clamp(1rem, 1.5vw, 1.2rem);
   line-height: 1.65;
+  margin-bottom: 2.2rem;
 }
 
 .cine-btn {
