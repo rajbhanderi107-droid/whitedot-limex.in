@@ -1,5 +1,6 @@
 import './foundation.css';
 
+import Nav from './sections/Nav';
 import Hero from './sections/Hero';
 import Origin from './sections/Origin';
 import Conversion from './sections/Conversion';
@@ -16,6 +17,7 @@ export default function CinematicAppV2() {
       <a className="v2-skip-link" href="#material">
         Skip to main content
       </a>
+      <Nav />
       <main>
         <Hero />
         <Origin />
