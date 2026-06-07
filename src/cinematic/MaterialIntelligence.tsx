@@ -1,7 +1,6 @@
 import { lazy, Suspense } from "react";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { LimexRock } from "./LimexRock";
-import { SectionVideo } from "./SectionVideo";
 import { useScrollReveal } from "./useScrollReveal";
 import { usePremium } from "../premium-wd";
 
@@ -35,7 +34,6 @@ export function MaterialIntelligence() {
 
   return (
     <section className="cine-section cine-mi cine-section--cinematic" id="material">
-      <SectionVideo src="material" intensity="strong" />
       {premium && !reduce && (
         <span className="wd-section-num" aria-hidden="true">01</span>
       )}

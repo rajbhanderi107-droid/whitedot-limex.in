@@ -1,5 +1,4 @@
 import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { SectionVideo } from "./SectionVideo";
 import { usePremium } from "../premium-wd";
 import {
   Atom,
@@ -126,7 +125,6 @@ export function LimexDetail() {
 
   return (
     <section className="cine-section cine-detail cine-section--cinematic" id="limex">
-      <SectionVideo src="product" intensity="medium" />
       {premium && !reduce && (
         <span className="wd-section-num" aria-hidden="true">03</span>
       )}

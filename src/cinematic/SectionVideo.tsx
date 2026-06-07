@@ -234,45 +234,7 @@ export function SectionVideo({
 
   return (
     <div ref={rootRef} className={rootClassName} aria-hidden="true">
-      {/* Poster: always present as the immediate, zero-cost placeholder. */}
-      <img
-        className="cine-svideo-poster"
-        src={posterUrl}
-        alt=""
-        loading="lazy"
-        decoding="async"
-        style={objectPosition ? { objectPosition } : undefined}
-      />
-
-      {/*
-        Film: only in cinematic mode AND once mounted (eager, or lazily near
-        viewport). Reduced-motion / non-premium never reaches here — poster only.
-        preload="none" + lazy mount keep this to 4 total downloads site-wide.
-      */}
-      {cinematic && mounted && (
-        <video
-          ref={videoRef}
-          className="cine-svideo-el"
-          muted
-          loop
-          playsInline
-          preload="none"
-          poster={posterUrl}
-          style={objectPosition ? { objectPosition } : undefined}
-          onTimeUpdate={(e) => {
-            if (loopEnd !== undefined) {
-              const video = e.currentTarget;
-              if (video.currentTime >= loopEnd) {
-                video.currentTime = loopStart ?? 0;
-              }
-            }
-          }}
-        >
-          <source src={videoUrl} type="video/mp4" />
-        </video>
-      )}
-
-      {/* Dark readability scrim — sits above the film, below the content. */}
+      {/* Dark readability scrim — sits above the background, below the content. */}
       <div className="cine-svideo-scrim" />
     </div>
   );

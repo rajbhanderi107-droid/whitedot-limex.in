@@ -116,21 +116,6 @@ export function VideoHero() {
   }, [cinematic, inView]);
 
   return (
-    <div className="cine-hero-video" aria-hidden="true" ref={layerRef}>
-      {mounted && (
-        <video
-          ref={videoRef}
-          className="cine-hero-video-el"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          poster={`${base}assets/videos/hero-poster.jpg`}
-        >
-          <source src={`${base}assets/videos/hero.mp4`} type="video/mp4" />
-        </video>
-      )}
-    </div>
+    <div className="cine-hero-video" aria-hidden="true" ref={layerRef} />
   );
 }

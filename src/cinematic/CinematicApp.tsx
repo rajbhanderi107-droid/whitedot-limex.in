@@ -11,7 +11,6 @@ import { LimexDetail } from "./LimexDetail";
 import { LimexComparison } from "./LimexComparison";
 import { Consultation } from "./Consultation";
 import { SiteFooter } from "./SiteFooter";
-import { VideoHero } from "./VideoHero";
 import { PrivacyPolicyModal } from "./PrivacyPolicyModal";
 import { GlobalImpact } from "./GlobalImpact";
 import { useBrandLogo } from "../useBrandLogo";
@@ -423,10 +422,6 @@ export default function CinematicApp() {
           <span className="cine-hero-studio-mark cine-hero-studio-mark-bl" />
           <span className="cine-hero-studio-mark cine-hero-studio-mark-br" />
         </div>
-
-        {/* Hero film — video centerpiece (replaces the 3D model). Drop a file at
-            public/assets/videos/hero.mp4 and it auto-plays full-bleed. */}
-        <VideoHero />
 
         {/* Drifting mineral atmosphere — slow GPU-cheap radial glow that breathes.
             Premium-only, behind the 3D canvas, pointer-events:none, aria-hidden. */}

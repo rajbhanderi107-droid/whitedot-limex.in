@@ -36,7 +36,6 @@ import {
   ApplicationShowcase,
   type IndustryData,
 } from "./ApplicationShowcase";
-import { SectionVideo } from "./SectionVideo";
 
 /* ── Industry data ─────────────────────────────────────────────────────────── */
 
@@ -323,7 +322,6 @@ export function IndustryApplications() {
   return (
     <>
       <section className="cine-section cine-apps cine-section--cinematic" id="applications">
-        <SectionVideo src="product" intensity="medium" />
         <span className="cine-kicker">Industry Applications</span>
         <h2>One material, across the things you make.</h2>
         <p className="lead">
