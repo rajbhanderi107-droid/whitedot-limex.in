@@ -6,6 +6,7 @@ import Hero from './sections/Hero';
 import Origin from './sections/Origin';
 import Conversion from './sections/Conversion';
 import Material from './sections/Material';
+import Showcase from './sections/Showcase';
 import Comparison from './sections/Comparison';
 import Applications from './sections/Applications';
 import Proof from './sections/Proof';
@@ -35,6 +36,7 @@ export default function CinematicAppV2() {
         <Origin />
         <Conversion />
         <Material />
+        <Showcase />
         <Comparison />
         <Applications />
         <Proof />

@@ -1,12 +1,10 @@
 import './Footer.css';
 
 const NAV = [
-  { label: 'Origin', href: '#origin' },
-  { label: 'The Material', href: '#material' },
-  { label: 'Comparison', href: '#comparison' },
+  { label: 'Material', href: '#material' },
+  { label: 'Process', href: '#material' },
   { label: 'Applications', href: '#applications' },
-  { label: 'Sustainability', href: '#proof' },
-  { label: 'Get in Touch', href: '#consultation' },
+  { label: 'Consultation', href: '#consultation' },
 ] as const;
 
 export default function Footer() {
@@ -15,10 +13,10 @@ export default function Footer() {
       <div className="v2ft-inner">
         <div className="v2ft-brand">
           <div className="v2ft-dot" aria-hidden="true" />
-          <p className="v2ft-wordmark">WhiteDot</p>
+          <p className="v2ft-wordmark">White Dot <small>LLP</small></p>
           <p className="v2ft-sub">
-            Authorized Marketing Partner — LIMEX<br />
-            Western India Territory
+            Authorized LIMEX marketing &amp; sales — the sustainable way to
+            replace plastic.
           </p>
         </div>
 
@@ -31,13 +29,17 @@ export default function Footer() {
         </nav>
 
         <div className="v2ft-legal">
+          <p className="v2ft-supply">
+            TBM Co., Ltd. — Japan · inventor &amp; manufacturer<br />
+            Seven Dot — authorized distributor<br />
+            White Dot LLP — marketing &amp; sales
+          </p>
           <p>
-            LIMEX is a registered trademark of TBM Co., Ltd. (Japan).
-            WhiteDot LLP is authorized to market LIMEX in Gujarat,
-            Rajasthan, Daman, Diu, and Silvassa.
+            LIMEX is a material developed by TBM Co., Ltd. (Japan).
+            Ads are created by the use of artificial intelligence.
           </p>
           <p className="v2ft-copy">
-            © {new Date().getFullYear()} WhiteDot LLP. All rights reserved.
+            © {new Date().getFullYear()} White Dot LLP. All rights reserved.
           </p>
         </div>
       </div>

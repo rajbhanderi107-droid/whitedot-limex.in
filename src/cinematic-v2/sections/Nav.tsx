@@ -2,11 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import './Nav.css';
 
 const LINKS = [
-  { label: 'Origin', href: '#origin' },
   { label: 'Material', href: '#material' },
-  { label: 'Comparison', href: '#comparison' },
+  { label: 'LIMEX', href: '#limex' },
+  { label: 'Compare', href: '#comparison' },
   { label: 'Applications', href: '#applications' },
-  { label: 'Sustainability', href: '#proof' },
+  { label: 'Consultation', href: '#consultation' },
 ] as const;
 
 export default function Nav() {

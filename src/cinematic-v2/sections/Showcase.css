@@ -1,0 +1,93 @@
+/* Showcase section — v2 — the launch film */
+.v2sc {
+  background: transparent;
+  padding: var(--v2-section-pad) var(--v2-gutter);
+  border-top: var(--v2-hairline);
+}
+
+.v2sc-inner {
+  max-width: var(--v2-container-max);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.v2sc-head { max-width: 56ch; }
+
+.v2sc-title {
+  font-family: var(--v2-font-serif);
+  font-size: var(--v2-fs-h1);
+  font-weight: var(--v2-fw-light);
+  line-height: var(--v2-lh-tight);
+  letter-spacing: var(--v2-ls-tight);
+  color: var(--v2-text);
+  margin: var(--v2-space-5) 0 var(--v2-space-4);
+}
+
+.v2sc-sub {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-lead);
+  line-height: var(--v2-lh-relaxed);
+  color: var(--v2-text-muted);
+  margin: 0;
+}
+
+/* Video frame — glass plate */
+.v2sc-frame {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+  border: var(--v2-hairline-strong);
+  border-radius: var(--v2-radius-lg);
+  overflow: hidden;
+  background: var(--v2-canvas-raised);
+  box-shadow: var(--v2-shadow-lg);
+}
+
+.v2sc-reflection {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 40%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.06), transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.v2sc-media {
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.v2sc-caption {
+  font-family: var(--v2-font-mono);
+  font-size: var(--v2-fs-caption);
+  letter-spacing: var(--v2-ls-wide);
+  color: var(--v2-text-faint);
+  margin: clamp(1.5rem, 3vw, 2.5rem) 0 0;
+}
+
+/* Reveal */
+.v2sc-head.v2-reveal,
+.v2sc-frame.v2-reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity var(--v2-dur-slow) var(--v2-ease-out),
+    transform var(--v2-dur-slow) var(--v2-ease-out);
+}
+.v2sc-head.v2-reveal.is-in { opacity: 1; transform: none; }
+.v2sc-frame.v2-reveal.is-in {
+  opacity: 1; transform: none;
+  transition-delay: 0.12s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2sc-head.v2-reveal,
+  .v2sc-frame.v2-reveal { opacity: 1; transform: none; transition: none; }
+}
