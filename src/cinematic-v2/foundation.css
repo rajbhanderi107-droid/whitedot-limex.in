@@ -15,10 +15,14 @@
 /* TOKENS — :root custom properties (the locked vault)                 */
 /* ------------------------------------------------------------------ */
 .v2-root {
-  /* color — canvas */
-  --v2-canvas: #050706;
-  --v2-canvas-raised: #0a0d0b;
-  --v2-canvas-sunken: #030504;
+  /* color — canvas (dark sage-green studio — ref: Lazarieva/Milkin immersive) */
+  --v2-canvas: #161b14;
+  --v2-canvas-raised: #1e251b;
+  --v2-canvas-sunken: #0e120c;
+
+  /* green studio glow — the lit sage light that pools behind the stone */
+  --v2-green-glow: #34402d;   /* lit sage (center of studio) */
+  --v2-green-deep: #11150f;   /* far edge / vignette */
 
   /* color — the one accent (mineral sage) */
   --v2-accent: #9aa893;
@@ -142,6 +146,29 @@
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   font-feature-settings: 'kern' 1, 'liga' 1;
+}
+
+/* ------------------------------------------------------------------ */
+/* IMMERSIVE GREEN STUDIO — the sage light that pools across the page   */
+/* Reference: Lazarieva & Milkin. A soft eucalyptus glow rising from    */
+/* upper-center, falling to a dark olive vignette at the edges. Fixed    */
+/* so it stays put as you scroll — one continuous environment. Sits      */
+/* below all content; opaque sections that want it visible go            */
+/* transparent (see below).                                              */
+/* ------------------------------------------------------------------ */
+.v2-root::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    /* lit sage pool, upper-centre (the studio key light) */
+    radial-gradient(125% 85% at 58% 22%, var(--v2-green-glow) 0%, transparent 55%),
+    /* soft floor bounce, lower-centre */
+    radial-gradient(110% 70% at 50% 108%, rgba(52, 64, 45, 0.55) 0%, transparent 62%),
+    /* base + edge vignette */
+    radial-gradient(150% 120% at 50% 40%, var(--v2-canvas) 38%, var(--v2-green-deep) 100%);
 }
 
 /* ------------------------------------------------------------------ */

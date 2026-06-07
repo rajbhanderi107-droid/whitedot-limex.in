@@ -4,7 +4,7 @@
   min-height: 100svh;
   display: flex;
   align-items: center;
-  background: var(--v2-canvas);
+  background: transparent;
   overflow: hidden;
 }
 

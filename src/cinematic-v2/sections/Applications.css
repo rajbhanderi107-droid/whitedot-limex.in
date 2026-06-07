@@ -1,6 +1,6 @@
 /* Applications section — v2 */
 .v2ap {
-  background: var(--v2-canvas);
+  background: transparent;
   padding: var(--v2-section-pad) var(--v2-gutter);
   border-top: var(--v2-hairline);
 }
