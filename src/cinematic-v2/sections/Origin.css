@@ -1,4 +1,4 @@
-/* Origin section — v2 */
+/* Origin section — v2 — stone as protagonist */
 .v2o {
   background: var(--v2-canvas);
   padding: var(--v2-section-pad) var(--v2-gutter);
@@ -8,13 +8,16 @@
 .v2o-inner {
   max-width: var(--v2-container-max);
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(3rem, 6vw, 6rem);
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
-.v2o-header { grid-column: 1; }
+/* Header — centered above stone */
+.v2o-header {
+  max-width: 48ch;
+}
 
 .v2o-title {
   font-family: var(--v2-font-serif);
@@ -23,71 +26,143 @@
   line-height: var(--v2-lh-tight);
   letter-spacing: var(--v2-ls-tight);
   color: var(--v2-text);
-  margin: var(--v2-space-5) 0 var(--v2-space-6);
+  margin: var(--v2-space-5) 0 0;
 }
 
+/* Stone — the protagonist */
+.v2o-stone-wrap {
+  width: 100%;
+  max-width: 660px;
+  margin: clamp(3rem, 6vw, 5rem) auto clamp(2rem, 4vw, 3.5rem);
+}
+
+.v2o-stone {
+  width: 100%;
+  height: auto;
+  display: block;
+  -webkit-mask-image: radial-gradient(
+    ellipse 80% 85% at 50% 50%,
+    #000 30%,
+    rgba(0,0,0,0.65) 58%,
+    transparent 80%
+  );
+  mask-image: radial-gradient(
+    ellipse 80% 85% at 50% 50%,
+    #000 30%,
+    rgba(0,0,0,0.65) 58%,
+    transparent 80%
+  );
+  opacity: 0.88;
+}
+
+/* Lead text — below stone */
 .v2o-lead {
   font-family: var(--v2-font-sans);
   font-size: var(--v2-fs-lead);
   line-height: var(--v2-lh-relaxed);
   color: var(--v2-text-muted);
-  max-width: 48ch;
-  margin: 0;
+  max-width: 58ch;
+  margin: 0 0 clamp(3.5rem, 6vw, 5.5rem);
 }
 
+/* Cards — 3-col row */
 .v2o-cards {
-  grid-column: 2;
-  display: flex;
-  flex-direction: column;
-  gap: var(--v2-space-6);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  width: 100%;
+  text-align: left;
 }
 
 .v2o-card {
-  padding: var(--v2-space-6) 0;
-  border-top: var(--v2-hairline);
+  display: flex;
+  flex-direction: column;
+  gap: var(--v2-space-3);
+  padding: var(--v2-space-6);
+  background: var(--v2-canvas-raised);
+  border: var(--v2-hairline);
+  border-radius: var(--v2-radius-md);
+  transition: border-color var(--v2-dur-fast) var(--v2-ease-out);
 }
+.v2o-card:hover { border-color: var(--v2-accent-dim); }
 
 .v2o-card-num {
   display: block;
   font-family: var(--v2-font-mono);
   font-size: var(--v2-fs-eyebrow);
-  letter-spacing: var(--v2-ls-wide);
-  color: var(--v2-accent-dim);
-  margin-bottom: var(--v2-space-4);
+  letter-spacing: var(--v2-ls-widest);
+  color: var(--v2-accent);
 }
 
 .v2o-card h3 {
   font-family: var(--v2-font-sans);
-  font-size: var(--v2-fs-h3);
-  font-weight: var(--v2-fw-medium);
+  font-size: var(--v2-fs-body);
+  font-weight: var(--v2-fw-semibold);
   color: var(--v2-text);
-  margin: 0 0 var(--v2-space-4);
+  margin: 0;
 }
 
 .v2o-card p {
   font-family: var(--v2-font-sans);
-  font-size: var(--v2-fs-body);
+  font-size: var(--v2-fs-caption);
   line-height: var(--v2-lh-relaxed);
   color: var(--v2-text-muted);
   margin: 0;
 }
 
-/* Stagger reveal */
-.v2-reveal-group .v2o-card {
+/* Reveal animations */
+.v2o-header.v2-reveal,
+.v2o-stone-wrap.v2-reveal,
+.v2o-lead.v2-reveal {
   opacity: 0;
-  transform: translateY(14px);
+  transform: translateY(20px);
   transition:
     opacity var(--v2-dur-slow) var(--v2-ease-out),
     transform var(--v2-dur-slow) var(--v2-ease-out);
-  transition-delay: calc(var(--v2-stagger-i, 0) * 0.1s + 0.05s);
 }
-.v2-reveal-group.is-in .v2o-card { opacity: 1; transform: none; }
+.v2o-header.v2-reveal.is-in { opacity: 1; transform: none; }
+.v2o-stone-wrap.v2-reveal.is-in {
+  opacity: 1; transform: none;
+  transition-delay: 0.1s;
+}
+.v2o-lead.v2-reveal.is-in {
+  opacity: 1; transform: none;
+  transition-delay: 0.18s;
+}
+
+/* Cards stagger */
+.v2o-cards .v2o-card {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--v2-dur-slow) var(--v2-ease-out),
+    transform var(--v2-dur-slow) var(--v2-ease-out);
+}
+.v2o-cards.is-in .v2o-card:nth-child(1) { opacity: 1; transform: none; transition-delay: 0.05s; }
+.v2o-cards.is-in .v2o-card:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.14s; }
+.v2o-cards.is-in .v2o-card:nth-child(3) { opacity: 1; transform: none; transition-delay: 0.23s; }
 
 @media (prefers-reduced-motion: reduce) {
-  .v2o-card { opacity: 1; transform: none; transition: none; }
+  .v2o-header.v2-reveal,
+  .v2o-stone-wrap.v2-reveal,
+  .v2o-lead.v2-reveal,
+  .v2o-cards .v2o-card {
+    opacity: 1; transform: none; transition: none;
+  }
 }
 
-@media (max-width: 767px) {
-  .v2o-inner { grid-template-columns: 1fr; }
-  .v2o-header, .v2o-cards { grid-column: 1; }
+@media (max-width: 1023px) {
+  .v2o-stone-wrap { max-width: 520px; }
+  .v2o-cards { grid-template-columns: 1fr 1fr; }
+  .v2o-card:last-child { grid-column: span 2; }
+}
+
+@media (max-width: 639px) {
+  .v2o-stone-wrap { max-width: 100%; }
+  .v2o-stone {
+    -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, #000 25%, rgba(0,0,0,0.5) 55%, transparent 78%);
+    mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, #000 25%, rgba(0,0,0,0.5) 55%, transparent 78%);
+  }
+  .v2o-cards { grid-template-columns: 1fr; }
+  .v2o-card:last-child { grid-column: unset; }
 }

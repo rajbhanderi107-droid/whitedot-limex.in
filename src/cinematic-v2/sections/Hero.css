@@ -21,43 +21,48 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 72% center;
-  opacity: 0.6;
-  /* Feather the white background into the dark canvas, weighted to the right */
+  object-position: 66% center;
+  /* Stone is the protagonist — wide, prominent, high presence */
+  opacity: 0.82;
   -webkit-mask-image: radial-gradient(
-    ellipse 62% 78% at 70% 50%,
-    #000 28%,
-    transparent 72%
+    ellipse 74% 90% at 64% 52%,
+    #000 20%,
+    rgba(0,0,0,0.55) 54%,
+    transparent 80%
   );
   mask-image: radial-gradient(
-    ellipse 62% 78% at 70% 50%,
-    #000 28%,
-    transparent 72%
+    ellipse 74% 90% at 64% 52%,
+    #000 20%,
+    rgba(0,0,0,0.55) 54%,
+    transparent 80%
   );
 }
-/* Left-to-right scrim so the headline stays legible over the stone */
+/* Scrim: text legible left, stone owns the right 60% */
 .v2h-limestone-scrim {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    100deg,
-    var(--v2-canvas) 14%,
-    rgba(0, 0, 0, 0.45) 44%,
-    transparent 72%
+    105deg,
+    var(--v2-canvas) 8%,
+    rgba(0, 0, 0, 0.28) 32%,
+    transparent 58%
   );
 }
 
 @media (max-width: 767px) {
-  /* Mobile: stone centered, lighter presence, scrim fades from bottom */
   .v2h-limestone {
     object-position: center;
-    opacity: 0.4;
+    opacity: 0.55;
+    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 42%, #000 18%, rgba(0,0,0,0.4) 52%, transparent 80%);
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 42%, #000 18%, rgba(0,0,0,0.4) 52%, transparent 80%);
   }
   .v2h-limestone-scrim {
     background: linear-gradient(
       180deg,
-      transparent 40%,
-      var(--v2-canvas) 92%
+      var(--v2-canvas) 0%,
+      rgba(0,0,0,0.1) 30%,
+      transparent 55%,
+      var(--v2-canvas) 90%
     );
   }
 }
