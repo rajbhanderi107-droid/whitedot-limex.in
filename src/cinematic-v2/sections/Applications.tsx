@@ -3,24 +3,49 @@ import { useReveal, useStaggerGroup } from '../motion';
 
 const SECTORS = [
   {
-    sector: 'FMCG Packaging',
-    items: ['Flexible pouches', 'Label stock', 'Carry bags', 'Shrink wrap alternatives'],
-    note: 'Water-resistant surface suits wet-condition labelling and food-contact packaging where regulations permit.',
+    sector: 'Packaging',
+    items: ['Stand-up pouch', 'Rigid clamshell', 'Shrink film'],
+    note: 'Films, pouches and rigid packs with less plastic.',
   },
   {
-    sector: 'Paper Replacement',
-    items: ['Printing substrates', 'Stationery', 'Maps & menus', 'Signage'],
-    note: 'LIMEX paper-grade sheets are printable via offset and digital presses without chemical pre-treatment.',
+    sector: 'Stationery',
+    items: ['A4 document sheet', 'Presentation folder', 'Binder cover board'],
+    note: 'Folders, sheets and document products.',
   },
   {
-    sector: 'Civil Engineering',
-    items: ['Construction sheets', 'Formwork liners', 'Protective barriers', 'Underground conduit'],
-    note: 'Durability and moisture resistance make LIMEX suitable for short-term civil and infrastructure applications.',
+    sector: 'Injection Molding',
+    items: ['Thin-wall container lid', 'Industrial pallet foot', 'Cap and closure'],
+    note: 'Rigid components on existing molds.',
   },
   {
-    sector: 'Retail & Logistics',
-    items: ['Reusable bags', 'Document wallets', 'Protective sleeves', 'Point-of-sale materials'],
-    note: 'Durable enough for multi-use cycles; processable alongside conventional plastic logistics materials.',
+    sector: 'Retail',
+    items: ['Carry bag', 'Counter display tray', 'Hang tag card'],
+    note: 'Bags, displays and point-of-sale material.',
+  },
+  {
+    sector: 'Industrial Sheets',
+    items: ['Thermoformed tray', 'Wall panel board', 'Partition panel'],
+    note: 'Thermoformed trays, panels and boards.',
+  },
+  {
+    sector: 'Molded Products',
+    items: ['Blow-molded bottle', 'Storage container', 'Closure disc'],
+    note: 'Containers, caps and daily-use goods.',
+  },
+  {
+    sector: 'Consumer Goods',
+    items: ['Cosmetic outer carton', 'Gift box shell', 'Blister card backing'],
+    note: 'Brandable, repeatable product formats.',
+  },
+  {
+    sector: 'Food Packaging',
+    items: ['Single-use cup', 'Meal tray', 'Lidded portion pot'],
+    note: 'Cups, containers and service ware.',
+  },
+  {
+    sector: 'Woven & Non-Woven Sacks',
+    items: ['Woven PP sack', 'Non-woven fabric sack', 'FIBC / bulk bag liner'],
+    note: 'Sacks and fabric-form products with reduced plastic.',
   },
 ] as const;
 
@@ -34,13 +59,12 @@ export default function Applications() {
         <div className="v2-reveal" ref={headline.ref}>
           <p className="v2-eyebrow">Industry Applications</p>
           <h2 className="v2ap-title">
-            Where LIMEX<br />
-            performs
+            One material, across<br />
+            the things you make.
           </h2>
           <p className="v2ap-lead">
-            LIMEX has been adopted across FMCG, retail, civil engineering,
-            and paper replacement verticals. WhiteDot is the authorized
-            marketing partner for western India.
+            LIMEX adapts across high-volume manufacturing routes — wherever
+            plastic dependency can be reduced without re-tooling the line.
           </p>
         </div>
 

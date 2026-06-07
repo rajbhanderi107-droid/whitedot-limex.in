@@ -10,15 +10,15 @@ export default function Consultation() {
     <section className="v2con" id="consultation">
       <div className="v2con-inner">
         <div className="v2-reveal" ref={headline.ref}>
-          <p className="v2-eyebrow">Get in Touch</p>
+          <p className="v2-eyebrow">Consultation</p>
           <h2 className="v2con-title">
-            Ready to evaluate<br />
-            <span className="v2con-title-accent">LIMEX</span> for your project?
+            Move from plastic to <span className="v2con-title-accent">LIMEX</span>,<br />
+            without re-tooling.
           </h2>
           <p className="v2con-lead">
-            WhiteDot LLP serves Gujarat, Rajasthan, Daman, Diu, and Silvassa.
-            Share your requirements and we will follow up with technical
-            specifications and commercial terms within two business days.
+            Tell us your product, polymer, and monthly volume. We assess LIMEX
+            compatibility, arrange trial material for your existing line, and
+            scope a path to scale.
           </p>
         </div>
 
