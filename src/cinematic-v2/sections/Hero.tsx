@@ -30,31 +30,37 @@ export default function Hero() {
       </div>
 
       <div className="v2h-content">
-        <p className="v2h-eyebrow">WhiteDot LLP — Authorized Marketing Partner</p>
+        <p className="v2h-eyebrow">Next-Gen Limestone Technology</p>
 
         <div className="v2h-headline v2-reveal" ref={headline.ref}>
           <h1>
-            From<br />
-            <span className="v2h-headline-accent">Stone</span><br />
-            to Sustainable<br />
-            Possibility
+            Sustainable<br />
+            Material<br />
+            <span className="v2h-headline-accent">to Replace Plastic</span>
           </h1>
         </div>
 
         <p className="v2h-sub v2-reveal" ref={sub.ref}>
-          LIMEX is a limestone-based material — a practical alternative to
-          plastic and paper, built for FMCG packaging and civil engineering
-          at scale.
+          Invented by TBM in Japan, LIMEX is a limestone-based material that can
+          reduce petroleum-derived plastic while fitting practical industrial
+          trials. Seven Dot distributes it as the authorized dealer, and White
+          Dot LLP guides applications, samples, and commercial adoption.
         </p>
 
         <div className="v2h-cta v2-reveal" ref={cta.ref}>
           <a href="#material" className="v2h-btn v2h-btn--primary">
-            Explore the Material
+            Explore LIMEX
           </a>
           <a href="#consultation" className="v2h-btn v2h-btn--ghost">
-            Get in Touch
+            Request Material Consultation
           </a>
         </div>
+
+        <ul className="v2h-eco v2-reveal" aria-label="Sustainability signals">
+          <li>50%+ calcium carbonate, less plastic</li>
+          <li>Lower carbon footprint</li>
+          <li>Runs on existing production lines</li>
+        </ul>
       </div>
 
       <div className="v2h-scroll-cue" aria-hidden="true">

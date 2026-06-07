@@ -2,12 +2,12 @@ import './Material.css';
 import { useReveal, useStaggerGroup } from '../motion';
 
 const PROPS = [
-  { label: 'Water-Resistant', body: 'LIMEX does not absorb moisture, making it suitable for labelling and packaging in humid or wet environments.' },
-  { label: 'No Wood Pulp', body: 'Paper-grade LIMEX requires no tree fibre in production — a direct substitution for conventional paper substrates.' },
-  { label: 'Recyclable', body: 'Post-consumer LIMEX can be recovered and reprocessed within polyolefin recycling streams where facilities exist.' },
-  { label: 'Standard Equipment', body: 'Processed on the same injection-moulding, extrusion, and film lines used for conventional plastics — no new capex required.' },
-  { label: 'Durable Surface', body: 'High mineral content gives the sheet surface good printability and abrasion resistance for labels and packaging.' },
-  { label: 'Reduced Resin', body: 'A higher mineral ratio means less petroleum-derived resin per unit of output compared to virgin plastic sheet.' },
+  { label: 'Mineral composition', body: '50%+ calcium carbonate (CaCO₃), formed from captured CO₂.' },
+  { label: 'Reduced plastic dependency', body: 'Replaces a large share of petroleum-based plastic in the blend.' },
+  { label: 'Sustainability value', body: 'Lower carbon footprint with practical recycling pathways.' },
+  { label: 'Manufacturing adaptability', body: 'Runs on existing injection, blow, and sheet machinery.' },
+  { label: 'Industrial scalability', body: 'Backed by roughly 10,000 tonnes / month from TBM.' },
+  { label: 'Material flexibility', body: 'Sheets, bags, containers, molded goods, and film.' },
 ] as const;
 
 export default function Material() {
@@ -18,12 +18,11 @@ export default function Material() {
     <section className="v2m" id="material">
       <div className="v2m-inner">
         <div className="v2-reveal" ref={headline.ref}>
-          <p className="v2-eyebrow">The Material</p>
-          <h2 className="v2m-title">What LIMEX is</h2>
+          <p className="v2-eyebrow">LIMEX Material Intelligence</p>
+          <h2 className="v2m-title">Half laboratory. Half future material.</h2>
           <p className="v2m-lead">
-            A calcium carbonate composite sheet and pellet system — processable
-            by existing manufacturing infrastructure, with properties suited
-            to packaging, labelling, and construction applications.
+            A CO₂-based material engineered to behave like plastic on the
+            production line — while quietly using far less of it.
           </p>
         </div>
 

@@ -184,6 +184,34 @@
   background: var(--v2-accent-faint);
 }
 
+/* Eco signals — V1 sustainability row */
+.v2h-eco {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--v2-space-3) var(--v2-space-5);
+  margin: var(--v2-space-7) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.v2h-eco li {
+  position: relative;
+  font-family: var(--v2-font-mono);
+  font-size: var(--v2-fs-caption);
+  letter-spacing: var(--v2-ls-wide);
+  color: var(--v2-text-muted);
+  padding-left: 1.1em;
+}
+.v2h-eco li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--v2-accent);
+}
+
 /* Scroll cue */
 .v2h-scroll-cue {
   position: absolute;
