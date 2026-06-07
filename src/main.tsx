@@ -179,10 +179,11 @@ if (isAdmin) {
       return;
     }
 
-  // ?v2=1 → preview the new cinematic-v2 design
-  const useV2 = new URLSearchParams(window.location.search).get("v2") === "1";
+  // cinematic-v2 (sage-green studio) is now the DEFAULT public site.
+  // ?v1=1 → fall back to the previous cinematic design (rollback escape hatch).
+  const useV1 = new URLSearchParams(window.location.search).get("v1") === "1";
 
-  if (useV2) {
+  if (!useV1) {
     Promise.all([
       import("./cinematic-v2/CinematicAppV2"),
       import("./premium-wd"),
@@ -198,7 +199,7 @@ if (isAdmin) {
     return;
   }
 
-  // ─── Public cinematic site ─────────────────────────
+  // ─── Previous cinematic site (?v1=1) ───────────────
   // Static imports are fine here — this path needs everything.
   import("./cinematic/cinematic.css");
   // PREMIUM-WD-BEGIN imports
