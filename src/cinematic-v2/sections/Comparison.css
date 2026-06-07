@@ -1,0 +1,90 @@
+/* Comparison section — v2 */
+.v2cmp {
+  background: var(--v2-canvas-raised);
+  padding: var(--v2-section-pad) var(--v2-gutter);
+  border-top: var(--v2-hairline);
+}
+
+.v2cmp-inner {
+  max-width: var(--v2-container-max);
+  margin: 0 auto;
+}
+
+.v2cmp-title {
+  font-family: var(--v2-font-serif);
+  font-size: var(--v2-fs-h1);
+  font-weight: var(--v2-fw-light);
+  line-height: var(--v2-lh-tight);
+  letter-spacing: var(--v2-ls-tight);
+  color: var(--v2-text);
+  margin: var(--v2-space-5) 0 var(--v2-space-6);
+}
+
+.v2cmp-lead {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-lead);
+  line-height: var(--v2-lh-relaxed);
+  color: var(--v2-text-muted);
+  max-width: 52ch;
+  margin: 0 0 clamp(3rem, 5vw, 5rem);
+}
+
+/* Table */
+.v2cmp-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--v2-radius-md);
+  border: var(--v2-hairline);
+}
+
+.v2cmp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-body);
+}
+
+.v2cmp-th {
+  text-align: left;
+  padding: var(--v2-space-5) var(--v2-space-6);
+  font-size: var(--v2-fs-eyebrow);
+  font-family: var(--v2-font-mono);
+  letter-spacing: var(--v2-ls-widest);
+  text-transform: uppercase;
+  color: var(--v2-text-faint);
+  background: var(--v2-canvas-sunken);
+  border-bottom: var(--v2-hairline);
+}
+
+.v2cmp-th--attr { color: var(--v2-text-muted); }
+.v2cmp-th--limex { color: var(--v2-accent); }
+
+.v2cmp-row:not(:last-child) td { border-bottom: var(--v2-hairline); }
+.v2cmp-row:nth-child(odd) { background: rgba(154, 168, 147, 0.03); }
+
+.v2cmp-td {
+  padding: var(--v2-space-5) var(--v2-space-6);
+  color: var(--v2-text-muted);
+  vertical-align: middle;
+}
+
+.v2cmp-td--attr {
+  font-weight: var(--v2-fw-medium);
+  color: var(--v2-text);
+  white-space: nowrap;
+}
+
+.v2cmp-td--limex { color: var(--v2-accent); font-weight: var(--v2-fw-medium); }
+
+.v2cmp-note {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-caption);
+  color: var(--v2-text-faint);
+  margin: var(--v2-space-6) 0 0;
+  max-width: 60ch;
+}
+
+
+@media (max-width: 639px) {
+  .v2cmp-th, .v2cmp-td { padding: var(--v2-space-4); }
+}

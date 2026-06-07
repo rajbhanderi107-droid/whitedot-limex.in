@@ -1,0 +1,106 @@
+/* Proof section — v2 */
+.v2pr {
+  background: var(--v2-canvas-raised);
+  padding: var(--v2-section-pad) var(--v2-gutter);
+  border-top: var(--v2-hairline);
+}
+
+.v2pr-inner {
+  max-width: var(--v2-container-max);
+  margin: 0 auto;
+}
+
+.v2pr-title {
+  font-family: var(--v2-font-serif);
+  font-size: var(--v2-fs-h1);
+  font-weight: var(--v2-fw-light);
+  line-height: var(--v2-lh-tight);
+  letter-spacing: var(--v2-ls-tight);
+  color: var(--v2-text);
+  margin: var(--v2-space-5) 0 var(--v2-space-6);
+}
+
+.v2pr-lead {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-lead);
+  line-height: var(--v2-lh-relaxed);
+  color: var(--v2-text-muted);
+  max-width: 52ch;
+  margin: 0 0 clamp(3rem, 5vw, 5rem);
+}
+
+.v2pr-items {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--v2-space-1);
+  margin-bottom: clamp(3rem, 5vw, 5rem);
+}
+
+.v2pr-item {
+  display: flex;
+  gap: var(--v2-space-5);
+  padding: var(--v2-space-7);
+  background: var(--v2-canvas);
+  border: var(--v2-hairline);
+  border-radius: var(--v2-radius-sm);
+  align-items: flex-start;
+}
+
+.v2pr-dot {
+  display: block;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--v2-accent);
+  margin-top: 0.4em;
+}
+
+.v2pr-item-label {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-h3);
+  font-weight: var(--v2-fw-medium);
+  color: var(--v2-text);
+  margin: 0 0 var(--v2-space-3);
+}
+
+.v2pr-item-body {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-body);
+  line-height: var(--v2-lh-relaxed);
+  color: var(--v2-text-muted);
+  margin: 0;
+}
+
+.v2pr-footer {
+  padding: var(--v2-space-7);
+  border: var(--v2-hairline);
+  border-radius: var(--v2-radius-sm);
+  background: var(--v2-accent-faint);
+}
+
+.v2pr-footer p {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-body);
+  line-height: var(--v2-lh-relaxed);
+  color: var(--v2-text-muted);
+  margin: 0;
+}
+
+.v2-reveal-group .v2pr-item {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity var(--v2-dur-slow) var(--v2-ease-out),
+    transform var(--v2-dur-slow) var(--v2-ease-out);
+  transition-delay: calc(var(--v2-stagger-i, 0) * 0.1s + 0.05s);
+}
+.v2-reveal-group.is-in .v2pr-item { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .v2pr-item { opacity: 1; transform: none; transition: none; }
+}
+
+@media (max-width: 767px) {
+  .v2pr-items { grid-template-columns: 1fr; }
+}

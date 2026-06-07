@@ -179,6 +179,25 @@ if (isAdmin) {
       return;
     }
 
+  // ?v2=1 → preview the new cinematic-v2 design
+  const useV2 = new URLSearchParams(window.location.search).get("v2") === "1";
+
+  if (useV2) {
+    Promise.all([
+      import("./cinematic-v2/CinematicAppV2"),
+      import("./premium-wd"),
+    ]).then(([{ default: CinematicAppV2 }, { PremiumProvider }]) => {
+      createRoot(document.getElementById("root")!).render(
+        <StrictMode>
+          <PremiumProvider>
+            <CinematicAppV2 />
+          </PremiumProvider>
+        </StrictMode>,
+      );
+    });
+    return;
+  }
+
   // ─── Public cinematic site ─────────────────────────
   // Static imports are fine here — this path needs everything.
   import("./cinematic/cinematic.css");

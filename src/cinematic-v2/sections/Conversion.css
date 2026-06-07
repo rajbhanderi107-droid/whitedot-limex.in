@@ -1,0 +1,112 @@
+/* Conversion section — v2 */
+.v2cv {
+  background: var(--v2-canvas-raised);
+  padding: var(--v2-section-pad) var(--v2-gutter);
+}
+
+.v2cv-inner {
+  max-width: var(--v2-container-max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(3rem, 6vw, 7rem);
+  align-items: center;
+}
+
+.v2cv-title {
+  font-family: var(--v2-font-serif);
+  font-size: var(--v2-fs-h1);
+  font-weight: var(--v2-fw-light);
+  line-height: var(--v2-lh-tight);
+  letter-spacing: var(--v2-ls-tight);
+  color: var(--v2-text);
+  margin: var(--v2-space-5) 0 var(--v2-space-6);
+}
+
+.v2cv-title-accent {
+  color: var(--v2-accent);
+  font-style: italic;
+}
+
+.v2cv-lead {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-lead);
+  line-height: var(--v2-lh-relaxed);
+  color: var(--v2-text-muted);
+  margin: 0;
+  max-width: 44ch;
+}
+
+/* Steps list */
+.v2cv-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.v2cv-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  gap: var(--v2-space-5);
+  padding: var(--v2-space-6) 0;
+}
+
+/* Connector line between steps */
+.v2cv-step:not(:last-child) .v2cv-step-connector {
+  position: absolute;
+  left: 2.4rem;
+  top: calc(var(--v2-space-6) + 2.2rem);
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--v2-accent-dim), transparent);
+}
+
+.v2cv-step-symbol {
+  font-family: var(--v2-font-mono);
+  font-size: clamp(0.9rem, 0.8rem + 0.5vw, 1.1rem);
+  font-weight: var(--v2-fw-semibold);
+  color: var(--v2-accent);
+  letter-spacing: 0.02em;
+  padding: var(--v2-space-3) 0;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.v2cv-step-body h3 {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-h3);
+  font-weight: var(--v2-fw-medium);
+  color: var(--v2-text);
+  margin: 0 0 var(--v2-space-3);
+}
+
+.v2cv-step-body p {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-body);
+  line-height: var(--v2-lh-relaxed);
+  color: var(--v2-text-muted);
+  margin: 0;
+}
+
+.v2-reveal-group .v2cv-step {
+  opacity: 0;
+  transform: translateX(12px);
+  transition:
+    opacity var(--v2-dur-slow) var(--v2-ease-out),
+    transform var(--v2-dur-slow) var(--v2-ease-out);
+  transition-delay: calc(var(--v2-stagger-i, 0) * 0.14s + 0.05s);
+}
+.v2-reveal-group.is-in .v2cv-step { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .v2cv-step { opacity: 1; transform: none; transition: none; }
+}
+
+@media (max-width: 767px) {
+  .v2cv-inner { grid-template-columns: 1fr; }
+  .v2cv-lead { max-width: 100%; }
+}

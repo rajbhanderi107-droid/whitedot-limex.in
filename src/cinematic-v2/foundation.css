@@ -1,0 +1,668 @@
+/* =====================================================================
+   WhiteDot cinematic-v2 — FOUNDATION (fresh global stylesheet)
+   ---------------------------------------------------------------------
+   Single source of truth for the v2 build. Section agents consume ONLY
+   the --v2-* custom properties and .v2-* utility classes defined here.
+   NO raw hex, NO new fonts, NO old src/cinematic/ classes.
+
+   Motif: one white dot = one grain of limestone = the raw material.
+   All animation is transform/opacity only. Heavy motion is gated behind
+   [data-premium="on"] AND prefers-reduced-motion: no-preference, and is
+   disabled below 768px. Readability (WCAG AA) is never sacrificed.
+   ===================================================================== */
+
+/* ------------------------------------------------------------------ */
+/* TOKENS — :root custom properties (the locked vault)                 */
+/* ------------------------------------------------------------------ */
+.v2-root {
+  /* color — canvas */
+  --v2-canvas: #050706;
+  --v2-canvas-raised: #0a0d0b;
+  --v2-canvas-sunken: #030504;
+
+  /* color — the one accent (mineral sage) */
+  --v2-accent: #9aa893;
+  --v2-accent-dim: #5f6a5a;
+  --v2-accent-faint: rgba(154, 168, 147, 0.12);
+
+  /* color — text */
+  --v2-text: #f5f1e8;
+  --v2-text-muted: #c4c0b4;
+  --v2-text-faint: #8c9088;
+  --v2-text-on-light: #1c1f1b;
+  --v2-text-on-light-muted: #4a4d45;
+
+  /* color — cream / limestone surfaces */
+  --v2-cream-050: #f0eae0;
+  --v2-cream-100: #e7dfd0;
+  --v2-cream-200: #ddd3bf;
+  --v2-cream-300: #d4c9b0;
+
+  /* color — the grain */
+  --v2-grain: #f7f4ec;
+
+  /* hairlines / borders */
+  --v2-hairline: 1px solid rgba(154, 168, 147, 0.18);
+  --v2-hairline-strong: 1px solid rgba(154, 168, 147, 0.32);
+  --v2-border-on-light: 1px solid rgba(28, 31, 27, 0.14);
+
+  /* type families + fallbacks */
+  --v2-font-serif: 'Boska', Georgia, 'Times New Roman', 'Iowan Old Style', Cambria, serif;
+  --v2-font-sans: 'Satoshi', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --v2-font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+
+  /* weights */
+  --v2-fw-light: 300;
+  --v2-fw-regular: 400;
+  --v2-fw-medium: 500;
+  --v2-fw-semibold: 600;
+
+  /* fluid type scale */
+  --v2-fs-eyebrow: clamp(0.72rem, 0.68rem + 0.2vw, 0.8rem);
+  --v2-fs-caption: clamp(0.8rem, 0.76rem + 0.2vw, 0.875rem);
+  --v2-fs-body: clamp(1rem, 0.96rem + 0.25vw, 1.0625rem);
+  --v2-fs-lead: clamp(1.15rem, 1.05rem + 0.6vw, 1.5rem);
+  --v2-fs-h3: clamp(1.35rem, 1.15rem + 1vw, 1.9rem);
+  --v2-fs-h2: clamp(1.9rem, 1.4rem + 2.4vw, 3.25rem);
+  --v2-fs-h1: clamp(2.6rem, 1.6rem + 4.8vw, 5.5rem);
+  --v2-fs-display: clamp(3.4rem, 1.8rem + 7vw, 8rem);
+
+  /* line-height */
+  --v2-lh-tight: 1.04;
+  --v2-lh-snug: 1.18;
+  --v2-lh-normal: 1.55;
+  --v2-lh-relaxed: 1.7;
+
+  /* letter-spacing */
+  --v2-ls-tightest: -0.04em;
+  --v2-ls-tight: -0.02em;
+  --v2-ls-normal: 0em;
+  --v2-ls-wide: 0.04em;
+  --v2-ls-widest: 0.22em;
+
+  /* space scale (8px base) */
+  --v2-space-1: 0.25rem;
+  --v2-space-2: 0.5rem;
+  --v2-space-3: 0.75rem;
+  --v2-space-4: 1rem;
+  --v2-space-5: 1.5rem;
+  --v2-space-6: 2rem;
+  --v2-space-7: 3rem;
+  --v2-space-8: 4rem;
+  --v2-space-9: 6rem;
+  --v2-space-10: 8rem;
+  --v2-space-11: 12rem;
+
+  /* layout */
+  --v2-section-pad: clamp(4.5rem, 3rem + 7.5vw, 9rem);
+  --v2-container-max: 1200px;
+  --v2-prose-max: 68ch;
+  --v2-gutter: clamp(1.25rem, 0.5rem + 3vw, 2.5rem);
+
+  /* radii */
+  --v2-radius-xs: 2px;
+  --v2-radius-sm: 4px;
+  --v2-radius-md: 8px;
+  --v2-radius-lg: 14px;
+  --v2-radius-xl: 22px;
+  --v2-radius-pill: 999px;
+
+  /* elevation (restrained, no glow) */
+  --v2-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --v2-shadow-md: 0 12px 30px -12px rgba(0, 0, 0, 0.55);
+  --v2-shadow-lg: 0 30px 70px -28px rgba(0, 0, 0, 0.7);
+
+  /* motion */
+  --v2-dur-fast: 180ms;
+  --v2-dur-base: 320ms;
+  --v2-dur-slow: 620ms;
+  --v2-dur-grain: 1100ms;
+  --v2-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --v2-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --v2-ease-in: cubic-bezier(0.5, 0, 0.75, 0);
+
+  /* z ladder */
+  --v2-z-grain: 1;
+  --v2-z-content: 2;
+  --v2-z-sticky: 50;
+  --v2-z-nav: 100;
+  --v2-z-overlay: 1000;
+
+  /* parallax handle (written by useParallax; safe default) */
+  --v2-parallax: 0px;
+
+  /* base canvas + type application */
+  color: var(--v2-text);
+  background-color: var(--v2-canvas);
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-body);
+  line-height: var(--v2-lh-normal);
+  font-weight: var(--v2-fw-regular);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+
+/* ------------------------------------------------------------------ */
+/* TINY RESET — scoped under .v2-root (never global)                   */
+/* ------------------------------------------------------------------ */
+.v2-root *,
+.v2-root *::before,
+.v2-root *::after {
+  box-sizing: border-box;
+}
+.v2-root :where(h1, h2, h3, h4, p, figure, blockquote, ul, ol, dl) {
+  margin: 0;
+}
+.v2-root :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+.v2-root :where(img, picture, svg, canvas, video) {
+  display: block;
+  max-width: 100%;
+}
+.v2-root :where(button, input, select, textarea) {
+  font: inherit;
+  color: inherit;
+}
+.v2-root :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+.v2-root :where(button) {
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.v2-root :where(:focus-visible) {
+  outline: 2px solid var(--v2-accent);
+  outline-offset: 3px;
+  border-radius: var(--v2-radius-xs);
+}
+
+/* ------------------------------------------------------------------ */
+/* LAYOUT — section, container, grid                                   */
+/* ------------------------------------------------------------------ */
+.v2-section {
+  position: relative;
+  padding-block: var(--v2-section-pad);
+  padding-inline: var(--v2-gutter);
+  isolation: isolate;
+}
+.v2-section--tight {
+  padding-block: clamp(2.5rem, 1.8rem + 4vw, 5rem);
+}
+/* light-surface section variant (cream / limestone "finished material") */
+.v2-section--light {
+  background-color: var(--v2-cream-100);
+  color: var(--v2-text-on-light);
+}
+.v2-section--raised {
+  background-color: var(--v2-canvas-raised);
+}
+
+.v2-container {
+  width: 100%;
+  max-width: var(--v2-container-max);
+  margin-inline: auto;
+  position: relative;
+  z-index: var(--v2-z-content);
+}
+.v2-container--prose {
+  max-width: var(--v2-prose-max);
+}
+
+.v2-grid {
+  display: grid;
+  gap: var(--v2-space-6);
+  grid-template-columns: repeat(12, 1fr);
+}
+@media (max-width: 767px) {
+  .v2-grid {
+    grid-template-columns: 1fr;
+    gap: var(--v2-space-5);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* TYPOGRAPHY UTILITIES                                                */
+/* ------------------------------------------------------------------ */
+.v2-kicker,
+.v2-eyebrow {
+  font-family: var(--v2-font-mono);
+  font-size: var(--v2-fs-eyebrow);
+  font-weight: var(--v2-fw-medium);
+  letter-spacing: var(--v2-ls-widest);
+  text-transform: uppercase;
+  color: var(--v2-accent);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--v2-space-3);
+}
+/* kicker carries a leading grain dot; eyebrow is the bare label */
+.v2-kicker::before {
+  content: '';
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  background: var(--v2-grain);
+  flex: none;
+}
+
+.v2-h1 {
+  font-family: var(--v2-font-serif);
+  font-size: var(--v2-fs-h1);
+  line-height: var(--v2-lh-tight);
+  letter-spacing: var(--v2-ls-tight);
+  font-weight: var(--v2-fw-regular);
+  color: var(--v2-text);
+}
+.v2-display {
+  font-family: var(--v2-font-serif);
+  font-size: var(--v2-fs-display);
+  line-height: var(--v2-lh-tight);
+  letter-spacing: var(--v2-ls-tightest);
+  font-weight: var(--v2-fw-regular);
+  color: var(--v2-text);
+}
+.v2-h2 {
+  font-family: var(--v2-font-serif);
+  font-size: var(--v2-fs-h2);
+  line-height: var(--v2-lh-snug);
+  letter-spacing: var(--v2-ls-tight);
+  font-weight: var(--v2-fw-regular);
+  color: var(--v2-text);
+}
+.v2-h3 {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-h3);
+  line-height: var(--v2-lh-snug);
+  letter-spacing: var(--v2-ls-tight);
+  font-weight: var(--v2-fw-medium);
+  color: var(--v2-text);
+}
+.v2-lead {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-lead);
+  line-height: var(--v2-lh-relaxed);
+  font-weight: var(--v2-fw-regular);
+  color: var(--v2-text-muted);
+  max-width: var(--v2-prose-max);
+}
+.v2-body {
+  font-size: var(--v2-fs-body);
+  line-height: var(--v2-lh-normal);
+  color: var(--v2-text-muted);
+  max-width: var(--v2-prose-max);
+}
+.v2-caption {
+  font-family: var(--v2-font-mono);
+  font-size: var(--v2-fs-caption);
+  letter-spacing: var(--v2-ls-wide);
+  color: var(--v2-text-faint);
+}
+/* the single accent emphasis — use sparingly */
+.v2-accent-text {
+  color: var(--v2-accent);
+}
+
+/* on-light overrides (inside .v2-section--light) */
+.v2-section--light .v2-h1,
+.v2-section--light .v2-h2,
+.v2-section--light .v2-h3,
+.v2-section--light .v2-display {
+  color: var(--v2-text-on-light);
+}
+.v2-section--light .v2-lead,
+.v2-section--light .v2-body {
+  color: var(--v2-text-on-light-muted);
+}
+.v2-section--light .v2-kicker,
+.v2-section--light .v2-eyebrow {
+  color: var(--v2-text-on-light-muted);
+}
+.v2-section--light .v2-kicker::before {
+  background: var(--v2-text-on-light);
+}
+
+/* ------------------------------------------------------------------ */
+/* HAIRLINE + DIVIDER (the thin sage rule, the grain divider)         */
+/* ------------------------------------------------------------------ */
+.v2-hairline {
+  border: 0;
+  border-top: var(--v2-hairline);
+  margin: 0;
+  inline-size: 100%;
+}
+.v2-section--light .v2-hairline {
+  border-top: var(--v2-border-on-light);
+}
+/* divider = hairline with a centered grain — the motif as a section break */
+.v2-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--v2-space-4);
+  inline-size: 100%;
+  color: var(--v2-accent-dim);
+}
+.v2-divider::before,
+.v2-divider::after {
+  content: '';
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(
+    to var(--v2-divider-dir, right),
+    transparent,
+    rgba(154, 168, 147, 0.28)
+  );
+}
+.v2-divider::after {
+  --v2-divider-dir: left;
+}
+.v2-divider__dot {
+  inline-size: 5px;
+  block-size: 5px;
+  border-radius: 50%;
+  background: var(--v2-grain);
+  flex: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* GRAIN — the limestone-grain dot motif                              */
+/* ------------------------------------------------------------------ */
+/* a single grain (brand mark unit) */
+.v2-grain {
+  display: inline-block;
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: 50%;
+  background: var(--v2-grain);
+  vertical-align: middle;
+}
+.v2-grain--sm { inline-size: 5px; block-size: 5px; }
+.v2-grain--lg { inline-size: 12px; block-size: 12px; }
+.v2-grain--accent { background: var(--v2-accent); }
+
+/* grain field layer — the Canvas 2D host (useGrainField mounts here).
+   Sits behind content, non-interactive, painted by JS only when premium +
+   motion-allowed. Has NO static animation of its own (perf-safe default). */
+.v2-grain-field {
+  position: absolute;
+  inset: 0;
+  z-index: var(--v2-z-grain);
+  pointer-events: none;
+  /* canvas child fills this box */
+}
+.v2-grain-field > canvas {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  display: block;
+}
+
+/* ------------------------------------------------------------------ */
+/* BUTTONS                                                             */
+/* ------------------------------------------------------------------ */
+.v2-btn {
+  --_btn-bg: transparent;
+  --_btn-fg: var(--v2-text);
+  --_btn-bd: rgba(154, 168, 147, 0.32);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--v2-space-3);
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-body);
+  font-weight: var(--v2-fw-medium);
+  letter-spacing: var(--v2-ls-normal);
+  line-height: 1;
+  padding: 0.95em 1.6em;
+  border-radius: var(--v2-radius-pill);
+  background: var(--_btn-bg);
+  color: var(--_btn-fg);
+  border: 1px solid var(--_btn-bd);
+  cursor: pointer;
+  transition:
+    background-color var(--v2-dur-fast) var(--v2-ease-out),
+    color var(--v2-dur-fast) var(--v2-ease-out),
+    border-color var(--v2-dur-fast) var(--v2-ease-out),
+    transform var(--v2-dur-fast) var(--v2-ease-out);
+  will-change: transform;
+}
+.v2-btn:hover {
+  transform: translateY(-1px);
+}
+.v2-btn:active {
+  transform: translateY(0);
+}
+/* leading grain on every button (the motif "settles into a grain") */
+.v2-btn::before {
+  content: '';
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.85;
+  flex: none;
+  transition: transform var(--v2-dur-base) var(--v2-ease-out);
+}
+.v2-btn:hover::before {
+  transform: scale(1.35);
+}
+
+.v2-btn--primary {
+  --_btn-bg: var(--v2-cream-050);
+  --_btn-fg: var(--v2-text-on-light);
+  --_btn-bd: var(--v2-cream-050);
+}
+.v2-btn--primary:hover {
+  --_btn-bg: #fff;
+  --_btn-bd: #fff;
+}
+.v2-btn--ghost {
+  --_btn-bg: transparent;
+  --_btn-fg: var(--v2-text);
+  --_btn-bd: rgba(154, 168, 147, 0.32);
+}
+.v2-btn--ghost:hover {
+  --_btn-bg: var(--v2-accent-faint);
+  --_btn-bd: rgba(154, 168, 147, 0.55);
+}
+/* on light surfaces */
+.v2-section--light .v2-btn--ghost {
+  --_btn-fg: var(--v2-text-on-light);
+  --_btn-bd: rgba(28, 31, 27, 0.22);
+}
+.v2-section--light .v2-btn--primary {
+  --_btn-bg: var(--v2-canvas);
+  --_btn-fg: var(--v2-text);
+  --_btn-bd: var(--v2-canvas);
+}
+
+/* ------------------------------------------------------------------ */
+/* CARD                                                                */
+/* ------------------------------------------------------------------ */
+.v2-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--v2-space-4);
+  padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  background: var(--v2-canvas-raised);
+  border: var(--v2-hairline);
+  border-radius: var(--v2-radius-lg);
+  transition:
+    border-color var(--v2-dur-base) var(--v2-ease-out),
+    transform var(--v2-dur-base) var(--v2-ease-out);
+}
+.v2-card:hover {
+  border-color: rgba(154, 168, 147, 0.32);
+}
+.v2-card--light {
+  background: var(--v2-cream-050);
+  color: var(--v2-text-on-light);
+  border: var(--v2-border-on-light);
+}
+.v2-card--flush {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* STAT (procurement-grade data block)                                */
+/* ------------------------------------------------------------------ */
+.v2-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v2-space-2);
+}
+.v2-stat__value {
+  font-family: var(--v2-font-serif);
+  font-size: var(--v2-fs-h2);
+  line-height: 1;
+  letter-spacing: var(--v2-ls-tight);
+  color: var(--v2-text);
+  font-variant-numeric: tabular-nums;
+}
+.v2-stat__unit {
+  font-family: var(--v2-font-mono);
+  font-size: var(--v2-fs-caption);
+  color: var(--v2-accent);
+  margin-inline-start: 0.35em;
+}
+.v2-stat__label {
+  font-family: var(--v2-font-mono);
+  font-size: var(--v2-fs-eyebrow);
+  letter-spacing: var(--v2-ls-wide);
+  text-transform: uppercase;
+  color: var(--v2-text-faint);
+}
+.v2-section--light .v2-stat__value {
+  color: var(--v2-text-on-light);
+}
+.v2-section--light .v2-stat__label {
+  color: var(--v2-text-on-light-muted);
+}
+
+/* ------------------------------------------------------------------ */
+/* REVEAL — base state for useReveal (.is-in toggles in)              */
+/* ------------------------------------------------------------------ */
+.v2-reveal {
+  opacity: 1;
+  transform: none;
+}
+/* staggered children helper */
+.v2-reveal-group > * {
+  opacity: 1;
+}
+
+/* Heavy reveal motion ONLY when premium on AND motion allowed.
+   Default (no premium / reduced motion / SSR) => content is visible,
+   no transform — CLS-safe, never hidden behind JS. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-premium='on'] .v2-reveal {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+    transition:
+      opacity var(--v2-dur-slow) var(--v2-ease-out),
+      transform var(--v2-dur-slow) var(--v2-ease-out);
+    will-change: opacity, transform;
+  }
+  [data-premium='on'] .v2-reveal.is-in {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  [data-premium='on'] .v2-reveal-group > * {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+    transition:
+      opacity var(--v2-dur-base) var(--v2-ease-out),
+      transform var(--v2-dur-base) var(--v2-ease-out);
+    transition-delay: calc(var(--v2-stagger-i, 0) * 70ms);
+    will-change: opacity, transform;
+  }
+  [data-premium='on'] .v2-reveal-group.is-in > * {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* parallax consumer: section sets transform from --v2-parallax (px) */
+@media (prefers-reduced-motion: no-preference) {
+  [data-premium='on'] .v2-parallax {
+    transform: translate3d(0, var(--v2-parallax), 0);
+    will-change: transform;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* MOBILE — disable heavy layers below 768px                          */
+/* ------------------------------------------------------------------ */
+@media (max-width: 767px) {
+  /* grain field is never painted on mobile (hook also bails); hard-hide host */
+  .v2-grain-field {
+    display: none !important;
+  }
+  /* no reveal transform on mobile — content static & instant (never lag) */
+  [data-premium='on'] .v2-reveal,
+  [data-premium='on'] .v2-reveal-group > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  [data-premium='on'] .v2-parallax {
+    transform: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* REDUCED MOTION — kill all non-essential motion                     */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .v2-root *,
+  .v2-root *::before,
+  .v2-root *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .v2-grain-field {
+    display: none !important;
+  }
+  .v2-reveal,
+  .v2-reveal-group > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* SKIP LINK — accessibility                                           */
+/* ------------------------------------------------------------------ */
+.v2-skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0.75rem 1.25rem;
+  background: var(--v2-canvas);
+  color: var(--v2-text);
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-body);
+  border: var(--v2-hairline-strong);
+  border-radius: 0 0 var(--v2-radius-sm) 0;
+  text-decoration: none;
+  z-index: 9999;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 0.15s var(--v2-ease-out);
+}
+.v2-skip-link:focus-visible {
+  clip-path: inset(0);
+  outline: 2px solid var(--v2-accent);
+  outline-offset: 2px;
+}

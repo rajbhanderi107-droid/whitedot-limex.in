@@ -1,0 +1,103 @@
+/* Consultation section — v2 */
+.v2con {
+  background: var(--v2-canvas);
+  padding: var(--v2-section-pad) var(--v2-gutter);
+  border-top: var(--v2-hairline);
+}
+
+.v2con-inner {
+  max-width: var(--v2-container-max);
+  margin: 0 auto;
+}
+
+.v2con-title {
+  font-family: var(--v2-font-serif);
+  font-size: var(--v2-fs-h1);
+  font-weight: var(--v2-fw-light);
+  line-height: var(--v2-lh-tight);
+  letter-spacing: var(--v2-ls-tight);
+  color: var(--v2-text);
+  margin: var(--v2-space-5) 0 var(--v2-space-6);
+}
+
+.v2con-title-accent {
+  color: var(--v2-accent);
+  font-style: italic;
+}
+
+.v2con-lead {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-lead);
+  line-height: var(--v2-lh-relaxed);
+  color: var(--v2-text-muted);
+  max-width: 52ch;
+  margin: 0 0 clamp(3rem, 5vw, 5rem);
+}
+
+.v2con-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--v2-space-4);
+  margin-bottom: var(--v2-space-9);
+}
+
+.v2con-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v2-space-4);
+  padding: var(--v2-space-7);
+  background: var(--v2-canvas-raised);
+  border: var(--v2-hairline);
+  border-radius: var(--v2-radius-md);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--v2-dur-fast) var(--v2-ease-out);
+}
+.v2con-card:hover { border-color: var(--v2-accent-dim); }
+
+.v2con-card--primary {
+  border-color: var(--v2-accent-dim);
+  background: var(--v2-accent-faint);
+}
+
+.v2con-card-label {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-h3);
+  font-weight: var(--v2-fw-semibold);
+  color: var(--v2-text);
+}
+
+.v2con-card-desc {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-body);
+  line-height: var(--v2-lh-relaxed);
+  color: var(--v2-text-muted);
+  flex: 1;
+}
+
+.v2con-card-action {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-body);
+  font-weight: var(--v2-fw-medium);
+  color: var(--v2-accent);
+  text-decoration: none;
+  margin-top: auto;
+}
+.v2con-card-action:hover { text-decoration: underline; }
+
+.v2con-territory {
+  border-top: var(--v2-hairline);
+  padding-top: var(--v2-space-7);
+}
+
+.v2con-territory p:last-child {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-lead);
+  color: var(--v2-text-muted);
+  margin: var(--v2-space-4) 0 0;
+}
+
+
+@media (max-width: 1023px) {
+  .v2con-options { grid-template-columns: 1fr; }
+}
