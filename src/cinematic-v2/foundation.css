@@ -16,13 +16,13 @@
 /* ------------------------------------------------------------------ */
 .v2-root {
   /* color — canvas (dark sage-green studio — ref: Lazarieva/Milkin immersive) */
-  --v2-canvas: #161b14;
-  --v2-canvas-raised: #1e251b;
-  --v2-canvas-sunken: #0e120c;
+  --v2-canvas: #1a2016;
+  --v2-canvas-raised: #232b1e;
+  --v2-canvas-sunken: #11150e;
 
   /* green studio glow — the lit sage light that pools behind the stone */
-  --v2-green-glow: #34402d;   /* lit sage (center of studio) */
-  --v2-green-deep: #11150f;   /* far edge / vignette */
+  --v2-green-glow: #41502f;   /* lit sage (center of studio) — present, not timid */
+  --v2-green-deep: #10140d;   /* far edge / vignette */
 
   /* color — the one accent (mineral sage) */
   --v2-accent: #9aa893;
@@ -164,11 +164,11 @@
   pointer-events: none;
   background:
     /* lit sage pool, upper-centre (the studio key light) */
-    radial-gradient(125% 85% at 58% 22%, var(--v2-green-glow) 0%, transparent 55%),
+    radial-gradient(130% 95% at 56% 20%, var(--v2-green-glow) 0%, rgba(65, 80, 47, 0.4) 38%, transparent 66%),
     /* soft floor bounce, lower-centre */
-    radial-gradient(110% 70% at 50% 108%, rgba(52, 64, 45, 0.55) 0%, transparent 62%),
+    radial-gradient(115% 75% at 50% 110%, rgba(58, 72, 48, 0.6) 0%, transparent 64%),
     /* base + edge vignette */
-    radial-gradient(150% 120% at 50% 40%, var(--v2-canvas) 38%, var(--v2-green-deep) 100%);
+    radial-gradient(150% 120% at 50% 38%, var(--v2-canvas) 30%, var(--v2-green-deep) 100%);
 }
 
 /* ------------------------------------------------------------------ */
