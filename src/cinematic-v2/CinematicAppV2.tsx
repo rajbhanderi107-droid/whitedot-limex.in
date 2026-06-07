@@ -1,4 +1,5 @@
 import './foundation.css';
+import { useEffect } from 'react';
 
 import Nav from './sections/Nav';
 import Hero from './sections/Hero';
@@ -12,6 +13,17 @@ import Consultation from './sections/Consultation';
 import Footer from './sections/Footer';
 
 export default function CinematicAppV2() {
+  // Dismiss the static boot loader (#agg-wd-loader from index.html). The v1
+  // path removes it via AggregationLoader; v2 has no aggregation intro, so
+  // clear it on mount or it stays as a black overlay over the whole page.
+  useEffect(() => {
+    const el = document.getElementById('agg-wd-loader');
+    if (!el) return;
+    el.setAttribute('data-done', '');
+    const t = setTimeout(() => el.remove(), 400);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
     <div className="v2-root">
       <a className="v2-skip-link" href="#material">
