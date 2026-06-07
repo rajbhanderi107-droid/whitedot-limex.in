@@ -9,6 +9,18 @@ export default function Hero() {
 
   return (
     <section className="v2h" aria-label="Hero">
+      {/* Limestone texture — composited behind grain at low opacity */}
+      <video
+        className="v2h-limestone"
+        src="/assets/limestone-hero.mp4"
+        poster="/assets/limestone-hero.webp"
+        autoPlay
+        loop
+        muted
+        playsInline
+        aria-hidden="true"
+      />
+
       <div className="v2h-grain" ref={grain.ref} aria-hidden="true" />
 
       <div className="v2h-dot" aria-hidden="true">
