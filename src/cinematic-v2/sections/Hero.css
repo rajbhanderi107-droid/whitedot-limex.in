@@ -8,24 +8,57 @@
   overflow: hidden;
 }
 
-/* Limestone video — composited behind grain at low opacity */
+/* Limestone hero loop — white-bg stone, feathered into the dark canvas */
+.v2h-limestone-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
 .v2h-limestone {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
-  opacity: 0.18;
-  mix-blend-mode: screen;
-  pointer-events: none;
-  z-index: 0;
+  object-position: 72% center;
+  opacity: 0.6;
+  /* Feather the white background into the dark canvas, weighted to the right */
+  -webkit-mask-image: radial-gradient(
+    ellipse 62% 78% at 70% 50%,
+    #000 28%,
+    transparent 72%
+  );
+  mask-image: radial-gradient(
+    ellipse 62% 78% at 70% 50%,
+    #000 28%,
+    transparent 72%
+  );
+}
+/* Left-to-right scrim so the headline stays legible over the stone */
+.v2h-limestone-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    var(--v2-canvas) 14%,
+    rgba(0, 0, 0, 0.45) 44%,
+    transparent 72%
+  );
 }
 
 @media (max-width: 767px) {
-  /* Static poster only on mobile — no video decode cost */
+  /* Mobile: stone centered, lighter presence, scrim fades from bottom */
   .v2h-limestone {
-    display: none;
+    object-position: center;
+    opacity: 0.4;
+  }
+  .v2h-limestone-scrim {
+    background: linear-gradient(
+      180deg,
+      transparent 40%,
+      var(--v2-canvas) 92%
+    );
   }
 }
 
