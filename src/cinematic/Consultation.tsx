@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { MessageCircle, Phone } from "lucide-react";
 import { InquiryForm } from "./InquiryForm";
@@ -39,10 +39,14 @@ const steps = [
   },
 ];
 
+const consultationVideoSrc = `${import.meta.env.BASE_URL}assets/videos/consultation-products.mp4`;
+
 export function Consultation() {
   const reduce = useReducedMotion();
   const settings = useSiteSettings();
   const [activeForm, setActiveForm] = useState<FormKey>("inquiry");
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const activeTab = FORM_TABS.find((t) => t.key === activeForm)!;
   const whatsappHref = getWhatsappHref(
     settings,
@@ -55,29 +59,77 @@ export function Consultation() {
     show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
   };
 
+  useEffect(() => {
+    const section = sectionRef.current;
+    const video = videoRef.current;
+    if (!section || !video || reduce) return undefined;
+
+    const resetVideo = () => {
+      video.pause();
+      try {
+        video.currentTime = 0;
+      } catch {
+        // Some browsers can reject currentTime before metadata is ready.
+      }
+    };
+
+    resetVideo();
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          void video.play().catch(() => undefined);
+        } else {
+          resetVideo();
+        }
+      },
+      { threshold: 0.08 },
+    );
+
+    observer.observe(section);
+    return () => {
+      observer.disconnect();
+      resetVideo();
+    };
+  }, [reduce]);
+
   return (
-    <section className="cine-section cine-consult cine-section--cinematic" id="consult">
-      <div className="cine-consult-head">
-        <span className="cine-kicker">Consultation</span>
-        <h2>Move from plastic to LIMEX, without re-tooling.</h2>
-        <p className="lead">
-          Tell us your product, polymer, and monthly volume. We assess LIMEX compatibility,
-          arrange trial material for your existing line, and scope a path to scale.
-        </p>
-        <div className="cine-consult-actions">
-          <a
-            className="cine-btn cine-btn-primary"
-            href={whatsappHref}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <MessageCircle size={18} aria-hidden="true" />
-            Request a Trial
-          </a>
-          <a className="cine-btn cine-btn-ghost" href={getPhoneHref(settings)}>
-            <Phone size={18} aria-hidden="true" />
-            {settings.company_phone}
-          </a>
+    <section className="cine-section cine-consult cine-section--cinematic" id="consult" ref={sectionRef}>
+      <div className="cine-consult-hero-row">
+        <div className="cine-consult-head">
+          <span className="cine-kicker">Consultation</span>
+          <h2>Move from plastic to LIMEX, without re-tooling.</h2>
+          <p className="lead">
+            Tell us your product, polymer, and monthly volume. We assess LIMEX compatibility,
+            arrange trial material for your existing line, and scope a path to scale.
+          </p>
+          <div className="cine-consult-actions">
+            <a
+              className="cine-btn cine-btn-primary"
+              href={whatsappHref}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <MessageCircle size={18} aria-hidden="true" />
+              Request a Trial
+            </a>
+            <a className="cine-btn cine-btn-ghost" href={getPhoneHref(settings)}>
+              <Phone size={18} aria-hidden="true" />
+              {settings.company_phone}
+            </a>
+          </div>
+        </div>
+
+        <div className="cine-consult-product-stage" aria-hidden="true">
+          <video
+            ref={videoRef}
+            className="cine-consult-product-video"
+            src={consultationVideoSrc}
+            muted
+            loop
+            playsInline
+            preload="auto"
+          />
         </div>
       </div>
 

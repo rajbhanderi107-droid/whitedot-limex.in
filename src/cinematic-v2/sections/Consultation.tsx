@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './Consultation.css';
 import { useReveal } from '../motion';
 import { InquiryFormV2 } from './InquiryFormV2';
@@ -12,15 +12,52 @@ const FORM_TABS = [
   { key: 'calculator', label: 'Savings Calculator', blurb: 'Estimate plastic, CO₂, and cost impact of switching to LIMEX.' },
 ] as const;
 type FormKey = (typeof FORM_TABS)[number]['key'];
+const consultationVideoSrc = `${import.meta.env.BASE_URL}assets/videos/consultation-products.mp4`;
 
 export default function Consultation() {
   const headline = useReveal<HTMLDivElement>();
   const body = useReveal<HTMLDivElement>({ threshold: 0.06 });
   const [activeForm, setActiveForm] = useState<FormKey>('inquiry');
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const activeTab = FORM_TABS.find((t) => t.key === activeForm)!;
 
+  useEffect(() => {
+    const section = sectionRef.current;
+    const video = videoRef.current;
+    if (!section || !video) return undefined;
+
+    const resetVideo = () => {
+      video.pause();
+      try {
+        video.currentTime = 0;
+      } catch {
+        // Metadata may not be ready yet on first paint.
+      }
+    };
+
+    resetVideo();
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          void video.play().catch(() => undefined);
+        } else {
+          resetVideo();
+        }
+      },
+      { threshold: 0.08 },
+    );
+
+    observer.observe(section);
+    return () => {
+      observer.disconnect();
+      resetVideo();
+    };
+  }, []);
+
   return (
-    <section className="v2con v2-bg-light" id="consultation">
+    <section className="v2con v2-bg-light" id="consultation" ref={sectionRef}>
       <div className="v2con-inner">
         <div className="v2-reveal" ref={headline.ref}>
           <p className="v2-eyebrow">Consultation</p>
@@ -36,11 +73,13 @@ export default function Consultation() {
         </div>
 
         <div className="v2con-visual" aria-hidden="true">
-          <img
-            src="/assets/storyboard/frame-12-consultation.png"
-            alt=""
-            loading="lazy"
-            decoding="async"
+          <video
+            ref={videoRef}
+            src={consultationVideoSrc}
+            muted
+            loop
+            playsInline
+            preload="auto"
           />
         </div>
 
