@@ -1,14 +1,14 @@
 import './Material.css';
 import { useReveal, useStaggerGroup } from '../motion';
 
-const PROPS = [
-  { label: 'Mineral composition', body: '50%+ calcium carbonate (CaCO₃), formed from captured CO₂.' },
-  { label: 'Reduced plastic dependency', body: 'Replaces a large share of petroleum-based plastic in the blend.' },
-  { label: 'Sustainability value', body: 'Lower carbon footprint with practical recycling pathways.' },
-  { label: 'Manufacturing adaptability', body: 'Runs on existing injection, blow, and sheet machinery.' },
-  { label: 'Industrial scalability', body: 'Backed by roughly 10,000 tonnes / month from TBM.' },
-  { label: 'Material flexibility', body: 'Sheets, bags, containers, molded goods, and film.' },
-] as const;
+const whatsappHref =
+  'https://wa.me/918849728938?text=' +
+  encodeURIComponent(
+    "Hello White Dot LLP, I'd like to explore LIMEX material for my business."
+  );
+
+const LAYERS = ['Mineral layer', 'Binder layer', 'Surface layer', 'Material skin'];
+const FORMS = ['Sheet', 'Pellet', 'Packaging', 'Component'];
 
 export default function Material() {
   const headline = useReveal<HTMLDivElement>();
@@ -19,7 +19,7 @@ export default function Material() {
       <div className="v2m-inner">
         <div className="v2-reveal" ref={headline.ref}>
           <p className="v2-eyebrow">LIMEX Material Intelligence</p>
-          <h2 className="v2m-title">Half laboratory. Half future material.</h2>
+          <h2 className="v2m-title">Born from CO₂. Built for industry.</h2>
           <p className="v2m-lead">
             A CO₂-based material engineered to behave like plastic on the
             production line — while quietly using far less of it.
@@ -27,12 +27,66 @@ export default function Material() {
         </div>
 
         <div className="v2m-grid v2-reveal-group" ref={grid.ref}>
-          {PROPS.map((p, i) => (
-            <div key={i} className="v2m-prop">
-              <h3 className="v2m-prop-label">{p.label}</h3>
-              <p className="v2m-prop-body">{p.body}</p>
+          {/* Stage 01 */}
+          <div className="v2m-prop">
+            <span className="v2m-stage-eyebrow">Stage 01</span>
+            <h3 className="v2m-prop-label">Born from CO₂</h3>
+            <p className="v2m-prop-body">
+              LIMEX begins with captured CO₂ that is formed into calcium
+              carbonate, giving it a strong, abundant mineral foundation.
+            </p>
+          </div>
+
+          {/* Stage 02 */}
+          <div className="v2m-prop">
+            <span className="v2m-stage-eyebrow">Stage 02</span>
+            <h3 className="v2m-prop-label">Engineered Material Structure</h3>
+            <p className="v2m-prop-body">
+              Mineral content and engineered binders work together to create a
+              strong, moldable, and functional material.
+            </p>
+            <ul className="v2m-chips" aria-label="Material layers">
+              {LAYERS.map((l) => (
+                <li key={l} className="v2m-chip">{l}</li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Stage 03 */}
+          <div className="v2m-prop">
+            <span className="v2m-stage-eyebrow">Stage 03</span>
+            <h3 className="v2m-prop-label">From Mineral Core to Industrial Use</h3>
+            <p className="v2m-prop-body">
+              LIMEX can be processed into different material forms for packaging,
+              sheets, molded products, and industrial applications.
+            </p>
+            <div className="v2m-chips v2m-chips--forms" aria-label="Material forms">
+              {FORMS.map((f) => (
+                <span key={f} className="v2m-chip">{f}</span>
+              ))}
             </div>
-          ))}
+          </div>
+
+          {/* Stage 04 */}
+          <div className="v2m-prop v2m-prop--cta">
+            <span className="v2m-stage-eyebrow">Stage 04</span>
+            <h3 className="v2m-prop-label">Future-Ready Material Solutions</h3>
+            <p className="v2m-prop-body">
+              WhiteDot connects advanced LIMEX material possibilities with
+              practical business and industrial applications.
+            </p>
+            <div className="v2m-cta">
+              <p className="v2m-cta-prompt">Explore LIMEX with WhiteDot</p>
+              <a
+                className="v2-btn v2-btn--primary"
+                href={whatsappHref}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Connect With Us
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>

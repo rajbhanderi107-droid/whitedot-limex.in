@@ -16,24 +16,24 @@
 /* COLOR — the locked palette                                          */
 /* ------------------------------------------------------------------ */
 export const color = {
-  /** Canvas / background — deep near-black with a faint green-black cast. Never pure #000. */
-  canvas: '#050706',
+  /** Canvas / background — deep mineral green-black. Never pure #000. */
+  canvas: '#060a08',
   /** Slightly raised canvas for layered sections / panels. */
-  canvasRaised: '#0a0d0b',
+  canvasRaised: '#0d1510',
   /** Sunken well (insets, code, deep cards on dark). */
-  canvasSunken: '#030504',
+  canvasSunken: '#040705',
 
-  /** The ONE accent — muted mineral sage. Used sparingly. Never neon. */
-  accent: '#9aa893',
+  /** The ONE accent — TBM Japanese Emerald Green. Used sparingly. */
+  accent: '#10b981',
   /** Accent, dimmed — for hairlines, borders, quiet rules. */
-  accentDim: '#5f6a5a',
+  accentDim: '#047857',
   /** Accent, faint wash — backgrounds, hover veils (use with low alpha contexts). */
-  accentFaint: 'rgba(154, 168, 147, 0.12)',
+  accentFaint: 'rgba(16, 185, 129, 0.12)',
 
-  /** Primary text — warm off-white. AA+ on canvas. */
-  text: '#f5f1e8',
-  /** Secondary / body text — softened off-white. Still AA on canvas. */
-  textMuted: '#c4c0b4',
+  /** Primary text — clean off-white. AA+ on canvas. */
+  text: '#f8fafc',
+  /** Secondary / body text — softened slate. Still AA on canvas. */
+  textMuted: '#cbd5e1',
   /** Tertiary / captions, eyebrow labels. Use at >=12px (AA-ish small text only). */
   textFaint: '#8c9088',
   /** Inverse text — for use ON cream/limestone surfaces. */
@@ -147,8 +147,8 @@ export const radius = {
 /* HAIRLINE / BORDER                                                   */
 /* ------------------------------------------------------------------ */
 export const border = {
-  hairline: '1px solid rgba(154, 168, 147, 0.18)', // sage rule
-  hairlineStrong: '1px solid rgba(154, 168, 147, 0.32)',
+  hairline: '1px solid rgba(16, 185, 129, 0.18)', // emerald rule
+  hairlineStrong: '1px solid rgba(16, 185, 129, 0.32)',
   onLight: '1px solid rgba(28, 31, 27, 0.14)',
 } as const;
 

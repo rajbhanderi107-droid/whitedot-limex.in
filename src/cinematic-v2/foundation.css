@@ -15,23 +15,23 @@
 /* TOKENS — :root custom properties (the locked vault)                 */
 /* ------------------------------------------------------------------ */
 .v2-root {
-  /* color — canvas (dark sage-green studio — ref: Lazarieva/Milkin immersive) */
-  --v2-canvas: #1a2016;
-  --v2-canvas-raised: #232b1e;
-  --v2-canvas-sunken: #11150e;
+  /* color — canvas (deep mineral green-black studio) */
+  --v2-canvas: #060a08;
+  --v2-canvas-raised: #0d1510;
+  --v2-canvas-sunken: #040705;
 
   /* green studio glow — the lit sage light that pools behind the stone */
   --v2-green-glow: #41502f;   /* lit sage (center of studio) — present, not timid */
   --v2-green-deep: #10140d;   /* far edge / vignette */
 
-  /* color — the one accent (mineral sage) */
-  --v2-accent: #9aa893;
-  --v2-accent-dim: #5f6a5a;
-  --v2-accent-faint: rgba(154, 168, 147, 0.12);
+  /* color — the one accent (TBM Japanese Emerald Green) */
+  --v2-accent: #10b981;
+  --v2-accent-dim: #047857;
+  --v2-accent-faint: rgba(16, 185, 129, 0.12);
 
   /* color — text */
-  --v2-text: #f5f1e8;
-  --v2-text-muted: #c4c0b4;
+  --v2-text: #f8fafc;
+  --v2-text-muted: #cbd5e1;
   --v2-text-faint: #8c9088;
   --v2-text-on-light: #1c1f1b;
   --v2-text-on-light-muted: #4a4d45;
@@ -46,8 +46,8 @@
   --v2-grain: #f7f4ec;
 
   /* hairlines / borders */
-  --v2-hairline: 1px solid rgba(154, 168, 147, 0.18);
-  --v2-hairline-strong: 1px solid rgba(154, 168, 147, 0.32);
+  --v2-hairline: 1px solid rgba(16, 185, 129, 0.18);
+  --v2-hairline-strong: 1px solid rgba(16, 185, 129, 0.32);
   --v2-border-on-light: 1px solid rgba(28, 31, 27, 0.14);
 
   /* type families + fallbacks */
@@ -382,7 +382,7 @@
   background: linear-gradient(
     to var(--v2-divider-dir, right),
     transparent,
-    rgba(154, 168, 147, 0.28)
+    rgba(16, 185, 129, 0.28)
   );
 }
 .v2-divider::after {
@@ -436,7 +436,7 @@
 .v2-btn {
   --_btn-bg: transparent;
   --_btn-fg: var(--v2-text);
-  --_btn-bd: rgba(154, 168, 147, 0.32);
+  --_btn-bd: rgba(16, 185, 129, 0.32);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -492,11 +492,11 @@
 .v2-btn--ghost {
   --_btn-bg: transparent;
   --_btn-fg: var(--v2-text);
-  --_btn-bd: rgba(154, 168, 147, 0.32);
+  --_btn-bd: rgba(16, 185, 129, 0.32);
 }
 .v2-btn--ghost:hover {
   --_btn-bg: var(--v2-accent-faint);
-  --_btn-bd: rgba(154, 168, 147, 0.55);
+  --_btn-bd: rgba(16, 185, 129, 0.55);
 }
 /* on light surfaces */
 .v2-section--light .v2-btn--ghost {
@@ -526,7 +526,7 @@
     transform var(--v2-dur-base) var(--v2-ease-out);
 }
 .v2-card:hover {
-  border-color: rgba(154, 168, 147, 0.32);
+  border-color: rgba(16, 185, 129, 0.32);
 }
 .v2-card--light {
   background: var(--v2-cream-050);
