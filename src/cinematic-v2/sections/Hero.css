@@ -212,6 +212,50 @@
   background: var(--v2-accent);
 }
 
+/* Proof panel — V1 Material brief */
+.v2h-proof {
+  margin-top: var(--v2-space-7);
+  padding: var(--v2-space-5);
+  background: var(--v2-canvas-raised);
+  border: var(--v2-hairline);
+  border-radius: var(--v2-radius-md);
+  max-width: 460px;
+}
+.v2h-proof-kicker {
+  display: block;
+  font-family: var(--v2-font-mono);
+  font-size: var(--v2-fs-eyebrow);
+  letter-spacing: var(--v2-ls-widest);
+  text-transform: uppercase;
+  color: var(--v2-accent);
+  margin-bottom: var(--v2-space-4);
+}
+.v2h-proof-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--v2-space-4);
+  margin: 0;
+}
+.v2h-proof-grid div { display: flex; flex-direction: column; gap: 0.25rem; }
+.v2h-proof-grid dt {
+  font-family: var(--v2-font-serif);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: var(--v2-fw-light);
+  color: var(--v2-text);
+  line-height: 1;
+}
+.v2h-proof-grid dd {
+  margin: 0;
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-eyebrow);
+  line-height: var(--v2-lh-snug);
+  color: var(--v2-text-muted);
+}
+
+@media (max-width: 639px) {
+  .v2h-proof { max-width: 100%; }
+}
+
 /* Scroll cue */
 .v2h-scroll-cue {
   position: absolute;

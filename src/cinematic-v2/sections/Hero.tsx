@@ -61,6 +61,24 @@ export default function Hero() {
           <li>Lower carbon footprint</li>
           <li>Runs on existing production lines</li>
         </ul>
+
+        <aside className="v2h-proof v2-reveal" aria-label="LIMEX proof points">
+          <span className="v2h-proof-kicker">Material brief</span>
+          <dl className="v2h-proof-grid">
+            <div>
+              <dt aria-label="50% plus calcium carbonate content">50%+</dt>
+              <dd>calcium carbonate content</dd>
+            </div>
+            <div>
+              <dt>14d</dt>
+              <dd>trial sample target window</dd>
+            </div>
+            <div>
+              <dt aria-label="4 authorized regions served">4</dt>
+              <dd>authorized regions served</dd>
+            </div>
+          </dl>
+        </aside>
       </div>
 
       <div className="v2h-scroll-cue" aria-hidden="true">
