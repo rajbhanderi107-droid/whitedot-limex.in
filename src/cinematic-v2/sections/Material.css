@@ -50,7 +50,7 @@
 }
 
 .v2m-prop:hover {
-  border-color: rgba(112, 133, 144, 0.50);
+  border-color: rgba(154, 168, 147, 0.50);
   transform: translateY(-2px);
 }
 
@@ -94,10 +94,10 @@
   font-size: var(--v2-fs-caption);
   letter-spacing: var(--v2-ls-wide);
   color: var(--v2-accent);
-  border: 1px solid rgba(112, 133, 144, 0.30);
+  border: 1px solid rgba(154, 168, 147, 0.30);
   border-radius: var(--v2-radius-pill);
   padding: 0.2em 0.75em;
-  background: rgba(112, 133, 144, 0.08);
+  background: rgba(154, 168, 147, 0.08);
   white-space: nowrap;
 }
 

@@ -1,4 +1,4 @@
-﻿.v2gi {
+.v2gi {
   position: relative;
   background: transparent;
   padding: var(--v2-section-pad) var(--v2-gutter);
@@ -28,8 +28,8 @@
   z-index: 1;
   pointer-events: none;
   background:
-    linear-gradient(112deg, transparent 15%, rgba(59, 150, 184, 0.14) 42%, transparent 68%),
-    repeating-linear-gradient(90deg, transparent 0 56px, rgba(59, 150, 184, 0.045) 57px 58px);
+    linear-gradient(112deg, transparent 15%, rgba(154, 168, 147, 0.14) 42%, transparent 68%),
+    repeating-linear-gradient(90deg, transparent 0 56px, rgba(154, 168, 147, 0.045) 57px 58px);
   transform: translateX(-120%);
   animation: v2gi-industrial-scan 8s var(--v2-ease-in-out) infinite;
 }
@@ -120,7 +120,7 @@
 
 .v2gi-cta:hover { opacity: 0.9; }
 
-/* Reveal â€” observer ref is on .v2gi-inner, children carry .v2-reveal */
+/* Reveal — observer ref is on .v2gi-inner, children carry .v2-reveal */
 .v2gi-inner .v2-reveal {
   opacity: 0;
   transform: translateY(20px);

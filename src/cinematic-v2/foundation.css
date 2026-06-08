@@ -20,15 +20,15 @@
   --v2-canvas-raised: #111111;
   --v2-canvas-sunken: #050505;
 
-  /* color — the one accent (TBM steel blue-gray, dark-bg use) */
-  --v2-accent: #708590;
-  --v2-accent-dim: #4a6070;
-  --v2-accent-faint: rgba(112, 133, 144, 0.12);
+  /* color — sage / pine-smoke accent from the original WhiteDot system */
+  --v2-accent: #9aa893;
+  --v2-accent-dim: #7a857c;
+  --v2-accent-faint: rgba(154, 168, 147, 0.12);
 
-  /* sky blue — vivid accent for light-bg sections, diagrams, flowcharts */
-  --v2-sky: #3b96b8;
-  --v2-sky-dim: #2878a0;
-  --v2-sky-faint: rgba(59, 150, 184, 0.12);
+  /* light-section accent — mapped to the same green family */
+  --v2-sky: #9aa893;
+  --v2-sky-dim: #7a857c;
+  --v2-sky-faint: rgba(154, 168, 147, 0.12);
 
   /* light canvas — premium cool off-white (mineral water, faint sky tint) */
   --v2-canvas-light: #edf2f5;
@@ -242,7 +242,7 @@
   --v2-text: #111111;
   --v2-text-muted: rgba(0, 0, 0, 0.58);
   --v2-text-faint: rgba(0, 0, 0, 0.38);
-  /* re-map accent to sky-blue (pops on light bg) */
+  /* re-map accent to sage green on light bg */
   --v2-accent: var(--v2-sky);
   --v2-accent-dim: var(--v2-sky-dim);
   --v2-accent-faint: var(--v2-sky-faint);
@@ -403,7 +403,7 @@
   background: linear-gradient(
     to var(--v2-divider-dir, right),
     transparent,
-    rgba(112, 133, 144, 0.30)
+    rgba(154, 168, 147, 0.30)
   );
 }
 .v2-divider::after {
@@ -457,7 +457,7 @@
 .v2-btn {
   --_btn-bg: transparent;
   --_btn-fg: var(--v2-text);
-  --_btn-bd: rgba(112, 133, 144, 0.40);
+  --_btn-bd: rgba(154, 168, 147, 0.40);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -513,11 +513,11 @@
 .v2-btn--ghost {
   --_btn-bg: transparent;
   --_btn-fg: var(--v2-text);
-  --_btn-bd: rgba(112, 133, 144, 0.40);
+  --_btn-bd: rgba(154, 168, 147, 0.40);
 }
 .v2-btn--ghost:hover {
   --_btn-bg: var(--v2-accent-faint);
-  --_btn-bd: rgba(112, 133, 144, 0.65);
+  --_btn-bd: rgba(154, 168, 147, 0.65);
 }
 /* on light surfaces */
 .v2-section--light .v2-btn--ghost {
@@ -547,7 +547,7 @@
     transform var(--v2-dur-base) var(--v2-ease-out);
 }
 .v2-card:hover {
-  border-color: rgba(112, 133, 144, 0.45);
+  border-color: rgba(154, 168, 147, 0.45);
 }
 .v2-card--light {
   background: var(--v2-cream-050);
