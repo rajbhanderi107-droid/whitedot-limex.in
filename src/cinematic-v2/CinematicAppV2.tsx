@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 
 import Nav from './sections/Nav';
 import Hero from './sections/Hero';
+import SupplyFlow from './sections/SupplyFlow';
 import Material from './sections/Material';
 import Showcase from './sections/Showcase';
 import LimexDetail from './sections/LimexDetail';
@@ -32,6 +33,7 @@ export default function CinematicAppV2() {
       <Nav />
       <main>
         <Hero />
+        <SupplyFlow />
         <Material />
         <Showcase />
         <LimexDetail />

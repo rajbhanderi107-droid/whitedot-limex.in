@@ -1,0 +1,98 @@
+/* SupplyFlow band — V1 origin chain */
+.v2sf {
+  background: transparent;
+  padding: clamp(2.5rem, 4vw, 4rem) var(--v2-gutter);
+  border-top: var(--v2-hairline);
+}
+
+.v2sf-inner {
+  max-width: var(--v2-container-max);
+  margin: 0 auto;
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: var(--v2-space-4);
+}
+
+.v2sf-step {
+  display: flex;
+  align-items: center;
+  gap: var(--v2-space-4);
+  flex: 1 1 auto;
+}
+
+.v2sf-node {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v2-space-2);
+  padding: var(--v2-space-5);
+  background: var(--v2-canvas-raised);
+  border: var(--v2-hairline);
+  border-radius: var(--v2-radius-md);
+  min-width: 200px;
+  flex: 1;
+  transition: border-color var(--v2-dur-fast) var(--v2-ease-out);
+}
+.v2sf-node:hover { border-color: var(--v2-accent-dim); }
+
+.v2sf-num {
+  font-family: var(--v2-font-mono);
+  font-size: var(--v2-fs-eyebrow);
+  letter-spacing: var(--v2-ls-widest);
+  color: var(--v2-accent);
+}
+
+.v2sf-name {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-body);
+  font-weight: var(--v2-fw-semibold);
+  color: var(--v2-text);
+}
+
+.v2sf-role {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-caption);
+  color: var(--v2-text-muted);
+}
+
+.v2sf-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--v2-space-2);
+  min-width: 96px;
+}
+.v2sf-link-label {
+  font-family: var(--v2-font-mono);
+  font-size: var(--v2-fs-eyebrow);
+  letter-spacing: var(--v2-ls-wide);
+  color: var(--v2-text-faint);
+  text-align: center;
+}
+.v2sf-link-track {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--v2-accent-dim), transparent);
+}
+
+/* Reveal */
+.v2sf .v2-reveal-group > * {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--v2-dur-slow) var(--v2-ease-out),
+    transform var(--v2-dur-slow) var(--v2-ease-out);
+}
+.v2sf .v2-reveal-group.is-in > * { opacity: 1; transform: none; }
+.v2sf .v2-reveal-group.is-in > *:nth-child(2) { transition-delay: 0.1s; }
+.v2sf .v2-reveal-group.is-in > *:nth-child(3) { transition-delay: 0.2s; }
+
+@media (max-width: 767px) {
+  .v2sf-step { flex-direction: column; width: 100%; }
+  .v2sf-link { flex-direction: row; width: 100%; }
+  .v2sf-link-track { width: 40px; height: 1px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2sf .v2-reveal-group > * { opacity: 1; transform: none; transition: none; }
+}
