@@ -281,10 +281,11 @@
   align-items: stretch;
   gap: 0.5rem;
   padding: 0.9rem 1rem;
-  border: var(--v2-hairline);
+  border: var(--v2-hairline-strong);
   border-radius: var(--v2-radius-md);
-  background: rgba(7, 19, 14, 0.62);
-  backdrop-filter: blur(14px);
+  background: rgba(6, 14, 11, 0.9);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.7);
 }
 
 .v2h .v2sf-step {
@@ -294,7 +295,8 @@
 .v2h .v2sf-node {
   min-width: 0;
   padding: 0.68rem 0.72rem;
-  background: rgba(11, 24, 19, 0.52);
+  background: rgba(10, 20, 16, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: calc(var(--v2-radius-md) - 2px);
   backdrop-filter: blur(10px);
 }
