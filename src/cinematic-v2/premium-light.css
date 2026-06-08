@@ -269,6 +269,12 @@
   border-color: var(--v2-light-accent);
 }
 
+.v2nav--scrolled .v2nav-admin {
+  color: var(--v2-light-title);
+  background: var(--v2-light-accent);
+  border-color: var(--v2-light-accent);
+}
+
 .v2nav--scrolled .v2nav-burger {
   color: var(--v2-light-title);
 }

@@ -53,6 +53,19 @@ export default function Nav() {
 
         <a href="#consultation" className="v2nav-cta">Get in Touch</a>
 
+        <a
+          className="v2nav-admin"
+          href="#/admin/login"
+          aria-label="Open admin panel"
+        >
+          <span className="v2nav-admin-bars" aria-hidden="true">
+            <span className="v2nav-admin-line v2nav-admin-line--top" />
+            <span className="v2nav-admin-line v2nav-admin-line--mid" />
+            <span className="v2nav-admin-line v2nav-admin-line--bot" />
+          </span>
+          <span className="v2nav-admin-label">Admin Panel</span>
+        </a>
+
         <button
           className="v2nav-burger"
           aria-label={open ? 'Close menu' : 'Open menu'}
