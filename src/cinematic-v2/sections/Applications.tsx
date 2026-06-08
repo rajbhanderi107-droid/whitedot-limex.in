@@ -54,7 +54,7 @@ export default function Applications() {
   const cards = useStaggerGroup<HTMLDivElement>();
 
   return (
-    <section className="v2ap" id="applications">
+    <section className="v2ap v2-bg-light" id="applications">
       <div className="v2ap-inner">
         <div className="v2-reveal" ref={headline.ref}>
           <p className="v2-eyebrow">Industry Applications</p>

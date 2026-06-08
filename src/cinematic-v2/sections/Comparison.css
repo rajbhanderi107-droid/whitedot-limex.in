@@ -56,8 +56,8 @@
   z-index: 1;
   pointer-events: none;
   background:
-    linear-gradient(90deg, transparent, rgba(170, 190, 160, 0.18), transparent),
-    repeating-linear-gradient(0deg, transparent 0 34px, rgba(170, 190, 160, 0.07) 35px 36px);
+    linear-gradient(90deg, transparent, rgba(59, 150, 184, 0.22), transparent),
+    repeating-linear-gradient(0deg, transparent 0 34px, rgba(59, 150, 184, 0.08) 35px 36px);
   transform: translateX(-120%);
   animation: v2-industrial-scan 6.2s var(--v2-ease-in-out) infinite;
 }
@@ -68,8 +68,8 @@
   inset: 0;
   z-index: 2;
   background:
-    linear-gradient(180deg, transparent 42%, rgba(6, 14, 11, 0.74) 100%),
-    linear-gradient(90deg, rgba(6, 14, 11, 0.2), transparent 42%);
+    linear-gradient(180deg, transparent 42%, rgba(8, 8, 8, 0.72) 100%),
+    linear-gradient(90deg, rgba(8, 8, 8, 0.18), transparent 42%);
 }
 
 .v2cmp-visual figcaption {

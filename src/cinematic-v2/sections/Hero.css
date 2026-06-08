@@ -1,16 +1,16 @@
-/* Hero section — v2 */
+﻿/* Hero section â€” v2 */
 .v2h {
   position: relative;
   min-height: 100svh;
   display: flex;
   align-items: center;
   background:
-    linear-gradient(180deg, rgba(6, 14, 11, 0.28), transparent 42%),
+    linear-gradient(180deg, rgba(8, 8, 8, 0.28), transparent 42%),
     var(--v2-canvas);
   overflow: hidden;
 }
 
-/* Limestone hero loop — white-bg stone, feathered into the dark canvas */
+/* Limestone hero loop â€” white-bg stone, feathered into the dark canvas */
 .v2h-limestone-wrap {
   position: absolute;
   inset: 0;
@@ -24,7 +24,7 @@
   height: 100%;
   object-fit: cover;
   object-position: 78% center;
-  /* Stone is the protagonist — wide, prominent, high presence */
+  /* Stone is the protagonist â€” wide, prominent, high presence */
   opacity: 0.74;
   transform: scale(1.04);
   -webkit-mask-image: radial-gradient(
@@ -47,9 +47,9 @@
   background: linear-gradient(
     105deg,
     var(--v2-canvas) 0%,
-    rgba(6, 14, 11, 0.96) 34%,
-    rgba(6, 14, 11, 0.6) 54%,
-    rgba(6, 14, 11, 0.16) 74%,
+    rgba(8, 8, 8, 0.96) 34%,
+    rgba(8, 8, 8, 0.6) 54%,
+    rgba(8, 8, 8, 0.16) 74%,
     transparent 100%
   );
 }
@@ -60,7 +60,7 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(6, 14, 11, 0.18) 0%,
+    rgba(8, 8, 8, 0.18) 0%,
     transparent 44%,
     var(--v2-canvas) 100%
   );
@@ -128,14 +128,14 @@
     linear-gradient(
       105deg,
       var(--v2-canvas) 0%,
-      rgba(6, 14, 11, 0.97) 34%,
-      rgba(6, 14, 11, 0.6) 53%,
-      rgba(6, 14, 11, 0.16) 74%,
+      rgba(8, 8, 8, 0.97) 34%,
+      rgba(8, 8, 8, 0.6) 53%,
+      rgba(8, 8, 8, 0.16) 74%,
       transparent 100%
     ),
     linear-gradient(
       180deg,
-      rgba(6, 14, 11, 0.22) 0%,
+      rgba(8, 8, 8, 0.22) 0%,
       transparent 44%,
       var(--v2-canvas) 100%
     );
@@ -193,7 +193,7 @@
   height: 100%;
 }
 
-/* The white dot motif — top center */
+/* The white dot motif â€” top center */
 .v2h-dot {
   position: absolute;
   top: clamp(5rem, 8vw, 7rem);
@@ -329,7 +329,7 @@
   width: 100%;
   height: 1px;
   overflow: visible;
-  background: rgba(170, 190, 160, 0.22);
+  background: rgba(200, 210, 215, 0.22);
 }
 
 .v2h .v2sf-link-draw {
@@ -383,7 +383,7 @@
 
 @keyframes v2sf-node-glow {
   0%, 100% { text-shadow: none; }
-  50% { text-shadow: 0 0 14px rgba(170, 190, 160, 0.42); }
+  50% { text-shadow: 0 0 14px rgba(200, 210, 215, 0.42); }
 }
 
 /* CTA */
@@ -426,7 +426,7 @@
   background: var(--v2-accent-faint);
 }
 
-/* Eco signals — V1 sustainability row */
+/* Eco signals â€” V1 sustainability row */
 .v2h-eco {
   display: flex;
   flex-wrap: wrap;
@@ -454,7 +454,7 @@
   background: var(--v2-accent);
 }
 
-/* Proof panel — V1 Material brief */
+/* Proof panel â€” V1 Material brief */
 .v2h-proof {
   margin-top: var(--v2-space-7);
   padding-top: var(--v2-space-5);
@@ -563,8 +563,8 @@
   }
   .v2h-environment-scrim {
     background:
-      linear-gradient(180deg, rgba(6, 14, 11, 0.24) 0%, rgba(6, 14, 11, 0.18) 26%, var(--v2-canvas) 54%),
-      linear-gradient(90deg, var(--v2-canvas) 0%, rgba(6, 14, 11, 0.52) 62%, transparent 100%);
+      linear-gradient(180deg, rgba(8, 8, 8, 0.24) 0%, rgba(8, 8, 8, 0.18) 26%, var(--v2-canvas) 54%),
+      linear-gradient(90deg, var(--v2-canvas) 0%, rgba(8, 8, 8, 0.52) 62%, transparent 100%);
   }
   .v2h::before,
   .v2h::after {
@@ -604,3 +604,5 @@
   .v2h-cta { flex-direction: column; }
   .v2h-btn { justify-content: center; }
 }
+
+

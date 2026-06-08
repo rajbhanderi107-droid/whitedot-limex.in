@@ -23,12 +23,22 @@ export const color = {
   /** Sunken well (insets, code, deep cards on dark). */
   canvasSunken: '#050505',
 
-  /** The ONE accent — TBM steel blue-gray (the muted sky-blue from tb-m.com). */
+  /** The ONE accent — TBM steel blue-gray (dark bg use). */
   accent: '#708590',
   /** Accent, dimmed — deeper steel for quiet borders/rules. */
   accentDim: '#4a6070',
   /** Accent, faint wash — hover veils, chip backgrounds. */
   accentFaint: 'rgba(112, 133, 144, 0.12)',
+
+  /** Sky blue — vivid accent for light-bg sections, diagrams, flowcharts. */
+  sky: '#3b96b8',
+  skyDim: '#2878a0',
+  skyFaint: 'rgba(59, 150, 184, 0.12)',
+
+  /** Light canvas — premium cool off-white (mineral water tone, faint sky tint). */
+  canvasLight: '#edf2f5',
+  /** Raised surface on light canvas. */
+  canvasLightRaised: '#e3ecf1',
 
   /** Primary text — pure white. AA+ on canvas. */
   text: '#ffffff',

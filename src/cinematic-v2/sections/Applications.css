@@ -56,8 +56,8 @@
   z-index: 1;
   pointer-events: none;
   background:
-    linear-gradient(90deg, transparent, rgba(170, 190, 160, 0.16), transparent),
-    repeating-linear-gradient(90deg, transparent 0 42px, rgba(170, 190, 160, 0.06) 43px 44px);
+    linear-gradient(90deg, transparent, rgba(59, 150, 184, 0.20), transparent),
+    repeating-linear-gradient(90deg, transparent 0 42px, rgba(59, 150, 184, 0.07) 43px 44px);
   transform: translateX(-120%);
   animation: v2-industrial-scan 7s var(--v2-ease-in-out) infinite;
 }
@@ -67,7 +67,7 @@
   position: absolute;
   inset: 0;
   z-index: 2;
-  background: linear-gradient(90deg, rgba(6, 14, 11, 0.34), transparent 55%);
+  background: linear-gradient(90deg, rgba(8, 8, 8, 0.32), transparent 55%);
 }
 
 @keyframes v2-media-drift {

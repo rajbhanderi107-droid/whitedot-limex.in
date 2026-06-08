@@ -20,10 +20,19 @@
   --v2-canvas-raised: #111111;
   --v2-canvas-sunken: #050505;
 
-  /* color — the one accent (TBM steel blue-gray, muted sky-blue from tb-m.com) */
+  /* color — the one accent (TBM steel blue-gray, dark-bg use) */
   --v2-accent: #708590;
   --v2-accent-dim: #4a6070;
   --v2-accent-faint: rgba(112, 133, 144, 0.12);
+
+  /* sky blue — vivid accent for light-bg sections, diagrams, flowcharts */
+  --v2-sky: #3b96b8;
+  --v2-sky-dim: #2878a0;
+  --v2-sky-faint: rgba(59, 150, 184, 0.12);
+
+  /* light canvas — premium cool off-white (mineral water, faint sky tint) */
+  --v2-canvas-light: #edf2f5;
+  --v2-canvas-light-raised: #e3ecf1;
 
   /* color — text */
   --v2-text: #ffffff;
@@ -216,6 +225,30 @@
 }
 .v2-section--raised {
   background-color: var(--v2-canvas-raised);
+}
+
+/* ------------------------------------------------------------------ */
+/* LIGHT BG CASCADE — 3-tone system (hero/footer=dark, mid=light)      */
+/* Override all --v2-* tokens so every child picks up light-surface    */
+/* colors automatically, without touching individual section files.     */
+/* ------------------------------------------------------------------ */
+.v2-bg-light {
+  background-color: var(--v2-canvas-light);
+  /* re-map canvas */
+  --v2-canvas: var(--v2-canvas-light);
+  --v2-canvas-raised: var(--v2-canvas-light-raised);
+  --v2-canvas-sunken: #dce6ec;
+  /* re-map text to dark */
+  --v2-text: #111111;
+  --v2-text-muted: rgba(0, 0, 0, 0.58);
+  --v2-text-faint: rgba(0, 0, 0, 0.38);
+  /* re-map accent to sky-blue (pops on light bg) */
+  --v2-accent: var(--v2-sky);
+  --v2-accent-dim: var(--v2-sky-dim);
+  --v2-accent-faint: var(--v2-sky-faint);
+  /* re-map borders */
+  --v2-hairline: 1px solid rgba(0, 0, 0, 0.10);
+  --v2-hairline-strong: 1px solid rgba(0, 0, 0, 0.20);
 }
 
 .v2-container {

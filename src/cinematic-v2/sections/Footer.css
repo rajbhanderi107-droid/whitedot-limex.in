@@ -1,4 +1,4 @@
-/* Footer — v2 */
+﻿/* Footer â€” v2 */
 .v2ft {
   position: relative;
   background: var(--v2-canvas-sunken);
@@ -12,7 +12,7 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, var(--v2-canvas-sunken) 0%, rgba(6, 14, 11, 0.78) 58%, var(--v2-canvas-sunken) 100%),
+    linear-gradient(90deg, var(--v2-canvas-sunken) 0%, rgba(8, 8, 8, 0.78) 58%, var(--v2-canvas-sunken) 100%),
     url('/assets/storyboard/frame-14-footer.png') center / cover no-repeat;
   opacity: 0.44;
   pointer-events: none;
@@ -91,3 +91,4 @@
     gap: var(--v2-space-8);
   }
 }
+

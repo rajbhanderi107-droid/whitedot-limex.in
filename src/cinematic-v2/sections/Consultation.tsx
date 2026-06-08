@@ -20,7 +20,7 @@ export default function Consultation() {
   const activeTab = FORM_TABS.find((t) => t.key === activeForm)!;
 
   return (
-    <section className="v2con" id="consultation">
+    <section className="v2con v2-bg-light" id="consultation">
       <div className="v2con-inner">
         <div className="v2-reveal" ref={headline.ref}>
           <p className="v2-eyebrow">Consultation</p>

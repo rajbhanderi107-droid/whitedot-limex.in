@@ -49,7 +49,7 @@ export default function LimexDetail() {
   const b4Group = useStaggerGroup<HTMLDivElement>();
 
   return (
-    <section className="v2ld" id="limex">
+    <section className="v2ld v2-bg-light" id="limex">
       <div className="v2ld-inner">
 
         {/* BLOCK 1 */}

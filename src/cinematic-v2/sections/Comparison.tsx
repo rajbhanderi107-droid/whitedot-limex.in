@@ -43,7 +43,7 @@ export default function Comparison() {
   const [tab, setTab] = useState<Tab>('Purpose');
 
   return (
-    <section className="v2cmp" id="comparison">
+    <section className="v2cmp v2-bg-light" id="comparison">
       <div className="v2cmp-inner">
         <div className="v2-reveal" ref={headline.ref}>
           <p className="v2-eyebrow">LIMEX Pellets vs Local Filler</p>

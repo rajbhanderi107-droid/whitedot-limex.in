@@ -15,7 +15,7 @@ export default function Material() {
   const grid = useStaggerGroup<HTMLDivElement>();
 
   return (
-    <section className="v2m" id="material">
+    <section className="v2m v2-bg-light" id="material">
       <div className="v2m-inner">
         <div className="v2-reveal" ref={headline.ref}>
           <p className="v2-eyebrow">LIMEX Material Intelligence</p>
