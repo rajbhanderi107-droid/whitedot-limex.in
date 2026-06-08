@@ -269,6 +269,10 @@
   border-color: var(--v2-light-accent);
 }
 
+.v2nav--scrolled .v2nav-burger {
+  color: var(--v2-light-title);
+}
+
 .v2nav--scrolled .v2nav-burger-line {
   background: var(--v2-light-title);
 }

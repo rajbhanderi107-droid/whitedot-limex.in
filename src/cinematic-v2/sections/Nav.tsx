@@ -59,8 +59,9 @@ export default function Nav() {
           aria-expanded={open}
           onClick={() => setOpen((o) => !o)}
         >
-          <span className={`v2nav-burger-line${open ? ' v2nav-burger-line--top-open' : ''}`} />
-          <span className={`v2nav-burger-line${open ? ' v2nav-burger-line--bot-open' : ''}`} />
+          <span className={`v2nav-burger-line v2nav-burger-line--top${open ? ' v2nav-burger-line--top-open' : ''}`} />
+          <span className={`v2nav-burger-line v2nav-burger-line--mid${open ? ' v2nav-burger-line--mid-open' : ''}`} />
+          <span className={`v2nav-burger-line v2nav-burger-line--bot${open ? ' v2nav-burger-line--bot-open' : ''}`} />
         </button>
       </div>
 

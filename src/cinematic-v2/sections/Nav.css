@@ -96,37 +96,63 @@
   color: var(--v2-text);
 }
 
-/* Burger — hidden on desktop */
+/* Three-bar menu button */
 .v2nav-burger {
-  display: none;
+  display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 5px;
-  width: 36px;
-  height: 36px;
+  align-items: flex-end;
+  gap: 6px;
+  width: 42px;
+  height: 42px;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
-  margin-left: auto;
+  padding: 7px 4px;
+  margin-left: var(--v2-space-2);
   flex-shrink: 0;
+  color: var(--v2-text);
+  position: relative;
 }
 .v2nav-burger-line {
   display: block;
-  width: 22px;
-  height: 1.5px;
-  background: var(--v2-text);
+  width: 28px;
+  height: 2px;
+  background: currentColor;
   border-radius: 2px;
   transform-origin: center;
   transition:
     transform var(--v2-dur-fast) var(--v2-ease-out),
-    opacity var(--v2-dur-fast) var(--v2-ease-out);
+    opacity var(--v2-dur-fast) var(--v2-ease-out),
+    width var(--v2-dur-fast) var(--v2-ease-out);
+  animation: v2nav-bars-breathe 1.9s var(--v2-ease-in-out) infinite;
+  box-shadow: 0 0 10px color-mix(in srgb, currentColor 36%, transparent);
+}
+.v2nav-burger-line--mid {
+  width: 22px;
+  animation-delay: 0.12s;
+}
+.v2nav-burger-line--bot {
+  width: 16px;
+  animation-delay: 0.24s;
+}
+.v2nav-burger:hover .v2nav-burger-line {
+  width: 30px;
 }
 .v2nav-burger-line--top-open {
-  transform: translateY(6.5px) rotate(45deg);
+  width: 28px;
+  transform: translateY(8px) rotate(45deg);
+  animation: none;
+}
+.v2nav-burger-line--mid-open {
+  opacity: 0;
+  transform: translateX(8px);
+  animation: none;
 }
 .v2nav-burger-line--bot-open {
-  transform: translateY(-6.5px) rotate(-45deg);
+  width: 28px;
+  transform: translateY(-8px) rotate(-45deg);
+  animation: none;
 }
 
 /* Mobile drawer */
@@ -173,5 +199,21 @@
 @media (max-width: 1023px) {
   .v2nav-links { display: none; }
   .v2nav-cta { display: none; }
-  .v2nav-burger { display: flex; }
+  .v2nav-burger { margin-left: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2nav-burger-line { animation: none; }
+}
+
+@keyframes v2nav-bars-breathe {
+  0%,
+  100% {
+    opacity: 0.76;
+    transform: translateX(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-3px);
+  }
 }
