@@ -13,53 +13,53 @@
  */
 
 /* ------------------------------------------------------------------ */
-/* COLOR — the locked palette                                          */
+/* COLOR — the locked palette (TBM Japan monochromatic system)         */
 /* ------------------------------------------------------------------ */
 export const color = {
-  /** Canvas / background — deep mineral green-black. Never pure #000. */
-  canvas: '#060a08',
+  /** Canvas / background — TBM Japan pure near-black. */
+  canvas: '#080808',
   /** Slightly raised canvas for layered sections / panels. */
-  canvasRaised: '#0d1510',
+  canvasRaised: '#111111',
   /** Sunken well (insets, code, deep cards on dark). */
-  canvasSunken: '#040705',
+  canvasSunken: '#050505',
 
-  /** The ONE accent — TBM Japanese Emerald Green. Used sparingly. */
-  accent: '#10b981',
-  /** Accent, dimmed — for hairlines, borders, quiet rules. */
-  accentDim: '#047857',
-  /** Accent, faint wash — backgrounds, hover veils (use with low alpha contexts). */
-  accentFaint: 'rgba(16, 185, 129, 0.12)',
+  /** The ONE accent — TBM steel blue-gray (the muted sky-blue from tb-m.com). */
+  accent: '#708590',
+  /** Accent, dimmed — deeper steel for quiet borders/rules. */
+  accentDim: '#4a6070',
+  /** Accent, faint wash — hover veils, chip backgrounds. */
+  accentFaint: 'rgba(112, 133, 144, 0.12)',
 
-  /** Primary text — clean off-white. AA+ on canvas. */
-  text: '#f8fafc',
-  /** Secondary / body text — softened slate. Still AA on canvas. */
-  textMuted: '#cbd5e1',
-  /** Tertiary / captions, eyebrow labels. Use at >=12px (AA-ish small text only). */
-  textFaint: '#8c9088',
-  /** Inverse text — for use ON cream/limestone surfaces. */
-  textOnLight: '#1c1f1b',
-  textOnLightMuted: '#4a4d45',
+  /** Primary text — pure white. AA+ on canvas. */
+  text: '#ffffff',
+  /** Secondary / body text — TBM Noto weight-300 gray. */
+  textMuted: 'rgba(255, 255, 255, 0.65)',
+  /** Tertiary / captions, eyebrow labels. */
+  textFaint: 'rgba(255, 255, 255, 0.38)',
+  /** Inverse text — for use ON light surfaces. */
+  textOnLight: '#111111',
+  textOnLightMuted: '#444444',
 
-  /** Cream / limestone surface range — light moments, cards, the "finished material". */
-  cream050: '#F0EAE0',
-  cream100: '#E7DFD0',
-  cream200: '#DDD3BF',
-  cream300: '#D4C9B0',
+  /** Light surface range — TBM light sections (f5f5f5 → e3e3e3). */
+  cream050: '#f5f5f5',
+  cream100: '#ebebeb',
+  cream200: '#e3e3e3',
+  cream300: '#d9d9d9',
 
-  /** The grain itself — pure-feeling limestone white (the dot motif). */
-  grain: '#f7f4ec',
+  /** The grain itself — pure limestone white (the dot motif). */
+  grain: '#ffffff',
 } as const;
 
 /* ------------------------------------------------------------------ */
 /* TYPOGRAPHY — families + robust fallbacks                            */
 /* ------------------------------------------------------------------ */
 export const font = {
-  /** Display / editorial serif. Degrades gracefully — no webfont network dep added here. */
+  /** Display / headlines — Inter light 300, English-native, TBM style. */
   serif:
-    "'Boska', Georgia, 'Times New Roman', 'Iowan Old Style', Cambria, serif",
-  /** Workhorse sans. */
+    "'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif",
+  /** Workhorse body — Inter English-native, Noto Sans JP fallback only. */
   sans:
-    "'Satoshi', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+    "'Inter', 'Noto Sans JP', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
   /** Mono — data, specs, eyebrow kickers, numerals. */
   mono:
     "'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace",
@@ -147,9 +147,9 @@ export const radius = {
 /* HAIRLINE / BORDER                                                   */
 /* ------------------------------------------------------------------ */
 export const border = {
-  hairline: '1px solid rgba(16, 185, 129, 0.18)', // emerald rule
-  hairlineStrong: '1px solid rgba(16, 185, 129, 0.32)',
-  onLight: '1px solid rgba(28, 31, 27, 0.14)',
+  hairline: '1px solid rgba(255, 255, 255, 0.10)',
+  hairlineStrong: '1px solid rgba(255, 255, 255, 0.20)',
+  onLight: '1px solid rgba(0, 0, 0, 0.12)',
 } as const;
 
 /* ------------------------------------------------------------------ */

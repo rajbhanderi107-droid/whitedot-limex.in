@@ -15,44 +15,40 @@
 /* TOKENS — :root custom properties (the locked vault)                 */
 /* ------------------------------------------------------------------ */
 .v2-root {
-  /* color — canvas (deep mineral green-black studio) */
-  --v2-canvas: #060a08;
-  --v2-canvas-raised: #0d1510;
-  --v2-canvas-sunken: #040705;
+  /* color — canvas (TBM Japan pure near-black) */
+  --v2-canvas: #080808;
+  --v2-canvas-raised: #111111;
+  --v2-canvas-sunken: #050505;
 
-  /* green studio glow — the lit sage light that pools behind the stone */
-  --v2-green-glow: #41502f;   /* lit sage (center of studio) — present, not timid */
-  --v2-green-deep: #10140d;   /* far edge / vignette */
-
-  /* color — the one accent (TBM Japanese Emerald Green) */
-  --v2-accent: #10b981;
-  --v2-accent-dim: #047857;
-  --v2-accent-faint: rgba(16, 185, 129, 0.12);
+  /* color — the one accent (TBM steel blue-gray, muted sky-blue from tb-m.com) */
+  --v2-accent: #708590;
+  --v2-accent-dim: #4a6070;
+  --v2-accent-faint: rgba(112, 133, 144, 0.12);
 
   /* color — text */
-  --v2-text: #f8fafc;
-  --v2-text-muted: #cbd5e1;
-  --v2-text-faint: #8c9088;
-  --v2-text-on-light: #1c1f1b;
-  --v2-text-on-light-muted: #4a4d45;
+  --v2-text: #ffffff;
+  --v2-text-muted: rgba(255, 255, 255, 0.65);
+  --v2-text-faint: rgba(255, 255, 255, 0.38);
+  --v2-text-on-light: #111111;
+  --v2-text-on-light-muted: #444444;
 
-  /* color — cream / limestone surfaces */
-  --v2-cream-050: #f0eae0;
-  --v2-cream-100: #e7dfd0;
-  --v2-cream-200: #ddd3bf;
-  --v2-cream-300: #d4c9b0;
+  /* color — light surfaces (TBM Japan f5f5f5 scale) */
+  --v2-cream-050: #f5f5f5;
+  --v2-cream-100: #ebebeb;
+  --v2-cream-200: #e3e3e3;
+  --v2-cream-300: #d9d9d9;
 
-  /* color — the grain */
-  --v2-grain: #f7f4ec;
+  /* color — the grain (pure white dot motif) */
+  --v2-grain: #ffffff;
 
   /* hairlines / borders */
-  --v2-hairline: 1px solid rgba(16, 185, 129, 0.18);
-  --v2-hairline-strong: 1px solid rgba(16, 185, 129, 0.32);
-  --v2-border-on-light: 1px solid rgba(28, 31, 27, 0.14);
+  --v2-hairline: 1px solid rgba(255, 255, 255, 0.10);
+  --v2-hairline-strong: 1px solid rgba(255, 255, 255, 0.20);
+  --v2-border-on-light: 1px solid rgba(0, 0, 0, 0.12);
 
-  /* type families + fallbacks */
-  --v2-font-serif: 'Boska', Georgia, 'Times New Roman', 'Iowan Old Style', Cambria, serif;
-  --v2-font-sans: 'Satoshi', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  /* type families — English-native Inter primary, Noto Sans JP fallback only */
+  --v2-font-serif: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --v2-font-sans: 'Inter', 'Noto Sans JP', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --v2-font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
 
   /* weights */
@@ -149,12 +145,8 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* IMMERSIVE GREEN STUDIO — the sage light that pools across the page   */
-/* Reference: Lazarieva & Milkin. A soft eucalyptus glow rising from    */
-/* upper-center, falling to a dark olive vignette at the edges. Fixed    */
-/* so it stays put as you scroll — one continuous environment. Sits      */
-/* below all content; opaque sections that want it visible go            */
-/* transparent (see below).                                              */
+/* TBM JAPAN STUDIO DEPTH — pure black with subtle center depth veil   */
+/* Matches tb-m.com/eng: flat near-black, minimal depth, no color tint */
 /* ------------------------------------------------------------------ */
 .v2-root::before {
   content: '';
@@ -163,12 +155,8 @@
   z-index: 0;
   pointer-events: none;
   background:
-    /* lit sage pool, upper-centre (the studio key light) */
-    radial-gradient(130% 95% at 56% 20%, var(--v2-green-glow) 0%, rgba(65, 80, 47, 0.4) 38%, transparent 66%),
-    /* soft floor bounce, lower-centre */
-    radial-gradient(115% 75% at 50% 110%, rgba(58, 72, 48, 0.6) 0%, transparent 64%),
-    /* base + edge vignette */
-    radial-gradient(150% 120% at 50% 38%, var(--v2-canvas) 30%, var(--v2-green-deep) 100%);
+    radial-gradient(180% 140% at 50% 0%, rgba(28, 28, 28, 0.45) 0%, transparent 60%),
+    radial-gradient(150% 120% at 50% 38%, var(--v2-canvas) 40%, #030303 100%);
 }
 
 /* ------------------------------------------------------------------ */
@@ -382,7 +370,7 @@
   background: linear-gradient(
     to var(--v2-divider-dir, right),
     transparent,
-    rgba(16, 185, 129, 0.28)
+    rgba(112, 133, 144, 0.30)
   );
 }
 .v2-divider::after {
@@ -436,7 +424,7 @@
 .v2-btn {
   --_btn-bg: transparent;
   --_btn-fg: var(--v2-text);
-  --_btn-bd: rgba(16, 185, 129, 0.32);
+  --_btn-bd: rgba(112, 133, 144, 0.40);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -492,11 +480,11 @@
 .v2-btn--ghost {
   --_btn-bg: transparent;
   --_btn-fg: var(--v2-text);
-  --_btn-bd: rgba(16, 185, 129, 0.32);
+  --_btn-bd: rgba(112, 133, 144, 0.40);
 }
 .v2-btn--ghost:hover {
   --_btn-bg: var(--v2-accent-faint);
-  --_btn-bd: rgba(16, 185, 129, 0.55);
+  --_btn-bd: rgba(112, 133, 144, 0.65);
 }
 /* on light surfaces */
 .v2-section--light .v2-btn--ghost {
@@ -526,7 +514,7 @@
     transform var(--v2-dur-base) var(--v2-ease-out);
 }
 .v2-card:hover {
-  border-color: rgba(16, 185, 129, 0.32);
+  border-color: rgba(112, 133, 144, 0.45);
 }
 .v2-card--light {
   background: var(--v2-cream-050);
