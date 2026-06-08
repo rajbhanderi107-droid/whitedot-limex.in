@@ -269,18 +269,8 @@
   border-color: var(--v2-light-accent);
 }
 
-.v2nav--scrolled .v2nav-admin {
+.v2nav--scrolled .v2nav-admin-trigger {
   color: var(--v2-light-title);
-  background: var(--v2-light-accent);
-  border-color: var(--v2-light-accent);
-}
-
-.v2nav--scrolled .v2nav-burger {
-  color: var(--v2-light-title);
-}
-
-.v2nav--scrolled .v2nav-burger-line {
-  background: var(--v2-light-title);
 }
 
 @media (max-width: 767px) {

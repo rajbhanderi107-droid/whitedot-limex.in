@@ -12,8 +12,9 @@ const LINKS = [
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [adminOpen, setAdminOpen] = useState(false);
   const lastY = useRef(0);
+  const adminMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function onScroll() {
@@ -27,11 +28,34 @@ export default function Nav() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [open]);
+    if (!adminOpen) return;
 
-  const close = () => setOpen(false);
+    function onPointerDown(event: PointerEvent) {
+      if (!adminMenuRef.current?.contains(event.target as Node)) {
+        setAdminOpen(false);
+      }
+    }
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setAdminOpen(false);
+      }
+    }
+
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [adminOpen]);
+
+  const adminBasePath = window.location.hostname.endsWith('github.io') ? '/whitedot-limex.in' : '';
+  const adminLoginHref = `${adminBasePath}/#/admin/login`;
+  const forceAdminLogin = () => {
+    window.localStorage.removeItem('wd_admin_token');
+    setAdminOpen(false);
+  };
 
   const cls = ['v2nav', scrolled && 'v2nav--scrolled', hidden && 'v2nav--hidden']
     .filter(Boolean).join(' ');
@@ -53,46 +77,45 @@ export default function Nav() {
 
         <a href="#consultation" className="v2nav-cta">Get in Touch</a>
 
-        <a
-          className="v2nav-admin"
-          href="#/admin/login"
-          aria-label="Open admin panel"
-        >
-          <span className="v2nav-admin-bars" aria-hidden="true">
-            <span className="v2nav-admin-line v2nav-admin-line--top" />
-            <span className="v2nav-admin-line v2nav-admin-line--mid" />
-            <span className="v2nav-admin-line v2nav-admin-line--bot" />
-          </span>
-          <span className="v2nav-admin-label">Admin Panel</span>
-        </a>
+        <div className="v2nav-admin-menu" ref={adminMenuRef}>
+          <button
+            className={`v2nav-admin-trigger${adminOpen ? ' v2nav-admin-trigger--open' : ''}`}
+            type="button"
+            aria-label={adminOpen ? 'Close admin menu' : 'Open admin menu'}
+            aria-expanded={adminOpen}
+            aria-controls="v2nav-admin-panel"
+            onClick={() => setAdminOpen((o) => !o)}
+          >
+            <span className="v2nav-admin-bars" aria-hidden="true">
+              <span className="v2nav-admin-line v2nav-admin-line--top" />
+              <span className="v2nav-admin-line v2nav-admin-line--mid" />
+              <span className="v2nav-admin-line v2nav-admin-line--bot" />
+            </span>
+          </button>
 
-        <button
-          className="v2nav-burger"
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          aria-expanded={open}
-          onClick={() => setOpen((o) => !o)}
-        >
-          <span className={`v2nav-burger-line v2nav-burger-line--top${open ? ' v2nav-burger-line--top-open' : ''}`} />
-          <span className={`v2nav-burger-line v2nav-burger-line--mid${open ? ' v2nav-burger-line--mid-open' : ''}`} />
-          <span className={`v2nav-burger-line v2nav-burger-line--bot${open ? ' v2nav-burger-line--bot-open' : ''}`} />
-        </button>
-      </div>
-
-      <div
-        className={`v2nav-drawer${open ? ' v2nav-drawer--open' : ''}`}
-        aria-hidden={!open}
-        inert={open ? undefined : true}
-      >
-        <nav aria-label="Mobile navigation">
-          {LINKS.map((l) => (
-            <a key={l.href} href={l.href} className="v2nav-drawer-link" onClick={close}>
-              {l.label}
+          <div
+            id="v2nav-admin-panel"
+            className="v2nav-admin-panel"
+            data-open={adminOpen ? 'true' : 'false'}
+            aria-hidden={!adminOpen}
+            style={{
+              opacity: adminOpen ? 1 : 0,
+              pointerEvents: adminOpen ? 'auto' : 'none',
+              transform: adminOpen ? 'translateY(0) scale(1)' : 'translateY(-8px) scale(0.98)',
+            }}
+          >
+            <a
+              className="v2nav-admin-panel-link"
+              href={adminLoginHref}
+              target="_blank"
+              rel="noreferrer"
+              onClick={forceAdminLogin}
+            >
+              Admin Panel
             </a>
-          ))}
-          <a href="#consultation" className="v2nav-drawer-link" onClick={close}>
-            Get in Touch
-          </a>
-        </nav>
+          </div>
+        </div>
+
       </div>
     </header>
   );
