@@ -30,8 +30,23 @@ export default function SupplyFlow() {
               <span className="v2sf-link" aria-hidden="true">
                 <span className="v2sf-link-label">{LINKS[i]}</span>
                 <span className="v2sf-link-track">
-                  <span className="v2sf-link-draw" />
-                  <span className="v2sf-link-pulse" />
+                  <svg
+                    className="v2sf-wave"
+                    viewBox="0 0 180 48"
+                    preserveAspectRatio="none"
+                    focusable="false"
+                  >
+                    <line className="v2sf-wave-line" x1="0" y1="24" x2="180" y2="24" />
+                    <path
+                      className="v2sf-wave-path v2sf-wave-path--front"
+                      d="M -60 24 C -42 8 -18 8 0 24 C 18 40 42 40 60 24 C 78 8 102 8 120 24 C 138 40 162 40 180 24 C 198 8 222 8 240 24"
+                    />
+                    <path
+                      className="v2sf-wave-path v2sf-wave-path--back"
+                      d="M -60 24 C -42 8 -18 8 0 24 C 18 40 42 40 60 24 C 78 8 102 8 120 24 C 138 40 162 40 180 24 C 198 8 222 8 240 24"
+                    />
+                    <circle className="v2sf-wave-pulse" cx="0" cy="24" r="3.2" />
+                  </svg>
                 </span>
               </span>
             )}
