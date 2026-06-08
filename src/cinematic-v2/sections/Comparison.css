@@ -56,8 +56,8 @@
   z-index: 1;
   pointer-events: none;
   background:
-    linear-gradient(90deg, transparent, rgba(154, 168, 147, 0.22), transparent),
-    repeating-linear-gradient(0deg, transparent 0 34px, rgba(154, 168, 147, 0.08) 35px 36px);
+    linear-gradient(90deg, transparent, rgba(111, 174, 79, 0.26), transparent),
+    repeating-linear-gradient(0deg, transparent 0 34px, rgba(111, 174, 79, 0.12) 35px 36px);
   transform: translateX(-120%);
   animation: v2-industrial-scan 6.2s var(--v2-ease-in-out) infinite;
 }

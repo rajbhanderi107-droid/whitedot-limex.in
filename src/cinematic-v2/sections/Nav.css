@@ -18,7 +18,7 @@
   background: rgba(5, 7, 6, 0.88);
   backdrop-filter: blur(16px) saturate(1.4);
   -webkit-backdrop-filter: blur(16px) saturate(1.4);
-  border-bottom-color: rgba(154, 168, 147, 0.12);
+  border-bottom-color: rgba(111, 174, 79, 0.16);
 }
 
 .v2nav--hidden {
@@ -88,10 +88,11 @@
   font-weight: var(--v2-fw-medium);
   letter-spacing: var(--v2-ls-wide);
   text-transform: uppercase;
-  color: var(--v2-accent);
+  color: var(--v2-text-on-light);
+  background: var(--v2-accent);
   text-decoration: none;
   padding: 0.55em 1.1em;
-  border: var(--v2-hairline-strong);
+  border: 1px solid var(--v2-accent);
   border-radius: var(--v2-radius-pill);
   transition:
     color var(--v2-dur-fast) var(--v2-ease-out),
@@ -100,7 +101,8 @@
   white-space: nowrap;
 }
 .v2nav-cta:hover {
-  background: var(--v2-accent-faint);
+  background: var(--v2-accent-dim);
+  border-color: var(--v2-accent-dim);
   color: var(--v2-text);
 }
 

@@ -12,8 +12,8 @@
   --v2-light-title: #1c211b;
   --v2-light-body: #4a5146;
   --v2-light-muted: #687065;
-  --v2-light-accent: #5e7159;
-  --v2-light-accent-soft: rgba(94, 113, 89, 0.12);
+  --v2-light-accent: #6fae4f;
+  --v2-light-accent-soft: rgba(111, 174, 79, 0.16);
   background: var(--v2-light-page);
 }
 
@@ -122,7 +122,7 @@
 .v2cmp-card.is-limex,
 .v2con-form-tab.is-on {
   background: var(--v2-light-accent-soft);
-  border-color: rgba(94, 113, 89, 0.28);
+  border-color: rgba(111, 174, 79, 0.34);
   color: var(--v2-light-title);
 }
 
@@ -205,14 +205,14 @@
 .v2iq-input:focus,
 .v2iq-textarea:focus,
 .v2iq-select:focus {
-  border-color: rgba(94, 113, 89, 0.58);
+  border-color: rgba(111, 174, 79, 0.62);
   background: #ffffff;
 }
 
 .v2iq-submit,
 .v2gi-cta {
-  background: #1f2a1d;
-  color: #fffdf8;
+  background: var(--v2-light-accent);
+  color: var(--v2-light-title);
 }
 
 .v2gi {
@@ -231,7 +231,7 @@
 }
 
 .v2gi-glow {
-  background: radial-gradient(circle at center, rgba(94, 113, 89, 0.14) 0%, transparent 60%);
+  background: radial-gradient(circle at center, rgba(111, 174, 79, 0.18) 0%, transparent 60%);
 }
 
 .v2ft {
@@ -269,7 +269,8 @@
 
 .v2nav--scrolled .v2nav-cta {
   color: var(--v2-light-title);
-  border-color: var(--v2-light-line-strong);
+  background: var(--v2-light-accent);
+  border-color: var(--v2-light-accent);
 }
 
 .v2nav--scrolled .v2nav-dot,

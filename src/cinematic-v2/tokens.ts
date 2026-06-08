@@ -24,16 +24,16 @@ export const color = {
   canvasSunken: '#050505',
 
   /** The ONE accent — WhiteDot sage / pine-smoke green. */
-  accent: '#9aa893',
+  accent: '#6fae4f',
   /** Accent, dimmed — deeper sage for quiet borders/rules. */
-  accentDim: '#7a857c',
+  accentDim: '#4f8438',
   /** Accent, faint wash — hover veils, chip backgrounds. */
-  accentFaint: 'rgba(154, 168, 147, 0.12)',
+  accentFaint: 'rgba(111, 174, 79, 0.16)',
 
   /** Light-section accent — same green family, kept on sky tokens for compatibility. */
-  sky: '#9aa893',
-  skyDim: '#7a857c',
-  skyFaint: 'rgba(154, 168, 147, 0.12)',
+  sky: '#6fae4f',
+  skyDim: '#4f8438',
+  skyFaint: 'rgba(111, 174, 79, 0.16)',
 
   /** Light canvas — premium cool off-white (mineral water tone, faint sky tint). */
   canvasLight: '#edf2f5',
