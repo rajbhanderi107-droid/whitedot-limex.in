@@ -35,6 +35,15 @@ export default function Consultation() {
           </p>
         </div>
 
+        <div className="v2con-visual" aria-hidden="true">
+          <img
+            src="/assets/storyboard/frame-12-consultation.png"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+
         <ConsultationSteps />
 
         <div className="v2con-body v2-reveal" ref={body.ref} id="inquiry">

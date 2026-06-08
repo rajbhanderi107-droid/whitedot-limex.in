@@ -1,5 +1,6 @@
 import './Hero.css';
 import { useGrainField, useReveal } from '../motion';
+import SupplyFlow from './SupplyFlow';
 
 export default function Hero() {
   const grain = useGrainField<HTMLDivElement>({ count: 80, speed: 0.7 });
@@ -10,18 +11,18 @@ export default function Hero() {
   return (
     <section className="v2h" aria-label="Hero">
       {/* Limestone hero loop — white-bg stone, edges feathered into the dark canvas */}
-      <div className="v2h-limestone-wrap" aria-hidden="true">
+      <div className="v2h-environment" aria-hidden="true">
         <video
-          className="v2h-limestone"
-          src="/assets/limestone-hero.mp4"
-          poster="/assets/limestone-hero-poster.png"
+          className="v2h-higgsfield-video"
+          src="/assets/higgsfield/hero-environment-loop.mp4"
+          poster="/assets/higgsfield/hero-environment-keyframe.png"
           autoPlay
           loop
           muted
           playsInline
         />
-        <span className="v2h-limestone-scrim" />
       </div>
+      <span className="v2h-environment-scrim" aria-hidden="true" />
 
       <div className="v2h-grain" ref={grain.ref} aria-hidden="true" />
 
@@ -46,6 +47,8 @@ export default function Hero() {
           trials. Seven Dot distributes it as the authorized dealer, and White
           Dot LLP guides applications, samples, and commercial adoption.
         </p>
+
+        <SupplyFlow />
 
         <div className="v2h-cta v2-reveal" ref={cta.ref}>
           <a href="#material" className="v2h-btn v2h-btn--primary">

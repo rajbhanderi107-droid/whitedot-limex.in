@@ -29,6 +29,47 @@
   margin: 0 0 clamp(2.5rem, 4vw, 4rem);
 }
 
+.v2cmp-visual {
+  position: relative;
+  margin: 0 0 var(--v2-space-8);
+  min-height: clamp(260px, 38vw, 460px);
+  border: var(--v2-hairline);
+  border-radius: var(--v2-radius-md);
+  overflow: hidden;
+  background: var(--v2-canvas-raised);
+}
+
+.v2cmp-visual img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.v2cmp-visual::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, transparent 42%, rgba(6, 14, 11, 0.74) 100%),
+    linear-gradient(90deg, rgba(6, 14, 11, 0.2), transparent 42%);
+}
+
+.v2cmp-visual figcaption {
+  position: absolute;
+  z-index: 1;
+  left: clamp(1.25rem, 3vw, 2rem);
+  right: clamp(1.25rem, 3vw, 2rem);
+  bottom: clamp(1.25rem, 3vw, 2rem);
+  max-width: 54ch;
+  margin: 0;
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-caption);
+  line-height: var(--v2-lh-relaxed);
+  color: var(--v2-text-muted);
+}
+
 /* Tabs */
 .v2cmp-tabs {
   display: flex;
@@ -147,6 +188,7 @@
 .v2cmp .v2-reveal.is-in { opacity: 1; transform: none; }
 
 @media (max-width: 767px) {
+  .v2cmp-visual { min-height: 240px; }
   .v2cmp-row { grid-template-columns: 1fr; gap: var(--v2-space-3); }
   .v2cmp-pair { grid-template-columns: 1fr; }
 }
