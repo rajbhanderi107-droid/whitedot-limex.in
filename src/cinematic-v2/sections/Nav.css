@@ -43,16 +43,6 @@
   flex-shrink: 0;
 }
 
-.v2nav-dot {
-  display: block;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--v2-grain);
-  opacity: 0.92;
-  flex-shrink: 0;
-}
-
 .v2nav-wordmark {
   font-family: var(--v2-font-serif);
   font-size: 1.15rem;

@@ -40,7 +40,6 @@ export default function Nav() {
     <header className={cls} role="banner">
       <div className="v2nav-inner">
         <a href="#" className="v2nav-brand" aria-label="WhiteDot — home">
-          <span className="v2nav-dot" aria-hidden="true" />
           <span className="v2nav-wordmark">WhiteDot</span>
         </a>
 

@@ -29,15 +29,6 @@
   align-items: start;
 }
 
-/* Brand */
-.v2ft-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--v2-grain);
-  margin-bottom: var(--v2-space-4);
-}
-
 .v2ft-wordmark {
   font-family: var(--v2-font-serif);
   font-size: clamp(1.4rem, 2vw, 1.9rem);

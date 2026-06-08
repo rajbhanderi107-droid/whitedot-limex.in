@@ -26,10 +26,6 @@ export default function Hero() {
 
       <div className="v2h-grain" ref={grain.ref} aria-hidden="true" />
 
-      <div className="v2h-dot" aria-hidden="true">
-        <span className="v2h-dot-inner" />
-      </div>
-
       <div className="v2h-content">
         <p className="v2h-eyebrow">Next-Gen Limestone Technology</p>
 
