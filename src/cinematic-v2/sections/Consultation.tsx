@@ -12,7 +12,7 @@ const FORM_TABS = [
   { key: 'calculator', label: 'Savings Calculator', blurb: 'Estimate plastic, CO₂, and cost impact of switching to LIMEX.' },
 ] as const;
 type FormKey = (typeof FORM_TABS)[number]['key'];
-const consultationVideoSrc = `${import.meta.env.BASE_URL}assets/videos/consultation-products.mp4`;
+const consultationVideoSrc = `${import.meta.env.BASE_URL}assets/videos/consultation-products-2afe4bb.mp4`;
 
 export default function Consultation() {
   const headline = useReveal<HTMLDivElement>();

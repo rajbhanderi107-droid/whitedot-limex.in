@@ -39,7 +39,7 @@ const steps = [
   },
 ];
 
-const consultationVideoSrc = `${import.meta.env.BASE_URL}assets/videos/consultation-products.mp4`;
+const consultationVideoSrc = `${import.meta.env.BASE_URL}assets/videos/consultation-products-2afe4bb.mp4`;
 
 export function Consultation() {
   const reduce = useReducedMotion();
