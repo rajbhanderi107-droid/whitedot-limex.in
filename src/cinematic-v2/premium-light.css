@@ -244,10 +244,6 @@
   opacity: 0;
 }
 
-.v2ft-dot {
-  background: var(--v2-light-title);
-}
-
 .v2ft-nav-link {
   color: var(--v2-light-body);
 }
@@ -273,7 +269,6 @@
   border-color: var(--v2-light-accent);
 }
 
-.v2nav--scrolled .v2nav-dot,
 .v2nav--scrolled .v2nav-burger-line {
   background: var(--v2-light-title);
 }
