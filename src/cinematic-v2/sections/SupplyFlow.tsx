@@ -29,7 +29,10 @@ export default function SupplyFlow() {
             {i < CHAIN.length - 1 && (
               <span className="v2sf-link" aria-hidden="true">
                 <span className="v2sf-link-label">{LINKS[i]}</span>
-                <span className="v2sf-link-track" />
+                <span className="v2sf-link-track">
+                  <span className="v2sf-link-draw" />
+                  <span className="v2sf-link-pulse" />
+                </span>
               </span>
             )}
           </div>

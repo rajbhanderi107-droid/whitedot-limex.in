@@ -17,6 +17,21 @@
   object-fit: cover;
   opacity: 0.66;
   filter: saturate(0.9);
+  transform: scale(1.03);
+  animation: v2gi-drift 24s var(--v2-ease-in-out) infinite;
+}
+
+.v2gi::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(112deg, transparent 15%, rgba(170, 190, 160, 0.14) 42%, transparent 68%),
+    repeating-linear-gradient(90deg, transparent 0 56px, rgba(170, 190, 160, 0.045) 57px 58px);
+  transform: translateX(-120%);
+  animation: v2gi-industrial-scan 8s var(--v2-ease-in-out) infinite;
 }
 
 .v2gi::after {
@@ -47,13 +62,24 @@
 
 .v2gi-inner {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   max-width: var(--v2-container-max);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+}
+
+@keyframes v2gi-drift {
+  0%, 100% { transform: scale(1.03) translate3d(0, 0, 0); }
+  50% { transform: scale(1.08) translate3d(-1%, -0.8%, 0); }
+}
+
+@keyframes v2gi-industrial-scan {
+  0% { transform: translateX(-120%); opacity: 0; }
+  18%, 70% { opacity: 0.36; }
+  100% { transform: translateX(120%); opacity: 0; }
 }
 
 .v2gi .v2-eyebrow { margin: 0 0 var(--v2-space-4); }
@@ -112,6 +138,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .v2gi-bg,
+  .v2gi::before {
+    animation: none;
+  }
   .v2gi-inner .v2-reveal {
     opacity: 1;
     transform: none;

@@ -45,13 +45,40 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transform: scale(1.03);
+  animation: v2-media-drift 20s var(--v2-ease-in-out) infinite;
+}
+
+.v2ap-visual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent, rgba(170, 190, 160, 0.16), transparent),
+    repeating-linear-gradient(90deg, transparent 0 42px, rgba(170, 190, 160, 0.06) 43px 44px);
+  transform: translateX(-120%);
+  animation: v2-industrial-scan 7s var(--v2-ease-in-out) infinite;
 }
 
 .v2ap-visual::after {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 2;
   background: linear-gradient(90deg, rgba(6, 14, 11, 0.34), transparent 55%);
+}
+
+@keyframes v2-media-drift {
+  0%, 100% { transform: scale(1.03) translate3d(0, 0, 0); }
+  50% { transform: scale(1.08) translate3d(-1.2%, -0.8%, 0); }
+}
+
+@keyframes v2-industrial-scan {
+  0% { transform: translateX(-120%); opacity: 0; }
+  18%, 72% { opacity: 0.42; }
+  100% { transform: translateX(120%); opacity: 0; }
 }
 
 .v2ap-grid {
@@ -127,6 +154,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .v2ap-card { opacity: 1; transform: none; transition: none; }
+  .v2ap-visual img,
+  .v2ap-visual::before { animation: none; }
 }
 
 @media (max-width: 767px) {

@@ -22,7 +22,7 @@ export default function Footer() {
 
         <nav className="v2ft-nav" aria-label="Footer navigation">
           {NAV.map((n) => (
-            <a key={n.href} href={n.href} className="v2ft-nav-link">
+            <a key={`${n.label}-${n.href}`} href={n.href} className="v2ft-nav-link">
               {n.label}
             </a>
           ))}
