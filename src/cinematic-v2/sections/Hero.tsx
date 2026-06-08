@@ -14,8 +14,8 @@ export default function Hero() {
       <div className="v2h-environment" aria-hidden="true">
         <video
           className="v2h-higgsfield-video"
-          src="/assets/higgsfield/hero-environment-loop.mp4"
-          poster="/assets/higgsfield/hero-environment-keyframe.png"
+          src="/assets/higgsfield/hero-environment-loop.mp4?v=f0a79b7"
+          poster="/assets/higgsfield/hero-environment-keyframe.png?v=f0a79b7"
           autoPlay
           loop
           muted
