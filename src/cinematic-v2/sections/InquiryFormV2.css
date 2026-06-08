@@ -6,6 +6,53 @@
   position: relative;
 }
 
+/* Checkbox row (quote: food-contact) */
+.v2iq-check {
+  display: flex;
+  align-items: center;
+  gap: var(--v2-space-3);
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-caption);
+  color: var(--v2-text-muted);
+  cursor: pointer;
+}
+.v2iq-check input { accent-color: var(--v2-accent); width: 16px; height: 16px; }
+
+/* Calculator result */
+.v2iq-calc {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--v2-space-4);
+  padding: var(--v2-space-5);
+  background: var(--v2-accent-faint);
+  border: var(--v2-hairline);
+  border-radius: var(--v2-radius-md);
+}
+.v2iq-calc-stat { display: flex; flex-direction: column; gap: 0.25rem; }
+.v2iq-calc-num {
+  font-family: var(--v2-font-serif);
+  font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+  font-weight: var(--v2-fw-light);
+  color: var(--v2-text);
+  line-height: 1.1;
+}
+.v2iq-calc-label {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-eyebrow);
+  color: var(--v2-text-muted);
+  line-height: var(--v2-lh-snug);
+}
+.v2iq-calc-note {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-eyebrow);
+  color: var(--v2-text-faint);
+  margin: 0;
+}
+
+@media (max-width: 639px) {
+  .v2iq-calc { grid-template-columns: 1fr; }
+}
+
 .v2iq-row {
   display: grid;
   grid-template-columns: 1fr 1fr;

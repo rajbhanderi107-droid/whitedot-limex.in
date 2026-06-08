@@ -46,6 +46,41 @@
   min-width: 0;
 }
 
+/* Form tabs (Inquiry / Quote / Sample / Calculator) */
+.v2con-form-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--v2-space-2);
+  margin-bottom: var(--v2-space-4);
+}
+.v2con-form-tab {
+  padding: var(--v2-space-2) var(--v2-space-4);
+  font-family: var(--v2-font-mono);
+  font-size: var(--v2-fs-eyebrow);
+  letter-spacing: var(--v2-ls-wide);
+  color: var(--v2-text-faint);
+  background: none;
+  border: var(--v2-hairline);
+  border-radius: var(--v2-radius-pill);
+  cursor: pointer;
+  transition: color var(--v2-dur-fast) var(--v2-ease-out),
+    border-color var(--v2-dur-fast) var(--v2-ease-out),
+    background var(--v2-dur-fast) var(--v2-ease-out);
+}
+.v2con-form-tab:hover { color: var(--v2-text-muted); border-color: var(--v2-accent-dim); }
+.v2con-form-tab.is-on {
+  color: var(--v2-text);
+  background: var(--v2-accent-faint);
+  border-color: var(--v2-accent-dim);
+}
+.v2con-form-blurb {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-caption);
+  line-height: var(--v2-lh-relaxed);
+  color: var(--v2-text-muted);
+  margin: 0 0 var(--v2-space-5);
+}
+
 .v2con-aside {
   display: flex;
   flex-direction: column;

@@ -1,11 +1,23 @@
+import { useState } from 'react';
 import './Consultation.css';
 import { useReveal } from '../motion';
 import { InquiryFormV2 } from './InquiryFormV2';
+import { QuoteFormV2, SampleFormV2, CalculatorFormV2 } from './ConsultationForms';
 import ConsultationSteps from './ConsultationSteps';
+
+const FORM_TABS = [
+  { key: 'inquiry', label: 'Inquiry', blurb: 'Prefer email? Fill in the form below and our team will get back to you within one business day.' },
+  { key: 'quote', label: 'Get a Quote', blurb: "Share your specification and target volume — we'll prepare indicative pricing." },
+  { key: 'sample', label: 'Request a Sample', blurb: 'Trial material for your existing line. Samples ship within 14 working days.' },
+  { key: 'calculator', label: 'Savings Calculator', blurb: 'Estimate plastic, CO₂, and cost impact of switching to LIMEX.' },
+] as const;
+type FormKey = (typeof FORM_TABS)[number]['key'];
 
 export default function Consultation() {
   const headline = useReveal<HTMLDivElement>();
   const body = useReveal<HTMLDivElement>({ threshold: 0.06 });
+  const [activeForm, setActiveForm] = useState<FormKey>('inquiry');
+  const activeTab = FORM_TABS.find((t) => t.key === activeForm)!;
 
   return (
     <section className="v2con" id="consultation">
@@ -26,12 +38,27 @@ export default function Consultation() {
         <ConsultationSteps />
 
         <div className="v2con-body v2-reveal" ref={body.ref} id="inquiry">
-          {/* Left — inline inquiry form */}
+          {/* Left — tabbed contact forms */}
           <div className="v2con-form-col">
-            <p className="v2-eyebrow" style={{ marginBottom: 'var(--v2-space-5)' }}>
-              Inquiry Form
-            </p>
-            <InquiryFormV2 />
+            <div className="v2con-form-tabs" role="tablist" aria-label="Contact options">
+              {FORM_TABS.map((t) => (
+                <button
+                  key={t.key}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeForm === t.key}
+                  className={`v2con-form-tab${activeForm === t.key ? ' is-on' : ''}`}
+                  onClick={() => setActiveForm(t.key)}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+            <p className="v2con-form-blurb">{activeTab.blurb}</p>
+            {activeForm === 'inquiry' && <InquiryFormV2 />}
+            {activeForm === 'quote' && <QuoteFormV2 />}
+            {activeForm === 'sample' && <SampleFormV2 />}
+            {activeForm === 'calculator' && <CalculatorFormV2 />}
           </div>
 
           {/* Right — contact options + territory */}
