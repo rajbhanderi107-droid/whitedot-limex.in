@@ -1,0 +1,289 @@
+/* Premium limestone-light visual correction.
+   Keeps the hero cinematic, then turns the website body into a bright,
+   procurement-grade industrial surface with readable dark content. */
+
+.v2-root {
+  --v2-light-page: #f7f4ec;
+  --v2-light-band: #fffdf8;
+  --v2-light-card: rgba(255, 255, 255, 0.86);
+  --v2-light-card-solid: #ffffff;
+  --v2-light-line: rgba(28, 31, 27, 0.14);
+  --v2-light-line-strong: rgba(28, 31, 27, 0.24);
+  --v2-light-title: #1c211b;
+  --v2-light-body: #4a5146;
+  --v2-light-muted: #687065;
+  --v2-light-accent: #5e7159;
+  --v2-light-accent-soft: rgba(94, 113, 89, 0.12);
+  background: var(--v2-light-page);
+}
+
+.v2-root::before {
+  opacity: 0.18;
+  mix-blend-mode: multiply;
+}
+
+.v2-root main {
+  background: var(--v2-light-page);
+}
+
+.v2-root main > section:not(.v2h) {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(247, 244, 236, 0.96)),
+    var(--v2-light-page);
+  color: var(--v2-light-title);
+  border-top: 1px solid var(--v2-light-line);
+}
+
+.v2-root main > section:nth-of-type(2n + 3):not(.v2h) {
+  background:
+    linear-gradient(180deg, rgba(255, 253, 248, 0.98), rgba(241, 236, 226, 0.94)),
+    var(--v2-light-band);
+}
+
+.v2-root main > section:not(.v2h) .v2-reveal,
+.v2-root main > section:not(.v2h) .v2-reveal-group > * {
+  opacity: 1;
+  transform: none;
+}
+
+.v2m-title,
+.v2sc-title,
+.v2ld-block-title,
+.v2cmp-title,
+.v2ap-title,
+.v2con-title,
+.v2gi-title,
+.v2ft-wordmark {
+  color: var(--v2-light-title);
+}
+
+.v2m-lead,
+.v2sc-sub,
+.v2ld-sub,
+.v2cmp-lead,
+.v2ap-lead,
+.v2con-lead,
+.v2gi-copy,
+.v2ft-sub,
+.v2ft-legal p,
+.v2cmp-note {
+  color: var(--v2-light-body);
+}
+
+.v2-root main > section:not(.v2h) .v2-eyebrow,
+.v2-root main > section:not(.v2h) .v2-kicker,
+.v2con-title-accent,
+.v2gi .v2-eyebrow {
+  color: var(--v2-light-accent);
+}
+
+.v2m-prop,
+.v2ld-card,
+.v2cmp-card,
+.v2ap-card,
+.v2con-card,
+.v2cs-card,
+.v2iq-success,
+.v2iq-calc {
+  background: var(--v2-light-card);
+  border: 1px solid var(--v2-light-line);
+  box-shadow: 0 18px 48px -34px rgba(20, 27, 18, 0.38);
+  color: var(--v2-light-title);
+}
+
+.v2m-prop-label,
+.v2ld-card-title,
+.v2cmp-cat,
+.v2ap-card-sector,
+.v2con-card-label,
+.v2cs-title,
+.v2iq-success-title,
+.v2iq-calc-num {
+  color: var(--v2-light-title);
+}
+
+.v2m-prop-body,
+.v2ld-card-body,
+.v2cmp-card p,
+.v2ap-card-list li,
+.v2ap-card-note,
+.v2con-card-desc,
+.v2con-form-blurb,
+.v2con-territory p:last-child,
+.v2cs-desc,
+.v2iq-check,
+.v2iq-success-body,
+.v2iq-calc-label,
+.v2iq-calc-note {
+  color: var(--v2-light-body);
+}
+
+.v2ld-chip,
+.v2cmp-card.is-limex,
+.v2con-form-tab.is-on {
+  background: var(--v2-light-accent-soft);
+  border-color: rgba(94, 113, 89, 0.28);
+  color: var(--v2-light-title);
+}
+
+.v2ld-note,
+.v2cmp-tab,
+.v2cmp-card.is-filler .v2cmp-tag,
+.v2ft-copy {
+  color: var(--v2-light-muted);
+}
+
+.v2cmp-tab:hover,
+.v2cmp-tab.is-on,
+.v2con-form-tab:hover,
+.v2con-form-tab.is-on,
+.v2cmp-card.is-limex .v2cmp-tag,
+.v2con-card-action,
+.v2iq-reset {
+  color: var(--v2-light-accent);
+}
+
+.v2cmp-tab.is-on::after,
+.v2ap-card-list li::before,
+.v2h-eco li::before,
+.v2iq-success-dot {
+  background: var(--v2-light-accent);
+}
+
+.v2cmp-tabs,
+.v2cmp-row,
+.v2ap-card-note,
+.v2con-territory,
+.v2iq-field,
+.v2iq-success {
+  border-color: var(--v2-light-line);
+}
+
+.v2cmp-visual,
+.v2ap-visual,
+.v2con-visual {
+  background: #e6e1d7;
+  border-color: var(--v2-light-line-strong);
+  box-shadow: 0 26px 70px -44px rgba(20, 27, 18, 0.46);
+}
+
+.v2cmp-visual::after,
+.v2con-visual::after {
+  background:
+    linear-gradient(180deg, transparent 48%, rgba(247, 244, 236, 0.64) 100%),
+    linear-gradient(90deg, rgba(247, 244, 236, 0.14), transparent 44%);
+}
+
+.v2ap-visual::after {
+  background: linear-gradient(90deg, rgba(247, 244, 236, 0.18), transparent 55%);
+}
+
+.v2cmp-visual figcaption {
+  color: #f8f5ed;
+  text-shadow: 0 1px 12px rgba(6, 14, 11, 0.72);
+}
+
+.v2con-form-tab {
+  color: var(--v2-light-muted);
+  border-color: var(--v2-light-line);
+}
+
+.v2iq-input,
+.v2iq-textarea,
+.v2iq-select {
+  background: var(--v2-light-card-solid);
+  border-color: var(--v2-light-line);
+  color: var(--v2-light-title);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+.v2iq-input::placeholder,
+.v2iq-textarea::placeholder {
+  color: rgba(74, 81, 70, 0.58);
+}
+
+.v2iq-input:focus,
+.v2iq-textarea:focus,
+.v2iq-select:focus {
+  border-color: rgba(94, 113, 89, 0.58);
+  background: #ffffff;
+}
+
+.v2iq-submit,
+.v2gi-cta {
+  background: #1f2a1d;
+  color: #fffdf8;
+}
+
+.v2gi {
+  min-height: clamp(560px, 72svh, 800px);
+}
+
+.v2gi-bg {
+  opacity: 0.34;
+  filter: saturate(0.82) contrast(0.96);
+}
+
+.v2gi::after {
+  background:
+    linear-gradient(180deg, var(--v2-light-page) 0%, rgba(247, 244, 236, 0.48) 38%, var(--v2-light-page) 100%),
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.22), rgba(247, 244, 236, 0.78) 78%);
+}
+
+.v2gi-glow {
+  background: radial-gradient(circle at center, rgba(94, 113, 89, 0.14) 0%, transparent 60%);
+}
+
+.v2ft {
+  background: #f0eadf;
+  border-top: 1px solid var(--v2-light-line);
+  color: var(--v2-light-title);
+}
+
+.v2ft::before {
+  opacity: 0;
+}
+
+.v2ft-dot {
+  background: var(--v2-light-title);
+}
+
+.v2ft-nav-link {
+  color: var(--v2-light-body);
+}
+
+.v2ft-nav-link:hover {
+  color: var(--v2-light-title);
+}
+
+.v2nav--scrolled {
+  background: rgba(255, 253, 248, 0.92);
+  border-bottom-color: var(--v2-light-line);
+  box-shadow: 0 18px 50px -38px rgba(20, 27, 18, 0.42);
+}
+
+.v2nav--scrolled .v2nav-wordmark,
+.v2nav--scrolled .v2nav-link {
+  color: var(--v2-light-title);
+}
+
+.v2nav--scrolled .v2nav-cta {
+  color: var(--v2-light-title);
+  border-color: var(--v2-light-line-strong);
+}
+
+.v2nav--scrolled .v2nav-dot,
+.v2nav--scrolled .v2nav-burger-line {
+  background: var(--v2-light-title);
+}
+
+@media (max-width: 767px) {
+  .v2m-prop,
+  .v2ld-card,
+  .v2cmp-card,
+  .v2ap-card,
+  .v2con-card,
+  .v2cs-card {
+    box-shadow: 0 14px 36px -30px rgba(20, 27, 18, 0.36);
+  }
+}
