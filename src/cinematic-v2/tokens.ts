@@ -23,17 +23,17 @@ export const color = {
   /** Sunken well (insets, code, deep cards on dark). */
   canvasSunken: '#050505',
 
-  /** The ONE accent — WhiteDot sage / pine-smoke green. */
-  accent: '#6fae4f',
-  /** Accent, dimmed — deeper sage for quiet borders/rules. */
-  accentDim: '#4f8438',
+  /** The ONE accent — WhiteDot tree-leaf green (deep, living foliage). */
+  accent: '#4f9a35',
+  /** Accent, dimmed — deeper leaf-shadow green for quiet borders/rules. */
+  accentDim: '#3a7526',
   /** Accent, faint wash — hover veils, chip backgrounds. */
-  accentFaint: 'rgba(111, 174, 79, 0.16)',
+  accentFaint: 'rgba(79, 154, 53, 0.16)',
 
   /** Light-section accent — same green family, kept on sky tokens for compatibility. */
-  sky: '#6fae4f',
-  skyDim: '#4f8438',
-  skyFaint: 'rgba(111, 174, 79, 0.16)',
+  sky: '#4f9a35',
+  skyDim: '#3a7526',
+  skyFaint: 'rgba(79, 154, 53, 0.16)',
 
   /** Light canvas — premium cool off-white (mineral water tone, faint sky tint). */
   canvasLight: '#edf2f5',
