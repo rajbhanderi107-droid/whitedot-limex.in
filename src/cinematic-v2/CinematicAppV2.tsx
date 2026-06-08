@@ -3,14 +3,13 @@ import { useEffect } from 'react';
 
 import Nav from './sections/Nav';
 import Hero from './sections/Hero';
-import Origin from './sections/Origin';
-import Conversion from './sections/Conversion';
 import Material from './sections/Material';
 import Showcase from './sections/Showcase';
+import LimexDetail from './sections/LimexDetail';
 import Comparison from './sections/Comparison';
 import Applications from './sections/Applications';
-import Proof from './sections/Proof';
 import Consultation from './sections/Consultation';
+import GlobalImpact from './sections/GlobalImpact';
 import Footer from './sections/Footer';
 
 export default function CinematicAppV2() {
@@ -33,14 +32,13 @@ export default function CinematicAppV2() {
       <Nav />
       <main>
         <Hero />
-        <Origin />
-        <Conversion />
         <Material />
         <Showcase />
+        <LimexDetail />
         <Comparison />
         <Applications />
-        <Proof />
         <Consultation />
+        <GlobalImpact />
       </main>
       <Footer />
     </div>

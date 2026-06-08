@@ -1,0 +1,79 @@
+.v2cs {
+  background: transparent;
+}
+
+.v2cs-list {
+  list-style: none;
+  margin: 0 0 var(--v2-space-8);
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--v2-space-4);
+}
+
+.v2cs-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v2-space-3);
+  padding: var(--v2-space-5);
+  background: var(--v2-canvas-raised);
+  border: var(--v2-hairline);
+  border-radius: var(--v2-radius-md);
+  transition: border-color var(--v2-dur-fast) var(--v2-ease-out);
+}
+
+.v2cs-card:hover { border-color: var(--v2-accent-dim); }
+
+.v2cs-num {
+  font-family: var(--v2-font-mono);
+  font-size: var(--v2-fs-h3);
+  letter-spacing: var(--v2-ls-wide);
+  color: var(--v2-accent);
+  line-height: var(--v2-lh-tight);
+}
+
+.v2cs-title {
+  margin: 0;
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-body);
+  font-weight: var(--v2-fw-semibold);
+  line-height: var(--v2-lh-snug);
+  color: var(--v2-text);
+}
+
+.v2cs-desc {
+  margin: 0;
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-caption);
+  line-height: var(--v2-lh-relaxed);
+  color: var(--v2-text-muted);
+}
+
+/* Reveal — group ref on the ol, children = cards */
+.v2cs .v2-reveal-group > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--v2-dur-slow) var(--v2-ease-out),
+    transform var(--v2-dur-slow) var(--v2-ease-out);
+}
+.v2cs .v2-reveal-group.is-in > * { opacity: 1; transform: none; }
+.v2cs .v2-reveal-group.is-in > *:nth-child(2) { transition-delay: 0.08s; }
+.v2cs .v2-reveal-group.is-in > *:nth-child(3) { transition-delay: 0.16s; }
+.v2cs .v2-reveal-group.is-in > *:nth-child(4) { transition-delay: 0.24s; }
+
+@media (max-width: 1023px) {
+  .v2cs-list { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 767px) {
+  .v2cs-list { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2cs .v2-reveal-group > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

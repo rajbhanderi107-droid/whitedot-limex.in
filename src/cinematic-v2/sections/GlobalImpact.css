@@ -1,0 +1,97 @@
+.v2gi {
+  position: relative;
+  background: transparent;
+  padding: var(--v2-section-pad) var(--v2-gutter);
+  border-top: var(--v2-hairline);
+  overflow: hidden;
+}
+
+.v2gi-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(900px, 120%);
+  height: min(900px, 120%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  background: radial-gradient(
+    circle at center,
+    var(--v2-accent-faint) 0%,
+    transparent 60%
+  );
+  z-index: 0;
+}
+
+.v2gi-inner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--v2-container-max);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.v2gi .v2-eyebrow { margin: 0 0 var(--v2-space-4); }
+
+.v2gi-title {
+  margin: 0 0 var(--v2-space-5);
+  max-width: 20ch;
+  font-family: var(--v2-font-serif);
+  font-weight: var(--v2-fw-light);
+  font-size: var(--v2-fs-h2);
+  line-height: var(--v2-lh-tight);
+  letter-spacing: var(--v2-ls-tight);
+  color: var(--v2-text);
+}
+
+.v2gi-copy {
+  margin: 0 0 var(--v2-space-7);
+  max-width: 52ch;
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-lead);
+  line-height: var(--v2-lh-relaxed);
+  color: var(--v2-text-muted);
+}
+
+.v2gi-cta {
+  display: inline-block;
+  padding: var(--v2-space-3) var(--v2-space-6);
+  border-radius: 999px;
+  background: var(--v2-accent);
+  color: var(--v2-text-on-light);
+  font-family: var(--v2-font-sans);
+  font-weight: var(--v2-fw-medium);
+  font-size: var(--v2-fs-body);
+  letter-spacing: var(--v2-ls-wide);
+  text-decoration: none;
+  transition: opacity var(--v2-dur-fast) var(--v2-ease-out);
+}
+
+.v2gi-cta:hover { opacity: 0.9; }
+
+/* Reveal — observer ref is on .v2gi-inner, children carry .v2-reveal */
+.v2gi-inner .v2-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity var(--v2-dur-slow) var(--v2-ease-out),
+    transform var(--v2-dur-slow) var(--v2-ease-out);
+}
+.v2gi-inner.is-in .v2-reveal { opacity: 1; transform: none; }
+.v2gi-inner.is-in .v2-reveal:nth-child(2) { transition-delay: 0.08s; }
+.v2gi-inner.is-in .v2-reveal:nth-child(3) { transition-delay: 0.16s; }
+.v2gi-inner.is-in .v2-reveal:nth-child(4) { transition-delay: 0.24s; }
+
+@media (max-width: 767px) {
+  .v2gi-title { max-width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2gi-inner .v2-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

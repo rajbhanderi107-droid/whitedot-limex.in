@@ -1,6 +1,7 @@
 import './Consultation.css';
 import { useReveal } from '../motion';
 import { InquiryFormV2 } from './InquiryFormV2';
+import ConsultationSteps from './ConsultationSteps';
 
 export default function Consultation() {
   const headline = useReveal<HTMLDivElement>();
@@ -21,6 +22,8 @@ export default function Consultation() {
             scope a path to scale.
           </p>
         </div>
+
+        <ConsultationSteps />
 
         <div className="v2con-body v2-reveal" ref={body.ref} id="inquiry">
           {/* Left — inline inquiry form */}
