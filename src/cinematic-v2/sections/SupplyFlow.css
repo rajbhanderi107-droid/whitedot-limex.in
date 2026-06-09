@@ -77,19 +77,20 @@
   stroke-width: 1;
 }
 
-/* the glowing coil strand */
+/* the glowing coil strand — rotates + a living glow pulse */
 .v2sf-spiral-coil {
   fill: none;
   stroke: var(--v2-accent);
   stroke-width: 2;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 5px rgba(79, 154, 53, 0.7));
+  animation: v2sf-spiral-glow 2.4s ease-in-out infinite;
 }
 /* dim back strand for depth */
 .v2sf-spiral-coil--back {
   stroke: var(--v2-accent-dim);
   stroke-width: 3.4;
-  opacity: 0.32;
+  opacity: 0.3;
+  animation: none;
   filter: none;
 }
 
@@ -98,15 +99,21 @@
   animation: v2sf-spiral-spin 3s linear infinite;
 }
 
-/* travelling light pulse */
-.v2sf-spiral-dot {
-  fill: #eafbe9;
-  filter: drop-shadow(0 0 6px rgba(205, 236, 207, 0.95));
-}
-
 @keyframes v2sf-spiral-spin {
   from { transform: translateX(0); }
   to   { transform: translateX(calc(var(--v2sf-period, 47.12) * -1px)); }
+}
+
+/* breathing glow keeps the line alive as it spins */
+@keyframes v2sf-spiral-glow {
+  0%, 100% {
+    stroke: var(--v2-accent);
+    filter: drop-shadow(0 0 4px rgba(79, 154, 53, 0.6));
+  }
+  50% {
+    stroke: #9fe6a3;
+    filter: drop-shadow(0 0 9px rgba(159, 230, 163, 0.95));
+  }
 }
 
 /* Reveal */
@@ -129,6 +136,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .v2sf .v2-reveal-group > * { opacity: 1; transform: none; transition: none; }
-  .v2sf-spiral-rot { animation: none; }
-  .v2sf-spiral-dot { display: none; }
+  .v2sf-spiral-rot,
+  .v2sf-spiral-coil { animation: none; }
 }

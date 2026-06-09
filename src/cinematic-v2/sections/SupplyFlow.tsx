@@ -70,17 +70,6 @@ export default function SupplyFlow() {
                     <path className="v2sf-spiral-coil v2sf-spiral-coil--back" d={COIL} />
                     <path className="v2sf-spiral-coil" d={COIL} />
                   </g>
-                  {/* light pulse travelling the strand */}
-                  <circle className="v2sf-spiral-dot" r="2.6">
-                    <animateMotion
-                      dur="2.8s"
-                      repeatCount="indefinite"
-                      path={COIL}
-                      keyPoints="0.15;0.85"
-                      keyTimes="0;1"
-                      calcMode="linear"
-                    />
-                  </circle>
                 </svg>
               </span>
             )}
