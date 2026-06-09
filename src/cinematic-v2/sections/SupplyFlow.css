@@ -63,14 +63,50 @@
   flex: 0 0 auto;
 }
 
-/* Vibe-motion video connector */
-.v2sf-vibe {
+/* ── Spiral rotating glow line connector ───────────────────────── */
+.v2sf-spiral {
   width: 100%;
-  height: 64px;
-  object-fit: cover;
-  border-radius: var(--v2-radius-sm);
-  opacity: 0.82;
-  border: 1px solid rgba(79, 154, 53, 0.22);
+  height: 48px;
+  overflow: visible;
+  display: block;
+}
+
+/* faint rail the coil rides */
+.v2sf-spiral-base {
+  stroke: rgba(200, 210, 215, 0.16);
+  stroke-width: 1;
+}
+
+/* the glowing coil strand */
+.v2sf-spiral-coil {
+  fill: none;
+  stroke: var(--v2-accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 5px rgba(79, 154, 53, 0.7));
+}
+/* dim back strand for depth */
+.v2sf-spiral-coil--back {
+  stroke: var(--v2-accent-dim);
+  stroke-width: 3.4;
+  opacity: 0.32;
+  filter: none;
+}
+
+/* group rotates by translating exactly one coil period → seamless spin */
+.v2sf-spiral-rot {
+  animation: v2sf-spiral-spin 3s linear infinite;
+}
+
+/* travelling light pulse */
+.v2sf-spiral-dot {
+  fill: #eafbe9;
+  filter: drop-shadow(0 0 6px rgba(205, 236, 207, 0.95));
+}
+
+@keyframes v2sf-spiral-spin {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(var(--v2sf-period, 47.12) * -1px)); }
 }
 
 /* Reveal */
@@ -88,9 +124,11 @@
 @media (max-width: 767px) {
   .v2sf-step { flex-direction: column; width: 100%; }
   .v2sf-link { flex-direction: row; width: 100%; min-width: 0; }
-  .v2sf-vibe { height: 40px; }
+  .v2sf-spiral { height: 34px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .v2sf .v2-reveal-group > * { opacity: 1; transform: none; transition: none; }
+  .v2sf-spiral-rot { animation: none; }
+  .v2sf-spiral-dot { display: none; }
 }
