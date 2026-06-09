@@ -23,6 +23,8 @@ import { useHeavyMotion } from '../motion';
 
 const BASE = import.meta.env.BASE_URL;
 const asset = (p: string) => `${BASE}${p}`.replace(/\/{2,}/g, '/');
+const STORY_ASSET_VERSION = '20260610-quiet-scenes';
+const storyAsset = (p: string) => `${asset(p)}?v=${STORY_ASSET_VERSION}`;
 
 const N = 8;
 const SCENE_IDS = Array.from({ length: N }, (_, i) => i + 1);
@@ -199,7 +201,7 @@ export default function MaterialStory() {
     >
       <div className="v2story__viewport" ref={viewportRef}>
         {SCENE_IDS.map((n, i) => {
-          const poster = asset(`assets/videos/story/scene-${n}-poster.jpg`);
+          const poster = storyAsset(`assets/videos/story/scene-${n}-poster.jpg`);
           return (
             <article
               key={n}
@@ -234,11 +236,11 @@ export default function MaterialStory() {
                   {armed.has(i) && (
                     <>
                       <source
-                        src={asset(`assets/videos/story/scene-${n}.webm`)}
+                        src={storyAsset(`assets/videos/story/scene-${n}.webm`)}
                         type="video/webm"
                       />
                       <source
-                        src={asset(`assets/videos/story/scene-${n}.mp4`)}
+                        src={storyAsset(`assets/videos/story/scene-${n}.mp4`)}
                         type="video/mp4"
                       />
                     </>
