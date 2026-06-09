@@ -2,8 +2,9 @@ import './SupplyFlow.css';
 import { useStaggerGroup } from '../motion';
 
 /**
- * SupplyFlow — V1 verbatim origin chain (SupplyFlow.tsx):
- * TBM manufactures it, Seven Dot distributes it, White Dot LLP markets & sells it.
+ * SupplyFlow — origin chain:
+ * TBM manufactures LIMEX → Seven Dot distributes → White Dot LLP markets & sells.
+ * Connectors use the Higgsfield vibe-motion video to show the living link.
  */
 const CHAIN = [
   { name: 'TBM Co., Ltd.', role: 'Japan · inventor & manufacturer' },
@@ -11,7 +12,7 @@ const CHAIN = [
   { name: 'White Dot LLP', role: 'Marketing & sales · sister company' },
 ];
 
-const LINKS = ['supplies LIMEX', 'marketed & sold by'];
+const vibeVideo = `${import.meta.env.BASE_URL}assets/higgsfield/supply-chain-vibe.mp4`;
 
 export default function SupplyFlow() {
   const { ref } = useStaggerGroup<HTMLDivElement>();
@@ -28,26 +29,14 @@ export default function SupplyFlow() {
             </div>
             {i < CHAIN.length - 1 && (
               <span className="v2sf-link" aria-hidden="true">
-                <span className="v2sf-link-label">{LINKS[i]}</span>
-                <span className="v2sf-link-track">
-                  <svg
-                    className="v2sf-wave"
-                    viewBox="0 0 180 48"
-                    preserveAspectRatio="none"
-                    focusable="false"
-                  >
-                    <line className="v2sf-wave-line" x1="0" y1="24" x2="180" y2="24" />
-                    <path
-                      className="v2sf-wave-path v2sf-wave-path--front"
-                      d="M -60 24 C -42 8 -18 8 0 24 C 18 40 42 40 60 24 C 78 8 102 8 120 24 C 138 40 162 40 180 24 C 198 8 222 8 240 24"
-                    />
-                    <path
-                      className="v2sf-wave-path v2sf-wave-path--back"
-                      d="M -60 24 C -42 8 -18 8 0 24 C 18 40 42 40 60 24 C 78 8 102 8 120 24 C 138 40 162 40 180 24 C 198 8 222 8 240 24"
-                    />
-                    <circle className="v2sf-wave-pulse" cx="0" cy="24" r="3.2" />
-                  </svg>
-                </span>
+                <video
+                  className="v2sf-vibe"
+                  src={vibeVideo}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
               </span>
             )}
           </div>
