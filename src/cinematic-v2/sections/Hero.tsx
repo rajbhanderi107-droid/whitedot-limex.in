@@ -51,44 +51,46 @@ export default function Hero() {
       <div className="v2h-grain" ref={grain.ref} aria-hidden="true" />
 
       <div className="v2h-content">
-        <p className="v2h-eyebrow">Next-Gen Limestone Technology</p>
+        <div className="v2h-glass-panel">
+          <p className="v2h-eyebrow">Next-Gen Limestone Technology</p>
 
-        <h1 className="v2h-sr-title">{`${LINE1} ${LINE2} ${LINE3}`}</h1>
+          <h1 className="v2h-sr-title">{`${LINE1} ${LINE2} ${LINE3}`}</h1>
 
-        <div
-          className="v2h-headline v2-reveal"
-          ref={headline.ref}
-        >
-          <div className="v2h-animated-title" aria-hidden="true">
-            {/* Each .v2h-line clips vertically so chars rise from below */}
-            <span className="v2h-line">
-              {chars(LINE1, 0)}
-            </span>
-            <span className="v2h-line">
-              {chars(LINE2, OFF2)}
-            </span>
-            <span className="v2h-headline-accent v2h-line">
-              {chars(LINE3, OFF3)}
-            </span>
+          <div
+            className="v2h-headline v2-reveal"
+            ref={headline.ref}
+          >
+            <div className="v2h-animated-title" aria-hidden="true">
+              {/* Each .v2h-line clips vertically so chars rise from below */}
+              <span className="v2h-line">
+                {chars(LINE1, 0)}
+              </span>
+              <span className="v2h-line">
+                {chars(LINE2, OFF2)}
+              </span>
+              <span className="v2h-headline-accent v2h-line">
+                {chars(LINE3, OFF3)}
+              </span>
+            </div>
           </div>
-        </div>
 
-        <p className="v2h-sub v2-reveal" ref={sub.ref}>
-          Invented by TBM in Japan, LIMEX is a limestone-based material that can
-          reduce petroleum-derived plastic while fitting practical industrial
-          trials. Seven Dot distributes it as the authorized dealer, and White
-          Dot LLP guides applications, samples, and commercial adoption.
-        </p>
+          <p className="v2h-sub v2-reveal" ref={sub.ref}>
+            Invented by TBM in Japan, LIMEX is a limestone-based material that can
+            reduce petroleum-derived plastic while fitting practical industrial
+            trials. Seven Dot distributes it as the authorized dealer, and White
+            Dot LLP guides applications, samples, and commercial adoption.
+          </p>
 
-        <SupplyFlow />
+          <SupplyFlow />
 
-        <div className="v2h-cta v2-reveal" ref={cta.ref}>
-          <a href="#material" className="v2h-btn v2h-btn--primary">
-            Explore LIMEX
-          </a>
-          <a href="#consultation" className="v2h-btn v2h-btn--ghost">
-            Request Material Consultation
-          </a>
+          <div className="v2h-cta v2-reveal" ref={cta.ref}>
+            <a href="#material" className="v2h-btn v2h-btn--primary">
+              Explore LIMEX
+            </a>
+            <a href="#consultation" className="v2h-btn v2h-btn--ghost">
+              Request Material Consultation
+            </a>
+          </div>
         </div>
 
         <ul className="v2h-eco v2-reveal" aria-label="Sustainability signals">
