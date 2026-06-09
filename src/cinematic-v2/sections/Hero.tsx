@@ -1,4 +1,5 @@
 import './Hero.css';
+import React from 'react';
 import { useGrainField, useReveal } from '../motion';
 import SupplyFlow from './SupplyFlow';
 
@@ -31,9 +32,15 @@ export default function Hero() {
 
         <div className="v2h-headline v2-reveal" ref={headline.ref}>
           <h1>
-            Sustainable<br />
-            Material<br />
-            <span className="v2h-headline-accent">to Replace Plastic</span>
+            <span className="v2h-line">
+              <span className="v2h-word" style={{ '--wi': '0' } as React.CSSProperties}>Sustainable</span>
+            </span>
+            <span className="v2h-line">
+              <span className="v2h-word" style={{ '--wi': '1' } as React.CSSProperties}>Material</span>
+            </span>
+            <span className="v2h-headline-accent v2h-line">
+              <span className="v2h-word" style={{ '--wi': '2' } as React.CSSProperties}>to Replace Plastic</span>
+            </span>
           </h1>
         </div>
 
