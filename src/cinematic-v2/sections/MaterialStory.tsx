@@ -203,7 +203,7 @@ export default function MaterialStory() {
           return (
             <article
               key={n}
-              className="v2story__scene"
+              className={`v2story__scene${n === 3 || n === 5 ? ' v2story__scene--quiet' : ''}`}
               data-scene={i}
               ref={(el) => {
                 sceneRefs.current[i] = el;
