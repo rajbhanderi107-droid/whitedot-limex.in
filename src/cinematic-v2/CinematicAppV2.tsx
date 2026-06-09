@@ -2,7 +2,7 @@ import './foundation.css';
 
 import Nav from './sections/Nav';
 import Hero from './sections/Hero';
-import Material from './sections/Material';
+import MaterialStory from './sections/MaterialStory';
 import Showcase from './sections/Showcase';
 import LimexDetail from './sections/LimexDetail';
 import Comparison from './sections/Comparison';
@@ -46,7 +46,7 @@ export default function CinematicAppV2() {
         <Nav />
         <main>
           <Hero />
-          <Material />
+          <MaterialStory />
           <Showcase />
           <LimexDetail />
           <Comparison />

@@ -1,0 +1,318 @@
+/* =====================================================================
+   MaterialStory — "Born from CO₂" pinned scroll film (cinematic-v2)
+   ---------------------------------------------------------------------
+   Full-bleed dark cinematic band (like GlobalImpact). Two layouts share
+   the same markup:
+     • default          → FALLBACK: scenes stack in normal flow, ~1 vh each.
+     • .v2story--pinned → PINNED:  scenes overlap absolutely, GSAP crossfades.
+   All motion is transform/opacity only. Text overlays are real HTML.
+   ===================================================================== */
+
+.v2story {
+  position: relative;
+  background: var(--v2-canvas);
+  color: var(--v2-text);
+  isolation: isolate;
+  /* round both layouts to the same dark frame as neighbouring dark bands */
+  border-block: var(--v2-hairline);
+}
+
+/* The element that gets pinned (pinned mode) / the flow container (fallback) */
+.v2story__viewport {
+  position: relative;
+  width: 100%;
+}
+
+/* ---- PINNED MODE: viewport is one screen tall, scenes overlap ---- */
+.v2story--pinned .v2story__viewport {
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+.v2story--pinned .v2story__scene {
+  position: absolute;
+  inset: 0;
+  /* GSAP drives autoAlpha (opacity + visibility) */
+}
+
+/* ---- FALLBACK MODE: each scene is its own ~viewport-tall block ---- */
+.v2story__scene {
+  position: relative;
+  display: flex;
+  min-height: 100vh;
+  min-height: 100svh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------ */
+/* MEDIA LAYER — poster (instant) + film + scrim                       */
+/* ------------------------------------------------------------------ */
+.v2story__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--v2-canvas-sunken);
+  will-change: transform;
+}
+.v2story__poster,
+.v2story__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.v2story__poster {
+  z-index: 0;
+}
+.v2story__video {
+  z-index: 1;
+  /* Poster sits beneath at z0; the <video> is transparent until it has
+     decoded frames, so the poster shows through with no fade flicker. */
+}
+
+/* readability scrim — darker bottom-left where copy sits */
+.v2story__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(8, 8, 8, 0.78) 0%,
+      rgba(8, 8, 8, 0.45) 42%,
+      rgba(8, 8, 8, 0.12) 70%,
+      rgba(8, 8, 8, 0) 100%
+    ),
+    linear-gradient(
+      0deg,
+      rgba(8, 8, 8, 0.7) 0%,
+      rgba(8, 8, 8, 0.15) 45%,
+      rgba(8, 8, 8, 0.35) 100%
+    );
+}
+
+/* ------------------------------------------------------------------ */
+/* COPY OVERLAY — real HTML, sharp + responsive                        */
+/* ------------------------------------------------------------------ */
+.v2story__overlay {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  padding: clamp(2rem, 4vw, 5rem) var(--v2-gutter)
+    clamp(3.5rem, 7vw, 7rem);
+}
+.v2story--pinned .v2story__overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.v2story__copy {
+  width: 100%;
+  max-width: var(--v2-container-max);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--v2-space-5);
+  /* keep copy in the readable left column on wide screens */
+}
+.v2story__copy > * {
+  max-width: 38ch;
+}
+
+.v2story__eyebrow {
+  color: var(--v2-sky);
+}
+
+.v2story__title {
+  font-family: var(--v2-font-serif);
+  font-weight: var(--v2-fw-light);
+  line-height: var(--v2-lh-tight);
+  letter-spacing: var(--v2-ls-tight);
+  color: #fff;
+  /* mid-scenes: h2 weight so copy + chips never overflow a short viewport */
+  font-size: var(--v2-fs-h2);
+  margin: 0;
+  text-wrap: balance;
+}
+/* hero scene gets the full display-scale opener */
+.v2story__scene:first-child .v2story__title {
+  font-size: var(--v2-fs-h1);
+}
+
+.v2story__body {
+  font-family: var(--v2-font-sans);
+  font-size: var(--v2-fs-lead);
+  line-height: var(--v2-lh-relaxed);
+  color: rgba(255, 255, 255, 0.82);
+  margin: 0;
+}
+
+/* process / benefit chips */
+.v2story__chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--v2-space-2) var(--v2-space-3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-width: 52ch;
+}
+.v2story__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--v2-space-3);
+  font-family: var(--v2-font-mono);
+  font-size: var(--v2-fs-caption);
+  letter-spacing: var(--v2-ls-wide);
+  color: #fff;
+  border: 1px solid rgba(59, 150, 184, 0.45);
+  background: rgba(59, 150, 184, 0.14);
+  border-radius: var(--v2-radius-pill);
+  padding: 0.32em 0.85em;
+  white-space: nowrap;
+  backdrop-filter: blur(2px);
+}
+.v2story__chip-arrow {
+  color: var(--v2-sky);
+  margin-inline-start: 0.1em;
+  /* arrow visually separates flow steps; sits to the RIGHT of each chip */
+  position: relative;
+  margin-inline-end: calc(-1 * var(--v2-space-3) - 0.85em);
+  padding-inline-start: var(--v2-space-3);
+}
+
+.v2story__cta {
+  align-self: flex-start;
+  margin-top: var(--v2-space-2);
+}
+
+/* ------------------------------------------------------------------ */
+/* CLOSING LOCKUP scene                                                */
+/* ------------------------------------------------------------------ */
+.v2story__scene--lockup .v2story__overlay {
+  /* film already carries the LIMEX wordmark in-frame — keep HTML lockup in the
+     lower third so the two never sit on top of each other */
+  align-items: flex-end;
+  justify-content: center;
+  text-align: center;
+}
+.v2story__scene--lockup .v2story__copy {
+  align-items: center;
+  text-align: center;
+}
+/* symmetric bottom scrim for the centered closing copy (default scrim is
+   left-weighted for the side-aligned scenes) */
+.v2story__scene--lockup .v2story__scrim {
+  background: linear-gradient(
+    0deg,
+    rgba(8, 8, 8, 0.8) 0%,
+    rgba(8, 8, 8, 0.35) 38%,
+    rgba(8, 8, 8, 0) 65%,
+    rgba(8, 8, 8, 0.3) 100%
+  );
+}
+.v2story__scene--lockup .v2story__copy > * {
+  max-width: 46ch;
+}
+.v2story__title--lockup {
+  font-size: var(--v2-fs-display);
+  letter-spacing: var(--v2-ls-tightest);
+}
+
+/* ------------------------------------------------------------------ */
+/* PROGRESS DOTS — current chapter indicator                          */
+/* ------------------------------------------------------------------ */
+/* Lives inside the pinned viewport, so it only appears while the section is
+   pinned on screen and never floats over neighbouring sections. */
+.v2story__progress {
+  position: absolute;
+  z-index: 4;
+  right: clamp(1rem, 2.5vw, 2.25rem);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--v2-space-3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  pointer-events: none;
+}
+/* fallback (non-pinned) stacks scenes — the dot rail has no fixed anchor there */
+.v2story:not(.v2story--pinned) .v2story__progress {
+  display: none;
+}
+.v2story__dot {
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+  transition:
+    background-color var(--v2-dur-base) var(--v2-ease-out),
+    transform var(--v2-dur-base) var(--v2-ease-out);
+}
+.v2story__dot.is-active {
+  background: var(--v2-sky);
+  transform: scale(1.6);
+}
+
+/* ------------------------------------------------------------------ */
+/* FALLBACK reveal (no GSAP) — simple fade/slide via IO .is-in        */
+/* ------------------------------------------------------------------ */
+.v2story:not(.v2story--pinned) .v2story__copy > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--v2-dur-slow) var(--v2-ease-out),
+    transform var(--v2-dur-slow) var(--v2-ease-out);
+}
+.v2story:not(.v2story--pinned) .v2story__scene.is-in .v2story__copy > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* RESPONSIVE                                                          */
+/* ------------------------------------------------------------------ */
+@media (max-width: 767px) {
+  .v2story__progress {
+    display: none;
+  }
+  .v2story__copy > * {
+    max-width: 100%;
+  }
+  .v2story__chips {
+    max-width: 100%;
+  }
+  /* slightly stronger scrim on small screens for guaranteed contrast */
+  .v2story__scrim {
+    background:
+      linear-gradient(
+        0deg,
+        rgba(8, 8, 8, 0.82) 0%,
+        rgba(8, 8, 8, 0.28) 55%,
+        rgba(8, 8, 8, 0.5) 100%
+      );
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* REDUCED MOTION — posters only, no film, no transitions             */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .v2story__video {
+    display: none !important;
+  }
+  .v2story:not(.v2story--pinned) .v2story__copy > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
