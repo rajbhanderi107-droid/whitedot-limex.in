@@ -219,7 +219,19 @@
 }
 
 /* Headline */
-.v2h-headline h1 {
+.v2h-sr-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.v2h-animated-title {
   font-family: var(--v2-font-serif);
   font-size: clamp(4rem, 9vw, 8.8rem);
   font-weight: var(--v2-fw-light);
@@ -584,7 +596,7 @@
     min-height: 36px;
     height: 36px;
   }
-  .v2h-headline h1 { max-width: 100%; }
+  .v2h-animated-title { max-width: 100%; }
   .v2h-sub { max-width: 100%; }
   .v2h-cta { flex-direction: column; }
   .v2h-btn { justify-content: center; }

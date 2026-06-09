@@ -109,6 +109,7 @@ export default function Nav() {
               href={adminLoginHref}
               target="_blank"
               rel="noreferrer"
+              tabIndex={adminOpen ? undefined : -1}
               onClick={forceAdminLogin}
             >
               Admin Panel

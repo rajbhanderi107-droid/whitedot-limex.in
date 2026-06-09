@@ -53,13 +53,13 @@ export default function Hero() {
       <div className="v2h-content">
         <p className="v2h-eyebrow">Next-Gen Limestone Technology</p>
 
-        {/* aria-label preserves the full readable sentence for screen readers */}
+        <h1 className="v2h-sr-title">{`${LINE1} ${LINE2} ${LINE3}`}</h1>
+
         <div
           className="v2h-headline v2-reveal"
           ref={headline.ref}
-          aria-label={`${LINE1} ${LINE2} ${LINE3}`}
         >
-          <h1 aria-hidden="true">
+          <div className="v2h-animated-title" aria-hidden="true">
             {/* Each .v2h-line clips vertically so chars rise from below */}
             <span className="v2h-line">
               {chars(LINE1, 0)}
@@ -70,7 +70,7 @@ export default function Hero() {
             <span className="v2h-headline-accent v2h-line">
               {chars(LINE3, OFF3)}
             </span>
-          </h1>
+          </div>
         </div>
 
         <p className="v2h-sub v2-reveal" ref={sub.ref}>
