@@ -239,6 +239,70 @@
   letter-spacing: 0;
 }
 
+/* ============================================================
+   VIBE MOTION — expressive headline word animation
+   Higgsfield "express motion" style: each line is clipped by
+   an overflow-hidden wrapper; the word rises from below the
+   clip boundary with a blur-to-sharp entrance.
+   ============================================================ */
+
+/* Line wrapper: clips so the word materialises from below */
+.v2h-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.1em;
+}
+
+/* Word span: fills the line; transform acts on it */
+.v2h-word {
+  display: block;
+}
+
+@keyframes v2h-word-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(106%);
+    filter: blur(12px);
+  }
+  38% {
+    opacity: 1;
+    filter: blur(3px);
+  }
+  70% {
+    transform: translateY(-2.5%);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Desktop + premium + no-reduce-motion only */
+@media (prefers-reduced-motion: no-preference) and (min-width: 768px) {
+  /* Headline wrapper already in view; per-word handles the reveal */
+  [data-premium='on'] .v2h-headline.v2-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* Hidden state: word sits below the clip boundary */
+  [data-premium='on'] .v2h-headline .v2h-word {
+    opacity: 0;
+    transform: translateY(106%);
+    filter: blur(12px);
+    will-change: transform, opacity, filter;
+  }
+
+  /* Triggered: each word animates in with staggered delay */
+  [data-premium='on'] .v2h-headline.is-in .v2h-word {
+    animation: v2h-word-rise 1.15s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--wi, 0) * 0.17s + 0.04s);
+  }
+}
+
 /* Sub */
 .v2h-sub {
   font-family: var(--v2-font-sans);
