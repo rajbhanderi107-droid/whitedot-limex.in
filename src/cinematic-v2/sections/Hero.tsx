@@ -3,11 +3,33 @@ import React from 'react';
 import { useGrainField, useReveal } from '../motion';
 import SupplyFlow from './SupplyFlow';
 
+/** Splits a string into individually animatable character spans.
+ *  globalStart = running char index so the stagger is continuous
+ *  across all three headline lines. */
+function chars(text: string, globalStart: number) {
+  return [...text].map((ch, i) => (
+    <span
+      key={i}
+      className="v2h-char"
+      style={{ '--ci': String(globalStart + i) } as React.CSSProperties}
+    >
+      {ch === ' ' ? ' ' : ch}
+    </span>
+  ));
+}
+
+// "Sustainable" = 11, "Material" = 8, "to Replace Plastic" = 18
+const LINE1 = 'Sustainable';
+const LINE2 = 'Material';
+const LINE3 = 'to Replace Plastic';
+const OFF2  = LINE1.length;           // 11
+const OFF3  = OFF2 + LINE2.length;    // 19
+
 export default function Hero() {
-  const grain = useGrainField<HTMLDivElement>({ count: 80, speed: 0.7 });
+  const grain    = useGrainField<HTMLDivElement>({ count: 80, speed: 0.7 });
   const headline = useReveal<HTMLDivElement>({ threshold: 0.1 });
-  const sub = useReveal<HTMLParagraphElement>({ threshold: 0.1 });
-  const cta = useReveal<HTMLDivElement>({ threshold: 0.1 });
+  const sub      = useReveal<HTMLParagraphElement>({ threshold: 0.1 });
+  const cta      = useReveal<HTMLDivElement>({ threshold: 0.1 });
 
   return (
     <section className="v2h" aria-label="Hero">
@@ -30,16 +52,22 @@ export default function Hero() {
       <div className="v2h-content">
         <p className="v2h-eyebrow">Next-Gen Limestone Technology</p>
 
-        <div className="v2h-headline v2-reveal" ref={headline.ref}>
-          <h1>
+        {/* aria-label preserves the full readable sentence for screen readers */}
+        <div
+          className="v2h-headline v2-reveal"
+          ref={headline.ref}
+          aria-label={`${LINE1} ${LINE2} ${LINE3}`}
+        >
+          <h1 aria-hidden="true">
+            {/* Each .v2h-line clips vertically so chars rise from below */}
             <span className="v2h-line">
-              <span className="v2h-word" style={{ '--wi': '0' } as React.CSSProperties}>Sustainable</span>
+              {chars(LINE1, 0)}
             </span>
             <span className="v2h-line">
-              <span className="v2h-word" style={{ '--wi': '1' } as React.CSSProperties}>Material</span>
+              {chars(LINE2, OFF2)}
             </span>
             <span className="v2h-headline-accent v2h-line">
-              <span className="v2h-word" style={{ '--wi': '2' } as React.CSSProperties}>to Replace Plastic</span>
+              {chars(LINE3, OFF3)}
             </span>
           </h1>
         </div>
