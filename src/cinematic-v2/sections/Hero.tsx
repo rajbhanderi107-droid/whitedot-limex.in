@@ -85,7 +85,7 @@ export default function Hero() {
             LIMEX (Additive Masterbatch) is a limestone-based material that can
             reduce petroleum-derived plastic while fitting practical industrial
             trials. Seven Dot distributes it as the authorized dealer, and White
-            Dot LLP guides applications, samples, and commercial adoption.
+            Dot guides applications, samples, and commercial adoption.
           </p>
 
           <SupplyFlow />
