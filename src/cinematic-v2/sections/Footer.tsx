@@ -12,7 +12,7 @@ export default function Footer() {
     <footer className="v2ft">
       <div className="v2ft-inner">
         <div className="v2ft-brand">
-          <p className="v2ft-wordmark">White Dot <small>LLP</small></p>
+          <p className="v2ft-wordmark">White Dot</p>
           <p className="v2ft-sub">
             Authorized LIMEX marketing &amp; sales — the sustainable way to
             replace plastic.

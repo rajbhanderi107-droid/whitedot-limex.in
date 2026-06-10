@@ -83,15 +83,6 @@ export default function Applications() {
           </p>
         </div>
 
-        <div className="v2ap-visual" aria-hidden="true">
-          <img
-            src="/assets/storyboard/frame-11-industries.jpeg"
-            alt=""
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-
         <div className="v2ap-grid v2-reveal-group" ref={cards.ref}>
           {SECTORS.map((s, i) => (
             <article key={i} className="v2ap-card">

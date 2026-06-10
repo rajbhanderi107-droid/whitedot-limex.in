@@ -154,7 +154,6 @@
 }
 
 .v2cmp-visual,
-.v2ap-visual,
 .v2con-visual {
   background: #e6e1d7;
   border-color: var(--v2-light-line-strong);
@@ -166,10 +165,6 @@
   background:
     linear-gradient(180deg, transparent 48%, rgba(247, 244, 236, 0.64) 100%),
     linear-gradient(90deg, rgba(247, 244, 236, 0.14), transparent 44%);
-}
-
-.v2ap-visual::after {
-  background: linear-gradient(90deg, rgba(247, 244, 236, 0.18), transparent 55%);
 }
 
 .v2cmp-visual figcaption {
