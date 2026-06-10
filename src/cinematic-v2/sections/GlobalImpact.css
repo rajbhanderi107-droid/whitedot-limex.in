@@ -105,6 +105,8 @@
 }
 
 .v2gi-cta {
+  position: relative;
+  overflow: hidden;
   display: inline-block;
   padding: var(--v2-space-3) var(--v2-space-6);
   border-radius: 999px;
@@ -115,10 +117,33 @@
   font-size: var(--v2-fs-body);
   letter-spacing: var(--v2-ls-wide);
   text-decoration: none;
-  transition: opacity var(--v2-dur-fast) var(--v2-ease-out);
+  transition: opacity var(--v2-dur-fast) var(--v2-ease-out),
+              transform var(--v2-dur-fast) var(--v2-ease-out);
+}
+.v2gi-cta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 65%
+  );
+  transform: translateX(-120%);
+  pointer-events: none;
 }
 
-.v2gi-cta:hover { opacity: 0.9; }
+.v2gi-cta:hover { opacity: 0.92; }
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .v2gi-cta:hover { transform: translateY(-2px); }
+  .v2gi-cta:active { transform: translateY(0); }
+  .v2gi-cta:hover::after {
+    transform: translateX(120%);
+    transition: transform 0.7s var(--v2-ease-out);
+  }
+}
 
 /* Reveal — observer ref is on .v2gi-inner, children carry .v2-reveal */
 .v2gi-inner .v2-reveal {

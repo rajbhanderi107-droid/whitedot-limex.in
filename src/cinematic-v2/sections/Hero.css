@@ -111,7 +111,18 @@
   opacity: 0.96;
   transform: scale(1.035);
   filter: saturate(1.08) contrast(1.04) brightness(0.94);
-  will-change: transform;
+}
+
+/* Slow Ken Burns on the hero media — premium desktop only */
+@media (prefers-reduced-motion: no-preference) and (min-width: 768px) {
+  [data-premium='on'] .v2h-higgsfield-video {
+    animation: v2h-kenburns 38s var(--v2-ease-in-out) infinite alternate;
+    will-change: transform;
+  }
+}
+@keyframes v2h-kenburns {
+  from { transform: scale(1.035) translate3d(0, 0, 0); }
+  to   { transform: scale(1.085) translate3d(-1%, -0.6%, 0); }
 }
 
 .v2h-environment::before {
@@ -446,6 +457,8 @@
 }
 
 .v2h-btn {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   gap: 0.35em;
@@ -457,15 +470,30 @@
   white-space: nowrap;
   text-decoration: none;
   transition: opacity var(--v2-dur-fast) var(--v2-ease-out),
-              background var(--v2-dur-fast) var(--v2-ease-out);
+              background var(--v2-dur-fast) var(--v2-ease-out),
+              transform var(--v2-dur-fast) var(--v2-ease-out),
+              box-shadow var(--v2-dur-fast) var(--v2-ease-out);
 }
 
 .v2h-btn--primary {
   background: var(--v2-accent);
   color: var(--v2-text-on-light);
 }
+.v2h-btn--primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.32) 50%,
+    transparent 65%
+  );
+  transform: translateX(-120%);
+  pointer-events: none;
+}
 .v2h-btn--primary:hover {
-  opacity: 0.88;
+  opacity: 0.92;
 }
 
 .v2h-btn--ghost {
@@ -477,6 +505,15 @@
 }
 .v2h-btn--ghost:hover {
   background: var(--v2-accent-faint);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .v2h-btn:hover { transform: translateY(-2px); }
+  .v2h-btn:active { transform: translateY(0); }
+  .v2h-btn--primary:hover::after {
+    transform: translateX(120%);
+    transition: transform 0.7s var(--v2-ease-out);
+  }
 }
 
 /* Eco signals â€” V1 sustainability row */
@@ -535,6 +572,7 @@
   font-family: var(--v2-font-serif);
   font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: var(--v2-fw-light);
+  font-variant-numeric: tabular-nums;
   color: var(--v2-text);
   line-height: 1;
 }
@@ -575,7 +613,9 @@
 /* Reveal animations */
 .v2h-headline.v2-reveal,
 .v2h-sub.v2-reveal,
-.v2h-cta.v2-reveal {
+.v2h-cta.v2-reveal,
+.v2h-eco.v2-reveal,
+.v2h-proof.v2-reveal {
   opacity: 0;
   transform: translateY(18px);
   transition:
@@ -591,11 +631,21 @@
   opacity: 1; transform: none;
   transition-delay: 0.22s;
 }
+.v2h-eco.v2-reveal.is-in {
+  opacity: 1; transform: none;
+  transition-delay: 0.3s;
+}
+.v2h-proof.v2-reveal.is-in {
+  opacity: 1; transform: none;
+  transition-delay: 0.38s;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .v2h-headline.v2-reveal,
   .v2h-sub.v2-reveal,
   .v2h-cta.v2-reveal,
+  .v2h-eco.v2-reveal,
+  .v2h-proof.v2-reveal,
   .v2h-scroll-line { animation: none; opacity: 1; transform: none; }
 }
 

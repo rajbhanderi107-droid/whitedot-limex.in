@@ -40,12 +40,6 @@
     var(--v2-light-band);
 }
 
-.v2-root main > section:not(.v2h) .v2-reveal,
-.v2-root main > section:not(.v2h) .v2-reveal-group > * {
-  opacity: 1;
-  transform: none;
-}
-
 .v2m-title,
 .v2sc-title,
 .v2ld-block-title,
@@ -282,4 +276,35 @@
   .v2cs-card {
     box-shadow: 0 14px 36px -30px rgba(20, 27, 18, 0.36);
   }
+}
+
+/* Micro-interactions — card hover lift (pointer devices only) */
+.v2m-prop,
+.v2ld-card,
+.v2cmp-card,
+.v2ap-card,
+.v2con-card,
+.v2cs-card {
+  transition:
+    transform var(--v2-dur-base) var(--v2-ease-out),
+    box-shadow var(--v2-dur-base) var(--v2-ease-out),
+    border-color var(--v2-dur-base) var(--v2-ease-out);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .v2m-prop:hover,
+  .v2ld-card:hover,
+  .v2cmp-card:hover,
+  .v2ap-card:hover,
+  .v2con-card:hover,
+  .v2cs-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(79, 154, 53, 0.45);
+    box-shadow: 0 24px 56px -32px rgba(20, 27, 18, 0.45);
+  }
+}
+
+/* Nav scroll-spy active link on light glass */
+.v2nav--scrolled .v2nav-link.is-active {
+  color: var(--v2-light-accent);
 }

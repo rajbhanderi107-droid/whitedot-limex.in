@@ -448,6 +448,44 @@ export function useGrainField<T extends HTMLElement = HTMLDivElement>(
 }
 
 /* ================================================================== */
+/* useCountUp — animated number count-up (stats)                      */
+/* ================================================================== */
+/**
+ * Eases a number from 0 to `target` once `start` flips true (typically the
+ * `inView` flag from useReveal). When motion is not allowed (no premium /
+ * reduced motion) the final value renders immediately — no animation.
+ */
+export function useCountUp(
+  target: number,
+  start: boolean,
+  durationMs = 1100,
+): number {
+  const [value, setValue] = useState(() =>
+    revealMotionAllowed() ? 0 : target,
+  );
+
+  useEffect(() => {
+    if (!start) return;
+    if (!revealMotionAllowed()) {
+      setValue(target);
+      return;
+    }
+    let rafId = 0;
+    const t0 = performance.now();
+    const easeOutCubic = (x: number) => 1 - Math.pow(1 - x, 3);
+    const tick = (t: number) => {
+      const p = Math.min(1, (t - t0) / durationMs);
+      setValue(Math.round(target * easeOutCubic(p)));
+      if (p < 1) rafId = window.requestAnimationFrame(tick);
+    };
+    rafId = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(rafId);
+  }, [start, target, durationMs]);
+
+  return value;
+}
+
+/* ================================================================== */
 /* useReducedMotion / usePremiumFlag — reactive env helpers           */
 /* ================================================================== */
 /** Reactive prefers-reduced-motion boolean. */
@@ -499,6 +537,7 @@ export const motion = {
   useStaggerGroup,
   useParallax,
   useGrainField,
+  useCountUp,
   useReducedMotion,
   usePremiumFlag,
   useHeavyMotion,

@@ -74,7 +74,8 @@
 
 /* Reveal */
 .v2sc-head.v2-reveal,
-.v2sc-frame.v2-reveal {
+.v2sc-frame.v2-reveal,
+.v2sc-caption.v2-reveal {
   opacity: 0;
   transform: translateY(22px);
   transition:
@@ -86,8 +87,13 @@
   opacity: 1; transform: none;
   transition-delay: 0.12s;
 }
+.v2sc-caption.v2-reveal.is-in {
+  opacity: 1; transform: none;
+  transition-delay: 0.2s;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .v2sc-head.v2-reveal,
-  .v2sc-frame.v2-reveal { opacity: 1; transform: none; transition: none; }
+  .v2sc-frame.v2-reveal,
+  .v2sc-caption.v2-reveal { opacity: 1; transform: none; transition: none; }
 }

@@ -9,6 +9,7 @@ import { useReveal } from '../motion';
 export default function Showcase() {
   const head = useReveal<HTMLDivElement>();
   const frame = useReveal<HTMLDivElement>({ threshold: 0.15 });
+  const caption = useReveal<HTMLParagraphElement>();
 
   return (
     <section className="v2sc" id="material-core" aria-labelledby="v2sc-title">
@@ -37,7 +38,7 @@ export default function Showcase() {
           />
         </div>
 
-        <p className="v2sc-caption v2-reveal">
+        <p className="v2sc-caption v2-reveal" ref={caption.ref}>
           From captured carbon to next-generation material innovation.
         </p>
       </div>

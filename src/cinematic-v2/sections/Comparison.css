@@ -135,8 +135,13 @@
   display: flex;
   flex-direction: column;
   gap: var(--v2-space-5);
-  animation: v2cmp-fade var(--v2-dur-base, 320ms) var(--v2-ease-out);
 }
+.v2cmp-row {
+  animation: v2cmp-fade 0.46s var(--v2-ease-out) both;
+}
+.v2cmp-row:nth-child(2) { animation-delay: 0.07s; }
+.v2cmp-row:nth-child(3) { animation-delay: 0.14s; }
+.v2cmp-row:nth-child(4) { animation-delay: 0.21s; }
 @keyframes v2cmp-fade {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: none; }
@@ -223,6 +228,7 @@
 @media (prefers-reduced-motion: reduce) {
   .v2cmp .v2-reveal { opacity: 1; transform: none; transition: none; }
   .v2cmp-rows { animation: none; }
+  .v2cmp-row { animation: none; }
   .v2cmp-visual img,
   .v2cmp-visual::before { animation: none; }
 }

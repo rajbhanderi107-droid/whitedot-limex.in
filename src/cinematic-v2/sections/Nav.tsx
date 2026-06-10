@@ -13,6 +13,7 @@ export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
+  const [activeId, setActiveId] = useState('');
   const lastY = useRef(0);
   const adminMenuRef = useRef<HTMLDivElement>(null);
 
@@ -25,6 +26,27 @@ export default function Nav() {
     }
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Scroll-spy: highlight nav link of section in view.
+  useEffect(() => {
+    const sections = LINKS
+      .map((l) => document.getElementById(l.href.slice(1)))
+      .filter((el): el is HTMLElement => el !== null);
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveId(`#${entry.target.id}`);
+          }
+        }
+      },
+      { rootMargin: '-40% 0px -55% 0px' },
+    );
+    sections.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -69,7 +91,12 @@ export default function Nav() {
 
         <nav className="v2nav-links" aria-label="Primary navigation">
           {LINKS.map((l) => (
-            <a key={l.href} href={l.href} className="v2nav-link">
+            <a
+              key={l.href}
+              href={l.href}
+              className={`v2nav-link${activeId === l.href ? ' is-active' : ''}`}
+              aria-current={activeId === l.href ? 'true' : undefined}
+            >
               {l.label}
             </a>
           ))}

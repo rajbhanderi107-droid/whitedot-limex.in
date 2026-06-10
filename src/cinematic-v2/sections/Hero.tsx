@@ -1,6 +1,6 @@
 import './Hero.css';
 import React from 'react';
-import { useGrainField, useReveal } from '../motion';
+import { useCountUp, useGrainField, useReveal } from '../motion';
 import SupplyFlow from './SupplyFlow';
 
 /** Splits a string into individually animatable character spans.
@@ -30,6 +30,12 @@ export default function Hero() {
   const headline = useReveal<HTMLDivElement>({ threshold: 0.1 });
   const sub      = useReveal<HTMLParagraphElement>({ threshold: 0.1 });
   const cta      = useReveal<HTMLDivElement>({ threshold: 0.1 });
+  const eco      = useReveal<HTMLUListElement>({ threshold: 0.1 });
+  const proof    = useReveal<HTMLElement>({ threshold: 0.2 });
+
+  const statCaco = useCountUp(50, proof.inView);
+  const statDays = useCountUp(14, proof.inView);
+  const statRegions = useCountUp(4, proof.inView);
 
   return (
     <section className="v2h" aria-label="Hero">
@@ -93,25 +99,25 @@ export default function Hero() {
           </div>
         </div>
 
-        <ul className="v2h-eco v2-reveal" aria-label="Sustainability signals">
+        <ul className="v2h-eco v2-reveal" ref={eco.ref} aria-label="Sustainability signals">
           <li>50%+ calcium carbonate, less plastic</li>
           <li>Lower carbon footprint</li>
           <li>Runs on existing production lines</li>
         </ul>
 
-        <aside className="v2h-proof v2-reveal" aria-label="LIMEX proof points">
+        <aside className="v2h-proof v2-reveal" ref={proof.ref} aria-label="LIMEX proof points">
           <span className="v2h-proof-kicker">Material brief</span>
           <dl className="v2h-proof-grid">
             <div>
-              <dt aria-label="50% plus calcium carbonate content">50%+</dt>
+              <dt aria-label="50% plus calcium carbonate content">{statCaco}%+</dt>
               <dd>calcium carbonate content</dd>
             </div>
             <div>
-              <dt>14d</dt>
+              <dt aria-label="14 day trial sample target window">{statDays}d</dt>
               <dd>trial sample target window</dd>
             </div>
             <div>
-              <dt aria-label="4 authorized regions served">4</dt>
+              <dt aria-label="4 authorized regions served">{statRegions}</dt>
               <dd>authorized regions served</dd>
             </div>
           </dl>
