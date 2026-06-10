@@ -59,18 +59,6 @@ export default function Comparison() {
           </p>
         </div>
 
-        <figure className="v2cmp-visual" aria-label="LIMEX pellets compared with local filler powder">
-          <img
-            src="/assets/storyboard/frame-10-comparison.jpeg"
-            alt="Clean LIMEX pellets shown beside coarse grey local filler powder."
-            loading="lazy"
-            decoding="async"
-          />
-          <figcaption>
-            White LIMEX pellets are evaluated against coarse local filler by
-            processing stability, performance, and product quality.
-          </figcaption>
-        </figure>
 
         <div className="v2cmp-tabs" role="tablist" aria-label="Comparison categories">
           {TABS.map((t) => (
