@@ -31,9 +31,14 @@ const vh = 900;
 const N = 8;
 
 for (let i = 0; i < N; i++) {
-  const y = Math.round(pinTop + i * vh);
+  // land slightly BEFORE the boundary — ScrollTrigger's directional snap then
+  // settles forward onto exactly scene i (exact-boundary scrolls overshoot one
+  // scene due to float epsilon)
+  const y = Math.round(pinTop + i * vh - (i > 0 ? 250 : 0));
   await page.evaluate((yy) => window.scrollTo(0, yy), y);
-  await new Promise((r) => setTimeout(r, 1800)); // scrub catch-up + snap + video frame
+  // live SVG slides (scenes 3 & 5) draw for ~3.5s — wait longer there
+  const settle = i === 2 || i === 4 ? 4500 : 1800;
+  await new Promise((r) => setTimeout(r, settle));
   await page.screenshot({ path: `${OUT}/scene-${i + 1}.png` });
 }
 

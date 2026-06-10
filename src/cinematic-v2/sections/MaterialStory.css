@@ -53,24 +53,6 @@
   will-change: transform;
 }
 
-.v2story__scene--quiet .v2story__media {
-  background:
-    radial-gradient(80% 80% at 25% 28%, rgba(79, 154, 53, 0.08), transparent 58%),
-    linear-gradient(180deg, #f0f1ed, #e8ebe5);
-}
-
-.v2story__scene--quiet .v2story__media::after {
-  content: '';
-  position: absolute;
-  inset: clamp(0.75rem, 1.3vw, 1.5rem);
-  z-index: 3;
-  pointer-events: none;
-  border: 1px solid rgba(19, 31, 19, 0.1);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.48),
-    inset 0 -80px 160px rgba(19, 31, 19, 0.05);
-}
-
 .v2story__poster,
 .v2story__video {
   position: absolute;
@@ -89,21 +71,15 @@
      decoded frames, so the poster shows through with no fade flicker. */
 }
 
-.v2story__scene--quiet .v2story__poster,
-.v2story__scene--quiet .v2story__video {
-  filter: contrast(1.2) saturate(1.06) brightness(0.94);
-  transform: scale(1.055);
-  transform-origin: 28% 50%;
-}
-
 /* ------------------------------------------------------------------ */
 /* PROGRESS DOTS — current chapter indicator                          */
 /* ------------------------------------------------------------------ */
 /* Lives inside the pinned viewport, so it only appears while the section is
-   pinned on screen and never floats over neighbouring sections. */
+   pinned on screen and never floats over neighbouring sections.
+   z-index sits above the scene stack (scenes are z 1..N). */
 .v2story__progress {
   position: absolute;
-  z-index: 4;
+  z-index: 20;
   right: clamp(1rem, 2.5vw, 2.25rem);
   top: 50%;
   transform: translateY(-50%);
@@ -124,6 +100,8 @@
   block-size: 6px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.28);
+  /* faint dark ring keeps dots visible over the light slide scenes */
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18);
   transition:
     background-color var(--v2-dur-base) var(--v2-ease-out),
     transform var(--v2-dur-base) var(--v2-ease-out);

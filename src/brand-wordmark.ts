@@ -26,7 +26,10 @@ const SKIP_TAGS = new Set([
 function shouldSkip(node: Node): boolean {
   let el = node.parentElement;
   while (el) {
-    if (SKIP_TAGS.has(el.tagName)) return true;
+    // SVG element tagNames are lowercase (XML) — normalize before matching,
+    // otherwise "svg" !== "SVG" and HTML spans get injected into SVG <text>,
+    // where they render zero-width.
+    if (SKIP_TAGS.has(el.tagName.toUpperCase())) return true;
     if (el.isContentEditable) return true;
     if (el.classList.contains("wd-limex") || el.classList.contains("wd-tbm")) return true;
     if (el.hasAttribute("data-no-wordmark")) return true;

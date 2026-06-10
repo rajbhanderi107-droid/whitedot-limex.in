@@ -1,6 +1,7 @@
 import './MaterialStory.css';
 import { useEffect, useRef, useState } from 'react';
 import { useHeavyMotion } from '../motion';
+import { SceneScience, SceneImpact } from './StoryScenes';
 
 /* ---------------------------------------------------------------------------
    MaterialStory — the "Born from CO₂" scroll film (cinematic-v2).
@@ -28,6 +29,13 @@ const storyAsset = (p: string) => `${asset(p)}?v=${STORY_ASSET_VERSION}`;
 
 const N = 8;
 const SCENE_IDS = Array.from({ length: N }, (_, i) => i + 1);
+
+/* Scenes rendered as live, code-animated slides instead of video.
+   Index → component. (Scene 3 = science diagram, scene 5 = impact icons.) */
+const LIVE_SCENES: Record<number, typeof SceneScience> = {
+  2: SceneScience,
+  4: SceneImpact,
+};
 
 export default function MaterialStory() {
   const heavy = useHeavyMotion();
@@ -104,12 +112,15 @@ export default function MaterialStory() {
           gsap.registerPlugin(ScrollTrigger);
 
           const ctx = gsap.context(() => {
-            // Initial: scene 0 visible, others hidden.
+            /* Seamless dissolve: scenes stack by z-index and only the INCOMING
+               scene fades in over the top — the outgoing one stays fully
+               opaque beneath until covered, so there is never a mid-fade dip
+               where the background shows through. The covered scene is then
+               silently hidden (invisible switch, reverses cleanly on
+               back-scrub). */
             scenes.forEach((el, i) => {
-              gsap.set(el, { autoAlpha: i === 0 ? 1 : 0 });
-              gsap.set(el.querySelector('.v2story__media'), {
-                scale: i === 0 ? 1 : 1.06,
-              });
+              gsap.set(el, { zIndex: i + 1, autoAlpha: i === 0 ? 1 : 0 });
+              gsap.set(el.querySelector('.v2story__media'), { scale: 1 });
             });
 
             const tl = gsap.timeline({
@@ -120,15 +131,18 @@ export default function MaterialStory() {
                 end: () => '+=' + window.innerHeight * (N - 1),
                 pin: viewport,
                 pinSpacing: true,
-                scrub: 0.6,
+                scrub: 0.8,
                 anticipatePin: 1,
                 invalidateOnRefresh: true,
-                // settle on a whole scene so the user never rests mid-crossfade
+                // settle on a whole scene so the user never rests mid-crossfade.
+                // inertia:false = snap from the CURRENT position, never from a
+                // velocity projection — fast flicks can't skip several scenes.
                 snap: {
                   snapTo: 1 / (N - 1),
-                  duration: { min: 0.2, max: 0.5 },
-                  ease: 'power1.inOut',
+                  duration: { min: 0.25, max: 0.6 },
+                  ease: 'power2.inOut',
                   delay: 0.1,
+                  inertia: false,
                 },
                 onUpdate: (self) => {
                   const idx = Math.round(self.progress * (N - 1));
@@ -141,15 +155,24 @@ export default function MaterialStory() {
             for (let k = 0; k < N - 1; k++) {
               const cur = scenes[k];
               const nxt = scenes[k + 1];
-              tl.to(cur, { autoAlpha: 0, duration: 1 }, k)
-                .to(cur.querySelector('.v2story__media'), { scale: 1.05, duration: 1 }, k)
-                .to(nxt, { autoAlpha: 1, duration: 1 }, k)
+              tl
+                // incoming scene dissolves in on top, easing from a gentle zoom
+                .fromTo(nxt, { autoAlpha: 0 }, { autoAlpha: 1, duration: 1 }, k)
                 .fromTo(
                   nxt.querySelector('.v2story__media'),
-                  { scale: 1.06 },
+                  { scale: 1.07 },
                   { scale: 1, duration: 1 },
                   k
-                );
+                )
+                // outgoing scene keeps drifting beneath — no fade, no dip
+                .fromTo(
+                  cur.querySelector('.v2story__media'),
+                  { scale: 1 },
+                  { scale: 1.045, duration: 1 },
+                  k
+                )
+                // once fully covered, hide it (invisible to the user)
+                .set(cur, { autoAlpha: 0 }, k + 0.999);
             }
 
             // Settle layout once images/fonts are in.
@@ -201,51 +224,58 @@ export default function MaterialStory() {
     >
       <div className="v2story__viewport" ref={viewportRef}>
         {SCENE_IDS.map((n, i) => {
+          const Live = LIVE_SCENES[i];
           const poster = storyAsset(`assets/videos/story/scene-${n}-poster.jpg`);
           return (
             <article
               key={n}
-              className={`v2story__scene${n === 3 || n === 5 ? ' v2story__scene--quiet' : ''}`}
+              className="v2story__scene"
               data-scene={i}
               ref={(el) => {
                 sceneRefs.current[i] = el;
               }}
             >
               <div className="v2story__media">
-                <img
-                  className="v2story__poster"
-                  src={poster}
-                  alt=""
-                  aria-hidden="true"
-                  loading={i <= 1 ? 'eager' : 'lazy'}
-                  decoding="async"
-                />
-                <video
-                  className="v2story__video"
-                  ref={(el) => {
-                    videoRefs.current[i] = el;
-                  }}
-                  poster={poster}
-                  muted
-                  loop
-                  playsInline
-                  preload="none"
-                  aria-hidden="true"
-                  tabIndex={-1}
-                >
-                  {armed.has(i) && (
-                    <>
-                      <source
-                        src={storyAsset(`assets/videos/story/scene-${n}.webm`)}
-                        type="video/webm"
-                      />
-                      <source
-                        src={storyAsset(`assets/videos/story/scene-${n}.mp4`)}
-                        type="video/mp4"
-                      />
-                    </>
-                  )}
-                </video>
+                {Live ? (
+                  <Live active={active === i} />
+                ) : (
+                  <>
+                    <img
+                      className="v2story__poster"
+                      src={poster}
+                      alt=""
+                      aria-hidden="true"
+                      loading={i <= 1 ? 'eager' : 'lazy'}
+                      decoding="async"
+                    />
+                    <video
+                      className="v2story__video"
+                      ref={(el) => {
+                        videoRefs.current[i] = el;
+                      }}
+                      poster={poster}
+                      muted
+                      loop
+                      playsInline
+                      preload="none"
+                      aria-hidden="true"
+                      tabIndex={-1}
+                    >
+                      {armed.has(i) && (
+                        <>
+                          <source
+                            src={storyAsset(`assets/videos/story/scene-${n}.webm`)}
+                            type="video/webm"
+                          />
+                          <source
+                            src={storyAsset(`assets/videos/story/scene-${n}.mp4`)}
+                            type="video/mp4"
+                          />
+                        </>
+                      )}
+                    </video>
+                  </>
+                )}
               </div>
             </article>
           );
