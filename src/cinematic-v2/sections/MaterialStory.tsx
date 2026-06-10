@@ -1,7 +1,7 @@
 import './MaterialStory.css';
 import { useEffect, useRef, useState } from 'react';
 import { useHeavyMotion } from '../motion';
-import { SceneScience, SceneImpact } from './StoryScenes';
+import { SceneScience, SceneImpact, SceneFinale } from './StoryScenes';
 
 /* ---------------------------------------------------------------------------
    MaterialStory — the "Born from CO₂" scroll film (cinematic-v2).
@@ -35,6 +35,7 @@ const SCENE_IDS = Array.from({ length: N }, (_, i) => i + 1);
 const LIVE_SCENES: Record<number, typeof SceneScience> = {
   2: SceneScience,
   4: SceneImpact,
+  7: SceneFinale,
 };
 
 export default function MaterialStory() {

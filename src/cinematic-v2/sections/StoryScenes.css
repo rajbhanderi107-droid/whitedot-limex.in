@@ -7,7 +7,8 @@
    ===================================================================== */
 
 .wds3,
-.wds5 {
+.wds5,
+.wds8 {
   position: absolute;
   inset: 0;
   background: #f2f0e9;
@@ -266,6 +267,172 @@
 }
 
 /* ------------------------------------------------------------------ */
+/* SCENE 8 - Finale wordmark reveal                                    */
+/* ------------------------------------------------------------------ */
+.wds8 {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.84fr) minmax(420px, 1.36fr);
+  align-items: center;
+  gap: clamp(1.5rem, 5vw, 5rem);
+  padding: clamp(2rem, 6vw, 5rem) clamp(2rem, 7vw, 6rem);
+  background:
+    radial-gradient(circle at 70% 50%, rgba(255, 255, 255, 0.92), rgba(242, 240, 233, 0.16) 38%, transparent 62%),
+    linear-gradient(180deg, #f4f2ec 0%, #eeeae0 100%);
+}
+
+.wds8-copy {
+  min-width: 0;
+  transform: translateY(20px);
+  opacity: 0;
+}
+
+.wds8-mark {
+  font-family: var(--v2-font-mono);
+  font-size: clamp(0.72rem, 0.95vw, 0.92rem);
+  letter-spacing: 0.28em;
+  color: #5d8c62;
+  margin: 0 0 clamp(2rem, 5vh, 3.6rem);
+}
+
+.wds8-title {
+  font-family: var(--v2-font-sans);
+  font-size: clamp(2.15rem, 4.4vw, 4.8rem);
+  font-weight: 450;
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+  color: #282d31;
+  margin: 0;
+}
+
+.wds8-title > span {
+  display: block;
+  overflow: hidden;
+}
+
+.wds8-title > span > span {
+  display: inline-block;
+  transform: translateY(112%);
+}
+
+.wds8-sub {
+  font-family: var(--v2-font-sans);
+  font-size: clamp(1rem, 1.25vw, 1.25rem);
+  line-height: 1.55;
+  color: #565d63;
+  margin: clamp(1.6rem, 3vh, 2.4rem) 0 0;
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.wds8-stage {
+  width: 100%;
+  min-width: 0;
+  max-height: 78vh;
+  overflow: visible;
+}
+
+.wds8-haze {
+  fill: rgba(255, 255, 255, 0.48);
+  filter: url(#wds8-soft);
+  opacity: 0;
+  transform: scale(0.86);
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.wds8-ring {
+  fill: none;
+  stroke-linecap: round;
+  stroke-width: 18;
+  opacity: 0;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.wds8-ring--back {
+  stroke: rgba(212, 205, 188, 0.52);
+}
+
+.wds8-ring--front {
+  stroke: rgba(164, 174, 150, 0.5);
+  stroke-width: 9;
+  stroke-dasharray: 0.64 0.36;
+}
+
+.wds8-dust circle {
+  fill: url(#wds8-dust);
+  opacity: 0;
+  transform: scale(0.1) translateY(18px);
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.wds8-word {
+  opacity: 0;
+  transform: translateY(10px) scale(0.985);
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.wds8-word text {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 73px;
+  font-weight: 700;
+  letter-spacing: 0.19em;
+  fill: #282d31;
+  text-anchor: middle;
+}
+
+.wds8-word .wds8-tm {
+  font-family: var(--v2-font-sans);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.wds8.is-active .wds8-copy {
+  animation: wds-rise 0.75s var(--v2-ease-out) 0.08s both;
+}
+
+.wds8.is-active .wds8-title > span:nth-child(1) > span {
+  animation: wds-line-rise 0.82s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.wds8.is-active .wds8-title > span:nth-child(2) > span {
+  animation: wds-line-rise 0.82s cubic-bezier(0.16, 1, 0.3, 1) 0.36s both;
+}
+
+.wds8.is-active .wds8-sub {
+  animation: wds-rise 0.72s var(--v2-ease-out) 0.8s both;
+}
+
+.wds8.is-active .wds8-haze {
+  animation: wds8-breathe 1.35s var(--v2-ease-out) 0.2s both;
+}
+
+.wds8.is-active .wds8-ring--back {
+  animation: wds8-trace-ring 1.35s var(--v2-ease-out) 0.28s both;
+}
+
+.wds8.is-active .wds8-ring--front {
+  animation:
+    wds8-trace-ring 1.45s var(--v2-ease-out) 0.5s both,
+    wds8-orbit 9s linear 1.95s infinite;
+}
+
+.wds8.is-active .wds8-dust circle {
+  animation:
+    wds8-dust-in 0.72s var(--v2-ease-out) calc(0.62s + var(--i, 0) * 0.018s) both,
+    wds8-dust-float 5.4s ease-in-out calc(1.4s + var(--i, 0) * 0.025s) infinite alternate;
+}
+
+.wds8.is-active .wds8-word {
+  animation: wds8-word-in 0.9s var(--v2-ease-out) 1.08s both;
+}
+
+/* ------------------------------------------------------------------ */
 /* shared keyframes                                                    */
 /* ------------------------------------------------------------------ */
 @keyframes wds-trace {
@@ -297,6 +464,32 @@
   from { opacity: 0; stroke-dashoffset: 0.35; }
   to   { opacity: 0.85; stroke-dashoffset: 0; }
 }
+@keyframes wds8-breathe {
+  from { opacity: 0; transform: scale(0.86); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes wds8-trace-ring {
+  from { opacity: 0; stroke-dashoffset: 1; }
+  18%  { opacity: 1; }
+  to   { opacity: 1; stroke-dashoffset: 0; }
+}
+@keyframes wds8-orbit {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes wds8-dust-in {
+  from { opacity: 0; transform: scale(0.1) translateY(18px); }
+  70%  { opacity: 0.92; }
+  to   { opacity: 0.74; transform: scale(1) translateY(0); }
+}
+@keyframes wds8-dust-float {
+  from { transform: translate3d(-2px, 2px, 0) scale(1); opacity: 0.62; }
+  to   { transform: translate3d(3px, -3px, 0) scale(1.12); opacity: 0.88; }
+}
+@keyframes wds8-word-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.985); filter: blur(3px); }
+  to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
 
 /* ------------------------------------------------------------------ */
 /* responsive                                                          */
@@ -312,6 +505,17 @@
   .wds3-sub { margin-inline: auto; }
   .wds3-diagram { flex: none; width: 100%; max-height: 52vh; }
   .wds5-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .wds8 {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 0.75rem;
+  }
+  .wds8-mark { margin-bottom: 1.3rem; }
+  .wds8-stage {
+    width: min(112%, 620px);
+    justify-self: center;
+    max-height: 48vh;
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -319,7 +523,8 @@
 /* ------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
   .wds3 *,
-  .wds5 * {
+  .wds5 *,
+  .wds8 * {
     animation: none !important;
   }
   .wds3 .wds3-copy,
@@ -331,17 +536,25 @@
   .wds3 .wds3-dash,
   .wds5 .wds5-eyebrow,
   .wds5 .wds5-co2,
-  .wds5 .wds5-caption {
+  .wds5 .wds5-caption,
+  .wds8 .wds8-copy,
+  .wds8 .wds8-sub,
+  .wds8 .wds8-haze,
+  .wds8 .wds8-ring,
+  .wds8 .wds8-dust circle,
+  .wds8 .wds8-word {
     opacity: 1;
     transform: none;
   }
   .wds5 .wds5-line > span { transform: none; }
+  .wds8 .wds8-title > span > span { transform: none; }
   .wds3 .wds3-ring,
   .wds3 .wds3-draw,
   .wds3 .wds3-arrow,
   .wds3 .wds3-dash,
   .wds5 .wds5-ring,
-  .wds5 .wds5-draw {
+  .wds5 .wds5-draw,
+  .wds8 .wds8-ring {
     stroke-dashoffset: 0;
   }
 }

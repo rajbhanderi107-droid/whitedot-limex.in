@@ -3,7 +3,7 @@ import type { CSSProperties } from 'react';
 
 /* ---------------------------------------------------------------------------
    StoryScenes — live, code-animated slides for the "Born from CO₂" film.
-   Replaces the static/blank videos for scenes 3 and 5 with SVG diagrams that
+   Replaces selected static/blank videos with SVG diagrams that
    draw themselves every time the scene becomes active (CSS animations keyed
    off the `is-active` class). Light-cream slide aesthetic matches the rest of
    the film's designed frames. prefers-reduced-motion shows the finished state.
@@ -187,6 +187,71 @@ export function SceneImpact({ active }: SceneProps) {
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+/* ================= Scene 8 - Finale wordmark reveal ================= */
+
+const FINALE_DUST = Array.from({ length: 72 }, (_, i) => {
+  const t = (i / 72) * Math.PI * 2;
+  const wobble = Math.sin(i * 1.9) * 9;
+  const cx = 520 + Math.cos(t) * (230 + wobble);
+  const cy = 270 + Math.sin(t) * (112 + Math.cos(i * 1.35) * 7);
+  const r = 1.3 + (i % 5) * 0.35;
+  return { cx, cy, r, i };
+});
+
+export function SceneFinale({ active }: SceneProps) {
+  return (
+    <div className={`wds8${active ? ' is-active' : ''}`} aria-hidden="true">
+      <div className="wds8-copy">
+        <p className="wds8-mark">LIMEX™</p>
+        <h3 className="wds8-title">
+          <span><span>Born from CO₂.</span></span>
+          <span><span>Built for industry.</span></span>
+        </h3>
+        <p className="wds8-sub">Material intelligence for the real world.</p>
+      </div>
+
+      <svg
+        className="wds8-stage"
+        viewBox="0 0 900 540"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <filter id="wds8-soft" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="7" />
+          </filter>
+          <radialGradient id="wds8-dust" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#e8dfca" />
+            <stop offset="58%" stopColor="#cfc5ad" />
+            <stop offset="100%" stopColor="#9fb19d" />
+          </radialGradient>
+        </defs>
+
+        <ellipse className="wds8-haze" cx="520" cy="270" rx="292" ry="146" />
+        <ellipse className="wds8-ring wds8-ring--back" cx="520" cy="270" rx="262" ry="122" pathLength={1} />
+        <ellipse className="wds8-ring wds8-ring--front" cx="520" cy="270" rx="262" ry="122" pathLength={1} />
+
+        <g className="wds8-dust">
+          {FINALE_DUST.map((p) => (
+            <circle
+              key={p.i}
+              cx={p.cx}
+              cy={p.cy}
+              r={p.r}
+              style={{ '--i': p.i } as CSSProperties}
+            />
+          ))}
+        </g>
+
+        <g className="wds8-word">
+          <text x="520" y="290">LIMEX</text>
+          <text className="wds8-tm" x="706" y="248">™</text>
+        </g>
+      </svg>
     </div>
   );
 }
