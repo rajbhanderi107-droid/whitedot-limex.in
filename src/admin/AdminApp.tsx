@@ -11,6 +11,7 @@ import { ResetPasswordPage } from "./pages/ResetPasswordPage.js";
 import { UserManagementPage } from "./pages/UserManagementPage.js";
 import { WebsiteSettingsPage } from "./pages/WebsiteSettingsPage.js";
 import { GoogleDashboardPage } from "./pages/GoogleDashboardPage.js";
+import { MarketingToolsPage } from "./pages/MarketingToolsPage.js";
 import { warmUpBackend } from "./lib/api.js";
 import "./admin.css";
 
@@ -194,6 +195,11 @@ export default function AdminApp() {
         <Route
           path="/admin/google"
           element={<GoogleDashboardPage />}
+        />
+
+        <Route
+          path="/admin/marketing"
+          element={<MarketingToolsPage />}
         />
 
         <Route

@@ -18,10 +18,11 @@ function chars(text: string, globalStart: number) {
   ));
 }
 
-// "Sustainable" = 11, "Material" = 8, "to Replace Plastic" = 18
+// Accent line carries the TBM origin credit beside "to Replace Plastic",
+// sharing the same font and accent color (user-approved layout).
 const LINE1 = 'Sustainable';
 const LINE2 = 'Material';
-const LINE3 = 'to Replace Plastic';
+const LINE3 = 'to Replace Plastic · Invented by TBM in Japan';
 const OFF2  = LINE1.length;           // 11
 const OFF3  = OFF2 + LINE2.length;    // 19
 
@@ -81,7 +82,7 @@ export default function Hero() {
           </div>
 
           <p className="v2h-sub v2-reveal" ref={sub.ref}>
-            Invented by TBM in Japan, LIMEX is a limestone-based material that can
+            LIMEX (Additive Masterbatch) is a limestone-based material that can
             reduce petroleum-derived plastic while fitting practical industrial
             trials. Seven Dot distributes it as the authorized dealer, and White
             Dot LLP guides applications, samples, and commercial adoption.

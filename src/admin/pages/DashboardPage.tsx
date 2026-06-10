@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { LineChart, Settings, Users, LogOut, Trash2 } from "lucide-react";
+import { LineChart, Megaphone, Settings, Users, LogOut, Trash2 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth.js";
 import { api } from "../lib/api.js";
 
@@ -105,6 +105,13 @@ export function DashboardPage() {
           <span>
             <strong>Google dashboard</strong>
             <small>Review Search, Analytics, logins, and Ads in one place.</small>
+          </span>
+        </Link>
+        <Link className="adm-action-card" to="/admin/marketing">
+          <Megaphone size={18} />
+          <span>
+            <strong>Marketing tools</strong>
+            <small>Ads, SEO, social, and email channels in one hub.</small>
           </span>
         </Link>
         <Link className="adm-action-card" to="/admin/users">

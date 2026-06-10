@@ -5,7 +5,7 @@ import { NotificationBell } from "./NotificationBell";
 import { KeyboardShortcuts } from "./KeyboardShortcuts";
 import {
   Building2, Calculator, ClipboardList, FileText,
-  Home, LogOut, Menu, MessageSquare, Package, Settings, Users, Activity, Bell, X, LineChart,
+  Home, LogOut, Menu, MessageSquare, Package, Settings, Users, Activity, Bell, X, LineChart, Megaphone,
 } from "lucide-react";
 
 interface Props {
@@ -16,6 +16,7 @@ interface Props {
 const navItems = [
   { to: "/admin/dashboard", icon: Home, label: "Dashboard" },
   { to: "/admin/google", icon: LineChart, label: "Google" },
+  { to: "/admin/marketing", icon: Megaphone, label: "Marketing" },
   { to: "/admin/inquiries", icon: MessageSquare, label: "Inquiries" },
   { to: "/admin/quote-requests", icon: ClipboardList, label: "Quote Requests" },
   { to: "/admin/sample-requests", icon: Package, label: "Sample Requests" },
