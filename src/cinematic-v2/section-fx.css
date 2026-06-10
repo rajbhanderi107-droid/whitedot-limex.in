@@ -1,0 +1,196 @@
+/* =====================================================================
+   White Dot — cinematic-v2 per-section ambient motion + image backgrounds
+   Premium-subtle: each section gets ONE distinct, calm animated layer that
+   sits behind content (pointer-events:none, low opacity). Content always
+   wins the stacking order. Honors prefers-reduced-motion.
+   Generated mineral backgrounds drop into --sfx-bg per section.
+   ===================================================================== */
+
+.v2h,
+.v2story,
+.v2sc,
+.v2ld,
+.v2cmp,
+.v2ap,
+.v2con,
+.v2gi,
+.v2ft {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* keep real content above the ambient ::before/::after layers */
+.v2h > *,
+.v2story > *,
+.v2sc > *,
+.v2ld > *,
+.v2cmp > *,
+.v2ap > *,
+.v2con > *,
+.v2gi > *,
+.v2ft > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* shared ambient layer base */
+.v2h::before,
+.v2story::before,
+.v2sc::before,
+.v2ld::before,
+.v2cmp::before,
+.v2ap::before,
+.v2con::before,
+.v2gi::before,
+.v2ft::before {
+  content: '';
+  position: absolute;
+  inset: -10%;
+  z-index: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* optional generated mineral image, layered UNDER the ambient ::before.
+   Set a section's --sfx-bg to a url() to activate (very low opacity so
+   text stays crisp — "not over-looking"). */
+.v2h::after,
+.v2story::after,
+.v2sc::after,
+.v2ld::after,
+.v2cmp::after,
+.v2ap::after,
+.v2con::after,
+.v2gi::after,
+.v2ft::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--sfx-bg, none);
+  background-size: cover;
+  background-position: center;
+  opacity: var(--sfx-bg-opacity, 0.16);
+  animation: sfx-bg-drift 38s ease-in-out infinite alternate;
+}
+/* per-section generated mineral backgrounds (Hero + Material set inline) */
+.v2sc  { --sfx-bg: url(/assets/images/bg/showcase.webp);     --sfx-bg-opacity: 0.18; }
+.v2ld  { --sfx-bg: url(/assets/images/bg/limexdetail.webp);  --sfx-bg-opacity: 0.12; }
+.v2cmp { --sfx-bg: url(/assets/images/bg/comparison.webp);   --sfx-bg-opacity: 0.12; }
+.v2ap  { --sfx-bg: url(/assets/images/bg/applications.webp); --sfx-bg-opacity: 0.12; }
+.v2con { --sfx-bg: url(/assets/images/bg/consultation.webp); --sfx-bg-opacity: 0.14; }
+.v2gi  { --sfx-bg: url(/assets/images/bg/globalimpact.webp); --sfx-bg-opacity: 0.22; }
+.v2ft  { --sfx-bg: url(/assets/images/bg/footer.webp);       --sfx-bg-opacity: 0.20; }
+
+@keyframes sfx-bg-drift {
+  from { transform: scale(1.04) translate3d(0, 0, 0); }
+  to   { transform: scale(1.12) translate3d(-1.5%, -1.5%, 0); }
+}
+
+/* 1 — HERO: slow sage radial bloom that breathes */
+.v2h::before {
+  background:
+    radial-gradient(60% 55% at 50% 108%, rgba(79, 154, 53, 0.22), transparent 60%),
+    radial-gradient(40% 40% at 20% 0%, rgba(255, 255, 255, 0.05), transparent 70%);
+  animation: sfx-hero-bloom 14s ease-in-out infinite alternate;
+}
+@keyframes sfx-hero-bloom {
+  from { opacity: 0.7; transform: translateY(2%) scale(1); }
+  to   { opacity: 1;   transform: translateY(-2%) scale(1.06); }
+}
+
+/* 2 — MATERIAL STORY: vertical light sweep */
+.v2story::before {
+  background: linear-gradient(180deg, transparent 0%, rgba(79, 154, 53, 0.10) 50%, transparent 100%);
+  animation: sfx-sweep-y 16s linear infinite;
+}
+@keyframes sfx-sweep-y {
+  0%   { transform: translateY(-40%); }
+  100% { transform: translateY(40%); }
+}
+
+/* 3 — SHOWCASE: diagonal shimmer band */
+.v2sc::before {
+  background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.06) 50%, transparent 60%);
+  animation: sfx-shimmer 9s ease-in-out infinite;
+}
+@keyframes sfx-shimmer {
+  0%, 100% { transform: translateX(-30%); opacity: 0.4; }
+  50%      { transform: translateX(30%);  opacity: 1; }
+}
+
+/* 4 — LIMEX DETAIL (light): floating soft mineral orbs */
+.v2ld::before {
+  background:
+    radial-gradient(22% 22% at 25% 30%, rgba(79, 154, 53, 0.12), transparent 70%),
+    radial-gradient(26% 26% at 78% 68%, rgba(79, 154, 53, 0.08), transparent 70%);
+  animation: sfx-float 20s ease-in-out infinite alternate;
+}
+@keyframes sfx-float {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(2%, -3%, 0); }
+}
+
+/* 5 — COMPARISON (light): slow horizontal scan line */
+.v2cmp::before {
+  background: linear-gradient(90deg, transparent 0%, rgba(79, 154, 53, 0.10) 50%, transparent 100%);
+  animation: sfx-sweep-x 18s linear infinite;
+}
+@keyframes sfx-sweep-x {
+  0%   { transform: translateX(-45%); }
+  100% { transform: translateX(45%); }
+}
+
+/* 6 — APPLICATIONS (light): gentle conic glow rotation */
+.v2ap::before {
+  background: conic-gradient(from 0deg at 50% 120%, rgba(79, 154, 53, 0.10), transparent 35%, transparent 65%, rgba(79, 154, 53, 0.10));
+  animation: sfx-rotate 50s linear infinite;
+}
+@keyframes sfx-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* 7 — CONSULTATION (light): breathing vignette */
+.v2con::before {
+  background: radial-gradient(70% 70% at 50% 50%, transparent 55%, rgba(79, 154, 53, 0.10) 100%);
+  animation: sfx-breathe 12s ease-in-out infinite alternate;
+}
+@keyframes sfx-breathe {
+  from { opacity: 0.6; transform: scale(1.02); }
+  to   { opacity: 1;   transform: scale(1.08); }
+}
+
+/* 8 — GLOBAL IMPACT: parallax aurora drift */
+.v2gi::before {
+  background:
+    radial-gradient(50% 40% at 15% 20%, rgba(79, 154, 53, 0.20), transparent 65%),
+    radial-gradient(45% 40% at 85% 80%, rgba(58, 117, 38, 0.16), transparent 65%);
+  animation: sfx-aurora 22s ease-in-out infinite alternate;
+}
+@keyframes sfx-aurora {
+  from { transform: translate3d(-2%, 0, 0) scale(1); }
+  to   { transform: translate3d(2%, -2%, 0) scale(1.08); }
+}
+
+/* 9 — FOOTER: slow gradient shift */
+.v2ft::before {
+  background: linear-gradient(120deg, rgba(79, 154, 53, 0.10), transparent 40%, transparent 60%, rgba(79, 154, 53, 0.08));
+  background-size: 200% 200%;
+  animation: sfx-gradient 24s ease-in-out infinite alternate;
+}
+@keyframes sfx-gradient {
+  from { background-position: 0% 50%; }
+  to   { background-position: 100% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2h::before, .v2story::before, .v2sc::before, .v2ld::before,
+  .v2cmp::before, .v2ap::before, .v2con::before, .v2gi::before, .v2ft::before,
+  .v2h::after, .v2story::after, .v2sc::after, .v2ld::after, .v2cmp::after,
+  .v2ap::after, .v2con::after, .v2gi::after, .v2ft::after {
+    animation: none !important;
+  }
+}

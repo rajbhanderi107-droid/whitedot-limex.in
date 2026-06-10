@@ -11,6 +11,7 @@ import Consultation from './sections/Consultation';
 import GlobalImpact from './sections/GlobalImpact';
 import Footer from './sections/Footer';
 import './premium-light.css';
+import './section-fx.css';
 
 /* X-WD-BEGIN aggregation */
 import { AggregationLoader } from '../aggregation-wd';

@@ -7,7 +7,8 @@ type IndustryIconName =
   | 'molded'
   | 'consumer'
   | 'food'
-  | 'sacks';
+  | 'sacks'
+  | 'fmcg';
 
 interface IndustryAnimatedIconProps {
   name: IndustryIconName;
@@ -129,6 +130,20 @@ function SacksIcon() {
   );
 }
 
+function FmcgIcon() {
+  return (
+    <>
+      <path className="ia-secondary ia-fmcg-shelf" d="M26 84h64" />
+      <path className="ia-primary ia-fmcg-bottle" d="M40 40c0-5 3-7 3-11h-8c0 4 3 6 3 11v34a4 4 0 004 4h-2a4 4 0 01-3-4z" />
+      <path className="ia-primary ia-fmcg-tube" d="M52 46h14l-2 30a3 3 0 01-3 3h-4a3 3 0 01-3-3z" />
+      <path className="ia-detail" d="M52 46l2-6h10l2 6" />
+      <path className="ia-primary ia-fmcg-box" d="M72 50h16v29H72z" />
+      <path className="ia-detail" d="M76 58h8M76 66h8M57 56h4M57 64h4" />
+      <circle className="ia-secondary ia-fmcg-spark" cx="44" cy="30" r="2" />
+    </>
+  );
+}
+
 export default function IndustryAnimatedIcon({ name, className = '' }: IndustryAnimatedIconProps) {
   const content = {
     packaging: <PackagingIcon />,
@@ -140,6 +155,7 @@ export default function IndustryAnimatedIcon({ name, className = '' }: IndustryA
     consumer: <ConsumerIcon />,
     food: <FoodIcon />,
     sacks: <SacksIcon />,
+    fmcg: <FmcgIcon />,
   }[name];
 
   return (

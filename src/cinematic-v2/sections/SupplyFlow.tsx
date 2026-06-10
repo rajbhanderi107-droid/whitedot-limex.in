@@ -10,7 +10,7 @@ import { useStaggerGroup } from '../motion';
 const CHAIN = [
   { name: 'TBM Co., Ltd.', role: 'Japan · inventor & manufacturer' },
   { name: 'Seven Dot', role: 'Authorized distributor' },
-  { name: 'White Dot LLP', role: 'Marketing & sales · sister company' },
+  { name: 'White Dot', role: 'Marketing & sales · sister company' },
 ];
 
 /**
@@ -40,7 +40,7 @@ export default function SupplyFlow() {
   const { ref } = useStaggerGroup<HTMLDivElement>();
 
   return (
-    <section className="v2sf" aria-label="Where LIMEX comes from: TBM manufactures it, Seven Dot distributes it, White Dot LLP markets and sells it.">
+    <section className="v2sf" aria-label="Where LIMEX comes from: TBM manufactures it, Seven Dot distributes it, White Dot markets and sells it.">
       <div className="v2sf-inner v2-reveal-group" ref={ref}>
         {CHAIN.map((node, i) => (
           <div className="v2sf-step" key={node.name}>

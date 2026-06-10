@@ -21,8 +21,8 @@ export default function GlobalImpact() {
           From Japanese limestone innovation to western India.
         </h2>
         <p className="v2gi-copy v2-reveal">
-          LIMEX travels from TBM in Japan, through Seven Dot, to White Dot LLP
-          — the authorized partner for Gujarat, Rajasthan, Diu, Daman, and Goa.
+          LIMEX travels from TBM in Japan, through Seven Dot, to White Dot
+          — the authorized partner for Gujarat, Rajasthan, Diu, and Daman.
           One material story, carried across a single supply line.
         </p>
         <a className="v2gi-cta v2-reveal" href="#consultation">

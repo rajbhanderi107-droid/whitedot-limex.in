@@ -212,6 +212,26 @@
   transform-origin: 58px 84px;
 }
 
+.v2ap-card:hover .ia-fmcg-bottle,
+.v2ap-card:focus-within .ia-fmcg-bottle {
+  animation: ia-fmcg-bob 1.9s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+  transform-origin: 39px 78px;
+}
+.v2ap-card:hover .ia-fmcg-tube,
+.v2ap-card:focus-within .ia-fmcg-tube {
+  animation: ia-fmcg-bob 1.9s cubic-bezier(0.34, 1.56, 0.64, 1) infinite 0.18s;
+  transform-origin: 59px 79px;
+}
+.v2ap-card:hover .ia-fmcg-box,
+.v2ap-card:focus-within .ia-fmcg-box {
+  animation: ia-fmcg-bob 1.9s cubic-bezier(0.34, 1.56, 0.64, 1) infinite 0.36s;
+  transform-origin: 80px 79px;
+}
+.v2ap-card:hover .ia-fmcg-spark,
+.v2ap-card:focus-within .ia-fmcg-spark {
+  animation: ia-pop-out 1.9s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
 .v2ap-card-sector {
   font-family: var(--v2-font-sans);
   font-size: var(--v2-fs-h3);
@@ -395,6 +415,12 @@
   0%, 100% { transform: scaleX(1); }
   40% { transform: scaleX(1.035); }
   65% { transform: scaleX(0.99); }
+}
+
+@keyframes ia-fmcg-bob {
+  0%, 100% { transform: translateY(0); }
+  45% { transform: translateY(-3px); }
+  70% { transform: translateY(0.5px); }
 }
 
 @media (prefers-reduced-motion: reduce) {

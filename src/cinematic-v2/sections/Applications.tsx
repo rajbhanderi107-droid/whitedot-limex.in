@@ -52,10 +52,16 @@ const SECTORS = [
     note: 'Cups, containers and service ware.',
   },
   {
-    sector: 'Woven & Non-Woven Sacks',
+    sector: 'Woven Sacs & Non Woven',
     icon: 'sacks',
-    items: ['Woven PP sack', 'Non-woven fabric sack', 'FIBC / bulk bag liner'],
-    note: 'Sacks and fabric-form products with reduced plastic.',
+    items: ['Woven PP sac', 'Non-woven fabric sac', 'FIBC / bulk bag liner'],
+    note: 'Sacs and fabric-form products with reduced plastic.',
+  },
+  {
+    sector: 'FMCG Products',
+    icon: 'fmcg',
+    items: ['Bottle & closure for personal care', 'Tube & jar for cosmetics', 'Branded primary carton'],
+    note: 'Fast-moving consumer goods packs that lower plastic per unit.',
   },
 ] as const satisfies readonly {
   sector: string;

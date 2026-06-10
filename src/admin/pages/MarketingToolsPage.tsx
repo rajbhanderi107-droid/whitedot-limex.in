@@ -103,7 +103,7 @@ export function MarketingToolsPage() {
       <div className="adm-card" style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
         <LineChart size={18} style={{ flexShrink: 0 }} />
         <p style={{ margin: 0, fontSize: ".82rem", color: "var(--adm-muted)" }}>
-          Tip: connect each tool with the <strong>rajbhanderi107@gmail.com</strong> Google account so analytics, ads, and leads stay under one login.
+          Tip: connect each tool with the <strong>office@whitedotindia.in</strong> account so analytics, ads, social, and leads stay under one login.
         </p>
       </div>
     </>

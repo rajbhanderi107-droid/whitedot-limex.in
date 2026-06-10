@@ -39,7 +39,7 @@ export default function Hero() {
   const statRegions = useCountUp(4, proof.inView);
 
   return (
-    <section className="v2h" aria-label="Hero">
+    <section className="v2h" aria-label="Hero" style={{ '--sfx-bg': 'url(/assets/images/bg/hero.webp)', '--sfx-bg-opacity': '0.22' } as React.CSSProperties}>
       {/* Limestone hero loop — white-bg stone, edges feathered into the dark canvas */}
       <div className="v2h-environment" aria-hidden="true">
         <video
