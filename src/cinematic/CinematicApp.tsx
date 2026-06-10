@@ -257,23 +257,50 @@ function HeroHeadline({
   );
 }
 
+const containerVariants = {
+  hidden: { opacity: 0, y: 26, scale: 0.98 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.9,
+      delay: 0.92,
+      ease: [0.22, 1, 0.36, 1] as const,
+      staggerChildren: 0.08,
+      delayChildren: 1.05
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const }
+  }
+};
+
 function HeroProofPanel() {
   return (
     <motion.aside
       className="cine-hero-proof"
-      initial={{ opacity: 0, y: 26, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.9, delay: 0.92, ease: [0.22, 1, 0.36, 1] }}
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
       aria-label="LIMEX proof points"
     >
-      <span className="cine-hero-proof-kicker">Material brief</span>
+      <motion.span className="cine-hero-proof-kicker" variants={itemVariants}>
+        Material brief
+      </motion.span>
       <div className="cine-hero-proof-grid">
-        <strong className="wd-stat-num" aria-label="50% plus calcium carbonate content">50%+</strong>
-        <span>calcium carbonate content</span>
-        <strong className="wd-stat-num">14d</strong>
-        <span>trial sample target window</span>
-        <strong className="wd-stat-num" aria-label="4 authorized regions served">4</strong>
-        <span>authorized regions served</span>
+        <motion.strong className="wd-stat-num" variants={itemVariants} aria-label="50% plus calcium carbonate content">50%+</motion.strong>
+        <motion.span variants={itemVariants}>calcium carbonate content</motion.span>
+        <motion.strong className="wd-stat-num" variants={itemVariants}>14d</motion.strong>
+        <motion.span variants={itemVariants}>trial sample target window</motion.span>
+        <motion.strong className="wd-stat-num" variants={itemVariants} aria-label="4 authorized regions served">4</motion.strong>
+        <motion.span variants={itemVariants}>authorized regions served</motion.span>
       </div>
     </motion.aside>
   );

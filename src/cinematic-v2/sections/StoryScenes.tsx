@@ -104,7 +104,7 @@ export function SceneScience({ active }: SceneProps) {
             <ellipse cx="432" cy="492" rx="22" ry="17" />
             <ellipse cx="480" cy="488" rx="22" ry="17" />
           </g>
-          <text className="wds3-limex" x="450" y="606">LIMEX™</text>
+          <text className="wds3-limex" x="450" y="606">LIMEX</text>
         </g>
       </svg>
     </div>
