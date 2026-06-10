@@ -100,7 +100,7 @@
 .v2ap-card-head {
   display: flex;
   align-items: center;
-  gap: clamp(0.85rem, 1.4vw, 1.2rem);
+  gap: clamp(1rem, 1.55vw, 1.35rem);
   min-height: 76px;
 }
 
@@ -110,6 +110,7 @@
   aspect-ratio: 1;
   color: var(--v2-accent);
   overflow: visible;
+  margin-left: clamp(-0.9rem, -1vw, -0.55rem);
 }
 
 .v2ap-industry-icon .ia-primary,
@@ -458,5 +459,8 @@
 @media (max-width: 767px) {
   .v2ap-grid { grid-template-columns: 1fr; }
   .v2ap-card-head { min-height: 64px; }
-  .v2ap-industry-icon { width: 64px; }
+  .v2ap-industry-icon {
+    width: 64px;
+    margin-left: -0.35rem;
+  }
 }
