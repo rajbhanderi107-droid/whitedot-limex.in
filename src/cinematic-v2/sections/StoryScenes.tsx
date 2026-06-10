@@ -193,47 +193,52 @@ export function SceneImpact({ active }: SceneProps) {
 
 /* ================= Scene 8 - Finale wordmark reveal ================= */
 
-const FINALE_DUST = Array.from({ length: 72 }, (_, i) => {
-  const t = (i / 72) * Math.PI * 2;
-  const wobble = Math.sin(i * 1.9) * 9;
-  const cx = 520 + Math.cos(t) * (230 + wobble);
-  const cy = 270 + Math.sin(t) * (112 + Math.cos(i * 1.35) * 7);
-  const r = 1.3 + (i % 5) * 0.35;
+const FINALE_DUST = Array.from({ length: 150 }, (_, i) => {
+  const t = (i / 150) * Math.PI * 2;
+  const wobble = Math.sin(i * 1.7) * 21 + Math.cos(i * 0.73) * 8;
+  const cx = 1110 + Math.cos(t) * (388 + wobble);
+  const cy = 474 + Math.sin(t) * (190 + Math.cos(i * 1.21) * 18);
+  const r = 1.1 + (i % 7) * 0.34;
   return { cx, cy, r, i };
 });
 
 export function SceneFinale({ active }: SceneProps) {
   return (
     <div className={`wds8${active ? ' is-active' : ''}`} aria-hidden="true">
-      <div className="wds8-copy">
-        <p className="wds8-mark">LIMEX™</p>
-        <h3 className="wds8-title">
-          <span><span>Born from CO₂.</span></span>
-          <span><span>Built for industry.</span></span>
-        </h3>
-        <p className="wds8-sub">Material intelligence for the real world.</p>
-      </div>
+      <img
+        className="wds8-frame"
+        src="/assets/videos/story/scene-8-final-reference.png"
+        alt=""
+        decoding="async"
+        loading="eager"
+      />
+      <span className="wds8-paper-glow" />
 
       <svg
         className="wds8-stage"
-        viewBox="0 0 900 540"
+        viewBox="0 0 1916 1080"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
           <filter id="wds8-soft" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="7" />
+            <feGaussianBlur stdDeviation="11" />
           </filter>
-          <radialGradient id="wds8-dust" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#e8dfca" />
-            <stop offset="58%" stopColor="#cfc5ad" />
-            <stop offset="100%" stopColor="#9fb19d" />
+          <radialGradient id="wds8-dust" cx="44%" cy="42%" r="62%">
+            <stop offset="0%" stopColor="#f3eee2" />
+            <stop offset="46%" stopColor="#d4cbb8" />
+            <stop offset="100%" stopColor="#9f9b8b" />
           </radialGradient>
         </defs>
 
-        <ellipse className="wds8-haze" cx="520" cy="270" rx="292" ry="146" />
-        <ellipse className="wds8-ring wds8-ring--back" cx="520" cy="270" rx="262" ry="122" pathLength={1} />
-        <ellipse className="wds8-ring wds8-ring--front" cx="520" cy="270" rx="262" ry="122" pathLength={1} />
+        <ellipse className="wds8-haze" cx="1110" cy="474" rx="460" ry="238" />
+        <ellipse className="wds8-ring wds8-ring--back" cx="1110" cy="474" rx="430" ry="208" pathLength={1} />
+        <ellipse className="wds8-ring wds8-ring--front" cx="1110" cy="474" rx="430" ry="208" pathLength={1} />
+        <path
+          className="wds8-sweep"
+          pathLength={1}
+          d="M720 493 C835 401 997 360 1178 389 C1375 420 1514 522 1550 624"
+        />
 
         <g className="wds8-dust">
           {FINALE_DUST.map((p) => (
@@ -245,11 +250,6 @@ export function SceneFinale({ active }: SceneProps) {
               style={{ '--i': p.i } as CSSProperties}
             />
           ))}
-        </g>
-
-        <g className="wds8-word">
-          <text x="520" y="290">LIMEX</text>
-          <text className="wds8-tm" x="706" y="248">™</text>
         </g>
       </svg>
     </div>
