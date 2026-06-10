@@ -1,7 +1,7 @@
 import './MaterialStory.css';
 import { useEffect, useRef, useState } from 'react';
 import { useHeavyMotion } from '../motion';
-import { SceneScience, SceneImpact, SceneFinale } from './StoryScenes';
+import { SceneScience, SceneImpact } from './StoryScenes';
 
 /* ---------------------------------------------------------------------------
    MaterialStory — the "Born from CO₂" scroll film (cinematic-v2).
@@ -24,18 +24,18 @@ import { SceneScience, SceneImpact, SceneFinale } from './StoryScenes';
 
 const BASE = import.meta.env.BASE_URL;
 const asset = (p: string) => `${BASE}${p}`.replace(/\/{2,}/g, '/');
-const STORY_ASSET_VERSION = '20260610-quiet-scenes';
+const STORY_ASSET_VERSION = '20260611-scene8-film';
 const storyAsset = (p: string) => `${asset(p)}?v=${STORY_ASSET_VERSION}`;
 
 const N = 8;
 const SCENE_IDS = Array.from({ length: N }, (_, i) => i + 1);
 
 /* Scenes rendered as live, code-animated slides instead of video.
-   Index → component. (Scene 3 = science diagram, scene 5 = impact icons.) */
+   Index → component. (Scene 3 = science diagram, scene 5 = impact icons.
+   Scene 8 plays the rendered brand film video — no live override.) */
 const LIVE_SCENES: Record<number, typeof SceneScience> = {
   2: SceneScience,
   4: SceneImpact,
-  7: SceneFinale,
 };
 
 export default function MaterialStory() {
