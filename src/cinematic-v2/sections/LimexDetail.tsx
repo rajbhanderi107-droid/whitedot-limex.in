@@ -84,7 +84,7 @@ export default function LimexDetail() {
         </div>
 
         {/* BLOCK 3 */}
-        <div className="v2ld-block">
+        <div className="v2ld-block v2ld-block--compat">
           <div className="v2ld-head v2-reveal" ref={b3Head.ref}>
             <p className="v2-eyebrow">Designed for processing compatibility</p>
             <h3 className="v2ld-block-title">Runs through conventional plastic processing — after proper blending.</h3>
