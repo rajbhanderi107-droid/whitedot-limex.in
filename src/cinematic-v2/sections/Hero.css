@@ -452,6 +452,7 @@
 .v2h-cta {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--v2-space-4);
   margin-top: var(--v2-space-6);
 }
@@ -516,13 +517,14 @@
   }
 }
 
-/* Eco signals â€” V1 sustainability row */
+/* Eco signals — horizontal dot row beside the consultation CTA */
 .v2h-eco {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--v2-space-3) var(--v2-space-5);
-  margin: var(--v2-space-6) 0 0;
-  padding: 0;
+  align-items: center;
+  gap: var(--v2-space-2) var(--v2-space-5);
+  margin: 0;
+  padding: 0 0 0 var(--v2-space-3);
   list-style: none;
 }
 .v2h-eco li {
@@ -544,13 +546,21 @@
   background: var(--v2-accent);
 }
 
-/* Proof panel â€” V1 Material brief */
+/* Proof panel — Material brief, pinned bottom-right of the hero */
 .v2h-proof {
-  margin-top: var(--v2-space-7);
-  padding-top: var(--v2-space-5);
-  background: transparent;
-  border-top: var(--v2-hairline);
-  max-width: 620px;
+  position: absolute;
+  right: clamp(1.25rem, 4vw, 3.75rem);
+  bottom: clamp(1.5rem, 4.5vh, 3rem);
+  z-index: var(--v2-z-content);
+  margin: 0;
+  padding: var(--v2-space-4) var(--v2-space-5);
+  background: rgba(4, 10, 8, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--v2-radius-md);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 18px 44px -30px rgba(0, 0, 0, 0.8);
+  max-width: min(440px, 42vw);
 }
 .v2h-proof-kicker {
   display: block;
@@ -564,7 +574,7 @@
 .v2h-proof-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--v2-space-6);
+  gap: var(--v2-space-4);
   margin: 0;
 }
 .v2h-proof-grid div { display: flex; flex-direction: column; gap: 0.25rem; }
@@ -584,8 +594,16 @@
   color: var(--v2-text-muted);
 }
 
-@media (max-width: 639px) {
-  .v2h-proof { max-width: 100%; }
+@media (max-width: 767px) {
+  /* No room to pin on small screens — flow it under the content column */
+  .v2h {
+    flex-direction: column;
+  }
+  .v2h-proof {
+    position: static;
+    max-width: 100%;
+    margin: 0 clamp(1.25rem, 4vw, 3.75rem) clamp(2rem, 6vh, 3rem);
+  }
 }
 
 /* Scroll cue */

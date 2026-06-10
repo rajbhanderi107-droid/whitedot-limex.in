@@ -96,33 +96,32 @@ export default function Hero() {
             <a href="#consultation" className="v2h-btn v2h-btn--ghost">
               Request Material Consultation
             </a>
+            <ul className="v2h-eco v2-reveal" ref={eco.ref} aria-label="Sustainability signals">
+              <li>50%+ calcium carbonate, less plastic</li>
+              <li>Lower carbon footprint</li>
+              <li>Runs on existing production lines</li>
+            </ul>
           </div>
         </div>
-
-        <ul className="v2h-eco v2-reveal" ref={eco.ref} aria-label="Sustainability signals">
-          <li>50%+ calcium carbonate, less plastic</li>
-          <li>Lower carbon footprint</li>
-          <li>Runs on existing production lines</li>
-        </ul>
-
-        <aside className="v2h-proof v2-reveal" ref={proof.ref} aria-label="LIMEX proof points">
-          <span className="v2h-proof-kicker">Material brief</span>
-          <dl className="v2h-proof-grid">
-            <div>
-              <dt aria-label="50% plus calcium carbonate content">{statCaco}%+</dt>
-              <dd>calcium carbonate content</dd>
-            </div>
-            <div>
-              <dt aria-label="14 day trial sample target window">{statDays}d</dt>
-              <dd>trial sample target window</dd>
-            </div>
-            <div>
-              <dt aria-label="4 authorized regions served">{statRegions}</dt>
-              <dd>authorized regions served</dd>
-            </div>
-          </dl>
-        </aside>
       </div>
+
+      <aside className="v2h-proof v2-reveal" ref={proof.ref} aria-label="LIMEX proof points">
+        <span className="v2h-proof-kicker">Material brief</span>
+        <dl className="v2h-proof-grid">
+          <div>
+            <dt aria-label="50% plus calcium carbonate content">{statCaco}%+</dt>
+            <dd>calcium carbonate content</dd>
+          </div>
+          <div>
+            <dt aria-label="14 day trial sample target window">{statDays}d</dt>
+            <dd>trial sample target window</dd>
+          </div>
+          <div>
+            <dt aria-label="4 authorized regions served">{statRegions}</dt>
+            <dd>authorized regions served</dd>
+          </div>
+        </dl>
+      </aside>
 
       <div className="v2h-scroll-cue" aria-hidden="true">
         <span className="v2h-scroll-line" />
