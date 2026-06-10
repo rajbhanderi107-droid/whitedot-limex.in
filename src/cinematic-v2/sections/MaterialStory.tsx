@@ -1,5 +1,5 @@
 import './MaterialStory.css';
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useHeavyMotion } from '../motion';
 import { SceneScience, SceneImpact } from './StoryScenes';
 
@@ -222,7 +222,6 @@ export default function MaterialStory() {
       id="material"
       ref={rootRef}
       aria-label="LIMEX material story — born from CO₂"
-      style={{ '--sfx-bg': 'url(/assets/images/bg/material.webp)', '--sfx-bg-opacity': '0.14' } as CSSProperties}
     >
       <div className="v2story__viewport" ref={viewportRef}>
         {SCENE_IDS.map((n, i) => {
