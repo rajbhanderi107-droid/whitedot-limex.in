@@ -67,7 +67,7 @@
   max-height: 86%;
 }
 
-/* slide vignette (light top-left → warm shade) */
+/* slide vignette matches the photoreal crops (light top-left → warm shade) */
 .wds3 {
   background: radial-gradient(140% 120% at 26% 14%, #f7f3ee 0%, #f1ece5 52%, #e6dfd6 100%);
 }
@@ -89,45 +89,8 @@
   text-anchor: middle;
 }
 
-/* ---- glass petri dishes (code-drawn) ---- */
-.wds3-dish-fill { fill: rgba(252, 251, 247, 0.55); }
-.wds3-dish-rim {
-  fill: none;
-  stroke: #b9bfb8;
-  stroke-width: 3;
-}
-.wds3-dish-rim2 {
-  fill: none;
-  stroke: rgba(170, 178, 168, 0.5);
-  stroke-width: 1.4;
-}
-.wds3-dish-shine {
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.85);
-  stroke-width: 5;
-  stroke-linecap: round;
-}
-
-/* ---- dish contents ---- */
-.wds3-rock { fill: #e9e7e2; }
-.wds3-rock-face { fill: #f4f2ed; }
-.wds3-rock-face--2 { fill: #dcdad4; }
-.wds3-rock-edge { fill: none; stroke: #c4c2bb; stroke-width: 1.6; stroke-linejoin: round; }
-
-.wds3-mound { fill: #e4e2db; }
-.wds3-grains circle { fill: #c9c7bf; }
-
-.wds3-drop-shadow { fill: rgba(120, 130, 122, 0.18); }
-.wds3-drop-body { fill: url(#wds3-drop); stroke: rgba(180, 190, 184, 0.5); stroke-width: 1; }
-.wds3-drop-spec { fill: rgba(255, 255, 255, 0.9); }
-
-.wds3-pellets ellipse { stroke: #c2c8c1; stroke-width: 1; }
-
-/* transform-box for fill-box scaling on grouped content + particles */
-.wds3-content,
-.wds3-grains circle,
-.wds3-pellets ellipse,
-.wds3-drop {
+/* photoreal dish renders */
+.wds3-img {
   transform-origin: center;
   transform-box: fill-box;
 }
@@ -155,18 +118,12 @@
   fill: none;
 }
 
-/* ---------- scene-3 initial (hidden) states ---------- */
+/* ---------- scene-3 animation states ---------- */
 .wds3 .wds3-copy { opacity: 0; transform: translateY(22px); }
-.wds3 .wds3-dish-rim,
-.wds3 .wds3-dish-rim2 { stroke-dasharray: 1; stroke-dashoffset: 1; }
-.wds3 .wds3-dish-fill,
-.wds3 .wds3-dish-shine { opacity: 0; }
-.wds3 .wds3-content { opacity: 0; }
-.wds3 .wds3-rock-grp { transform: translateY(-26px) scale(0.8); opacity: 0; }
-.wds3 .wds3-grains circle { opacity: 0; transform: scale(0.2); }
-.wds3 .wds3-drop { opacity: 0; transform: scale(0.3); }
-.wds3 .wds3-pellets ellipse { opacity: 0; transform: scale(0.2); }
+.wds3 .wds3-img { opacity: 0; transform: scale(1.12); }
 .wds3 .wds3-arrow { stroke-dasharray: 1; stroke-dashoffset: 1; }
+/* dashed flows keep their dash pattern — they fade in, then march
+   toward the LIMEX dish for as long as the scene stays active */
 .wds3 .wds3-dash { opacity: 0; }
 .wds3 .wds3-dhead { opacity: 0; }
 .wds3 .wds3-labelgrp text,
@@ -176,69 +133,42 @@
   animation: wds-rise 0.9s var(--v2-ease-out) 0.15s both;
 }
 
-/* dish glass draws in: rim traces, fill + shine fade */
-.wds3.is-active .wds3-dish-rim { animation: wds-trace 0.8s var(--v2-ease-out) var(--dd, 0s) both; }
-.wds3.is-active .wds3-dish-rim2 { animation: wds-trace 0.8s var(--v2-ease-out) calc(var(--dd, 0s) + 0.1s) both; }
-.wds3.is-active .wds3-dish-fill,
-.wds3.is-active .wds3-dish-shine { animation: wds-fade 0.6s var(--v2-ease-out) calc(var(--dd, 0s) + 0.25s) both; }
-.wds3.is-active .wds3-content { animation: wds-fade 0.5s var(--v2-ease-out) calc(var(--cd, 0.5s)) both; }
-
-.wds3-dish--1 { --dd: 0.3s; }
-.wds3-dish--2 { --dd: 1.4s; }
-.wds3-dish--3 { --dd: 2.5s; }
-.wds3-dish--result { --dd: 3.7s; }
-.wds3-content--1 { --cd: 0.55s; }
-.wds3-content--2 { --cd: 1.65s; }
-.wds3-content--3 { --cd: 2.75s; }
-.wds3-content--result { --cd: 3.95s; }
-
-/* limestone rock drops into the dish */
-.wds3.is-active .wds3-rock-grp {
-  animation: wds3-rock-drop 0.7s cubic-bezier(0.34, 1.3, 0.5, 1) 0.6s both;
+/* dishes settle into place left → right, then the result */
+.wds3.is-active .wds3-img--1 { animation: wds3-place 0.7s var(--v2-ease-out) 0.3s both; }
+.wds3.is-active .wds3-img--2 { animation: wds3-place 0.7s var(--v2-ease-out) 1.3s both; }
+.wds3.is-active .wds3-img--3 { animation: wds3-place 0.7s var(--v2-ease-out) 2.3s both; }
+.wds3.is-active .wds3-img--result {
+  animation:
+    wds3-place 0.8s var(--v2-ease-out) 3.3s both,
+    wds3-breathe 6s ease-in-out 4.6s infinite alternate;
 }
 
-/* powder grains scatter in (the rock "ground down") */
-.wds3.is-active .wds3-grains circle {
-  animation: wds-pop 0.5s var(--v2-ease-out) calc(1.7s + var(--gi, 0) * 0.012s) both;
-}
-
-/* binder droplets bead up */
-.wds3.is-active .wds3-drop {
-  animation: wds3-bead 0.6s cubic-bezier(0.34, 1.4, 0.5, 1) calc(2.8s + var(--di, 0) * 0.09s) both;
-}
-
-/* finished pellets pop into the result dish */
-.wds3.is-active .wds3-pellets ellipse {
-  animation: wds-pop 0.5s cubic-bezier(0.34, 1.4, 0.5, 1) calc(4s + var(--pi, 0) * 0.018s) both;
-}
-
-.wds3.is-active .wds3-arrow--1 { animation: wds-trace 0.55s var(--v2-ease-out) 1.15s both; }
-.wds3.is-active .wds3-arrow--2 { animation: wds-trace 0.55s var(--v2-ease-out) 2.25s both; }
+.wds3.is-active .wds3-arrow--1 { animation: wds-trace 0.55s var(--v2-ease-out) 0.95s both; }
+.wds3.is-active .wds3-arrow--2 { animation: wds-trace 0.55s var(--v2-ease-out) 1.95s both; }
 
 .wds3.is-active .wds3-dash {
   animation:
-    wds3-dash-in 0.8s var(--v2-ease-out) 3.2s both,
-    wds3-march 1.3s linear 4s infinite;
+    wds3-dash-in 0.8s var(--v2-ease-out) 2.95s both,
+    wds3-march 1.3s linear 3.75s infinite;
 }
-.wds3.is-active .wds3-dhead { animation: wds-fade 0.5s var(--v2-ease-out) 3.7s both; }
+.wds3.is-active .wds3-dhead { animation: wds-fade 0.5s var(--v2-ease-out) 3.45s both; }
 
 .wds3.is-active .wds3-labelgrp text { animation: wds-rise 0.6s var(--v2-ease-out) both; }
-.wds3.is-active .wds3-labelgrp--1 text { animation-delay: 0.95s; }
-.wds3.is-active .wds3-labelgrp--1 .wds3-label--dim { animation-delay: 1.05s; }
-.wds3.is-active .wds3-labelgrp--2 text { animation-delay: 2.05s; }
-.wds3.is-active .wds3-labelgrp--2 .wds3-label--dim { animation-delay: 2.15s; }
-.wds3.is-active .wds3-labelgrp--3 text { animation-delay: 3.15s; }
-.wds3.is-active .wds3-labelgrp--3 .wds3-label--dim { animation-delay: 3.25s; }
-.wds3.is-active .wds3-limex { animation: wds-fade 0.7s var(--v2-ease-out) 4.5s both; }
+.wds3.is-active .wds3-labelgrp--1 text { animation-delay: 0.55s; }
+.wds3.is-active .wds3-labelgrp--1 .wds3-label--dim { animation-delay: 0.65s; }
+.wds3.is-active .wds3-labelgrp--2 text { animation-delay: 1.55s; }
+.wds3.is-active .wds3-labelgrp--2 .wds3-label--dim { animation-delay: 1.65s; }
+.wds3.is-active .wds3-labelgrp--3 text { animation-delay: 2.55s; }
+.wds3.is-active .wds3-labelgrp--3 .wds3-label--dim { animation-delay: 2.65s; }
+.wds3.is-active .wds3-limex { animation: wds-fade 0.7s var(--v2-ease-out) 3.95s both; }
 
-@keyframes wds3-rock-drop {
-  from { opacity: 0; transform: translateY(-26px) scale(0.8); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-@keyframes wds3-bead {
-  from { opacity: 0; transform: scale(0.3); }
-  60%  { opacity: 1; transform: scale(1.08); }
+@keyframes wds3-place {
+  from { opacity: 0; transform: scale(1.12); }
   to   { opacity: 1; transform: scale(1); }
+}
+@keyframes wds3-breathe {
+  from { transform: scale(1); }
+  to   { transform: scale(1.014); }
 }
 @keyframes wds3-dash-in {
   from { opacity: 0; }
@@ -250,7 +180,7 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* SCENE 5 — Built for sustainability                                  */
+/* SCENE 5 - Built for sustainability                                  */
 /* ------------------------------------------------------------------ */
 .wds5 {
   display: flex;
@@ -258,6 +188,7 @@
   justify-content: center;
   gap: clamp(1.5rem, 5vh, 3.5rem);
   padding: clamp(2rem, 6vw, 5rem) clamp(2rem, 7vw, 6rem);
+  background: radial-gradient(150% 130% at 50% 8%, #f8f5f0 0%, #f1ece5 56%, #e7e0d7 100%);
 }
 
 .wds5-title { max-width: 14ch; }
@@ -284,27 +215,50 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 1rem;
+  gap: 0.85rem;
 }
 .wds5-item svg {
   width: clamp(118px, 13vw, 188px);
   height: auto;
+  overflow: visible;
 }
 
-/* warm cream slide matching the reference frame */
-.wds5 {
-  background: radial-gradient(150% 130% at 50% 8%, #f8f5f0 0%, #f1ece5 56%, #e7e0d7 100%);
-}
-
-/* ---- photoreal glass-dish crops + soft surface shadow ---- */
-.wds5-photo {
+.wds5-photo,
+.wds5-dish-fill,
+.wds5-dish-rim,
+.wds5-dish-rim2,
+.wds5-dish-shine,
+.wds5-reflect {
   transform-origin: center;
   transform-box: fill-box;
+}
+.wds5-photo {
+  filter: saturate(1.02) contrast(1.02);
+}
+.wds5-dish-fill {
+  fill: rgba(255, 255, 255, 0.08);
+  stroke: rgba(255, 255, 255, 0.28);
+  stroke-width: 1;
+  pointer-events: none;
+}
+.wds5-dish-rim {
+  fill: none;
+  stroke: rgba(140, 154, 142, 0.72);
+  stroke-width: 3.2;
+}
+.wds5-dish-rim2 {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.7);
+  stroke-width: 1.4;
+}
+.wds5-dish-shine {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.84);
+  stroke-width: 6;
+  stroke-linecap: round;
 }
 .wds5-reflect {
   fill: rgba(120, 130, 122, 0.14);
-  transform-origin: center;
-  transform-box: fill-box;
 }
 
 .wds5-caption {
@@ -315,11 +269,15 @@
   margin: 0;
 }
 
-/* ---------- scene-5 initial (hidden) states ---------- */
+/* ---------- scene-5 animation states ---------- */
 .wds5 .wds5-eyebrow { opacity: 0; }
 .wds5 .wds5-line > span { transform: translateY(110%); }
-.wds5 .wds5-photo { opacity: 0; transform: scale(1.12); }
+.wds5 .wds5-photo { opacity: 0; transform: scale(1.08); }
+.wds5 .wds5-dish-fill,
+.wds5 .wds5-dish-shine,
 .wds5 .wds5-reflect { opacity: 0; }
+.wds5 .wds5-dish-rim,
+.wds5 .wds5-dish-rim2 { stroke-dasharray: 1; stroke-dashoffset: 1; }
 .wds5 .wds5-caption { opacity: 0; transform: translateY(14px); }
 
 .wds5.is-active .wds5-eyebrow { animation: wds-fade 0.6s var(--v2-ease-out) 0.15s both; }
@@ -327,19 +285,26 @@
 .wds5.is-active .wds5-line:nth-child(2) > span { animation: wds-line-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.38s both; }
 .wds5.is-active .wds5-line:nth-child(3) > span { animation: wds-line-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.51s both; }
 
-/* per-item: dish photo places in → shadow + caption */
 .wds5.is-active .wds5-photo {
   animation: wds5-place 0.7s var(--v2-ease-out) calc(0.9s + var(--i, 0) * 0.22s) both;
 }
+.wds5.is-active .wds5-dish-rim {
+  animation: wds-trace 0.75s var(--v2-ease-out) calc(0.96s + var(--i, 0) * 0.22s) both;
+}
+.wds5.is-active .wds5-dish-rim2 {
+  animation: wds-trace 0.75s var(--v2-ease-out) calc(1.04s + var(--i, 0) * 0.22s) both;
+}
+.wds5.is-active .wds5-dish-fill,
+.wds5.is-active .wds5-dish-shine,
 .wds5.is-active .wds5-reflect {
-  animation: wds5-reflect-in 0.7s var(--v2-ease-out) calc(1.05s + var(--i, 0) * 0.22s) both;
+  animation: wds5-reflect-in 0.7s var(--v2-ease-out) calc(1.08s + var(--i, 0) * 0.22s) both;
 }
 .wds5.is-active .wds5-caption {
   animation: wds-rise 0.6s var(--v2-ease-out) calc(1.3s + var(--i, 0) * 0.22s) both;
 }
 
 @keyframes wds5-place {
-  from { opacity: 0; transform: scale(1.12); }
+  from { opacity: 0; transform: scale(1.08); }
   to   { opacity: 1; transform: scale(1); }
 }
 @keyframes wds5-reflect-in {
@@ -566,7 +531,7 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* reduced motion — finished state, zero motion                        */
+/* reduced motion - finished state, zero motion                        */
 /* ------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
   .wds3 *,
@@ -574,27 +539,21 @@
   .wds8 * {
     animation: none !important;
   }
+  .wds3 .wds3-img,
   .wds3 .wds3-copy,
-  .wds3 .wds3-dish-fill,
-  .wds3 .wds3-dish-shine,
-  .wds3 .wds3-content,
-  .wds3 .wds3-rock-grp,
-  .wds3 .wds3-grains circle,
-  .wds3 .wds3-drop,
-  .wds3 .wds3-pellets ellipse,
   .wds3 .wds3-labelgrp text,
   .wds3 .wds3-limex,
   .wds3 .wds3-dhead,
   .wds3 .wds3-dash,
   .wds5 .wds5-eyebrow,
   .wds5 .wds5-photo,
+  .wds5 .wds5-dish-fill,
+  .wds5 .wds5-dish-shine,
   .wds5 .wds5-reflect,
   .wds5 .wds5-caption,
   .wds8 .wds8-frame,
   .wds8 .wds8-paper-glow,
   .wds8 .wds8-haze,
-  .wds8 .wds8-ring,
-  .wds8 .wds8-sweep,
   .wds8 .wds8-dust circle {
     opacity: 1;
     transform: none;
@@ -602,8 +561,8 @@
   }
   .wds5 .wds5-line > span { transform: none; }
   .wds3 .wds3-arrow,
-  .wds3 .wds3-dish-rim,
-  .wds3 .wds3-dish-rim2,
+  .wds5 .wds5-dish-rim,
+  .wds5 .wds5-dish-rim2,
   .wds8 .wds8-ring,
   .wds8 .wds8-sweep {
     stroke-dashoffset: 0;
