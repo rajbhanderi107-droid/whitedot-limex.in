@@ -1,5 +1,4 @@
 import './StoryScenes.css';
-import { Fragment } from 'react';
 import type { CSSProperties } from 'react';
 
 /* ---------------------------------------------------------------------------
@@ -14,28 +13,44 @@ type SceneProps = { active: boolean };
 
 /* ================= Scene 3 — Science behind LIMEX ================= */
 
-/* Photoreal petri-dish renders (cropped from the designed diagram frame),
-   placed in one responsive SVG. Each dish is feather-masked into the slide
-   background; arrows are live strokes that trace / flow on activation. */
-const STORY_IMG = '/assets/images/story';
+/* Fully code-drawn petri-dish process diagram (no raster assets).
+   Each glass dish + its contents are SVG primitives; the contents
+   animate in every time the scene gains `.is-active`:
+     1 limestone — faceted rock settles
+     2 powder    — grains scatter / pile (the rock "ground down")
+     3 binder    — glass droplets bead up
+     4 LIMEX     — finished pellets pop into the result dish
+   Solid arrows stroke-trace; dashed flows march toward the LIMEX dish.
+   prefers-reduced-motion: finished static state. */
 
-type DishSpec = {
-  id: string;
-  cls: string;
-  x: number;
-  y: number;
-  /* feather-mask geometry (diagram coords) */
-  mcx: number;
-  mcy: number;
-  solid: number;
-  edge: number;
-};
+const DISH = {
+  limestone: { cx: 352, cy: 226, r: 150 },
+  powder: { cx: 820, cy: 222, r: 150 },
+  binder: { cx: 1290, cy: 222, r: 150 },
+  limex: { cx: 820, cy: 850, r: 150 },
+} as const;
 
-const SCIENCE_DISHES: DishSpec[] = [
-  { id: 'limestone', cls: '1', x: 170, y: 40, mcx: 352, mcy: 226, solid: 134, edge: 152 },
-  { id: 'powder', cls: '2', x: 640, y: 40, mcx: 820, mcy: 220, solid: 160, edge: 176 },
-  { id: 'binder', cls: '3', x: 1110, y: 40, mcx: 1290, mcy: 220, solid: 166, edge: 179 },
-  { id: 'limex', cls: 'result', x: 640, y: 670, mcx: 820, mcy: 850, solid: 134, edge: 152 },
+/* deterministic scatter inside a disc of radius `rad` (no RNG → SSR-stable) */
+function scatter(n: number, cx: number, cy: number, rad: number, seed: number) {
+  const GA = 2.399963; // golden angle — even sunflower packing
+  return Array.from({ length: n }, (_, i) => {
+    const t = (i + 0.5 + seed) / n;
+    const r = rad * Math.sqrt(t);
+    const a = i * GA + seed;
+    return { x: cx + Math.cos(a) * r, y: cy + Math.sin(a) * r * 0.62, i };
+  });
+}
+
+const POWDER_GRAINS = scatter(54, DISH.powder.cx, DISH.powder.cy + 22, 104, 0.3);
+const PELLETS = scatter(46, DISH.limex.cx, DISH.limex.cy + 18, 96, 0.7);
+
+/* glass droplet beads in the binder dish */
+const DROPLETS = [
+  { x: 1248, y: 250, r: 40 },
+  { x: 1330, y: 214, r: 30 },
+  { x: 1336, y: 286, r: 26 },
+  { x: 1290, y: 196, r: 17 },
+  { x: 1288, y: 256, r: 12 },
 ];
 
 const SCIENCE_LABELS: { x: number; lines: [string, string] }[] = [
@@ -43,6 +58,21 @@ const SCIENCE_LABELS: { x: number; lines: [string, string] }[] = [
   { x: 820, lines: ['High-purity', 'Calcium carbonate'] },
   { x: 1290, lines: ['Bio-based', 'Polymers'] },
 ];
+
+/* a glass petri dish (rim ring + glass tint + top highlight) */
+function GlassDish({ cx, cy, r, cls }: { cx: number; cy: number; r: number; cls: string }) {
+  return (
+    <g className={`wds3-dish wds3-dish--${cls}`}>
+      <circle className="wds3-dish-fill" cx={cx} cy={cy} r={r} />
+      <circle className="wds3-dish-rim" cx={cx} cy={cy} r={r} pathLength={1} />
+      <circle className="wds3-dish-rim2" cx={cx} cy={cy} r={r - 9} pathLength={1} />
+      <path
+        className="wds3-dish-shine"
+        d={`M${cx - r * 0.62} ${cy - r * 0.5} A ${r} ${r} 0 0 1 ${cx + r * 0.2} ${cy - r * 0.86}`}
+      />
+    </g>
+  );
+}
 
 export function SceneScience({ active }: SceneProps) {
   return (
@@ -65,63 +95,112 @@ export function SceneScience({ active }: SceneProps) {
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          {SCIENCE_DISHES.map((d) => (
-            <Fragment key={d.id}>
-              <radialGradient id={`wds3-g-${d.id}`}>
-                <stop offset="0" stopColor="#fff" />
-                <stop offset={d.solid / d.edge} stopColor="#fff" />
-                <stop offset="1" stopColor="#fff" stopOpacity="0" />
-              </radialGradient>
-              <mask id={`wds3-m-${d.id}`} maskUnits="userSpaceOnUse">
-                <circle cx={d.mcx} cy={d.mcy} r={d.edge} fill={`url(#wds3-g-${d.id})`} />
-              </mask>
-            </Fragment>
-          ))}
+          <radialGradient id="wds3-bead" cx="38%" cy="32%" r="72%">
+            <stop offset="0" stopColor="#ffffff" />
+            <stop offset="0.5" stopColor="#eef1ee" />
+            <stop offset="1" stopColor="#cfd6cf" />
+          </radialGradient>
+          <radialGradient id="wds3-drop" cx="36%" cy="30%" r="74%">
+            <stop offset="0" stopColor="#ffffff" stopOpacity="0.95" />
+            <stop offset="0.45" stopColor="#eaf0ee" stopOpacity="0.5" />
+            <stop offset="1" stopColor="#c4d0cb" stopOpacity="0.32" />
+          </radialGradient>
         </defs>
 
-        {/* --- photoreal dishes --- */}
-        {SCIENCE_DISHES.map((d) => (
-          <image
-            key={d.id}
-            className={`wds3-img wds3-img--${d.cls}`}
-            href={`${STORY_IMG}/science-dish-${d.id}.jpg`}
-            x={d.x}
-            y={d.y}
-            width={360}
-            height={360}
-            mask={`url(#wds3-m-${d.id})`}
-            preserveAspectRatio="xMidYMid slice"
+        {/* ============ Dish 1 — limestone ============ */}
+        <GlassDish {...DISH.limestone} cls="1" />
+        <g className="wds3-rock-grp wds3-content wds3-content--1">
+          <path
+            className="wds3-rock"
+            d="M286 270 L268 214 L300 168 L350 150 L408 168 L424 224 L398 276 L330 282 Z"
           />
-        ))}
+          <path className="wds3-rock-face" d="M300 168 L342 222 L408 168 Z" />
+          <path className="wds3-rock-face wds3-rock-face--2" d="M342 222 L330 282 L398 276 L424 224 Z" />
+          <path className="wds3-rock-edge" d="M300 168 L342 222 M342 222 L268 214 M342 222 L424 224 M342 222 L330 282" />
+        </g>
 
-        {/* --- solid process arrows (stroke-traced) --- */}
+        {/* ============ arrow 1 ============ */}
         <path
           className="wds3-arrow wds3-arrow--1"
           pathLength={1}
-          d="M500 223 H640 M620 203 L644 223 L620 243"
+          d="M520 222 H636 M616 202 L640 222 L616 242"
         />
+
+        {/* ============ Dish 2 — powder ============ */}
+        <GlassDish {...DISH.powder} cls="2" />
+        <g className="wds3-content wds3-content--2">
+          <path
+            className="wds3-mound"
+            d="M724 300 Q760 246 820 240 Q882 246 916 300 Q820 318 724 300 Z"
+          />
+          <g className="wds3-grains">
+            {POWDER_GRAINS.map((g) => (
+              <circle
+                key={g.i}
+                cx={g.x}
+                cy={g.y}
+                r={1.6 + (g.i % 5) * 0.7}
+                style={{ '--gi': g.i } as CSSProperties}
+              />
+            ))}
+          </g>
+        </g>
+
+        {/* ============ arrow 2 ============ */}
         <path
           className="wds3-arrow wds3-arrow--2"
           pathLength={1}
-          d="M1000 220 H1100 M1080 200 L1104 220 L1080 240"
+          d="M992 222 H1108 M1088 202 L1112 222 L1088 242"
         />
 
-        {/* --- dashed convergence flows (marching toward LIMEX) --- */}
-        <path className="wds3-dash wds3-dash--l" d="M330 575 Q300 830 655 860" />
-        <path className="wds3-dash wds3-dash--c" d="M820 570 V 690" />
-        <path className="wds3-dash wds3-dash--r" d="M1310 570 Q1345 830 985 860" />
-        <path className="wds3-dhead wds3-dhead--l" d="M636 847 L658 861 L634 871" />
-        <path className="wds3-dhead wds3-dhead--c" d="M802 674 L820 696 L838 674" />
-        <path className="wds3-dhead wds3-dhead--r" d="M1004 847 L982 861 L1006 871" />
+        {/* ============ Dish 3 — binder droplets ============ */}
+        <GlassDish {...DISH.binder} cls="3" />
+        <g className="wds3-content wds3-content--3">
+          <g className="wds3-drops">
+            {DROPLETS.map((d, i) => (
+              <g key={i} className="wds3-drop" style={{ '--di': i } as CSSProperties}>
+                <ellipse className="wds3-drop-shadow" cx={d.x} cy={d.y + d.r * 0.62} rx={d.r * 0.86} ry={d.r * 0.2} />
+                <circle className="wds3-drop-body" cx={d.x} cy={d.y} r={d.r} />
+                <circle className="wds3-drop-spec" cx={d.x - d.r * 0.32} cy={d.y - d.r * 0.36} r={d.r * 0.22} />
+              </g>
+            ))}
+          </g>
+        </g>
 
-        {/* --- labels --- */}
+        {/* ============ dashed convergence flows ============ */}
+        <path className="wds3-dash wds3-dash--l" d="M352 580 Q322 830 655 862" />
+        <path className="wds3-dash wds3-dash--c" d="M820 576 V 692" />
+        <path className="wds3-dash wds3-dash--r" d="M1290 580 Q1320 830 985 862" />
+        <path className="wds3-dhead wds3-dhead--l" d="M636 849 L658 863 L634 873" />
+        <path className="wds3-dhead wds3-dhead--c" d="M802 676 L820 698 L838 676" />
+        <path className="wds3-dhead wds3-dhead--r" d="M1004 849 L982 863 L1006 873" />
+
+        {/* ============ Dish 4 — LIMEX pellets ============ */}
+        <GlassDish {...DISH.limex} cls="result" />
+        <g className="wds3-content wds3-content--result">
+          <g className="wds3-pellets">
+            {PELLETS.map((p) => (
+              <ellipse
+                key={p.i}
+                cx={p.x}
+                cy={p.y}
+                rx={11 + (p.i % 4)}
+                ry={9 + (p.i % 3)}
+                fill="url(#wds3-bead)"
+                style={{ '--pi': p.i } as CSSProperties}
+              />
+            ))}
+          </g>
+        </g>
+
+        {/* ============ labels ============ */}
         {SCIENCE_LABELS.map((l, i) => (
           <g className={`wds3-labelgrp wds3-labelgrp--${i + 1}`} key={l.x}>
-            <text className="wds3-label" x={l.x} y={488}>{l.lines[0]}</text>
-            <text className="wds3-label wds3-label--dim" x={l.x} y={530}>{l.lines[1]}</text>
+            <text className="wds3-label" x={l.x} y={462}>{l.lines[0]}</text>
+            <text className="wds3-label wds3-label--dim" x={l.x} y={504}>{l.lines[1]}</text>
           </g>
         ))}
-        <text className="wds3-limex" x="820" y="1044">LIMEX</text>
+        <text className="wds3-limex" x="820" y="1052">LIMEX</text>
       </svg>
     </div>
   );
