@@ -1,8 +1,21 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { AdminLayout } from "./components/AdminLayout.js";
+import { PortalProvider } from "./portal/PortalContext.js";
+import { PortalShell } from "./portal/PortalShell.js";
+import { CommandCenter } from "./portal/pages/CommandCenter.js";
+import { CrmPipeline } from "./portal/pages/CrmPipeline.js";
+import { HyperAutomation } from "./portal/pages/HyperAutomation.js";
+import { WorkflowBuilder } from "./portal/pages/WorkflowBuilder.js";
+import { ApprovalCenter } from "./portal/pages/ApprovalCenter.js";
+import { CyberShield } from "./portal/pages/CyberShield.js";
+import { IncidentResponse } from "./portal/pages/IncidentResponse.js";
+import { AiBrain } from "./portal/pages/AiBrain.js";
+import { AiAgents } from "./portal/pages/AiAgents.js";
+import { Sustainability } from "./portal/pages/Sustainability.js";
+import { IntegrationCenter } from "./portal/pages/IntegrationCenter.js";
+import { ModuleStub } from "./portal/pages/ModuleStub.js";
+import { SCAFFOLD_MODULES } from "./portal/modules.js";
 import { useAuth } from "./hooks/useAuth.js";
 import { GenericListPage } from "./pages/GenericListPage.js";
-import { DashboardPage } from "./pages/DashboardPage.js";
 import { InquiriesPage } from "./pages/InquiriesPage.js";
 import { InquiryDetailPage } from "./pages/InquiryDetailPage.js";
 import { LoginPage } from "./pages/LoginPage.js";
@@ -16,9 +29,6 @@ import { warmUpBackend } from "./lib/api.js";
 import "./admin.css";
 
 // Fire-and-forget: start waking the backend the instant admin JS loads.
-// This runs BEFORE React even mounts, so the backend is booting while
-// the login page renders. By the time the user types their password,
-// the backend is usually already warm.
 warmUpBackend();
 
 function badgeClass(status: string) {
@@ -44,7 +54,7 @@ interface AdminUser {
   role: string;
 }
 
-function AuthenticatedAdminLayout({
+function AuthenticatedPortal({
   isAuthenticated,
   user,
   onLogout,
@@ -56,8 +66,7 @@ function AuthenticatedAdminLayout({
   if (!isAuthenticated || !user) {
     return <Navigate to="/admin/login" replace />;
   }
-
-  return <AdminLayout user={user} onLogout={onLogout} />;
+  return <PortalShell user={user} onLogout={onLogout} />;
 }
 
 export default function AdminApp() {
@@ -72,164 +81,176 @@ export default function AdminApp() {
   );
 
   return (
-    <Routes>
-      <Route
-        path="/admin/login"
-        element={isAuthenticated ? <Navigate to="/admin/dashboard" replace /> : <LoginPage onLogin={login} onGoogleLogin={googleLogin} />}
-      />
-
-      {/* Public, reachable even with an active session (e.g. opening a reset email link). */}
-      <Route path="/admin/forgot-password" element={<ForgotPasswordPage />} />
-      <Route path="/admin/reset-password" element={<ResetPasswordPage />} />
-
-      <Route
-        element={
-          <AuthenticatedAdminLayout isAuthenticated={isAuthenticated} user={user} onLogout={logout} />
-        }
-      >
-        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
-        <Route path="/admin/dashboard" element={<DashboardPage />} />
-        <Route path="/admin/inquiries" element={<InquiriesPage />} />
-        <Route path="/admin/inquiries/:id" element={<InquiryDetailPage />} />
-
+    <PortalProvider>
+      <Routes>
         <Route
-          path="/admin/quote-requests"
-          element={
-            <GenericListPage
-              title="Quote Requests"
-              endpoint="/api/quote-requests"
-              columns={[
-                { key: "contactPerson", label: "Contact" },
-                { key: "email", label: "Email" },
-                { key: "productCategory", label: "Product" },
-                { key: "status", label: "Status", render: StatusBadge },
-                { key: "createdAt", label: "Date", render: DateCol },
-              ]}
-            />
-          }
+          path="/admin/login"
+          element={isAuthenticated ? <Navigate to="/admin/dashboard" replace /> : <LoginPage onLogin={login} onGoogleLogin={googleLogin} />}
         />
 
-        <Route
-          path="/admin/sample-requests"
-          element={
-            <GenericListPage
-              title="Sample Requests"
-              endpoint="/api/sample-requests"
-              columns={[
-                { key: "contactPerson", label: "Contact" },
-                { key: "email", label: "Email" },
-                { key: "requestedMaterialType", label: "Material" },
-                { key: "status", label: "Status", render: StatusBadge },
-                { key: "createdAt", label: "Date", render: DateCol },
-              ]}
-            />
-          }
-        />
+        {/* Public, reachable even with an active session (e.g. opening a reset email link). */}
+        <Route path="/admin/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/admin/reset-password" element={<ResetPasswordPage />} />
 
-        <Route
-          path="/admin/companies"
-          element={
-            <GenericListPage
-              title="Companies"
-              endpoint="/api/companies"
-              columns={[
-                { key: "companyName", label: "Company" },
-                { key: "contactPerson", label: "Contact" },
-                { key: "city", label: "City" },
-                { key: "status", label: "Status", render: StatusBadge },
-                { key: "createdAt", label: "Date", render: DateCol },
-              ]}
-            />
-          }
-        />
+        <Route element={<AuthenticatedPortal isAuthenticated={isAuthenticated} user={user} onLogout={logout} />}>
+          <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
 
-        <Route
-          path="/admin/calculator-submissions"
-          element={
-            <GenericListPage
-              title="Calculator Submissions"
-              endpoint="/api/calculator-submissions"
-              columns={[
-                { key: "contactPerson", label: "Contact" },
-                { key: "companyName", label: "Company" },
-                { key: "plasticType", label: "Plastic Type" },
-                { key: "limexReplacementPercentage", label: "Replacement %" },
-                { key: "createdAt", label: "Date", render: DateCol },
-              ]}
-            />
-          }
-        />
+          {/* ── Command Center ── */}
+          <Route path="/admin/dashboard" element={<CommandCenter />} />
 
-        <Route
-          path="/admin/follow-ups"
-          element={
-            <GenericListPage
-              title="Follow-Ups"
-              endpoint="/api/follow-ups"
-              columns={[
-                { key: "title", label: "Title" },
-                { key: "dueDate", label: "Due Date", render: DateCol },
-                { key: "status", label: "Status", render: StatusBadge },
-                { key: "createdAt", label: "Created", render: DateCol },
-              ]}
-            />
-          }
-        />
+          {/* ── Live modules (real backend data) ── */}
+          <Route path="/admin/inquiries" element={<InquiriesPage />} />
+          <Route path="/admin/inquiries/:id" element={<InquiryDetailPage />} />
 
-        <Route
-          path="/admin/documents"
-          element={
-            <GenericListPage
-              title="Documents"
-              endpoint="/api/documents"
-              columns={[
-                { key: "title", label: "Title" },
-                { key: "category", label: "Category" },
-                { key: "fileType", label: "Type" },
-                { key: "createdAt", label: "Date", render: DateCol },
-              ]}
-            />
-          }
-        />
+          <Route
+            path="/admin/quote-requests"
+            element={
+              <GenericListPage
+                title="Quote Requests"
+                endpoint="/api/quote-requests"
+                columns={[
+                  { key: "contactPerson", label: "Contact" },
+                  { key: "email", label: "Email" },
+                  { key: "productCategory", label: "Product" },
+                  { key: "status", label: "Status", render: StatusBadge },
+                  { key: "createdAt", label: "Date", render: DateCol },
+                ]}
+              />
+            }
+          />
 
-        <Route
-          path="/admin/google"
-          element={<GoogleDashboardPage />}
-        />
+          <Route
+            path="/admin/sample-requests"
+            element={
+              <GenericListPage
+                title="Sample Requests"
+                endpoint="/api/sample-requests"
+                columns={[
+                  { key: "contactPerson", label: "Contact" },
+                  { key: "email", label: "Email" },
+                  { key: "requestedMaterialType", label: "Material" },
+                  { key: "status", label: "Status", render: StatusBadge },
+                  { key: "createdAt", label: "Date", render: DateCol },
+                ]}
+              />
+            }
+          />
 
-        <Route
-          path="/admin/marketing"
-          element={<MarketingToolsPage />}
-        />
+          <Route
+            path="/admin/companies"
+            element={
+              <GenericListPage
+                title="Companies"
+                endpoint="/api/companies"
+                columns={[
+                  { key: "companyName", label: "Company" },
+                  { key: "contactPerson", label: "Contact" },
+                  { key: "city", label: "City" },
+                  { key: "status", label: "Status", render: StatusBadge },
+                  { key: "createdAt", label: "Date", render: DateCol },
+                ]}
+              />
+            }
+          />
 
-        <Route
-          path="/admin/settings"
-          element={<WebsiteSettingsPage />}
-        />
+          <Route
+            path="/admin/calculator-submissions"
+            element={
+              <GenericListPage
+                title="Calculator Submissions"
+                endpoint="/api/calculator-submissions"
+                columns={[
+                  { key: "contactPerson", label: "Contact" },
+                  { key: "companyName", label: "Company" },
+                  { key: "plasticType", label: "Plastic Type" },
+                  { key: "limexReplacementPercentage", label: "Replacement %" },
+                  { key: "createdAt", label: "Date", render: DateCol },
+                ]}
+              />
+            }
+          />
 
-        <Route
-          path="/admin/users"
-          element={<UserManagementPage />}
-        />
+          <Route
+            path="/admin/follow-ups"
+            element={
+              <GenericListPage
+                title="Follow-Ups"
+                endpoint="/api/follow-ups"
+                columns={[
+                  { key: "title", label: "Title" },
+                  { key: "dueDate", label: "Due Date", render: DateCol },
+                  { key: "status", label: "Status", render: StatusBadge },
+                  { key: "createdAt", label: "Created", render: DateCol },
+                ]}
+              />
+            }
+          />
 
-        <Route
-          path="/admin/activity-log"
-          element={
-            <GenericListPage
-              title="Activity Log"
-              endpoint="/api/activity-log"
-              columns={[
-                { key: "action", label: "Action" },
-                { key: "entityType", label: "Entity" },
-                { key: "createdAt", label: "Date", render: DateCol },
-              ]}
-              showDeleteAll={isSuperAdmin}
-            />
-          }
-        />
-      </Route>
+          <Route
+            path="/admin/documents"
+            element={
+              <GenericListPage
+                title="Documents"
+                endpoint="/api/documents"
+                columns={[
+                  { key: "title", label: "Title" },
+                  { key: "category", label: "Category" },
+                  { key: "fileType", label: "Type" },
+                  { key: "createdAt", label: "Date", render: DateCol },
+                ]}
+              />
+            }
+          />
 
-      <Route path="*" element={<Navigate to="/admin/login" replace />} />
-    </Routes>
+          <Route path="/admin/google" element={<GoogleDashboardPage />} />
+          <Route path="/admin/marketing" element={<MarketingToolsPage />} />
+          <Route path="/admin/settings" element={<WebsiteSettingsPage />} />
+          <Route path="/admin/users" element={<UserManagementPage />} />
+
+          <Route
+            path="/admin/activity-log"
+            element={
+              <GenericListPage
+                title="Activity Log"
+                endpoint="/api/activity-log"
+                columns={[
+                  { key: "action", label: "Action" },
+                  { key: "entityType", label: "Entity" },
+                  { key: "createdAt", label: "Date", render: DateCol },
+                ]}
+                showDeleteAll={isSuperAdmin}
+              />
+            }
+          />
+
+          {/* ── CRM — live Kanban pipeline over inquiry data ── */}
+          <Route path="/admin/crm" element={<CrmPipeline />} />
+
+          {/* ── Automation (Phase 3) ── */}
+          <Route path="/admin/hyperautomation" element={<HyperAutomation />} />
+          <Route path="/admin/workflows" element={<WorkflowBuilder />} />
+          <Route path="/admin/approvals" element={<ApprovalCenter />} />
+
+          {/* ── Security & Reliability (Phase 4) ── */}
+          <Route path="/admin/cybershield" element={<CyberShield />} />
+          <Route path="/admin/incidents" element={<IncidentResponse />} />
+
+          {/* ── AI Brain & Agents (Phase 5) ── */}
+          <Route path="/admin/ai-brain" element={<AiBrain />} />
+          <Route path="/admin/ai-agents" element={<AiAgents />} />
+
+          {/* ── Phase 6 functional modules ── */}
+          <Route path="/admin/sustainability" element={<Sustainability />} />
+          <Route path="/admin/integrations" element={<IntegrationCenter />} />
+
+          {/* ── Scaffolded modules (Infinity Growth OS) ── */}
+          {SCAFFOLD_MODULES.map((m) => (
+            <Route key={m.key} path={m.path} element={<ModuleStub moduleKey={m.key} />} />
+          ))}
+        </Route>
+
+        <Route path="*" element={<Navigate to="/admin/login" replace />} />
+      </Routes>
+    </PortalProvider>
   );
 }
