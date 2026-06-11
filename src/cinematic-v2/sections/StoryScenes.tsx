@@ -155,11 +155,11 @@ export function SceneImpact({ active }: SceneProps) {
               <defs>
                 <radialGradient id={`wds5-g-${item.id}`}>
                   <stop offset="0" stopColor="#fff" />
-                  <stop offset="0.86" stopColor="#fff" />
+                  <stop offset="0.94" stopColor="#fff" />
                   <stop offset="1" stopColor="#fff" stopOpacity="0" />
                 </radialGradient>
                 <mask id={`wds5-m-${item.id}`} maskUnits="userSpaceOnUse">
-                  <circle cx="180" cy="180" r="162" fill={`url(#wds5-g-${item.id})`} />
+                  <circle cx="180" cy="180" r="176" fill={`url(#wds5-g-${item.id})`} />
                 </mask>
               </defs>
               <ellipse className="wds5-reflect" cx="180" cy="356" rx="128" ry="20" />
