@@ -287,29 +287,26 @@
   gap: 1rem;
 }
 .wds5-item svg {
-  width: clamp(96px, 11vw, 160px);
+  width: clamp(118px, 13vw, 188px);
   height: auto;
 }
 
-.wds5-ring {
-  stroke: #9fb8a4;
-  stroke-width: 1.6;
-  fill: none;
+/* warm cream slide matching the reference frame */
+.wds5 {
+  background: radial-gradient(150% 130% at 50% 8%, #f8f5f0 0%, #f1ece5 56%, #e7e0d7 100%);
 }
-.wds5-draw {
-  stroke: #2f6b3a;
-  stroke-width: 2.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
+
+/* ---- photoreal glass-dish crops + soft surface shadow ---- */
+.wds5-photo {
+  transform-origin: center;
+  transform-box: fill-box;
 }
-.wds5-co2 {
-  font-family: var(--v2-font-sans);
-  font-size: 20px;
-  font-weight: 600;
-  fill: #2f6b3a;
-  text-anchor: middle;
+.wds5-reflect {
+  fill: rgba(120, 130, 122, 0.14);
+  transform-origin: center;
+  transform-box: fill-box;
 }
+
 .wds5-caption {
   font-family: var(--v2-font-sans);
   font-size: clamp(0.85rem, 1.1vw, 1.1rem);
@@ -318,12 +315,11 @@
   margin: 0;
 }
 
-/* ---------- scene-5 animation states ---------- */
+/* ---------- scene-5 initial (hidden) states ---------- */
 .wds5 .wds5-eyebrow { opacity: 0; }
 .wds5 .wds5-line > span { transform: translateY(110%); }
-.wds5 .wds5-ring,
-.wds5 .wds5-draw { stroke-dasharray: 1; stroke-dashoffset: 1; }
-.wds5 .wds5-co2 { opacity: 0; }
+.wds5 .wds5-photo { opacity: 0; transform: scale(1.12); }
+.wds5 .wds5-reflect { opacity: 0; }
 .wds5 .wds5-caption { opacity: 0; transform: translateY(14px); }
 
 .wds5.is-active .wds5-eyebrow { animation: wds-fade 0.6s var(--v2-ease-out) 0.15s both; }
@@ -331,17 +327,24 @@
 .wds5.is-active .wds5-line:nth-child(2) > span { animation: wds-line-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.38s both; }
 .wds5.is-active .wds5-line:nth-child(3) > span { animation: wds-line-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.51s both; }
 
-.wds5.is-active .wds5-ring {
-  animation: wds-trace 0.9s var(--v2-ease-out) calc(0.9s + var(--i, 0) * 0.22s) both;
+/* per-item: dish photo places in → shadow + caption */
+.wds5.is-active .wds5-photo {
+  animation: wds5-place 0.7s var(--v2-ease-out) calc(0.9s + var(--i, 0) * 0.22s) both;
 }
-.wds5.is-active .wds5-draw {
-  animation: wds-trace 1s var(--v2-ease-out) calc(1.15s + var(--i, 0) * 0.22s) both;
-}
-.wds5.is-active .wds5-co2 {
-  animation: wds-fade 0.5s var(--v2-ease-out) calc(1.6s + var(--i, 0) * 0.22s) both;
+.wds5.is-active .wds5-reflect {
+  animation: wds5-reflect-in 0.7s var(--v2-ease-out) calc(1.05s + var(--i, 0) * 0.22s) both;
 }
 .wds5.is-active .wds5-caption {
-  animation: wds-rise 0.6s var(--v2-ease-out) calc(1.35s + var(--i, 0) * 0.22s) both;
+  animation: wds-rise 0.6s var(--v2-ease-out) calc(1.3s + var(--i, 0) * 0.22s) both;
+}
+
+@keyframes wds5-place {
+  from { opacity: 0; transform: scale(1.12); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes wds5-reflect-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* ------------------------------------------------------------------ */
@@ -584,7 +587,8 @@
   .wds3 .wds3-dhead,
   .wds3 .wds3-dash,
   .wds5 .wds5-eyebrow,
-  .wds5 .wds5-co2,
+  .wds5 .wds5-photo,
+  .wds5 .wds5-reflect,
   .wds5 .wds5-caption,
   .wds8 .wds8-frame,
   .wds8 .wds8-paper-glow,
@@ -600,8 +604,6 @@
   .wds3 .wds3-arrow,
   .wds3 .wds3-dish-rim,
   .wds3 .wds3-dish-rim2,
-  .wds5 .wds5-ring,
-  .wds5 .wds5-draw,
   .wds8 .wds8-ring,
   .wds8 .wds8-sweep {
     stroke-dashoffset: 0;

@@ -208,51 +208,15 @@ export function SceneScience({ active }: SceneProps) {
 
 /* ================= Scene 5 — Built for sustainability ================= */
 
-const IMPACTS = [
-  {
-    caption: ['Use fewer', 'resources'],
-    icon: (
-      <path
-        className="wds5-draw"
-        pathLength={1}
-        d="M56 96 Q52 56 84 40 Q116 28 124 32 Q128 64 108 88 Q88 106 60 98 M56 100 L96 56"
-      />
-    ),
-  },
-  {
-    caption: ['Lower', 'CO₂ impact'],
-    icon: (
-      <>
-        <path
-          className="wds5-draw"
-          pathLength={1}
-          d="M52 84 Q36 84 36 68 Q36 52 54 52 Q58 32 80 32 Q102 32 106 50 Q124 50 124 67 Q124 84 108 84 Z"
-        />
-        <text className="wds5-co2" x="80" y="72">CO₂</text>
-        <path className="wds5-draw wds5-down" pathLength={1} d="M80 92 V116 M70 106 L80 118 L90 106" />
-      </>
-    ),
-  },
-  {
-    caption: ['Supports', 'circularity'],
-    icon: (
-      <path
-        className="wds5-draw"
-        pathLength={1}
-        d="M68 52 L84 36 L100 52 M84 38 L84 66 M108 60 L122 80 L98 86 M118 78 L96 64 M52 86 L46 62 L70 64 M49 64 L66 84 M58 96 H102 M94 88 L104 96 L94 106 M66 88 L56 96 L66 106"
-      />
-    ),
-  },
-  {
-    caption: ['Designed for', 'industry'],
-    icon: (
-      <path
-        className="wds5-draw"
-        pathLength={1}
-        d="M48 112 V64 L66 64 V44 L78 44 V112 Z M78 84 L100 66 V84 L120 66 V112 H78 M88 96 H96 M104 96 H112 M70 44 Q70 30 82 30 Q78 22 86 18 M86 30 Q94 26 96 34"
-      />
-    ),
-  },
+/* Photoreal glass-dish eco icons (cropped from the designed reference frame),
+   feather-masked into the slide so each clear circle floats on the cream
+   surface. Each dish places in with a soft pop on activation. */
+
+const IMPACTS: { id: string; caption: [string, string] }[] = [
+  { id: 'leaf', caption: ['Use fewer', 'resources'] },
+  { id: 'co2', caption: ['Lower', 'CO₂ impact'] },
+  { id: 'recycle', caption: ['Supports', 'circularity'] },
+  { id: 'factory', caption: ['Designed for', 'industry'] },
 ];
 
 export function SceneImpact({ active }: SceneProps) {
@@ -269,10 +233,29 @@ export function SceneImpact({ active }: SceneProps) {
 
       <ul className="wds5-grid">
         {IMPACTS.map((item, i) => (
-          <li className="wds5-item" style={{ '--i': i } as CSSProperties} key={i}>
-            <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle className="wds5-ring" cx="80" cy="80" r="74" pathLength={1} />
-              <g className="wds5-icon">{item.icon}</g>
+          <li className="wds5-item" style={{ '--i': i } as CSSProperties} key={item.id}>
+            <svg viewBox="0 0 360 392" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id={`wds5-g-${item.id}`}>
+                  <stop offset="0" stopColor="#fff" />
+                  <stop offset="0.86" stopColor="#fff" />
+                  <stop offset="1" stopColor="#fff" stopOpacity="0" />
+                </radialGradient>
+                <mask id={`wds5-m-${item.id}`} maskUnits="userSpaceOnUse">
+                  <circle cx="180" cy="180" r="162" fill={`url(#wds5-g-${item.id})`} />
+                </mask>
+              </defs>
+              <ellipse className="wds5-reflect" cx="180" cy="356" rx="128" ry="20" />
+              <image
+                className="wds5-photo"
+                href={`/assets/images/story/impact-${item.id}.jpg`}
+                x="0"
+                y="0"
+                width="360"
+                height="360"
+                mask={`url(#wds5-m-${item.id})`}
+                preserveAspectRatio="xMidYMid slice"
+              />
             </svg>
             <p className="wds5-caption">
               {item.caption[0]}
