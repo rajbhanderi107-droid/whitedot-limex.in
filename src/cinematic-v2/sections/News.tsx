@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowUpRight, Radio, RefreshCw } from 'lucide-react';
 import './News.css';
 import { useReveal, useStaggerGroup } from '../motion';
 
@@ -91,63 +90,58 @@ export default function News() {
     return () => controller.abort();
   }, []);
 
-  const latestItems = useMemo(() => feed.items.slice(0, 4), [feed.items]);
+  const latestItems = useMemo(() => feed.items.slice(0, 5), [feed.items]);
 
   return (
     <section className="v2news v2-bg-light" id="news">
       <div className="v2news-inner">
         <div className="v2news-head v2-reveal" ref={heading.ref}>
-          <div>
-            <p className="v2-eyebrow">TBM News Sync</p>
-            <h2 className="v2news-title">
-              Global TBM updates,<br />
-              connected to WhiteDot India.
-            </h2>
-          </div>
-          <a className="v2news-source" href={feed.sourceUrl} target="_blank" rel="noreferrer">
-            <RefreshCw aria-hidden="true" />
-            <span>{formatSyncedAt(feed.syncedAt)}</span>
-          </a>
+          <h2 className="v2news-title">NEWS</h2>
         </div>
 
-        <div className="v2news-layout">
-          <article className="v2news-partnership">
-            <div className="v2news-signal" aria-hidden="true">
-              <Radio />
-            </div>
-            <p className="v2news-partnership-label">WhiteDot connectivity</p>
-            <h3>India-side LIMEX access, application mapping and TBM-aligned material updates.</h3>
-            <p>
-              WhiteDot keeps Indian converters, brands and procurement teams connected with LIMEX
-              developments from TBM while supporting local conversations around samples, use cases
-              and manufacturable product routes.
-            </p>
-            <a className="v2news-partnership-link" href="#consultation">
-              Discuss an application
-              <ArrowUpRight aria-hidden="true" />
-            </a>
-          </article>
+        <nav className="v2news-categories" aria-label="News categories">
+          <a className="v2news-category is-active" href="#news">ALL</a>
+          <a className="v2news-category" href="#consultation">WhiteDot Connectivity</a>
+          <a className="v2news-category" href={feed.sourceUrl} target="_blank" rel="noreferrer">TBM News</a>
+          <a className="v2news-category" href={feed.sourceUrl} target="_blank" rel="noreferrer">Press Release</a>
+        </nav>
 
-          <div className="v2news-list v2-reveal-group" ref={cards.ref}>
-            {latestItems.map((item) => (
-              <a className="v2news-card" href={item.href} target="_blank" rel="noreferrer" key={item.href}>
-                <div className="v2news-thumb">
-                  <img src={item.image} alt="" />
+        <div className="v2news-paging" aria-label="News feed status">
+          <span className="v2news-page is-active">1</span>
+          <a className="v2news-page" href={feed.sourceUrl} target="_blank" rel="noreferrer">TBM</a>
+          <span className="v2news-page v2news-page--wide">{formatSyncedAt(feed.syncedAt)}</span>
+        </div>
+
+        <div className="v2news-list v2-reveal-group" ref={cards.ref}>
+          <a className="v2news-item v2news-item--connect" href="#consultation">
+            <div className="v2news-thumb v2news-thumb--connect" aria-hidden="true">
+              <span className="v2news-connect-mark">WD</span>
+              <span className="v2news-connect-line" />
+              <span className="v2news-connect-mark">TBM</span>
+            </div>
+            <div className="v2news-item-body">
+              <div className="v2news-meta">
+                <time dateTime="2026-06-11">2026.06.11</time>
+                <span>WhiteDot connectivity</span>
+              </div>
+              <h3>WhiteDot connects Indian manufacturers and brands with TBM-aligned LIMEX applications, samples and local implementation support.</h3>
+            </div>
+          </a>
+
+          {latestItems.map((item) => (
+            <a className="v2news-item" href={item.href} target="_blank" rel="noreferrer" key={item.href}>
+              <div className="v2news-thumb">
+                <img src={item.image} alt="" />
+              </div>
+              <div className="v2news-item-body">
+                <div className="v2news-meta">
+                  <time dateTime={item.isoDate}>{item.date}</time>
+                  <span>{item.category}</span>
                 </div>
-                <div className="v2news-card-body">
-                  <div className="v2news-meta">
-                    <time dateTime={item.isoDate}>{item.date}</time>
-                    <span>{item.category}</span>
-                  </div>
-                  <h3>{item.title}</h3>
-                  <span className="v2news-read">
-                    Read on TBM
-                    <ArrowUpRight aria-hidden="true" />
-                  </span>
-                </div>
-              </a>
-            ))}
-          </div>
+                <h3>{item.title}</h3>
+              </div>
+            </a>
+          ))}
         </div>
       </div>
     </section>
