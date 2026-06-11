@@ -15,8 +15,10 @@ export default function Nav() {
   const [hidden, setHidden] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
   const [activeId, setActiveId] = useState('');
+  const [menuOpen, setMenuOpen] = useState(false);
   const lastY = useRef(0);
   const adminMenuRef = useRef<HTMLDivElement>(null);
+  const closeMenu = () => setMenuOpen(false);
 
   useEffect(() => {
     function onScroll() {
@@ -86,7 +88,7 @@ export default function Nav() {
   return (
     <header className={cls} role="banner">
       <div className="v2nav-inner">
-        <a href="#" className="v2nav-brand" aria-label="WhiteDot — home">
+        <a href="#" className="v2nav-brand" aria-label="WhiteDot — home" onClick={closeMenu}>
           <span className="v2nav-wordmark">WhiteDot</span>
         </a>
 
@@ -104,6 +106,21 @@ export default function Nav() {
         </nav>
 
         <a href="#consultation" className="v2nav-cta">Get in Touch</a>
+
+        {/* Hamburger button — mobile only */}
+        <button
+          className={`v2nav-hamburger${menuOpen ? ' v2nav-hamburger--open' : ''}`}
+          type="button"
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((o) => !o)}
+        >
+          <span className="v2nav-hamburger-bars" aria-hidden="true">
+            <span className="v2nav-hamburger-line v2nav-hamburger-line--top" />
+            <span className="v2nav-hamburger-line v2nav-hamburger-line--mid" />
+            <span className="v2nav-hamburger-line v2nav-hamburger-line--bot" />
+          </span>
+        </button>
 
         <div className="v2nav-admin-menu" ref={adminMenuRef}>
           <button
@@ -146,6 +163,39 @@ export default function Nav() {
         </div>
 
       </div>
+
+      {/* Mobile backdrop overlay */}
+      <div
+        className={`v2nav-mobile-overlay${menuOpen ? ' is-open' : ''}`}
+        aria-hidden="true"
+        onClick={closeMenu}
+      />
+
+      {/* Mobile nav drawer */}
+      <nav
+        className={`v2nav-mobile-drawer${menuOpen ? ' is-open' : ''}`}
+        aria-label="Mobile navigation"
+      >
+        <div className="v2nav-mobile-links">
+          {LINKS.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              className={`v2nav-mobile-link${activeId === l.href ? ' is-active' : ''}`}
+              onClick={closeMenu}
+            >
+              {l.label}
+            </a>
+          ))}
+          <a
+            className="v2nav-mobile-cta"
+            href="#consultation"
+            onClick={closeMenu}
+          >
+            Get in Touch
+          </a>
+        </div>
+      </nav>
     </header>
   );
 }
