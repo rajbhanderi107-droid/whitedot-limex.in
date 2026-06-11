@@ -25,7 +25,7 @@ export function HyperAutomation() {
       automationId: a.id,
       risk: a.risk,
       preview: `Trigger: ${a.trigger}. Proposed action: ${a.action}.`,
-    });
+    }).catch(console.error);
   };
 
   const active = automations.filter((a) => a.enabled && a.mode !== "OFF").length;

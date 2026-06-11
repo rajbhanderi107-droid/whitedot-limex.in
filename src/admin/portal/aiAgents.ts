@@ -6,6 +6,7 @@
  * enable + safety mode persist locally. */
 
 import { useCallback, useEffect, useState } from "react";
+import { portalApi } from "./portalApi.js";
 import type { AutomationMode } from "./PortalContext.js";
 
 /** Model-routing tier — strategy work routes to the strongest model,
@@ -83,23 +84,36 @@ export const AI_RULES = [
 ];
 
 interface AgentState { enabled: boolean; mode: AutomationMode }
-const KEY = "wd_ai_agents";
-
-function load(): Record<string, AgentState> {
-  try { const r = localStorage.getItem(KEY); if (r) return JSON.parse(r); } catch { /* ignore */ }
-  return Object.fromEntries(AGENT_DEFS.map((a) => [a.id, { enabled: true, mode: a.defaultMode }]));
-}
 
 export interface AgentView extends AgentDef { enabled: boolean; mode: AutomationMode }
 
+/** Server-backed agent fleet config (AiAgentConfig table). Optimistic UI. */
 export function useAiAgents() {
-  const [state, setState] = useState<Record<string, AgentState>>(load);
-  useEffect(() => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* ignore */ } }, [state]);
+  const [state, setState] = useState<Record<string, AgentState>>({});
 
-  const setMode = useCallback((id: string, mode: AutomationMode) =>
-    setState((s) => ({ ...s, [id]: { ...(s[id] ?? { enabled: true }), mode } })), []);
-  const toggle = useCallback((id: string) =>
-    setState((s) => ({ ...s, [id]: { ...(s[id] ?? { mode: "DRAFT" }), enabled: !s[id]?.enabled } })), []);
+  useEffect(() => {
+    let cancelled = false;
+    portalApi.listAiAgents()
+      .then((r) => {
+        if (cancelled) return;
+        setState(Object.fromEntries(r.data.map((a) => [a.id, { enabled: a.enabled, mode: a.mode }])));
+      })
+      .catch(console.error);
+    return () => { cancelled = true; };
+  }, []);
+
+  const setMode = useCallback((id: string, mode: AutomationMode) => {
+    setState((s) => ({ ...s, [id]: { enabled: s[id]?.enabled ?? true, mode } }));
+    portalApi.patchAiAgent(id, { mode }).catch(console.error);
+  }, []);
+
+  const toggle = useCallback((id: string) => {
+    setState((s) => {
+      const enabled = !(s[id]?.enabled ?? true);
+      portalApi.patchAiAgent(id, { enabled }).catch(console.error);
+      return { ...s, [id]: { mode: s[id]?.mode ?? "DRAFT", enabled } };
+    });
+  }, []);
 
   const agents: AgentView[] = AGENT_DEFS.map((a) => ({
     ...a,

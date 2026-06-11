@@ -1,9 +1,13 @@
-/* Incident store (localStorage). Incidents are declared by a human here;
- * a future detection pipeline will also be able to open them. */
+/* Incident store — server-backed (PortalIncident table).
+ * SEV0/SEV1 declarations trip lockdown server-side automatically. */
 
 import { useCallback, useEffect, useState } from "react";
+import { portalApi, type ServerIncident } from "./portalApi.js";
 
-export type Severity = "SEV0" | "SEV1" | "SEV2" | "SEV3" | "SEV4";
+export type Severity = ServerIncident["severity"];
+export type Stage = ServerIncident["stage"];
+export type Incident = ServerIncident;
+
 export const SEVERITIES: { sev: Severity; label: string }[] = [
   { sev: "SEV0", label: "SEV0 · Active breach / data risk" },
   { sev: "SEV1", label: "SEV1 · Critical production/security" },
@@ -12,8 +16,11 @@ export const SEVERITIES: { sev: Severity; label: string }[] = [
   { sev: "SEV4", label: "SEV4 · Low" },
 ];
 
-export const STAGES = ["Detected", "Triage", "Contained", "Investigating", "Fixing", "Recovering", "Resolved"] as const;
-export type Stage = typeof STAGES[number];
+export const STAGES: Stage[] = ["DETECTED", "TRIAGE", "CONTAINED", "INVESTIGATING", "FIXING", "RECOVERING", "RESOLVED"];
+
+export function stageLabel(s: Stage): string {
+  return s.charAt(0) + s.slice(1).toLowerCase();
+}
 
 export const PLAYBOOKS = [
   "Suspicious admin login", "Malware upload", "Data export anomaly", "API key leak",
@@ -22,43 +29,56 @@ export const PLAYBOOKS = [
   "Spam automation risk", "Compromised integration", "Failed deployment", "Backup failure",
 ];
 
-export interface Incident {
-  id: string;
-  title: string;
-  severity: Severity;
-  playbook: string;
-  stage: Stage;
-  createdAt: string;
-}
-
-const KEY = "wd_incidents";
-
-function load(): Incident[] {
-  try { const r = localStorage.getItem(KEY); if (r) return JSON.parse(r); } catch { /* ignore */ }
-  return [];
-}
-
 export function useIncidents() {
-  const [items, setItems] = useState<Incident[]>(load);
+  const [items, setItems] = useState<Incident[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => { try { localStorage.setItem(KEY, JSON.stringify(items)); } catch { /* ignore */ } }, [items]);
-
-  const declare = useCallback((title: string, severity: Severity, playbook: string) => {
-    setItems((prev) => [
-      { id: `inc_${Date.now()}`, title: title.trim() || playbook, severity, playbook, stage: "Detected", createdAt: new Date().toISOString() },
-      ...prev,
-    ]);
+  const refresh = useCallback(async () => {
+    setLoading(true);
+    try {
+      const r = await portalApi.listIncidents();
+      setItems(r.data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const advance = useCallback((id: string) => {
-    setItems((prev) => prev.map((i) => {
-      const idx = STAGES.indexOf(i.stage);
-      return i.id === id && idx < STAGES.length - 1 ? { ...i, stage: STAGES[idx + 1] } : i;
-    }));
+  useEffect(() => { refresh(); }, [refresh]);
+
+  const declare = useCallback(async (title: string, severity: Severity, playbook: string) => {
+    const r = await portalApi.createIncident({ title: title.trim() || playbook, severity, playbook });
+    setItems((prev) => [r.data, ...prev]);
+    return r.data;
   }, []);
 
-  const remove = useCallback((id: string) => setItems((prev) => prev.filter((i) => i.id !== id)), []);
+  const advance = useCallback(async (id: string) => {
+    const inc = items.find((i) => i.id === id);
+    if (!inc) return;
+    const idx = STAGES.indexOf(inc.stage);
+    if (idx >= STAGES.length - 1) return;
+    const stage = STAGES[idx + 1];
+    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, stage } : i)));
+    try {
+      await portalApi.patchIncident(id, stage);
+    } catch (e) {
+      console.error(e);
+      setItems((prev) => prev.map((i) => (i.id === id ? { ...i, stage: inc.stage } : i)));
+    }
+  }, [items]);
 
-  const open = items.filter((i) => i.stage !== "Resolved").length;
-  return { items, declare, advance, remove, open };
+  const remove = useCallback(async (id: string) => {
+    const prev = items;
+    setItems((p) => p.filter((i) => i.id !== id));
+    try {
+      await portalApi.deleteIncident(id);
+    } catch (e) {
+      console.error(e);
+      setItems(prev);
+    }
+  }, [items]);
+
+  const open = items.filter((i) => i.stage !== "RESOLVED").length;
+  return { items, declare, advance, remove, open, loading, refresh };
 }

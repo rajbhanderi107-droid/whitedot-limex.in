@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { Siren, ChevronRight, Trash2, ShieldAlert } from "lucide-react";
-import { useIncidents, SEVERITIES, PLAYBOOKS, STAGES, type Severity } from "../incidentStore.js";
+import { useIncidents, SEVERITIES, PLAYBOOKS, STAGES, stageLabel, type Severity } from "../incidentStore.js";
 import { usePortal } from "../PortalContext.js";
 import { SectionHeader, Card } from "../ui.js";
 
@@ -14,11 +14,15 @@ export function IncidentResponse() {
   const [severity, setSeverity] = useState<Severity>("SEV3");
   const [playbook, setPlaybook] = useState(PLAYBOOKS[0]);
 
-  const onDeclare = () => {
-    declare(title, severity, playbook);
-    setTitle("");
-    // SEV0/SEV1 warrant immediate lockdown.
-    if ((severity === "SEV0" || severity === "SEV1") && !lockdown) triggerEmergencyStop();
+  const onDeclare = async () => {
+    try {
+      await declare(title, severity, playbook);
+      setTitle("");
+      // SEV0/SEV1 trip lockdown server-side too; mirror it locally at once.
+      if ((severity === "SEV0" || severity === "SEV1") && !lockdown) triggerEmergencyStop();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -54,7 +58,7 @@ export function IncidentResponse() {
           <SectionHeader title="Lifecycle" sub="Each incident advances through these stages." />
           <div className="wd-stage-track">
             {STAGES.map((s, i) => (
-              <span key={s} className="wd-stage-pill">{i + 1}. {s}</span>
+              <span key={s} className="wd-stage-pill">{i + 1}. {stageLabel(s)}</span>
             ))}
           </div>
         </Card>
@@ -66,7 +70,7 @@ export function IncidentResponse() {
       ) : (
         <div className="wd-auto-list">
           {items.map((inc) => {
-            const last = inc.stage === "Resolved";
+            const last = inc.stage === "RESOLVED";
             return (
               <div key={inc.id} className="wd-auto">
                 <div className="wd-auto-main">
@@ -74,7 +78,7 @@ export function IncidentResponse() {
                     <span className={`wd-sev wd-sev-${inc.severity.toLowerCase()}`}>{inc.severity}</span> {inc.title}
                   </div>
                   <div className="wd-auto-flow"><span>{inc.playbook}</span></div>
-                  <div className="wd-auto-meta">stage: <b className="wd-stage-now">{inc.stage}</b> · opened {new Date(inc.createdAt).toLocaleString()}</div>
+                  <div className="wd-auto-meta">stage: <b className="wd-stage-now">{stageLabel(inc.stage)}</b> · opened {new Date(inc.createdAt).toLocaleString()}</div>
                 </div>
                 <div className="wd-auto-controls">
                   <button className="wd-ghost-btn" disabled={last} onClick={() => advance(inc.id)}>

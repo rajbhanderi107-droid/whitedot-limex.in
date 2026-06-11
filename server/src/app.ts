@@ -12,6 +12,7 @@ import { adminLimiter } from "./middleware/rateLimit.middleware.js";
 import authRoutes from "./routes/auth.routes.js";
 import publicRoutes from "./routes/public.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
+import portalRoutes from "./routes/portal.routes.js";
 import { prisma } from "./config/prisma.js";
 
 const app = express();
@@ -136,6 +137,7 @@ app.get("/health", (_req, res) => {
 // ─── Routes ─────────────────────────────────────
 app.use("/api/auth", authRoutes);
 app.use("/api/public", publicRoutes);
+app.use("/api/portal", adminLimiter, portalRoutes);
 app.use("/api", adminLimiter, adminRoutes);
 
 // ─── 404 for unknown API routes ─────────────────

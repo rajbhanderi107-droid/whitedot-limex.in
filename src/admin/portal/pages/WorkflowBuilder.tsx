@@ -7,6 +7,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Plus, Trash2, ArrowDown, Save } from "lucide-react";
+import { portalApi, type ServerWorkflow } from "../portalApi.js";
 import { SectionHeader } from "../ui.js";
 
 const TRIGGERS = [
@@ -30,32 +31,47 @@ const ACTIONS = [
 ];
 const SAFETY = ["Risk check", "Permission check", "Log", "Notification", "Fallback", "Rollback"];
 
-interface WorkflowDraft { id: string; name: string; trigger: string; condition: string; action: string; createdAt: string }
-const KEY = "wd_workflows";
-
-function load(): WorkflowDraft[] {
-  try { const r = localStorage.getItem(KEY); if (r) return JSON.parse(r); } catch { /* ignore */ }
-  return [];
-}
-
 export function WorkflowBuilder() {
   const [name, setName] = useState("");
   const [trigger, setTrigger] = useState(TRIGGERS[0]);
   const [condition, setCondition] = useState(CONDITIONS[0]);
   const [action, setAction] = useState(ACTIONS[0]);
-  const [drafts, setDrafts] = useState<WorkflowDraft[]>(load);
+  const [drafts, setDrafts] = useState<ServerWorkflow[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => { try { localStorage.setItem(KEY, JSON.stringify(drafts)); } catch { /* ignore */ } }, [drafts]);
+  // Server-backed drafts (WorkflowDef table).
+  useEffect(() => {
+    let cancelled = false;
+    portalApi.listWorkflows()
+      .then((r) => { if (!cancelled) setDrafts(r.data); })
+      .catch(console.error)
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, []);
 
-  const save = useCallback(() => {
-    setDrafts((d) => [
-      { id: `wf_${Date.now()}`, name: name.trim() || `${trigger} → ${action}`, trigger, condition, action, createdAt: new Date().toISOString() },
-      ...d,
-    ]);
-    setName("");
+  const save = useCallback(async () => {
+    try {
+      const r = await portalApi.createWorkflow({
+        name: name.trim() || `${trigger} → ${action}`,
+        trigger, condition, action,
+      });
+      setDrafts((d) => [r.data, ...d]);
+      setName("");
+    } catch (e) {
+      console.error(e);
+    }
   }, [name, trigger, condition, action]);
 
-  const remove = (id: string) => setDrafts((d) => d.filter((w) => w.id !== id));
+  const remove = async (id: string) => {
+    const prev = drafts;
+    setDrafts((d) => d.filter((w) => w.id !== id));
+    try {
+      await portalApi.deleteWorkflow(id);
+    } catch (e) {
+      console.error(e);
+      setDrafts(prev);
+    }
+  };
 
   return (
     <div className="wd-page">
@@ -99,7 +115,9 @@ export function WorkflowBuilder() {
       </div>
 
       <SectionHeader title={`Saved drafts (${drafts.length})`} />
-      {drafts.length === 0 ? (
+      {loading ? (
+        <div className="wd-card wd-skel" style={{ height: 80 }} />
+      ) : drafts.length === 0 ? (
         <div className="wd-empty-state"><Plus size={26} /><p>No workflows yet. Design one above and save it.</p></div>
       ) : (
         <div className="wd-auto-list">

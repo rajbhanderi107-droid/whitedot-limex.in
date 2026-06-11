@@ -8,8 +8,9 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { LayoutList, Columns3, RefreshCw } from "lucide-react";
+import { LayoutList, Columns3, RefreshCw, Sparkles } from "lucide-react";
 import { api } from "../../lib/api.js";
+import { portalApi } from "../portalApi.js";
 import { usePortal } from "../PortalContext.js";
 import { leadScore, temperature, tempClass, type ScorableLead } from "../leadScore.js";
 import { SectionHeader } from "../ui.js";
@@ -43,7 +44,28 @@ export function CrmPipeline() {
   const [err, setErr] = useState<string | null>(null);
   const [dragId, setDragId] = useState<string | null>(null);
   const [overStage, setOverStage] = useState<string | null>(null);
+  const [draftingId, setDraftingId] = useState<string | null>(null);
+  const [draftMsg, setDraftMsg] = useState<string | null>(null);
   const { lockdown } = usePortal();
+
+  /** Generate a real AI follow-up draft for this lead; it lands in the
+   *  Approval Center for human review — nothing is sent automatically. */
+  const aiDraft = useCallback(async (l: Lead) => {
+    setDraftingId(l.id);
+    setDraftMsg(null);
+    try {
+      await portalApi.aiDraft({
+        kind: "followup_email",
+        lead: { name: l.name, company: l.companyName, status: l.status },
+      });
+      setDraftMsg(`AI draft for ${l.name} queued in the Approval Center.`);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "AI draft failed.";
+      setDraftMsg(`AI draft failed: ${msg}`);
+    } finally {
+      setDraftingId(null);
+    }
+  }, []);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -111,6 +133,7 @@ export function CrmPipeline() {
       />
 
       {err && <div className="wd-inline-err">{err}</div>}
+      {draftMsg && <div className={draftMsg.startsWith("AI draft failed") ? "wd-inline-err" : "wd-inline-ok"}>{draftMsg}</div>}
       {lockdown && <div className="wd-mod-lock"><Columns3 size={15} /> Lockdown active — stage changes still save, but automated follow-ups are paused.</div>}
 
       {loading ? (
@@ -167,6 +190,14 @@ export function CrmPipeline() {
                         >
                           {STAGES.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}
                         </select>
+                        <button
+                          className="wd-ai-btn"
+                          disabled={draftingId === l.id || lockdown}
+                          onClick={() => aiDraft(l)}
+                          title={lockdown ? "Paused during lockdown" : "Generate AI follow-up draft (goes to Approval Center)"}
+                        >
+                          <Sparkles size={12} /> {draftingId === l.id ? "Drafting…" : "AI draft"}
+                        </button>
                       </div>
                     );
                   })}

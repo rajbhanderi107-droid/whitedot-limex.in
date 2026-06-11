@@ -1,14 +1,12 @@
-/* Client-side automation control surface.
+/* Automation control surface — server-backed.
  *
- * No backend executor exists yet, so this stores automation *configuration*
- * (enabled flag + per-automation safety mode) and a local approval queue.
- * It is the real control plane the future server-side executor will read —
- * the UI never fabricates "runs" or pretends drafts were sent. Approval
- * items are only created by an explicit user action.
- *
- * Persistence: localStorage. */
+ * Definitions (what each automation IS) live in this registry; per-automation
+ * enable + mode state lives in Postgres (AutomationConfig) so every admin
+ * shares one configuration. The approval queue is the ApprovalRequest table.
+ * UI updates are optimistic; failures roll back. */
 
 import { useCallback, useEffect, useState } from "react";
+import { portalApi, type ServerApproval } from "./portalApi.js";
 import type { AutomationMode } from "./PortalContext.js";
 
 export type RiskLevel = "low" | "medium" | "high";
@@ -22,11 +20,9 @@ export interface AutomationDef {
   action: string;
   risk: RiskLevel;
   defaultMode: AutomationMode;
-  /** soft send/exec caps shown in the UI */
   limits: { daily: number; monthly: number };
 }
 
-/** Realistic WhiteDot automations spanning sales, marketing, ops & security. */
 export const AUTOMATION_DEFS: AutomationDef[] = [
   { id: "new-lead-followup", name: "New lead follow-up", group: "Sales", trigger: "New lead submitted", condition: "Lead score ≥ 30 · business hours", action: "Draft WhatsApp + email, create follow-up task", risk: "low", defaultMode: "APPROVAL", limits: { daily: 100, monthly: 2000 } },
   { id: "sample-delivered-followup", name: "Sample-delivered follow-up", group: "Sales", trigger: "Sample delivered", condition: "Customer opted in", action: "Draft feedback email, create sales task", risk: "low", defaultMode: "APPROVAL", limits: { daily: 50, monthly: 1000 } },
@@ -40,83 +36,92 @@ export const AUTOMATION_DEFS: AutomationDef[] = [
   { id: "website-down", name: "Website-down alert", group: "Security", trigger: "Website down / health fail", condition: "2 consecutive checks", action: "Create incident, notify Super Admin", risk: "medium", defaultMode: "AUTO", limits: { daily: 100, monthly: 2000 } },
 ];
 
-/* ─── Automation enable/mode state ─────────────────────── */
-
 interface AutoState { enabled: boolean; mode: AutomationMode }
-const AUTO_KEY = "wd_automations";
-
-function loadAuto(): Record<string, AutoState> {
-  try {
-    const raw = localStorage.getItem(AUTO_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch { /* ignore */ }
-  // Default: low-risk on, higher-risk off until an admin opts in.
-  return Object.fromEntries(
-    AUTOMATION_DEFS.map((d) => [d.id, { enabled: d.risk === "low", mode: d.defaultMode }]),
-  );
-}
 
 export interface AutomationView extends AutomationDef { enabled: boolean; mode: AutomationMode }
 
 export function useAutomations() {
-  const [state, setState] = useState<Record<string, AutoState>>(loadAuto);
+  const [state, setState] = useState<Record<string, AutoState>>({});
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    try { localStorage.setItem(AUTO_KEY, JSON.stringify(state)); } catch { /* ignore */ }
-  }, [state]);
+    let cancelled = false;
+    portalApi.listAutomations()
+      .then((r) => {
+        if (cancelled) return;
+        setState(Object.fromEntries(r.data.map((a) => [a.id, { enabled: a.enabled, mode: a.mode }])));
+        setLoaded(true);
+      })
+      .catch(console.error);
+    return () => { cancelled = true; };
+  }, []);
 
   const setMode = useCallback((id: string, mode: AutomationMode) => {
-    setState((s) => ({ ...s, [id]: { ...(s[id] ?? { enabled: true }), mode } }));
+    setState((s) => ({ ...s, [id]: { enabled: s[id]?.enabled ?? false, mode } }));
+    portalApi.patchAutomation(id, { mode }).catch(console.error);
   }, []);
+
   const toggle = useCallback((id: string) => {
-    setState((s) => ({ ...s, [id]: { ...(s[id] ?? { mode: "APPROVAL" }), enabled: !s[id]?.enabled } }));
+    setState((s) => {
+      const enabled = !(s[id]?.enabled ?? false);
+      portalApi.patchAutomation(id, { enabled }).catch(console.error);
+      return { ...s, [id]: { mode: s[id]?.mode ?? "APPROVAL", enabled } };
+    });
   }, []);
 
   const automations: AutomationView[] = AUTOMATION_DEFS.map((d) => ({
     ...d,
-    enabled: state[d.id]?.enabled ?? (d.risk === "low"),
+    enabled: state[d.id]?.enabled ?? (loaded ? false : d.risk === "low"),
     mode: state[d.id]?.mode ?? d.defaultMode,
   }));
 
-  return { automations, setMode, toggle };
+  return { automations, setMode, toggle, loaded };
 }
 
-/* ─── Approval queue ───────────────────────────────────── */
+/* ─── Approval queue (server) ─────────────────────────── */
 
-export interface ApprovalItem {
-  id: string;
-  title: string;
-  kind: string;        // e.g. "WhatsApp draft", "Email draft"
-  automationId: string;
-  risk: RiskLevel;
-  preview: string;
-  createdAt: string;
-}
-const APPROVALS_KEY = "wd_approvals";
-
-function loadApprovals(): ApprovalItem[] {
-  try {
-    const raw = localStorage.getItem(APPROVALS_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch { /* ignore */ }
-  return [];
-}
+export type ApprovalItem = ServerApproval;
 
 export function useApprovals() {
-  const [items, setItems] = useState<ApprovalItem[]>(loadApprovals);
+  const [items, setItems] = useState<ApprovalItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    try { localStorage.setItem(APPROVALS_KEY, JSON.stringify(items)); } catch { /* ignore */ }
+  const refresh = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const r = await portalApi.listApprovals("PENDING");
+      setItems(r.data);
+    } catch (e) {
+      console.error(e);
+      setError("Could not load the approval queue — the backend may be waking up.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { refresh(); }, [refresh]);
+
+  const enqueue = useCallback(async (item: { title: string; kind: string; automationId?: string; risk: RiskLevel; preview: string }) => {
+    const r = await portalApi.createApproval({
+      ...item,
+      risk: item.risk.toUpperCase() as ServerApproval["risk"],
+    });
+    setItems((prev) => [r.data, ...prev]);
+    return r.data;
+  }, []);
+
+  const decide = useCallback(async (id: string, decision: "APPROVED" | "REJECTED") => {
+    const prev = items;
+    setItems((p) => p.filter((i) => i.id !== id)); // optimistic
+    try {
+      await portalApi.decideApproval(id, decision);
+    } catch (e) {
+      setItems(prev); // rollback (e.g. 423 lockdown)
+      throw e;
+    }
   }, [items]);
 
-  const enqueue = useCallback((item: Omit<ApprovalItem, "id" | "createdAt">) => {
-    setItems((prev) => [
-      { ...item, id: `apr_${Date.now()}_${prev.length}`, createdAt: new Date().toISOString() },
-      ...prev,
-    ]);
-  }, []);
-  const resolve = useCallback((id: string) => setItems((prev) => prev.filter((i) => i.id !== id)), []);
-  const clear = useCallback(() => setItems([]), []);
-
-  return { items, enqueue, resolve, clear };
+  return { items, loading, error, refresh, enqueue, decide };
 }

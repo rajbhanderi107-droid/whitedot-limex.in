@@ -8,6 +8,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Plug, Power, ExternalLink, RotateCw } from "lucide-react";
+import { portalApi } from "../portalApi.js";
 import { SectionHeader, RiskBadge, type Risk } from "../ui.js";
 
 interface Integration { id: string; name: string; group: string; risk: Risk; live?: string }
@@ -36,22 +37,43 @@ const INTEGRATIONS: Integration[] = [
 ];
 
 interface ConnState { connected: boolean; env: "sandbox" | "production" }
-const KEY = "wd_integrations";
 
-function load(): Record<string, ConnState> {
-  try { const r = localStorage.getItem(KEY); if (r) return JSON.parse(r); } catch { /* ignore */ }
-  // Google is effectively live already.
-  return { ga4: { connected: true, env: "production" }, gsc: { connected: true, env: "production" } };
-}
+/** Google is live already (GA4/GSC dashboard) — shown connected by default
+ *  until a server row overrides it. */
+const DEFAULTS: Record<string, ConnState> = {
+  ga4: { connected: true, env: "production" },
+  gsc: { connected: true, env: "production" },
+};
 
 export function IntegrationCenter() {
-  const [state, setState] = useState<Record<string, ConnState>>(load);
-  useEffect(() => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* ignore */ } }, [state]);
+  const [state, setState] = useState<Record<string, ConnState>>(DEFAULTS);
+
+  // Server-backed connection state (IntegrationConfig table).
+  useEffect(() => {
+    let cancelled = false;
+    portalApi.listIntegrations()
+      .then((r) => {
+        if (cancelled) return;
+        setState({
+          ...DEFAULTS,
+          ...Object.fromEntries(r.data.map((i) => [i.id, { connected: i.connected, env: i.environment }])),
+        });
+      })
+      .catch(console.error);
+    return () => { cancelled = true; };
+  }, []);
 
   const toggle = useCallback((id: string) =>
-    setState((s) => ({ ...s, [id]: { env: s[id]?.env ?? "sandbox", connected: !s[id]?.connected } })), []);
+    setState((s) => {
+      const connected = !s[id]?.connected;
+      portalApi.patchIntegration(id, { connected }).catch(console.error);
+      return { ...s, [id]: { env: s[id]?.env ?? "sandbox", connected } };
+    }), []);
   const setEnv = useCallback((id: string, env: "sandbox" | "production") =>
-    setState((s) => ({ ...s, [id]: { connected: s[id]?.connected ?? false, env } })), []);
+    setState((s) => {
+      portalApi.patchIntegration(id, { environment: env }).catch(console.error);
+      return { ...s, [id]: { connected: s[id]?.connected ?? false, env } };
+    }), []);
 
   const groups = [...new Set(INTEGRATIONS.map((i) => i.group))];
   const connected = INTEGRATIONS.filter((i) => state[i.id]?.connected).length;

@@ -12,6 +12,9 @@ import { AiBrain } from "./portal/pages/AiBrain.js";
 import { AiAgents } from "./portal/pages/AiAgents.js";
 import { Sustainability } from "./portal/pages/Sustainability.js";
 import { IntegrationCenter } from "./portal/pages/IntegrationCenter.js";
+import { PimPage, InventoryPage, CpqPage, OrdersPage, CampaignsPage, SocialStudioPage, LandingPagesPage, BugShieldPage } from "./portal/pages/businessModules.js";
+import { BiPage, LeadGenPage, AdsPage, DataWarehousePage } from "./portal/pages/intelModules.js";
+import { WebsiteHealthPage, SeoGrowthPage, DevSecOpsPage, BackupPage, CustomerPortalAdminPage, NotificationCenterPage } from "./portal/pages/opsModules.js";
 import { ModuleStub } from "./portal/pages/ModuleStub.js";
 import { SCAFFOLD_MODULES } from "./portal/modules.js";
 import { useAuth } from "./hooks/useAuth.js";
@@ -242,6 +245,26 @@ export default function AdminApp() {
           {/* ── Phase 6 functional modules ── */}
           <Route path="/admin/sustainability" element={<Sustainability />} />
           <Route path="/admin/integrations" element={<IntegrationCenter />} />
+
+          {/* ── Phase 7: every remaining module, server-backed ── */}
+          <Route path="/admin/pim" element={<PimPage />} />
+          <Route path="/admin/inventory" element={<InventoryPage />} />
+          <Route path="/admin/cpq" element={<CpqPage />} />
+          <Route path="/admin/orders" element={<OrdersPage />} />
+          <Route path="/admin/campaigns" element={<CampaignsPage />} />
+          <Route path="/admin/social" element={<SocialStudioPage />} />
+          <Route path="/admin/landing" element={<LandingPagesPage />} />
+          <Route path="/admin/bugshield" element={<BugShieldPage />} />
+          <Route path="/admin/bi" element={<BiPage />} />
+          <Route path="/admin/lead-gen" element={<LeadGenPage />} />
+          <Route path="/admin/ads" element={<AdsPage />} />
+          <Route path="/admin/data-warehouse" element={<DataWarehousePage />} />
+          <Route path="/admin/website-health" element={<WebsiteHealthPage />} />
+          <Route path="/admin/seo" element={<SeoGrowthPage />} />
+          <Route path="/admin/devsecops" element={<DevSecOpsPage />} />
+          <Route path="/admin/backup" element={<BackupPage />} />
+          <Route path="/admin/customer-portal" element={<CustomerPortalAdminPage />} />
+          <Route path="/admin/notifications" element={<NotificationCenterPage />} />
 
           {/* ── Scaffolded modules (Infinity Growth OS) ── */}
           {SCAFFOLD_MODULES.map((m) => (

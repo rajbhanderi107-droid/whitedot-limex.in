@@ -1,14 +1,13 @@
-/* Portal-wide runtime state: the global automation safety mode and the
- * emergency-stop / lockdown switches described in the Infinity Growth OS spec.
+/* Portal-wide runtime state: global automation mode + emergency stop.
  *
- * This is a client-side control surface. The actual enforcement (blocking
- * external sends, revoking sessions, freezing integrations) happens server
- * side; this context records intent, persists it, and lets every module read
- * the current posture so they can render the correct guard-rails. */
+ * Source of truth is the server (PortalState row in Postgres) so every
+ * admin sees the same posture; localStorage is only a warm-start cache.
+ * Updates are optimistic with server persistence — lockdown enforcement
+ * also happens server-side (approvals and AI drafting return 423). */
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { api } from "../lib/api.js";
 
-/** Five automation modes, from least to most permissive — plus LOCKDOWN. */
 export type AutomationMode = "OFF" | "DRAFT" | "APPROVAL" | "AUTO" | "LOCKDOWN";
 
 export const AUTOMATION_MODES: { mode: AutomationMode; label: string; hint: string }[] = [
@@ -20,86 +19,93 @@ export const AUTOMATION_MODES: { mode: AutomationMode; label: string; hint: stri
 ];
 
 interface PortalState {
-  /** Default automation mode applied to new automations. */
   automationMode: AutomationMode;
   setAutomationMode: (m: AutomationMode) => void;
-  /** Global kill-switch. When true the portal is in lockdown regardless of mode. */
   emergencyStop: boolean;
-  /** True when emergencyStop is on OR mode is LOCKDOWN. */
   lockdown: boolean;
   triggerEmergencyStop: () => void;
   clearEmergencyStop: () => void;
-  /** Coarse 0–100 health scores shown in the topbar. */
   health: { business: number; security: number; automation: number };
+  /** true once server state has loaded at least once */
+  synced: boolean;
 }
 
 const STORAGE_KEY = "wd_portal_state";
 const PortalCtx = createContext<PortalState | null>(null);
 
-interface Persisted {
-  automationMode: AutomationMode;
-  emergencyStop: boolean;
-}
+interface Persisted { automationMode: AutomationMode; emergencyStop: boolean }
 
-function load(): Persisted {
+function loadCache(): Persisted {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return { automationMode: "APPROVAL", emergencyStop: false, ...JSON.parse(raw) };
-  } catch {
-    /* ignore corrupt state */
-  }
-  // Safe default: nothing runs unattended until an admin opts into AUTO.
+  } catch { /* ignore corrupt cache */ }
   return { automationMode: "APPROVAL", emergencyStop: false };
 }
 
 export function PortalProvider({ children }: { children: ReactNode }) {
-  const [persisted, setPersisted] = useState<Persisted>(load);
+  const [state, setState] = useState<Persisted>(loadCache);
+  const [synced, setSynced] = useState(false);
+
+  // Hydrate from the server once the admin shell mounts (token present).
+  useEffect(() => {
+    let cancelled = false;
+    api.get<{ automationMode: AutomationMode; emergencyStop: boolean }>("/api/portal/state")
+      .then((r) => {
+        if (cancelled) return;
+        setState({ automationMode: r.data.automationMode, emergencyStop: r.data.emergencyStop });
+        setSynced(true);
+      })
+      .catch(() => { /* unauthenticated or backend cold — cache stays */ });
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(persisted));
-    } catch {
-      /* storage full / disabled — non-fatal */
-    }
-  }, [persisted]);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch { /* ignore */ }
+  }, [state]);
+
+  const persist = useCallback((next: Partial<Persisted>) => {
+    api.patch("/api/portal/state", next).catch(console.error);
+  }, []);
 
   const setAutomationMode = useCallback((automationMode: AutomationMode) => {
-    setPersisted((p) => ({ ...p, automationMode }));
-  }, []);
+    setState((p) => ({ ...p, automationMode }));
+    persist({ automationMode });
+  }, [persist]);
 
   const triggerEmergencyStop = useCallback(() => {
-    setPersisted((p) => ({ ...p, emergencyStop: true, automationMode: "LOCKDOWN" }));
-  }, []);
+    setState((p) => ({ ...p, emergencyStop: true, automationMode: "LOCKDOWN" }));
+    persist({ emergencyStop: true, automationMode: "LOCKDOWN" });
+  }, [persist]);
 
   const clearEmergencyStop = useCallback(() => {
-    setPersisted((p) => ({ ...p, emergencyStop: false, automationMode: "APPROVAL" }));
-  }, []);
+    setState((p) => ({ ...p, emergencyStop: false, automationMode: "APPROVAL" }));
+    persist({ emergencyStop: false, automationMode: "APPROVAL" });
+  }, [persist]);
 
-  const lockdown = persisted.emergencyStop || persisted.automationMode === "LOCKDOWN";
+  const lockdown = state.emergencyStop || state.automationMode === "LOCKDOWN";
 
-  // Health scores are placeholders until telemetry is wired (Phase 4+).
-  // They degrade visibly when the portal is in lockdown so the topbar
-  // reflects the active posture rather than showing a fake "all green".
   const health = useMemo(
     () => ({
       business: 86,
       security: lockdown ? 41 : 92,
-      automation: persisted.automationMode === "AUTO" ? 95 : persisted.automationMode === "OFF" ? 60 : 88,
+      automation: state.automationMode === "AUTO" ? 95 : state.automationMode === "OFF" ? 60 : 88,
     }),
-    [lockdown, persisted.automationMode],
+    [lockdown, state.automationMode],
   );
 
   const value = useMemo<PortalState>(
     () => ({
-      automationMode: persisted.automationMode,
+      automationMode: state.automationMode,
       setAutomationMode,
-      emergencyStop: persisted.emergencyStop,
+      emergencyStop: state.emergencyStop,
       lockdown,
       triggerEmergencyStop,
       clearEmergencyStop,
       health,
+      synced,
     }),
-    [persisted, setAutomationMode, lockdown, triggerEmergencyStop, clearEmergencyStop, health],
+    [state, setAutomationMode, lockdown, triggerEmergencyStop, clearEmergencyStop, health, synced],
   );
 
   return <PortalCtx.Provider value={value}>{children}</PortalCtx.Provider>;
