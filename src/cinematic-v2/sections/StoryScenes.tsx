@@ -151,32 +151,28 @@ export function SceneImpact({ active }: SceneProps) {
       <ul className="wds5-grid">
         {IMPACTS.map((item, i) => (
           <li className="wds5-item" style={{ '--i': i } as CSSProperties} key={item.id}>
-            <svg viewBox="0 0 360 404" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 360 392" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <radialGradient id={`wds5-g-${item.id}`}>
                   <stop offset="0" stopColor="#fff" />
-                  <stop offset="0.8" stopColor="#fff" />
+                  <stop offset="0.86" stopColor="#fff" />
                   <stop offset="1" stopColor="#fff" stopOpacity="0" />
                 </radialGradient>
                 <mask id={`wds5-m-${item.id}`} maskUnits="userSpaceOnUse">
-                  <circle cx="180" cy="176" r="158" fill={`url(#wds5-g-${item.id})`} />
+                  <circle cx="180" cy="180" r="162" fill={`url(#wds5-g-${item.id})`} />
                 </mask>
               </defs>
-              <ellipse className="wds5-reflect" cx="180" cy="372" rx="122" ry="20" />
+              <ellipse className="wds5-reflect" cx="180" cy="356" rx="128" ry="20" />
               <image
                 className="wds5-photo"
                 href={`${STORY_IMG}/impact-${item.id}.jpg`}
-                x="18"
-                y="14"
-                width="324"
-                height="324"
+                x="0"
+                y="0"
+                width="360"
+                height="360"
                 mask={`url(#wds5-m-${item.id})`}
                 preserveAspectRatio="xMidYMid slice"
               />
-              <circle className="wds5-dish-fill" cx="180" cy="176" r="157" />
-              <circle className="wds5-dish-rim" cx="180" cy="176" r="158" pathLength={1} />
-              <circle className="wds5-dish-rim2" cx="180" cy="176" r="146" pathLength={1} />
-              <path className="wds5-dish-shine" d="M84 116 A 158 158 0 0 1 215 28" />
             </svg>
             <p className="wds5-caption">
               {item.caption[0]}

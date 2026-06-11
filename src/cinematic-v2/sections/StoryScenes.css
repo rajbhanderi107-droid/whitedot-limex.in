@@ -218,44 +218,18 @@
   gap: 0.85rem;
 }
 .wds5-item svg {
-  width: clamp(118px, 13vw, 188px);
+  width: clamp(120px, 13vw, 188px);
   height: auto;
   overflow: visible;
 }
 
 .wds5-photo,
-.wds5-dish-fill,
-.wds5-dish-rim,
-.wds5-dish-rim2,
-.wds5-dish-shine,
 .wds5-reflect {
   transform-origin: center;
   transform-box: fill-box;
 }
 .wds5-photo {
   filter: saturate(1.02) contrast(1.02);
-}
-.wds5-dish-fill {
-  fill: rgba(255, 255, 255, 0.08);
-  stroke: rgba(255, 255, 255, 0.28);
-  stroke-width: 1;
-  pointer-events: none;
-}
-.wds5-dish-rim {
-  fill: none;
-  stroke: rgba(140, 154, 142, 0.72);
-  stroke-width: 3.2;
-}
-.wds5-dish-rim2 {
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.7);
-  stroke-width: 1.4;
-}
-.wds5-dish-shine {
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.84);
-  stroke-width: 6;
-  stroke-linecap: round;
 }
 .wds5-reflect {
   fill: rgba(120, 130, 122, 0.14);
@@ -273,11 +247,7 @@
 .wds5 .wds5-eyebrow { opacity: 0; }
 .wds5 .wds5-line > span { transform: translateY(110%); }
 .wds5 .wds5-photo { opacity: 0; transform: scale(1.08); }
-.wds5 .wds5-dish-fill,
-.wds5 .wds5-dish-shine,
 .wds5 .wds5-reflect { opacity: 0; }
-.wds5 .wds5-dish-rim,
-.wds5 .wds5-dish-rim2 { stroke-dasharray: 1; stroke-dashoffset: 1; }
 .wds5 .wds5-caption { opacity: 0; transform: translateY(14px); }
 
 .wds5.is-active .wds5-eyebrow { animation: wds-fade 0.6s var(--v2-ease-out) 0.15s both; }
@@ -288,14 +258,6 @@
 .wds5.is-active .wds5-photo {
   animation: wds5-place 0.7s var(--v2-ease-out) calc(0.9s + var(--i, 0) * 0.22s) both;
 }
-.wds5.is-active .wds5-dish-rim {
-  animation: wds-trace 0.75s var(--v2-ease-out) calc(0.96s + var(--i, 0) * 0.22s) both;
-}
-.wds5.is-active .wds5-dish-rim2 {
-  animation: wds-trace 0.75s var(--v2-ease-out) calc(1.04s + var(--i, 0) * 0.22s) both;
-}
-.wds5.is-active .wds5-dish-fill,
-.wds5.is-active .wds5-dish-shine,
 .wds5.is-active .wds5-reflect {
   animation: wds5-reflect-in 0.7s var(--v2-ease-out) calc(1.08s + var(--i, 0) * 0.22s) both;
 }
@@ -547,8 +509,6 @@
   .wds3 .wds3-dash,
   .wds5 .wds5-eyebrow,
   .wds5 .wds5-photo,
-  .wds5 .wds5-dish-fill,
-  .wds5 .wds5-dish-shine,
   .wds5 .wds5-reflect,
   .wds5 .wds5-caption,
   .wds8 .wds8-frame,
@@ -561,8 +521,6 @@
   }
   .wds5 .wds5-line > span { transform: none; }
   .wds3 .wds3-arrow,
-  .wds5 .wds5-dish-rim,
-  .wds5 .wds5-dish-rim2,
   .wds8 .wds8-ring,
   .wds8 .wds8-sweep {
     stroke-dashoffset: 0;
