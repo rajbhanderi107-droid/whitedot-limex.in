@@ -1,4 +1,5 @@
 import './StoryScenes.css';
+import { Fragment } from 'react';
 import type { CSSProperties } from 'react';
 
 /* ---------------------------------------------------------------------------
@@ -12,6 +13,37 @@ import type { CSSProperties } from 'react';
 type SceneProps = { active: boolean };
 
 /* ================= Scene 3 — Science behind LIMEX ================= */
+
+/* Photoreal petri-dish renders (cropped from the designed diagram frame),
+   placed in one responsive SVG. Each dish is feather-masked into the slide
+   background; arrows are live strokes that trace / flow on activation. */
+const STORY_IMG = '/assets/images/story';
+
+type DishSpec = {
+  id: string;
+  cls: string;
+  x: number;
+  y: number;
+  /* feather-mask geometry (diagram coords) */
+  mcx: number;
+  mcy: number;
+  solid: number;
+  edge: number;
+};
+
+const SCIENCE_DISHES: DishSpec[] = [
+  { id: 'limestone', cls: '1', x: 170, y: 40, mcx: 352, mcy: 226, solid: 134, edge: 152 },
+  { id: 'powder', cls: '2', x: 640, y: 40, mcx: 820, mcy: 220, solid: 160, edge: 176 },
+  { id: 'binder', cls: '3', x: 1110, y: 40, mcx: 1290, mcy: 220, solid: 166, edge: 179 },
+  { id: 'limex', cls: 'result', x: 640, y: 670, mcx: 820, mcy: 850, solid: 134, edge: 152 },
+];
+
+const SCIENCE_LABELS: { x: number; lines: [string, string] }[] = [
+  { x: 352, lines: ['Limestone', 'CaCO₃'] },
+  { x: 820, lines: ['High-purity', 'Calcium carbonate'] },
+  { x: 1290, lines: ['Bio-based', 'Polymers'] },
+];
+
 export function SceneScience({ active }: SceneProps) {
   return (
     <div className={`wds3${active ? ' is-active' : ''}`} aria-hidden="true">
@@ -28,84 +60,68 @@ export function SceneScience({ active }: SceneProps) {
 
       <svg
         className="wds3-diagram"
-        viewBox="0 0 900 620"
+        viewBox="0 0 1672 1080"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* --- top row: three nodes --- */}
-        {/* limestone */}
-        <g className="wds3-node wds3-node--1">
-          <circle className="wds3-ring" cx="150" cy="160" r="92" pathLength={1} />
-          <path
-            className="wds3-draw wds3-rock"
-            pathLength={1}
-            d="M108 196 L96 158 L118 116 L154 102 L196 118 L206 162 L188 198 L138 204 Z M118 116 L146 150 L196 118 M146 150 L138 204 M146 150 L206 162"
+        <defs>
+          {SCIENCE_DISHES.map((d) => (
+            <Fragment key={d.id}>
+              <radialGradient id={`wds3-g-${d.id}`}>
+                <stop offset="0" stopColor="#fff" />
+                <stop offset={d.solid / d.edge} stopColor="#fff" />
+                <stop offset="1" stopColor="#fff" stopOpacity="0" />
+              </radialGradient>
+              <mask id={`wds3-m-${d.id}`} maskUnits="userSpaceOnUse">
+                <circle cx={d.mcx} cy={d.mcy} r={d.edge} fill={`url(#wds3-g-${d.id})`} />
+              </mask>
+            </Fragment>
+          ))}
+        </defs>
+
+        {/* --- photoreal dishes --- */}
+        {SCIENCE_DISHES.map((d) => (
+          <image
+            key={d.id}
+            className={`wds3-img wds3-img--${d.cls}`}
+            href={`${STORY_IMG}/science-dish-${d.id}.jpg`}
+            x={d.x}
+            y={d.y}
+            width={360}
+            height={360}
+            mask={`url(#wds3-m-${d.id})`}
+            preserveAspectRatio="xMidYMid slice"
           />
-          <text className="wds3-label" x="150" y="286">Limestone</text>
-          <text className="wds3-label wds3-label--dim" x="150" y="308">CaCO₃</text>
-        </g>
+        ))}
 
-        {/* arrow 1 */}
-        <path className="wds3-arrow wds3-arrow--1" pathLength={1} d="M262 160 H348 M332 146 L350 160 L332 174" />
-
-        {/* powder */}
-        <g className="wds3-node wds3-node--2">
-          <circle className="wds3-ring" cx="450" cy="160" r="92" pathLength={1} />
-          <path
-            className="wds3-draw wds3-powder"
-            pathLength={1}
-            d="M394 188 Q450 138 506 188 Q478 200 450 196 Q422 200 394 188 Z"
-          />
-          <g className="wds3-specks">
-            <circle cx="420" cy="142" r="3" /> <circle cx="452" cy="128" r="2.5" />
-            <circle cx="486" cy="146" r="3" /> <circle cx="438" cy="156" r="2" />
-            <circle cx="468" cy="160" r="2.5" /> <circle cx="500" cy="170" r="2" />
-            <circle cx="404" cy="166" r="2" /> <circle cx="452" cy="174" r="2" />
-          </g>
-          <text className="wds3-label" x="450" y="286">High-purity</text>
-          <text className="wds3-label wds3-label--dim" x="450" y="308">Calcium Carbonate</text>
-        </g>
-
-        {/* arrow 2 */}
-        <path className="wds3-arrow wds3-arrow--2" pathLength={1} d="M562 160 H648 M632 146 L650 160 L632 174" />
-
-        {/* polymers */}
-        <g className="wds3-node wds3-node--3">
-          <circle className="wds3-ring" cx="750" cy="160" r="92" pathLength={1} />
-          <path
-            className="wds3-draw wds3-poly"
-            pathLength={1}
-            d="M718 118 L740 106 L762 118 L762 142 L740 154 L718 142 Z M740 154 L740 176 M722 188 L740 176 L758 188 M704 196 L722 188 L722 210 M758 188 L776 196 L776 212"
-          />
-          <text className="wds3-label" x="750" y="286">Bio-based</text>
-          <text className="wds3-label wds3-label--dim" x="750" y="308">Polymers</text>
-        </g>
-
-        {/* --- dashed convergence curves --- */}
+        {/* --- solid process arrows (stroke-traced) --- */}
         <path
-          className="wds3-dash wds3-dash--l"
+          className="wds3-arrow wds3-arrow--1"
           pathLength={1}
-          d="M150 330 Q160 430 340 470"
-          strokeDasharray="0.035 0.022"
+          d="M500 223 H640 M620 203 L644 223 L620 243"
         />
         <path
-          className="wds3-dash wds3-dash--r"
+          className="wds3-arrow wds3-arrow--2"
           pathLength={1}
-          d="M750 330 Q740 430 560 470"
-          strokeDasharray="0.035 0.022"
+          d="M1000 220 H1100 M1080 200 L1104 220 L1080 240"
         />
 
-        {/* --- LIMEX result node --- */}
-        <g className="wds3-node wds3-node--result">
-          <circle className="wds3-ring" cx="450" cy="470" r="92" pathLength={1} />
-          <g className="wds3-pellets">
-            <ellipse cx="424" cy="452" rx="22" ry="17" />
-            <ellipse cx="474" cy="446" rx="22" ry="17" />
-            <ellipse cx="432" cy="492" rx="22" ry="17" />
-            <ellipse cx="480" cy="488" rx="22" ry="17" />
+        {/* --- dashed convergence flows (marching toward LIMEX) --- */}
+        <path className="wds3-dash wds3-dash--l" d="M330 575 Q300 830 655 860" />
+        <path className="wds3-dash wds3-dash--c" d="M820 570 V 690" />
+        <path className="wds3-dash wds3-dash--r" d="M1310 570 Q1345 830 985 860" />
+        <path className="wds3-dhead wds3-dhead--l" d="M636 847 L658 861 L634 871" />
+        <path className="wds3-dhead wds3-dhead--c" d="M802 674 L820 696 L838 674" />
+        <path className="wds3-dhead wds3-dhead--r" d="M1004 847 L982 861 L1006 871" />
+
+        {/* --- labels --- */}
+        {SCIENCE_LABELS.map((l, i) => (
+          <g className={`wds3-labelgrp wds3-labelgrp--${i + 1}`} key={l.x}>
+            <text className="wds3-label" x={l.x} y={488}>{l.lines[0]}</text>
+            <text className="wds3-label wds3-label--dim" x={l.x} y={530}>{l.lines[1]}</text>
           </g>
-          <text className="wds3-limex" x="450" y="606">LIMEX</text>
-        </g>
+        ))}
+        <text className="wds3-limex" x="820" y="1044">LIMEX</text>
       </svg>
     </div>
   );

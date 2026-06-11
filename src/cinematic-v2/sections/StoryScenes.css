@@ -67,109 +67,117 @@
   max-height: 86%;
 }
 
-/* node rings + labels */
-.wds3-ring {
-  stroke: #9fb8a4;
-  stroke-width: 1.4;
-  fill: #fbfaf6;
+/* slide vignette matches the photoreal crops (light top-left → warm shade) */
+.wds3 {
+  background: radial-gradient(140% 120% at 26% 14%, #f7f3ee 0%, #f1ece5 52%, #e6dfd6 100%);
 }
+
+/* labels */
 .wds3-label {
   font-family: var(--v2-font-sans);
-  font-size: 22px;
+  font-size: 36px;
   fill: #2c3137;
   text-anchor: middle;
 }
-.wds3-label--dim { fill: #6b7176; font-size: 19px; }
+.wds3-label--dim { fill: #6b7176; font-size: 29px; }
 .wds3-limex {
   font-family: var(--v2-font-sans);
-  font-size: 26px;
+  font-size: 46px;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   fill: #23282e;
   text-anchor: middle;
 }
 
-/* line-art strokes */
-.wds3-draw {
-  stroke: #4a7a52;
-  stroke-width: 2.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
+/* photoreal dish renders */
+.wds3-img {
+  transform-origin: center;
+  transform-box: fill-box;
 }
-.wds3-rock { stroke: #8a9097; }
-.wds3-specks circle { fill: #9aa1a8; }
+
+/* arrows */
 .wds3-arrow {
-  stroke: #2f6b3a;
-  stroke-width: 2.6;
+  stroke: #2e5b3c;
+  stroke-width: 7;
   stroke-linecap: round;
   stroke-linejoin: round;
   fill: none;
 }
 .wds3-dash {
-  stroke: #2f6b3a;
-  stroke-width: 2;
+  stroke: #35633f;
+  stroke-width: 5;
   stroke-linecap: round;
   fill: none;
-  opacity: 0.85;
+  stroke-dasharray: 16 13;
 }
-.wds3-pellets ellipse {
-  fill: #ffffff;
-  stroke: #c9cdd1;
-  stroke-width: 1.4;
+.wds3-dhead {
+  stroke: #35633f;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
 }
 
 /* ---------- scene-3 animation states ---------- */
 .wds3 .wds3-copy { opacity: 0; transform: translateY(22px); }
-.wds3 .wds3-node { opacity: 0; }
-.wds3 .wds3-ring,
-.wds3 .wds3-draw,
+.wds3 .wds3-img { opacity: 0; transform: scale(1.12); }
 .wds3 .wds3-arrow { stroke-dasharray: 1; stroke-dashoffset: 1; }
-/* dashed curves keep their dash pattern — they fade in while flowing
-   toward the LIMEX node instead of stroke-tracing */
+/* dashed flows keep their dash pattern — they fade in, then march
+   toward the LIMEX dish for as long as the scene stays active */
 .wds3 .wds3-dash { opacity: 0; }
-.wds3 .wds3-specks circle,
-.wds3 .wds3-pellets ellipse { opacity: 0; transform: scale(0.4); transform-origin: center; transform-box: fill-box; }
-.wds3 .wds3-label,
+.wds3 .wds3-dhead { opacity: 0; }
+.wds3 .wds3-labelgrp text,
 .wds3 .wds3-limex { opacity: 0; }
 
 .wds3.is-active .wds3-copy {
   animation: wds-rise 0.9s var(--v2-ease-out) 0.15s both;
 }
-.wds3.is-active .wds3-node--1 { animation: wds-in 0.4s var(--v2-ease-out) 0.3s both; }
-.wds3.is-active .wds3-node--2 { animation: wds-in 0.4s var(--v2-ease-out) 1.0s both; }
-.wds3.is-active .wds3-node--3 { animation: wds-in 0.4s var(--v2-ease-out) 1.7s both; }
-.wds3.is-active .wds3-node--result { animation: wds-in 0.4s var(--v2-ease-out) 2.6s both; }
 
-.wds3.is-active .wds3-node--1 .wds3-ring { animation: wds-trace 0.8s var(--v2-ease-out) 0.3s both; }
-.wds3.is-active .wds3-node--2 .wds3-ring { animation: wds-trace 0.8s var(--v2-ease-out) 1.0s both; }
-.wds3.is-active .wds3-node--3 .wds3-ring { animation: wds-trace 0.8s var(--v2-ease-out) 1.7s both; }
-.wds3.is-active .wds3-node--result .wds3-ring { animation: wds-trace 0.8s var(--v2-ease-out) 2.6s both; }
-
-.wds3.is-active .wds3-rock { animation: wds-trace 0.9s var(--v2-ease-out) 0.5s both; }
-.wds3.is-active .wds3-powder { animation: wds-trace 0.9s var(--v2-ease-out) 1.2s both; }
-.wds3.is-active .wds3-poly { animation: wds-trace 0.9s var(--v2-ease-out) 1.9s both; }
-
-.wds3.is-active .wds3-arrow--1 { animation: wds-trace 0.5s var(--v2-ease-out) 0.8s both; }
-.wds3.is-active .wds3-arrow--2 { animation: wds-trace 0.5s var(--v2-ease-out) 1.5s both; }
-
-.wds3.is-active .wds3-dash--l,
-.wds3.is-active .wds3-dash--r { animation: wds-dash-flow 1.2s var(--v2-ease-out) 2.3s both; }
-
-.wds3.is-active .wds3-specks circle {
-  animation: wds-pop 0.4s var(--v2-ease-out) calc(1.35s + var(--si, 0) * 0.04s) both;
+/* dishes settle into place left → right, then the result */
+.wds3.is-active .wds3-img--1 { animation: wds3-place 0.7s var(--v2-ease-out) 0.3s both; }
+.wds3.is-active .wds3-img--2 { animation: wds3-place 0.7s var(--v2-ease-out) 1.3s both; }
+.wds3.is-active .wds3-img--3 { animation: wds3-place 0.7s var(--v2-ease-out) 2.3s both; }
+.wds3.is-active .wds3-img--result {
+  animation:
+    wds3-place 0.8s var(--v2-ease-out) 3.3s both,
+    wds3-breathe 6s ease-in-out 4.6s infinite alternate;
 }
-.wds3.is-active .wds3-pellets ellipse:nth-child(1) { animation: wds-pop 0.45s var(--v2-ease-out) 2.85s both; }
-.wds3.is-active .wds3-pellets ellipse:nth-child(2) { animation: wds-pop 0.45s var(--v2-ease-out) 2.95s both; }
-.wds3.is-active .wds3-pellets ellipse:nth-child(3) { animation: wds-pop 0.45s var(--v2-ease-out) 3.05s both; }
-.wds3.is-active .wds3-pellets ellipse:nth-child(4) { animation: wds-pop 0.45s var(--v2-ease-out) 3.15s both; }
 
-.wds3.is-active .wds3-label,
-.wds3.is-active .wds3-limex { animation: wds-fade 0.6s var(--v2-ease-out) both; }
-.wds3.is-active .wds3-node--1 .wds3-label { animation-delay: 0.7s; }
-.wds3.is-active .wds3-node--2 .wds3-label { animation-delay: 1.4s; }
-.wds3.is-active .wds3-node--3 .wds3-label { animation-delay: 2.1s; }
-.wds3.is-active .wds3-limex { animation-delay: 3.2s; }
+.wds3.is-active .wds3-arrow--1 { animation: wds-trace 0.55s var(--v2-ease-out) 0.95s both; }
+.wds3.is-active .wds3-arrow--2 { animation: wds-trace 0.55s var(--v2-ease-out) 1.95s both; }
+
+.wds3.is-active .wds3-dash {
+  animation:
+    wds3-dash-in 0.8s var(--v2-ease-out) 2.95s both,
+    wds3-march 1.3s linear 3.75s infinite;
+}
+.wds3.is-active .wds3-dhead { animation: wds-fade 0.5s var(--v2-ease-out) 3.45s both; }
+
+.wds3.is-active .wds3-labelgrp text { animation: wds-rise 0.6s var(--v2-ease-out) both; }
+.wds3.is-active .wds3-labelgrp--1 text { animation-delay: 0.55s; }
+.wds3.is-active .wds3-labelgrp--1 .wds3-label--dim { animation-delay: 0.65s; }
+.wds3.is-active .wds3-labelgrp--2 text { animation-delay: 1.55s; }
+.wds3.is-active .wds3-labelgrp--2 .wds3-label--dim { animation-delay: 1.65s; }
+.wds3.is-active .wds3-labelgrp--3 text { animation-delay: 2.55s; }
+.wds3.is-active .wds3-labelgrp--3 .wds3-label--dim { animation-delay: 2.65s; }
+.wds3.is-active .wds3-limex { animation: wds-fade 0.7s var(--v2-ease-out) 3.95s both; }
+
+@keyframes wds3-place {
+  from { opacity: 0; transform: scale(1.12); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes wds3-breathe {
+  from { transform: scale(1); }
+  to   { transform: scale(1.014); }
+}
+@keyframes wds3-dash-in {
+  from { opacity: 0; }
+  to   { opacity: 0.92; }
+}
+@keyframes wds3-march {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -58; }
+}
 
 /* ------------------------------------------------------------------ */
 /* SCENE 5 — Built for sustainability                                  */
@@ -494,11 +502,10 @@
     animation: none !important;
   }
   .wds3 .wds3-copy,
-  .wds3 .wds3-node,
+  .wds3 .wds3-img,
   .wds3 .wds3-label,
   .wds3 .wds3-limex,
-  .wds3 .wds3-specks circle,
-  .wds3 .wds3-pellets ellipse,
+  .wds3 .wds3-dhead,
   .wds3 .wds3-dash,
   .wds5 .wds5-eyebrow,
   .wds5 .wds5-co2,
@@ -514,10 +521,7 @@
     filter: none;
   }
   .wds5 .wds5-line > span { transform: none; }
-  .wds3 .wds3-ring,
-  .wds3 .wds3-draw,
   .wds3 .wds3-arrow,
-  .wds3 .wds3-dash,
   .wds5 .wds5-ring,
   .wds5 .wds5-draw,
   .wds8 .wds8-ring,
