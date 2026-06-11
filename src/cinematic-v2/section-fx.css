@@ -4,13 +4,13 @@
    own design. Hero (.v2h), GlobalImpact (.v2gi), Footer (.v2ft) define
    their own pseudo-element layers in their section CSS — never touch
    them here. MaterialStory (.v2story) uses sticky scroll choreography —
-   excluded. Children are never restyled; layers sit at negative z-index
-   inside an isolated stacking context.
+   excluded. LimexDetail (.v2ld) and Comparison (.v2cmp) stay clean white
+   per client feedback (no green effects, no background seams).
+   Children are never restyled; layers sit at negative z-index inside an
+   isolated stacking context.
    ===================================================================== */
 
 .v2sc,
-.v2ld,
-.v2cmp,
 .v2ap,
 .v2con {
   position: relative;
@@ -20,8 +20,6 @@
 
 /* generated mineral image — lowest layer */
 .v2sc::after,
-.v2ld::after,
-.v2cmp::after,
 .v2ap::after,
 .v2con::after {
   content: '';
@@ -37,10 +35,8 @@
 }
 
 .v2sc  { --sfx-bg: url(/assets/images/bg/showcase.webp);     --sfx-bg-opacity: 0.16; }
-.v2ld  { --sfx-bg: url(/assets/images/bg/limexdetail.webp);  --sfx-bg-opacity: 0.10; }
-.v2cmp { --sfx-bg: url(/assets/images/bg/comparison.webp);   --sfx-bg-opacity: 0.10; }
-.v2ap  { --sfx-bg: url(/assets/images/bg/applications.webp); --sfx-bg-opacity: 0.10; }
-.v2con { --sfx-bg: url(/assets/images/bg/consultation.webp); --sfx-bg-opacity: 0.12; }
+.v2ap  { --sfx-bg: url(/assets/images/bg/applications.webp); --sfx-bg-opacity: 0.08; }
+.v2con { --sfx-bg: url(/assets/images/bg/consultation.webp); --sfx-bg-opacity: 0.10; }
 
 @keyframes sfx-bg-drift {
   from { transform: scale(1.04); }
@@ -49,8 +45,6 @@
 
 /* ambient motion layer — above image, below content */
 .v2sc::before,
-.v2ld::before,
-.v2cmp::before,
 .v2ap::before,
 .v2con::before {
   content: '';
@@ -70,31 +64,9 @@
   50%      { transform: translateX(25%);  opacity: 1; }
 }
 
-/* LIMEX DETAIL (light): floating soft mineral orbs */
-.v2ld::before {
-  background:
-    radial-gradient(22% 22% at 25% 30%, rgba(79, 154, 53, 0.10), transparent 70%),
-    radial-gradient(26% 26% at 78% 68%, rgba(79, 154, 53, 0.07), transparent 70%);
-  animation: sfx-float 20s ease-in-out infinite alternate;
-}
-@keyframes sfx-float {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(1.5%, -2%, 0); }
-}
-
-/* COMPARISON (light): slow horizontal scan line */
-.v2cmp::before {
-  background: linear-gradient(90deg, transparent 0%, rgba(79, 154, 53, 0.08) 50%, transparent 100%);
-  animation: sfx-sweep-x 18s linear infinite;
-}
-@keyframes sfx-sweep-x {
-  0%   { transform: translateX(-40%); }
-  100% { transform: translateX(40%); }
-}
-
 /* APPLICATIONS (light): gentle conic glow rotation */
 .v2ap::before {
-  background: conic-gradient(from 0deg at 50% 120%, rgba(79, 154, 53, 0.08), transparent 35%, transparent 65%, rgba(79, 154, 53, 0.08));
+  background: conic-gradient(from 0deg at 50% 120%, rgba(79, 154, 53, 0.06), transparent 35%, transparent 65%, rgba(79, 154, 53, 0.06));
   animation: sfx-rotate 50s linear infinite;
 }
 @keyframes sfx-rotate {
@@ -104,7 +76,7 @@
 
 /* CONSULTATION (light): breathing vignette */
 .v2con::before {
-  background: radial-gradient(70% 70% at 50% 50%, transparent 58%, rgba(79, 154, 53, 0.08) 100%);
+  background: radial-gradient(70% 70% at 50% 50%, transparent 58%, rgba(79, 154, 53, 0.06) 100%);
   animation: sfx-breathe 12s ease-in-out infinite alternate;
 }
 @keyframes sfx-breathe {
@@ -113,8 +85,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .v2sc::before, .v2ld::before, .v2cmp::before, .v2ap::before, .v2con::before,
-  .v2sc::after,  .v2ld::after,  .v2cmp::after,  .v2ap::after,  .v2con::after {
+  .v2sc::before, .v2ap::before, .v2con::before,
+  .v2sc::after,  .v2ap::after,  .v2con::after {
     animation: none !important;
   }
 }
