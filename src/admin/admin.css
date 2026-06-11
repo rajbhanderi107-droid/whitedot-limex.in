@@ -1,25 +1,45 @@
-/* WhiteDot Admin — clean, practical office dashboard */
+/* WhiteDot Admin — clean, practical office dashboard.
+   Tuned to match the public cinematic-v2 brand: TBM near-black canvas,
+   tree-leaf green accent (#4f9a35), Inter + JetBrains Mono, white-grain-dot
+   motif, and the v2 ease curve. Tokens cascade to every .adm-* class. */
 
 :root {
-  --adm-bg: #0f1210;
-  --adm-surface: #171c19;
-  --adm-surface-2: #1e2521;
-  --adm-border: rgba(154, 168, 147, 0.15);
-  --adm-text: #eef0ec;
-  --adm-muted: #8c9488;
-  --adm-accent: #9aa893;
-  --adm-accent-soft: rgba(154, 168, 147, 0.15);
+  /* canvas — v2 TBM near-black scale */
+  --adm-bg: #080808;
+  --adm-surface: #111111;
+  --adm-surface-2: #171717;
+  /* green-tinted hairlines to echo the public site */
+  --adm-border: rgba(79, 154, 53, 0.16);
+  --adm-text: #ffffff;
+  --adm-muted: rgba(255, 255, 255, 0.62);
+  /* tree-leaf green accent (v2 --v2-accent) */
+  --adm-accent: #4f9a35;
+  --adm-accent-dim: #3a7526;
+  --adm-accent-soft: rgba(79, 154, 53, 0.16);
   --adm-success: #6bc36b;
   --adm-warning: #e0a040;
   --adm-danger: #d65858;
   --adm-radius: 8px;
+  /* v2 fonts + motion */
+  --adm-font-sans: 'Inter', 'Noto Sans JP', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --adm-font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --adm-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --adm-dur: 320ms;
 }
 
-html, body, #root { min-height: 100%; margin: 0; background: #0f1210; }
+html, body, #root { min-height: 100%; margin: 0; background: #080808; }
 *, *::before, *::after { box-sizing: border-box; }
 
 /* ─── Layout ─────────────────────────── */
-.adm { display: flex; min-height: 100vh; width: 100%; background: var(--adm-bg); color: var(--adm-text); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+.adm { display: flex; min-height: 100vh; width: 100%; background: var(--adm-bg); color: var(--adm-text); font-family: var(--adm-font-sans); }
+/* subtle v2 center-depth veil behind the whole console */
+.adm::before {
+  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(180% 140% at 50% 0%, rgba(28,28,28,.45) 0%, transparent 60%),
+    radial-gradient(150% 120% at 50% 38%, #080808 40%, #030303 100%);
+}
+.adm-sidebar, .adm-main { position: relative; z-index: 1; }
 
 .adm-sidebar {
   width: 240px; flex-shrink: 0; background: var(--adm-surface);
@@ -65,8 +85,25 @@ html, body, #root { min-height: 100%; margin: 0; background: #0f1210; }
   display: flex; align-items: flex-start; gap: .75rem; padding: 1rem 1.1rem;
   color: var(--adm-text); text-decoration: none; background: var(--adm-surface);
   border: 1px solid var(--adm-border); border-radius: var(--adm-radius);
+  transition: border-color var(--adm-dur) var(--adm-ease),
+              background-color var(--adm-dur) var(--adm-ease),
+              transform var(--adm-dur) var(--adm-ease);
+  animation: adm-card-in var(--adm-dur) var(--adm-ease) both;
 }
-.adm-action-card:hover { border-color: rgba(154, 168, 147, .35); background: var(--adm-surface-2); }
+.adm-action-card:hover { border-color: rgba(79, 154, 53, .48); background: var(--adm-surface-2); transform: translateY(-2px); }
+@keyframes adm-card-in {
+  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+/* stagger the action grid + stat tiles like the public-site reveal groups */
+.adm-action-grid > :nth-child(1), .adm-stats > :nth-child(1) { animation-delay: 0ms; }
+.adm-action-grid > :nth-child(2), .adm-stats > :nth-child(2) { animation-delay: 60ms; }
+.adm-action-grid > :nth-child(3), .adm-stats > :nth-child(3) { animation-delay: 120ms; }
+.adm-action-grid > :nth-child(4), .adm-stats > :nth-child(4) { animation-delay: 180ms; }
+.adm-action-grid > :nth-child(n+5), .adm-stats > :nth-child(n+5) { animation-delay: 240ms; }
+@media (prefers-reduced-motion: reduce) {
+  .adm-action-card, .adm-stat { animation: none; }
+}
 .adm-action-card svg { color: var(--adm-accent); flex: 0 0 auto; margin-top: .1rem; }
 .adm-action-card span { display: grid; gap: .2rem; }
 .adm-action-card strong { font-size: .88rem; }
@@ -77,6 +114,7 @@ html, body, #root { min-height: 100%; margin: 0; background: #0f1210; }
 .adm-stat {
   background: var(--adm-surface); border: 1px solid var(--adm-border);
   border-radius: var(--adm-radius); padding: 1rem 1.2rem;
+  animation: adm-card-in var(--adm-dur) var(--adm-ease) both;
 }
 .adm-stat-value { font-size: 1.8rem; font-weight: 700; color: var(--adm-accent); }
 .adm-stat-label { font-size: .78rem; color: var(--adm-muted); margin-top: .2rem; }
@@ -195,8 +233,8 @@ select.adm-input { cursor: pointer; }
   display: inline-flex; align-items: center; gap: .4rem; padding: .5rem 1rem;
   border-radius: 6px; font-size: .82rem; font-weight: 500; cursor: pointer; border: none; transition: all .15s;
 }
-.adm-btn-primary { background: var(--adm-accent); color: #111; }
-.adm-btn-primary:hover { background: #abbfa3; }
+.adm-btn-primary { background: var(--adm-accent); color: #fff; }
+.adm-btn-primary:hover { background: var(--adm-accent-dim); }
 .adm-btn-ghost { background: transparent; border: 1px solid var(--adm-border); color: var(--adm-text); }
 .adm-btn-ghost:hover { border-color: var(--adm-accent); }
 .adm-btn-danger { background: transparent; border: 1px solid var(--adm-danger); color: var(--adm-danger); }
@@ -224,17 +262,37 @@ select.adm-input { cursor: pointer; }
   display: flex; align-items: center; justify-content: center; min-height: 100vh;
   background: var(--adm-bg); color: var(--adm-text); padding: 1rem;
 }
+/* v2 center-depth veil behind the login screen too */
+.adm-login::before {
+  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(180% 140% at 50% 0%, rgba(28,28,28,.45) 0%, transparent 60%),
+    radial-gradient(150% 120% at 50% 38%, #080808 40%, #030303 100%);
+}
 .adm-login-card {
   width: 100%; max-width: 380px; background: var(--adm-surface);
-  border: 1px solid var(--adm-border); border-radius: 12px; padding: 2rem;
-  box-shadow: 0 8px 40px rgba(0,0,0,.45), 0 1px 0 rgba(154,168,147,.12) inset;
-  position: relative;
+  border: 1px solid var(--adm-border); border-radius: 14px; padding: 2rem;
+  box-shadow: 0 30px 70px -28px rgba(0,0,0,.7), 0 1px 0 rgba(79,154,53,.14) inset;
+  position: relative; z-index: 1;
+  animation: adm-login-in var(--adm-dur) var(--adm-ease) both;
 }
-/* hairline top accent — the white dot brand signal */
+@keyframes adm-login-in {
+  from { opacity: 0; transform: translate3d(0, 18px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .adm-login-card { animation: none; }
+}
+/* hairline top accent — the white grain-dot brand signal */
 .adm-login-card::before {
   content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
   width: 40px; height: 2px; border-radius: 0 0 2px 2px;
-  background: linear-gradient(90deg, transparent, rgba(154,168,147,.6), transparent);
+  background: linear-gradient(90deg, transparent, rgba(79,154,53,.6), transparent);
+}
+/* leading grain dot on the title, mirroring the public-site kicker motif */
+.adm-login-card h1::before {
+  content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  background: #fff; margin-right: .55rem; vertical-align: middle; transform: translateY(-1px);
 }
 .adm-login-card h1 { color: var(--adm-text); font-size: 1.3rem; margin: 0 0 .3rem; text-align: center; }
 .adm-login-card p { color: var(--adm-muted); font-size: .82rem; text-align: center; margin: 0 0 1.5rem; }
