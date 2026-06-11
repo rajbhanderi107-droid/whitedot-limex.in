@@ -6,6 +6,7 @@ const LINKS = [
   { label: 'LIMEX', href: '#limex' },
   { label: 'Compare', href: '#comparison' },
   { label: 'Applications', href: '#applications' },
+  { label: 'News', href: '#news' },
   { label: 'Consultation', href: '#consultation' },
 ] as const;
 

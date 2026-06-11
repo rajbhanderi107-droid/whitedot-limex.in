@@ -21,6 +21,7 @@
     "remove:assistant:wd": "node scripts/remove-assistant-wd.mjs",
     "remove:allplan": "node scripts/remove-allplan.mjs",
     "wire:higgsfield:loop": "node scripts/wire-higgsfield-loop.mjs",
+    "sync:tbm-news": "node scripts/sync-tbm-news.mjs",
     "guard:admin-google": "node scripts/guard-admin-google.mjs",
     "security:audit": "npm audit && npm --prefix server audit",
     "launch:check": "npm run security:audit && npm run build && npm run backend:build"

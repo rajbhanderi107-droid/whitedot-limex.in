@@ -7,6 +7,7 @@ import Showcase from './sections/Showcase';
 import LimexDetail from './sections/LimexDetail';
 import Comparison from './sections/Comparison';
 import Applications from './sections/Applications';
+import News from './sections/News';
 import Consultation from './sections/Consultation';
 import GlobalImpact from './sections/GlobalImpact';
 import Footer from './sections/Footer';
@@ -52,6 +53,7 @@ export default function CinematicAppV2() {
           <LimexDetail />
           <Comparison />
           <Applications />
+          <News />
           <Consultation />
           <GlobalImpact />
         </main>
