@@ -178,11 +178,11 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(90deg, 
-    #F6F3EE 0%, 
-    #F6F3EE 42%, 
-    rgba(246, 243, 238, 0.88) 60%, 
-    rgba(246, 243, 238, 0.3) 80%, 
+  background: linear-gradient(90deg,
+    #F6F3EE 0%,
+    #F6F3EE 42%,
+    rgba(246, 243, 238, 0.88) 60%,
+    rgba(246, 243, 238, 0.3) 80%,
     transparent 100%
   );
 }
@@ -205,15 +205,14 @@
     padding: var(--v2-space-6) var(--v2-space-5);
   }
   .v2ld-block--compat::before {
-    background: linear-gradient(180deg, 
-      #F6F3EE 0%, 
-      #F6F3EE 62%, 
-      rgba(246, 243, 238, 0.92) 80%, 
+    background: linear-gradient(180deg,
+      #F6F3EE 0%,
+      #F6F3EE 62%,
+      rgba(246, 243, 238, 0.92) 80%,
       transparent 100%
     );
   }
 }
-
 @media (prefers-reduced-motion: reduce) {
   .v2ld-block--compat {
     transition: none !important;
