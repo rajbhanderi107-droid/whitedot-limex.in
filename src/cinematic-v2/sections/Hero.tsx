@@ -22,7 +22,7 @@ function chars(text: string, globalStart: number) {
 // sharing the same font and accent color (user-approved layout).
 const LINE1 = 'Sustainable';
 const LINE2 = 'Material';
-const LINE3 = 'to Replace Plastic · Invented by TBM in Japan';
+const LINE3 = 'to Replace Plastic · Invented by TBM, Japan';
 const OFF2  = LINE1.length;           // 11
 const OFF3  = OFF2 + LINE2.length;    // 19
 

@@ -211,7 +211,7 @@ function HeroHeadline({
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
       >
-        Sustainable Material <span className="grad">to Replace Plastic · Invented by TBM in Japan</span>
+        Sustainable Material <span className="grad">to Replace Plastic · Invented by TBM, Japan</span>
       </motion.h1>
     );
   }
@@ -223,13 +223,13 @@ function HeroHeadline({
   const headlineLines = [
     { words: ["Sustainable"], grad: false },
     { words: ["Material"], grad: false },
-    { words: ["to", "Replace", "Plastic", "·", "Invented", "by", "TBM", "in", "Japan"], grad: true },
+    { words: ["to", "Replace", "Plastic", "·", "Invented", "by", "TBM,", "Japan"], grad: true },
   ];
   const wordDelay = 0.095; // slightly wider stagger for cinematic weight
   let wordIndex = 0;
 
   return (
-    <h1 aria-label="Sustainable Material to Replace Plastic, invented by TBM in Japan">
+    <h1 aria-label="Sustainable Material to Replace Plastic, invented by TBM, Japan">
       {headlineLines.map((line, lineIndex) => (
         <span className="cine-hero-h1-line" aria-hidden="true" key={line.words.join("-")}>
           {line.words.map((word, i) => {
