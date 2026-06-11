@@ -128,3 +128,12 @@
     display: none !important;
   }
 }
+
+@media (max-width: 767px) {
+  .v2story__video,
+  .v2story__poster {
+    /* Prevent heavy horizontal cropping of burned-in text on mobile */
+    object-fit: contain;
+    background-color: #040a08; /* var(--v2-canvas-sunken) */
+  }
+}

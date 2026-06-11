@@ -258,7 +258,7 @@
 @media (max-width: 1023px) {
   .v2nav-links { display: none; }
   .v2nav-cta { display: none; }
-  .v2nav-admin-menu { margin-left: 0; }
+  .v2nav-admin-menu { display: none; } /* Hide the separate admin menu trigger on mobile */
 }
 
 @media (max-width: 639px) {
@@ -437,6 +437,20 @@
 
 .v2nav-mobile-cta:hover {
   background: var(--v2-accent-dim);
+}
+
+.v2nav-mobile-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 1.5rem 0;
+}
+
+.v2nav-mobile-link--admin {
+  color: var(--v2-accent);
+}
+
+.v2nav-mobile-link--admin:hover {
+  color: var(--v2-accent-dim);
 }
 
 /* Show hamburger on mobile, hide on desktop */

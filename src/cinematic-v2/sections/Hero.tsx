@@ -3,19 +3,32 @@ import React from 'react';
 import { useCountUp, useGrainField, useReveal } from '../motion';
 import SupplyFlow from './SupplyFlow';
 
-/** Splits a string into individually animatable character spans.
+/** Splits a string into individually animatable character spans, grouped by word to prevent mid-word wrapping on mobile.
  *  globalStart = running char index so the stagger is continuous
  *  across all three headline lines. */
 function chars(text: string, globalStart: number) {
-  return [...text].map((ch, i) => (
-    <span
-      key={i}
-      className="v2h-char"
-      style={{ '--ci': String(globalStart + i) } as React.CSSProperties}
-    >
-      {ch === ' ' ? ' ' : ch}
-    </span>
-  ));
+  let currentIdx = globalStart;
+  return text.split(' ').map((word, wIdx, arr) => {
+    const isLast = wIdx === arr.length - 1;
+    const wordSpan = (
+      <span key={wIdx} className="v2h-word" style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
+        {[...word].map((ch, cIdx) => (
+          <span
+            key={cIdx}
+            className="v2h-char"
+            style={{ '--ci': String(currentIdx++) } as React.CSSProperties}
+          >
+            {ch}
+          </span>
+        ))}
+      </span>
+    );
+    if (!isLast) {
+      currentIdx++; // increment so the timing stays consistent for the next word
+      return <React.Fragment key={wIdx}>{wordSpan}{' '}</React.Fragment>;
+    }
+    return wordSpan;
+  });
 }
 
 // Accent line carries the TBM origin credit beside "to Replace Plastic",

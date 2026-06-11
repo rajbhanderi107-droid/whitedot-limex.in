@@ -479,11 +479,35 @@
     justify-content: center;
     text-align: center;
     gap: 1.25rem;
+    padding: clamp(1rem, 5vw, 2rem);
   }
   .wds3-copy { flex: none; }
   .wds3-sub { margin-inline: auto; }
-  .wds3-diagram { flex: none; width: 100%; max-height: 52vh; }
-  .wds5-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .wds3-diagram-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 1rem;
+  }
+  .wds3-diagram {
+    flex: none;
+    width: 250%; /* Force width to allow horizontal scrolling and keep text readable */
+    min-width: 600px;
+    max-height: none;
+  }
+  .wds5-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(0.5rem, 2vw, 1rem); /* Reduce gap to fit on 375px */
+  }
+  .wds5 {
+    padding: clamp(1.5rem, 5vw, 2rem) clamp(1rem, 4vw, 2rem); /* Reduce horizontal padding */
+  }
+  .wds5-item svg {
+    width: clamp(100px, 12vw, 160px); /* Slightly reduce min width to guarantee fit */
+  }
+  .wds5-caption {
+    font-size: 0.85rem;
+  }
   .wds8-frame,
   .wds8-stage,
   .wds8-paper-glow {

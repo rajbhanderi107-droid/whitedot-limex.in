@@ -58,71 +58,73 @@ export function SceneScience({ active }: SceneProps) {
         </p>
       </div>
 
-      <svg
-        className="wds3-diagram"
-        viewBox="0 0 1672 1080"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
+      <div className="wds3-diagram-wrap">
+        <svg
+          className="wds3-diagram"
+          viewBox="0 0 1672 1080"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            {SCIENCE_DISHES.map((d) => (
+              <Fragment key={d.id}>
+                <radialGradient id={`wds3-g-${d.id}`}>
+                  <stop offset="0" stopColor="#fff" />
+                  <stop offset={d.solid / d.edge} stopColor="#fff" />
+                  <stop offset="1" stopColor="#fff" stopOpacity="0" />
+                </radialGradient>
+                <mask id={`wds3-m-${d.id}`} maskUnits="userSpaceOnUse">
+                  <circle cx={d.mcx} cy={d.mcy} r={d.edge} fill={`url(#wds3-g-${d.id})`} />
+                </mask>
+              </Fragment>
+            ))}
+          </defs>
+
+          {/* --- photoreal dishes --- */}
           {SCIENCE_DISHES.map((d) => (
-            <Fragment key={d.id}>
-              <radialGradient id={`wds3-g-${d.id}`}>
-                <stop offset="0" stopColor="#fff" />
-                <stop offset={d.solid / d.edge} stopColor="#fff" />
-                <stop offset="1" stopColor="#fff" stopOpacity="0" />
-              </radialGradient>
-              <mask id={`wds3-m-${d.id}`} maskUnits="userSpaceOnUse">
-                <circle cx={d.mcx} cy={d.mcy} r={d.edge} fill={`url(#wds3-g-${d.id})`} />
-              </mask>
-            </Fragment>
+            <image
+              key={d.id}
+              className={`wds3-img wds3-img--${d.cls}`}
+              href={`${STORY_IMG}/science-dish-${d.id}.jpg`}
+              x={d.x}
+              y={d.y}
+              width={360}
+              height={360}
+              mask={`url(#wds3-m-${d.id})`}
+              preserveAspectRatio="xMidYMid slice"
+            />
           ))}
-        </defs>
 
-        {/* --- photoreal dishes --- */}
-        {SCIENCE_DISHES.map((d) => (
-          <image
-            key={d.id}
-            className={`wds3-img wds3-img--${d.cls}`}
-            href={`${STORY_IMG}/science-dish-${d.id}.jpg`}
-            x={d.x}
-            y={d.y}
-            width={360}
-            height={360}
-            mask={`url(#wds3-m-${d.id})`}
-            preserveAspectRatio="xMidYMid slice"
+          {/* --- solid process arrows (stroke-traced) --- */}
+          <path
+            className="wds3-arrow wds3-arrow--1"
+            pathLength={1}
+            d="M500 223 H640 M620 203 L644 223 L620 243"
           />
-        ))}
+          <path
+            className="wds3-arrow wds3-arrow--2"
+            pathLength={1}
+            d="M1000 220 H1100 M1080 200 L1104 220 L1080 240"
+          />
 
-        {/* --- solid process arrows (stroke-traced) --- */}
-        <path
-          className="wds3-arrow wds3-arrow--1"
-          pathLength={1}
-          d="M500 223 H640 M620 203 L644 223 L620 243"
-        />
-        <path
-          className="wds3-arrow wds3-arrow--2"
-          pathLength={1}
-          d="M1000 220 H1100 M1080 200 L1104 220 L1080 240"
-        />
+          {/* --- dashed convergence flows (marching toward LIMEX) --- */}
+          <path className="wds3-dash wds3-dash--l" d="M330 575 Q300 830 655 860" />
+          <path className="wds3-dash wds3-dash--c" d="M820 570 V 690" />
+          <path className="wds3-dash wds3-dash--r" d="M1310 570 Q1345 830 985 860" />
+          <path className="wds3-dhead wds3-dhead--l" d="M636 847 L658 861 L634 871" />
+          <path className="wds3-dhead wds3-dhead--c" d="M802 674 L820 696 L838 674" />
+          <path className="wds3-dhead wds3-dhead--r" d="M1004 847 L982 861 L1006 871" />
 
-        {/* --- dashed convergence flows (marching toward LIMEX) --- */}
-        <path className="wds3-dash wds3-dash--l" d="M330 575 Q300 830 655 860" />
-        <path className="wds3-dash wds3-dash--c" d="M820 570 V 690" />
-        <path className="wds3-dash wds3-dash--r" d="M1310 570 Q1345 830 985 860" />
-        <path className="wds3-dhead wds3-dhead--l" d="M636 847 L658 861 L634 871" />
-        <path className="wds3-dhead wds3-dhead--c" d="M802 674 L820 696 L838 674" />
-        <path className="wds3-dhead wds3-dhead--r" d="M1004 847 L982 861 L1006 871" />
-
-        {/* --- labels --- */}
-        {SCIENCE_LABELS.map((l, i) => (
-          <g className={`wds3-labelgrp wds3-labelgrp--${i + 1}`} key={l.x}>
-            <text className="wds3-label" x={l.x} y={488}>{l.lines[0]}</text>
-            <text className="wds3-label wds3-label--dim" x={l.x} y={530}>{l.lines[1]}</text>
-          </g>
-        ))}
-        <text className="wds3-limex" x="820" y="1044">LIMEX</text>
-      </svg>
+          {/* --- labels --- */}
+          {SCIENCE_LABELS.map((l, i) => (
+            <g className={`wds3-labelgrp wds3-labelgrp--${i + 1}`} key={l.x}>
+              <text className="wds3-label" x={l.x} y={488}>{l.lines[0]}</text>
+              <text className="wds3-label wds3-label--dim" x={l.x} y={530}>{l.lines[1]}</text>
+            </g>
+          ))}
+          <text className="wds3-limex" x="820" y="1044">LIMEX</text>
+        </svg>
+      </div>
     </div>
   );
 }
