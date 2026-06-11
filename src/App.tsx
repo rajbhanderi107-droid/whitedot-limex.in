@@ -15,6 +15,7 @@ import {
   Split,
   Target,
 } from "lucide-react";
+import { useState } from "react";
 
 // CONTINUITY-WD-BEGIN imports
 import { ContinuityShell } from "./continuity-wd";
@@ -29,6 +30,7 @@ import "./aggregation-wd/aggregation-wd.css";
 import { LegalBriefs, LimexComposition, LimexComparison } from "./god-wd";
 import "./god-wd/god-wd.css";
 // GOD-WD-END imports
+import "./mobile.css";
 
 const whatsappNumber = "918849728938";
 const whatsappMessage =
@@ -276,6 +278,9 @@ const sourceLinks = [
 
 
 function App() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <main>
       {/* CONTINUITY-WD-BEGIN overlay */}
@@ -285,7 +290,7 @@ function App() {
       <AggregationLoader />
       {/* AGGREGATION-WD-END loader */}
       <nav className="site-nav" aria-label="Primary navigation">
-        <a className="brand" href="#home" aria-label="White Dot LLP home">
+        <a className="brand" href="#home" aria-label="White Dot LLP home" onClick={closeMenu}>
           <img className="brand-symbol" src={assetPath("assets/whitedot-logo-enhanced.svg")} alt="" />
           <span className="brand-wordmark">
             <span className="brand-name">White Dot</span>
@@ -307,6 +312,47 @@ function App() {
         <a className="nav-action" href={whatsappHref} target="_blank" rel="noreferrer">
           <MessageCircle size={18} />
           WhatsApp
+        </a>
+        {/* Hamburger — mobile only */}
+        <button
+          className={`nav-hamburger${menuOpen ? " open" : ""}`}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+      </nav>
+
+      {/* Mobile drawer */}
+      <div
+        className={`mobile-nav-overlay${menuOpen ? " open" : ""}`}
+        aria-hidden="true"
+        onClick={closeMenu}
+      />
+      <nav
+        className={`mobile-nav-drawer${menuOpen ? " open" : ""}`}
+        aria-label="Mobile navigation"
+      >
+        <a href="#about" onClick={closeMenu}>About</a>
+        <a href="#authorization" onClick={closeMenu}>Authorization</a>
+        <a href="#material" onClick={closeMenu}>Material</a>
+        <a href="#limex-vs-fillers" onClick={closeMenu}>vs Fillers</a>
+        <a href="#education" onClick={closeMenu}>Education</a>
+        <a href="#impact-data" onClick={closeMenu}>Impact</a>
+        <a href="#applications" onClick={closeMenu}>Applications</a>
+        <a href="#contact" onClick={closeMenu}>Contact</a>
+        <a
+          className="mobile-nav-cta"
+          href={whatsappHref}
+          target="_blank"
+          rel="noreferrer"
+          onClick={closeMenu}
+        >
+          <MessageCircle size={18} />
+          WhatsApp Us
         </a>
       </nav>
 
