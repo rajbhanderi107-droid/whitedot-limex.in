@@ -3,6 +3,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 interface PasswordInputProps {
   id?: string;
+  name?: string;
   value: string;
   onChange: (value: string) => void;
   className?: string;
@@ -16,6 +17,7 @@ interface PasswordInputProps {
 
 export function PasswordInput({
   id,
+  name,
   value,
   onChange,
   className = "adm-input",
@@ -33,6 +35,7 @@ export function PasswordInput({
     <div className="adm-password-wrap">
       <input
         id={inputId}
+        name={name}
         className={`${className} adm-password-input`}
         type={visible ? "text" : "password"}
         value={value}

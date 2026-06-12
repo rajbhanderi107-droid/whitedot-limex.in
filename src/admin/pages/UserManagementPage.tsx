@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { KeyRound, Plus, RefreshCw } from "lucide-react";
 import { api, ApiError } from "../lib/api.js";
 import { PasswordInput } from "../components/PasswordInput.js";
@@ -45,6 +45,7 @@ export function UserManagementPage() {
   const [resetPasswords, setResetPasswords] = useState<Record<string, string>>({});
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
   const limit = 20;
 
   const loadUsers = useCallback(async () => {
@@ -72,6 +73,16 @@ export function UserManagementPage() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, [notice, error]);
+
+  useEffect(() => {
+    const clearAutofill = () => {
+      setSearch("");
+      if (searchInputRef.current) searchInputRef.current.value = "";
+    };
+    clearAutofill();
+    const timers = [150, 600, 1500].map((delay) => window.setTimeout(clearAutofill, delay));
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+  }, []);
 
   const createUser = async (event: FormEvent) => {
     event.preventDefault();
@@ -156,6 +167,8 @@ export function UserManagementPage() {
             <span>Name</span>
             <input
               className="adm-input"
+              name="new-admin-display-name"
+              autoComplete="off"
               value={form.name}
               onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
               required
@@ -166,6 +179,8 @@ export function UserManagementPage() {
             <input
               className="adm-input"
               type="email"
+              name="new-admin-email-address"
+              autoComplete="off"
               value={form.email}
               onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
               required
@@ -174,8 +189,10 @@ export function UserManagementPage() {
           <label className="adm-form-group">
             <span>Password</span>
             <PasswordInput
+              name="new-admin-password"
               value={form.password}
               onChange={(value) => setForm((current) => ({ ...current, password: value }))}
+              autoComplete="new-password"
               minLength={8}
               required
             />
@@ -198,9 +215,18 @@ export function UserManagementPage() {
       <div className="adm-table-wrap">
         <div className="adm-toolbar">
           <input
+            ref={searchInputRef}
             className="adm-search"
+            type="search"
+            name="manual-user-search"
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
             placeholder="Search users..."
             value={search}
+            onFocus={(event) => {
+              if (!search) event.currentTarget.value = "";
+            }}
             onChange={(event) => {
               setSearch(event.target.value);
               setPage(1);
@@ -265,7 +291,9 @@ export function UserManagementPage() {
                     <td>
                       <div className="adm-inline-edit">
                         <PasswordInput
+                          name={`reset-password-${user.id}`}
                           className="adm-input adm-input-compact"
+                          autoComplete="new-password"
                           minLength={8}
                           placeholder="New password"
                           value={resetPasswords[user.id] ?? ""}
