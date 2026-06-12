@@ -404,3 +404,17 @@
   .wd-estop-text { display: none; }
   .wd-main { padding: 1.1rem 1rem; }
 }
+
+/* ── CyberShield live threat feed ── */
+.wd-threat-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .35rem; max-height: 420px; overflow-y: auto; }
+.wd-threat { display: flex; align-items: flex-start; gap: .6rem; padding: .55rem .7rem; border: 1px solid var(--adm-border); border-radius: 8px; background: var(--adm-surface); }
+.wd-threat .wd-ctrl-dot { margin-top: .35rem; flex: none; }
+.wd-ctrl-dot.wd-sev-low { background: var(--adm-muted); }
+.wd-ctrl-dot.wd-sev-medium { background: var(--adm-warning); }
+.wd-ctrl-dot.wd-sev-high, .wd-ctrl-dot.wd-sev-critical { background: var(--adm-danger); }
+.wd-threat-main { display: flex; flex-direction: column; gap: .1rem; min-width: 0; flex: 1; }
+.wd-threat-kind { font-weight: 600; font-size: .82rem; }
+.wd-threat-path { font-size: .74rem; color: var(--adm-muted); word-break: break-all; }
+.wd-threat-detail { font-size: .74rem; color: var(--adm-muted); opacity: .85; }
+.wd-threat-time { font-size: .7rem; color: var(--adm-muted); white-space: nowrap; }
+.wd-threat-high, .wd-threat-critical { border-color: color-mix(in srgb, var(--adm-danger) 45%, var(--adm-border)); }

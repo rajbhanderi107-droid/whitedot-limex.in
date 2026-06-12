@@ -541,6 +541,29 @@ model PortalIncident {
   @@index([createdAt])
 }
 
+enum SecurityEventKind {
+  AUTH_FAILURE
+  RATE_LIMITED
+  VALIDATION_REJECTED
+  LOCKDOWN_BLOCK
+}
+
+/// Real security telemetry — failed auth, rate-limit hits, rejected public
+/// payloads, lockdown-blocked actions. Powers the CyberShield threat feed.
+model SecurityEvent {
+  id        String            @id @default(cuid())
+  kind      SecurityEventKind
+  severity  PortalRiskLevel   @default(LOW)
+  path      String
+  method    String
+  ip        String?
+  detail    String?
+  createdAt DateTime          @default(now())
+
+  @@index([createdAt])
+  @@index([kind])
+}
+
 /// Integration connection state (sandbox/production).
 model IntegrationConfig {
   id          String   @id

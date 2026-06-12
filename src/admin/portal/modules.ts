@@ -49,7 +49,7 @@ export const MODULE_GROUPS: ModuleGroup[] = [
     modules: [
       { key: "command-center", label: "Command Center", icon: Home, path: "/admin/dashboard", status: "live",
         blurb: "Executive view of business, security & automation health." },
-      { key: "ai-brain", label: "WhiteDot AI Brain", icon: Brain, path: "/admin/ai-brain", status: "beta",
+      { key: "ai-brain", label: "WhiteDot AI Brain", icon: Brain, path: "/admin/ai-brain", status: "live",
         blurb: "Central control plane for every AI agent, draft and cost.",
         features: ["Model router & cost tracker", "AI draft + approval queue", "Brand-voice & claim checkers", "Agent performance dashboard", "Confidence & risk scoring"] },
     ],
@@ -140,13 +140,13 @@ export const MODULE_GROUPS: ModuleGroup[] = [
   {
     title: "Automation",
     modules: [
-      { key: "hyperautomation", label: "HyperAutomation", icon: Workflow, path: "/admin/hyperautomation", status: "beta",
+      { key: "hyperautomation", label: "HyperAutomation", icon: Workflow, path: "/admin/hyperautomation", status: "live",
         blurb: "No-code automations with 5 safety modes.",
         features: ["Trigger → Condition → Risk → Action", "OFF / DRAFT / APPROVAL / AUTO / LOCKDOWN", "Daily & monthly limits", "Rollback & error logs"] },
       { key: "workflows", label: "Workflow Builder", icon: GitBranch, path: "/admin/workflows", status: "live",
         blurb: "Visual low-code workflow designer.",
         features: ["Drag-drop steps", "Branching & conditions", "Risk & permission checks", "Run history & monitoring"] },
-      { key: "ai-agents", label: "AI Agents", icon: Brain, path: "/admin/ai-agents", status: "beta",
+      { key: "ai-agents", label: "AI Agents", icon: Brain, path: "/admin/ai-agents", status: "live",
         blurb: "Marketplace of specialised AI agents.",
         features: ["Strategy, growth, sales, content agents", "DevSecOps & security agents", "Per-agent permissions", "Cost & success tracking"] },
       { key: "approvals", label: "Approval Center", icon: BadgeCheck, path: "/admin/approvals", status: "live",
@@ -160,7 +160,7 @@ export const MODULE_GROUPS: ModuleGroup[] = [
   {
     title: "Security & Reliability",
     modules: [
-      { key: "cybershield", label: "CyberShield", icon: ShieldCheck, path: "/admin/cybershield", status: "beta",
+      { key: "cybershield", label: "CyberShield", icon: ShieldCheck, path: "/admin/cybershield", status: "live",
         blurb: "SOC-style security command center (defense-in-depth).",
         features: ["Security score & threat feed", "Failed logins & sessions", "Vulnerability & malware status", "Safe auto-remediation + lockdown"] },
       { key: "incidents", label: "Incident Response", icon: Siren, path: "/admin/incidents", status: "live",

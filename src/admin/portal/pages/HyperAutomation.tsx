@@ -1,9 +1,8 @@
 /* HyperAutomation Control Room — the automation control plane.
  *
  * Each automation has its own 5-mode selector and enable toggle, persisted
- * locally. There is no server executor yet, so nothing is actually sent;
- * the only action available is "Queue draft" which (for APPROVAL-mode
- * automations) places a real item in the Approval Center for a human to
+ * server-side in Postgres (AutomationConfig). Nothing is sent without a
+ * human: "Queue draft" places a real item in the Approval Center for
  * review. Lockdown globally pauses everything risky. */
 
 import { ArrowRight, Send, Power, ShieldAlert } from "lucide-react";
@@ -68,7 +67,7 @@ export function HyperAutomation() {
                       <span>{a.trigger}</span><ArrowRight size={12} /><span className="wd-auto-action">{a.action}</span>
                     </div>
                     <div className="wd-auto-meta">
-                      cond: {a.condition} · limit {a.limits.daily}/day · last run —
+                      cond: {a.condition} · limit {a.limits.daily}/day
                     </div>
                   </div>
                   <div className="wd-auto-controls">

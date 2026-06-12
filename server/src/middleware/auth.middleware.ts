@@ -3,6 +3,7 @@ import type { Role } from "@prisma/client";
 import { prisma } from "../config/prisma.js";
 import { verifyToken } from "../utils/tokens.js";
 import { AppError } from "./error.middleware.js";
+import { recordSecurityEvent } from "../services/securityEvents.service.js";
 
 /** Verify JWT from Authorization header and attach currentUser to request */
 export async function requireAuth(req: Request, _res: Response, next: NextFunction) {
@@ -25,6 +26,15 @@ export async function requireAuth(req: Request, _res: Response, next: NextFuncti
     req.currentUser = { id: user.id, email: user.email, name: user.name, role: user.role };
     next();
   } catch (err) {
+    // A bad/expired token on a protected route is a security signal; a
+    // missing token is usually just an expired session — log it lighter.
+    const hadToken = !!req.headers.authorization;
+    recordSecurityEvent({
+      kind: "AUTH_FAILURE",
+      req,
+      severity: hadToken ? "MEDIUM" : "LOW",
+      detail: hadToken ? "Invalid or expired bearer token" : "No bearer token on protected route",
+    });
     if (err instanceof AppError) return next(err);
     next(new AppError(401, "UNAUTHORIZED", "Invalid or expired token"));
   }

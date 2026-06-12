@@ -56,6 +56,8 @@ router.patch("/ai-agents/:id", validate(upsertAiAgentSchema), asyncHandler(porta
 router.post("/ai-draft", validate(aiDraftSchema), asyncHandler(portal.createAiDraft));
 
 // ─── Intelligence & operations ───────────────────
+router.get("/security/summary", asyncHandler(portal.getSecuritySummary));
+router.get("/ai/stats", asyncHandler(portal.getAiStats));
 router.get("/bi/summary", asyncHandler(portal.getBiSummary));
 router.get("/health/detailed", asyncHandler(portal.getDetailedHealth));
 router.get("/seo/audit", asyncHandler(portal.getSeoAudit));

@@ -77,6 +77,34 @@ export interface DevopsRun {
 
 export interface BackupStats { tables: Record<string, number>; totalRows: number; note: string }
 
+export interface SecurityEvent {
+  id: string;
+  kind: "AUTH_FAILURE" | "RATE_LIMITED" | "VALIDATION_REJECTED" | "LOCKDOWN_BLOCK";
+  severity: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+  path: string;
+  method: string;
+  ip?: string | null;
+  detail?: string | null;
+  createdAt: string;
+}
+
+export interface SecuritySummary {
+  counts24h: Record<SecurityEvent["kind"], number>;
+  high24h: number;
+  total7d: number;
+  events: SecurityEvent[];
+}
+
+export interface AiStats {
+  pending: number;
+  approved: number;
+  rejected: number;
+  decided: number;
+  aiDrafts: number;
+  approvalRate: number | null;
+  llmConfigured: boolean;
+}
+
 export const portalApi = {
   // posture
   getState: () => api.get<ServerPortalState>("/api/portal/state"),
@@ -115,6 +143,8 @@ export const portalApi = {
   aiDraft: (body: { kind: "followup_email" | "followup_whatsapp" | "proposal_intro" | "reactivation"; lead: { name: string; company?: string; status?: string; industry?: string; product?: string; notes?: string } }) =>
     api.post<ServerApproval>("/api/portal/ai-draft", body),
   // intelligence & ops
+  securitySummary: () => api.get<SecuritySummary>("/api/portal/security/summary"),
+  aiStats: () => api.get<AiStats>("/api/portal/ai/stats"),
   biSummary: () => api.get<BiSummary>("/api/portal/bi/summary"),
   health: () => api.get<DetailedHealth>("/api/portal/health/detailed"),
   seoAudit: () => api.get<SeoAudit>("/api/portal/seo/audit"),

@@ -13,6 +13,7 @@ import { env } from "../config/env.js";
 import { sendSuccess, sendError } from "../utils/apiResponse.js";
 import { paramId } from "../utils/params.js";
 import { logActivity } from "../services/activity.service.js";
+import { recordSecurityEvent } from "../services/securityEvents.service.js";
 import { aiDraftConfigured, generateDraft, type DraftKind, type LeadContext } from "../services/aiDraft.service.js";
 
 const SITE_URL = env.isProduction ? "https://whitedotindia.in" : env.FRONTEND_URL;
@@ -90,6 +91,7 @@ export async function decideApproval(req: Request, res: Response) {
   if (req.body.decision === "APPROVED") {
     const state = await prisma.portalState.findUnique({ where: { id: "global" } });
     if (state?.emergencyStop || state?.automationMode === "LOCKDOWN") {
+      recordSecurityEvent({ kind: "LOCKDOWN_BLOCK", req, severity: "HIGH", detail: `Approve attempt on ${id} during lockdown` });
       return sendError(res, "LOCKDOWN_ACTIVE", "Approvals are blocked while lockdown is active.", 423);
     }
   }
@@ -462,5 +464,51 @@ export async function exportBackup(req: Request, res: Response) {
     exportedAt: new Date().toISOString(),
     companies, inquiries, quotes, samples, calculators: calcs,
     products, inventory, quotations, orders, campaigns, content, workflows, incidents,
+  });
+}
+
+// ─── Security telemetry (CyberShield) ────────────
+
+export async function getSecuritySummary(_req: Request, res: Response) {
+  const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+  const [byKind24h, high24h, total7d, recent] = await Promise.all([
+    prisma.securityEvent.groupBy({
+      by: ["kind"],
+      where: { createdAt: { gte: dayAgo } },
+      _count: { _all: true },
+    }),
+    prisma.securityEvent.count({ where: { createdAt: { gte: dayAgo }, severity: "HIGH" } }),
+    prisma.securityEvent.count({ where: { createdAt: { gte: weekAgo } } }),
+    prisma.securityEvent.findMany({ orderBy: { createdAt: "desc" }, take: 30 }),
+  ]);
+
+  const counts24h = { AUTH_FAILURE: 0, RATE_LIMITED: 0, VALIDATION_REJECTED: 0, LOCKDOWN_BLOCK: 0 } as Record<string, number>;
+  for (const row of byKind24h) counts24h[row.kind] = row._count._all;
+
+  return sendSuccess(res, { counts24h, high24h, total7d, events: recent });
+}
+
+// ─── AI Brain stats ──────────────────────────────
+
+const AI_DRAFT_KINDS = ["followup_email", "followup_whatsapp", "proposal_intro", "reactivation"];
+
+export async function getAiStats(_req: Request, res: Response) {
+  const [pending, approved, rejected, aiDrafts] = await Promise.all([
+    prisma.approvalRequest.count({ where: { status: "PENDING" } }),
+    prisma.approvalRequest.count({ where: { status: "APPROVED" } }),
+    prisma.approvalRequest.count({ where: { status: "REJECTED" } }),
+    prisma.approvalRequest.count({ where: { kind: { in: AI_DRAFT_KINDS } } }),
+  ]);
+  const decided = approved + rejected;
+  return sendSuccess(res, {
+    pending,
+    approved,
+    rejected,
+    decided,
+    aiDrafts,
+    approvalRate: decided > 0 ? Math.round((approved / decided) * 100) : null,
+    llmConfigured: aiDraftConfigured(),
   });
 }
