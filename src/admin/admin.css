@@ -174,6 +174,18 @@ table.adm-table tr:hover td { background: var(--adm-accent-soft); }
 .adm-input-compact { min-width: 150px; padding: .4rem .55rem; font-size: .8rem; }
 .adm-textarea { min-height: 80px; resize: vertical; }
 select.adm-input { cursor: pointer; }
+.adm-password-wrap { position: relative; width: 100%; }
+.adm-password-input { width: 100%; padding-right: 2.35rem; }
+.adm-password-toggle {
+  position: absolute; top: 50%; right: .42rem; transform: translateY(-50%);
+  width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;
+  border: 0; border-radius: 5px; background: transparent; color: var(--adm-muted);
+  cursor: pointer;
+}
+.adm-password-toggle:hover:not(:disabled) { color: var(--adm-accent); background: var(--adm-accent-soft); }
+.adm-password-toggle:disabled { opacity: .45; cursor: not-allowed; }
+.adm-inline-edit .adm-password-wrap { min-width: 190px; }
+.adm-inline-edit .adm-password-input { min-width: 190px; }
 
 .adm-panel { background: var(--adm-surface); border: 1px solid var(--adm-border); border-radius: var(--adm-radius); padding: 1rem; margin-bottom: 1rem; }
 .adm-panel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }

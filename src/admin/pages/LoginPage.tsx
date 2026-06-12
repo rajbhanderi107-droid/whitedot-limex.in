@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { FormEvent } from "react";
 import { api } from "../lib/api.js";
 import { useBrandLogo } from "../../useBrandLogo";
+import { PasswordInput } from "../components/PasswordInput.js";
 
 /* ─── Google Identity Services type shim ─── */
 declare global {
@@ -170,7 +171,7 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
           </div>
           <div className="adm-form-group">
             <label htmlFor="password">Password</label>
-            <input id="password" type="password" className="adm-input" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <PasswordInput id="password" value={password} onChange={setPassword} required />
           </div>
           <button type="submit" className="adm-btn adm-btn-primary" style={{ width: "100%", marginTop: ".8rem", justifyContent: "center" }} disabled={anyLoading}>
             {loading ? (

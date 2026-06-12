@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { KeyRound, Plus, RefreshCw } from "lucide-react";
 import { api, ApiError } from "../lib/api.js";
+import { PasswordInput } from "../components/PasswordInput.js";
 
 type Role = "SUPER_ADMIN" | "ADMIN" | "SALES" | "OPERATIONS" | "VIEWER";
 
@@ -172,11 +173,9 @@ export function UserManagementPage() {
           </label>
           <label className="adm-form-group">
             <span>Password</span>
-            <input
-              className="adm-input"
-              type="password"
+            <PasswordInput
               value={form.password}
-              onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
+              onChange={(value) => setForm((current) => ({ ...current, password: value }))}
               minLength={8}
               required
             />
@@ -265,15 +264,12 @@ export function UserManagementPage() {
                     </td>
                     <td>
                       <div className="adm-inline-edit">
-                        <input
+                        <PasswordInput
                           className="adm-input adm-input-compact"
-                          type="password"
                           minLength={8}
                           placeholder="New password"
                           value={resetPasswords[user.id] ?? ""}
-                          onChange={(event) =>
-                            setResetPasswords((current) => ({ ...current, [user.id]: event.target.value }))
-                          }
+                          onChange={(value) => setResetPasswords((current) => ({ ...current, [user.id]: value }))}
                         />
                         <button
                           className="adm-icon-btn"
