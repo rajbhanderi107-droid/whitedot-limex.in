@@ -38,6 +38,15 @@ const STAGES: { key: string; label: string }[] = [
 ];
 const STAGE_KEYS = STAGES.map((s) => s.key);
 
+function cleanPhone(phone?: string): string {
+  return (phone ?? "").replace(/[^\d]/g, "");
+}
+
+function leadWhatsappHref(lead: Lead): string {
+  const message = `Hello ${lead.name}, this is White Dot LLP. We received your LIMEX inquiry${lead.companyName ? ` for ${lead.companyName}` : ""}. Can we confirm your application, current material, monthly volume, and quote/sample requirement?`;
+  return `https://wa.me/${cleanPhone(lead.phone)}?text=${encodeURIComponent(message)}`;
+}
+
 export function CrmPipeline() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
@@ -181,6 +190,18 @@ export function CrmPipeline() {
                           <span className={`wd-prio wd-prio-${l.priority.toLowerCase()}`}>{l.priority}</span>
                           <span className="wd-temp-label">{temp}</span>
                           {l.assignedTo && <span className="wd-lead-owner">{l.assignedTo.name.split(" ")[0]}</span>}
+                        </div>
+                        <div className="wd-lead-actions">
+                          {l.phone && (
+                            <a href={leadWhatsappHref(l)} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>
+                              WhatsApp
+                            </a>
+                          )}
+                          {l.email && (
+                            <a href={`mailto:${l.email}?subject=${encodeURIComponent("White Dot LIMEX follow-up")}`} onClick={(e) => e.stopPropagation()}>
+                              Email
+                            </a>
+                          )}
                         </div>
                         <select
                           className="wd-lead-stage"

@@ -5,7 +5,7 @@ const NAV = [
   { label: 'Material', href: '#material' },
   { label: 'Process', href: '#material' },
   { label: 'Applications', href: '#applications' },
-  { label: 'Consultation', href: '#consultation' },
+  { label: 'Consultation', href: '#consultation?lead=inquiry' },
 ] as const;
 
 // Placeholder handles — update each href once the live profiles exist.

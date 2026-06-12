@@ -6,7 +6,15 @@ import './InquiryFormV2.css';
 
 export function InquiryFormV2() {
   const [form, setForm] = useState({
-    name: '', email: '', phone: '', companyName: '', message: '', _hp: '',
+    name: '',
+    email: '',
+    phone: '',
+    companyName: '',
+    city: '',
+    industry: '',
+    inquiryType: '',
+    message: '',
+    _hp: '',
   });
   const [status, setStatus] = useState<SubmitStatus>('idle');
   const [errorMsg, setErrorMsg] = useState('');
@@ -23,7 +31,17 @@ export function InquiryFormV2() {
       const { _hp, ...payload } = form;
       await submitPublic('inquiry', { ...payload, sourcePage: withAttribution('consultation-v2') });
       setStatus('sent');
-      setForm({ name: '', email: '', phone: '', companyName: '', message: '', _hp: '' });
+      setForm({
+        name: '',
+        email: '',
+        phone: '',
+        companyName: '',
+        city: '',
+        industry: '',
+        inquiryType: '',
+        message: '',
+        _hp: '',
+      });
     } catch (err: unknown) {
       setStatus('error');
       setErrorMsg(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
@@ -102,6 +120,55 @@ export function InquiryFormV2() {
             onChange={set('companyName')}
             autoComplete="organization"
           />
+        </div>
+      </div>
+      <div className="v2iq-field">
+        <label className="v2iq-label" htmlFor="v2iq-industry">Industry</label>
+        <select
+          id="v2iq-industry"
+          className="v2iq-input"
+          name="industry"
+          value={form.industry}
+          onChange={set('industry')}
+        >
+          <option value="">Select industry</option>
+          <option value="Packaging">Packaging</option>
+          <option value="FMCG">FMCG</option>
+          <option value="Automotive">Automotive</option>
+          <option value="Building materials">Building materials</option>
+          <option value="Export / trading">Export / trading</option>
+          <option value="Other manufacturing">Other manufacturing</option>
+        </select>
+      </div>
+      <div className="v2iq-row">
+        <div className="v2iq-field">
+          <label className="v2iq-label" htmlFor="v2iq-city">City</label>
+          <input
+            id="v2iq-city"
+            className="v2iq-input"
+            name="city"
+            placeholder="Ahmedabad"
+            value={form.city}
+            onChange={set('city')}
+            autoComplete="address-level2"
+          />
+        </div>
+        <div className="v2iq-field">
+          <label className="v2iq-label" htmlFor="v2iq-type">Buying intent</label>
+          <select
+            id="v2iq-type"
+            className="v2iq-input"
+            name="inquiryType"
+            value={form.inquiryType}
+            onChange={set('inquiryType')}
+          >
+            <option value="">Select intent</option>
+            <option value="Technical consultation">Technical consultation</option>
+            <option value="Price discovery">Price discovery</option>
+            <option value="Sample / trial">Sample / trial</option>
+            <option value="Bulk procurement">Bulk procurement</option>
+            <option value="Partnership / distribution">Partnership / distribution</option>
+          </select>
         </div>
       </div>
       <div className="v2iq-field">

@@ -94,7 +94,47 @@ export function BiPage() {
 
 /* ─── Lead Generation Engine ───────────────────────────── */
 
-interface LeadLite { sourcePage?: string | null; inquiryType?: string | null; createdAt: string }
+interface LeadLite {
+  sourcePage?: string | null;
+  inquiryType?: string | null;
+  industry?: string | null;
+  createdAt: string;
+}
+
+const UTM_PRESETS = [
+  { label: "LinkedIn buyers", source: "linkedin", medium: "paid_social", campaign: "industrial-buyers" },
+  { label: "Google Search", source: "google", medium: "cpc", campaign: "limex-supplier-search" },
+  { label: "Meta retargeting", source: "meta", medium: "paid_social", campaign: "site-retargeting" },
+  { label: "WhatsApp broadcast", source: "whatsapp", medium: "message", campaign: "sample-followup" },
+  { label: "Email nurture", source: "zoho-campaigns", medium: "email", campaign: "quote-nurture" },
+  { label: "Partner referral", source: "partner", medium: "referral", campaign: "distributor-referral" },
+];
+
+const GROWTH_STACK = [
+  { tool: "Zoho CRM", role: "System of record", action: "Sync every website, IndiaMART, LinkedIn, Google, and Meta lead into one deduped pipeline." },
+  { tool: "GTM + GA4 + Google Ads", role: "Conversion tracking", action: "Track generate_lead, WhatsApp clicks, quote requests, sample requests, calculator submits, and bookings." },
+  { tool: "WhatsApp Business", role: "Fast response", action: "Start with tracked wa.me CTAs, then add Business Platform templates once reply volume grows." },
+  { tool: "Zoho Campaigns", role: "Nurture", action: "Run inquiry received, catalog sent, quote follow-up, and dormant-lead reactivation sequences." },
+  { tool: "LinkedIn Lead Gen Forms", role: "B2B prospecting", action: "Target procurement, packaging, export, and sustainability roles; sync leads quickly." },
+  { tool: "Google/Meta lead forms", role: "Paid acquisition", action: "Use high-intent questions and push leads into CRM immediately for same-day follow-up." },
+  { tool: "Zoho Bookings or Calendly", role: "Meeting capture", action: "Offer export consultation and buyer-call slots after quote/sample form submission." },
+  { tool: "Microsoft Clarity", role: "UX evidence", action: "Review heatmaps and recordings for form friction; mask sensitive fields." },
+  { tool: "IndiaMART", role: "Indian B2B demand", action: "Connect IndiaMART leads into Zoho CRM and compare source quality against ads." },
+  { tool: "Apollo/Lusha", role: "Enrichment", action: "Run server-side enrichment only after capture; never expose keys in the browser." },
+];
+
+function sourceField(raw: string, name: string): string {
+  const match = raw.match(new RegExp(`${name}=([^|\\]]+)`));
+  return match?.[1]?.trim() ?? "";
+}
+
+function sourceLabel(sourcePage?: string | null, fallback?: string | null): string {
+  const raw = sourcePage?.trim() || fallback?.trim() || "direct / unknown";
+  const source = sourceField(raw, "source") || sourceField(raw, "ref") || (raw === "direct / unknown" ? "direct" : raw.split(" ")[0]);
+  const medium = sourceField(raw, "medium") || (sourceField(raw, "ref") ? "referral" : "site");
+  const campaign = sourceField(raw, "campaign");
+  return campaign ? `${source} / ${campaign}` : `${source} / ${medium}`;
+}
 
 export function LeadGenPage() {
   const [leads, setLeads] = useState<LeadLite[]>([]);
@@ -112,12 +152,30 @@ export function LeadGenPage() {
   const bySource = useMemo(() => {
     const map = new Map<string, number>();
     for (const l of leads) {
-      const key = l.sourcePage?.trim() || l.inquiryType?.trim() || "direct / unknown";
+      const key = sourceLabel(l.sourcePage, l.inquiryType);
       map.set(key, (map.get(key) ?? 0) + 1);
     }
     return [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
   }, [leads]);
   const maxSource = Math.max(1, ...bySource.map(([, c]) => c));
+
+  const byCampaign = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const l of leads) {
+      const key = sourceField(l.sourcePage ?? "", "campaign") || "untracked";
+      map.set(key, (map.get(key) ?? 0) + 1);
+    }
+    return [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
+  }, [leads]);
+
+  const byIndustry = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const l of leads) {
+      const key = l.industry?.trim() || "industry missing";
+      map.set(key, (map.get(key) ?? 0) + 1);
+    }
+    return [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
+  }, [leads]);
 
   const utmUrl = useMemo(() => {
     try {
@@ -172,6 +230,18 @@ export function LeadGenPage() {
             <label className="wd-field"><span>utm_medium</span><input value={utm.medium} onChange={(e) => setUtm((s) => ({ ...s, medium: e.target.value }))} placeholder="social / cpc / email" /></label>
             <label className="wd-field"><span>utm_campaign</span><input value={utm.campaign} onChange={(e) => setUtm((s) => ({ ...s, campaign: e.target.value }))} placeholder="fmcg-bottles-jun" /></label>
           </div>
+          <div className="wd-preset-row">
+            {UTM_PRESETS.map((preset) => (
+              <button
+                key={preset.label}
+                type="button"
+                className="wd-action-chip wd-chip-btn"
+                onClick={() => setUtm((s) => ({ ...s, source: preset.source, medium: preset.medium, campaign: preset.campaign }))}
+              >
+                {preset.label}
+              </button>
+            ))}
+          </div>
           {utmUrl ? (
             <div className="wd-utm-out">
               <Link2 size={13} /><code>{utmUrl}</code>
@@ -181,7 +251,46 @@ export function LeadGenPage() {
         </Card>
       </div>
 
+      <div className="wd-two-col">
+        <Card>
+          <SectionHeader title="Campaign quality" sub="Named campaigns make follow-up match the offer." />
+          <div className="wd-chip-row">
+            {byCampaign.map(([campaign, count]) => (
+              <span key={campaign} className="wd-action-chip">{campaign} · <b>{count}</b></span>
+            ))}
+            {!loading && byCampaign.length === 0 && <span className="wd-muted">No campaign data yet.</span>}
+          </div>
+        </Card>
+        <Card>
+          <SectionHeader title="Industry signal" sub="Industry capture helps route and prioritize faster." />
+          <div className="wd-chip-row">
+            {byIndustry.map(([industry, count]) => (
+              <span key={industry} className="wd-action-chip">{industry} · <b>{count}</b></span>
+            ))}
+            {!loading && byIndustry.length === 0 && <span className="wd-muted">No industry data yet.</span>}
+          </div>
+        </Card>
+      </div>
+
+      <SectionHeader title="Real-world growth stack" sub="Practical tools to connect as accounts/API keys become available." />
+      <div className="wd-growth-stack">
+        {GROWTH_STACK.map((item) => (
+          <div key={item.tool} className="wd-growth-card">
+            <div>
+              <span className="wd-growth-tool">{item.tool}</span>
+              <span className="wd-growth-role">{item.role}</span>
+            </div>
+            <p>{item.action}</p>
+          </div>
+        ))}
+      </div>
+
       <SectionHeader title="Scoring rules" sub="How the CRM scores each lead today (see CRM & Pipeline)." />
+      <div className="wd-chip-row wd-mt">
+        {["Phone +8", "Industry +8", "Buying intent +12", "Tracked source +8"].map((r) => (
+          <span key={r} className="wd-action-chip">{r}</span>
+        ))}
+      </div>
       <div className="wd-chip-row">
         {["Stage progress up to +60", "Priority up to +35", "Company named +10", "Business email +15", "Salesperson assigned +10", "Fresh (≤7d) +10", "Stale NEW (>14d) −15"].map((r) => (
           <span key={r} className="wd-action-chip">{r}</span>

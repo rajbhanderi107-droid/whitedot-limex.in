@@ -567,6 +567,61 @@ select.adm-input { cursor: pointer; }
 .adm-bell-dot-warning, .adm-bell-dot-follow_up { background: var(--adm-warning); }
 .adm-bell-dot-error { background: var(--adm-danger); }
 .adm-bell-dot-lead, .adm-bell-dot-quote { background: var(--adm-accent); }
+
+.adm-quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-bottom: .8rem;
+}
+
+.adm-quick-actions a[aria-disabled="true"] {
+  opacity: .45;
+  pointer-events: none;
+}
+
+.adm-playbook {
+  display: grid;
+  gap: .45rem;
+  font-size: .8rem;
+  line-height: 1.55;
+  color: var(--adm-muted);
+}
+
+.adm-playbook p { margin: 0; }
+.adm-playbook b { color: var(--adm-text); }
+
+.adm-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 .75rem;
+  display: grid;
+  gap: .45rem;
+}
+
+.adm-checklist li {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  color: var(--adm-muted);
+  font-size: .8rem;
+}
+
+.adm-checklist li::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--adm-danger);
+}
+
+.adm-checklist li[data-ok="true"] {
+  color: var(--adm-text);
+}
+
+.adm-checklist li[data-ok="true"]::before {
+  background: var(--adm-success);
+}
 .adm-bell-body { flex: 1; min-width: 0; }
 .adm-bell-title { font-size: .82rem; font-weight: 600; color: var(--adm-text); }
 .adm-bell-msg { font-size: .78rem; color: var(--adm-muted); margin-top: .1rem; line-height: 1.4; }

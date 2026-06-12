@@ -11,7 +11,11 @@
 
 export interface ScorableLead {
   email?: string;
+  phone?: string;
   companyName?: string;
+  industry?: string | null;
+  inquiryType?: string | null;
+  sourcePage?: string | null;
   status: string;
   priority: string;
   createdAt: string;
@@ -33,6 +37,10 @@ export function leadScore(lead: ScorableLead): number {
   s += PRIORITY_WEIGHT[lead.priority] ?? 0;
   if (lead.companyName?.trim()) s += 10;
   if (lead.email && !FREE_EMAIL.test(lead.email)) s += 15; // business domain
+  if (lead.phone?.trim()) s += 8;
+  if (lead.industry?.trim()) s += 8;
+  if (/bulk|sample|quote|price|technical|procurement|distribut/i.test(lead.inquiryType ?? "")) s += 12;
+  if (/utm_|source=|campaign=|gclid|fbclid|li_fat_id|ref=/i.test(lead.sourcePage ?? "")) s += 8;
   if (lead.assignedTo) s += 10;
 
   const ageDays = (Date.now() - new Date(lead.createdAt).getTime()) / 86_400_000;

@@ -14,6 +14,16 @@ const FORM_TABS = [
 type FormKey = (typeof FORM_TABS)[number]['key'];
 const consultationVideoSrc = `${import.meta.env.BASE_URL}assets/videos/consultation-products-2afe4bb.mp4`;
 
+function requestedLeadForm(): FormKey | null {
+  const searchParams = new URLSearchParams(window.location.search);
+  const queryLead = searchParams.get('lead') as FormKey | null;
+  if (queryLead && FORM_TABS.some((tab) => tab.key === queryLead)) return queryLead;
+
+  const [, hashQuery = ''] = window.location.hash.split('?');
+  const hashLead = new URLSearchParams(hashQuery).get('lead') as FormKey | null;
+  return hashLead && FORM_TABS.some((tab) => tab.key === hashLead) ? hashLead : null;
+}
+
 export default function Consultation() {
   const headline = useReveal<HTMLDivElement>();
   const body = useReveal<HTMLDivElement>({ threshold: 0.06 });
@@ -21,6 +31,21 @@ export default function Consultation() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const activeTab = FORM_TABS.find((t) => t.key === activeForm)!;
+
+  useEffect(() => {
+    const syncLeadForm = () => {
+      const requested = requestedLeadForm();
+      if (requested) setActiveForm(requested);
+    };
+    syncLeadForm();
+    window.addEventListener('hashchange', syncLeadForm);
+    return () => window.removeEventListener('hashchange', syncLeadForm);
+  }, []);
+
+  const openForm = (formKey: FormKey) => {
+    setActiveForm(formKey);
+    sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -117,9 +142,9 @@ export default function Consultation() {
                 Request physical LIMEX samples for in-house evaluation and
                 testing against your process specifications.
               </span>
-              <a href="mailto:info@whitedotindia.in" className="v2con-card-action">
+              <button type="button" className="v2con-card-action" onClick={() => openForm('sample')}>
                 Request Samples →
-              </a>
+              </button>
             </div>
 
             <div className="v2con-card">
@@ -128,9 +153,9 @@ export default function Consultation() {
                 Speak with our team about formulation grades, processing
                 parameters, and integration into your manufacturing line.
               </span>
-              <a href="mailto:info@whitedotindia.in" className="v2con-card-action">
+              <button type="button" className="v2con-card-action" onClick={() => openForm('inquiry')}>
                 Schedule a Call →
-              </a>
+              </button>
             </div>
 
             <div className="v2con-territory">

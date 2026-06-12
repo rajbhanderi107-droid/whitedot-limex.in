@@ -156,12 +156,18 @@
 }
 
 .v2con-card-action {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
   font-family: var(--v2-font-sans);
   font-size: var(--v2-fs-caption);
   font-weight: var(--v2-fw-medium);
   color: var(--v2-accent);
   text-decoration: none;
   margin-top: var(--v2-space-2);
+  cursor: pointer;
+  text-align: left;
 }
 .v2con-card-action:hover { text-decoration: underline; }
 

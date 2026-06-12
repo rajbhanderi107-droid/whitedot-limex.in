@@ -13,6 +13,40 @@ interface InquiryDetail {
   adminNotes: Array<{ id: string; content: string; createdAt: string; createdBy: { name: string } }>;
 }
 
+function cleanPhone(phone?: string): string {
+  return (phone ?? "").replace(/[^\d]/g, "");
+}
+
+function whatsappHref(inquiry: InquiryDetail): string {
+  const phone = cleanPhone(inquiry.phone);
+  const target = phone.length >= 10 ? phone : "";
+  const message = [
+    `Hello ${inquiry.name}, this is White Dot LLP.`,
+    `We received your LIMEX inquiry${inquiry.companyName ? ` for ${inquiry.companyName}` : ""}.`,
+    inquiry.inquiryType ? `Interest: ${inquiry.inquiryType}.` : "",
+    "Can we confirm your application, current material, monthly volume, and sample/quote requirement?",
+  ].filter(Boolean).join(" ");
+  return `https://wa.me/${target}?text=${encodeURIComponent(message)}`;
+}
+
+function emailHref(inquiry: InquiryDetail): string {
+  const subject = `White Dot LIMEX follow-up${inquiry.companyName ? ` - ${inquiry.companyName}` : ""}`;
+  const body = [
+    `Hello ${inquiry.name},`,
+    "",
+    "Thank you for contacting White Dot LLP about LIMEX.",
+    "To prepare the right recommendation, please share:",
+    "1. Product/application",
+    "2. Current material or polymer grade",
+    "3. Monthly volume",
+    "4. Target: quote, sample, technical consultation, or bulk procurement",
+    "",
+    "Regards,",
+    "White Dot LLP",
+  ].join("\n");
+  return `mailto:${inquiry.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
 export function InquiryDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -59,6 +93,9 @@ export function InquiryDetailPage() {
   if (loading) return <div className="adm-loading">Loading...</div>;
   if (!inquiry) return <div className="adm-empty">Inquiry not found.</div>;
 
+  const phone = cleanPhone(inquiry.phone);
+  const hasEnoughQualification = Boolean(inquiry.companyName && inquiry.industry && inquiry.inquiryType && inquiry.message);
+
   return (
     <>
       <div className="adm-header">
@@ -79,6 +116,22 @@ export function InquiryDetailPage() {
                 <div className="adm-card-row" key={label}><dt>{label}</dt><dd>{value}</dd></div>
               ) : null)}
             </dl>
+          </div>
+
+          <div className="adm-card">
+            <h3>Employee Follow-Up Console</h3>
+            <div className="adm-quick-actions">
+              <a className="adm-btn adm-btn-primary" href={emailHref(inquiry)}>Email follow-up</a>
+              <a className="adm-btn" href={whatsappHref(inquiry)} target="_blank" rel="noreferrer" aria-disabled={!phone}>
+                WhatsApp
+              </a>
+              {phone && <a className="adm-btn" href={`tel:${phone}`}>Call</a>}
+            </div>
+            <div className="adm-playbook">
+              <p><b>First response target:</b> Contact within 15 minutes during business hours.</p>
+              <p><b>Opening script:</b> Confirm application, current material, monthly volume, target price range, and sample/quote timeline.</p>
+              <p><b>Next CRM step:</b> Move to CONTACTED after first touch, QUALIFIED after volume/application are confirmed, then set priority HIGH for bulk/sample-ready buyers.</p>
+            </div>
           </div>
 
           {inquiry.message && (
@@ -104,6 +157,20 @@ export function InquiryDetailPage() {
         </div>
 
         <div className="adm-detail-aside">
+          <div className="adm-card">
+            <h3>Qualification Health</h3>
+            <ul className="adm-checklist">
+              <li data-ok={Boolean(inquiry.companyName)}>Company captured</li>
+              <li data-ok={Boolean(inquiry.phone)}>Phone / WhatsApp captured</li>
+              <li data-ok={Boolean(inquiry.industry)}>Industry captured</li>
+              <li data-ok={Boolean(inquiry.inquiryType)}>Buying intent captured</li>
+              <li data-ok={Boolean(inquiry.message)}>Requirement details captured</li>
+            </ul>
+            <p style={{ fontSize: ".78rem", color: hasEnoughQualification ? "var(--adm-success)" : "var(--adm-muted)" }}>
+              {hasEnoughQualification ? "Ready for sales qualification." : "Ask missing details before preparing quote or sample dispatch."}
+            </p>
+          </div>
+
           <div className="adm-card">
             <h3>Status & Priority</h3>
             <div className="adm-form-group" style={{ marginBottom: ".6rem" }}>

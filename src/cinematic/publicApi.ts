@@ -2,17 +2,20 @@ const API_BASE =
   import.meta.env.VITE_API_URL ||
   (import.meta.env.DEV ? "http://localhost:4000" : "https://whitedot-limex-backend.onrender.com");
 
-/* The backend sleeps on the Render free tier. A submission that hits a
- * cold server can take ~30-50s to be served — without a generous timeout
- * and a quiet retry, that's a silently lost lead. */
+declare global {
+  interface Window {
+    dataLayer?: Array<Record<string, unknown>>;
+    gtag?: (...args: unknown[]) => void;
+    fbq?: (...args: unknown[]) => void;
+  }
+}
+
 const COLD_TIMEOUT_MS = 50_000;
 const WARM_TIMEOUT_MS = 15_000;
 let backendWarm = false;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-/** Fire-and-forget warm-up ping. Called once when the public site mounts so
- *  the backend is already awake by the time a visitor submits a form. */
 export function warmPublicBackend(): void {
   if (backendWarm) return;
   fetch(`${API_BASE}/api/health`)
@@ -20,48 +23,132 @@ export function warmPublicBackend(): void {
     .catch(() => {});
 }
 
-/* ── Lead attribution ──
- * Captured once per session from the first URL the visitor lands on.
- * Flows into Inquiry.sourcePage, which powers the portal's Lead Generation
- * source breakdown and UTM campaign attribution. */
-const ATTR_KEY = "wd_lead_attribution";
+export interface LeadAttribution {
+  landingPage: string;
+  capturedAt: string;
+  referrer?: string;
+  source?: string;
+  medium?: string;
+  campaign?: string;
+  term?: string;
+  content?: string;
+  clickId?: string;
+}
 
-function captureAttribution(): string {
+const ATTR_KEY = "wd_lead_attribution_v2";
+const CLICK_ID_KEYS = ["gclid", "gbraid", "wbraid", "fbclid", "msclkid", "li_fat_id"];
+
+function safeHostname(value: string): string | undefined {
   try {
-    const existing = sessionStorage.getItem(ATTR_KEY);
-    if (existing !== null) return existing;
-
-    const params = new URLSearchParams(window.location.search);
-    const parts: string[] = [];
-    for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"]) {
-      const v = params.get(k);
-      if (v) parts.push(`${k.replace("utm_", "")}=${v}`);
-    }
-    if (parts.length === 0 && document.referrer) {
-      try {
-        const ref = new URL(document.referrer).hostname;
-        if (ref && ref !== window.location.hostname) parts.push(`ref=${ref}`);
-      } catch { /* unparseable referrer */ }
-    }
-    const attr = parts.join("|").slice(0, 150);
-    sessionStorage.setItem(ATTR_KEY, attr);
-    return attr;
+    const host = new URL(value).hostname;
+    return host || undefined;
   } catch {
-    return "";
+    return undefined;
   }
 }
 
-/** "consultation-v2" → "consultation-v2 [source=google|medium=cpc]" (≤200 chars). */
-export function withAttribution(sourcePage: string): string {
-  const attr = captureAttribution();
-  return attr ? `${sourcePage} [${attr}]`.slice(0, 200) : sourcePage;
+function readStoredAttribution(): LeadAttribution | null {
+  try {
+    const raw = sessionStorage.getItem(ATTR_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as LeadAttribution;
+    return parsed?.landingPage ? parsed : null;
+  } catch {
+    return null;
+  }
 }
 
-// Capture as early as possible — UTM params may be cleaned from the URL later.
+function captureAttribution(): LeadAttribution {
+  const stored = readStoredAttribution();
+  if (stored) return stored;
+
+  const params = new URLSearchParams(window.location.search);
+  const clickIdKey = CLICK_ID_KEYS.find((key) => params.get(key));
+  const referrer = document.referrer ? safeHostname(document.referrer) : undefined;
+  const attr: LeadAttribution = {
+    landingPage: `${window.location.pathname}${window.location.search}${window.location.hash}`.slice(0, 260),
+    capturedAt: new Date().toISOString(),
+    source: params.get("utm_source") || undefined,
+    medium: params.get("utm_medium") || undefined,
+    campaign: params.get("utm_campaign") || undefined,
+    term: params.get("utm_term") || undefined,
+    content: params.get("utm_content") || undefined,
+    clickId: clickIdKey ? `${clickIdKey}:${params.get(clickIdKey)}` : undefined,
+    referrer: referrer && referrer !== window.location.hostname ? referrer : undefined,
+  };
+
+  try {
+    sessionStorage.setItem(ATTR_KEY, JSON.stringify(attr));
+  } catch {
+    // Attribution is helpful, not required for submission.
+  }
+  return attr;
+}
+
+export function getLeadAttribution(): LeadAttribution {
+  if (typeof window === "undefined") {
+    return { landingPage: "/", capturedAt: new Date().toISOString() };
+  }
+  return captureAttribution();
+}
+
+function attributionParts(attr: LeadAttribution): string[] {
+  return [
+    attr.source && `source=${attr.source}`,
+    attr.medium && `medium=${attr.medium}`,
+    attr.campaign && `campaign=${attr.campaign}`,
+    attr.term && `term=${attr.term}`,
+    attr.content && `content=${attr.content}`,
+    attr.clickId && `click=${attr.clickId.split(":")[0]}`,
+    attr.referrer && `ref=${attr.referrer}`,
+    attr.landingPage && `landing=${attr.landingPage}`,
+  ].filter(Boolean) as string[];
+}
+
+export function withAttribution(sourcePage: string): string {
+  const parts = attributionParts(getLeadAttribution());
+  return parts.length ? `${sourcePage} [${parts.join("|")}]`.slice(0, 200) : sourcePage;
+}
+
+export function appendAttributionNote(value: string | undefined, label = "Lead attribution", maxLength = 5000): string {
+  const parts = attributionParts(getLeadAttribution());
+  if (parts.length === 0) return value ?? "";
+  const note = `${label}: ${parts.join(" | ")}`;
+  return `${value?.trim() ? `${value.trim()}\n\n` : ""}${note}`.slice(0, maxLength);
+}
+
+function eventType(endpoint: string): string {
+  return {
+    inquiry: "inquiry",
+    "quote-request": "quote_request",
+    "sample-request": "sample_request",
+    "calculator-submission": "calculator_submission",
+  }[endpoint] ?? endpoint;
+}
+
+export function trackLeadConversion(endpoint: string): void {
+  const attr = getLeadAttribution();
+  const leadType = eventType(endpoint);
+  const payload = {
+    event: "generate_lead",
+    lead_type: leadType,
+    lead_source: attr.source ?? attr.referrer ?? "direct",
+    lead_medium: attr.medium ?? "site",
+    lead_campaign: attr.campaign ?? "",
+    landing_page: attr.landingPage,
+  };
+
+  window.dataLayer?.push(payload);
+  window.gtag?.("event", "generate_lead", payload);
+  window.fbq?.("track", "Lead", {
+    content_name: leadType,
+    content_category: payload.lead_source,
+  });
+  window.dispatchEvent(new CustomEvent("whitedot:lead-conversion", { detail: payload }));
+}
+
 if (typeof window !== "undefined") captureAttribution();
 
-/** POST a payload to a public endpoint. Throws with a readable message on failure.
- *  Retries once on pure network failure (request never reached the server). */
 export async function submitPublic(endpoint: string, payload: unknown, _attempt = 0): Promise<void> {
   const controller = new AbortController();
   const timeoutId = window.setTimeout(
@@ -84,7 +171,7 @@ export async function submitPublic(endpoint: string, payload: unknown, _attempt 
       return submitPublic(endpoint, payload, _attempt + 1);
     }
     throw new Error(
-      "Could not reach our server — it may be waking up. Please try again in a few seconds.",
+      "Could not reach our server. It may be waking up, so please try again in a few seconds.",
     );
   }
   window.clearTimeout(timeoutId);
@@ -98,6 +185,8 @@ export async function submitPublic(endpoint: string, payload: unknown, _attempt 
       "Submission failed. Please try again.",
     );
   }
+
+  trackLeadConversion(endpoint);
 }
 
 export type SubmitStatus = "idle" | "sending" | "sent" | "error";

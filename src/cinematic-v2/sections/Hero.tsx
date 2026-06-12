@@ -107,7 +107,7 @@ export default function Hero() {
             <a href="#material" className="v2h-btn v2h-btn--primary">
               Explore LIMEX
             </a>
-            <a href="#consultation" className="v2h-btn v2h-btn--ghost">
+            <a href="#consultation?lead=quote" className="v2h-btn v2h-btn--ghost">
               Request Material Consultation
             </a>
             <ul className="v2h-eco v2-reveal" ref={eco.ref} aria-label="Sustainability signals">

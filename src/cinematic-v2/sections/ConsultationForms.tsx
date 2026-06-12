@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { submitPublic } from '../../cinematic/publicApi';
+import { appendAttributionNote, getLeadAttribution, submitPublic } from '../../cinematic/publicApi';
 import type { SubmitStatus } from '../../cinematic/publicApi';
 import './InquiryFormV2.css';
 
@@ -51,7 +51,11 @@ export function QuoteFormV2() {
     if (form._hp) { setStatus('sent'); return; }
     try {
       const { _hp, ...payload } = form;
-      await submitPublic('quote-request', { ...payload, foodContactRequired });
+      await submitPublic('quote-request', {
+        ...payload,
+        message: appendAttributionNote(payload.message, 'Campaign source'),
+        foodContactRequired,
+      });
       setStatus('sent'); setForm(QUOTE_EMPTY); setFood(false);
     } catch (err: unknown) {
       setStatus('error');
@@ -110,7 +114,10 @@ export function SampleFormV2() {
     if (form._hp) { setStatus('sent'); return; }
     try {
       const { _hp, ...payload } = form;
-      await submitPublic('sample-request', payload);
+      await submitPublic('sample-request', {
+        ...payload,
+        remarks: appendAttributionNote(payload.remarks, 'Campaign source', 2000),
+      });
       setStatus('sent'); setForm(SAMPLE_EMPTY);
     } catch (err: unknown) {
       setStatus('error');
@@ -191,6 +198,7 @@ export function CalculatorFormV2() {
           co2PlasticFactor: CO2_PLASTIC, co2LimexFactor: CO2_LIMEX,
           currentPricePerKg: parseFloat(form.currentPricePerKg) || null,
           limexPricePerKg: parseFloat(form.limexPricePerKg) || null,
+          attribution: getLeadAttribution(),
           basis: 'annualised from monthly quantity × replacement %',
         },
       });
