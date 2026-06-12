@@ -133,15 +133,45 @@ export function warmUpBackend(): void {
     .catch(() => {});
 }
 
+/* ── GET cache ──
+ * Short-TTL in-memory cache so switching between portal modules renders
+ * instantly from the last response instead of refetching every mount.
+ * Any mutation clears the whole cache — the next GET refetches fresh. */
+const GET_TTL_MS = 25_000;
+const getCache = new Map<string, { at: number; promise: Promise<ApiResponse<unknown>> }>();
+
+function cachedGet<T>(path: string): Promise<ApiResponse<T>> {
+  const hit = getCache.get(path);
+  if (hit && Date.now() - hit.at < GET_TTL_MS) {
+    return hit.promise as Promise<ApiResponse<T>>;
+  }
+  const promise = request<T>(path).catch((err) => {
+    getCache.delete(path); // never cache failures
+    throw err;
+  });
+  getCache.set(path, { at: Date.now(), promise: promise as Promise<ApiResponse<unknown>> });
+  return promise;
+}
+
+function mutate<T>(path: string, options: RequestInit): Promise<ApiResponse<T>> {
+  getCache.clear();
+  return request<T>(path, options);
+}
+
 export const api = {
-  get: <T>(path: string) => request<T>(path),
+  get: <T>(path: string) => cachedGet<T>(path),
+  /** Bypass the cache — for explicit Refresh buttons. */
+  getFresh: <T>(path: string) => {
+    getCache.delete(path);
+    return cachedGet<T>(path);
+  },
   post: <T>(path: string, body: unknown) =>
-    request<T>(path, { method: "POST", body: JSON.stringify(body) }),
+    mutate<T>(path, { method: "POST", body: JSON.stringify(body) }),
   patch: <T>(path: string, body: unknown) =>
-    request<T>(path, { method: "PATCH", body: JSON.stringify(body) }),
+    mutate<T>(path, { method: "PATCH", body: JSON.stringify(body) }),
   put: <T>(path: string, body: unknown) =>
-    request<T>(path, { method: "PUT", body: JSON.stringify(body) }),
-  delete: <T>(path: string) => request<T>(path, { method: "DELETE" }),
+    mutate<T>(path, { method: "PUT", body: JSON.stringify(body) }),
+  delete: <T>(path: string) => mutate<T>(path, { method: "DELETE" }),
 };
 
 export { ApiError };

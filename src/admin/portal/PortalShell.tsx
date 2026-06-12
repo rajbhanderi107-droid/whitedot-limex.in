@@ -14,6 +14,7 @@ import { useBrandLogo } from "../../useBrandLogo";
 import { NotificationBell } from "../components/NotificationBell";
 import { KeyboardShortcuts } from "../components/KeyboardShortcuts";
 import { MODULE_GROUPS, type PortalModule } from "./modules.js";
+import { CommandPalette } from "./CommandPalette.js";
 import { usePortal, AUTOMATION_MODES, type AutomationMode } from "./PortalContext.js";
 import { HealthRing, StatusBadge } from "./ui.js";
 import "./portal.css";
@@ -97,6 +98,7 @@ export function PortalShell({ user, onLogout }: Props) {
   return (
     <div className={`adm wd-portal${lockdown ? " wd-lockdown" : ""}`}>
       <KeyboardShortcuts />
+      <CommandPalette isSuperAdmin={isSuperAdmin} />
 
       {/* Desktop sidebar */}
       <aside className="adm-sidebar wd-sidebar">{sidebar()}</aside>
@@ -116,10 +118,15 @@ export function PortalShell({ user, onLogout }: Props) {
         <header className="wd-topbar">
           <button className="wd-topbar-menu" onClick={() => setDrawerOpen(true)} aria-label="Open menu"><Menu size={20} /></button>
 
-          <div className="wd-search">
+          <button
+            className="wd-search"
+            onClick={() => window.dispatchEvent(new Event("wd:open-palette"))}
+            aria-label="Open command palette"
+          >
             <Search size={15} />
-            <input placeholder="Search leads, products, modules…" aria-label="Global search" />
-          </div>
+            <span className="wd-search-hint">Search leads, modules…</span>
+            <kbd className="wd-search-kbd">Ctrl K</kbd>
+          </button>
 
           <div className="wd-topbar-right">
             <div className="wd-rings">
