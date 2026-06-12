@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { warmPublicBackend } from "../cinematic/publicApi";
 
 /**
  * LIMEX Assistant — floating chat widget for the public site.
@@ -43,9 +44,13 @@ export function LimexAssistant() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
 
-  // Focus the input when the panel opens.
+  // Focus the input when the panel opens; also nudge the backend awake so
+  // the first chat message doesn't wait on a Render cold start.
   useEffect(() => {
-    if (open) inputRef.current?.focus();
+    if (open) {
+      inputRef.current?.focus();
+      warmPublicBackend();
+    }
   }, [open]);
 
   // Close on Escape.

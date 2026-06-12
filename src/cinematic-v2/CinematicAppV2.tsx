@@ -1,5 +1,7 @@
 import './foundation.css';
 
+import { useEffect } from 'react';
+import { warmPublicBackend } from '../cinematic/publicApi';
 import Nav from './sections/Nav';
 import Hero from './sections/Hero';
 import MaterialStory from './sections/MaterialStory';
@@ -31,6 +33,13 @@ import { AssistantShell } from '../assistant-wd';
 /* X-WD-END assistant */
 
 export default function CinematicAppV2() {
+  // Wake the backend while the visitor is still reading the hero, so the
+  // first form submit / assistant message never waits on a cold start.
+  useEffect(() => {
+    const t = window.setTimeout(warmPublicBackend, 3_000);
+    return () => window.clearTimeout(t);
+  }, []);
+
   return (
     <>
       {/* X-WD-BEGIN aggregation */}

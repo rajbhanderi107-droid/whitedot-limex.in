@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { submitPublic } from '../../cinematic/publicApi';
+import { submitPublic, withAttribution } from '../../cinematic/publicApi';
 import type { SubmitStatus } from '../../cinematic/publicApi';
 import './InquiryFormV2.css';
 
@@ -21,7 +21,7 @@ export function InquiryFormV2() {
     if (form._hp) { setStatus('sent'); return; }
     try {
       const { _hp, ...payload } = form;
-      await submitPublic('inquiry', { ...payload, sourcePage: 'consultation-v2' });
+      await submitPublic('inquiry', { ...payload, sourcePage: withAttribution('consultation-v2') });
       setStatus('sent');
       setForm({ name: '', email: '', phone: '', companyName: '', message: '', _hp: '' });
     } catch (err: unknown) {
