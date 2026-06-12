@@ -38,6 +38,15 @@ class ApiError extends Error {
   }
 }
 
+const MAX_RETRIES = 2;
+const RETRY_DELAY_MS = 2_500;
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** GET requests are safe to retry; mutations are not (could double-create). */
+function isRetryable(options: RequestInit): boolean {
+  return !options.method || options.method === "GET";
+}
+
 async function request<T>(path: string, options: RequestInit = {}, _retryCount = 0): Promise<ApiResponse<T>> {
   const timeout = backendWarm ? WARM_TIMEOUT_MS : COLD_TIMEOUT_MS;
   const controller = new AbortController();
@@ -64,8 +73,9 @@ async function request<T>(path: string, options: RequestInit = {}, _retryCount =
     window.clearTimeout(timeoutId);
     const timedOut = err instanceof DOMException && err.name === "AbortError";
 
-    // Auto-retry once on timeout (backend might be waking up)
-    if (timedOut && _retryCount < 1) {
+    // Auto-retry on timeout or network failure (backend waking up / mid-deploy)
+    if (isRetryable(options) && _retryCount < MAX_RETRIES) {
+      if (!timedOut) await sleep(RETRY_DELAY_MS);
       return request<T>(path, options, _retryCount + 1);
     }
 
@@ -89,9 +99,20 @@ async function request<T>(path: string, options: RequestInit = {}, _retryCount =
   }));
 
   if (!res.ok || !json.success) {
-    // If unauthorized, clear stale token
+    // 502/503/504 = Render proxy errors during deploy/restart — retry
+    if (res.status >= 502 && isRetryable(options) && _retryCount < MAX_RETRIES) {
+      await sleep(RETRY_DELAY_MS);
+      return request<T>(path, options, _retryCount + 1);
+    }
+    // If unauthorized, clear stale token and send the user back to login.
+    // (Skip when there was no token — e.g. a wrong-password login attempt.)
     if (res.status === 401) {
+      const hadToken = !!getToken();
       clearToken();
+      if (hadToken && !window.location.hash.includes("/admin/login")) {
+        window.location.hash = "#/admin/login";
+        window.location.reload();
+      }
     }
     throw new ApiError(
       json.error?.code || "UNKNOWN",
