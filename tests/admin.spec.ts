@@ -108,6 +108,9 @@ test.describe("Admin Portal End-to-End and Google Sync Dashboard Verification", 
   });
 
   test("should render Google Sync page dashboard components correctly", async ({ page }) => {
+    await page.addInitScript(() => {
+      window.localStorage.setItem("wd_admin_token", "mock-jwt-token-value");
+    });
     // Pretend we are already logged in
     await page.route("**/api/auth/me", async (route) => {
       await route.fulfill({
@@ -239,6 +242,9 @@ test.describe("Admin Portal End-to-End and Google Sync Dashboard Verification", 
   });
 
   test("should toggle sync history timeline and trigger manual sync correctly", async ({ page }) => {
+    await page.addInitScript(() => {
+      window.localStorage.setItem("wd_admin_token", "mock-jwt-token-value");
+    });
     // Pretend we are already logged in
     await page.route("**/api/auth/me", async (route) => {
       await route.fulfill({
