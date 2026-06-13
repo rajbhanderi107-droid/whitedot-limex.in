@@ -205,6 +205,7 @@ test.describe("Admin Portal End-to-End and Google Sync Dashboard Verification", 
     await page.evaluate(() => {
       localStorage.setItem("wd_admin_token", "mock-jwt-token-value");
     });
+    await page.reload();
     await page.goto("/#/admin/google");
 
     // Verify Title & Subtitle
@@ -309,6 +310,7 @@ test.describe("Admin Portal End-to-End and Google Sync Dashboard Verification", 
     await page.evaluate(() => {
       localStorage.setItem("wd_admin_token", "mock-jwt-token-value");
     });
+    await page.reload();
     await page.goto("/#/admin/google");
 
     // Timeline should not be visible initially
