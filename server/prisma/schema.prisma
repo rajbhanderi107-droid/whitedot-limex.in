@@ -696,3 +696,16 @@ model BugReport {
 
   @@index([status])
 }
+
+/// Automated Google data sync snapshots (GA4, GSC, Ads, Logins).
+/// Each row = one sync run. Powers the sync-history timeline in the portal.
+model GoogleDataSnapshot {
+  id        String   @id @default(cuid())
+  status    String   @default("SUCCESS") // SUCCESS | FAILED
+  data      Json                          // Full overview payload
+  error     String?                       // Error message if sync failed
+  duration  Int      @default(0)          // Sync duration in milliseconds
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}

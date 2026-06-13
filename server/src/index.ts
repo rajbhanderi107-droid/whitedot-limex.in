@@ -1,6 +1,7 @@
 import app from "./app.js";
 import { env } from "./config/env.js";
 import { prisma } from "./config/prisma.js";
+import { startGoogleSyncCron } from "./services/googleSync.service.js";
 
 const server = app.listen(env.PORT, () => {
   console.log(`
@@ -22,6 +23,9 @@ const server = app.listen(env.PORT, () => {
     }, KEEP_ALIVE_MS);
     console.log(`  Keep-alive ping every 14m → ${selfUrl}/api/health`);
   }
+
+  // ─── Google data auto-sync cron (every 6h) ──
+  startGoogleSyncCron();
 });
 
 // ─── Graceful shutdown ──────────────────────────

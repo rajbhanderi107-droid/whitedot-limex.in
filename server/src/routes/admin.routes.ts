@@ -41,6 +41,8 @@ router.get("/dashboard", asyncHandler(dashboard.getDashboard));
 
 // ─── Google (all-in-one overview) ────────────────
 router.get("/google/overview", asyncHandler(google.getGoogleOverview));
+router.get("/google/sync-status", asyncHandler(google.getGoogleSyncStatus));
+router.post("/google/sync", requireRole("SUPER_ADMIN", "ADMIN"), asyncHandler(google.triggerManualSync));
 
 // ─── Inquiries ───────────────────────────────────
 router.get("/inquiries", asyncHandler(inquiries.listInquiries));

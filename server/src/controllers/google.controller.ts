@@ -240,3 +240,25 @@ export async function getGoogleOverview(_req: Request, res: Response) {
   const overview = await fetchAndStoreGoogleData();
   return sendSuccess(res, overview);
 }
+
+// ─── Sync Status & Manual Trigger ─────────────────────────────────────────────
+
+export async function getGoogleSyncStatus(_req: Request, res: Response) {
+  const { getSyncStatus } = await import("../services/googleSync.service.js");
+  const status = await getSyncStatus();
+  return sendSuccess(res, status);
+}
+
+export async function triggerManualSync(_req: Request, res: Response) {
+  const { runGoogleSync } = await import("../services/googleSync.service.js");
+  const result = await runGoogleSync();
+
+  // Also return the fresh overview data
+  const { getLatestSnapshot } = await import("../services/googleSync.service.js");
+  const snapshot = await getLatestSnapshot();
+
+  return sendSuccess(res, {
+    sync: result,
+    overview: snapshot?.data ?? null,
+  }, result.status === "SUCCESS" ? "Google data synced successfully" : "Sync completed with errors");
+}
