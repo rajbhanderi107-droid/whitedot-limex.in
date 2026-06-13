@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: tbm-news-sync
@@ -30,7 +31,10 @@ jobs:
         run: npm run sync:tbm-news
 
       - name: Commit updated feed
+        id: commit-feed
         run: |
+          echo "pushed=false" >> "$GITHUB_OUTPUT"
+
           if git diff --quiet -- public/data/tbm-news.json; then
             echo "TBM news feed is already current."
             exit 0
@@ -41,3 +45,10 @@ jobs:
           git add public/data/tbm-news.json
           git commit -m "chore: sync TBM news feed"
           git push
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch Pages deployment
+        if: ${{ steps.commit-feed.outputs.pushed == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main
