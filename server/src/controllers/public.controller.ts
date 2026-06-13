@@ -6,18 +6,10 @@ import { sendMail } from "../services/mailer.service.js";
 
 const PUBLIC_LOADING_SETTING = {
   key: "public_loading_enabled",
-  value: "true",
+  value: "false",
   type: "BOOLEAN" as const,
   description: "Show the loading page to public visitors while admins preview and work behind it",
 };
-
-async function ensurePublicLoadingSetting() {
-  await prisma.websiteSetting.upsert({
-    where: { key: PUBLIC_LOADING_SETTING.key },
-    update: {},
-    create: PUBLIC_LOADING_SETTING,
-  });
-}
 
 function escapeHtml(value: string) {
   return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -148,14 +140,24 @@ export async function submitCalculatorSubmission(req: Request, res: Response) {
 }
 
 export async function getWebsiteSettings(_req: Request, res: Response) {
-  await ensurePublicLoadingSetting();
-
   const settings = await prisma.websiteSetting.findMany({
     select: { key: true, value: true, type: true, updatedAt: true },
     orderBy: { key: "asc" },
   });
 
-  return sendSuccess(res, settings);
+  const hasPublicLoading = settings.some((setting) => setting.key === PUBLIC_LOADING_SETTING.key);
+  const publicSettings = hasPublicLoading
+    ? settings
+    : [
+        ...settings,
+        {
+          ...PUBLIC_LOADING_SETTING,
+          updatedAt: new Date(0),
+        },
+      ];
+
+  res.set("Cache-Control", "public, max-age=60, stale-while-revalidate=300");
+  return sendSuccess(res, publicSettings);
 }
 
 export async function getGoogleOverview(_req: Request, res: Response) {

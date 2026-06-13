@@ -45,7 +45,8 @@ let initStarted = false;
 export function initBrandLogo(): void {
   if (initStarted) return;
   initStarted = true;
-  fetch(`${API_BASE}/api/public/settings`)
+  window.setTimeout(() => {
+    fetch(`${API_BASE}/api/public/settings`)
     .then((res) => res.json())
     .then((json) => {
       if (!json?.success || !Array.isArray(json.data)) return;
@@ -55,4 +56,5 @@ export function initBrandLogo(): void {
     .catch(() => {
       // Offline or backend unavailable — keep the bundled default.
     });
+  }, 1_000);
 }

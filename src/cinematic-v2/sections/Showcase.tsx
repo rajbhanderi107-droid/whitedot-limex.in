@@ -1,5 +1,10 @@
 import './Showcase.css';
+import { useRef } from 'react';
 import { useReveal } from '../motion';
+import { useViewportVideo } from '../useViewportVideo';
+
+const launchFilmSrc = `${import.meta.env.BASE_URL}assets/limex-launch-film-fast.mp4`;
+const launchPosterSrc = `${import.meta.env.BASE_URL}assets/limex-launch-poster.webp`;
 
 /**
  * Showcase — Frame 05. Carries V1's "Future Advertisement Showcase" copy
@@ -10,6 +15,8 @@ export default function Showcase() {
   const head = useReveal<HTMLDivElement>();
   const frame = useReveal<HTMLDivElement>({ threshold: 0.15 });
   const caption = useReveal<HTMLParagraphElement>();
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  useViewportVideo(videoRef);
 
   return (
     <section className="v2sc" id="material-core" aria-labelledby="v2sc-title">
@@ -28,13 +35,15 @@ export default function Showcase() {
         <div className="v2sc-frame v2-reveal" ref={frame.ref}>
           <span className="v2sc-reflection" aria-hidden="true" />
           <video
+            ref={videoRef}
             className="v2sc-media"
-            src="/assets/limex-launch-film.mp4"
-            poster="/assets/limex-launch-poster.png"
+            src={launchFilmSrc}
+            poster={launchPosterSrc}
             autoPlay
             loop
             muted
             playsInline
+            preload="metadata"
           />
         </div>
 

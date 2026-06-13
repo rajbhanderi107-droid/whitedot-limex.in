@@ -1,8 +1,9 @@
 import './Hero.css';
-import React from 'react';
+import React, { useRef } from 'react';
 import { useCountUp, useGrainField, useReveal } from '../motion';
 import { CONSULTATION_HASH, openConsultationForm } from '../consultationNavigation';
 import SupplyFlow from './SupplyFlow';
+import { useViewportVideo } from '../useViewportVideo';
 
 /** Splits a string into individually animatable character spans, grouped by word to prevent mid-word wrapping on mobile.
  *  globalStart = running char index so the stagger is continuous
@@ -39,6 +40,8 @@ const LINE2 = 'Material';
 const LINE3 = 'to Replace Plastic · Invented by TBM, Japan';
 const OFF2  = LINE1.length;           // 11
 const OFF3  = OFF2 + LINE2.length;    // 19
+const heroVideoSrc = `${import.meta.env.BASE_URL}assets/higgsfield/hero-head-background-fast.mp4`;
+const heroPosterSrc = `${import.meta.env.BASE_URL}assets/higgsfield/hero-head-background-poster.jpg`;
 
 export default function Hero() {
   const grain    = useGrainField<HTMLDivElement>({ count: 80, speed: 0.7 });
@@ -47,6 +50,8 @@ export default function Hero() {
   const cta      = useReveal<HTMLDivElement>({ threshold: 0.1 });
   const eco      = useReveal<HTMLUListElement>({ threshold: 0.1 });
   const proof    = useReveal<HTMLElement>({ threshold: 0.2 });
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  useViewportVideo(videoRef, { eager: true, rootMargin: '260px 0px' });
 
   const statCaco = useCountUp(50, proof.inView);
   const statDays = useCountUp(14, proof.inView);
@@ -57,14 +62,15 @@ export default function Hero() {
       {/* Limestone hero loop — white-bg stone, edges feathered into the dark canvas */}
       <div className="v2h-environment" aria-hidden="true">
         <video
+          ref={videoRef}
           className="v2h-higgsfield-video"
-          src="/assets/higgsfield/hero-head-background.mp4"
-          poster="/assets/higgsfield/hero-head-background-poster.jpg"
+          src={heroVideoSrc}
+          poster={heroPosterSrc}
           autoPlay
           loop
           muted
           playsInline
-          preload="auto"
+          preload="metadata"
         />
       </div>
       <span className="v2h-environment-scrim" aria-hidden="true" />

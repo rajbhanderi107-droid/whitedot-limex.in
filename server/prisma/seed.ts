@@ -42,7 +42,7 @@ async function main() {
       { key: "brand_logo", value: "", type: "TEXT", description: "Website logo (uploaded image, applies across the site)" },
       {
         key: "public_loading_enabled",
-        value: "true",
+        value: "false",
         type: "BOOLEAN",
         description: "Show the loading page to public visitors while admins preview and work behind it",
       },

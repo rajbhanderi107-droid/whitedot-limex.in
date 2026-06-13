@@ -22,7 +22,7 @@ if ("serviceWorker" in navigator) {
     .catch(() => {});
 }
 
-// ─── Google Analytics (GA4) ───
+// Google Analytics (GA4)
 const gaId = import.meta.env.VITE_GA_MEASUREMENT_ID;
 if (gaId) {
   const script = document.createElement("script");
@@ -31,11 +31,12 @@ if (gaId) {
   document.head.appendChild(script);
 
   (window as any).dataLayer = (window as any).dataLayer || [];
-  function gtag(...args: any[]) { (window as any).dataLayer.push(args); }
+  function gtag(...args: any[]) {
+    (window as any).dataLayer.push(args);
+  }
   gtag("js", new Date());
   gtag("config", gaId);
 }
-
 
 const hostname = window.location.hostname.toLowerCase();
 const adminHosts = new Set(["admin.whitedotindia.in", "admin.whitedot-limex.in"]);
@@ -51,7 +52,6 @@ if (isAdminHost && !window.location.hash.startsWith("#/admin")) {
   window.location.hash = "#/admin/login";
 }
 
-// Check if we should toggle the visibility of the admin links in the menu
 function checkAdminQueryParam() {
   try {
     const params = new URLSearchParams(window.location.search);
@@ -70,13 +70,11 @@ function checkAdminQueryParam() {
       window.history.replaceState(null, "", cleanUrl);
     }
   } catch {
-    // Ignore storage/history errors in isolated environments
+    // Ignore storage/history errors in isolated environments.
   }
 }
 checkAdminQueryParam();
 
-// If the host or known public hash path selects admin, show the admin SPA.
-// Otherwise, render the public cinematic website unchanged.
 const isLocal = ["localhost", "127.0.0.1", "::1"].includes(hostname);
 const isKnownPublicAdminHost =
   hostname === "whitedotindia.in" ||
@@ -112,20 +110,24 @@ function hasPublicPreviewAccess(): boolean {
 async function shouldShowPublicLoading(): Promise<boolean> {
   if (hasPublicPreviewAccess()) return false;
 
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 900);
+
   try {
     const res = await fetch(`${API_BASE}/api/public/settings`, {
       headers: { Accept: "application/json" },
+      signal: controller.signal,
     });
     if (!res.ok) return true;
 
     const json = await res.json();
     const settings = Array.isArray(json.data) ? json.data : [];
     const loadingSetting = settings.find((setting: { key?: string }) => setting.key === PUBLIC_LOADING_SETTING_KEY);
-    // Only show maintenance screen when EXPLICITLY set to "true"
     return loadingSetting?.value === "true";
   } catch {
-    // API unreachable → show the site, not a dead maintenance screen
     return false;
+  } finally {
+    window.clearTimeout(timeout);
   }
 }
 
@@ -138,49 +140,7 @@ function showPublicLoadingPage() {
   if (loader) loader.setAttribute("data-maintenance", "");
 }
 
-// Dismiss the inline aggregation loader immediately for admin routes —
-// CinematicApp's useDismissBootLoader() won't run in admin mode.
-if (isAdmin) {
-  document.documentElement.style.background = "#0f1210";
-  document.body.style.margin = "0";
-  document.body.style.background = "#0f1210";
-  const loader = document.getElementById("agg-wd-loader");
-  if (loader) loader.remove();
-}
-
-if (isAdmin) {
-  // ─── Admin SPA ─────────────────────────────────────
-  // Lazy-load ONLY admin code — no Three.js, no cinematic CSS, no premium layer.
-  const AdminApp = lazy(() => import("./admin/AdminApp"));
-
-  createRoot(document.getElementById("root")!).render(
-    <StrictMode>
-      <HashRouter>
-        <Suspense
-          fallback={
-            <div style={{
-              display: "flex", alignItems: "center", justifyContent: "center",
-              minHeight: "100vh", background: "#0f1210", color: "#8c9488",
-              fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif", fontSize: ".85rem",
-            }}>
-              Loading admin...
-            </div>
-          }
-        >
-          <AdminApp />
-        </Suspense>
-      </HashRouter>
-    </StrictMode>,
-  );
-} else {
-  shouldShowPublicLoading().then((showLoading) => {
-    if (showLoading) {
-      showPublicLoadingPage();
-      return;
-    }
-
-  // cinematic-v2 (sage-green studio) is now the DEFAULT public site.
-  // ?v1=1 → fall back to the previous cinematic design (rollback escape hatch).
+function renderPublicSite() {
   const useV1 = new URLSearchParams(window.location.search).get("v1") === "1";
 
   if (!useV1) {
@@ -199,12 +159,8 @@ if (isAdmin) {
     return;
   }
 
-  // ─── Previous cinematic site (?v1=1) ───────────────
-  // Static imports are fine here — this path needs everything.
   import("./cinematic/cinematic.css");
-  // PREMIUM-WD-BEGIN imports
   import("./premium-wd/premium-wd.css");
-  // PREMIUM-WD-END imports
 
   Promise.all([
     import("./cinematic/CinematicApp"),
@@ -218,5 +174,50 @@ if (isAdmin) {
       </StrictMode>,
     );
   });
-  });
+}
+
+if (isAdmin) {
+  document.documentElement.style.background = "#0f1210";
+  document.body.style.margin = "0";
+  document.body.style.background = "#0f1210";
+  const loader = document.getElementById("agg-wd-loader");
+  if (loader) loader.remove();
+}
+
+if (isAdmin) {
+  const AdminApp = lazy(() => import("./admin/AdminApp"));
+
+  createRoot(document.getElementById("root")!).render(
+    <StrictMode>
+      <HashRouter>
+        <Suspense
+          fallback={
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                minHeight: "100vh",
+                background: "#0f1210",
+                color: "#8c9488",
+                fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif",
+                fontSize: ".85rem",
+              }}
+            >
+              Loading admin...
+            </div>
+          }
+        >
+          <AdminApp />
+        </Suspense>
+      </HashRouter>
+    </StrictMode>,
+  );
+} else {
+  renderPublicSite();
+  window.setTimeout(() => {
+    shouldShowPublicLoading().then((showLoading) => {
+      if (showLoading) showPublicLoadingPage();
+    });
+  }, 1_000);
 }

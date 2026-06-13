@@ -5,6 +5,7 @@ import { CONSULTATION_FORM_EVENT, CONSULTATION_HASH, type ConsultationLeadForm }
 import { InquiryFormV2 } from './InquiryFormV2';
 import { QuoteFormV2, SampleFormV2, CalculatorFormV2 } from './ConsultationForms';
 import ConsultationSteps from './ConsultationSteps';
+import { useViewportVideo } from '../useViewportVideo';
 
 const FORM_TABS = [
   { key: 'inquiry', label: 'Inquiry', blurb: 'Prefer email? Fill in the form below and our team will get back to you within one business day.' },
@@ -32,6 +33,7 @@ export default function Consultation() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const activeTab = FORM_TABS.find((t) => t.key === activeForm)!;
+  useViewportVideo(videoRef, { resetWhenHidden: true });
 
   useEffect(() => {
     const syncLeadForm = () => {
@@ -69,40 +71,6 @@ export default function Consultation() {
     document.getElementById('inquiry')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    const video = videoRef.current;
-    if (!section || !video) return undefined;
-
-    const resetVideo = () => {
-      video.pause();
-      try {
-        video.currentTime = 0;
-      } catch {
-        // Metadata may not be ready yet on first paint.
-      }
-    };
-
-    resetVideo();
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          void video.play().catch(() => undefined);
-        } else {
-          resetVideo();
-        }
-      },
-      { threshold: 0.08 },
-    );
-
-    observer.observe(section);
-    return () => {
-      observer.disconnect();
-      resetVideo();
-    };
-  }, []);
-
   return (
     <section className="v2con v2-bg-light" id="consultation" ref={sectionRef}>
       <div className="v2con-inner">
@@ -126,7 +94,7 @@ export default function Consultation() {
             muted
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
           />
         </div>
 

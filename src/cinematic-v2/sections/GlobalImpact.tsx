@@ -7,14 +7,17 @@ export default function GlobalImpact() {
 
   return (
     <section className="v2gi" id="global-impact">
-      <img
-        className="v2gi-bg"
-        src="/assets/storyboard/frame-13-globalimpact.png"
-        alt=""
-        loading="lazy"
-        decoding="async"
-        aria-hidden="true"
-      />
+      <picture>
+        <source srcSet="/assets/storyboard/frame-13-globalimpact.webp" type="image/webp" />
+        <img
+          className="v2gi-bg"
+          src="/assets/storyboard/frame-13-globalimpact.png"
+          alt=""
+          loading="lazy"
+          decoding="async"
+          aria-hidden="true"
+        />
+      </picture>
       <span className="v2gi-glow" aria-hidden="true" />
       <div className="v2gi-inner" ref={ref}>
         <p className="v2-eyebrow v2-reveal">Global Material Movement</p>
