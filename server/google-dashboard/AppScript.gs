@@ -101,27 +101,29 @@ function writeToSheet(sheetName, headers, rows) {
 function syncInquiries() {
   var data = supabaseFetch(
     "Inquiry",
-    "id,name,email,phone,companyName,industry,inquiryType,message,status,priority,createdAt,updatedAt",
+    "id,name,email,phone,companyName,designation,city,country,industry,inquiryType,message,sourcePage,status,priority,internalNotes,followUpDate,createdAt,updatedAt,assignedToId,companyId",
     "createdAt.desc"
   );
 
   var headers = [
-    "ID", "Name", "Email", "Phone", "Company",
-    "Industry", "Type", "Message", "Status", "Priority",
-    "Created", "Updated"
+    "ID", "Name", "Email", "Phone", "Company Name",
+    "Designation", "City", "Country", "Industry", "Inquiry Type",
+    "Message", "Source Page", "Status", "Priority", "Internal Notes",
+    "Follow Up Date", "Created At", "Updated At", "Assigned To ID", "Company ID"
   ];
 
   var rows = data.map(function(r) {
     return [
       r.id, r.name, r.email, r.phone || "", r.companyName || "",
-      r.industry || "", r.inquiryType || "", r.message || "",
-      r.status, r.priority,
-      formatDate(r.createdAt), formatDate(r.updatedAt)
+      r.designation || "", r.city || "", r.country || "", r.industry || "",
+      r.inquiryType || "", r.message || "", r.sourcePage || "",
+      r.status, r.priority, r.internalNotes || "", formatDate(r.followUpDate),
+      formatDate(r.createdAt), formatDate(r.updatedAt), r.assignedToId || "", r.companyId || ""
     ];
   });
 
   writeToSheet("Inquiries", headers, rows);
-  applyStatusColors("Inquiries", 8); // Status column index (0-based: 8 → col I)
+  applyStatusColors("Inquiries", 12); // Status column index (0-based: 12 → col M)
   SpreadsheetApp.getActiveSpreadsheet().toast("Synced " + rows.length + " inquiries", "WhiteDot CRM");
 }
 
@@ -132,20 +134,22 @@ function syncInquiries() {
 function syncCompanies() {
   var data = supabaseFetch(
     "Company",
-    "id,companyName,industry,contactPerson,email,phone,city,state,country,status,createdAt",
+    "id,companyName,industry,contactPerson,email,phone,website,city,state,country,address,gstNumber,status,notes,createdAt,updatedAt",
     "createdAt.desc"
   );
 
   var headers = [
     "ID", "Company Name", "Industry", "Contact Person", "Email",
-    "Phone", "City", "State", "Country", "Status", "Created"
+    "Phone", "Website", "City", "State", "Country", "Address",
+    "GST Number", "Status", "Notes", "Created At", "Updated At"
   ];
 
   var rows = data.map(function(r) {
     return [
       r.id, r.companyName, r.industry || "", r.contactPerson || "",
-      r.email || "", r.phone || "", r.city || "", r.state || "",
-      r.country || "", r.status, formatDate(r.createdAt)
+      r.email || "", r.phone || "", r.website || "", r.city || "", r.state || "",
+      r.country || "", r.address || "", r.gstNumber || "", r.status, r.notes || "",
+      formatDate(r.createdAt), formatDate(r.updatedAt)
     ];
   });
 
@@ -156,23 +160,26 @@ function syncCompanies() {
 function syncQuoteRequests() {
   var data = supabaseFetch(
     "QuoteRequest",
-    "id,contactPerson,email,phone,productCategory,currentMaterial,monthlyQuantity,targetApplication,expectedPriceRange,status,priority,createdAt",
+    "id,contactPerson,email,phone,productCategory,currentMaterial,currentPlasticGrade,monthlyQuantity,targetApplication,strengthRequirement,foodContactRequired,colorRequirement,sustainabilityGoal,expectedPriceRange,message,status,priority,createdAt,updatedAt,assignedToId,companyId",
     "createdAt.desc"
   );
 
   var headers = [
-    "ID", "Contact", "Email", "Phone", "Product Category",
-    "Current Material", "Monthly Qty", "Application",
-    "Price Range", "Status", "Priority", "Created"
+    "ID", "Contact Person", "Email", "Phone", "Product Category",
+    "Current Material", "Current Plastic Grade", "Monthly Quantity", "Target Application",
+    "Strength Requirement", "Food Contact Required", "Color Requirement", "Sustainability Goal",
+    "Expected Price Range", "Message", "Status", "Priority", "Created At", "Updated At",
+    "Assigned To ID", "Company ID"
   ];
 
   var rows = data.map(function(r) {
     return [
-      r.id, r.contactPerson, r.email, r.phone || "",
-      r.productCategory || "", r.currentMaterial || "",
-      r.monthlyQuantity || "", r.targetApplication || "",
-      r.expectedPriceRange || "", r.status, r.priority,
-      formatDate(r.createdAt)
+      r.id, r.contactPerson, r.email, r.phone || "", r.productCategory || "",
+      r.currentMaterial || "", r.currentPlasticGrade || "", r.monthlyQuantity || "",
+      r.targetApplication || "", r.strengthRequirement || "", r.foodContactRequired ? "Yes" : "No",
+      r.colorRequirement || "", r.sustainabilityGoal || "", r.expectedPriceRange || "",
+      r.message || "", r.status, r.priority, formatDate(r.createdAt), formatDate(r.updatedAt),
+      r.assignedToId || "", r.companyId || ""
     ];
   });
 
@@ -183,23 +190,22 @@ function syncQuoteRequests() {
 function syncSampleRequests() {
   var data = supabaseFetch(
     "SampleRequest",
-    "id,contactPerson,email,phone,requestedMaterialType,application,quantity,deliveryAddress,courierTracking,status,remarks,createdAt",
+    "id,contactPerson,email,phone,requestedMaterialType,application,quantity,deliveryAddress,courierTracking,status,remarks,createdAt,updatedAt,companyId",
     "createdAt.desc"
   );
 
   var headers = [
-    "ID", "Contact", "Email", "Phone", "Material Type",
-    "Application", "Quantity", "Delivery Address",
-    "Tracking", "Status", "Remarks", "Created"
+    "ID", "Contact Person", "Email", "Phone", "Requested Material Type",
+    "Application", "Quantity", "Delivery Address", "Courier Tracking",
+    "Status", "Remarks", "Created At", "Updated At", "Company ID"
   ];
 
   var rows = data.map(function(r) {
     return [
-      r.id, r.contactPerson, r.email, r.phone || "",
-      r.requestedMaterialType || "", r.application || "",
-      r.quantity || "", r.deliveryAddress || "",
+      r.id, r.contactPerson, r.email, r.phone || "", r.requestedMaterialType || "",
+      r.application || "", r.quantity || "", r.deliveryAddress || "",
       r.courierTracking || "", r.status, r.remarks || "",
-      formatDate(r.createdAt)
+      formatDate(r.createdAt), formatDate(r.updatedAt), r.companyId || ""
     ];
   });
 
