@@ -14,6 +14,7 @@
 var CONFIG = {
   SUPABASE_URL: "https://yrsqtsejbvjwzegtkmkr.supabase.co",
   SUPABASE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlyc3F0c2VqYnZqd3plZ3RrbWtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5MDkyODAsImV4cCI6MjA5NTQ4NTI4MH0.BuTY3DwgQwzFcHhhqbHOxgs0db_4Rl9ShrETTGbhZps",
+  BACKEND_URL: "https://whitedot-limex-backend.onrender.com"
 };
 
 // ─── Menu ───────────────────────────────────────────────────
@@ -26,6 +27,7 @@ function onOpen() {
     .addItem("Sync Quote Requests", "syncQuoteRequests")
     .addItem("Sync Sample Requests", "syncSampleRequests")
     .addItem("Sync Activity Log", "syncActivityLog")
+    .addItem("Sync Google Overview Data", "syncGoogleOverview")
     .addSeparator()
     .addItem("Create Summary Dashboard", "createSummarySheet")
     .addToUi();
@@ -233,6 +235,54 @@ function syncActivityLog() {
   SpreadsheetApp.getActiveSpreadsheet().toast("Synced " + rows.length + " activity logs", "WhiteDot CRM");
 }
 
+function syncGoogleOverview() {
+  var url = CONFIG.BACKEND_URL + "/api/public/google-overview";
+  var options = {
+    method: "GET",
+    muteHttpExceptions: true
+  };
+
+  var response = UrlFetchApp.fetch(url, options);
+  var code = response.getResponseCode();
+
+  if (code !== 200) {
+    throw new Error("Backend API error (" + code + "): " + response.getContentText());
+  }
+
+  var resObj = JSON.parse(response.getContentText());
+  var data = resObj.data; // Response contains { success: true, data: { range, generatedAt, sources: [...] } }
+
+  var headers = ["Source", "Metric Label", "Value", "Delta", "Hint/Setup Info"];
+  var rows = [];
+
+  if (data && data.sources) {
+    data.sources.forEach(function(src) {
+      if (src.connected) {
+        src.metrics.forEach(function(m) {
+          rows.push([
+            src.title,
+            m.label,
+            m.value,
+            m.delta || "",
+            src.connected ? "Connected" : (src.setupHint || "")
+          ]);
+        });
+      } else {
+        rows.push([
+          src.title,
+          "Disconnected",
+          "-",
+          "-",
+          src.setupHint || "Credentials/Configuration missing"
+        ]);
+      }
+    });
+  }
+
+  writeToSheet("Google Overview", headers, rows);
+  SpreadsheetApp.getActiveSpreadsheet().toast("Synced Google Overview (" + rows.length + " rows)", "WhiteDot CRM");
+}
+
 // ─── Sync All ───────────────────────────────────────────────
 function syncAll() {
   syncInquiries();
@@ -240,6 +290,7 @@ function syncAll() {
   syncQuoteRequests();
   syncSampleRequests();
   syncActivityLog();
+  syncGoogleOverview();
   createSummarySheet();
   SpreadsheetApp.getActiveSpreadsheet().toast("All data synced!", "WhiteDot CRM", 5);
 }

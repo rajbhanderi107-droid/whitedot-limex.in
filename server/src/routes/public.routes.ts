@@ -24,5 +24,6 @@ router.get("/settings", asyncHandler(pub.getWebsiteSettings));
 
 // LIMEX Assistant — tighter, chat-specific rate limit overrides the default.
 router.post("/chat", chatLimiter, validate(chatSchema), asyncHandler(chat));
+router.get("/google-overview", asyncHandler(pub.getGoogleOverview));
 
 export default router;

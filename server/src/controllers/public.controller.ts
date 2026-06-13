@@ -110,3 +110,22 @@ export async function getWebsiteSettings(_req: Request, res: Response) {
 
   return sendSuccess(res, settings);
 }
+
+export async function getGoogleOverview(_req: Request, res: Response) {
+  const setting = await prisma.websiteSetting.findFirst({
+    where: { key: "google_overview_data" },
+  });
+  if (setting && setting.value) {
+    try {
+      const data = JSON.parse(setting.value);
+      return sendSuccess(res, data);
+    } catch (e) {
+      // JSON parse failed, proceed to fetch fresh
+    }
+  }
+
+  // Import dynamic/lazy to avoid circular import issues if google.controller imports public.controller
+  const { fetchAndStoreGoogleData } = await import("./google.controller.js");
+  const data = await fetchAndStoreGoogleData();
+  return sendSuccess(res, data);
+}

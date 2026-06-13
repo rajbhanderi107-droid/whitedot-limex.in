@@ -204,17 +204,39 @@ async function buildAdsSource(): Promise<GoogleSource> {
   }
 }
 
-export async function getGoogleOverview(_req: Request, res: Response) {
+export async function fetchAndStoreGoogleData() {
   const [logins, analytics, searchConsole, ads] = await Promise.all([
-    buildLoginsSource(),
-    buildAnalyticsSource(),
-    buildSearchConsoleSource(),
-    buildAdsSource(),
+    buildLoginsSource().catch(e => ({ key: "logins", title: "Admin Logins", connected: false, setupHint: e.message, metrics: [] })),
+    buildAnalyticsSource().catch(e => ({ key: "analytics", title: "Analytics (GA4)", connected: false, setupHint: e.message, metrics: [] })),
+    buildSearchConsoleSource().catch(e => ({ key: "search-console", title: "Search Console", connected: false, setupHint: e.message, metrics: [] })),
+    buildAdsSource().catch(e => ({ key: "ads", title: "Google Ads", connected: false, setupHint: e.message, metrics: [] })),
   ]);
 
-  return sendSuccess(res, {
+  const overview = {
     range: "Last 28 days",
     generatedAt: new Date().toISOString(),
     sources: [logins, analytics, searchConsole, ads],
-  });
+  };
+
+  try {
+    await prisma.websiteSetting.upsert({
+      where: { key: "google_overview_data" },
+      update: { value: JSON.stringify(overview), updatedAt: new Date() },
+      create: {
+        key: "google_overview_data",
+        value: JSON.stringify(overview),
+        type: "JSON",
+        description: "Cached Google Analytics, Search Console, and Ads data",
+      },
+    });
+  } catch (err) {
+    console.error("Failed to store Google overview data:", err);
+  }
+
+  return overview;
+}
+
+export async function getGoogleOverview(_req: Request, res: Response) {
+  const overview = await fetchAndStoreGoogleData();
+  return sendSuccess(res, overview);
 }
