@@ -61,8 +61,15 @@
   max-width: 34ch;
 }
 
-.wds3-diagram {
+.wds3-diagram-wrap {
   flex: 1 1 62%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.wds3-diagram {
+  width: 100%;
   min-width: 0;
   max-height: 86%;
 }
@@ -471,184 +478,6 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* fresh SVG slide overrides                                           */
-/* ------------------------------------------------------------------ */
-.wds3-diagram-wrap {
-  flex: 1 1 62%;
-  min-width: 0;
-}
-
-.wds3-diagram {
-  width: 100%;
-  height: auto;
-}
-
-.wds3-node,
-.wds3-icon,
-.wds3-flow circle,
-.wds5-disc,
-.wds5-orbit,
-.wds5-glyph {
-  transform-origin: center;
-  transform-box: fill-box;
-}
-
-.wds3-node-shadow {
-  fill: rgba(69, 73, 64, 0.13);
-  filter: blur(12px);
-}
-
-.wds3-node-disc {
-  fill: url(#wds3-node-bg);
-  stroke: rgba(47, 91, 60, 0.16);
-  stroke-width: 2;
-  filter: drop-shadow(0 22px 34px rgba(42, 45, 38, 0.15));
-}
-
-.wds3-icon {
-  stroke: #365f3f;
-  stroke-width: 9;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
-}
-
-.wds3-icon circle {
-  fill: rgba(63, 122, 75, 0.18);
-  stroke: #365f3f;
-  stroke-width: 5;
-}
-
-.wds3-icon--powder > circle:first-child {
-  fill: rgba(255, 255, 255, 0.52);
-  stroke: rgba(54, 95, 63, 0.2);
-}
-
-.wds3-icon--powder circle:not(:first-child) {
-  fill: #d9d2c4;
-  stroke: rgba(54, 95, 63, 0.18);
-  stroke-width: 1;
-}
-
-.wds3-icon--sheet path:first-child {
-  fill: url(#wds3-sheet);
-}
-
-.wds3 .wds3-node {
-  opacity: 0;
-}
-
-.wds3 .wds3-flow circle {
-  opacity: 0;
-  transform: scale(0.4);
-}
-
-.wds3.is-active .wds3-node {
-  animation: wds3-node-in 0.72s var(--v2-ease-out) calc(0.3s + var(--i, 0) * 0.42s) both;
-}
-
-.wds3.is-active .wds3-node--limex {
-  animation: wds3-node-in 0.78s var(--v2-ease-out) 2.8s both;
-}
-
-.wds3.is-active .wds3-flow circle {
-  animation:
-    wds-pop 0.52s var(--v2-ease-out) calc(2.6s + var(--i, 0) * 0.025s) both,
-    wds3-float 3.4s ease-in-out calc(3.7s + var(--i, 0) * 0.03s) infinite alternate;
-}
-
-.wds5-disc {
-  stroke: rgba(47, 91, 60, 0.12);
-  stroke-width: 2;
-  filter: drop-shadow(0 22px 32px rgba(42, 45, 38, 0.15));
-}
-
-.wds5-orbit {
-  stroke: rgba(63, 122, 75, 0.34);
-  stroke-width: 5;
-  stroke-dasharray: 0.22 0.065;
-  fill: none;
-}
-
-.wds5-glyph {
-  stroke: #345f3d;
-  stroke-width: 10;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
-}
-
-.wds5-glyph--leaf path:first-child,
-.wds5-glyph--factory path:first-child {
-  fill: rgba(63, 122, 75, 0.1);
-}
-
-.wds5-glyph--co2 circle {
-  fill: rgba(63, 122, 75, 0.08);
-}
-
-.wds5-glyph--co2 text {
-  fill: #345f3d;
-  stroke: none;
-  font-family: var(--v2-font-sans);
-  font-size: 42px;
-  font-weight: 650;
-  text-anchor: middle;
-}
-
-.wds5 .wds5-disc,
-.wds5 .wds5-orbit,
-.wds5 .wds5-glyph {
-  opacity: 0;
-}
-
-.wds5 .wds5-disc {
-  transform: scale(0.88);
-}
-
-.wds5 .wds5-orbit {
-  stroke-dashoffset: 1;
-}
-
-.wds5 .wds5-glyph {
-  transform: scale(0.82);
-}
-
-.wds5.is-active .wds5-disc {
-  animation: wds5-place 0.7s var(--v2-ease-out) calc(0.9s + var(--i, 0) * 0.22s) both;
-}
-
-.wds5.is-active .wds5-orbit {
-  animation:
-    wds5-orbit-in 0.76s var(--v2-ease-out) calc(1.02s + var(--i, 0) * 0.22s) both,
-    wds5-spin 9s linear calc(1.9s + var(--i, 0) * 0.22s) infinite;
-}
-
-.wds5.is-active .wds5-glyph {
-  animation: wds-pop 0.7s var(--v2-ease-out) calc(1.12s + var(--i, 0) * 0.22s) both;
-}
-
-@keyframes wds3-node-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-@keyframes wds3-float {
-  from { transform: translate3d(-5px, 4px, 0) scale(1); opacity: 0.36; }
-  to   { transform: translate3d(6px, -7px, 0) scale(1.18); opacity: 0.72; }
-}
-
-@keyframes wds5-orbit-in {
-  from { opacity: 0; stroke-dashoffset: 1; transform: scale(0.88); }
-  to   { opacity: 1; stroke-dashoffset: 0; transform: scale(1); }
-}
-
-@keyframes wds5-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-/* ------------------------------------------------------------------ */
 /* responsive                                                          */
 /* ------------------------------------------------------------------ */
 @media (max-width: 767px) {
@@ -725,22 +554,6 @@
   .wds3 .wds3-arrow,
   .wds8 .wds8-ring,
   .wds8 .wds8-sweep {
-    stroke-dashoffset: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .wds3 .wds3-node,
-  .wds3 .wds3-flow circle,
-  .wds5 .wds5-disc,
-  .wds5 .wds5-orbit,
-  .wds5 .wds5-glyph {
-    opacity: 1;
-    transform: none;
-    animation: none !important;
-  }
-
-  .wds5 .wds5-orbit {
     stroke-dashoffset: 0;
   }
 }
