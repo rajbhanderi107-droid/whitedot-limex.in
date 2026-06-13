@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import './Consultation.css';
 import { useReveal } from '../motion';
+import { CONSULTATION_FORM_EVENT, CONSULTATION_HASH, type ConsultationLeadForm } from '../consultationNavigation';
 import { InquiryFormV2 } from './InquiryFormV2';
 import { QuoteFormV2, SampleFormV2, CalculatorFormV2 } from './ConsultationForms';
 import ConsultationSteps from './ConsultationSteps';
@@ -36,15 +37,36 @@ export default function Consultation() {
     const syncLeadForm = () => {
       const requested = requestedLeadForm();
       if (requested) setActiveForm(requested);
+
+      if (
+        window.location.hash.startsWith(`${CONSULTATION_HASH}?`) ||
+        window.location.hash.startsWith('#consultation?')
+      ) {
+        window.history.replaceState(null, '', CONSULTATION_HASH);
+        document.getElementById('inquiry')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     };
+
+    const onOpenForm = (event: Event) => {
+      const formKey = (event as CustomEvent<{ formKey?: ConsultationLeadForm }>).detail?.formKey;
+      if (formKey && FORM_TABS.some((tab) => tab.key === formKey)) {
+        setActiveForm(formKey);
+        document.getElementById('inquiry')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+
     syncLeadForm();
     window.addEventListener('hashchange', syncLeadForm);
-    return () => window.removeEventListener('hashchange', syncLeadForm);
+    window.addEventListener(CONSULTATION_FORM_EVENT, onOpenForm);
+    return () => {
+      window.removeEventListener('hashchange', syncLeadForm);
+      window.removeEventListener(CONSULTATION_FORM_EVENT, onOpenForm);
+    };
   }, []);
 
   const openForm = (formKey: FormKey) => {
     setActiveForm(formKey);
-    sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('inquiry')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   useEffect(() => {

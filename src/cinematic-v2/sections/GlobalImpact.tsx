@@ -1,5 +1,6 @@
 import './GlobalImpact.css';
 import { useReveal } from '../motion';
+import { CONSULTATION_HASH, openConsultationForm } from '../consultationNavigation';
 
 export default function GlobalImpact() {
   const { ref } = useReveal<HTMLDivElement>();
@@ -25,7 +26,14 @@ export default function GlobalImpact() {
           — the authorized partner for Gujarat, Rajasthan, Diu, and Daman.
           One material story, carried across a single supply line.
         </p>
-        <a className="v2gi-cta v2-reveal" href="#inquiry?lead=calculator">
+        <a
+          className="v2gi-cta v2-reveal"
+          href={CONSULTATION_HASH}
+          onClick={(event) => {
+            event.preventDefault();
+            openConsultationForm('calculator');
+          }}
+        >
           Start a Material Consultation
         </a>
       </div>

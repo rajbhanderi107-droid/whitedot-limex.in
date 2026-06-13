@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { CONSULTATION_HASH, GMAIL_CONTACT_HREF, openConsultationForm } from '../consultationNavigation';
 import './Nav.css';
 
 const LINKS = [
@@ -7,7 +8,7 @@ const LINKS = [
   { label: 'Compare', href: '#comparison' },
   { label: 'Applications', href: '#applications' },
   { label: 'News', href: '#news' },
-  { label: 'Consultation', href: '#inquiry' },
+  { label: 'Consultation', href: CONSULTATION_HASH },
 ] as const;
 
 export default function Nav() {
@@ -99,13 +100,19 @@ export default function Nav() {
               href={l.href}
               className={`v2nav-link${activeId === l.href ? ' is-active' : ''}`}
               aria-current={activeId === l.href ? 'true' : undefined}
+              onClick={(event) => {
+                if (l.href === CONSULTATION_HASH) {
+                  event.preventDefault();
+                  openConsultationForm('inquiry');
+                }
+              }}
             >
               {l.label}
             </a>
           ))}
         </nav>
 
-        <a href="#inquiry" className="v2nav-cta">Get in Touch</a>
+        <a href={GMAIL_CONTACT_HREF} className="v2nav-cta" target="_blank" rel="noreferrer">Get in Touch</a>
 
         {/* Hamburger button — mobile only */}
         <button
@@ -182,14 +189,22 @@ export default function Nav() {
               key={l.href}
               href={l.href}
               className={`v2nav-mobile-link${activeId === l.href ? ' is-active' : ''}`}
-              onClick={closeMenu}
+              onClick={(event) => {
+                closeMenu();
+                if (l.href === CONSULTATION_HASH) {
+                  event.preventDefault();
+                  openConsultationForm('inquiry');
+                }
+              }}
             >
               {l.label}
             </a>
           ))}
           <a
             className="v2nav-mobile-cta"
-            href="#inquiry"
+            href={GMAIL_CONTACT_HREF}
+            target="_blank"
+            rel="noreferrer"
             onClick={closeMenu}
           >
             Get in Touch

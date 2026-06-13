@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
+import { RefreshCw } from "lucide-react";
 import { api } from "../lib/api.js";
 
 interface Inquiry {
@@ -22,13 +23,14 @@ export function InquiriesPage() {
   const [loading, setLoading] = useState(true);
   const limit = 20;
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (fresh = false) => {
     setLoading(true);
     try {
       const params = new URLSearchParams({ page: String(page), limit: String(limit) });
       if (search) params.set("search", search);
       if (status) params.set("status", status);
-      const res = await api.get<Inquiry[]>(`/api/inquiries?${params}`);
+      const path = `/api/inquiries?${params}`;
+      const res = fresh ? await api.getFresh<Inquiry[]>(path) : await api.get<Inquiry[]>(path);
       setData(res.data);
       setTotal(res.pagination?.total ?? 0);
     } catch (e) { console.error(e); }
@@ -41,9 +43,14 @@ export function InquiriesPage() {
 
   return (
     <>
-      <div className="adm-header">
-        <h1>Inquiries</h1>
-        <p>{total} total inquiries</p>
+      <div className="adm-header adm-header-row">
+        <div>
+          <h1>Inquiries</h1>
+          <p>{total} total inquiries</p>
+        </div>
+        <button className="adm-btn adm-btn-ghost" type="button" onClick={() => load(true)} disabled={loading}>
+          <RefreshCw size={14} className={loading ? "adm-spin" : ""} /> Refresh
+        </button>
       </div>
 
       <div className="adm-table-wrap">

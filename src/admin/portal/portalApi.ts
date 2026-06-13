@@ -147,8 +147,11 @@ export const portalApi = {
   aiStats: () => api.get<AiStats>("/api/portal/ai/stats"),
   biSummary: () => api.get<BiSummary>("/api/portal/bi/summary"),
   health: () => api.get<DetailedHealth>("/api/portal/health/detailed"),
+  healthFresh: () => api.getFresh<DetailedHealth>("/api/portal/health/detailed"),
   seoAudit: () => api.get<SeoAudit>("/api/portal/seo/audit"),
+  seoAuditFresh: () => api.getFresh<SeoAudit>("/api/portal/seo/audit"),
   devopsRuns: () => api.get<{ repo: string; runs: DevopsRun[] }>("/api/portal/devops/runs"),
+  devopsRunsFresh: () => api.getFresh<{ repo: string; runs: DevopsRun[] }>("/api/portal/devops/runs"),
   backupStats: () => api.get<BackupStats>("/api/portal/backup/stats"),
   // generic resources
   listR: <T>(resource: string, params = "") => api.get<T[]>(`/api/portal/r/${resource}${params}`),

@@ -29,7 +29,7 @@ export function WebsiteHealthPage() {
   const load = () => {
     setLoading(true);
     setErr(null);
-    portalApi.health()
+    portalApi.healthFresh()
       .then((r) => setH(r.data))
       .catch(() => setErr("Health endpoint unreachable — backend may be waking up."))
       .finally(() => setLoading(false));
@@ -86,7 +86,7 @@ export function SeoGrowthPage() {
   const run = () => {
     setLoading(true);
     setErr(null);
-    portalApi.seoAudit()
+    portalApi.seoAuditFresh()
       .then((r) => setAudit(r.data))
       .catch(() => setErr("Audit failed — the site could not be fetched."))
       .finally(() => setLoading(false));
@@ -145,7 +145,7 @@ export function DevSecOpsPage() {
   const load = () => {
     setLoading(true);
     setErr(null);
-    portalApi.devopsRuns()
+    portalApi.devopsRunsFresh()
       .then((r) => { setRuns(r.data.runs); setRepo(r.data.repo); })
       .catch(() => setErr("Could not reach the GitHub API (rate limit or network)."))
       .finally(() => setLoading(false));

@@ -108,7 +108,9 @@ export function GoogleDashboardPage() {
     if (isRefresh) setRefreshing(true); else setLoading(true);
     setError(null);
     try {
-      const res = await api.get<GoogleOverview>("/api/google/overview");
+      const res = isRefresh
+        ? await api.getFresh<GoogleOverview>("/api/google/overview")
+        : await api.get<GoogleOverview>("/api/google/overview");
       setData(res.data);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not load Google data.");

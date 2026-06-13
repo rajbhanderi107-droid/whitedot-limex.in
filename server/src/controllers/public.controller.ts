@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { prisma } from "../config/prisma.js";
 import { sendSuccess } from "../utils/apiResponse.js";
 import { notifyAdmins } from "../services/notification.service.js";
+import { sendMail } from "../services/mailer.service.js";
 
 const PUBLIC_LOADING_SETTING = {
   key: "public_loading_enabled",
@@ -18,6 +19,41 @@ async function ensurePublicLoadingSetting() {
   });
 }
 
+function escapeHtml(value: string) {
+  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function inquiryEmailText(inquiry: {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  companyName?: string | null;
+  city?: string | null;
+  industry?: string | null;
+  inquiryType?: string | null;
+  message?: string | null;
+  sourcePage?: string | null;
+}) {
+  return [
+    "New WhiteDot LIMEX inquiry",
+    "",
+    `Name: ${inquiry.name}`,
+    `Email: ${inquiry.email}`,
+    inquiry.phone && `Phone: ${inquiry.phone}`,
+    inquiry.companyName && `Company: ${inquiry.companyName}`,
+    inquiry.city && `City: ${inquiry.city}`,
+    inquiry.industry && `Industry: ${inquiry.industry}`,
+    inquiry.inquiryType && `Intent: ${inquiry.inquiryType}`,
+    inquiry.sourcePage && `Source: ${inquiry.sourcePage}`,
+    "",
+    "Message:",
+    inquiry.message || "-",
+    "",
+    `Portal: ${process.env.FRONTEND_URL || "https://whitedotindia.in"}/#/admin/inquiries/${inquiry.id}`,
+  ].filter(Boolean).join("\n");
+}
+
 export async function submitInquiry(req: Request, res: Response) {
   const inquiry = await prisma.inquiry.create({ data: req.body });
 
@@ -26,6 +62,17 @@ export async function submitInquiry(req: Request, res: Response) {
     `${inquiry.name} (${inquiry.email}) submitted an inquiry.`,
     "LEAD",
   );
+
+  const inbox = process.env.ADMIN_INQUIRY_EMAIL || process.env.SMTP_USER || "rajbhanderi107@gmail.com";
+  const text = inquiryEmailText(inquiry);
+  sendMail({
+    to: inbox,
+    subject: `New LIMEX inquiry from ${inquiry.name}`,
+    text,
+    html: `<pre style="font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;line-height:1.5;">${escapeHtml(text)}</pre>`,
+  }).catch((error: unknown) => {
+    console.error("[mailer] Inquiry notification failed", error);
+  });
 
   return sendSuccess(res, { id: inquiry.id }, "Inquiry submitted successfully. We will contact you soon.", 201);
 }

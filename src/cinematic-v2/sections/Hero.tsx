@@ -1,6 +1,7 @@
 import './Hero.css';
 import React from 'react';
 import { useCountUp, useGrainField, useReveal } from '../motion';
+import { CONSULTATION_HASH, openConsultationForm } from '../consultationNavigation';
 import SupplyFlow from './SupplyFlow';
 
 /** Splits a string into individually animatable character spans, grouped by word to prevent mid-word wrapping on mobile.
@@ -107,7 +108,14 @@ export default function Hero() {
             <a href="#material" className="v2h-btn v2h-btn--primary">
               Explore LIMEX
             </a>
-            <a href="#inquiry?lead=quote" className="v2h-btn v2h-btn--ghost">
+            <a
+              href={CONSULTATION_HASH}
+              className="v2h-btn v2h-btn--ghost"
+              onClick={(event) => {
+                event.preventDefault();
+                openConsultationForm('quote');
+              }}
+            >
               Request Material Consultation
             </a>
             <ul className="v2h-eco v2-reveal" ref={eco.ref} aria-label="Sustainability signals">

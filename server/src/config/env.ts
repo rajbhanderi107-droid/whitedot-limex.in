@@ -18,6 +18,7 @@ export const env = {
     .filter(Boolean),
   ADMIN_SEED_EMAIL: process.env.ADMIN_SEED_EMAIL || "admin@whitedot.in",
   ADMIN_SEED_PASSWORD: process.env.ADMIN_SEED_PASSWORD,
+  ADMIN_INQUIRY_EMAIL: process.env.ADMIN_INQUIRY_EMAIL || "rajbhanderi107@gmail.com",
   RENDER_EXTERNAL_URL: process.env.RENDER_EXTERNAL_URL,
 
   // Google OAuth (optional — leave blank to disable Google login)

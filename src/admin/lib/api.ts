@@ -163,7 +163,7 @@ export const api = {
   /** Bypass the cache — for explicit Refresh buttons. */
   getFresh: <T>(path: string) => {
     getCache.delete(path);
-    return cachedGet<T>(path);
+    return request<T>(path, { headers: { "Cache-Control": "no-cache" } });
   },
   post: <T>(path: string, body: unknown) =>
     mutate<T>(path, { method: "POST", body: JSON.stringify(body) }),

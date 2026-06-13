@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { RefreshCw } from "lucide-react";
 import { api } from "../lib/api.js";
 
 /** Reusable list page for admin CRUD entities */
@@ -15,12 +16,15 @@ export function GenericListPage({ title, endpoint, columns, showDeleteAll = fals
   const [loading, setLoading] = useState(true);
   const limit = 20;
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (fresh = false) => {
     setLoading(true);
     try {
       const params = new URLSearchParams({ page: String(page), limit: String(limit) });
       if (search) params.set("search", search);
-      const res = await api.get<Record<string, unknown>[]>(`${endpoint}?${params}`);
+      const path = `${endpoint}?${params}`;
+      const res = fresh
+        ? await api.getFresh<Record<string, unknown>[]>(path)
+        : await api.get<Record<string, unknown>[]>(path);
       setData(res.data);
       setTotal(res.pagination?.total ?? 0);
     } catch (e) { console.error(e); }
@@ -48,9 +52,14 @@ export function GenericListPage({ title, endpoint, columns, showDeleteAll = fals
 
   return (
     <>
-      <div className="adm-header">
-        <h1>{title}</h1>
-        <p>{total} records</p>
+      <div className="adm-header adm-header-row">
+        <div>
+          <h1>{title}</h1>
+          <p>{total} records</p>
+        </div>
+        <button className="adm-btn adm-btn-ghost" type="button" onClick={() => load(true)} disabled={loading}>
+          <RefreshCw size={14} className={loading ? "adm-spin" : ""} /> Refresh
+        </button>
       </div>
 
       <div className="adm-table-wrap">

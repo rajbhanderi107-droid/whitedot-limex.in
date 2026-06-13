@@ -76,12 +76,13 @@ export function CrmPipeline() {
     }
   }, []);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (fresh = false) => {
     setLoading(true);
     setErr(null);
     try {
       // Pull a wide page; the pipeline shows the whole active book.
-      const res = await api.get<Lead[]>("/api/inquiries?page=1&limit=200");
+      const path = "/api/inquiries?page=1&limit=200";
+      const res = fresh ? await api.getFresh<Lead[]>(path) : await api.get<Lead[]>(path);
       setLeads(res.data);
     } catch (e) {
       console.error(e);
@@ -135,7 +136,7 @@ export function CrmPipeline() {
         title="Pipeline"
         sub="Live inquiry data. Stage changes persist to your CRM backend."
         right={
-          <button className="wd-ghost-btn" onClick={load} disabled={loading}>
+          <button className="wd-ghost-btn" onClick={() => load(true)} disabled={loading}>
             <RefreshCw size={14} className={loading ? "wd-spin" : ""} /> Refresh
           </button>
         }
