@@ -1,5 +1,5 @@
 import './Footer.css';
-import { Instagram, Facebook, Linkedin, Youtube, Twitter, Mail } from 'lucide-react';
+import { Instagram, Facebook, Linkedin, Twitter, Mail } from 'lucide-react';
 
 const NAV = [
   { label: 'Material', href: '#material' },
@@ -13,7 +13,6 @@ const SOCIAL = [
   { label: 'Instagram', href: 'https://instagram.com/whitedotindia', Icon: Instagram },
   { label: 'Facebook', href: 'https://facebook.com/whitedotindia', Icon: Facebook },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/company/whitedotindia', Icon: Linkedin },
-  { label: 'YouTube', href: 'https://youtube.com/@whitedotindia', Icon: Youtube },
   { label: 'X (Twitter)', href: 'https://x.com/whitedotindia', Icon: Twitter },
   { label: 'Email office@whitedotindia.in', href: 'mailto:office@whitedotindia.in', Icon: Mail },
 ] as const;
