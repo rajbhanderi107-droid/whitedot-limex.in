@@ -11,6 +11,7 @@ const { signToken, verifyToken } = await import("../src/utils/tokens.js");
 const { hashPassword, verifyPassword } = await import("../src/utils/password.js");
 const { requireAuth } = await import("../src/middleware/auth.middleware.js");
 const { getGoogleSyncStatus, triggerManualSync } = await import("../src/controllers/google.controller.js");
+const { listInquiries, updateInquiry } = await import("../src/controllers/inquiry.controller.js");
 const { createUserSchema, updateInquirySchema } = await import("../src/validators/admin.validator.js");
 
 const isDummyDb = process.env.DATABASE_URL.includes("dummy");
@@ -75,6 +76,44 @@ if (isDummyDb) {
     id: args.where.id,
     name: "E2E Test Client",
     email: "e2e-test@whitedot.in",
+    phone: "+918888888888",
+    companyName: "WhiteDot Test Labs",
+    status: "NEW",
+    priority: "MEDIUM",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    adminNotes: [],
+    followUpTasks: [],
+  });
+
+  (prisma.inquiry as any).findMany = async (args: any) => [
+    {
+      id: "inquiry-123",
+      name: "E2E Test Client",
+      email: "e2e-test@whitedot.in",
+      phone: "+918888888888",
+      companyName: "WhiteDot Test Labs",
+      status: "NEW",
+      priority: "MEDIUM",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      assignedTo: { id: "test-runner-id", name: "Test Runner" },
+      company: null,
+    }
+  ];
+
+  (prisma.inquiry as any).count = async () => 1;
+
+  (prisma.inquiry as any).update = async (args: any) => ({
+    id: args.where.id,
+    name: "E2E Test Client",
+    email: "e2e-test@whitedot.in",
+    phone: "+918888888888",
+    companyName: "WhiteDot Test Labs",
+    status: args.data.status || "NEW",
+    priority: args.data.priority || "MEDIUM",
+    createdAt: new Date(),
+    updatedAt: new Date(),
   });
 
   (prisma.inquiry as any).delete = async () => ({
@@ -320,6 +359,35 @@ test("=== STARTING 4-LEVEL STRENGTH & FUNCTIONALITY TESTS ===", async (t) => {
       assert.ok(res.body.data.sync, "Response should return sync results");
       assert.ok(res.body.data.sync.hasOwnProperty("status"), "Sync result should contain status");
       assert.ok(res.body.data.sync.hasOwnProperty("duration"), "Sync result should contain duration");
+    });
+
+    await t2.test("listInquiries returns list with custom pagination limit up to 1000", async () => {
+      const req: any = {
+        currentUser: { id: "test-user-123", role: "ADMIN" },
+        query: { page: "1", limit: "200" }
+      };
+      const res = makeMockRes();
+
+      await listInquiries(req, res);
+      assert.strictEqual(res.statusCode, 200);
+      assert.strictEqual(res.body.success, true);
+      assert.ok(Array.isArray(res.body.data), "Response should include inquiries list");
+      assert.strictEqual(res.body.pagination.limit, 200, "Limit should match requested page limit of 200");
+    });
+
+    await t2.test("updateInquiry updates status and priority successfully", async () => {
+      const req: any = {
+        currentUser: { id: "test-user-123", role: "ADMIN" },
+        params: { id: "inquiry-123" },
+        body: { status: "QUALIFIED", priority: "HIGH" }
+      };
+      const res = makeMockRes();
+
+      await updateInquiry(req, res);
+      assert.strictEqual(res.statusCode, 200);
+      assert.strictEqual(res.body.success, true);
+      assert.strictEqual(res.body.data.status, "QUALIFIED");
+      assert.strictEqual(res.body.data.priority, "HIGH");
     });
   });
 
