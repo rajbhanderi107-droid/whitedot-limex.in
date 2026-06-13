@@ -224,21 +224,33 @@
 }
 
 .v2ft {
-  background: #f0eadf;
-  border-top: 1px solid var(--v2-light-line);
-  color: var(--v2-light-title);
+  border-top: 1px solid rgba(244, 247, 239, 0.12);
+  color: #f6f8f2;
 }
 
 .v2ft::before {
-  opacity: 0;
+  opacity: 0.62;
+}
+
+.v2ft .v2ft-wordmark {
+  color: #f6f8f2;
+}
+
+.v2ft .v2ft-sub,
+.v2ft .v2ft-legal p {
+  color: rgba(244, 247, 239, 0.82);
+}
+
+.v2ft .v2ft-copy {
+  color: rgba(244, 247, 239, 0.7);
 }
 
 .v2ft-nav-link {
-  color: var(--v2-light-body);
+  color: rgba(244, 247, 239, 0.8);
 }
 
 .v2ft-nav-link:hover {
-  color: var(--v2-light-title);
+  color: #ffffff;
 }
 
 .v2nav--scrolled {
