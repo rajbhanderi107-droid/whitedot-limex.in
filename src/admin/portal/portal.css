@@ -336,6 +336,74 @@
 .wd-int-foot { display: flex; align-items: center; gap: .4rem; }
 .wd-int-env { flex: 1; padding: .3rem .4rem; background: var(--adm-bg); border: 1px solid var(--adm-border); border-radius: 5px; color: var(--adm-text); font-size: .72rem; }
 
+.wd-connector-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(160px, 1fr));
+  gap: var(--wd-gap);
+  margin-bottom: 1.2rem;
+}
+
+.wd-connector-summary .wd-card {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  min-height: 86px;
+  justify-content: center;
+}
+
+.wd-connector-num {
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-family: var(--adm-font-mono);
+  color: var(--adm-accent);
+}
+
+.wd-connector {
+  min-height: 210px;
+}
+
+.wd-connector-title {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  min-width: 0;
+}
+
+.wd-connector-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: var(--adm-accent-soft);
+  color: var(--adm-accent);
+  flex: 0 0 28px;
+}
+
+.wd-connector-purpose {
+  margin: 0;
+  min-height: 2.9em;
+  color: var(--adm-muted);
+  font-size: .76rem;
+  line-height: 1.45;
+}
+
+.wd-connector-caps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem;
+}
+
+.wd-connector-caps span {
+  padding: .16rem .42rem;
+  border: 1px solid var(--adm-border);
+  border-radius: 999px;
+  color: var(--adm-muted);
+  background: var(--adm-bg);
+  font-size: .64rem;
+  line-height: 1.25;
+}
+
 /* ─── ResourcePage (generic CRUD) ─────────────────────── */
 .wd-rp-actions { display: inline-flex; align-items: center; gap: .45rem; }
 .wd-rp-search { padding: .4rem .6rem; background: var(--adm-bg); border: 1px solid var(--adm-border); border-radius: 6px; color: var(--adm-text); font-size: .78rem; width: 170px; }
@@ -407,6 +475,7 @@
   .wd-auto-controls { justify-content: flex-start; }
   .wd-approval { flex-direction: column; }
   .wd-sec-top { grid-template-columns: 1fr; }
+  .wd-connector-summary { grid-template-columns: 1fr; }
 }
 @media (max-width: 820px) {
   .wd-sidebar.adm-sidebar { display: none; }
@@ -459,4 +528,159 @@
   .wd-search-kbd { display: none; }
   .wd-palette-overlay { padding-top: 6vh; }
   .wd-palette-kind { display: none; }
+}
+
+/* Light SaaS portal pass */
+.wd-portal {
+  --wd-gap: 1rem;
+}
+
+.wd-sidebar {
+  background: rgba(255, 253, 248, 0.9);
+}
+
+.wd-brand {
+  border-bottom-color: var(--adm-border);
+}
+
+.wd-brand-text strong,
+.wd-user-name,
+.wd-page-head h1,
+.wd-section-head h2,
+.wd-kpi-value,
+.wd-col-title,
+.wd-lead-name,
+.wd-feature-list li,
+.wd-status-row,
+.wd-ctrl-name,
+.wd-agent-name,
+.wd-int-name,
+.wd-report-summary h4,
+.wd-growth-tool,
+.wd-threat-kind,
+.wd-palette-label {
+  color: var(--adm-text);
+}
+
+.wd-nav-link:hover,
+.wd-nav-link.active {
+  background: rgba(79, 154, 53, 0.1);
+}
+
+.wd-nav-link.active {
+  color: var(--adm-accent);
+}
+
+.wd-topbar {
+  background: rgba(255, 253, 248, 0.86);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: 0 18px 46px -40px rgba(20, 27, 18, 0.38);
+}
+
+.wd-search,
+.wd-mode,
+.wd-search-kbd,
+.wd-col,
+.wd-impact,
+.wd-report-summary,
+.wd-disclaimer,
+.wd-rp-search,
+.wd-rp-status,
+.wd-utm-out,
+.wd-action-chip,
+.wd-stage-pill,
+.wd-flow-step,
+.wd-flow-safety,
+.wd-int-env,
+.wd-lead-stage,
+.wd-auto-mode,
+.wd-field input,
+.wd-field select,
+.wd-chip-btn,
+.wd-palette-icon {
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--adm-text);
+  border-color: var(--adm-border);
+}
+
+.wd-card,
+.wd-kpi,
+.wd-lead-card,
+.wd-agent,
+.wd-int,
+.wd-auto,
+.wd-approval,
+.wd-rp-tablewrap,
+.wd-growth-card,
+.wd-threat,
+.wd-palette {
+  background: var(--adm-surface);
+  border-color: var(--adm-border);
+  box-shadow: 0 18px 48px -36px rgba(20, 27, 18, 0.36);
+}
+
+.wd-kpi-link:hover .wd-kpi,
+.wd-growth-card:hover,
+.wd-int-on,
+.wd-lead-card:hover {
+  background: #ffffff;
+  border-color: rgba(79, 154, 53, 0.38);
+}
+
+.wd-ring-track,
+.wd-funnel-track {
+  stroke: rgba(28, 31, 27, 0.12);
+  background: rgba(28, 31, 27, 0.08);
+}
+
+.wd-mode select,
+.wd-mode select option,
+.wd-field select option,
+.wd-int-env option,
+.wd-lead-stage option {
+  background: #fffdf8;
+  color: var(--adm-text);
+}
+
+.wd-estop {
+  background: rgba(184, 75, 75, 0.08);
+}
+
+.wd-lockbar,
+.wd-mod-lock,
+.wd-inline-err {
+  background: rgba(184, 75, 75, 0.1);
+  color: #8f3434;
+}
+
+.wd-col-empty {
+  color: rgba(28, 31, 27, 0.28);
+}
+
+.wd-rp-table th {
+  background: rgba(241, 236, 226, 0.72);
+}
+
+.wd-rp-table td {
+  border-bottom-color: rgba(28, 31, 27, 0.08);
+}
+
+.wd-rp-table tr:hover td {
+  background: rgba(79, 154, 53, 0.07);
+}
+
+.wd-temp-priority,
+.wd-lead-actions a:hover,
+.wd-primary-btn,
+.wd-ai-btn:hover:not(:disabled) {
+  color: #f8fbf4;
+}
+
+.wd-palette-overlay {
+  background: rgba(28, 33, 27, 0.32);
+}
+
+.wd-palette-item.active {
+  background: var(--adm-surface-2);
 }

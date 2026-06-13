@@ -667,3 +667,134 @@ select.adm-input { cursor: pointer; }
   border-radius: 5px; font-family: var(--wd-font-mono, ui-monospace, monospace);
   font-size: .72rem; color: var(--adm-text);
 }
+
+/* Light limestone portal theme.
+   Keeps the existing admin workflows intact while matching the public site's
+   warm white LIMEX palette. */
+:root {
+  --adm-bg: #f7f4ec;
+  --adm-surface: rgba(255, 253, 248, 0.92);
+  --adm-surface-2: rgba(241, 236, 226, 0.92);
+  --adm-border: rgba(28, 31, 27, 0.14);
+  --adm-text: #1c211b;
+  --adm-muted: #687065;
+  --adm-accent: #4f9a35;
+  --adm-accent-dim: #3f7f2b;
+  --adm-accent-soft: rgba(79, 154, 53, 0.12);
+  --adm-success: #2f7d3d;
+  --adm-warning: #94651e;
+  --adm-danger: #b84b4b;
+}
+
+html,
+body,
+#root {
+  background: var(--adm-bg);
+}
+
+.adm {
+  background:
+    radial-gradient(120% 90% at 50% -12%, rgba(255, 255, 255, 0.82), transparent 56%),
+    linear-gradient(180deg, #fffdf8 0%, #f7f4ec 52%, #efe8dc 100%);
+}
+
+.adm::before,
+.adm-login::before {
+  background:
+    radial-gradient(90% 62% at 22% 8%, rgba(79, 154, 53, 0.12), transparent 58%),
+    radial-gradient(92% 70% at 88% 12%, rgba(255, 255, 255, 0.72), transparent 60%),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.72), rgba(247, 244, 236, 0.18));
+}
+
+.adm-sidebar,
+.adm-drawer,
+.adm-mobile-topbar {
+  background: rgba(255, 253, 248, 0.88);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: 18px 0 42px -36px rgba(20, 27, 18, 0.42);
+}
+
+.adm-main {
+  background: transparent;
+}
+
+.adm-header h1,
+.adm-panel-head h2,
+.adm-card h3,
+.adm-setting-meta strong,
+.adm-google-card-title,
+.adm-bell-title,
+.adm-kbd-list li {
+  color: var(--adm-text);
+}
+
+.adm-action-card,
+.adm-stat,
+.adm-table-wrap,
+.adm-panel,
+.adm-card,
+.adm-login-card,
+.adm-google-metric,
+.adm-note,
+.adm-bell-panel,
+.adm-kbd-sheet,
+.adm-toast {
+  background: var(--adm-surface);
+  border-color: var(--adm-border);
+  box-shadow: 0 18px 48px -36px rgba(20, 27, 18, 0.38);
+}
+
+.adm-action-card:hover {
+  background: #ffffff;
+}
+
+.adm-search,
+.adm-filter,
+.adm-input,
+.adm-google-metric,
+.adm-pagination-btns button,
+.adm-kbd-list kbd {
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--adm-text);
+  border-color: var(--adm-border);
+}
+
+.adm-input::placeholder,
+.adm-search::placeholder {
+  color: rgba(104, 112, 101, 0.72);
+}
+
+table.adm-table th {
+  background: rgba(241, 236, 226, 0.72);
+}
+
+table.adm-table tr:hover td,
+.adm-bell-item.is-unread {
+  background: rgba(79, 154, 53, 0.08);
+}
+
+.adm-toggle-track {
+  background: #e2ddd2;
+}
+
+.adm-toggle-thumb {
+  background: #ffffff;
+  box-shadow: 0 2px 10px rgba(20, 27, 18, 0.24);
+}
+
+.adm-btn-primary {
+  color: #f8fbf4;
+}
+
+.adm-drawer-overlay,
+.adm-kbd-overlay {
+  background: rgba(28, 33, 27, 0.32);
+}
+
+.adm-login {
+  background:
+    radial-gradient(80% 60% at 50% 0%, rgba(79, 154, 53, 0.14), transparent 56%),
+    var(--adm-bg);
+  color: var(--adm-text);
+}
