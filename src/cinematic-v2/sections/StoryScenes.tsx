@@ -35,9 +35,9 @@ type DishSpec = {
 };
 
 const SCIENCE_DISHES: DishSpec[] = [
-  { id: 'limestone', cls: '1', x: 170, y: 40, mcx: 352, mcy: 226, solid: 134, edge: 152 },
-  { id: 'powder', cls: '2', x: 640, y: 40, mcx: 820, mcy: 220, solid: 160, edge: 176 },
-  { id: 'binder', cls: '3', x: 1110, y: 40, mcx: 1290, mcy: 220, solid: 166, edge: 179 },
+  { id: 'limestone', cls: '1', x: 170, y: 40, mcx: 352, mcy: 226, solid: 116, edge: 124 },
+  { id: 'powder', cls: '2', x: 640, y: 40, mcx: 820, mcy: 220, solid: 138, edge: 148 },
+  { id: 'binder', cls: '3', x: 1110, y: 40, mcx: 1290, mcy: 220, solid: 138, edge: 148 },
   { id: 'limex', cls: 'result', x: 640, y: 670, mcx: 820, mcy: 850, solid: 134, edge: 152 },
 ];
 
