@@ -25,7 +25,7 @@ export default function GlobalImpact() {
           — the authorized partner for Gujarat, Rajasthan, Diu, and Daman.
           One material story, carried across a single supply line.
         </p>
-        <a className="v2gi-cta v2-reveal" href="#consultation?lead=calculator">
+        <a className="v2gi-cta v2-reveal" href="#inquiry?lead=calculator">
           Start a Material Consultation
         </a>
       </div>

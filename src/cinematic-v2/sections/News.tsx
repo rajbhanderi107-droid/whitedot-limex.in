@@ -101,7 +101,7 @@ export default function News() {
 
         <nav className="v2news-categories" aria-label="News categories">
           <a className="v2news-category is-active" href="#news">ALL</a>
-          <a className="v2news-category" href="#consultation">WhiteDot Connectivity</a>
+          <a className="v2news-category" href="#inquiry">WhiteDot Connectivity</a>
           <a className="v2news-category" href={feed.sourceUrl} target="_blank" rel="noreferrer">TBM News</a>
           <a className="v2news-category" href={feed.sourceUrl} target="_blank" rel="noreferrer">Press Release</a>
         </nav>
@@ -113,7 +113,7 @@ export default function News() {
         </div>
 
         <div className="v2news-list v2-reveal-group" ref={cards.ref}>
-          <a className="v2news-item v2news-item--connect" href="#consultation">
+          <a className="v2news-item v2news-item--connect" href="#inquiry">
             <div className="v2news-thumb v2news-thumb--connect" aria-hidden="true">
               <span className="v2news-connect-mark">WD</span>
               <span className="v2news-connect-line" />

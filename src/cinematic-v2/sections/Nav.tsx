@@ -7,7 +7,7 @@ const LINKS = [
   { label: 'Compare', href: '#comparison' },
   { label: 'Applications', href: '#applications' },
   { label: 'News', href: '#news' },
-  { label: 'Consultation', href: '#consultation?lead=inquiry' },
+  { label: 'Consultation', href: '#inquiry' },
 ] as const;
 
 export default function Nav() {
@@ -105,7 +105,7 @@ export default function Nav() {
           ))}
         </nav>
 
-        <a href="#consultation?lead=inquiry" className="v2nav-cta">Get in Touch</a>
+        <a href="#inquiry" className="v2nav-cta">Get in Touch</a>
 
         {/* Hamburger button — mobile only */}
         <button
@@ -189,7 +189,7 @@ export default function Nav() {
           ))}
           <a
             className="v2nav-mobile-cta"
-            href="#consultation?lead=inquiry"
+            href="#inquiry"
             onClick={closeMenu}
           >
             Get in Touch
