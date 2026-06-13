@@ -234,6 +234,29 @@ export function SectionVideo({
 
   return (
     <div ref={rootRef} className={rootClassName} aria-hidden="true">
+      {/* Static poster image always present as a baseline placeholder / fallback */}
+      <img
+        src={posterUrl}
+        alt=""
+        className="cine-svideo-poster"
+        decoding="async"
+        style={objectPosition ? { objectPosition } : undefined}
+      />
+
+      {/* Video element only mounts on premium + motion-allowed + near-viewport */}
+      {cinematic && mounted && (
+        <video
+          ref={videoRef}
+          className="cine-svideo-el"
+          src={videoUrl}
+          muted
+          loop
+          playsInline
+          preload="none"
+          style={objectPosition ? { objectPosition } : undefined}
+        />
+      )}
+
       {/* Dark readability scrim — sits above the background, below the content. */}
       <div className="cine-svideo-scrim" />
     </div>

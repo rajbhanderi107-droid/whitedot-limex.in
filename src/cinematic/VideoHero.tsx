@@ -116,6 +116,27 @@ export function VideoHero() {
   }, [cinematic, inView]);
 
   return (
-    <div className="cine-hero-video" aria-hidden="true" ref={layerRef} />
+    <div className="cine-hero-video" aria-hidden="true" ref={layerRef}>
+      {/* Static poster image always present as a baseline placeholder / fallback */}
+      <img
+        src={`${base}assets/videos/hero-poster.jpg`}
+        alt=""
+        className="cine-svideo-poster"
+        decoding="async"
+      />
+
+      {/* Video element only mounts on premium + motion-allowed + near-viewport */}
+      {cinematic && mounted && (
+        <video
+          ref={videoRef}
+          className="cine-hero-video-el cine-svideo-el"
+          src={`${base}assets/videos/hero.mp4`}
+          muted
+          loop
+          playsInline
+          preload="auto"
+        />
+      )}
+    </div>
   );
 }
