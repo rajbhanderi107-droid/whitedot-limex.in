@@ -207,7 +207,6 @@ test.describe("Admin Portal End-to-End and Google Sync Dashboard Verification", 
     });
     await page.reload();
     await page.goto("/#/admin/google");
-
     // Verify Title & Subtitle
     await expect(page.locator("h1")).toContainText("Google");
     await expect(page.locator(".adm-header p")).toContainText("Last 28 days");
