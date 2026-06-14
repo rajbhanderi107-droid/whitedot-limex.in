@@ -14,6 +14,16 @@ export interface ServerPortalState {
 
 export interface ServerAutomation { id: string; enabled: boolean; mode: AutomationMode; updatedAt: string }
 export interface ServerAiAgent { id: string; enabled: boolean; mode: AutomationMode; updatedAt: string }
+export interface AgentRunResult {
+  runId: string;
+  agentId: string;
+  output: string;
+  model: string;
+  inputTokens: number;
+  outputTokens: number;
+  costUsd: number;
+  createdAt: string;
+}
 export interface ServerIntegration { id: string; connected: boolean; environment: "sandbox" | "production"; updatedAt: string }
 
 export interface ServerApproval {
@@ -105,6 +115,17 @@ export interface AiStats {
   llmConfigured: boolean;
 }
 
+export interface AiToolResult {
+  runId: string;
+  tool: string;
+  output: string;
+  model: string;
+  inputTokens: number;
+  outputTokens: number;
+  costUsd: number;
+  createdAt: string;
+}
+
 export const portalApi = {
   // posture
   getState: () => api.get<ServerPortalState>("/api/portal/state"),
@@ -117,6 +138,11 @@ export const portalApi = {
   listAiAgents: () => api.get<ServerAiAgent[]>("/api/portal/ai-agents"),
   patchAiAgent: (id: string, body: Partial<Pick<ServerAiAgent, "enabled" | "mode">>) =>
     api.patch<ServerAiAgent>(`/api/portal/ai-agents/${id}`, body),
+  runAiAgent: (id: string, body: { input: string; context?: string }) =>
+    api.post<AgentRunResult>(`/api/portal/ai-agents/${id}/run`, body),
+  // AI Growth Studio tools
+  aiTool: (tool: string, inputs: Record<string, string>) =>
+    api.post<AiToolResult>("/api/portal/ai/tool", { tool, inputs }),
   listIntegrations: () => api.get<ServerIntegration[]>("/api/portal/integrations"),
   patchIntegration: (id: string, body: Partial<Pick<ServerIntegration, "connected" | "environment">>) =>
     api.patch<ServerIntegration>(`/api/portal/integrations/${id}`, body),

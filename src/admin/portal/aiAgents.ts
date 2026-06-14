@@ -68,6 +68,14 @@ export const AGENT_DEFS: AgentDef[] = [
   { id: "vuln-remediation", name: "Vulnerability Remediation Agent", group: "Security & Dev", role: "Patch proposals (approval-gated)", tier: "specialist", defaultMode: "APPROVAL" },
   { id: "incident", name: "Incident Response Agent", group: "Security & Dev", role: "Triage & response support", tier: "specialist", defaultMode: "APPROVAL" },
   { id: "orchestrator", name: "Automation Orchestrator Agent", group: "Security & Dev", role: "Coordinate multi-step automations", tier: "specialist", defaultMode: "APPROVAL" },
+  // Digital Marketing (mirrors the Digital Marketing skill-tree — see digitalMarketing.ts)
+  { id: "dm-seo", name: "SEO Specialist Agent", group: "Digital Marketing", role: "On-page, off-page, technical & local SEO playbooks", tier: "specialist", defaultMode: "DRAFT" },
+  { id: "dm-ppc", name: "PPC Manager Agent", group: "Digital Marketing", role: "Google & social paid campaigns, bidding, ROAS", tier: "specialist", defaultMode: "APPROVAL" },
+  { id: "dm-smm", name: "Social Media Marketing Agent", group: "Digital Marketing", role: "Organic + paid social, calendar & engagement", tier: "content", defaultMode: "DRAFT" },
+  { id: "dm-email", name: "Email Marketing Agent", group: "Digital Marketing", role: "Newsletters, sequences, segmentation & automation", tier: "content", defaultMode: "APPROVAL" },
+  { id: "dm-content", name: "Content Marketing Agent", group: "Digital Marketing", role: "Content types, planning, copywriting & distribution", tier: "content", defaultMode: "DRAFT" },
+  { id: "dm-strategy", name: "Marketing Strategy Agent", group: "Digital Marketing", role: "Funnels, lead-gen strategy, CRM & tooling stack", tier: "strategy", defaultMode: "DRAFT" },
+  { id: "dm-analytics", name: "Analytics & Tracking Agent", group: "Digital Marketing", role: "GA4, GTM, UTM, heatmaps, CRO & KPI dashboards", tier: "specialist", defaultMode: "DRAFT" },
 ];
 
 export const AI_RULES = [

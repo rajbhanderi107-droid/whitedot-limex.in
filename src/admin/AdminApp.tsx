@@ -10,12 +10,18 @@ import { CyberShield } from "./portal/pages/CyberShield.js";
 import { IncidentResponse } from "./portal/pages/IncidentResponse.js";
 import { AiBrain } from "./portal/pages/AiBrain.js";
 import { AiAgents } from "./portal/pages/AiAgents.js";
+import { DigitalMarketing } from "./portal/pages/DigitalMarketing.js";
 import { Sustainability } from "./portal/pages/Sustainability.js";
 import { IntegrationCenter } from "./portal/pages/IntegrationCenter.js";
 import { PimPage, InventoryPage, CpqPage, OrdersPage, CampaignsPage, SocialStudioPage, LandingPagesPage, BugShieldPage } from "./portal/pages/businessModules.js";
 import { BiPage, LeadGenPage, AdsPage, DataWarehousePage } from "./portal/pages/intelModules.js";
 import { WebsiteHealthPage, SeoGrowthPage, DevSecOpsPage, BackupPage, CustomerPortalAdminPage, NotificationCenterPage } from "./portal/pages/opsModules.js";
 import { ModuleStub } from "./portal/pages/ModuleStub.js";
+import { Employees } from "./portal/pages/Employees.js";
+import { Attendance } from "./portal/pages/Attendance.js";
+import { EmployeeWorkspace } from "./portal/pages/EmployeeWorkspace.js";
+import { AiToolPage } from "./portal/pages/AiToolPage.js";
+import { AI_TOOLS } from "./portal/aiTools.js";
 import { SCAFFOLD_MODULES } from "./portal/modules.js";
 import { useAuth } from "./hooks/useAuth.js";
 import { GenericListPage } from "./pages/GenericListPage.js";
@@ -207,6 +213,7 @@ export default function AdminApp() {
 
           <Route path="/admin/google" element={<GoogleDashboardPage />} />
           <Route path="/admin/marketing" element={<MarketingToolsPage />} />
+          <Route path="/admin/digital-marketing" element={<DigitalMarketing />} />
           <Route path="/admin/settings" element={<WebsiteSettingsPage />} />
           <Route path="/admin/users" element={<UserManagementPage />} />
 
@@ -265,6 +272,17 @@ export default function AdminApp() {
           <Route path="/admin/backup" element={<BackupPage />} />
           <Route path="/admin/customer-portal" element={<CustomerPortalAdminPage />} />
           <Route path="/admin/notifications" element={<NotificationCenterPage />} />
+
+          {/* ── Workforce (Employees · Attendance · Employee Workspace) ── */}
+          <Route path="/admin/employees" element={<Employees />} />
+          <Route path="/admin/attendance" element={<Attendance />} />
+          <Route path="/admin/workspace" element={<EmployeeWorkspace />} />
+          <Route path="/admin/workspace/:id" element={<EmployeeWorkspace />} />
+
+          {/* ── AI Growth Studio tools (config-driven) ── */}
+          {AI_TOOLS.map((t) => (
+            <Route key={t.key} path={`/admin/studio/${t.key}`} element={<AiToolPage moduleKey={t.key} />} />
+          ))}
 
           {/* ── Scaffolded modules (Infinity Growth OS) ── */}
           {SCAFFOLD_MODULES.map((m) => (
