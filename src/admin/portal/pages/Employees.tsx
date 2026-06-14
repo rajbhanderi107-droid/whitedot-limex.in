@@ -151,6 +151,23 @@ export function Employees() {
   const [dept, setDept] = useState<string>("All");
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [quickName, setQuickName] = useState("");
+  const [quickRole, setQuickRole] = useState(ROLE_OPTIONS[0]);
+
+  const quickAdd = () => {
+    const name = quickName.trim();
+    if (!name) return;
+    const slug = name.toLowerCase().replace(/[^a-z]+/g, ".").replace(/^\.|\.$/g, "");
+    addEmployee({
+      name, role: quickRole, department: WF_DEPARTMENTS[0],
+      email: `${slug}@whitedotindia.in`, phone: "", location: "",
+      type: "Full-Time", status: "Active",
+      joinedAt: new Date().toISOString().slice(0, 10), manager: "",
+      salary: 0, kpi: 75, tools: [], workspace: WORKSPACE_OPTIONS[0], notes: "",
+      leave: { annual: 18, sick: 12, casual: 8, usedAnnual: 0, usedSick: 0, usedCasual: 0 },
+    } as any);
+    setQuickName("");
+  };
 
   const emps = data.employees;
   const active = emps.filter((e) => e.status === "Active").length;
@@ -220,13 +237,30 @@ export function Employees() {
         <button className="wd-primary-btn" onClick={openAdd}><Plus size={14} /> Hire Employee</button>
       </div>
 
+      {/* Quick add — one step: name + role, instant hire. Full details via Edit. */}
+      <Card>
+        <div className="wd-wf-quickadd">
+          <input
+            value={quickName}
+            onChange={(e) => setQuickName(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") quickAdd(); }}
+            placeholder="Employee name — type and press Enter"
+            className="wd-wf-quickadd-name"
+          />
+          <select value={quickRole} onChange={(e) => setQuickRole(e.target.value)} className="wd-wf-select">
+            {ROLE_OPTIONS.map((r) => <option key={r} value={r}>{r}</option>)}
+          </select>
+          <button className="wd-primary-btn" onClick={quickAdd} disabled={!quickName.trim()}><Plus size={14} /> Quick Add</button>
+          <button className="wd-ghost-btn" onClick={openAdd}><UserPlus size={14} /> Full Form</button>
+        </div>
+      </Card>
+
       {emps.length === 0 && (
         <Card>
-          <div style={{ textAlign: "center", padding: "48px 24px" }}>
+          <div style={{ textAlign: "center", padding: "40px 24px" }}>
             <Users size={48} style={{ opacity: 0.3, marginBottom: 16 }} />
             <h3 style={{ marginBottom: 8 }}>No Employees Yet</h3>
-            <p className="wd-muted" style={{ marginBottom: 20 }}>Your workforce is empty. Click "Hire Employee" to add your first team member.</p>
-            <button className="wd-primary-btn" onClick={openAdd}><UserPlus size={14} /> Hire First Employee</button>
+            <p className="wd-muted">Type a name above and press Enter to hire your first team member.</p>
           </div>
         </Card>
       )}

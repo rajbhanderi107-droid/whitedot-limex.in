@@ -941,3 +941,14 @@
   .wd-form-grid { grid-template-columns: 1fr; }
   .wd-modal-lg { padding: 1rem; }
 }
+
+/* Workforce quick-add bar */
+.wd-wf-quickadd { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.wd-wf-quickadd-name { flex: 1; min-width: 200px; padding: 10px 12px; border-radius: 8px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: inherit; font-size: 14px; }
+.wd-wf-quickadd-name:focus { outline: none; border-color: rgba(120,200,140,0.5); }
+.wd-wf-quickadd .wd-wf-select { min-width: 180px; }
+@media (max-width: 700px) {
+  .wd-wf-quickadd { flex-direction: column; align-items: stretch; }
+  .wd-wf-quickadd .wd-wf-select, .wd-wf-quickadd button { width: 100%; }
+}

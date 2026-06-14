@@ -124,6 +124,10 @@ const KEY = "wd.workforce.v2";
 
 function load(): WorkforceData {
   try {
+    // Purge any legacy seeded data so old demo employees never reappear.
+    for (const old of ["wd.workforce.v1", "wd.workforce"]) {
+      if (localStorage.getItem(old)) localStorage.removeItem(old);
+    }
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const parsed = JSON.parse(raw) as Partial<WorkforceData>;
