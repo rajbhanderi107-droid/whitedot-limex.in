@@ -1,16 +1,12 @@
-/* Employee Workspace — the per-employee portal each team member works in.
- *
- * Profile header, "My Tasks" kanban (drag between To Do / In Progress /
- * Review / Done), my attendance this week, leave balance, and a payslip
- * summary. Reached from the Employees directory (/admin/workspace/:id) or
- * the Workforce sidebar entry (defaults to the first employee). Backed by
- * the client workforceStore. */
+/* Employee Workspace — per-employee portal view.
+ * Shows profile, tasks kanban, attendance, leave, payslip, assigned tools.
+ * Super admin assigns everything — employee just sees their workspace. */
 
 import { useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, CalendarDays, Briefcase, Wallet, Plus } from "lucide-react";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { ArrowLeft, CalendarDays, Briefcase, Wallet, Plus, Wrench, MapPin, Trash2 } from "lucide-react";
 import {
-  useWorkforce, empById, TASK_STAGES, tenureMonths,
+  useWorkforce, empById, TASK_STAGES, tenureMonths, todayISO,
   type TaskStage, type WorkTask, type TaskPriority,
 } from "../workforceStore.js";
 import { SectionHeader, Card } from "../ui.js";
@@ -21,7 +17,8 @@ function prioClass(p: TaskPriority) {
 
 export function EmployeeWorkspace() {
   const { id } = useParams<{ id: string }>();
-  const { data, setTaskStage, addTask, today } = useWorkforce();
+  const navigate = useNavigate();
+  const { data, setTaskStage, addTask, deleteTask, today } = useWorkforce();
 
   const employee = useMemo(
     () => (id ? empById(data, id) : data.employees[0]),
@@ -32,11 +29,24 @@ export function EmployeeWorkspace() {
   const [overStage, setOverStage] = useState<TaskStage | null>(null);
   const [adding, setAdding] = useState(false);
   const [newTitle, setNewTitle] = useState("");
+  const [newProject, setNewProject] = useState("");
+  const [newPriority, setNewPriority] = useState<TaskPriority>("medium");
 
   if (!employee) {
     return (
       <div className="wd-page">
-        <Card><p className="wd-muted" style={{ padding: 24 }}>Employee not found. <Link to="/admin/employees">Back to directory</Link></p></Card>
+        <Card>
+          <div style={{ textAlign: "center", padding: "48px 24px" }}>
+            <p className="wd-muted" style={{ marginBottom: 16 }}>
+              {data.employees.length === 0
+                ? "No employees in workforce yet. Add employees first."
+                : "Employee not found."}
+            </p>
+            <Link to="/admin/employees" className="wd-primary-btn">
+              <ArrowLeft size={14} /> {data.employees.length === 0 ? "Go to Workforce" : "Back to Directory"}
+            </Link>
+          </div>
+        </Card>
       </div>
     );
   }
@@ -62,8 +72,10 @@ export function EmployeeWorkspace() {
 
   const submitTask = () => {
     if (!newTitle.trim()) return;
-    addTask(employee.id, newTitle.trim(), employee.department, "medium", today);
+    addTask(employee.id, newTitle.trim(), newProject.trim() || employee.department, newPriority, todayISO(7));
     setNewTitle("");
+    setNewProject("");
+    setNewPriority("medium");
     setAdding(false);
   };
 
@@ -74,7 +86,6 @@ export function EmployeeWorkspace() {
     ["Casual", lv.usedCasual, lv.casual],
   ];
 
-  // Payslip estimate.
   const basic = Math.round(employee.salary * 0.5);
   const hra = Math.round(employee.salary * 0.2);
   const allowance = employee.salary - basic - hra;
@@ -86,6 +97,18 @@ export function EmployeeWorkspace() {
     <div className="wd-page">
       <div className="wd-page-head">
         <Link to="/admin/employees" className="wd-ghost-btn wd-wf-back"><ArrowLeft size={15} /> Directory</Link>
+        {data.employees.length > 1 && (
+          <select
+            className="wd-wf-select"
+            value={employee.id}
+            onChange={(e) => navigate(`/admin/workspace/${e.target.value}`)}
+            style={{ marginLeft: "auto" }}
+          >
+            {data.employees.map((emp) => (
+              <option key={emp.id} value={emp.id}>{emp.name} — {emp.role}</option>
+            ))}
+          </select>
+        )}
       </div>
 
       {/* Profile header */}
@@ -97,6 +120,7 @@ export function EmployeeWorkspace() {
           <h2>{employee.name}</h2>
           <p>{employee.role} · {employee.department}</p>
           <p className="wd-muted">{employee.email} · {employee.phone} · {employee.location}</p>
+          {employee.manager && <p className="wd-muted" style={{ fontSize: 12 }}>Reports to: {employee.manager}</p>}
         </div>
         <div className="wd-wf-profile-stats">
           <div><strong>{employee.kpi}</strong><span>KPI</span></div>
@@ -106,79 +130,117 @@ export function EmployeeWorkspace() {
         </div>
       </Card>
 
-      {/* My Tasks kanban */}
+      {/* Assigned Tools & Workspace */}
+      <div className="wd-two-col">
+        <Card>
+          <SectionHeader title="Assigned Tools" sub={`${employee.tools?.length || 0} tools granted by admin`} right={<Wrench size={16} className="wd-muted" />} />
+          {(employee.tools?.length || 0) > 0 ? (
+            <div className="wd-tool-chips" style={{ padding: "8px 0" }}>
+              {employee.tools.map((t) => <span key={t} className="wd-chip wd-chip-active">{t}</span>)}
+            </div>
+          ) : (
+            <p className="wd-muted" style={{ padding: 16 }}>No tools assigned yet. Super admin will assign tools.</p>
+          )}
+        </Card>
+        <Card>
+          <SectionHeader title="Workspace" sub="Work location assigned by admin" right={<MapPin size={16} className="wd-muted" />} />
+          <p style={{ padding: "16px 0", fontSize: 15, fontWeight: 500 }}>{employee.workspace || "Not assigned"}</p>
+          {employee.notes && <p className="wd-muted" style={{ fontSize: 12, borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 10 }}>{employee.notes}</p>}
+        </Card>
+      </div>
+
+      {/* Tasks kanban */}
       <Card>
         <div className="wd-wf-dir-head">
-          <SectionHeader title="My Tasks" sub={`${myTasks.length} assigned · ${done} done`} />
-          <button className="wd-primary-btn wd-wf-mini" onClick={() => setAdding((v) => !v)}><Plus size={14} /> Add task</button>
+          <SectionHeader title="Tasks" sub={`${myTasks.length} assigned · ${done} done`} />
+          <button className="wd-primary-btn wd-wf-mini" onClick={() => setAdding((v) => !v)}><Plus size={14} /> Assign Task</button>
         </div>
         {adding && (
           <div className="wd-wf-addtask">
             <input
               autoFocus value={newTitle} onChange={(e) => setNewTitle(e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter") submitTask(); if (e.key === "Escape") setAdding(false); }}
-              placeholder="Task title — Enter to add"
+              placeholder="Task title"
+              style={{ flex: 2 }}
             />
+            <input value={newProject} onChange={(e) => setNewProject(e.target.value)} placeholder="Project" style={{ flex: 1 }} />
+            <select value={newPriority} onChange={(e) => setNewPriority(e.target.value as TaskPriority)} style={{ width: 100 }}>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="urgent">Urgent</option>
+            </select>
             <button className="wd-primary-btn wd-wf-mini" onClick={submitTask}>Add</button>
           </div>
         )}
-        <div className="wd-kanban wd-wf-kanban">
-          {TASK_STAGES.map((s) => (
-            <div
-              key={s.key}
-              className={`wd-col${overStage === s.key ? " wd-col-over" : ""}`}
-              onDragOver={(e) => { e.preventDefault(); setOverStage(s.key); }}
-              onDragLeave={() => setOverStage((cur) => (cur === s.key ? null : cur))}
-              onDrop={() => onDrop(s.key)}
-            >
-              <div className="wd-col-head">
-                <span className="wd-col-title">{s.label}</span>
-                <span className="wd-col-count">{byStage[s.key].length}</span>
-              </div>
-              <div className="wd-col-body">
-                {byStage[s.key].map((t) => (
-                  <div
-                    key={t.id}
-                    className="wd-wf-task"
-                    draggable
-                    onDragStart={() => setDragId(t.id)}
-                    onDragEnd={() => { setDragId(null); setOverStage(null); }}
-                  >
-                    <span className={prioClass(t.priority)}>{t.priority}</span>
-                    <p className="wd-wf-task-title">{t.title}</p>
-                    <div className="wd-wf-task-foot">
-                      <span>{t.project}</span>
-                      <span className="wd-muted">{t.due.slice(5)}</span>
+        {myTasks.length === 0 && !adding && (
+          <p className="wd-muted" style={{ padding: 24, textAlign: "center" }}>No tasks assigned. Click "Assign Task" to add work.</p>
+        )}
+        {myTasks.length > 0 && (
+          <div className="wd-kanban wd-wf-kanban">
+            {TASK_STAGES.map((s) => (
+              <div
+                key={s.key}
+                className={`wd-col${overStage === s.key ? " wd-col-over" : ""}`}
+                onDragOver={(e) => { e.preventDefault(); setOverStage(s.key); }}
+                onDragLeave={() => setOverStage((cur) => (cur === s.key ? null : cur))}
+                onDrop={() => onDrop(s.key)}
+              >
+                <div className="wd-col-head">
+                  <span className="wd-col-title">{s.label}</span>
+                  <span className="wd-col-count">{byStage[s.key].length}</span>
+                </div>
+                <div className="wd-col-body">
+                  {byStage[s.key].map((t) => (
+                    <div
+                      key={t.id}
+                      className="wd-wf-task"
+                      draggable
+                      onDragStart={() => setDragId(t.id)}
+                      onDragEnd={() => { setDragId(null); setOverStage(null); }}
+                    >
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span className={prioClass(t.priority)}>{t.priority}</span>
+                        <button className="wd-ghost-btn" style={{ padding: 2, opacity: 0.5 }} onClick={() => deleteTask(t.id)} title="Remove task"><Trash2 size={11} /></button>
+                      </div>
+                      <p className="wd-wf-task-title">{t.title}</p>
+                      <div className="wd-wf-task-foot">
+                        <span>{t.project}</span>
+                        <span className="wd-muted">{t.due.slice(5)}</span>
+                      </div>
                     </div>
-                  </div>
-                ))}
-                {!byStage[s.key].length && <p className="wd-col-empty">Drop tasks here</p>}
+                  ))}
+                  {!byStage[s.key].length && <p className="wd-col-empty">Drop tasks here</p>}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </Card>
 
       <div className="wd-two-col">
-        {/* My attendance */}
+        {/* Attendance */}
         <Card>
-          <SectionHeader title="My Attendance" sub="Last 5 days" right={<CalendarDays size={16} className="wd-muted" />} />
-          <div className="wd-rp-tablewrap">
-            <table className="wd-rp-table wd-wf-table">
-              <thead><tr><th>Date</th><th>In</th><th>Out</th><th>Status</th></tr></thead>
-              <tbody>
-                {myAttendance.map((a) => (
-                  <tr key={a.id}>
-                    <td>{a.date}</td>
-                    <td>{a.checkIn ?? "—"}</td>
-                    <td>{a.checkOut ?? "—"}</td>
-                    <td><span className={`wd-wf-att wd-wf-att-${a.status.toLowerCase()}`}>{a.status}</span></td>
-                  </tr>
-                ))}
-                {!myAttendance.length && <tr><td colSpan={4} className="wd-muted" style={{ padding: 16 }}>No records yet.</td></tr>}
-              </tbody>
-            </table>
-          </div>
+          <SectionHeader title="Attendance" sub="Last 5 days" right={<CalendarDays size={16} className="wd-muted" />} />
+          {myAttendance.length > 0 ? (
+            <div className="wd-rp-tablewrap">
+              <table className="wd-rp-table wd-wf-table">
+                <thead><tr><th>Date</th><th>In</th><th>Out</th><th>Status</th></tr></thead>
+                <tbody>
+                  {myAttendance.map((a) => (
+                    <tr key={a.id}>
+                      <td>{a.date}</td>
+                      <td>{a.checkIn ?? "—"}</td>
+                      <td>{a.checkOut ?? "—"}</td>
+                      <td><span className={`wd-wf-att wd-wf-att-${a.status.toLowerCase()}`}>{a.status}</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="wd-muted" style={{ padding: 16 }}>No attendance records yet.</p>
+          )}
         </Card>
 
         {/* Leave balance */}
@@ -191,7 +253,7 @@ export function EmployeeWorkspace() {
                 <div key={label} className="wd-wf-leave-row">
                   <span className="wd-wf-leave-label">{label}</span>
                   <span className="wd-wf-leave-track">
-                    <span className="wd-wf-leave-fill" style={{ width: `${(used / total) * 100}%` }} />
+                    <span className="wd-wf-leave-fill" style={{ width: `${(used / (total || 1)) * 100}%` }} />
                   </span>
                   <span className="wd-wf-leave-val"><strong>{left}</strong> / {total}</span>
                 </div>
@@ -213,21 +275,23 @@ export function EmployeeWorkspace() {
       </div>
 
       {/* Payslip */}
-      <Card>
-        <SectionHeader title="Payslip — Current Month" sub="Estimated; final figures from Finance" right={<Wallet size={16} className="wd-muted" />} />
-        <div className="wd-wf-pay">
-          <div className="wd-wf-pay-grid">
-            <div><span>Basic</span><strong>{inr(basic)}</strong></div>
-            <div><span>HRA</span><strong>{inr(hra)}</strong></div>
-            <div><span>Allowances</span><strong>{inr(allowance)}</strong></div>
-            <div><span>PF (−)</span><strong>−{inr(pf)}</strong></div>
+      {employee.salary > 0 && (
+        <Card>
+          <SectionHeader title="Payslip — Current Month" sub="Estimated breakdown" right={<Wallet size={16} className="wd-muted" />} />
+          <div className="wd-wf-pay">
+            <div className="wd-wf-pay-grid">
+              <div><span>Basic</span><strong>{inr(basic)}</strong></div>
+              <div><span>HRA</span><strong>{inr(hra)}</strong></div>
+              <div><span>Allowances</span><strong>{inr(allowance)}</strong></div>
+              <div><span>PF (−)</span><strong>−{inr(pf)}</strong></div>
+            </div>
+            <div className="wd-wf-pay-net">
+              <span>Net Pay</span>
+              <strong>{inr(net)}</strong>
+            </div>
           </div>
-          <div className="wd-wf-pay-net">
-            <span>Net Pay</span>
-            <strong>{inr(net)}</strong>
-          </div>
-        </div>
-      </Card>
+        </Card>
+      )}
     </div>
   );
 }
