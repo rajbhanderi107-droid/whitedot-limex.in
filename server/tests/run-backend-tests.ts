@@ -21,7 +21,6 @@ if (isDummyDb) {
 
   // Mocking Prisma Client properties directly (works with Proxies)
   (prisma as any).$queryRaw = async () => [{ '1': 1 }];
-  
   // Mock User operations
   (prisma.user as any).upsert = async (args: any) => ({
     id: "test-runner-id",
@@ -174,7 +173,6 @@ if (isDummyDb) {
 }
 
 test("=== STARTING 4-LEVEL STRENGTH & FUNCTIONALITY TESTS ===", async (t) => {
-  
   // -------------------------------------------------------------
   // LEVEL 1: DATABASE INTEGRITY & MODEL VALIDATION (Strength Test)
   // -------------------------------------------------------------
@@ -321,7 +319,6 @@ test("=== STARTING 4-LEVEL STRENGTH & FUNCTIONALITY TESTS ===", async (t) => {
   // LEVEL 3: ROUTE & CONTROLLER LOGIC (Functional Test)
   // -------------------------------------------------------------
   await t.test("Level 3: Public & admin endpoints controller test", async (t2) => {
-    
     // Helper to create mock Express Response
     const makeMockRes = () => {
       const res: any = {};

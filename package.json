@@ -25,7 +25,7 @@
     "guard:admin-google": "node scripts/guard-admin-google.mjs",
     "security:audit": "npm audit && npm --prefix server audit",
     "test:backend": "npm --prefix server run test",
-    "test:frontend": "npx playwright test tests/admin.spec.ts tests/smoothness.spec.ts --project=chromium",
+    "test:frontend": "npx playwright test tests/admin.spec.ts tests/smoothness.spec.ts --project=chromium --workers=1",
     "test:all": "npm run test:backend && npm run test:frontend",
     "launch:check": "npm run security:audit && npm run build && npm run backend:build"
   },

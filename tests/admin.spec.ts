@@ -1,7 +1,6 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Admin Portal End-to-End and Google Sync Dashboard Verification", () => {
-  
   test.beforeEach(async ({ page }) => {
     // Intercept Google Config
     await page.route("**/api/auth/google/config", async (route) => {
