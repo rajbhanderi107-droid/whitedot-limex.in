@@ -72,7 +72,7 @@ export function QuoteFormV2() {
         <input className="v2iq-input" type="email" placeholder="Email address *" required value={form.email} onChange={set('email')} aria-label="Email address" />
       </div>
       <div className="v2iq-row">
-        <input className="v2iq-input" placeholder="Phone number" value={form.phone} onChange={set('phone')} aria-label="Phone number" />
+        <input className="v2iq-input" placeholder="Phone" value={form.phone} onChange={set('phone')} aria-label="Phone" />
         <input className="v2iq-input" placeholder="Company name" value={form.companyName} onChange={set('companyName')} aria-label="Company name" />
       </div>
       <div className="v2iq-row">
@@ -134,7 +134,7 @@ export function SampleFormV2() {
         <input className="v2iq-input" type="email" placeholder="Email address *" required value={form.email} onChange={set('email')} aria-label="Email address" />
       </div>
       <div className="v2iq-row">
-        <input className="v2iq-input" placeholder="Phone number" value={form.phone} onChange={set('phone')} aria-label="Phone number" />
+        <input className="v2iq-input" placeholder="Phone" value={form.phone} onChange={set('phone')} aria-label="Phone" />
         <input className="v2iq-input" placeholder="Company name" value={form.companyName} onChange={set('companyName')} aria-label="Company name" />
       </div>
       <div className="v2iq-row">
@@ -251,7 +251,7 @@ export function CalculatorFormV2() {
         <input className="v2iq-input" type="email" placeholder="Email address *" required value={form.email} onChange={set('email')} aria-label="Email address" />
       </div>
       <div className="v2iq-row">
-        <input className="v2iq-input" placeholder="Phone number" value={form.phone} onChange={set('phone')} aria-label="Phone number" />
+        <input className="v2iq-input" placeholder="Phone" value={form.phone} onChange={set('phone')} aria-label="Phone" />
         <input className="v2iq-input" placeholder="Company name" value={form.companyName} onChange={set('companyName')} aria-label="Company name" />
       </div>
       {HP(form._hp, set('_hp'))}

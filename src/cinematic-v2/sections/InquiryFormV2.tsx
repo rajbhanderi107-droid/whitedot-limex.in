@@ -103,7 +103,7 @@ export function InquiryFormV2() {
             id="v2iq-phone"
             className="v2iq-input"
             name="phone"
-            placeholder="Phone number"
+            placeholder="Phone"
             value={form.phone}
             onChange={set('phone')}
             autoComplete="tel"
