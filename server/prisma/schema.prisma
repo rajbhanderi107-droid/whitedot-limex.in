@@ -580,6 +580,24 @@ model AiAgentConfig {
   updatedAt DateTime             @updatedAt
 }
 
+/// One real Claude-backed agent run — input, draft output, model, token usage
+/// and cost. Powers run history and the AI cost/usage stats.
+model AiAgentRun {
+  id           String   @id @default(cuid())
+  agentId      String
+  input        String
+  output       String
+  model        String
+  inputTokens  Int      @default(0)
+  outputTokens Int      @default(0)
+  costUsd      Float    @default(0)
+  createdById  String?
+  createdAt    DateTime @default(now())
+
+  @@index([agentId])
+  @@index([createdAt])
+}
+
 /// PIM — LIMEX product records (specs & SEO live in `data`).
 model Product {
   id        String   @id @default(cuid())

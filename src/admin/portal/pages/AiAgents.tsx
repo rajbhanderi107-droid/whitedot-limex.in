@@ -1,10 +1,12 @@
 /* AI Agent Marketplace — enable/disable agents and set each one's safety
  * mode. Grouped by domain. No model is invoked; this configures the fleet. */
 
-import { Power } from "lucide-react";
+import { useState } from "react";
+import { Power, Sparkles } from "lucide-react";
 import { useAiAgents, type AgentTier } from "../aiAgents.js";
 import { AUTOMATION_MODES, usePortal, type AutomationMode } from "../PortalContext.js";
 import { SectionHeader } from "../ui.js";
+import { AgentRunModal } from "../AgentRunModal.js";
 
 const TIER_LABEL: Record<AgentTier, string> = { strategy: "Strategy tier", content: "Content tier", specialist: "Specialist tier" };
 
@@ -13,6 +15,7 @@ export function AiAgents() {
   const { lockdown } = usePortal();
   const groups = [...new Set(agents.map((a) => a.group))];
   const enabled = agents.filter((a) => a.enabled).length;
+  const [run, setRun] = useState<{ id: string; name: string; role: string } | null>(null);
 
   return (
     <div className="wd-page">
@@ -43,11 +46,16 @@ export function AiAgents() {
                     {AUTOMATION_MODES.filter((m) => m.mode !== "LOCKDOWN").map((m) => <option key={m.mode} value={m.mode}>{m.label}</option>)}
                   </select>
                 </div>
+                <button className="wd-agent-run" onClick={() => setRun({ id: a.id, name: a.name, role: a.role })} disabled={!a.enabled}>
+                  <Sparkles size={13} /> Run agent
+                </button>
               </div>
             ))}
           </div>
         </div>
       ))}
+
+      {run && <AgentRunModal agentId={run.id} agentName={run.name} role={run.role} onClose={() => setRun(null)} />}
     </div>
   );
 }

@@ -67,3 +67,17 @@ export const aiDraftSchema = z.object({
     notes: z.string().max(2000).optional(),
   }),
 }).strip();
+
+export const runAiAgentSchema = z.object({
+  /** The task / prompt for the agent. */
+  input: z.string().min(1).max(4000),
+  /** Optional grounding context (pasted data, lead notes, brief). */
+  context: z.string().max(4000).optional(),
+}).strip();
+
+export const runAiToolSchema = z.object({
+  /** Registered AI Growth Studio tool id (validated against the registry in the controller). */
+  tool: z.string().min(1).max(80),
+  /** Structured form fields → prompt. Values are capped to keep prompts bounded. */
+  inputs: z.record(z.string(), z.string().max(8000)),
+}).strip();

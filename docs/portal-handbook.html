@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WhiteDot Infinity Growth OS — Employee Handbook</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Arial, sans-serif; color: #25291f; margin: 0; font-size: 10.5pt; line-height: 1.55; }
+  h1 { font-size: 22pt; margin: 0 0 4mm; color: #2f3a23; }
+  h2 { font-size: 15pt; margin: 8mm 0 3mm; color: #2f3a23; border-bottom: 2px solid #9aa893; padding-bottom: 1.5mm; }
+  h3 { font-size: 11.5pt; margin: 5mm 0 2mm; color: #45522f; }
+  p { margin: 0 0 2.5mm; }
+  ul, ol { margin: 0 0 3mm; padding-left: 5mm; }
+  li { margin-bottom: 1.2mm; }
+  table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 9pt; }
+  th { background: #45522f; color: #f4f2ea; text-align: left; padding: 1.8mm 2.2mm; }
+  td { border: 1px solid #d6d4c8; padding: 1.6mm 2.2mm; vertical-align: top; }
+  tr:nth-child(even) td { background: #f4f2ea; }
+  .page { page-break-after: always; }
+  .nobreak { page-break-inside: avoid; }
+  .cover { display: flex; flex-direction: column; justify-content: center; min-height: 250mm; text-align: center; }
+  .cover h1 { font-size: 30pt; }
+  .cover .sub { font-size: 13pt; color: #6b7355; margin-bottom: 14mm; }
+  .cover .meta { color: #8a8f7a; font-size: 9.5pt; }
+  .badge { display: inline-block; background: #9aa893; color: #1d2117; border-radius: 3mm; padding: .6mm 2.6mm; font-size: 8pt; font-weight: 600; margin-right: 1.5mm; }
+  .tip { background: #eef0e6; border-left: 3px solid #9aa893; padding: 2.2mm 3mm; margin: 2.5mm 0; border-radius: 0 1.5mm 1.5mm 0; }
+  .warn { background: #f7ece4; border-left: 3px solid #b15a3a; padding: 2.2mm 3mm; margin: 2.5mm 0; border-radius: 0 1.5mm 1.5mm 0; }
+  .mod { margin-bottom: 3.2mm; padding: 2.4mm 3mm; border: 1px solid #d6d4c8; border-radius: 2mm; page-break-inside: avoid; }
+  .mod b { color: #45522f; }
+  .mod .who { color: #8a6240; font-size: 8.6pt; }
+  .mod p { margin: 1mm 0 0; font-size: 9.4pt; }
+  kbd { background: #2f3a23; color: #f4f2ea; border-radius: 1.2mm; padding: .3mm 1.8mm; font-size: 8.4pt; font-family: Consolas, monospace; }
+  .toc li { margin-bottom: 1.8mm; }
+  .step { display: flex; gap: 3mm; margin-bottom: 2.2mm; page-break-inside: avoid; }
+  .step .n { flex: none; width: 6.5mm; height: 6.5mm; border-radius: 50%; background: #45522f; color: #f4f2ea; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 9pt; }
+  .footer-note { color: #8a8f7a; font-size: 8.4pt; margin-top: 6mm; }
+  .role-card { border: 1px solid #d6d4c8; border-radius: 2mm; padding: 2.6mm 3mm; margin-bottom: 3mm; page-break-inside: avoid; }
+  .role-card h3 { margin-top: 0; }
+  .ok { color: #4d7a3a; font-weight: 700; }
+  .no { color: #b15a3a; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- ════════ COVER ════════ -->
+<div class="page cover">
+  <h1>WhiteDot<br>Infinity Growth OS</h1>
+  <div class="sub">Employee Handbook &amp; Role Guide</div>
+  <p class="meta">
+    White Dot LLP — Authorized LIMEX Marketing &amp; Sales<br>
+    Gujarat · Rajasthan · Diu · Daman · Goa<br><br>
+    Portal: <b>whitedotindia.in/#/admin</b><br>
+    Version 1.0 · June 2026
+  </p>
+</div>
+
+<!-- ════════ TOC ════════ -->
+<div class="page">
+  <h2>What is inside this handbook</h2>
+  <ol class="toc">
+    <li><b>The big picture</b> — what the portal is and why we use it</li>
+    <li><b>Logging in &amp; the screen</b> — your first 5 minutes</li>
+    <li><b>The safety system</b> — automation modes, approvals, emergency stop</li>
+    <li><b>Every module explained</b> — all 35 tools, in plain words</li>
+    <li><b>Daily workflows</b> — step-by-step: lead → quote → order, samples, campaigns, incidents</li>
+    <li><b>Roles &amp; who should get which</b> — assignment guide for the company</li>
+    <li><b>Quick reference card</b> — shortcuts and statuses on one page</li>
+  </ol>
+
+  <h2>1. The big picture</h2>
+  <p>The portal is <b>one system that runs the whole business</b>. Everything that used to live in WhatsApp chats, Excel sheets and memory now lives in one place:</p>
+  <ul>
+    <li><b>Every lead from the website lands here automatically</b> — inquiry forms, quote requests, sample requests and calculator submissions on whitedotindia.in flow straight into the portal, with the marketing source attached (so we know if a lead came from a Google ad, WhatsApp link, or a referral).</li>
+    <li><b>Sales runs on a visual pipeline</b> — drag a lead card from "New" to "Won" like moving sticky notes on a board.</li>
+    <li><b>AI helps, humans decide</b> — the AI can write follow-up emails and WhatsApp messages, but nothing is ever sent until a person approves it in the Approval Center.</li>
+    <li><b>Everything is recorded</b> — every change is in the Audit Log. Failed logins and suspicious activity show up in CyberShield automatically.</li>
+    <li><b>It works on phone and desktop</b> — same address, same login.</li>
+  </ul>
+  <div class="tip"><b>One sentence for new staff:</b> "If you did something for a customer and it is not in the portal, it did not happen."</div>
+</div>
+
+<!-- ════════ LOGIN + SCREEN ════════ -->
+<div class="page">
+  <h2>2. Logging in &amp; understanding the screen</h2>
+  <h3>Logging in</h3>
+  <div class="step"><div class="n">1</div><div>Open <b>whitedotindia.in/#/admin</b> in any browser (Chrome/Edge recommended).</div></div>
+  <div class="step"><div class="n">2</div><div>Enter the email and password the Super Admin created for you, or use <b>"Sign in with Google"</b> if your Google account was added.</div></div>
+  <div class="step"><div class="n">3</div><div>You land on the <b>Command Center</b> — the dashboard.</div></div>
+  <div class="warn"><b>Never share your password.</b> Each person has their own account so the system knows who did what. After 5 wrong password attempts the system blocks logins for a while and records it as a security event.</div>
+
+  <h3>The screen — 3 areas</h3>
+  <table>
+    <tr><th>Area</th><th>What it is</th><th>What you do with it</th></tr>
+    <tr><td><b>Left sidebar</b></td><td>All 35 modules in 8 groups (Overview, Growth &amp; Sales, Customers, Marketing, Product &amp; Data, Automation, Security, Administration)</td><td>Click a module to open it. On mobile, tap the ☰ menu button.</td></tr>
+    <tr><td><b>Top bar</b></td><td>Search box, 3 health rings (Biz / Sec / Auto), Automation-mode selector, red <b>Stop</b> button, notification bell</td><td>Press <kbd>Ctrl</kbd>+<kbd>K</kbd> or click the search box to jump anywhere or find a lead by name. Health rings show business, security and automation health at a glance.</td></tr>
+    <tr><td><b>Main area</b></td><td>The module you opened</td><td>Your actual work — tables, pipelines, forms, charts.</td></tr>
+  </table>
+
+  <h3>The fastest way to move around</h3>
+  <ul>
+    <li><kbd>Ctrl</kbd>+<kbd>K</kbd> — opens the command palette. Type "cpq" to jump to quotations, or type a customer's name to open their lead directly. Use arrows + Enter. This is the #1 time saver.</li>
+    <li><kbd>g</kbd> then <kbd>i</kbd> — jump to Inquiries. <kbd>g</kbd> then <kbd>d</kbd> — Dashboard. Press <kbd>?</kbd> to see all shortcuts.</li>
+    <li>Module pages you visited recently open instantly (the portal remembers the data for ~25 seconds).</li>
+  </ul>
+</div>
+
+<!-- ════════ SAFETY ════════ -->
+<div class="page">
+  <h2>3. The safety system — read this before touching automation</h2>
+  <p>The portal can automate work (follow-up messages, lead scoring, alerts). Automation is powerful, so every automation and every AI agent runs in one of <b>5 safety modes</b>:</p>
+  <table>
+    <tr><th>Mode</th><th>Meaning in plain words</th></tr>
+    <tr><td><b>OFF</b></td><td>Does nothing. Completely asleep.</td></tr>
+    <tr><td><b>DRAFT</b></td><td>Prepares work and saves it as a draft. Sends nothing. Good for testing.</td></tr>
+    <tr><td><b>APPROVAL</b> (default)</td><td>Prepares work and puts it in the <b>Approval Center</b>. A human must press Approve before anything goes out. <b>This is our standard mode.</b></td></tr>
+    <tr><td><b>AUTO</b></td><td>Acts by itself within strict daily limits. Only for low-risk, well-tested automations. Needs management decision.</td></tr>
+    <tr><td><b>LOCKDOWN</b></td><td>Everything frozen. Set automatically by the Emergency Stop or by a critical incident.</td></tr>
+  </table>
+
+  <h3>The red Stop button (Emergency Stop)</h3>
+  <p>Top-right of every screen. Pressing it puts the whole portal into <b>Lockdown</b>: all automations pause, nothing external is sent, and approving items is blocked by the server itself (not just hidden in the screen). Use it if something is sending wrong messages, if you suspect a hack, or if a serious mistake is spreading.</p>
+  <div class="warn"><b>Lockdown is also automatic:</b> if anyone declares a SEV0 or SEV1 incident in Incident Response, the system locks itself down instantly.</div>
+
+  <h3>The Approval Center — the human checkpoint</h3>
+  <p>Everything the AI writes (follow-up emails, WhatsApp drafts, proposals) lands here as a card showing exactly what would be sent. You read it, then <b>Approve</b> or <b>Reject</b>. Nothing leaves the company without this step. During Lockdown, Approve is blocked; Reject always works.</p>
+  <div class="tip"><b>Golden rule:</b> AI drafts, humans approve. No exceptions.</div>
+</div>
+
+<!-- ════════ MODULES 1 ════════ -->
+<div class="page">
+  <h2>4. Every module explained (35 tools)</h2>
+  <h3>Overview</h3>
+  <div class="mod"><b>Command Center</b> <span class="who">— everyone</span><p>The home dashboard. Business numbers, security posture and automation health in one executive view. Start your day here.</p></div>
+  <div class="mod"><b>WhiteDot AI Brain</b> <span class="who">— managers</span><p>Control room for all AI activity: how many drafts the AI made, how many are waiting for approval, the approval rate, and the governance rules every agent must follow.</p></div>
+
+  <h3>Growth &amp; Sales</h3>
+  <div class="mod"><b>Lead Generation</b> <span class="who">— sales, marketing</span><p>Shows where leads come from (Google ad, WhatsApp, referral…) as a chart, and includes a <b>UTM link builder</b>: create a tracked link for each campaign so the portal can tell you which campaign actually brought customers.</p></div>
+  <div class="mod"><b>CRM &amp; Pipeline</b> <span class="who">— sales (main tool)</span><p>The sales board. Every lead is a card; columns are stages (New → Contacted → Qualified → … → Won/Lost). Drag a card to change its stage — it saves automatically. The <b>"AI draft"</b> button on a card asks the AI to write a follow-up email, which goes to the Approval Center.</p></div>
+  <div class="mod"><b>Inquiries</b> <span class="who">— sales</span><p>The raw list of all website inquiries with full details, notes and history. Click any row to open the lead's detail page.</p></div>
+  <div class="mod"><b>Quote Requests</b> <span class="who">— sales</span><p>Customers who asked for pricing on the website. Work them like inquiries; change status as you progress.</p></div>
+  <div class="mod"><b>Sample Requests</b> <span class="who">— sales + operations</span><p>Customers who asked for LIMEX material samples. Operations dispatches; status tracks Requested → Approved → Dispatched → Delivered.</p></div>
+  <div class="mod"><b>CPQ / Quotations</b> <span class="who">— sales</span><p>Create formal quotations: line items, GST, discounts, validity date. Track each through Draft → Sent → Accepted/Rejected → Converted to order.</p></div>
+  <div class="mod"><b>Orders &amp; Invoices</b> <span class="who">— sales + operations</span><p>Confirmed orders with payment and dispatch status. The end of the sales journey and the start of the operations journey.</p></div>
+
+  <h3>Customers</h3>
+  <div class="mod"><b>Companies</b> <span class="who">— sales</span><p>The company &amp; contact directory — every business we talk to, with city, status and contact person.</p></div>
+  <div class="mod"><b>Customer Portal</b> <span class="who">— managers</span><p>Admin view of client accounts — which companies are active clients and their self-service settings.</p></div>
+  <div class="mod"><b>Calculator</b> <span class="who">— sales</span><p>Submissions from the website's sustainability calculator. These are warm leads — they already computed how much plastic and CO₂ they could save with LIMEX.</p></div>
+  <div class="mod"><b>Follow-Ups</b> <span class="who">— sales</span><p>Your to-do list of scheduled follow-up calls/messages with due dates. Check it every morning.</p></div>
+</div>
+
+<!-- ════════ MODULES 2 ════════ -->
+<div class="page">
+  <h3>Marketing</h3>
+  <div class="mod"><b>Marketing Tools</b> <span class="who">— marketing</span><p>Content helpers and the marketing toolkit for day-to-day promotional work.</p></div>
+  <div class="mod"><b>Campaign Center</b> <span class="who">— marketing</span><p>Plan and track campaigns: channel, budget, spend, leads generated, dates and status (Draft → Active → Completed).</p></div>
+  <div class="mod"><b>Ad Intelligence</b> <span class="who">— marketing</span><p>For paid ads (Google/Meta/LinkedIn/YouTube): computes cost-per-lead and budget pacing, and highlights overspending campaigns.</p></div>
+  <div class="mod"><b>Social Studio</b> <span class="who">— marketing</span><p>The social content calendar — plan posts, captions and reels; schedule and track status.</p></div>
+  <div class="mod"><b>Landing Pages</b> <span class="who">— marketing</span><p>Campaign landing page content: plan, draft and track pages used for specific campaigns.</p></div>
+  <div class="mod"><b>SEO Growth</b> <span class="who">— marketing</span><p>Press one button to audit the live website: 11 real checks (title, descriptions, images, schema, speed…) with a 0–100 score and exactly what to fix.</p></div>
+  <div class="mod"><b>Sustainability Engine</b> <span class="who">— sales + marketing</span><p>Plastic/paper/CO₂ calculators and client-facing ESG report material with editable assumptions. Use it to build the sustainability story for a client meeting.</p></div>
+
+  <h3>Product &amp; Data</h3>
+  <div class="mod"><b>Product PIM</b> <span class="who">— operations</span><p>The official product catalog — every LIMEX grade with specs, status and pricing info. One source of truth for what we sell.</p></div>
+  <div class="mod"><b>Inventory &amp; Samples</b> <span class="who">— operations</span><p>Stock levels and sample stock. Rows turn red when stock falls below the reorder point.</p></div>
+  <div class="mod"><b>Documents</b> <span class="who">— everyone</span><p>Brochures, datasheets, certificates — the company's document library.</p></div>
+  <div class="mod"><b>Google Analytics</b> <span class="who">— marketing, managers</span><p>Website traffic data from Google in the portal.</p></div>
+  <div class="mod"><b>Business Intelligence</b> <span class="who">— managers</span><p>12-month lead trend chart, the sales funnel (how many leads reach each stage), top industries, and totals for quotes/orders/campaigns. Real numbers from the live database.</p></div>
+  <div class="mod"><b>Data Warehouse</b> <span class="who">— managers</span><p>Browse all recorded activity grouped by type — the analytical view of everything that happened.</p></div>
+
+  <h3>Automation</h3>
+  <div class="mod"><b>HyperAutomation</b> <span class="who">— managers only</span><p>The control room for the 10 predefined automations (lead scoring, follow-up reminders, reactivation…). Each one has its own enable switch and safety mode, with daily limits.</p></div>
+  <div class="mod"><b>Workflow Builder</b> <span class="who">— managers</span><p>Build custom "when X happens → do Y" rules (trigger, condition, action) and save them to the server.</p></div>
+  <div class="mod"><b>AI Agents</b> <span class="who">— managers only</span><p>The marketplace of AI helpers grouped by domain. Switch each agent on/off and set its safety mode.</p></div>
+  <div class="mod"><b>Approval Center</b> <span class="who">— managers + senior sales</span><p>The human checkpoint. Every AI draft and automation output waits here for Approve/Reject. Check it at least twice a day.</p></div>
+  <div class="mod"><b>Integrations</b> <span class="who">— super admin</span><p>Connections to outside services (Google Analytics, Search Console, WhatsApp, e-mail…) and whether each is in sandbox or production.</p></div>
+</div>
+
+<!-- ════════ MODULES 3 + WORKFLOWS ════════ -->
+<div class="page">
+  <h3>Security &amp; Reliability</h3>
+  <div class="mod"><b>CyberShield</b> <span class="who">— managers</span><p>Security center: a coverage score of implemented protections, plus a <b>live threat feed</b> — real failed logins, rate-limit trips, rejected payloads and lockdown blocks, with severity colors.</p></div>
+  <div class="mod"><b>Incident Response</b> <span class="who">— managers</span><p>Declare and manage incidents with severity SEV0 (worst) to SEV4 (minor). SEV0/SEV1 automatically locks the portal down. Walk the incident through stages until Resolved.</p></div>
+  <div class="mod"><b>Website Health</b> <span class="who">— operations, managers</span><p>One-click health check: database speed, website reachability, sitemap/robots files, configured services.</p></div>
+  <div class="mod"><b>BugShield</b> <span class="who">— everyone</span><p>Report website/portal bugs with severity. Anyone who spots a problem files it here so it is never forgotten.</p></div>
+  <div class="mod"><b>DevSecOps</b> <span class="who">— technical</span><p>Live status of code deployments from GitHub — when the site was last updated and whether it succeeded.</p></div>
+  <div class="mod"><b>Backup &amp; DR</b> <span class="who">— super admin only</span><p>Row counts of every data table and a one-click JSON export of all business data for an off-platform copy.</p></div>
+
+  <h3>Administration</h3>
+  <div class="mod"><b>Team &amp; Roles</b> <span class="who">— super admin only</span><p>Create staff accounts, set their role, deactivate leavers.</p></div>
+  <div class="mod"><b>Audit Logs</b> <span class="who">— admin+</span><p>The permanent record: who did what, when. Cannot be edited by normal users.</p></div>
+  <div class="mod"><b>Notifications</b> <span class="who">— everyone</span><p>Your in-portal notification inbox; mark read individually or all at once.</p></div>
+  <div class="mod"><b>Settings</b> <span class="who">— admin+</span><p>Website settings: brand logo, public-site options, content toggles.</p></div>
+
+  <h2>5. Daily workflows — step by step</h2>
+  <h3>Workflow A — A new lead arrives (Sales)</h3>
+  <div class="step"><div class="n">1</div><div>A visitor submits a form on whitedotindia.in → it appears in <b>Inquiries</b> and as a card in <b>CRM &amp; Pipeline</b> ("New" column), with the marketing source attached. A notification appears on the bell.</div></div>
+  <div class="step"><div class="n">2</div><div>Open the card. Read what they need. Call or WhatsApp them the same day.</div></div>
+  <div class="step"><div class="n">3</div><div>Drag the card to <b>Contacted</b>. Optionally press <b>AI draft</b> — the AI writes a follow-up email and parks it in the Approval Center.</div></div>
+  <div class="step"><div class="n">4</div><div>Manager reviews the draft in <b>Approval Center</b> → Approve → send it.</div></div>
+  <div class="step"><div class="n">5</div><div>As the deal progresses, keep dragging: Qualified → Proposal → Negotiation → <b>Won</b> (or Lost, with a note why).</div></div>
+</div>
+
+<!-- ════════ WORKFLOWS 2 ════════ -->
+<div class="page">
+  <h3>Workflow B — Quote to Order (Sales)</h3>
+  <div class="step"><div class="n">1</div><div>Customer wants pricing → open <b>CPQ / Quotations</b> → New quotation: line items, GST, discount, validity.</div></div>
+  <div class="step"><div class="n">2</div><div>Send the quotation; set status <b>Sent</b>. Follow up via <b>Follow-Ups</b> with a due date.</div></div>
+  <div class="step"><div class="n">3</div><div>Customer accepts → status <b>Accepted</b> → create the order in <b>Orders &amp; Invoices</b>.</div></div>
+  <div class="step"><div class="n">4</div><div>Operations tracks payment and dispatch on the order until <b>Delivered</b>.</div></div>
+
+  <h3>Workflow C — Sample dispatch (Operations)</h3>
+  <div class="step"><div class="n">1</div><div>Request appears in <b>Sample Requests</b> → review the application and address.</div></div>
+  <div class="step"><div class="n">2</div><div>Check material in <b>Inventory &amp; Samples</b>. Low stock (red row)? Flag for reorder.</div></div>
+  <div class="step"><div class="n">3</div><div>Approve → dispatch → update status with courier details → mark <b>Delivered</b>.</div></div>
+  <div class="step"><div class="n">4</div><div>Tell the salesperson — sample delivered means a follow-up call within 3 days (set it in Follow-Ups).</div></div>
+
+  <h3>Workflow D — Running a campaign (Marketing)</h3>
+  <div class="step"><div class="n">1</div><div>Create the campaign in <b>Campaign Center</b> (channel, budget, dates).</div></div>
+  <div class="step"><div class="n">2</div><div>Build a tracked link in <b>Lead Generation → UTM builder</b> and use that link in the ad/post.</div></div>
+  <div class="step"><div class="n">3</div><div>Plan content in <b>Social Studio</b> / <b>Landing Pages</b>.</div></div>
+  <div class="step"><div class="n">4</div><div>Watch results: <b>Lead Generation</b> shows which source brings leads; <b>Ad Intelligence</b> shows cost-per-lead; <b>BI</b> shows the month trend. Update spend in Campaign Center weekly.</div></div>
+
+  <h3>Workflow E — Something is wrong (Anyone)</h3>
+  <div class="step"><div class="n">1</div><div>Small bug (typo, broken button)? File it in <b>BugShield</b> with severity.</div></div>
+  <div class="step"><div class="n">2</div><div>Serious problem (wrong messages going out, suspected breach)? Tell a manager → press <b>Emergency Stop</b> → declare an incident in <b>Incident Response</b> with the right SEV level.</div></div>
+  <div class="step"><div class="n">3</div><div>SEV0/SEV1 locks the portal automatically. Work the incident through its stages until <b>Resolved</b>, then clear the lockdown.</div></div>
+
+  <h3>Workflow F — Morning routine (Managers)</h3>
+  <div class="step"><div class="n">1</div><div><b>Command Center</b> — scan the three health rings and KPIs.</div></div>
+  <div class="step"><div class="n">2</div><div><b>Approval Center</b> — approve/reject pending drafts.</div></div>
+  <div class="step"><div class="n">3</div><div><b>CyberShield</b> — glance at the threat feed (anything red?).</div></div>
+  <div class="step"><div class="n">4</div><div><b>BI</b> — check the funnel; where are leads getting stuck?</div></div>
+</div>
+
+<!-- ════════ ROLES ════════ -->
+<div class="page">
+  <h2>6. Roles — who can do what, and who to assign</h2>
+  <p>Every account has exactly one role. Roles are set in <b>Team &amp; Roles</b> (Super Admin only). The server enforces these rules — they are not just hidden buttons.</p>
+
+  <div class="role-card">
+    <h3>SUPER ADMIN — the owner</h3>
+    <p><b>Assign to:</b> Raj only (and at most one trusted backup person).</p>
+    <p>Everything, plus exclusively: create/edit/deactivate user accounts · export full data backup · delete audit logs · delete incidents · manage integrations. The only role that can change who has access.</p>
+  </div>
+
+  <div class="role-card">
+    <h3>ADMIN — general manager</h3>
+    <p><b>Assign to:</b> business/operations manager, senior marketing manager.</p>
+    <p>Everything daily: full CRM, quotations, orders, campaigns, automations, AI agents, approvals, incidents, settings, audit logs, deleting records. <span class="no">Cannot</span> manage user accounts or export backups.</p>
+  </div>
+
+  <div class="role-card">
+    <h3>SALES — sales executive</h3>
+    <p><b>Assign to:</b> every salesperson.</p>
+    <p>Work leads end-to-end: inquiries, CRM pipeline, quote/sample requests, CPQ, orders, companies, follow-ups, documents, sustainability engine. Can request AI drafts (approval still needed by a manager). <span class="no">Cannot</span> delete records, change automations, or touch settings.</p>
+  </div>
+
+  <div class="role-card">
+    <h3>OPERATIONS — dispatch &amp; stock</h3>
+    <p><b>Assign to:</b> warehouse/dispatch staff, back-office.</p>
+    <p>Product PIM, inventory, sample dispatch, order fulfillment status, website health, documents. <span class="no">Cannot</span> delete records or manage campaigns/automations.</p>
+  </div>
+
+  <div class="role-card">
+    <h3>VIEWER — read only</h3>
+    <p><b>Assign to:</b> accountant, auditor, advisor, intern in week 1.</p>
+    <p>Can open and read dashboards and lists. <span class="no">Cannot</span> change anything.</p>
+  </div>
+
+  <h3>Permission matrix (server-enforced highlights)</h3>
+  <table>
+    <tr><th>Action</th><th>SUPER ADMIN</th><th>ADMIN</th><th>SALES</th><th>OPERATIONS</th><th>VIEWER</th></tr>
+    <tr><td>View dashboards &amp; lists</td><td class="ok">Yes</td><td class="ok">Yes</td><td class="ok">Yes</td><td class="ok">Yes</td><td class="ok">Yes</td></tr>
+    <tr><td>Work leads / quotes / orders</td><td class="ok">Yes</td><td class="ok">Yes</td><td class="ok">Yes</td><td>Status only</td><td class="no">No</td></tr>
+    <tr><td>Delete records</td><td class="ok">Yes</td><td class="ok">Yes</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+    <tr><td>Approve AI drafts</td><td class="ok">Yes</td><td class="ok">Yes</td><td>Manager decision</td><td class="no">No</td><td class="no">No</td></tr>
+    <tr><td>Change automation modes</td><td class="ok">Yes</td><td class="ok">Yes</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+    <tr><td>Emergency stop / incidents</td><td class="ok">Yes</td><td class="ok">Yes</td><td>Report only</td><td>Report only</td><td class="no">No</td></tr>
+    <tr><td>Website settings / brand</td><td class="ok">Yes</td><td class="ok">Yes</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+    <tr><td>Audit logs</td><td class="ok">Yes</td><td class="ok">Yes</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+    <tr><td>User accounts (create/edit)</td><td class="ok">Yes</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+    <tr><td>Full data backup export</td><td class="ok">Yes</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+  </table>
+  <p class="footer-note">Delete restrictions, settings, user management, audit-log control and backup export are enforced by the server (HTTP 403 for lower roles), not just hidden in the interface.</p>
+</div>
+
+<!-- ════════ QUICK REF ════════ -->
+<div class="page">
+  <h2>7. Quick reference card — print this page for every desk</h2>
+
+  <h3>Shortcuts</h3>
+  <table>
+    <tr><th>Keys</th><th>Action</th></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>K</kbd></td><td>Command palette — jump to any module, or type a customer name to open their lead</td></tr>
+    <tr><td><kbd>g</kbd> then <kbd>d</kbd>/<kbd>i</kbd>/<kbd>q</kbd>/<kbd>s</kbd>/<kbd>c</kbd>/<kbd>f</kbd></td><td>Quick jump: Dashboard / Inquiries / Quotes / Samples / Companies / Follow-ups</td></tr>
+    <tr><td><kbd>?</kbd></td><td>Show all shortcuts</td></tr>
+    <tr><td><kbd>Esc</kbd></td><td>Close any popup</td></tr>
+  </table>
+
+  <h3>Pipeline stages (CRM)</h3>
+  <p>New → Contacted → Qualified → Proposal → Negotiation → <b>Won</b> / Lost</p>
+
+  <h3>Automation modes</h3>
+  <p>OFF (asleep) · DRAFT (writes, never sends) · <b>APPROVAL (our default — human must approve)</b> · AUTO (acts alone, limited) · LOCKDOWN (everything frozen)</p>
+
+  <h3>Incident severity</h3>
+  <table>
+    <tr><th>Level</th><th>Meaning</th><th>Effect</th></tr>
+    <tr><td><b>SEV0</b></td><td>Catastrophic — data breach, everything down</td><td>Auto-lockdown</td></tr>
+    <tr><td><b>SEV1</b></td><td>Critical — wrong messages going out, payments broken</td><td>Auto-lockdown</td></tr>
+    <tr><td><b>SEV2</b></td><td>Major — an important module not working</td><td>Fix same day</td></tr>
+    <tr><td><b>SEV3</b></td><td>Minor — small feature broken</td><td>Fix this week</td></tr>
+    <tr><td><b>SEV4</b></td><td>Cosmetic — typo, styling issue</td><td>Backlog</td></tr>
+  </table>
+
+  <h3>The 5 golden rules</h3>
+  <ol>
+    <li>If it's not in the portal, it didn't happen — log every customer interaction.</li>
+    <li>AI drafts, humans approve — never bypass the Approval Center.</li>
+    <li>Same-day response to every new lead.</li>
+    <li>See something wrong? BugShield for small, Emergency Stop + Incident for serious.</li>
+    <li>Never share your login.</li>
+  </ol>
+
+  <p class="footer-note">WhiteDot Infinity Growth OS · Employee Handbook v1.0 · June 2026 · White Dot LLP — Authorized LIMEX Marketing &amp; Sales (TBM Co., Japan → Seven Dot → White Dot LLP) · Portal: whitedotindia.in/#/admin</p>
+</div>
+
+</body>
+</html>

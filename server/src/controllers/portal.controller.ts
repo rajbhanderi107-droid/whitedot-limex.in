@@ -15,6 +15,9 @@ import { paramId } from "../utils/params.js";
 import { logActivity } from "../services/activity.service.js";
 import { recordSecurityEvent } from "../services/securityEvents.service.js";
 import { aiDraftConfigured, generateDraft, type DraftKind, type LeadContext } from "../services/aiDraft.service.js";
+import { aiAgentConfigured, runAgent, complete } from "../services/aiAgent.service.js";
+import { getAgentDef } from "../services/aiAgentRegistry.js";
+import { TOOL_REGISTRY, getToolDef, buildToolSystem, type ToolInputs } from "../services/aiTools.js";
 
 const SITE_URL = env.isProduction ? "https://whitedotindia.in" : env.FRONTEND_URL;
 const GITHUB_REPO = "rajbhanderi107-droid/whitedot-limex.in";
@@ -223,6 +226,121 @@ export async function createAiDraft(req: Request, res: Response) {
   });
   await logActivity({ userId: req.currentUser!.id, action: "AI_DRAFT_CREATED", entityType: "APPROVAL", entityId: item.id, metadata: { kind } });
   return sendSuccess(res, item, "Draft generated and queued for approval", 201);
+}
+
+// ─── AI agent run (real Claude-backed draft) ─────
+
+export async function runAiAgent(req: Request, res: Response) {
+  if (!aiAgentConfigured()) {
+    return sendError(res, "AI_UNAVAILABLE", "AI agents are not configured on the server (ANTHROPIC_API_KEY missing).", 503);
+  }
+
+  const id = paramId(req);
+  const agent = getAgentDef(id);
+  if (!agent) {
+    return sendError(res, "AGENT_NOT_FOUND", `No agent is registered under “${id}”.`, 404);
+  }
+
+  // Respect an explicit disable in AiAgentConfig (defaults to enabled).
+  const config = await prisma.aiAgentConfig.findUnique({ where: { id } });
+  if (config && !config.enabled) {
+    return sendError(res, "AGENT_DISABLED", `The ${agent.name} is disabled.`, 409);
+  }
+
+  const { input, context } = req.body as { input: string; context?: string };
+
+  let result;
+  try {
+    result = await runAgent(agent, input, context);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "The AI agent failed to run.";
+    return sendError(res, "AI_RUN_FAILED", message, 502);
+  }
+
+  const run = await prisma.aiAgentRun.create({
+    data: {
+      agentId: id,
+      input,
+      output: result.output,
+      model: result.model,
+      inputTokens: result.inputTokens,
+      outputTokens: result.outputTokens,
+      costUsd: result.costUsd,
+      createdById: req.currentUser!.id,
+    },
+  });
+  await logActivity({ userId: req.currentUser!.id, action: "AI_AGENT_RUN", entityType: "AI_AGENT", entityId: id, metadata: { model: result.model, costUsd: result.costUsd } });
+
+  return sendSuccess(res, {
+    runId: run.id,
+    agentId: id,
+    output: result.output,
+    model: result.model,
+    inputTokens: result.inputTokens,
+    outputTokens: result.outputTokens,
+    costUsd: result.costUsd,
+    createdAt: run.createdAt,
+  }, "Agent run complete", 201);
+}
+
+// ─── AI Growth Studio tools (real Claude-backed drafts) ─────
+
+export async function listAiTools(_req: Request, res: Response) {
+  const tools = Object.values(TOOL_REGISTRY).map((t) => ({
+    id: t.id, name: t.name, group: t.group, tier: t.tier,
+  }));
+  return sendSuccess(res, { configured: aiAgentConfigured(), tools });
+}
+
+export async function runAiTool(req: Request, res: Response) {
+  if (!aiAgentConfigured()) {
+    return sendError(res, "AI_UNAVAILABLE", "AI tools are not configured on the server (ANTHROPIC_API_KEY missing).", 503);
+  }
+
+  const { tool: toolId, inputs } = req.body as { tool: string; inputs: ToolInputs };
+  const tool = getToolDef(toolId);
+  if (!tool) {
+    return sendError(res, "TOOL_NOT_FOUND", `No AI tool is registered under “${toolId}”.`, 404);
+  }
+
+  const user = tool.buildUser(inputs || {});
+  if (!user.replace(/^[^:]*:\s*/gm, "").trim()) {
+    return sendError(res, "EMPTY_INPUT", "Please fill in at least one field before running this tool.", 400);
+  }
+
+  let result;
+  try {
+    result = await complete({ system: buildToolSystem(tool), user, tier: tool.tier, maxTokens: tool.maxTokens });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "The AI tool failed to run.";
+    return sendError(res, "AI_RUN_FAILED", message, 502);
+  }
+
+  // Track runs alongside agent runs for unified AI cost reporting.
+  const run = await prisma.aiAgentRun.create({
+    data: {
+      agentId: `tool:${tool.id}`,
+      input: user.slice(0, 8000),
+      output: result.output,
+      model: result.model,
+      inputTokens: result.inputTokens,
+      outputTokens: result.outputTokens,
+      costUsd: result.costUsd,
+      createdById: req.currentUser!.id,
+    },
+  });
+  await logActivity({ userId: req.currentUser!.id, action: "AI_TOOL_RUN", entityType: "AI_AGENT", entityId: tool.id, metadata: { model: result.model, costUsd: result.costUsd } });
+
+  return sendSuccess(res, {
+    runId: run.id,
+    tool: tool.id,
+    output: result.output,
+    model: result.model,
+    inputTokens: result.inputTokens,
+    outputTokens: result.outputTokens,
+    costUsd: result.costUsd,
+    createdAt: run.createdAt,
+  }, "Tool run complete", 201);
 }
 
 // ─── Business intelligence ───────────────────────

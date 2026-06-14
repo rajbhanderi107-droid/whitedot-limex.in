@@ -15,6 +15,8 @@ import {
   upsertIntegrationSchema,
   upsertAiAgentSchema,
   aiDraftSchema,
+  runAiAgentSchema,
+  runAiToolSchema,
 } from "../validators/portal.validator.js";
 
 const router = Router();
@@ -51,6 +53,11 @@ router.get("/integrations", asyncHandler(portal.listIntegrations));
 router.patch("/integrations/:id", validate(upsertIntegrationSchema), asyncHandler(portal.upsertIntegration));
 router.get("/ai-agents", asyncHandler(portal.listAiAgents));
 router.patch("/ai-agents/:id", validate(upsertAiAgentSchema), asyncHandler(portal.upsertAiAgent));
+router.post("/ai-agents/:id/run", validate(runAiAgentSchema), asyncHandler(portal.runAiAgent));
+
+// ─── AI Growth Studio tools (real Claude-backed drafts) ─────
+router.get("/ai/tools", asyncHandler(portal.listAiTools));
+router.post("/ai/tool", validate(runAiToolSchema), asyncHandler(portal.runAiTool));
 
 // ─── AI drafting (queues into approvals) ─────────
 router.post("/ai-draft", validate(aiDraftSchema), asyncHandler(portal.createAiDraft));

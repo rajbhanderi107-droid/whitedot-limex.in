@@ -41,6 +41,13 @@ export const env = {
   LLM_BASE_URL: process.env.LLM_BASE_URL || "https://api.groq.com/openai/v1",
   LLM_MODEL: process.env.LLM_MODEL || "llama-3.3-70b-versatile",
 
+  // AI Agents (real Claude-backed runs). ANTHROPIC_API_KEY is set in the Render
+  // dashboard (sync: false). If unset, the agent-run endpoint returns a graceful
+  // 503 — the rest of the portal is unaffected. ANTHROPIC_MODEL overrides the
+  // default for every agent; leave blank to use the per-tier defaults.
+  ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+  ANTHROPIC_MODEL: process.env.ANTHROPIC_MODEL || "",
+
   get isProduction() {
     return this.NODE_ENV === "production";
   },
