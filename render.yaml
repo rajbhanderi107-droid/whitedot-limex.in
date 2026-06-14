@@ -71,6 +71,11 @@ services:
         sync: false
       - key: GSC_OAUTH_REFRESH_TOKEN
         sync: false
+      # Quota project for the GSC OAuth token. Required when the refresh token
+      # belongs to a shared/default OAuth client (gcloud ADC); the searchconsole
+      # API rejects calls without an x-goog-user-project header. Non-secret.
+      - key: GSC_QUOTA_PROJECT
+        value: "fresh-strategy-497720-q7"
 
       - key: DATABASE_URL
         fromDatabase:

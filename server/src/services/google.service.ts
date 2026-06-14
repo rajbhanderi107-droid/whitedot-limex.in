@@ -211,6 +211,13 @@ function gscAuth() {
       process.env.GSC_OAUTH_CLIENT_SECRET,
     );
     oauthClient.setCredentials({ refresh_token: process.env.GSC_OAUTH_REFRESH_TOKEN });
+    // When the refresh token belongs to a shared/default OAuth client (e.g. the
+    // gcloud ADC client), Google requires a quota project — without it the
+    // searchconsole API rejects the call. Set GSC_QUOTA_PROJECT to send the
+    // x-goog-user-project header. Harmless (left unset) for a dedicated client.
+    if (process.env.GSC_QUOTA_PROJECT && process.env.GSC_QUOTA_PROJECT.trim()) {
+      oauthClient.quotaProjectId = process.env.GSC_QUOTA_PROJECT.trim();
+    }
     return oauthClient;
   }
 
