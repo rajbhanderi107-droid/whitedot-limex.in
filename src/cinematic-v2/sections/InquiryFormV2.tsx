@@ -55,7 +55,7 @@ export function InquiryFormV2() {
         <div>
           <p className="v2iq-success-title">Inquiry received</p>
           <p className="v2iq-success-body">
-            Our team will contact you within two business days about your LIMEX material requirements.
+            Our team will contact you soon about your LIMEX material requirements.
           </p>
           <button type="button" className="v2iq-reset" onClick={() => setStatus('idle')}>
             Send another inquiry
@@ -103,7 +103,7 @@ export function InquiryFormV2() {
             id="v2iq-phone"
             className="v2iq-input"
             name="phone"
-            placeholder="+91 98765 43210"
+            placeholder="Phone number"
             value={form.phone}
             onChange={set('phone')}
             autoComplete="tel"

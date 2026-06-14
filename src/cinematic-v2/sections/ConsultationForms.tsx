@@ -63,7 +63,7 @@ export function QuoteFormV2() {
     }
   };
 
-  if (status === 'sent') return <Success title="Quote request received" body="Our team will prepare pricing for your specification and respond within one business day." reset={() => setStatus('idle')} label="Request another quote" />;
+  if (status === 'sent') return <Success title="Quote request received" body="Our team will prepare pricing for your specification and respond soon." reset={() => setStatus('idle')} label="Request another quote" />;
 
   return (
     <form className="v2iq-form" onSubmit={submit} noValidate>
@@ -80,7 +80,7 @@ export function QuoteFormV2() {
         <input className="v2iq-input" placeholder="Current material / polymer grade" value={form.currentMaterial} onChange={set('currentMaterial')} aria-label="Current material or polymer grade" />
       </div>
       <div className="v2iq-row">
-        <input className="v2iq-input" placeholder="Monthly quantity (e.g. 5 tonnes)" value={form.monthlyQuantity} onChange={set('monthlyQuantity')} aria-label="Monthly quantity" />
+        <input className="v2iq-input" placeholder="Monthly quantity" value={form.monthlyQuantity} onChange={set('monthlyQuantity')} aria-label="Monthly quantity" />
         <input className="v2iq-input" placeholder="Target application" value={form.targetApplication} onChange={set('targetApplication')} aria-label="Target application" />
       </div>
       <label className="v2iq-check">
@@ -125,7 +125,7 @@ export function SampleFormV2() {
     }
   };
 
-  if (status === 'sent') return <Success title="Sample request received" body="Trial samples ship within 14 working days. Our team will confirm logistics shortly." reset={() => setStatus('idle')} label="Request another sample" />;
+  if (status === 'sent') return <Success title="Sample request received" body="Our team will confirm sample logistics shortly." reset={() => setStatus('idle')} label="Request another sample" />;
 
   return (
     <form className="v2iq-form" onSubmit={submit} noValidate>
@@ -141,7 +141,7 @@ export function SampleFormV2() {
         <input className="v2iq-input" placeholder="Material type (e.g. pellet, sheet)" value={form.requestedMaterialType} onChange={set('requestedMaterialType')} aria-label="Material type" />
         <input className="v2iq-input" placeholder="Application / end product" value={form.application} onChange={set('application')} aria-label="Application or end product" />
       </div>
-      <input className="v2iq-input" placeholder="Quantity needed (e.g. 5 kg)" value={form.quantity} onChange={set('quantity')} aria-label="Quantity needed" />
+      <input className="v2iq-input" placeholder="Quantity needed" value={form.quantity} onChange={set('quantity')} aria-label="Quantity needed" />
       <textarea className="v2iq-textarea" placeholder="Delivery address" rows={2} value={form.deliveryAddress} onChange={set('deliveryAddress')} aria-label="Delivery address" />
       <textarea className="v2iq-textarea" placeholder="Remarks (optional)" rows={3} value={form.remarks} onChange={set('remarks')} aria-label="Remarks" />
       {HP(form._hp, set('_hp'))}
@@ -157,7 +157,7 @@ const CO2_LIMEX = 1.0;
 const CALC_EMPTY = {
   companyName: '', contactPerson: '', email: '', phone: '',
   plasticType: '', currentGrade: '', monthlyQuantityKg: '',
-  replacementPct: '50', currentPricePerKg: '', limexPricePerKg: '', _hp: '',
+  replacementPct: '', currentPricePerKg: '', limexPricePerKg: '', _hp: '',
 };
 interface Estimate { plasticReduction: number; co2Impact: number; costSaving: number | null; }
 function compute(form: typeof CALC_EMPTY): Estimate | null {
@@ -234,7 +234,7 @@ export function CalculatorFormV2() {
           </div>
           <div className="v2iq-calc-stat">
             <span className="v2iq-calc-num">{num(estimate.co2Impact)} kg/yr</span>
-            <span className="v2iq-calc-label">CO₂e reduction (indicative)</span>
+            <span className="v2iq-calc-label">Carbon reduction (indicative)</span>
           </div>
           {estimate.costSaving !== null && (
             <div className="v2iq-calc-stat">

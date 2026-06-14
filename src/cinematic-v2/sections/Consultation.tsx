@@ -8,10 +8,10 @@ import ConsultationSteps from './ConsultationSteps';
 import { useViewportVideo } from '../useViewportVideo';
 
 const FORM_TABS = [
-  { key: 'inquiry', label: 'Inquiry', blurb: 'Prefer email? Fill in the form below and our team will get back to you within one business day.' },
+  { key: 'inquiry', label: 'Inquiry', blurb: 'Prefer email? Fill in the form below and our team will get back to you soon.' },
   { key: 'quote', label: 'Get a Quote', blurb: "Share your specification and target volume — we'll prepare indicative pricing." },
-  { key: 'sample', label: 'Request a Sample', blurb: 'Trial material for your existing line. Samples ship within 14 working days.' },
-  { key: 'calculator', label: 'Savings Calculator', blurb: 'Estimate plastic, CO₂, and cost impact of switching to LIMEX.' },
+  { key: 'sample', label: 'Request a Sample', blurb: 'Trial material for your existing line. Our team will confirm sample logistics.' },
+  { key: 'calculator', label: 'Savings Calculator', blurb: 'Estimate plastic, carbon, and cost impact of switching to LIMEX.' },
 ] as const;
 type FormKey = (typeof FORM_TABS)[number]['key'];
 const consultationVideoSrc = `${import.meta.env.BASE_URL}assets/videos/consultation-products-2afe4bb.mp4`;
