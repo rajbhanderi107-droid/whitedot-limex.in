@@ -35,10 +35,10 @@ export const color = {
   skyDim: '#3a7526',
   skyFaint: 'rgba(79, 154, 53, 0.16)',
 
-  /** Light canvas — premium cool off-white (mineral water tone, faint sky tint). */
-  canvasLight: '#edf2f5',
+  /** Light canvas: neutral WhiteDot white/off-white, no blue tint. */
+  canvasLight: '#f7f4ec',
   /** Raised surface on light canvas. */
-  canvasLightRaised: '#e3ecf1',
+  canvasLightRaised: '#ffffff',
 
   /** Primary text — pure white. AA+ on canvas. */
   text: '#ffffff',

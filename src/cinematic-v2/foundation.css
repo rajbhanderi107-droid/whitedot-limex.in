@@ -38,9 +38,9 @@ html, body {
   --v2-sky-dim: #3a7526;
   --v2-sky-faint: rgba(79, 154, 53, 0.16);
 
-  /* light canvas — premium cool off-white (mineral water, faint sky tint) */
-  --v2-canvas-light: #edf2f5;
-  --v2-canvas-light-raised: #e3ecf1;
+  /* light canvas: neutral WhiteDot white/off-white, no blue tint */
+  --v2-canvas-light: #f7f4ec;
+  --v2-canvas-light-raised: #ffffff;
 
   /* color — text */
   --v2-text: #ffffff;
@@ -245,7 +245,7 @@ html, body {
   /* re-map canvas */
   --v2-canvas: var(--v2-canvas-light);
   --v2-canvas-raised: var(--v2-canvas-light-raised);
-  --v2-canvas-sunken: #dce6ec;
+  --v2-canvas-sunken: #f1ece2;
   /* re-map text to dark */
   --v2-text: #111111;
   --v2-text-muted: rgba(0, 0, 0, 0.58);
