@@ -1,13 +1,14 @@
 /* AiToolPage — generic, config-driven page for every AI Growth Studio tool.
+ * [ARCHIVED — see future-tools/README.md. Not routed in the live portal.]
  *
- * Renders the tool's input form from src/admin/portal/aiTools.ts, runs it
+ * Renders the tool's input form from future-tools/aiTools.ts, runs it
  * through the server (real Claude via /api/portal/ai/tool), and shows the
  * draft output with Copy + "Save to Approvals". Every output is a DRAFT for a
  * human to review — nothing is sent or published from here. */
 
 import { useState } from "react";
 import { Sparkles, Copy, Check, AlertTriangle, Loader2, BadgeCheck, ShieldAlert } from "lucide-react";
-import { AI_TOOLS_BY_KEY, type AiTool } from "../aiTools.js";
+import { AI_TOOLS_BY_KEY, type AiTool } from "./aiTools.js";
 import { portalApi, type AiToolResult } from "../portalApi.js";
 import { usePortal } from "../PortalContext.js";
 import { Card, SectionHeader, RiskBadge, type Risk } from "../ui.js";

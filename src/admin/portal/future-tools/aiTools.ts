@@ -1,9 +1,12 @@
-/* AI Growth Studio — frontend tool registry.
+/* AI Growth Studio — frontend tool registry.  [ARCHIVED — see future-tools/README.md]
  *
  * Mirrors the server tool registry (server/src/services/aiTools.ts): same ids,
  * same input field names. This file only describes how to render each tool's
  * input form + framing copy; the actual prompts live on the server so keys are
  * never exposed client-side. One generic <AiToolPage> renders any tool by key.
+ *
+ * Parked in future-tools/ — not wired into the live portal. To re-enable, follow
+ * future-tools/README.md.
  */
 import {
   Boxes, Gauge, Search, LineChart, Clapperboard, Scale, Rocket, Hourglass,

@@ -20,8 +20,6 @@ import { ModuleStub } from "./portal/pages/ModuleStub.js";
 import { Employees } from "./portal/pages/Employees.js";
 import { Attendance } from "./portal/pages/Attendance.js";
 import { EmployeeWorkspace } from "./portal/pages/EmployeeWorkspace.js";
-import { AiToolPage } from "./portal/pages/AiToolPage.js";
-import { AI_TOOLS } from "./portal/aiTools.js";
 import { SCAFFOLD_MODULES } from "./portal/modules.js";
 import { useAuth } from "./hooks/useAuth.js";
 import { GenericListPage } from "./pages/GenericListPage.js";
@@ -279,10 +277,7 @@ export default function AdminApp() {
           <Route path="/admin/workspace" element={<EmployeeWorkspace />} />
           <Route path="/admin/workspace/:id" element={<EmployeeWorkspace />} />
 
-          {/* ── AI Growth Studio tools (config-driven) ── */}
-          {AI_TOOLS.map((t) => (
-            <Route key={t.key} path={`/admin/studio/${t.key}`} element={<AiToolPage moduleKey={t.key} />} />
-          ))}
+          {/* AI Growth Studio tools parked in src/admin/portal/future-tools/ — see its README to re-enable. */}
 
           {/* ── Scaffolded modules (Infinity Growth OS) ── */}
           {SCAFFOLD_MODULES.map((m) => (
