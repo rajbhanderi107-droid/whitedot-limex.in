@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
-import { KeyRound, Plus, RefreshCw } from "lucide-react";
+import { KeyRound, Plus, RefreshCw, Trash2 } from "lucide-react";
 import { api, ApiError } from "../lib/api.js";
 import { PasswordInput } from "../components/PasswordInput.js";
+import { useAuth } from "../hooks/useAuth.js";
 
 type Role = "SUPER_ADMIN" | "ADMIN" | "SALES" | "OPERATIONS" | "VIEWER";
 
@@ -35,6 +36,8 @@ function errorMessage(error: unknown) {
 }
 
 export function UserManagementPage() {
+  const { user: currentUser } = useAuth();
+  const isSuperAdmin = currentUser?.role === "SUPER_ADMIN";
   const [users, setUsers] = useState<UserRow[]>([]);
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState("");
@@ -133,6 +136,23 @@ export function UserManagementPage() {
     const success = await updateUser(user.id, { password });
     if (success) {
       setResetPasswords((current) => ({ ...current, [user.id]: "" }));
+    }
+  };
+
+  const deleteUser = async (user: UserRow) => {
+    if (!window.confirm(`Delete ${user.name} (${user.email})? This cannot be undone.`)) return;
+    setSavingId(user.id);
+    setError("");
+    setNotice("");
+    try {
+      await api.delete(`/api/users/${user.id}`);
+      setUsers((current) => current.filter((u) => u.id !== user.id));
+      setTotal((current) => Math.max(0, current - 1));
+      setNotice("User deleted.");
+    } catch (err) {
+      setError(errorMessage(err));
+    } finally {
+      setSavingId(null);
     }
   };
 
@@ -256,6 +276,7 @@ export function UserManagementPage() {
                   <th>Status</th>
                   <th>Password</th>
                   <th>Created</th>
+                  {isSuperAdmin && <th>Actions</th>}
                 </tr>
               </thead>
               <tbody>
@@ -315,6 +336,19 @@ export function UserManagementPage() {
                         {new Date(user.createdAt).toLocaleDateString()}
                       </span>
                     </td>
+                    {isSuperAdmin && (
+                      <td>
+                        <button
+                          className="adm-icon-btn adm-icon-btn-danger"
+                          type="button"
+                          title={user.id === currentUser?.id ? "You cannot delete yourself" : "Delete user"}
+                          disabled={savingId === user.id || user.id === currentUser?.id}
+                          onClick={() => deleteUser(user)}
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>

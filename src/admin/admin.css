@@ -203,6 +203,7 @@ select.adm-input { cursor: pointer; }
 }
 .adm-icon-btn:hover:not(:disabled) { border-color: var(--adm-accent); color: var(--adm-accent); }
 .adm-icon-btn:disabled { opacity: .45; cursor: not-allowed; }
+.adm-icon-btn-danger:hover:not(:disabled) { border-color: #ef4444; color: #ef4444; }
 .adm-switch { display: inline-flex; align-items: center; gap: .45rem; color: var(--adm-muted); font-size: .8rem; white-space: nowrap; }
 .adm-switch input { accent-color: var(--adm-accent); }
 .adm-toolbar-note { flex: 1; color: var(--adm-muted); font-size: .82rem; }
