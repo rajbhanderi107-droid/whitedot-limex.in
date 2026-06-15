@@ -76,6 +76,36 @@
   margin-top: 22px; font-size: 12px; color: var(--adm-muted, #94a3b8);
 }
 
+/* Tasks */
+.wd-ep-tasks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.wd-ep-task { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; background: rgba(255,255,255,0.02); }
+.wd-ep-task.done { opacity: 0.6; }
+.wd-ep-task.done strong { text-decoration: line-through; }
+.wd-ep-task-main { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.wd-ep-task-main strong { display: block; font-size: 13px; }
+.wd-ep-task-sub { display: block; font-size: 11px; color: var(--adm-muted, #94a3b8); }
+.wd-ep-prio { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 3px 7px; border-radius: 6px; flex: none; }
+.wd-ep-prio.p-low { background: rgba(100,116,139,0.2); color: #94a3b8; }
+.wd-ep-prio.p-medium { background: rgba(56,189,248,0.15); color: #7dd3fc; }
+.wd-ep-prio.p-high { background: rgba(245,158,11,0.15); color: #fbbf24; }
+.wd-ep-prio.p-urgent { background: rgba(239,68,68,0.15); color: #f87171; }
+.wd-ep-stage { background: rgba(255,255,255,0.04); color: inherit; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 5px 8px; font-size: 12px; flex: none; }
+
+/* Leave */
+.wd-ep-leave-bal { display: flex; gap: 8px; margin-bottom: 12px; }
+.wd-ep-leave-chip { flex: 1; text-align: center; padding: 10px 6px; border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; }
+.wd-ep-leave-chip strong { display: block; font-size: 18px; }
+.wd-ep-leave-chip span { font-size: 10.5px; color: var(--adm-muted, #94a3b8); }
+.wd-ep-leave-form { display: flex; flex-direction: column; gap: 8px; }
+.wd-ep-leave-row { display: flex; gap: 8px; }
+.wd-ep-leave-row select, .wd-ep-leave-row input, .wd-ep-leave-reason { background: rgba(255,255,255,0.04); color: inherit; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px; font-size: 12.5px; }
+.wd-ep-leave-row select { flex: none; } .wd-ep-leave-row input { flex: 1; min-width: 0; }
+.wd-ep-leave-reason { width: 100%; }
+.wd-ep-leave-btn { background: #22c55e; color: #06210f; border: none; border-radius: 9px; padding: 10px; font-weight: 600; font-size: 13px; cursor: pointer; }
+.wd-ep-leave-msg { font-size: 12px; color: var(--adm-muted, #94a3b8); margin: 4px 0 0; }
+.wd-ep-leave-list { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.wd-ep-leave-list li { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 6px 0; border-top: 1px solid rgba(255,255,255,0.05); }
+
 @media (max-width: 760px) {
   .wd-ep-grid { grid-template-columns: 1fr; }
   .wd-ep-user-meta { display: none; }

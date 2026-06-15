@@ -4,11 +4,16 @@
  * in/out with live location, today's status, and personal attendance history.
  * Employees never see admin modules or other people's data. */
 
-import { useEffect, useState } from "react";
-import { LogOut, CalendarDays, Clock, MapPin } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { LogOut, CalendarDays, Clock, MapPin, ListChecks, Plane } from "lucide-react";
 import { useBrandLogo } from "../../useBrandLogo";
 import { PunchClock } from "../components/PunchClock.js";
 import { attendanceApi, fmtMinutes, type AttendanceDay } from "../lib/attendanceApi.js";
+import {
+  employeesApi, TASK_STAGES, prettyEnum,
+  type MyWorkspace, type TaskStage, type LeaveKind,
+} from "../lib/employeesApi.js";
+import { ApiError } from "../lib/api.js";
 import "../portal/portal.css";
 import "./employee-portal.css";
 
@@ -29,14 +34,41 @@ function timeOf(iso: string | null) {
 export function EmployeePortal({ user, onLogout }: Props) {
   const brandLogo = useBrandLogo();
   const [history, setHistory] = useState<AttendanceDay[]>([]);
+  const [ws, setWs] = useState<MyWorkspace | null>(null);
+  const [leaveType, setLeaveType] = useState<LeaveKind>("ANNUAL");
+  const [leaveFrom, setLeaveFrom] = useState("");
+  const [leaveTo, setLeaveTo] = useState("");
+  const [leaveReason, setLeaveReason] = useState("");
+  const [leaveMsg, setLeaveMsg] = useState("");
 
   useEffect(() => {
     let active = true;
-    attendanceApi.me()
-      .then((res) => { if (active) setHistory(res.data.history); })
-      .catch(() => { /* ignore */ });
+    attendanceApi.me().then((res) => { if (active) setHistory(res.data.history); }).catch(() => {});
     return () => { active = false; };
   }, []);
+
+  const loadWs = useCallback(() => {
+    employeesApi.myWorkspace().then((res) => setWs(res.data)).catch(() => {});
+  }, []);
+  useEffect(() => { loadWs(); }, [loadWs]);
+
+  const moveTask = async (taskId: string, stage: TaskStage) => {
+    setWs((cur) => cur ? { ...cur, workTasks: cur.workTasks.map((t) => t.id === taskId ? { ...t, stage } : t) } : cur);
+    try { await employeesApi.updateTask(taskId, { stage }); } catch { loadWs(); }
+  };
+
+  const submitLeave = async () => {
+    setLeaveMsg("");
+    if (!leaveFrom || !leaveTo) { setLeaveMsg("Pick both dates."); return; }
+    if (leaveTo < leaveFrom) { setLeaveMsg("End date is before start date."); return; }
+    try {
+      await employeesApi.requestLeave({ type: leaveType, fromDate: leaveFrom, toDate: leaveTo, reason: leaveReason.trim() || undefined });
+      setLeaveFrom(""); setLeaveTo(""); setLeaveReason(""); setLeaveMsg("Leave requested.");
+      loadWs();
+    } catch (err) {
+      setLeaveMsg(err instanceof ApiError ? err.message : "Request failed.");
+    }
+  };
 
   const initials = user.name.split(" ").map((p) => p[0]).slice(0, 2).join("");
 
@@ -98,6 +130,74 @@ export function EmployeePortal({ user, onLogout }: Props) {
                   </tbody>
                 </table>
               </div>
+            )}
+          </section>
+        </div>
+
+        <div className="wd-ep-grid">
+          <section className="wd-ep-card">
+            <div className="wd-ep-card-head">
+              <ListChecks size={16} />
+              <h2>My Tasks</h2>
+              <span className="wd-ep-muted">{ws?.workTasks.length ?? 0} assigned</span>
+            </div>
+            {!ws || ws.workTasks.length === 0 ? (
+              <p className="wd-ep-empty">No tasks assigned yet. Tasks from your manager will appear here.</p>
+            ) : (
+              <ul className="wd-ep-tasks">
+                {ws.workTasks.map((t) => (
+                  <li key={t.id} className={`wd-ep-task${t.stage === "DONE" ? " done" : ""}`}>
+                    <div className="wd-ep-task-main">
+                      <span className={`wd-ep-prio p-${t.priority.toLowerCase()}`}>{t.priority.toLowerCase()}</span>
+                      <div>
+                        <strong>{t.title}</strong>
+                        {t.project && <span className="wd-ep-task-sub">{t.project}</span>}
+                      </div>
+                    </div>
+                    <select className="wd-ep-stage" value={t.stage} onChange={(e) => moveTask(t.id, e.target.value as TaskStage)}>
+                      {TASK_STAGES.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}
+                    </select>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+
+          <section className="wd-ep-card">
+            <div className="wd-ep-card-head">
+              <Plane size={16} />
+              <h2>Leave</h2>
+            </div>
+            {ws?.employeeProfile && (
+              <div className="wd-ep-leave-bal">
+                {([["Annual", ws.employeeProfile.usedAnnual, ws.employeeProfile.annual],
+                   ["Sick", ws.employeeProfile.usedSick, ws.employeeProfile.sick],
+                   ["Casual", ws.employeeProfile.usedCasual, ws.employeeProfile.casual]] as [string, number, number][]).map(([l, used, total]) => (
+                  <div key={l} className="wd-ep-leave-chip"><strong>{total - used}</strong><span>{l} left</span></div>
+                ))}
+              </div>
+            )}
+            <div className="wd-ep-leave-form">
+              <div className="wd-ep-leave-row">
+                <select value={leaveType} onChange={(e) => setLeaveType(e.target.value as LeaveKind)}>
+                  <option value="ANNUAL">Annual</option><option value="SICK">Sick</option><option value="CASUAL">Casual</option>
+                </select>
+                <input type="date" value={leaveFrom} onChange={(e) => setLeaveFrom(e.target.value)} aria-label="From" />
+                <input type="date" value={leaveTo} onChange={(e) => setLeaveTo(e.target.value)} aria-label="To" />
+              </div>
+              <input className="wd-ep-leave-reason" value={leaveReason} onChange={(e) => setLeaveReason(e.target.value)} placeholder="Reason (optional)" />
+              <button className="wd-ep-leave-btn" onClick={submitLeave}>Request Leave</button>
+              {leaveMsg && <p className="wd-ep-leave-msg">{leaveMsg}</p>}
+            </div>
+            {ws && ws.leaveRequests.length > 0 && (
+              <ul className="wd-ep-leave-list">
+                {ws.leaveRequests.slice(0, 5).map((l) => (
+                  <li key={l.id}>
+                    <span>{prettyEnum(l.type)} · {l.days}d · {l.fromDate.slice(5, 10)}</span>
+                    <span className={`wd-ep-att wd-ep-att-${l.status === "APPROVED" ? "present" : l.status === "REJECTED" ? "absent" : "late"}`}>{prettyEnum(l.status)}</span>
+                  </li>
+                ))}
+              </ul>
             )}
           </section>
         </div>

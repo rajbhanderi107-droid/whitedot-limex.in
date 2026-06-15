@@ -1,103 +1,99 @@
-/* Employees — workforce directory, fully editable by super admin.
- * Add, edit, delete employees. Assign roles, tools, workspace. */
+/* Employees — workforce directory, backend-backed.
+ * Each employee is a real User (role EMPLOYEE) with an HR profile.
+ * Super admin can hire (creates a login), edit, and remove. */
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Users, UserPlus, Search, X, Pencil, Trash2, Save, Plus } from "lucide-react";
+import { Users, UserPlus, Search, X, Pencil, Trash2, Save, Plus, RefreshCw } from "lucide-react";
+import { WF_DEPARTMENTS, ROLE_OPTIONS, TOOL_OPTIONS, WORKSPACE_OPTIONS } from "../workforceStore.js";
 import {
-  useWorkforce, WF_DEPARTMENTS, ROLE_OPTIONS, TOOL_OPTIONS, WORKSPACE_OPTIONS,
-  tenureMonths, type Employee, type EmployType, type EmployeeStatus,
-} from "../workforceStore.js";
+  employeesApi, EMP_TYPES, EMP_STATUSES, prettyEnum,
+  type Employee, type EmploymentType, type EmployeeStatus,
+} from "../../lib/employeesApi.js";
+import { api, ApiError } from "../../lib/api.js";
 import { SectionHeader, Card } from "../ui.js";
+import { PasswordInput } from "../../components/PasswordInput.js";
 
-const EMP_TYPES: EmployType[] = ["Full-Time", "Part-Time", "Contract", "Intern", "Freelance"];
-const EMP_STATUSES: EmployeeStatus[] = ["Active", "On Leave", "Probation", "Resigned", "Terminated"];
+function hueFor(name: string) {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) % 360;
+  return h;
+}
 
-function Avatar({ e, size = 40 }: { e: Employee; size?: number }) {
-  const initials = e.name.split(" ").map((p) => p[0]).slice(0, 2).join("");
+function Avatar({ name, hue, size = 32 }: { name: string; hue: number; size?: number }) {
+  const initials = name.split(" ").map((p) => p[0]).slice(0, 2).join("");
   return (
-    <span
-      className="wd-wf-avatar"
-      style={{ width: size, height: size, fontSize: size * 0.36, background: `hsl(${e.avatarHue} 45% 22%)`, color: `hsl(${e.avatarHue} 70% 72%)` }}
-      title={e.name}
-    >
+    <span className="wd-wf-avatar" title={name}
+      style={{ width: size, height: size, fontSize: size * 0.36, background: `hsl(${hue} 45% 22%)`, color: `hsl(${hue} 70% 72%)` }}>
       {initials}
     </span>
   );
 }
 
-function statusClass(s: Employee["status"]) {
-  if (s === "Active") return "wd-wf-pill wd-wf-pill-ok";
-  if (s === "On Leave") return "wd-wf-pill wd-wf-pill-warn";
-  if (s === "Probation") return "wd-wf-pill wd-wf-pill-info";
+function statusClass(s: EmployeeStatus) {
+  if (s === "ACTIVE") return "wd-wf-pill wd-wf-pill-ok";
+  if (s === "ON_LEAVE") return "wd-wf-pill wd-wf-pill-warn";
+  if (s === "PROBATION") return "wd-wf-pill wd-wf-pill-info";
   return "wd-wf-pill wd-wf-pill-off";
 }
 
 interface EmployeeForm {
-  name: string;
-  role: string;
-  department: string;
-  email: string;
-  phone: string;
-  location: string;
-  type: EmployType;
-  status: EmployeeStatus;
-  joinedAt: string;
-  manager: string;
-  salary: number;
-  kpi: number;
-  tools: string[];
-  workspace: string;
-  notes: string;
+  name: string; jobTitle: string; department: string; email: string; password: string;
+  phone: string; location: string; type: EmploymentType; status: EmployeeStatus;
+  joinedAt: string; manager: string; salary: number; kpi: number;
+  tools: string[]; workspace: string; notes: string;
 }
 
 const emptyForm: EmployeeForm = {
-  name: "", role: ROLE_OPTIONS[0], department: WF_DEPARTMENTS[0],
-  email: "", phone: "", location: "", type: "Full-Time", status: "Active",
+  name: "", jobTitle: ROLE_OPTIONS[0], department: WF_DEPARTMENTS[0], email: "", password: "",
+  phone: "", location: "", type: "FULL_TIME", status: "ACTIVE",
   joinedAt: new Date().toISOString().slice(0, 10), manager: "", salary: 0, kpi: 75,
   tools: [], workspace: WORKSPACE_OPTIONS[0], notes: "",
 };
 
-function EmployeeModal({ initial, onSave, onCancel, allEmployees }: {
-  initial: EmployeeForm;
-  onSave: (f: EmployeeForm) => void;
-  onCancel: () => void;
-  allEmployees: Employee[];
+function EmployeeModal({ initial, isEdit, employees, onSave, onCancel, saving }: {
+  initial: EmployeeForm; isEdit: boolean; employees: Employee[];
+  onSave: (f: EmployeeForm) => void; onCancel: () => void; saving: boolean;
 }) {
   const [f, setF] = useState<EmployeeForm>(initial);
-  const set = (k: keyof EmployeeForm, v: any) => setF((p) => ({ ...p, [k]: v }));
-
-  const toggleTool = (t: string) => {
+  const set = <K extends keyof EmployeeForm>(k: K, v: EmployeeForm[K]) => setF((p) => ({ ...p, [k]: v }));
+  const toggleTool = (t: string) =>
     setF((p) => ({ ...p, tools: p.tools.includes(t) ? p.tools.filter((x) => x !== t) : [...p.tools, t] }));
-  };
+
+  const valid = f.name.trim() && f.email.trim() && (isEdit || f.password.length >= 8);
 
   return (
     <div className="wd-modal-overlay" onClick={onCancel}>
       <div className="wd-modal wd-modal-lg" onClick={(e) => e.stopPropagation()}>
-        <h3 style={{ marginBottom: 16 }}>{initial.name ? "Edit Employee" : "Add New Employee"}</h3>
+        <h3 style={{ marginBottom: 16 }}>{isEdit ? "Edit Employee" : "Hire New Employee"}</h3>
         <div className="wd-form-grid">
           <label>Full Name *<input value={f.name} onChange={(e) => set("name", e.target.value)} placeholder="e.g. Aarav Mehta" /></label>
-          <label>Role *
-            <select value={f.role} onChange={(e) => set("role", e.target.value)}>
+          <label>Job Title
+            <select value={f.jobTitle} onChange={(e) => set("jobTitle", e.target.value)}>
               {ROLE_OPTIONS.map((r) => <option key={r} value={r}>{r}</option>)}
             </select>
           </label>
-          <label>Department *
+          <label>Department
             <select value={f.department} onChange={(e) => set("department", e.target.value)}>
               {WF_DEPARTMENTS.map((d) => <option key={d} value={d}>{d}</option>)}
             </select>
           </label>
-          <label>Email *<input type="email" value={f.email} onChange={(e) => set("email", e.target.value)} placeholder="name@whitedotindia.in" /></label>
+          <label>Email *<input type="email" value={f.email} disabled={isEdit} onChange={(e) => set("email", e.target.value)} placeholder="name@whitedotindia.in" /></label>
+          {!isEdit && (
+            <label>Login Password *
+              <PasswordInput value={f.password} onChange={(v) => set("password", v)} autoComplete="new-password" minLength={8} />
+            </label>
+          )}
           <label>Phone<input value={f.phone} onChange={(e) => set("phone", e.target.value)} placeholder="+91 98250 XXXXX" /></label>
           <label>Location<input value={f.location} onChange={(e) => set("location", e.target.value)} placeholder="City" /></label>
           <label>Type
-            <select value={f.type} onChange={(e) => set("type", e.target.value)}>
-              {EMP_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+            <select value={f.type} onChange={(e) => set("type", e.target.value as EmploymentType)}>
+              {EMP_TYPES.map((t) => <option key={t} value={t}>{prettyEnum(t)}</option>)}
             </select>
           </label>
           <label>Status
-            <select value={f.status} onChange={(e) => set("status", e.target.value)}>
-              {EMP_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+            <select value={f.status} onChange={(e) => set("status", e.target.value as EmployeeStatus)}>
+              {EMP_STATUSES.map((s) => <option key={s} value={s}>{prettyEnum(s)}</option>)}
             </select>
           </label>
           <label>Joined Date<input type="date" value={f.joinedAt} onChange={(e) => set("joinedAt", e.target.value)} /></label>
@@ -105,7 +101,7 @@ function EmployeeModal({ initial, onSave, onCancel, allEmployees }: {
             <select value={f.manager} onChange={(e) => set("manager", e.target.value)}>
               <option value="">— None (Top Level) —</option>
               <option value="Super Admin">Super Admin (You)</option>
-              {allEmployees.map((emp) => <option key={emp.id} value={emp.name}>{emp.name} — {emp.role}</option>)}
+              {employees.map((emp) => <option key={emp.id} value={emp.name}>{emp.name}</option>)}
             </select>
           </label>
           <label>Monthly CTC (₹)<input type="number" value={f.salary} onChange={(e) => set("salary", +e.target.value)} /></label>
@@ -115,29 +111,22 @@ function EmployeeModal({ initial, onSave, onCancel, allEmployees }: {
               {WORKSPACE_OPTIONS.map((w) => <option key={w} value={w}>{w}</option>)}
             </select>
           </label>
-          <label className="wd-form-full">Notes<textarea value={f.notes} onChange={(e) => set("notes", e.target.value)} rows={2} placeholder="Internal notes about this employee..." /></label>
+          <label className="wd-form-full">Notes<textarea value={f.notes} onChange={(e) => set("notes", e.target.value)} rows={2} placeholder="Internal notes…" /></label>
         </div>
 
         <div style={{ marginTop: 16 }}>
           <p style={{ fontWeight: 600, marginBottom: 8 }}>Assigned Tools (click to toggle)</p>
           <div className="wd-tool-chips">
             {TOOL_OPTIONS.map((t) => (
-              <button
-                key={t}
-                type="button"
-                className={`wd-chip${f.tools.includes(t) ? " wd-chip-active" : ""}`}
-                onClick={() => toggleTool(t)}
-              >
-                {t}
-              </button>
+              <button key={t} type="button" className={`wd-chip${f.tools.includes(t) ? " wd-chip-active" : ""}`} onClick={() => toggleTool(t)}>{t}</button>
             ))}
           </div>
         </div>
 
         <div className="wd-modal-actions">
-          <button className="wd-ghost-btn" onClick={onCancel}>Cancel</button>
-          <button className="wd-primary-btn" onClick={() => onSave(f)} disabled={!f.name.trim() || !f.email.trim()}>
-            <Save size={14} /> Save Employee
+          <button className="wd-ghost-btn" onClick={onCancel} disabled={saving}>Cancel</button>
+          <button className="wd-primary-btn" onClick={() => onSave(f)} disabled={!valid || saving}>
+            <Save size={14} /> {saving ? "Saving…" : isEdit ? "Save Changes" : "Hire Employee"}
           </button>
         </div>
       </div>
@@ -146,202 +135,173 @@ function EmployeeModal({ initial, onSave, onCancel, allEmployees }: {
 }
 
 export function Employees() {
-  const { data, addEmployee, updateEmployee, deleteEmployee } = useWorkforce();
+  const [emps, setEmps] = useState<Employee[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [q, setQ] = useState("");
-  const [dept, setDept] = useState<string>("All");
+  const [dept, setDept] = useState("All");
   const [showModal, setShowModal] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [quickName, setQuickName] = useState("");
-  const [quickRole, setQuickRole] = useState(ROLE_OPTIONS[0]);
+  const [editing, setEditing] = useState<Employee | null>(null);
+  const [saving, setSaving] = useState(false);
 
-  const quickAdd = () => {
-    const name = quickName.trim();
-    if (!name) return;
-    const slug = name.toLowerCase().replace(/[^a-z]+/g, ".").replace(/^\.|\.$/g, "");
-    addEmployee({
-      name, role: quickRole, department: WF_DEPARTMENTS[0],
-      email: `${slug}@whitedotindia.in`, phone: "", location: "",
-      type: "Full-Time", status: "Active",
-      joinedAt: new Date().toISOString().slice(0, 10), manager: "",
-      salary: 0, kpi: 75, tools: [], workspace: WORKSPACE_OPTIONS[0], notes: "",
-      leave: { annual: 18, sick: 12, casual: 8, usedAnnual: 0, usedSick: 0, usedCasual: 0 },
-    } as any);
-    setQuickName("");
-  };
+  const load = useCallback(async () => {
+    setLoading(true); setError("");
+    try {
+      const res = await employeesApi.list();
+      setEmps(res.data);
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Failed to load employees.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  const emps = data.employees;
-  const active = emps.filter((e) => e.status === "Active").length;
+  useEffect(() => { load(); }, [load]);
+
+  const active = emps.filter((e) => e.employeeProfile?.status === "ACTIVE").length;
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
     return emps.filter((e) => {
       if (dept !== "All" && e.department !== dept) return false;
       if (!needle) return true;
-      return `${e.name} ${e.role} ${e.email} ${e.department}`.toLowerCase().includes(needle);
+      return `${e.name} ${e.jobTitle ?? ""} ${e.email} ${e.department ?? ""}`.toLowerCase().includes(needle);
     });
   }, [emps, q, dept]);
 
-  const openAdd = () => { setEditingId(null); setShowModal(true); };
-  const openEdit = (e: Employee) => { setEditingId(e.id); setShowModal(true); };
+  const toForm = (e: Employee): EmployeeForm => ({
+    name: e.name, jobTitle: e.jobTitle || ROLE_OPTIONS[0], department: e.department || WF_DEPARTMENTS[0],
+    email: e.email, password: "", phone: e.phone || "",
+    location: e.employeeProfile?.location || "", type: e.employeeProfile?.type || "FULL_TIME",
+    status: e.employeeProfile?.status || "ACTIVE",
+    joinedAt: (e.employeeProfile?.joinedAt || new Date().toISOString()).slice(0, 10),
+    manager: e.employeeProfile?.manager || "", salary: e.employeeProfile?.salary ?? 0, kpi: e.employeeProfile?.kpi ?? 75,
+    tools: e.employeeProfile?.tools || [], workspace: e.employeeProfile?.workspace || WORKSPACE_OPTIONS[0],
+    notes: e.employeeProfile?.notes || "",
+  });
 
-  const handleSave = (f: EmployeeForm) => {
-    const payload = {
-      name: f.name.trim(),
-      role: f.role,
-      department: f.department,
-      email: f.email.trim(),
-      phone: f.phone.trim(),
-      location: f.location.trim(),
-      type: f.type,
-      status: f.status,
-      joinedAt: f.joinedAt,
-      manager: f.manager,
-      salary: f.salary,
-      kpi: f.kpi,
-      tools: f.tools,
-      workspace: f.workspace,
-      notes: f.notes,
-      leave: { annual: 18, sick: 12, casual: 8, usedAnnual: 0, usedSick: 0, usedCasual: 0 },
+  const handleSave = async (f: EmployeeForm) => {
+    setSaving(true); setError("");
+    const profile = {
+      jobTitle: f.jobTitle, department: f.department, phone: f.phone.trim(),
+      location: f.location.trim(), type: f.type, status: f.status, joinedAt: f.joinedAt,
+      manager: f.manager, salary: f.salary, kpi: f.kpi, tools: f.tools,
+      workspace: f.workspace, notes: f.notes, avatarHue: hueFor(f.name),
     };
-    if (editingId) {
-      updateEmployee(editingId, payload);
-    } else {
-      addEmployee(payload as any);
-    }
-    setShowModal(false);
-    setEditingId(null);
-  };
-
-  const handleDelete = (e: Employee) => {
-    if (confirm(`Remove "${e.name}" from workforce? This cannot be undone.`)) {
-      deleteEmployee(e.id);
-    }
-  };
-
-  const editingEmployee = editingId ? emps.find((e) => e.id === editingId) : null;
-  const modalInitial: EmployeeForm = editingEmployee
-    ? {
-        name: editingEmployee.name, role: editingEmployee.role, department: editingEmployee.department,
-        email: editingEmployee.email, phone: editingEmployee.phone, location: editingEmployee.location,
-        type: editingEmployee.type, status: editingEmployee.status, joinedAt: editingEmployee.joinedAt,
-        manager: editingEmployee.manager ?? "", salary: editingEmployee.salary, kpi: editingEmployee.kpi,
-        tools: editingEmployee.tools ?? [], workspace: editingEmployee.workspace ?? WORKSPACE_OPTIONS[0],
-        notes: editingEmployee.notes ?? "",
+    try {
+      if (editing) {
+        await employeesApi.update(editing.id, { name: f.name.trim(), ...profile });
+      } else {
+        await employeesApi.create({ name: f.name.trim(), email: f.email.trim(), password: f.password, ...profile });
       }
-    : emptyForm;
+      setShowModal(false); setEditing(null);
+      await load();
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Save failed.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async (e: Employee) => {
+    if (!confirm(`Remove "${e.name}"? This deletes their login and all their data. Cannot be undone.`)) return;
+    try {
+      // Employees are Users — reuse the user delete endpoint (SUPER_ADMIN only).
+      await api.delete(`/api/users/${e.id}`);
+      await load();
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Delete failed.");
+    }
+  };
 
   return (
     <div className="wd-page">
       <div className="wd-page-head">
-        <SectionHeader title="Workforce Management" sub={`${emps.length} employees · ${active} active — Super Admin controls all roles, tools & workspaces`} />
-        <button className="wd-primary-btn" onClick={openAdd}><Plus size={14} /> Hire Employee</button>
+        <SectionHeader title="Workforce Management" sub={`${emps.length} employees · ${active} active — each has a real login, attendance & workspace`} />
+        <div style={{ display: "flex", gap: 8 }}>
+          <button className="wd-ghost-btn" onClick={load}><RefreshCw size={14} /> Refresh</button>
+          <button className="wd-primary-btn" onClick={() => { setEditing(null); setShowModal(true); }}><UserPlus size={14} /> Hire Employee</button>
+        </div>
       </div>
 
-      {/* Quick add — one step: name + role, instant hire. Full details via Edit. */}
-      <Card>
-        <div className="wd-wf-quickadd">
-          <input
-            value={quickName}
-            onChange={(e) => setQuickName(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter") quickAdd(); }}
-            placeholder="Employee name — type and press Enter"
-            className="wd-wf-quickadd-name"
-          />
-          <select value={quickRole} onChange={(e) => setQuickRole(e.target.value)} className="wd-wf-select">
-            {ROLE_OPTIONS.map((r) => <option key={r} value={r}>{r}</option>)}
-          </select>
-          <button className="wd-primary-btn" onClick={quickAdd} disabled={!quickName.trim()}><Plus size={14} /> Quick Add</button>
-          <button className="wd-ghost-btn" onClick={openAdd}><UserPlus size={14} /> Full Form</button>
-        </div>
-      </Card>
+      {error && <Card><p className="wd-danger" style={{ padding: 4 }}>{error}</p></Card>}
 
-      {emps.length === 0 && (
+      {loading ? (
+        <Card><p className="wd-muted" style={{ padding: 24, textAlign: "center" }}>Loading employees…</p></Card>
+      ) : emps.length === 0 ? (
         <Card>
           <div style={{ textAlign: "center", padding: "40px 24px" }}>
             <Users size={48} style={{ opacity: 0.3, marginBottom: 16 }} />
             <h3 style={{ marginBottom: 8 }}>No Employees Yet</h3>
-            <p className="wd-muted">Type a name above and press Enter to hire your first team member.</p>
+            <p className="wd-muted">Click “Hire Employee” to create a login and workspace for your first team member.</p>
           </div>
         </Card>
-      )}
-
-      {emps.length > 0 && (
-        <>
-          <Card>
-            <div className="wd-wf-dir-head">
-              <SectionHeader title="Directory" sub={`${filtered.length} of ${emps.length} shown`} />
-              <div className="wd-wf-dir-controls">
-                <div className="wd-wf-search">
-                  <Search size={15} />
-                  <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search name, role, email…" />
-                  {q && <button onClick={() => setQ("")} aria-label="Clear"><X size={14} /></button>}
-                </div>
-                <select value={dept} onChange={(e) => setDept(e.target.value)} className="wd-wf-select">
-                  <option value="All">All departments</option>
-                  {WF_DEPARTMENTS.map((d) => <option key={d} value={d}>{d}</option>)}
-                </select>
+      ) : (
+        <Card>
+          <div className="wd-wf-dir-head">
+            <SectionHeader title="Directory" sub={`${filtered.length} of ${emps.length} shown`} />
+            <div className="wd-wf-dir-controls">
+              <div className="wd-wf-search">
+                <Search size={15} />
+                <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search name, title, email…" />
+                {q && <button onClick={() => setQ("")} aria-label="Clear"><X size={14} /></button>}
               </div>
+              <select value={dept} onChange={(e) => setDept(e.target.value)} className="wd-wf-select">
+                <option value="All">All departments</option>
+                {WF_DEPARTMENTS.map((d) => <option key={d} value={d}>{d}</option>)}
+              </select>
             </div>
+          </div>
 
-            <div className="wd-wf-table-wrap">
-              <table className="wd-rp-table wd-wf-table">
-                <thead>
-                  <tr>
-                    <th>Employee</th>
-                    <th>Role</th>
-                    <th>Department</th>
-                    <th>Type</th>
-                    <th>Status</th>
-                    <th>Workspace</th>
-                    <th>Tools</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((e) => (
+          <div className="wd-wf-table-wrap">
+            <table className="wd-rp-table wd-wf-table">
+              <thead>
+                <tr><th>Employee</th><th>Title</th><th>Department</th><th>Type</th><th>Status</th><th>Tasks</th><th>Actions</th></tr>
+              </thead>
+              <tbody>
+                {filtered.map((e) => {
+                  const p = e.employeeProfile;
+                  return (
                     <tr key={e.id}>
                       <td>
                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                          <Avatar e={e} size={32} />
+                          <Avatar name={e.name} hue={p?.avatarHue ?? hueFor(e.name)} />
                           <div>
-                            <strong>{e.name}</strong>
+                            <strong>{e.name}{!e.isActive && <span className="wd-muted" style={{ fontSize: 11 }}> · inactive</span>}</strong>
                             <div className="wd-muted" style={{ fontSize: 11 }}>{e.email}</div>
                           </div>
                         </div>
                       </td>
-                      <td>{e.role}</td>
-                      <td>{e.department}</td>
-                      <td>{e.type}</td>
-                      <td><span className={statusClass(e.status)}>{e.status}</span></td>
-                      <td><span className="wd-muted">{e.workspace || "—"}</span></td>
-                      <td>
-                        <span className="wd-muted" style={{ fontSize: 11 }}>
-                          {(e.tools?.length || 0) > 0 ? `${e.tools.length} tools` : "None"}
-                        </span>
-                      </td>
+                      <td>{e.jobTitle || "—"}</td>
+                      <td>{e.department || "—"}</td>
+                      <td>{prettyEnum(p?.type || "FULL_TIME")}</td>
+                      <td><span className={statusClass(p?.status || "ACTIVE")}>{prettyEnum(p?.status || "ACTIVE")}</span></td>
+                      <td className="wd-muted">{e.tasksDone ?? 0}/{e.tasksTotal ?? 0}</td>
                       <td>
                         <div style={{ display: "flex", gap: 6 }}>
                           <Link to={`/admin/workspace/${e.id}`} className="wd-ghost-btn wd-wf-mini" title="Open Workspace">▶</Link>
-                          <button className="wd-ghost-btn wd-wf-mini" onClick={() => openEdit(e)} title="Edit"><Pencil size={13} /></button>
+                          <button className="wd-ghost-btn wd-wf-mini" onClick={() => { setEditing(e); setShowModal(true); }} title="Edit"><Pencil size={13} /></button>
                           <button className="wd-ghost-btn wd-wf-mini wd-danger" onClick={() => handleDelete(e)} title="Remove"><Trash2 size={13} /></button>
                         </div>
                       </td>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-              {!filtered.length && <p className="wd-muted" style={{ padding: 24, textAlign: "center" }}>No employees match your filters.</p>}
-            </div>
-          </Card>
-        </>
+                  );
+                })}
+              </tbody>
+            </table>
+            {!filtered.length && <p className="wd-muted" style={{ padding: 24, textAlign: "center" }}>No employees match your filters.</p>}
+          </div>
+        </Card>
       )}
 
       {showModal && (
         <EmployeeModal
-          initial={modalInitial}
+          initial={editing ? toForm(editing) : emptyForm}
+          isEdit={!!editing}
+          employees={emps.filter((e) => e.id !== editing?.id)}
           onSave={handleSave}
-          onCancel={() => { setShowModal(false); setEditingId(null); }}
-          allEmployees={emps.filter((e) => e.id !== editingId)}
+          onCancel={() => { setShowModal(false); setEditing(null); }}
+          saving={saving}
         />
       )}
     </div>
