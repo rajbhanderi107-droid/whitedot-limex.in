@@ -1,0 +1,111 @@
+/* EmployeePortal — the per-employee digital office.
+ *
+ * Shown to users with role EMPLOYEE. A focused, isolated workspace: punch
+ * in/out with live location, today's status, and personal attendance history.
+ * Employees never see admin modules or other people's data. */
+
+import { useEffect, useState } from "react";
+import { LogOut, CalendarDays, Clock, MapPin } from "lucide-react";
+import { useBrandLogo } from "../../useBrandLogo";
+import { PunchClock } from "../components/PunchClock.js";
+import { attendanceApi, fmtMinutes, type AttendanceDay } from "../lib/attendanceApi.js";
+import "../portal/portal.css";
+import "./employee-portal.css";
+
+interface Props {
+  user: { name: string; email: string; role: string };
+  onLogout: () => void;
+}
+
+function statusClass(s: string) {
+  return `wd-ep-att wd-ep-att-${s.toLowerCase()}`;
+}
+
+function timeOf(iso: string | null) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
+export function EmployeePortal({ user, onLogout }: Props) {
+  const brandLogo = useBrandLogo();
+  const [history, setHistory] = useState<AttendanceDay[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    attendanceApi.me()
+      .then((res) => { if (active) setHistory(res.data.history); })
+      .catch(() => { /* ignore */ });
+    return () => { active = false; };
+  }, []);
+
+  const initials = user.name.split(" ").map((p) => p[0]).slice(0, 2).join("");
+
+  return (
+    <div className="adm wd-ep">
+      <header className="wd-ep-topbar">
+        <div className="wd-ep-brand">
+          <img src={brandLogo} alt="" width={26} height={26} />
+          <div>
+            <strong>WhiteDot</strong>
+            <small>Employee Workspace</small>
+          </div>
+        </div>
+        <div className="wd-ep-user">
+          <span className="wd-ep-avatar">{initials}</span>
+          <div className="wd-ep-user-meta">
+            <span className="wd-ep-user-name">{user.name}</span>
+            <span className="wd-ep-user-role">{user.role.toLowerCase().replace(/_/g, " ")}</span>
+          </div>
+          <button className="wd-ep-logout" onClick={onLogout}><LogOut size={15} /> Sign out</button>
+        </div>
+      </header>
+
+      <main className="wd-ep-main">
+        <div className="wd-ep-hello">
+          <h1>Good to see you, {user.name.split(" ")[0]}.</h1>
+          <p>Punch in to start your office day. Your attendance is marked when you punch out.</p>
+        </div>
+
+        <div className="wd-ep-grid">
+          <section className="wd-ep-card wd-ep-punch-wrap">
+            <PunchClock variant="full" />
+          </section>
+
+          <section className="wd-ep-card">
+            <div className="wd-ep-card-head">
+              <CalendarDays size={16} />
+              <h2>My Attendance</h2>
+              <span className="wd-ep-muted">last 30 days</span>
+            </div>
+            {history.length === 0 ? (
+              <p className="wd-ep-empty">No attendance yet. Your first punch-in will appear here.</p>
+            ) : (
+              <div className="wd-ep-tablewrap">
+                <table className="wd-ep-table">
+                  <thead>
+                    <tr><th>Date</th><th><Clock size={12} /> In</th><th>Out</th><th>Hours</th><th>Status</th></tr>
+                  </thead>
+                  <tbody>
+                    {history.map((d) => (
+                      <tr key={d.id}>
+                        <td>{d.date}</td>
+                        <td>{timeOf(d.firstPunchIn)}</td>
+                        <td>{timeOf(d.lastPunchOut)}</td>
+                        <td>{d.finalized ? fmtMinutes(d.workedMinutes) : <span className="wd-ep-live">live</span>}</td>
+                        <td><span className={statusClass(d.status)}>{d.status.replace("_", " ")}</span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
+        </div>
+
+        <p className="wd-ep-foot">
+          <MapPin size={12} /> While punched in, your location is shared with the company admin for attendance verification.
+        </p>
+      </main>
+    </div>
+  );
+}

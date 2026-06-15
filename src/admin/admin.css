@@ -163,6 +163,9 @@ table.adm-table tr:hover td { background: var(--adm-accent-soft); }
 /* ─── Forms & inputs ─────────────────── */
 .adm-form { display: grid; gap: 1rem; }
 .adm-form-group { display: flex; flex-direction: column; gap: .3rem; }
+.adm-opt { font-style: normal; opacity: .6; font-weight: 400; }
+.adm-form-hint { margin: .75rem 0 0; font-size: .8rem; color: var(--adm-muted); }
+.adm-form-hint strong { color: var(--adm-text, #e2e8f0); }
 .adm-form-group label { font-size: .78rem; color: var(--adm-muted); font-weight: 500; }
 .adm-form-group span { font-size: .78rem; color: var(--adm-muted); font-weight: 500; }
 .adm-form-grid { display: grid; grid-template-columns: repeat(4, minmax(160px, 1fr)); gap: .8rem; }

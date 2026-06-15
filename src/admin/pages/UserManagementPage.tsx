@@ -4,7 +4,7 @@ import { api, ApiError } from "../lib/api.js";
 import { PasswordInput } from "../components/PasswordInput.js";
 import { useAuth } from "../hooks/useAuth.js";
 
-type Role = "SUPER_ADMIN" | "ADMIN" | "SALES" | "OPERATIONS" | "VIEWER";
+type Role = "SUPER_ADMIN" | "ADMIN" | "SALES" | "OPERATIONS" | "VIEWER" | "EMPLOYEE";
 
 interface UserRow {
   id: string;
@@ -14,15 +14,21 @@ interface UserRow {
   isActive: boolean;
   createdAt: string;
   updatedAt?: string;
+  jobTitle?: string | null;
+  department?: string | null;
+  phone?: string | null;
 }
 
-const roles: Role[] = ["SUPER_ADMIN", "ADMIN", "SALES", "OPERATIONS", "VIEWER"];
+const roles: Role[] = ["SUPER_ADMIN", "ADMIN", "SALES", "OPERATIONS", "VIEWER", "EMPLOYEE"];
 
 const blankForm = {
   name: "",
   email: "",
   password: "",
-  role: "ADMIN" as Role,
+  role: "EMPLOYEE" as Role,
+  jobTitle: "",
+  department: "",
+  phone: "",
 };
 
 function formatRole(role: string) {
@@ -229,7 +235,43 @@ export function UserManagementPage() {
               ))}
             </select>
           </label>
+          <label className="adm-form-group">
+            <span>Job title <em className="adm-opt">(optional)</em></span>
+            <input
+              className="adm-input"
+              name="new-user-job-title"
+              autoComplete="off"
+              placeholder="e.g. Sales Executive"
+              value={form.jobTitle}
+              onChange={(event) => setForm((current) => ({ ...current, jobTitle: event.target.value }))}
+            />
+          </label>
+          <label className="adm-form-group">
+            <span>Department <em className="adm-opt">(optional)</em></span>
+            <input
+              className="adm-input"
+              name="new-user-department"
+              autoComplete="off"
+              placeholder="e.g. Sales"
+              value={form.department}
+              onChange={(event) => setForm((current) => ({ ...current, department: event.target.value }))}
+            />
+          </label>
+          <label className="adm-form-group">
+            <span>Phone <em className="adm-opt">(optional)</em></span>
+            <input
+              className="adm-input"
+              name="new-user-phone"
+              autoComplete="off"
+              placeholder="+91…"
+              value={form.phone}
+              onChange={(event) => setForm((current) => ({ ...current, phone: event.target.value }))}
+            />
+          </label>
         </div>
+        <p className="adm-form-hint">
+          Tip: create an <strong>Employee</strong> account so the person can sign in, punch in/out, and have their attendance &amp; location tracked.
+        </p>
       </form>
 
       <div className="adm-table-wrap">

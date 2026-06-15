@@ -18,8 +18,9 @@ import { BiPage, LeadGenPage, AdsPage, DataWarehousePage } from "./portal/pages/
 import { WebsiteHealthPage, SeoGrowthPage, DevSecOpsPage, BackupPage, CustomerPortalAdminPage, NotificationCenterPage } from "./portal/pages/opsModules.js";
 import { ModuleStub } from "./portal/pages/ModuleStub.js";
 import { Employees } from "./portal/pages/Employees.js";
-import { Attendance } from "./portal/pages/Attendance.js";
+import { AttendanceBoard } from "./pages/AttendanceBoard.js";
 import { EmployeeWorkspace } from "./portal/pages/EmployeeWorkspace.js";
+import { EmployeePortal } from "./pages/EmployeePortal.js";
 import { SCAFFOLD_MODULES } from "./portal/modules.js";
 import { useAuth } from "./hooks/useAuth.js";
 import { GenericListPage } from "./pages/GenericListPage.js";
@@ -86,6 +87,16 @@ export default function AdminApp() {
       Connecting to backend...
     </div>
   );
+
+  // Employees get an isolated workspace — never the admin portal shell.
+  if (isAuthenticated && user?.role === "EMPLOYEE") {
+    return (
+      <Routes>
+        <Route path="/admin/me" element={<EmployeePortal user={user} onLogout={logout} />} />
+        <Route path="*" element={<Navigate to="/admin/me" replace />} />
+      </Routes>
+    );
+  }
 
   return (
     <PortalProvider>
@@ -273,7 +284,7 @@ export default function AdminApp() {
 
           {/* ── Workforce (Employees · Attendance · Employee Workspace) ── */}
           <Route path="/admin/employees" element={<Employees />} />
-          <Route path="/admin/attendance" element={<Attendance />} />
+          <Route path="/admin/attendance" element={<AttendanceBoard />} />
           <Route path="/admin/workspace" element={<EmployeeWorkspace />} />
           <Route path="/admin/workspace/:id" element={<EmployeeWorkspace />} />
 

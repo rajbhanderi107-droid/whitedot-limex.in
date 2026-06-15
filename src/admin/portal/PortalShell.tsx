@@ -13,6 +13,7 @@ import {
 import { useBrandLogo } from "../../useBrandLogo";
 import { NotificationBell } from "../components/NotificationBell";
 import { KeyboardShortcuts } from "../components/KeyboardShortcuts";
+import { PunchClock } from "../components/PunchClock";
 import { MODULE_GROUPS, type PortalModule } from "./modules.js";
 import { CommandPalette } from "./CommandPalette.js";
 import { usePortal, AUTOMATION_MODES, type AutomationMode } from "./PortalContext.js";
@@ -129,6 +130,7 @@ export function PortalShell({ user, onLogout }: Props) {
           </button>
 
           <div className="wd-topbar-right">
+            <PunchClock variant="compact" />
             <div className="wd-rings">
               <HealthRing label="Biz" value={health.business} />
               <HealthRing label="Sec" value={health.security} />
