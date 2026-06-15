@@ -684,7 +684,7 @@ function App() {
             </div>
             <div>
               <dt>Email</dt>
-              <dd>rajbhanderi107@gmail.com</dd>
+              <dd>office@whitedotindia.in</dd>
             </div>
             <div>
               <dt>Region</dt>

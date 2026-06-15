@@ -1,7 +1,7 @@
 export const CONSULTATION_HASH = '#inquiry';
 export const CONSULTATION_FORM_EVENT = 'whitedot:open-consultation-form';
 export const GMAIL_CONTACT_HREF =
-  'https://mail.google.com/mail/?view=cm&fs=1&to=rajbhanderi107%40gmail.com&su=WhiteDot%20LIMEX%20Inquiry';
+  'https://mail.google.com/mail/?view=cm&fs=1&to=office%40whitedotindia.in&su=WhiteDot%20LIMEX%20Inquiry';
 
 export type ConsultationLeadForm = 'inquiry' | 'quote' | 'sample' | 'calculator';
 

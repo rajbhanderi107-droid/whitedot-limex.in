@@ -55,7 +55,7 @@ npm run backend:build
 ## Contact Details Used
 
 - WhatsApp: `+91 88497 28938`
-- Email: `rajbhanderi107@gmail.com`
+- Email: `office@whitedotindia.in`
 
 ## Important Notes
 

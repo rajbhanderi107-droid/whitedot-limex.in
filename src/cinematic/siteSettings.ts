@@ -15,7 +15,7 @@ export interface SiteSettings {
 
 export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   company_name: "White Dot LLP",
-  company_email: "rajbhanderi107@gmail.com",
+  company_email: "office@whitedotindia.in",
   company_phone: "+91 88497 28938",
   whatsapp_number: "918849728938",
   company_address: "Gujarat, India",

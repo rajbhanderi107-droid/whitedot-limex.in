@@ -55,7 +55,7 @@ export async function submitInquiry(req: Request, res: Response) {
     "LEAD",
   );
 
-  const inbox = process.env.ADMIN_INQUIRY_EMAIL || process.env.SMTP_USER || "rajbhanderi107@gmail.com";
+  const inbox = process.env.ADMIN_INQUIRY_EMAIL || process.env.SMTP_USER || "office@whitedotindia.in";
   const text = inquiryEmailText(inquiry);
   sendMail({
     to: inbox,

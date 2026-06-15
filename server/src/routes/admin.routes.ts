@@ -96,6 +96,7 @@ router.patch("/website-settings/:key", requireRole("SUPER_ADMIN", "ADMIN"), vali
 router.get("/users", requireRole("SUPER_ADMIN"), asyncHandler(users.listUsers));
 router.post("/users", requireRole("SUPER_ADMIN"), validate(createUserSchema), asyncHandler(users.createUser));
 router.patch("/users/:id", requireRole("SUPER_ADMIN"), validate(updateUserSchema), asyncHandler(users.updateUser));
+router.delete("/users/:id", requireRole("SUPER_ADMIN"), asyncHandler(users.deleteUser));
 
 // ─── Notifications ───────────────────────────────
 router.get("/notifications", asyncHandler(notifications.listNotifications));

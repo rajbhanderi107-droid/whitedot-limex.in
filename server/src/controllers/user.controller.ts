@@ -78,3 +78,37 @@ export async function updateUser(req: Request, res: Response) {
 
   return sendSuccess(res, user, "User updated");
 }
+
+export async function deleteUser(req: Request, res: Response) {
+  const id = paramId(req);
+
+  if (id === req.currentUser!.id) {
+    throw new AppError(400, "CANNOT_DELETE_SELF", "You cannot delete your own account");
+  }
+
+  const target = await prisma.user.findUnique({
+    where: { id },
+    select: { id: true, name: true, email: true, role: true },
+  });
+  if (!target) throw new AppError(404, "USER_NOT_FOUND", "User not found");
+
+  // Never allow removing the last remaining super admin.
+  if (target.role === "SUPER_ADMIN") {
+    const superAdmins = await prisma.user.count({ where: { role: "SUPER_ADMIN" } });
+    if (superAdmins <= 1) {
+      throw new AppError(400, "LAST_SUPER_ADMIN", "Cannot delete the last super admin");
+    }
+  }
+
+  await prisma.user.delete({ where: { id } });
+
+  await logActivity({
+    userId: req.currentUser!.id,
+    action: "DELETE_USER",
+    entityType: "USER",
+    entityId: id,
+    metadata: { name: target.name, email: target.email, role: target.role },
+  });
+
+  return sendSuccess(res, { id }, "User deleted");
+}
