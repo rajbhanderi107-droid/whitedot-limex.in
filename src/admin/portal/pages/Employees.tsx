@@ -5,7 +5,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Users, UserPlus, Search, X, Pencil, Trash2, Save, Plus, RefreshCw } from "lucide-react";
-import { WF_DEPARTMENTS, ROLE_OPTIONS, TOOL_OPTIONS, WORKSPACE_OPTIONS } from "../workforceStore.js";
+import { WF_DEPARTMENTS, ROLE_OPTIONS, TOOL_OPTIONS, WORKSPACE_OPTIONS } from "../workforceOptions.js";
 import {
   employeesApi, EMP_TYPES, EMP_STATUSES, prettyEnum,
   type Employee, type EmploymentType, type EmployeeStatus,
