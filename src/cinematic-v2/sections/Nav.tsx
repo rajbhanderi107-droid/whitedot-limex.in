@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { CONSULTATION_HASH, GMAIL_CONTACT_HREF, openConsultationForm } from '../consultationNavigation';
+import { useBrandLogo } from '../../useBrandLogo';
 import './Nav.css';
 
 const LINKS = [
@@ -12,6 +13,7 @@ const LINKS = [
 ] as const;
 
 export default function Nav() {
+  const brandLogo = useBrandLogo();
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
@@ -90,6 +92,7 @@ export default function Nav() {
     <header className={cls} role="banner">
       <div className="v2nav-inner">
         <a href="#" className="v2nav-brand" aria-label="WhiteDot — home" onClick={closeMenu}>
+          <img className="v2nav-logo" src={brandLogo} alt="WhiteDot logo" width={30} height={30} decoding="async" />
           <span className="v2nav-wordmark">WhiteDot</span>
         </a>
 

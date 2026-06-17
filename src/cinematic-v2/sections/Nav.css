@@ -43,12 +43,24 @@
   flex-shrink: 0;
 }
 
+.v2nav-logo {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+
 .v2nav-wordmark {
   font-family: var(--v2-font-serif);
   font-size: 1.15rem;
   font-weight: var(--v2-fw-light);
   color: var(--v2-text);
   letter-spacing: 0.01em;
+}
+
+@media (max-width: 600px) {
+  .v2nav-logo { width: 26px; height: 26px; }
 }
 
 /* Desktop links */

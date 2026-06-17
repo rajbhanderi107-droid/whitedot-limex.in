@@ -188,9 +188,15 @@ export const MODULE_GROUPS: ModuleGroup[] = [
   {
     title: "Workforce",
     modules: [
+      { key: "workforce-overview", label: "Workforce Overview", icon: Gauge, path: "/admin/workforce", status: "live",
+        blurb: "HR command center — headcount, attendance, leave & announcements.",
+        features: ["Live headcount & status KPIs", "Department & employment-type split", "Present-today & pending-leave signals", "Company announcements composer"] },
       { key: "employees", label: "Employees", icon: Users, path: "/admin/employees", status: "live",
         blurb: "Team directory, headcount and department split.",
         features: ["Directory grid + filterable table", "Department headcount donut", "Per-employee KPI & tenure", "Links to each Employee Workspace"] },
+      { key: "departments", label: "Departments", icon: Building2, path: "/admin/departments", status: "live",
+        blurb: "Company org structure — departments, codes and heads.",
+        features: ["Create / edit / remove departments", "Assign a department head", "Headcount per department", "Used across hiring & profiles"] },
       { key: "attendance", label: "Attendance", icon: CalendarCheck, path: "/admin/attendance", status: "live",
         blurb: "Daily check-in / check-out, punctuality and leave.",
         features: ["Present / late / absent / leave KPIs", "Attendance-rate ring + 5-day trend", "Inline check-in / check-out", "Day-by-day attendance log"] },

@@ -952,3 +952,25 @@
   .wd-wf-quickadd { flex-direction: column; align-items: stretch; }
   .wd-wf-quickadd .wd-wf-select, .wd-wf-quickadd button { width: 100%; }
 }
+
+/* ── Workforce OS additions ── */
+.wd-wf-ann {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+  padding: 10px 12px; border: 1px solid rgba(255,255,255,0.07); border-radius: 10px;
+  background: rgba(255,255,255,0.02);
+}
+.wd-wf-checklist { list-style: none; margin: 0; padding: 8px 0; display: grid; gap: 4px; }
+.wd-wf-check-row {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px;
+  cursor: pointer; font-size: 14px; transition: background .15s ease;
+}
+.wd-wf-check-row:hover { background: rgba(255,255,255,0.04); }
+.wd-wf-check-done { text-decoration: line-through; opacity: 0.55; }
+.wd-wf-goal {
+  padding: 10px 12px; border: 1px solid rgba(255,255,255,0.07); border-radius: 10px;
+  background: rgba(255,255,255,0.02); display: grid; gap: 6px;
+}
+.wd-wf-review {
+  padding: 10px 12px; border: 1px solid rgba(255,255,255,0.07); border-radius: 10px;
+  background: rgba(255,255,255,0.02); display: grid; gap: 4px;
+}

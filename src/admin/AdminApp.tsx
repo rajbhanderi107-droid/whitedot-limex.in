@@ -18,6 +18,8 @@ import { BiPage, LeadGenPage, AdsPage, DataWarehousePage } from "./portal/pages/
 import { WebsiteHealthPage, SeoGrowthPage, DevSecOpsPage, BackupPage, CustomerPortalAdminPage, NotificationCenterPage } from "./portal/pages/opsModules.js";
 import { ModuleStub } from "./portal/pages/ModuleStub.js";
 import { Employees } from "./portal/pages/Employees.js";
+import { WorkforceOverview } from "./portal/pages/WorkforceOverview.js";
+import { Departments } from "./portal/pages/Departments.js";
 import { AttendanceBoard } from "./pages/AttendanceBoard.js";
 import { EmployeeWorkspace } from "./portal/pages/EmployeeWorkspace.js";
 import { EmployeePortal } from "./pages/EmployeePortal.js";
@@ -282,7 +284,9 @@ export default function AdminApp() {
           <Route path="/admin/customer-portal" element={<CustomerPortalAdminPage />} />
           <Route path="/admin/notifications" element={<NotificationCenterPage />} />
 
-          {/* ── Workforce (Employees · Attendance · Employee Workspace) ── */}
+          {/* ── Workforce (Overview · Employees · Departments · Attendance · Employee Workspace) ── */}
+          <Route path="/admin/workforce" element={<WorkforceOverview />} />
+          <Route path="/admin/departments" element={<Departments />} />
           <Route path="/admin/employees" element={<Employees />} />
           <Route path="/admin/attendance" element={<AttendanceBoard />} />
           <Route path="/admin/workspace" element={<EmployeeWorkspace />} />

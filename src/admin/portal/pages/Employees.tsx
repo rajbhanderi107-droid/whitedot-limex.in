@@ -42,13 +42,25 @@ interface EmployeeForm {
   phone: string; location: string; type: EmploymentType; status: EmployeeStatus;
   joinedAt: string; manager: string; salary: number; kpi: number;
   tools: string[]; workspace: string; notes: string;
+  // Extended HR profile
+  employeeCode: string; currency: string; weeklyHours: number;
+  dateOfBirth: string; gender: string; bloodGroup: string; address: string;
+  emergencyName: string; emergencyPhone: string;
+  bankName: string; bankAccount: string; ifsc: string; taxId: string;
 }
+
+const CURRENCIES = ["INR", "USD", "EUR", "GBP", "AED", "SGD", "JPY"];
+const GENDERS = ["", "Male", "Female", "Other", "Prefer not to say"];
 
 const emptyForm: EmployeeForm = {
   name: "", jobTitle: ROLE_OPTIONS[0], department: WF_DEPARTMENTS[0], email: "", password: "",
   phone: "", location: "", type: "FULL_TIME", status: "ACTIVE",
   joinedAt: new Date().toISOString().slice(0, 10), manager: "", salary: 0, kpi: 75,
   tools: [], workspace: WORKSPACE_OPTIONS[0], notes: "",
+  employeeCode: "", currency: "INR", weeklyHours: 40,
+  dateOfBirth: "", gender: "", bloodGroup: "", address: "",
+  emergencyName: "", emergencyPhone: "",
+  bankName: "", bankAccount: "", ifsc: "", taxId: "",
 };
 
 function EmployeeModal({ initial, isEdit, employees, onSave, onCancel, saving }: {
@@ -111,6 +123,27 @@ function EmployeeModal({ initial, isEdit, employees, onSave, onCancel, saving }:
               {WORKSPACE_OPTIONS.map((w) => <option key={w} value={w}>{w}</option>)}
             </select>
           </label>
+          <label>Employee Code<input value={f.employeeCode} onChange={(e) => set("employeeCode", e.target.value)} placeholder="e.g. WD-0001" /></label>
+          <label>Currency
+            <select value={f.currency} onChange={(e) => set("currency", e.target.value)}>
+              {CURRENCIES.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </label>
+          <label>Weekly Hours<input type="number" min={0} max={168} value={f.weeklyHours} onChange={(e) => set("weeklyHours", +e.target.value)} /></label>
+          <label>Date of Birth<input type="date" value={f.dateOfBirth} onChange={(e) => set("dateOfBirth", e.target.value)} /></label>
+          <label>Gender
+            <select value={f.gender} onChange={(e) => set("gender", e.target.value)}>
+              {GENDERS.map((g) => <option key={g} value={g}>{g || "—"}</option>)}
+            </select>
+          </label>
+          <label>Blood Group<input value={f.bloodGroup} onChange={(e) => set("bloodGroup", e.target.value)} placeholder="e.g. O+" /></label>
+          <label>Emergency Contact<input value={f.emergencyName} onChange={(e) => set("emergencyName", e.target.value)} placeholder="Name" /></label>
+          <label>Emergency Phone<input value={f.emergencyPhone} onChange={(e) => set("emergencyPhone", e.target.value)} placeholder="+91 …" /></label>
+          <label>Bank Name<input value={f.bankName} onChange={(e) => set("bankName", e.target.value)} /></label>
+          <label>Bank Account<input value={f.bankAccount} onChange={(e) => set("bankAccount", e.target.value)} /></label>
+          <label>IFSC / SWIFT<input value={f.ifsc} onChange={(e) => set("ifsc", e.target.value)} /></label>
+          <label>Tax / PAN ID<input value={f.taxId} onChange={(e) => set("taxId", e.target.value)} /></label>
+          <label className="wd-form-full">Address<textarea value={f.address} onChange={(e) => set("address", e.target.value)} rows={2} placeholder="Residential address" /></label>
           <label className="wd-form-full">Notes<textarea value={f.notes} onChange={(e) => set("notes", e.target.value)} rows={2} placeholder="Internal notes…" /></label>
         </div>
 
@@ -140,6 +173,8 @@ export function Employees() {
   const [error, setError] = useState("");
   const [q, setQ] = useState("");
   const [dept, setDept] = useState("All");
+  const [statusF, setStatusF] = useState<"All" | EmployeeStatus>("All");
+  const [typeF, setTypeF] = useState<"All" | EmploymentType>("All");
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState<Employee | null>(null);
   const [saving, setSaving] = useState(false);
@@ -164,10 +199,12 @@ export function Employees() {
     const needle = q.trim().toLowerCase();
     return emps.filter((e) => {
       if (dept !== "All" && e.department !== dept) return false;
+      if (statusF !== "All" && (e.employeeProfile?.status ?? "ACTIVE") !== statusF) return false;
+      if (typeF !== "All" && (e.employeeProfile?.type ?? "FULL_TIME") !== typeF) return false;
       if (!needle) return true;
       return `${e.name} ${e.jobTitle ?? ""} ${e.email} ${e.department ?? ""}`.toLowerCase().includes(needle);
     });
-  }, [emps, q, dept]);
+  }, [emps, q, dept, statusF, typeF]);
 
   const toForm = (e: Employee): EmployeeForm => ({
     name: e.name, jobTitle: e.jobTitle || ROLE_OPTIONS[0], department: e.department || WF_DEPARTMENTS[0],
@@ -178,6 +215,19 @@ export function Employees() {
     manager: e.employeeProfile?.manager || "", salary: e.employeeProfile?.salary ?? 0, kpi: e.employeeProfile?.kpi ?? 75,
     tools: e.employeeProfile?.tools || [], workspace: e.employeeProfile?.workspace || WORKSPACE_OPTIONS[0],
     notes: e.employeeProfile?.notes || "",
+    employeeCode: e.employeeProfile?.employeeCode || "",
+    currency: e.employeeProfile?.currency || "INR",
+    weeklyHours: e.employeeProfile?.weeklyHours ?? 40,
+    dateOfBirth: (e.employeeProfile?.dateOfBirth || "").slice(0, 10),
+    gender: e.employeeProfile?.gender || "",
+    bloodGroup: e.employeeProfile?.bloodGroup || "",
+    address: e.employeeProfile?.address || "",
+    emergencyName: e.employeeProfile?.emergencyName || "",
+    emergencyPhone: e.employeeProfile?.emergencyPhone || "",
+    bankName: e.employeeProfile?.bankName || "",
+    bankAccount: e.employeeProfile?.bankAccount || "",
+    ifsc: e.employeeProfile?.ifsc || "",
+    taxId: e.employeeProfile?.taxId || "",
   });
 
   const handleSave = async (f: EmployeeForm) => {
@@ -187,6 +237,13 @@ export function Employees() {
       location: f.location.trim(), type: f.type, status: f.status, joinedAt: f.joinedAt,
       manager: f.manager, salary: f.salary, kpi: f.kpi, tools: f.tools,
       workspace: f.workspace, notes: f.notes, avatarHue: hueFor(f.name),
+      employeeCode: f.employeeCode.trim() || undefined,
+      currency: f.currency, weeklyHours: f.weeklyHours,
+      dateOfBirth: f.dateOfBirth || undefined, gender: f.gender || undefined,
+      bloodGroup: f.bloodGroup.trim() || undefined, address: f.address.trim() || undefined,
+      emergencyName: f.emergencyName.trim() || undefined, emergencyPhone: f.emergencyPhone.trim() || undefined,
+      bankName: f.bankName.trim() || undefined, bankAccount: f.bankAccount.trim() || undefined,
+      ifsc: f.ifsc.trim() || undefined, taxId: f.taxId.trim() || undefined,
     };
     try {
       if (editing) {
@@ -249,6 +306,14 @@ export function Employees() {
               <select value={dept} onChange={(e) => setDept(e.target.value)} className="wd-wf-select">
                 <option value="All">All departments</option>
                 {WF_DEPARTMENTS.map((d) => <option key={d} value={d}>{d}</option>)}
+              </select>
+              <select value={statusF} onChange={(e) => setStatusF(e.target.value as "All" | EmployeeStatus)} className="wd-wf-select">
+                <option value="All">All statuses</option>
+                {EMP_STATUSES.map((s) => <option key={s} value={s}>{prettyEnum(s)}</option>)}
+              </select>
+              <select value={typeF} onChange={(e) => setTypeF(e.target.value as "All" | EmploymentType)} className="wd-wf-select">
+                <option value="All">All types</option>
+                {EMP_TYPES.map((t) => <option key={t} value={t}>{prettyEnum(t)}</option>)}
               </select>
             </div>
           </div>

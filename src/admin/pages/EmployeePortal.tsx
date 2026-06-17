@@ -5,13 +5,13 @@
  * Employees never see admin modules or other people's data. */
 
 import { useCallback, useEffect, useState } from "react";
-import { LogOut, CalendarDays, Clock, MapPin, ListChecks, Plane } from "lucide-react";
+import { LogOut, CalendarDays, Clock, MapPin, ListChecks, Plane, Target, CheckSquare, Square, Receipt, Megaphone } from "lucide-react";
 import { useBrandLogo } from "../../useBrandLogo";
 import { PunchClock } from "../components/PunchClock.js";
 import { attendanceApi, fmtMinutes, type AttendanceDay } from "../lib/attendanceApi.js";
 import {
   employeesApi, TASK_STAGES, prettyEnum,
-  type MyWorkspace, type TaskStage, type LeaveKind,
+  type MyWorkspace, type TaskStage, type LeaveKind, type Announcement,
 } from "../lib/employeesApi.js";
 import { ApiError } from "../lib/api.js";
 import "../portal/portal.css";
@@ -35,6 +35,7 @@ export function EmployeePortal({ user, onLogout }: Props) {
   const brandLogo = useBrandLogo();
   const [history, setHistory] = useState<AttendanceDay[]>([]);
   const [ws, setWs] = useState<MyWorkspace | null>(null);
+  const [anns, setAnns] = useState<Announcement[]>([]);
   const [leaveType, setLeaveType] = useState<LeaveKind>("ANNUAL");
   const [leaveFrom, setLeaveFrom] = useState("");
   const [leaveTo, setLeaveTo] = useState("");
@@ -51,11 +52,24 @@ export function EmployeePortal({ user, onLogout }: Props) {
     employeesApi.myWorkspace().then((res) => setWs(res.data)).catch(() => {});
   }, []);
   useEffect(() => { loadWs(); }, [loadWs]);
+  useEffect(() => { employeesApi.listAnnouncements().then((r) => setAnns(r.data)).catch(() => {}); }, []);
 
   const moveTask = async (taskId: string, stage: TaskStage) => {
     setWs((cur) => cur ? { ...cur, workTasks: cur.workTasks.map((t) => t.id === taskId ? { ...t, stage } : t) } : cur);
     try { await employeesApi.updateTask(taskId, { stage }); } catch { loadWs(); }
   };
+
+  const toggleOnboarding = async (taskId: string, done: boolean) => {
+    setWs((cur) => cur ? { ...cur, onboardingTasks: cur.onboardingTasks.map((t) => t.id === taskId ? { ...t, done } : t) } : cur);
+    try { await employeesApi.updateMyOnboarding(taskId, done); } catch { loadWs(); }
+  };
+
+  const setGoalProgress = async (goalId: string, progress: number) => {
+    setWs((cur) => cur ? { ...cur, goals: cur.goals.map((g) => g.id === goalId ? { ...g, progress } : g) } : cur);
+    try { await employeesApi.updateMyGoal(goalId, progress); } catch { loadWs(); }
+  };
+
+  const inr = (n: number, cur = "INR") => `${cur === "INR" ? "₹" : cur + " "}${n.toLocaleString("en-IN")}`;
 
   const submitLeave = async () => {
     setLeaveMsg("");
@@ -201,6 +215,100 @@ export function EmployeePortal({ user, onLogout }: Props) {
             )}
           </section>
         </div>
+
+        {anns.length > 0 && (
+          <div className="wd-ep-grid">
+            <section className="wd-ep-card" style={{ gridColumn: "1 / -1" }}>
+              <div className="wd-ep-card-head">
+                <Megaphone size={16} />
+                <h2>Announcements</h2>
+                <span className="wd-ep-muted">{anns.length}</span>
+              </div>
+              <ul className="wd-ep-tasks">
+                {anns.map((a) => (
+                  <li key={a.id} className="wd-ep-task">
+                    <div className="wd-ep-task-main">
+                      <div>
+                        <strong>{a.title}</strong>
+                        <span className="wd-ep-task-sub">{a.body}</span>
+                      </div>
+                    </div>
+                    <span className="wd-ep-muted" style={{ fontSize: 11 }}>{new Date(a.createdAt).toLocaleDateString()}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
+        )}
+
+        <div className="wd-ep-grid">
+          <section className="wd-ep-card">
+            <div className="wd-ep-card-head">
+              <Target size={16} />
+              <h2>My Goals</h2>
+              <span className="wd-ep-muted">{ws?.goals.length ?? 0}</span>
+            </div>
+            {!ws || ws.goals.length === 0 ? (
+              <p className="wd-ep-empty">No goals assigned yet.</p>
+            ) : (
+              <div style={{ display: "grid", gap: 12 }}>
+                {ws.goals.map((g) => (
+                  <div key={g.id}>
+                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                      <strong style={{ fontSize: 13 }}>{g.title}</strong>
+                      <span className="wd-ep-muted" style={{ fontSize: 11 }}>{g.progress}%</span>
+                    </div>
+                    <input type="range" min={0} max={100} step={5} value={g.progress} onChange={(e) => setGoalProgress(g.id, +e.target.value)} style={{ width: "100%" }} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+
+          <section className="wd-ep-card">
+            <div className="wd-ep-card-head">
+              <CheckSquare size={16} />
+              <h2>Onboarding</h2>
+              <span className="wd-ep-muted">{ws ? `${ws.onboardingTasks.filter((t) => t.done).length}/${ws.onboardingTasks.length}` : ""}</span>
+            </div>
+            {!ws || ws.onboardingTasks.length === 0 ? (
+              <p className="wd-ep-empty">No onboarding tasks.</p>
+            ) : (
+              <ul className="wd-ep-tasks">
+                {ws.onboardingTasks.map((t) => (
+                  <li key={t.id} className="wd-ep-task" style={{ cursor: "pointer" }} onClick={() => toggleOnboarding(t.id, !t.done)}>
+                    <div className="wd-ep-task-main">
+                      {t.done ? <CheckSquare size={16} /> : <Square size={16} />}
+                      <strong style={{ textDecoration: t.done ? "line-through" : "none", opacity: t.done ? 0.6 : 1 }}>{t.label}</strong>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </div>
+
+        {ws && ws.payslips.length > 0 && (
+          <div className="wd-ep-grid">
+            <section className="wd-ep-card" style={{ gridColumn: "1 / -1" }}>
+              <div className="wd-ep-card-head">
+                <Receipt size={16} />
+                <h2>My Payslips</h2>
+                <span className="wd-ep-muted">{ws.payslips.length}</span>
+              </div>
+              <div className="wd-ep-tablewrap">
+                <table className="wd-ep-table">
+                  <thead><tr><th>Month</th><th>Gross</th><th>Deductions</th><th>Net</th></tr></thead>
+                  <tbody>
+                    {ws.payslips.map((s) => (
+                      <tr key={s.id}><td>{s.month}</td><td>{inr(s.gross, s.currency)}</td><td>−{inr(s.deductions, s.currency)}</td><td><strong>{inr(s.net, s.currency)}</strong></td></tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        )}
 
         <p className="wd-ep-foot">
           <MapPin size={12} /> While punched in, your location is shared with the company admin for attendance verification.
