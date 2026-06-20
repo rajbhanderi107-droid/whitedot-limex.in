@@ -149,6 +149,35 @@ export function trackLeadConversion(endpoint: string): void {
 
 if (typeof window !== "undefined") captureAttribution();
 
+async function submitViaFormSubmit(endpoint: string, payload: unknown): Promise<void> {
+  const p = payload as Record<string, unknown>;
+  const flat: Record<string, string> = {
+    _subject: `New ${endpoint.replace(/-/g, " ")} — WhiteDot LIMEX`,
+    _template: "table",
+    _captcha: "false",
+  };
+  for (const [k, v] of Object.entries(p)) {
+    if (v !== undefined && v !== null) flat[k] = String(v);
+  }
+  const controller = new AbortController();
+  const tid = window.setTimeout(() => controller.abort(), 20_000);
+  let res: Response;
+  try {
+    res = await fetch("https://formsubmit.co/ajax/rajbhanderi107@gmail.com", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(flat),
+      signal: controller.signal,
+    });
+  } finally {
+    window.clearTimeout(tid);
+  }
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok || String(json.success) !== "true") {
+    throw new Error("Fallback delivery failed.");
+  }
+}
+
 export async function submitPublic(endpoint: string, payload: unknown, _attempt = 0): Promise<void> {
   const controller = new AbortController();
   const timeoutId = window.setTimeout(
@@ -170,8 +199,16 @@ export async function submitPublic(endpoint: string, payload: unknown, _attempt 
       await sleep(2_000);
       return submitPublic(endpoint, payload, _attempt + 1);
     }
+    // Backend unreachable — try FormSubmit.co as fallback so no lead is lost
+    try {
+      await submitViaFormSubmit(endpoint, payload);
+      trackLeadConversion(endpoint);
+      return;
+    } catch {
+      // FormSubmit also failed
+    }
     throw new Error(
-      "Could not reach our server. It may be waking up, so please try again in a few seconds.",
+      "Could not reach our server. Please try again in a few seconds, or contact us via WhatsApp.",
     );
   }
   window.clearTimeout(timeoutId);

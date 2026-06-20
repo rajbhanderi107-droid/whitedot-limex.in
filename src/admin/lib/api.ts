@@ -133,6 +133,20 @@ export function warmUpBackend(): void {
     .catch(() => {});
 }
 
+/** One-shot health check. Returns true if backend responds 2xx. */
+export async function checkBackendHealth(): Promise<boolean> {
+  try {
+    const controller = new AbortController();
+    const tid = window.setTimeout(() => controller.abort(), 10_000);
+    const res = await fetch(`${API_BASE}/api/health`, { signal: controller.signal });
+    window.clearTimeout(tid);
+    if (res.ok) backendWarm = true;
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 /* ── GET cache ──
  * Short-TTL in-memory cache so switching between portal modules renders
  * instantly from the last response instead of refetching every mount.
