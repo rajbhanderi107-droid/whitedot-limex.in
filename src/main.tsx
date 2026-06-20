@@ -46,7 +46,7 @@ const PREVIEW_STORAGE_KEY = "wd_public_preview";
 const PUBLIC_LOADING_SETTING_KEY = "public_loading_enabled";
 const API_BASE =
   import.meta.env.VITE_API_URL ||
-  (import.meta.env.DEV ? "http://localhost:4000" : "https://whitedot-limex-backend.onrender.com");
+  (import.meta.env.DEV ? "http://localhost:4000" : "https://api.whitedotindia.in");
 
 if (isAdminHost && !window.location.hash.startsWith("#/admin")) {
   window.location.hash = "#/admin/login";

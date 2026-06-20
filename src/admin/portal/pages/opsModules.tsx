@@ -213,7 +213,7 @@ export function BackupPage() {
     setExporting(true);
     setErr(null);
     try {
-      const base = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "http://localhost:4000" : "https://whitedot-limex-backend.onrender.com");
+      const base = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "http://localhost:4000" : "https://api.whitedotindia.in");
       const res = await fetch(`${base}/api/portal/backup/export`, { headers: { Authorization: `Bearer ${getToken() ?? ""}` } });
       if (!res.ok) throw new Error(`Export failed (${res.status})${res.status === 403 ? " — Super Admin only" : ""}.`);
       const blob = await res.blob();

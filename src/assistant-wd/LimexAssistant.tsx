@@ -11,7 +11,7 @@ import { warmPublicBackend } from "../cinematic/publicApi";
 
 const API_BASE =
   import.meta.env.VITE_API_URL ||
-  (import.meta.env.DEV ? "http://localhost:4000" : "https://whitedot-limex-backend.onrender.com");
+  (import.meta.env.DEV ? "http://localhost:4000" : "https://api.whitedotindia.in");
 
 interface Msg {
   role: "user" | "assistant";
