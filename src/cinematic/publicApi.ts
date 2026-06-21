@@ -1,6 +1,8 @@
 const API_BASE =
   import.meta.env.VITE_API_URL ||
-  (import.meta.env.DEV ? "http://localhost:4000" : "https://api.whitedotindia.in");
+  (import.meta.env.DEV
+    ? "http://localhost:54321/functions/v1/backend"
+    : "https://yrsqtsejbvjwzegtkmkr.supabase.co/functions/v1/backend");
 
 declare global {
   interface Window {
@@ -10,23 +12,9 @@ declare global {
   }
 }
 
-const COLD_TIMEOUT_MS = 90_000;   // 90s — Render free tier can take 60-75s cold
-const WARM_TIMEOUT_MS = 15_000;
-let backendWarm = false;
-
+const TIMEOUT_MS = 30_000;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-export function warmPublicBackend(): void {
-  fetch(`${API_BASE}/api/health`)
-    .then(() => { backendWarm = true; })
-    .catch(() => {});
-}
-
-// Keep backend warm: ping every 9 minutes so Render free tier never sleeps
-// while someone has the tab open (Render sleeps after 15 min idle).
-if (typeof window !== 'undefined') {
-  setInterval(warmPublicBackend, 9 * 60 * 1000);
-}
+export function warmPublicBackend(): void {} // no-op: edge functions have no cold start
 
 export interface LeadAttribution {
   landingPage: string;
@@ -185,10 +173,7 @@ async function submitViaFormSubmit(endpoint: string, payload: unknown): Promise<
 
 export async function submitPublic(endpoint: string, payload: unknown, _attempt = 0): Promise<void> {
   const controller = new AbortController();
-  const timeoutId = window.setTimeout(
-    () => controller.abort(),
-    backendWarm ? WARM_TIMEOUT_MS : COLD_TIMEOUT_MS,
-  );
+  const timeoutId = window.setTimeout(() => controller.abort(), TIMEOUT_MS);
 
   let res: Response;
   try {
@@ -200,25 +185,18 @@ export async function submitPublic(endpoint: string, payload: unknown, _attempt 
     });
   } catch {
     window.clearTimeout(timeoutId);
-    if (_attempt < 2) {
-      // Render free tier cold start can take 60-75s — retry with longer gap
-      await sleep(_attempt === 0 ? 5_000 : 10_000);
+    if (_attempt < 1) {
+      await sleep(2_000);
       return submitPublic(endpoint, payload, _attempt + 1);
     }
-    // Backend unreachable after retries — try FormSubmit.co fallback
     try {
       await submitViaFormSubmit(endpoint, payload);
       trackLeadConversion(endpoint);
       return;
-    } catch {
-      // FormSubmit also failed
-    }
-    throw new Error(
-      "Server is still waking up (free hosting takes ~60s). Please wait a moment and try again.",
-    );
+    } catch { /* FormSubmit also failed */ }
+    throw new Error("Could not reach our server. Please try again or contact us directly.");
   }
   window.clearTimeout(timeoutId);
-  backendWarm = true;
 
   const json = await res.json().catch(() => ({}));
   if (!res.ok || !json.success) {

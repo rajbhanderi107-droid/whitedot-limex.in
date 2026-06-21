@@ -1,0 +1,5 @@
+[project]
+project_id = "yrsqtsejbvjwzegtkmkr"
+
+[functions.backend]
+verify_jwt = false

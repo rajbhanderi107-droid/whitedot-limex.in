@@ -1,12 +1,10 @@
 const API_BASE =
   import.meta.env.VITE_API_URL ||
-  (import.meta.env.DEV ? "http://localhost:4000" : "https://api.whitedotindia.in");
+  (import.meta.env.DEV
+    ? "http://localhost:54321/functions/v1/backend"
+    : "https://yrsqtsejbvjwzegtkmkr.supabase.co/functions/v1/backend");
 
-/** First request gets a generous timeout (cold start).
- *  Subsequent requests use a shorter timeout. */
-const COLD_TIMEOUT_MS = 90_000;  // 90s — Render free tier cold start takes 60-75s
-const WARM_TIMEOUT_MS = 10_000;  // 10s once backend is warm
-let backendWarm = false;
+const TIMEOUT_MS = 30_000;
 
 const TOKEN_KEY = "wd_admin_token";
 
@@ -48,9 +46,8 @@ function isRetryable(options: RequestInit): boolean {
 }
 
 async function request<T>(path: string, options: RequestInit = {}, _retryCount = 0): Promise<ApiResponse<T>> {
-  const timeout = backendWarm ? WARM_TIMEOUT_MS : COLD_TIMEOUT_MS;
   const controller = new AbortController();
-  const timeoutId = window.setTimeout(() => controller.abort(), timeout);
+  const timeoutId = window.setTimeout(() => controller.abort(), TIMEOUT_MS);
 
   // Build headers — include Authorization if we have a token
   const headers: Record<string, string> = {
@@ -73,33 +70,27 @@ async function request<T>(path: string, options: RequestInit = {}, _retryCount =
     window.clearTimeout(timeoutId);
     const timedOut = err instanceof DOMException && err.name === "AbortError";
 
-    // Auto-retry on timeout or network failure (backend waking up / mid-deploy)
     if (isRetryable(options) && _retryCount < MAX_RETRIES) {
-      if (!timedOut) await sleep(RETRY_DELAY_MS);
+      await sleep(RETRY_DELAY_MS);
       return request<T>(path, options, _retryCount + 1);
     }
 
     throw new ApiError(
       timedOut ? "REQUEST_TIMEOUT" : "BACKEND_UNREACHABLE",
       timedOut
-        ? "Backend is waking up. Please wait a moment and try again."
-        : "Backend is not reachable. Please try again in a few seconds.",
+        ? "Request timed out. Please try again."
+        : "Could not reach our server. Please try again.",
       0,
     );
   }
 
   window.clearTimeout(timeoutId);
-
-  // Backend responded — mark as warm for faster timeouts going forward
-  backendWarm = true;
-
   const json = await res.json().catch(() => ({
     success: false,
     error: { code: "PARSE_ERROR", message: "Invalid server response" },
   }));
 
   if (!res.ok || !json.success) {
-    // 502/503/504 = Render proxy errors during deploy/restart — retry
     if (res.status >= 502 && isRetryable(options) && _retryCount < MAX_RETRIES) {
       await sleep(RETRY_DELAY_MS);
       return request<T>(path, options, _retryCount + 1);
@@ -124,18 +115,7 @@ async function request<T>(path: string, options: RequestInit = {}, _retryCount =
   return json;
 }
 
-/** Fire-and-forget warm-up ping — call on admin load so
- *  the backend starts booting before the user even logs in. */
-export function warmUpBackend(): void {
-  fetch(`${API_BASE}/api/health`, { method: "GET" })
-    .then(() => { backendWarm = true; })
-    .catch(() => {});
-}
-
-// Keep backend alive every 9 min while admin tab is open
-if (typeof window !== "undefined") {
-  setInterval(warmUpBackend, 9 * 60 * 1000);
-}
+export function warmUpBackend(): void {} // no-op: edge functions have no cold start
 
 /** One-shot health check. Returns true if backend responds 2xx. */
 export async function checkBackendHealth(): Promise<boolean> {
@@ -144,7 +124,6 @@ export async function checkBackendHealth(): Promise<boolean> {
     const tid = window.setTimeout(() => controller.abort(), 10_000);
     const res = await fetch(`${API_BASE}/api/health`, { signal: controller.signal });
     window.clearTimeout(tid);
-    if (res.ok) backendWarm = true;
     return res.ok;
   } catch {
     return false;
