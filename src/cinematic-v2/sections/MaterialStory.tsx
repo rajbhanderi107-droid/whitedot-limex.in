@@ -190,7 +190,7 @@ export default function MaterialStory() {
           let playing = false;
           let autoCompleted = false;
 
-          // Detect manual scroll to pause auto-play
+          // Detect manual wheel/touch scroll to pause auto-play briefly
           let userScrollTimer: ReturnType<typeof setTimeout> | null = null;
           let userScrolling = false;
           const onUserScroll = () => {
@@ -218,9 +218,10 @@ export default function MaterialStory() {
 
           function scheduleNext() {
             autoTimer = setTimeout(() => {
-              if (cancelled || !playing || userScrolling) {
-                // reschedule once if user is mid-scroll
-                if (playing && userScrolling) scheduleNext();
+              if (cancelled || !playing) return;
+              if (userScrolling) {
+                // User is mid-scroll — wait for them to stop then retry
+                scheduleNext();
                 return;
               }
               autoIdx++;
@@ -242,29 +243,34 @@ export default function MaterialStory() {
             }, SLIDE_MS);
           }
 
-          // Observe the FIRST scene (1 vh tall, reliable threshold)
+          // ── CRITICAL FIX: observe `root` (the whole section), NOT scenes[0].
+          //    GSAP's autoAlpha sets visibility:hidden on scenes[0] after crossfade,
+          //    which breaks IntersectionObserver (hidden elements = not intersecting),
+          //    causing the old code to reset auto-play after the very first advance.
           const autoIO = new IntersectionObserver(
             (entries) => {
               const e = entries[0];
               if (e.isIntersecting && !playing && !autoCompleted) {
                 playing = true;
                 autoIdx = 0;
-                // Snap to top of section first, then begin
+                // Snap to top of section first, then begin cycling
                 scrollToScene(0, () => {
                   if (!cancelled && playing) scheduleNext();
                 });
               }
-              if (!e.isIntersecting && playing) {
-                // User scrolled back above scene 0 — reset so it can replay
-                playing = false;
+              if (!e.isIntersecting) {
+                if (playing) {
+                  playing = false;
+                  if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+                  gsap.killTweensOf(window);
+                }
+                // Reset so section can auto-play again on next visit
                 autoCompleted = false;
-                if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
-                gsap.killTweensOf(window);
               }
             },
-            { threshold: 0.5 },
+            { threshold: 0.1 },
           );
-          autoIO.observe(scenes[0]);
+          autoIO.observe(root!);
           // ── END AUTO-PLAY ──────────────────────────────────────────────
 
           cleanup = () => {
@@ -286,7 +292,7 @@ export default function MaterialStory() {
       };
     }
 
-    // ---- Fallback: IO play/pause, native scroll ----
+    // ---- Fallback: IO play/pause + auto-advance, native scroll ----
     if (typeof IntersectionObserver === 'undefined') {
       setActive(0);
       return;
@@ -304,10 +310,44 @@ export default function MaterialStory() {
       },
       { threshold: 0.55 }
     );
-
     scenes.forEach((el) => playIO.observe(el));
 
-    cleanup = () => playIO.disconnect();
+    // Auto-advance: scroll to next scene every 5 s when section is in view
+    const FALLBACK_MS = 5000;
+    let fbTimer: ReturnType<typeof setInterval> | null = null;
+    let fbIdx = 0;
+
+    function startFallbackAuto() {
+      fbIdx = 0;
+      fbTimer = setInterval(() => {
+        fbIdx = (fbIdx + 1) % N;
+        const el = scenes[fbIdx];
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        arm(fbIdx);
+      }, FALLBACK_MS);
+    }
+
+    const fbIO = new IntersectionObserver(
+      (entries) => {
+        const e = entries[0];
+        if (e.isIntersecting && !fbTimer) startFallbackAuto();
+        if (!e.isIntersecting && fbTimer) {
+          clearInterval(fbTimer);
+          fbTimer = null;
+          fbIdx = 0;
+        }
+      },
+      { threshold: 0.1 }
+    );
+    fbIO.observe(root!);
+
+    cleanup = () => {
+      playIO.disconnect();
+      fbIO.disconnect();
+      if (fbTimer) clearInterval(fbTimer);
+    };
     return () => cleanup();
   }, [heavy]);
 
