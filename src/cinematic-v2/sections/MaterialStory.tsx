@@ -107,10 +107,13 @@ export default function MaterialStory() {
       // ---- Pinned, scrubbed crossfade via GSAP ScrollTrigger ----
       root.classList.add('v2story--pinned');
 
-      Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(
-        ([{ gsap }, { ScrollTrigger }]) => {
+      Promise.all([
+        import('gsap'),
+        import('gsap/ScrollTrigger'),
+        import('gsap/ScrollToPlugin'),
+      ]).then(([{ gsap }, { ScrollTrigger }, { ScrollToPlugin }]) => {
           if (cancelled) return;
-          gsap.registerPlugin(ScrollTrigger);
+          gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
           const ctx = gsap.context(() => {
             /* Seamless dissolve: scenes stack by z-index and only the INCOMING
@@ -180,7 +183,99 @@ export default function MaterialStory() {
             ScrollTrigger.refresh();
           }, root);
 
-          cleanup = () => ctx.revert();
+          // ── AUTO-PLAY: advance slides every 4 s when section enters view ──
+          const SLIDE_MS = 4000;
+          let autoTimer: ReturnType<typeof setTimeout> | null = null;
+          let autoIdx = 0;
+          let playing = false;
+          let autoCompleted = false;
+
+          // Detect manual scroll to pause auto-play
+          let userScrollTimer: ReturnType<typeof setTimeout> | null = null;
+          let userScrolling = false;
+          const onUserScroll = () => {
+            userScrolling = true;
+            if (userScrollTimer) clearTimeout(userScrollTimer);
+            userScrollTimer = setTimeout(() => { userScrolling = false; }, 1200);
+          };
+          window.addEventListener('wheel', onUserScroll, { passive: true });
+          window.addEventListener('touchmove', onUserScroll, { passive: true });
+
+          function getSectionTop(): number {
+            return root!.getBoundingClientRect().top + window.scrollY;
+          }
+
+          function scrollToScene(idx: number, onDone?: () => void) {
+            if (cancelled) return;
+            const targetY = getSectionTop() + idx * window.innerHeight;
+            gsap.to(window, {
+              scrollTo: { y: targetY, autoKill: false },
+              duration: 0.85,
+              ease: 'power2.inOut',
+              onComplete: onDone,
+            });
+          }
+
+          function scheduleNext() {
+            autoTimer = setTimeout(() => {
+              if (cancelled || !playing || userScrolling) {
+                // reschedule once if user is mid-scroll
+                if (playing && userScrolling) scheduleNext();
+                return;
+              }
+              autoIdx++;
+              if (autoIdx >= N) {
+                // All 8 scenes shown — scroll past the section
+                const pastY = getSectionTop() + N * window.innerHeight;
+                gsap.to(window, {
+                  scrollTo: { y: pastY, autoKill: false },
+                  duration: 1.1,
+                  ease: 'power2.inOut',
+                });
+                playing = false;
+                autoCompleted = true;
+                return;
+              }
+              scrollToScene(autoIdx, () => {
+                if (playing && !cancelled) scheduleNext();
+              });
+            }, SLIDE_MS);
+          }
+
+          // Observe the FIRST scene (1 vh tall, reliable threshold)
+          const autoIO = new IntersectionObserver(
+            (entries) => {
+              const e = entries[0];
+              if (e.isIntersecting && !playing && !autoCompleted) {
+                playing = true;
+                autoIdx = 0;
+                // Snap to top of section first, then begin
+                scrollToScene(0, () => {
+                  if (!cancelled && playing) scheduleNext();
+                });
+              }
+              if (!e.isIntersecting && playing) {
+                // User scrolled back above scene 0 — reset so it can replay
+                playing = false;
+                autoCompleted = false;
+                if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+                gsap.killTweensOf(window);
+              }
+            },
+            { threshold: 0.5 },
+          );
+          autoIO.observe(scenes[0]);
+          // ── END AUTO-PLAY ──────────────────────────────────────────────
+
+          cleanup = () => {
+            ctx.revert();
+            autoIO.disconnect();
+            if (autoTimer) clearTimeout(autoTimer);
+            if (userScrollTimer) clearTimeout(userScrollTimer);
+            window.removeEventListener('wheel', onUserScroll);
+            window.removeEventListener('touchmove', onUserScroll);
+            gsap.killTweensOf(window);
+          };
         }
       );
 

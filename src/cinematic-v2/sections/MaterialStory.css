@@ -109,6 +109,12 @@
 .v2story__dot.is-active {
   background: var(--v2-sky);
   transform: scale(1.6);
+  animation: v2story-dot-timer 4s linear 1 forwards;
+}
+
+@keyframes v2story-dot-timer {
+  from { box-shadow: 0 0 0 1px rgba(0,0,0,0.18), 0 0 0 2px rgba(255,255,255,0); }
+  to   { box-shadow: 0 0 0 1px rgba(0,0,0,0.18), 0 0 0 6px rgba(255,255,255,0.32); }
 }
 
 /* ------------------------------------------------------------------ */
