@@ -104,12 +104,11 @@
   object-fit: cover;
   object-position: 64% center;
   opacity: 1;
-  /* No base magnification — a true-4K source must render 1:1 crisp, not blown up. */
-  transform: scale(1.008) translateZ(0);
-  filter: saturate(1.06) contrast(1.05) brightness(1);
+  /* GPU promotion only — no scale, no filter (both degrade 4K sharpness via resampling) */
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  image-rendering: -webkit-optimize-contrast;
 }
 
 /* Slow Ken Burns on the hero media — premium desktop only.
@@ -121,8 +120,8 @@
   }
 }
 @keyframes v2h-kenburns {
-  from { transform: scale(1.008) translate3d(0, 0, 0); }
-  to   { transform: scale(1.04) translate3d(-0.6%, -0.4%, 0); }
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(-0.6%, -0.4%, 0) scale(1.032); }
 }
 
 .v2h-environment::before {
@@ -780,7 +779,7 @@
   }
   .v2h-higgsfield-video {
     object-position: 62% center;
-    transform: scale(1.06);
+    transform: translate3d(0, 0, 0);
   }
   .v2h-environment-scrim {
     background:
