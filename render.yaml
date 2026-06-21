@@ -87,16 +87,7 @@ services:
       - key: GSC_QUOTA_PROJECT
         value: "fresh-strategy-497720-q7"
 
+      # Set this in the Render dashboard to the Supabase Session Pooler URL:
+      # postgresql://postgres.yrsqtsejbvjwzegtkmkr:[PASSWORD]@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres
       - key: DATABASE_URL
-        fromDatabase:
-          name: whitedot-limex-postgres
-          property: connectionString
-
-databases:
-  - name: whitedot-limex-postgres
-    databaseName: whitedot_limex
-    user: whitedot_limex_user
-    plan: free
-    region: singapore
-    postgresMajorVersion: "15"
-    ipAllowList: []
+        sync: false
