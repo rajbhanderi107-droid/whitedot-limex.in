@@ -183,104 +183,63 @@ export default function MaterialStory() {
             ScrollTrigger.refresh();
           }, root);
 
-          // ── AUTO-PLAY: advance slides every 4 s when section enters view ──
-          const SLIDE_MS = 4000;
-          let autoTimer: ReturnType<typeof setTimeout> | null = null;
+          // ── AUTO-PLAY: setInterval-based, no onComplete chaining ──────
+          const SLIDE_MS = 4500;
+          let autoInterval: ReturnType<typeof setInterval> | null = null;
           let autoIdx = 0;
-          let playing = false;
-          let autoCompleted = false;
-
-          // Detect manual wheel/touch scroll to pause auto-play briefly
-          let userScrollTimer: ReturnType<typeof setTimeout> | null = null;
-          let userScrolling = false;
-          const onUserScroll = () => {
-            userScrolling = true;
-            if (userScrollTimer) clearTimeout(userScrollTimer);
-            userScrollTimer = setTimeout(() => { userScrolling = false; }, 1200);
-          };
-          window.addEventListener('wheel', onUserScroll, { passive: true });
-          window.addEventListener('touchmove', onUserScroll, { passive: true });
 
           function getSectionTop(): number {
             return root!.getBoundingClientRect().top + window.scrollY;
           }
 
-          function scrollToScene(idx: number, onDone?: () => void) {
+          function jumpToScene(idx: number) {
             if (cancelled) return;
-            const targetY = getSectionTop() + idx * window.innerHeight;
+            gsap.killTweensOf(window);
             gsap.to(window, {
-              scrollTo: { y: targetY, autoKill: false },
-              duration: 0.85,
+              scrollTo: { y: getSectionTop() + idx * window.innerHeight, autoKill: false },
+              duration: 0.9,
               ease: 'power2.inOut',
-              onComplete: onDone,
             });
           }
 
-          function scheduleNext() {
-            autoTimer = setTimeout(() => {
-              if (cancelled || !playing) return;
-              if (userScrolling) {
-                // User is mid-scroll — wait for them to stop then retry
-                scheduleNext();
-                return;
-              }
-              autoIdx++;
-              if (autoIdx >= N) {
-                // All 8 scenes shown — scroll past the section
-                const pastY = getSectionTop() + N * window.innerHeight;
+          function startAutoPlay() {
+            if (autoInterval) return;
+            autoIdx = 0;
+            jumpToScene(0);
+            autoInterval = setInterval(() => {
+              if (cancelled) { stopAutoPlay(); return; }
+              autoIdx = (autoIdx + 1) % N;
+              if (autoIdx === 0) {
+                // Completed full cycle — scroll past section then stop
+                stopAutoPlay();
                 gsap.to(window, {
-                  scrollTo: { y: pastY, autoKill: false },
+                  scrollTo: { y: getSectionTop() + N * window.innerHeight, autoKill: false },
                   duration: 1.1,
                   ease: 'power2.inOut',
                 });
-                playing = false;
-                autoCompleted = true;
                 return;
               }
-              scrollToScene(autoIdx, () => {
-                if (playing && !cancelled) scheduleNext();
-              });
+              jumpToScene(autoIdx);
             }, SLIDE_MS);
           }
 
-          // ── CRITICAL FIX: observe `root` (the whole section), NOT scenes[0].
-          //    GSAP's autoAlpha sets visibility:hidden on scenes[0] after crossfade,
-          //    which breaks IntersectionObserver (hidden elements = not intersecting),
-          //    causing the old code to reset auto-play after the very first advance.
-          const autoIO = new IntersectionObserver(
-            (entries) => {
-              const e = entries[0];
-              if (e.isIntersecting && !playing && !autoCompleted) {
-                playing = true;
-                autoIdx = 0;
-                // Snap to top of section first, then begin cycling
-                scrollToScene(0, () => {
-                  if (!cancelled && playing) scheduleNext();
-                });
-              }
-              if (!e.isIntersecting) {
-                if (playing) {
-                  playing = false;
-                  if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
-                  gsap.killTweensOf(window);
-                }
-                // Reset so section can auto-play again on next visit
-                autoCompleted = false;
-              }
-            },
-            { threshold: 0.1 },
-          );
+          function stopAutoPlay() {
+            if (autoInterval) { clearInterval(autoInterval); autoInterval = null; }
+            gsap.killTweensOf(window);
+          }
+
+          // Watch the section root (never hidden by GSAP)
+          const autoIO = new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) startAutoPlay();
+            else stopAutoPlay();
+          }, { threshold: 0.15 });
           autoIO.observe(root!);
           // ── END AUTO-PLAY ──────────────────────────────────────────────
 
           cleanup = () => {
             ctx.revert();
             autoIO.disconnect();
-            if (autoTimer) clearTimeout(autoTimer);
-            if (userScrollTimer) clearTimeout(userScrollTimer);
-            window.removeEventListener('wheel', onUserScroll);
-            window.removeEventListener('touchmove', onUserScroll);
-            gsap.killTweensOf(window);
+            stopAutoPlay();
           };
         }
       );
