@@ -4,7 +4,7 @@ const API_BASE =
 
 /** First request gets a generous timeout (cold start).
  *  Subsequent requests use a shorter timeout. */
-const COLD_TIMEOUT_MS = 45_000;  // 45s for cold start
+const COLD_TIMEOUT_MS = 90_000;  // 90s — Render free tier cold start takes 60-75s
 const WARM_TIMEOUT_MS = 10_000;  // 10s once backend is warm
 let backendWarm = false;
 
@@ -127,10 +127,14 @@ async function request<T>(path: string, options: RequestInit = {}, _retryCount =
 /** Fire-and-forget warm-up ping — call on admin load so
  *  the backend starts booting before the user even logs in. */
 export function warmUpBackend(): void {
-  if (backendWarm) return;
   fetch(`${API_BASE}/api/health`, { method: "GET" })
     .then(() => { backendWarm = true; })
     .catch(() => {});
+}
+
+// Keep backend alive every 9 min while admin tab is open
+if (typeof window !== "undefined") {
+  setInterval(warmUpBackend, 9 * 60 * 1000);
 }
 
 /** One-shot health check. Returns true if backend responds 2xx. */

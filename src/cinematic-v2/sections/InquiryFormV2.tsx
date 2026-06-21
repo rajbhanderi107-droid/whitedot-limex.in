@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { FormEvent } from 'react';
-import { submitPublic, withAttribution } from '../../cinematic/publicApi';
+import { submitPublic, withAttribution, warmPublicBackend } from '../../cinematic/publicApi';
 import type { SubmitStatus } from '../../cinematic/publicApi';
 import './InquiryFormV2.css';
 
@@ -18,6 +18,11 @@ export function InquiryFormV2() {
   });
   const [status, setStatus] = useState<SubmitStatus>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  const [slowWarn, setSlowWarn] = useState(false);
+  const slowTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Ping backend when form first mounts so cold start begins early
+  useEffect(() => { warmPublicBackend(); }, []);
 
   const set = (key: string) => (e: { target: { value: string } }) =>
     setForm((prev) => ({ ...prev, [key]: e.target.value }));
@@ -26,6 +31,9 @@ export function InquiryFormV2() {
     e.preventDefault();
     setStatus('sending');
     setErrorMsg('');
+    setSlowWarn(false);
+    // After 12s still sending → show "server waking up" hint
+    slowTimer.current = setTimeout(() => setSlowWarn(true), 12_000);
     if (form._hp) { setStatus('sent'); return; }
     try {
       const { _hp, ...payload } = form;
@@ -45,6 +53,9 @@ export function InquiryFormV2() {
     } catch (err: unknown) {
       setStatus('error');
       setErrorMsg(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    } finally {
+      if (slowTimer.current) { clearTimeout(slowTimer.current); slowTimer.current = null; }
+      setSlowWarn(false);
     }
   };
 
@@ -195,8 +206,13 @@ export function InquiryFormV2() {
         style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, width: 0 }}
       />
       {status === 'error' && <p className="v2iq-error">{errorMsg}</p>}
+      {slowWarn && (
+        <p className="v2iq-error" style={{ color: 'var(--v2-accent)' }}>
+          Server is waking up — please keep this tab open, it takes ~60s on first request.
+        </p>
+      )}
       <button type="submit" className="v2iq-submit" disabled={status === 'sending'}>
-        {status === 'sending' ? 'Submitting…' : 'Submit Inquiry'}
+        {status === 'sending' ? 'Sending… (server waking up, please wait)' : 'Submit Inquiry'}
       </button>
     </form>
   );

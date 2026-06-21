@@ -180,7 +180,7 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
           </button>
           {anyLoading && (
             <p style={{ textAlign: "center", color: "var(--adm-muted)", fontSize: ".75rem", marginTop: ".6rem" }}>
-              First request may take a few seconds while the server wakes up.
+              Server is waking up (free hosting takes up to 60s on first request). Please wait…
             </p>
           )}
         </form>

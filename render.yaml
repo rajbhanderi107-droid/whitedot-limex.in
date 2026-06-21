@@ -7,8 +7,8 @@ services:
     branch: main
     autoDeploy: true
     healthCheckPath: /health
-    buildCommand: cd server && NPM_CONFIG_PRODUCTION=false npm ci && npm run prisma:generate && npm run build
-    startCommand: cd server && npx prisma db push && npm run seed && npm run start
+    buildCommand: cd server && NPM_CONFIG_PRODUCTION=false npm ci && npm run prisma:generate && npm run build && npx prisma db push && npm run seed
+    startCommand: cd server && npm run start
     envVars:
       - key: NODE_ENV
         value: production

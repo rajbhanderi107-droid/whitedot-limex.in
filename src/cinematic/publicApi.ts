@@ -10,17 +10,22 @@ declare global {
   }
 }
 
-const COLD_TIMEOUT_MS = 50_000;
+const COLD_TIMEOUT_MS = 90_000;   // 90s — Render free tier can take 60-75s cold
 const WARM_TIMEOUT_MS = 15_000;
 let backendWarm = false;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export function warmPublicBackend(): void {
-  if (backendWarm) return;
   fetch(`${API_BASE}/api/health`)
     .then(() => { backendWarm = true; })
     .catch(() => {});
+}
+
+// Keep backend warm: ping every 9 minutes so Render free tier never sleeps
+// while someone has the tab open (Render sleeps after 15 min idle).
+if (typeof window !== 'undefined') {
+  setInterval(warmPublicBackend, 9 * 60 * 1000);
 }
 
 export interface LeadAttribution {
@@ -195,11 +200,12 @@ export async function submitPublic(endpoint: string, payload: unknown, _attempt 
     });
   } catch {
     window.clearTimeout(timeoutId);
-    if (_attempt < 1) {
-      await sleep(2_000);
+    if (_attempt < 2) {
+      // Render free tier cold start can take 60-75s — retry with longer gap
+      await sleep(_attempt === 0 ? 5_000 : 10_000);
       return submitPublic(endpoint, payload, _attempt + 1);
     }
-    // Backend unreachable — try FormSubmit.co as fallback so no lead is lost
+    // Backend unreachable after retries — try FormSubmit.co fallback
     try {
       await submitViaFormSubmit(endpoint, payload);
       trackLeadConversion(endpoint);
@@ -208,7 +214,7 @@ export async function submitPublic(endpoint: string, payload: unknown, _attempt 
       // FormSubmit also failed
     }
     throw new Error(
-      "Could not reach our server. Please try again in a few seconds, or contact us via WhatsApp.",
+      "Server is still waking up (free hosting takes ~60s). Please wait a moment and try again.",
     );
   }
   window.clearTimeout(timeoutId);
