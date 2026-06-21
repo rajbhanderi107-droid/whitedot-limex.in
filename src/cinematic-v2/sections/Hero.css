@@ -4,10 +4,7 @@
   min-height: 100svh;
   display: flex;
   align-items: center;
-  background:
-    radial-gradient(120% 92% at 72% 54%, rgba(93, 132, 76, 0.16), transparent 62%),
-    linear-gradient(180deg, rgba(8, 8, 8, 0.18), transparent 36%),
-    var(--v2-canvas);
+  background: var(--v2-canvas);
   overflow: hidden;
 }
 
@@ -91,9 +88,7 @@
   width: 100%;
   pointer-events: none;
   z-index: 0;
-  background:
-    radial-gradient(circle at 76% 52%, rgba(143, 191, 138, 0.16), transparent 48%),
-    var(--v2-canvas);
+  background: var(--v2-canvas);
   overflow: hidden;
 }
 
@@ -135,9 +130,7 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 78% 78% at 70% 57%, transparent 0%, transparent 58%, rgba(8, 8, 8, 0.2) 84%, rgba(8, 8, 8, 0.46) 100%),
-    radial-gradient(circle at 76% 48%, rgba(138, 196, 149, 0.12), transparent 32%),
-    radial-gradient(circle at 58% 70%, rgba(103, 190, 177, 0.08), transparent 34%);
+    radial-gradient(ellipse 78% 78% at 70% 57%, transparent 0%, transparent 62%, rgba(8, 8, 8, 0.08) 86%, rgba(8, 8, 8, 0.18) 100%);
   z-index: 1;
 }
 
@@ -147,8 +140,8 @@
   inset: -1px;
   z-index: 2;
   background:
-    linear-gradient(180deg, rgba(8, 8, 8, 0.62) 0%, rgba(8, 8, 8, 0.08) 22%, rgba(8, 8, 8, 0.04) 72%, rgba(8, 8, 8, 0.66) 100%),
-    linear-gradient(90deg, rgba(8, 8, 8, 0.52) 0%, rgba(8, 8, 8, 0.12) 32%, transparent 62%, rgba(8, 8, 8, 0.16) 100%);
+    linear-gradient(180deg, rgba(8, 8, 8, 0.28) 0%, rgba(8, 8, 8, 0.03) 22%, rgba(8, 8, 8, 0.02) 72%, rgba(8, 8, 8, 0.32) 100%),
+    linear-gradient(90deg, rgba(8, 8, 8, 0.22) 0%, rgba(8, 8, 8, 0.05) 32%, transparent 62%, rgba(8, 8, 8, 0.06) 100%);
 }
 
 .v2h-environment-scrim {
@@ -183,9 +176,8 @@
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(143, 191, 138, 0.18) 0%,
-    rgba(126, 197, 185, 0.08) 32%,
-    transparent 66%
+    rgba(143, 191, 138, 0.04) 0%,
+    transparent 60%
   );
   pointer-events: none;
   z-index: 0;
@@ -198,15 +190,7 @@
   right: 0;
   bottom: 0;
   height: 38%;
-  background: linear-gradient(
-    110deg,
-    transparent 0%,
-    rgba(121, 180, 133, 0.08) 42%,
-    rgba(121, 180, 133, 0.18) 48%,
-    rgba(121, 180, 133, 0.06) 58%,
-    transparent 100%
-  );
-  transform: skewY(-8deg);
+  background: transparent;
   pointer-events: none;
   z-index: 1;
 }
