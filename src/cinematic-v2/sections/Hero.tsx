@@ -1,9 +1,10 @@
 import './Hero.css';
 import React, { useRef } from 'react';
-import { useCountUp, useGrainField, useReveal } from '../motion';
+import { useCountUp, useGrainField, useReveal, useHeavyMotion } from '../motion';
 import { CONSULTATION_HASH, openConsultationForm } from '../consultationNavigation';
 import SupplyFlow from './SupplyFlow';
 import { useViewportVideo } from '../useViewportVideo';
+import { RotatingText } from './RotatingText';
 
 /** Splits a string into individually animatable character spans, grouped by word to prevent mid-word wrapping on mobile.
  *  globalStart = running char index so the stagger is continuous
@@ -45,6 +46,7 @@ const heroVideo1080 = `${import.meta.env.BASE_URL}assets/higgsfield/hero-1080-h2
 const heroPosterSrc = `${import.meta.env.BASE_URL}assets/higgsfield/hero-head-background-poster-4k.jpg`;
 
 export default function Hero() {
+  const heavyMotion = useHeavyMotion();
   const grain    = useGrainField<HTMLDivElement>({ count: 80, speed: 0.7 });
   const headline = useReveal<HTMLDivElement>({ threshold: 0.1 });
   const sub      = useReveal<HTMLParagraphElement>({ threshold: 0.1 });
@@ -96,8 +98,20 @@ export default function Hero() {
               <span className="v2h-line">
                 {chars(LINE1, 0)}
               </span>
-              <span className="v2h-line">
-                {chars(LINE2, OFF2)}
+              <span className="v2h-line v2h-rotating-wrapper-line">
+                {heavyMotion ? (
+                  <RotatingText
+                    texts={['Material', 'Technology', 'Innovation']}
+                    mainClassName="v2h-rotating-text"
+                    staggerDuration={0.015}
+                    staggerFrom="first"
+                    transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                    rotationInterval={2500}
+                    animatePresenceMode="wait"
+                  />
+                ) : (
+                  chars(LINE2, OFF2)
+                )}
               </span>
               <span className="v2h-headline-accent v2h-line">
                 {chars(LINE3, OFF3)}

@@ -284,6 +284,7 @@
   text-shadow:
     0 2px 8px rgba(0, 0, 0, 0.72),
     0 16px 42px rgba(0, 0, 0, 0.58);
+  perspective: 1000px;
 }
 
 .v2h-headline-accent {
@@ -313,30 +314,45 @@
   display: block;
   overflow: hidden;
   padding-bottom: 0.12em;
+  perspective: 1000px;
+  transform-style: preserve-3d;
 }
 
 /* Character span: inline-block so transforms apply */
 .v2h-char {
   display: inline-block;
+  transform-style: preserve-3d;
+}
+
+/* Rotating text additions from 21st-dev magic */
+.v2h-rotating-wrapper-line {
+  height: 1.12em;
+  position: relative;
+}
+.v2h-rotating-text {
+  display: inline-flex;
+  vertical-align: bottom;
+  position: relative;
+  height: 100%;
 }
 
 @keyframes v2h-char-rise {
   0% {
     opacity: 0;
-    transform: translateY(115%) scale(0.92);
-    filter: blur(10px);
+    transform: translateY(125%) rotateX(25deg) rotateY(8deg) scale(0.88);
+    filter: blur(8px);
   }
-  45% {
+  40% {
     opacity: 1;
-    filter: blur(2px);
+    filter: blur(1.5px);
   }
-  72% {
-    transform: translateY(-3%) scale(1.01);
+  70% {
+    transform: translateY(-4%) rotateX(-3deg) scale(1.02);
     filter: blur(0);
   }
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0) rotateX(0) rotateY(0) scale(1);
     filter: blur(0);
   }
 }
@@ -353,8 +369,8 @@
   /* Hidden state: each char sits below its line clip */
   [data-premium='on'] .v2h-headline .v2h-char {
     opacity: 0;
-    transform: translateY(115%) scale(0.92);
-    filter: blur(10px);
+    transform: translateY(125%) rotateX(25deg) rotateY(8deg) scale(0.88);
+    filter: blur(8px);
   }
 
   /* Triggered: chars animate in with 28 ms per-character stagger */

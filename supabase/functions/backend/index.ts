@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.ts';
 import publicRoutes from './routes/public.ts';
 import adminRoutes from './routes/admin.ts';
 import portalRoutes from './routes/portal.ts';
+import workforceRoutes from './routes/workforce.ts';
 
 const app = new Hono().basePath('/backend');
 
@@ -47,6 +48,7 @@ app.get('/', (c) => c.json({ service: 'White Dot LLP — LIMEX CRM API', status:
 app.route('/api/auth', authRoutes);
 app.route('/api/public', publicRoutes);
 app.route('/api', adminRoutes);
+app.route('/api', workforceRoutes);
 app.route('/api/portal', portalRoutes);
 
 app.notFound((c) => c.json({ success: false, error: { code: 'NOT_FOUND', message: 'API endpoint not found' } }, 404));
