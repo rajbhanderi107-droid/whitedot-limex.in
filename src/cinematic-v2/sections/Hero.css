@@ -108,21 +108,26 @@
 .v2h-higgsfield-video {
   object-fit: cover;
   object-position: 64% center;
-  opacity: 0.96;
-  transform: scale(1.035);
-  filter: saturate(1.08) contrast(1.04) brightness(0.94);
+  opacity: 1;
+  /* No base magnification — a true-4K source must render 1:1 crisp, not blown up. */
+  transform: scale(1.008) translateZ(0);
+  filter: saturate(1.06) contrast(1.05) brightness(1);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  image-rendering: -webkit-optimize-contrast;
 }
 
-/* Slow Ken Burns on the hero media — premium desktop only */
+/* Slow Ken Burns on the hero media — premium desktop only.
+   Gentle range (1.008 → 1.04) keeps the 4K frame sharp instead of upscaling it. */
 @media (prefers-reduced-motion: no-preference) and (min-width: 768px) {
   [data-premium='on'] .v2h-higgsfield-video {
-    animation: v2h-kenburns 38s var(--v2-ease-in-out) infinite alternate;
+    animation: v2h-kenburns 42s var(--v2-ease-in-out) infinite alternate;
     will-change: transform;
   }
 }
 @keyframes v2h-kenburns {
-  from { transform: scale(1.035) translate3d(0, 0, 0); }
-  to   { transform: scale(1.085) translate3d(-1%, -0.6%, 0); }
+  from { transform: scale(1.008) translate3d(0, 0, 0); }
+  to   { transform: scale(1.04) translate3d(-0.6%, -0.4%, 0); }
 }
 
 .v2h-environment::before {

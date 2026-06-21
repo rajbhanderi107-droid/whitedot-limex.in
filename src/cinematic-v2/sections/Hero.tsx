@@ -40,8 +40,9 @@ const LINE2 = 'Material';
 const LINE3 = 'to Replace Plastic · Invented by TBM, Japan';
 const OFF2  = LINE1.length;           // 11
 const OFF3  = OFF2 + LINE2.length;    // 19
-const heroVideoSrc = `${import.meta.env.BASE_URL}assets/higgsfield/hero-head-background-fast.mp4`;
-const heroPosterSrc = `${import.meta.env.BASE_URL}assets/higgsfield/hero-head-background-poster.jpg`;
+const heroVideo4k = `${import.meta.env.BASE_URL}assets/higgsfield/hero-head-background-4k.mp4`;
+const heroVideo1080 = `${import.meta.env.BASE_URL}assets/higgsfield/hero-1080-h264.mp4`;
+const heroPosterSrc = `${import.meta.env.BASE_URL}assets/higgsfield/hero-head-background-poster-4k.jpg`;
 
 export default function Hero() {
   const grain    = useGrainField<HTMLDivElement>({ count: 80, speed: 0.7 });
@@ -64,14 +65,17 @@ export default function Hero() {
         <video
           ref={videoRef}
           className="v2h-higgsfield-video"
-          src={heroVideoSrc}
           poster={heroPosterSrc}
           autoPlay
           loop
           muted
           playsInline
           preload="metadata"
-        />
+        >
+          {/* True-4K (3840×2160) on desktop; 1080p fallback on smaller/metered screens */}
+          <source src={heroVideo4k} type="video/mp4" media="(min-width: 1024px)" />
+          <source src={heroVideo1080} type="video/mp4" />
+        </video>
       </div>
       <span className="v2h-environment-scrim" aria-hidden="true" />
 
