@@ -15,6 +15,7 @@ import * as users from "../controllers/user.controller.js";
 import * as notifications from "../controllers/notification.controller.js";
 import * as activityLog from "../controllers/activityLog.controller.js";
 import * as google from "../controllers/google.controller.js";
+import * as workforce from "../controllers/workforce.controller.js";
 import {
   updateInquirySchema,
   updateQuoteRequestSchema,
@@ -108,4 +109,43 @@ router.get("/activity-log", requireRole("SUPER_ADMIN", "ADMIN"), asyncHandler(ac
 router.delete("/activity-log/:id", requireRole("SUPER_ADMIN"), asyncHandler(activityLog.deleteActivityLog));
 router.delete("/activity-log", requireRole("SUPER_ADMIN"), asyncHandler(activityLog.deleteAllActivityLogs));
 
+// ─── Workforce Management ────────────────────────
+router.get("/employees", asyncHandler(workforce.listEmployees));
+router.get("/employees/:id", asyncHandler(workforce.getEmployee));
+router.post("/employees", asyncHandler(workforce.createEmployee));
+router.patch("/employees/:id", asyncHandler(workforce.updateEmployee));
+router.post("/employees/:id/tasks", asyncHandler(workforce.addTask));
+router.patch("/tasks/:id", asyncHandler(workforce.updateTask));
+router.delete("/tasks/:id", asyncHandler(workforce.deleteTask));
+router.patch("/leave/:id", asyncHandler(workforce.decideLeave));
+router.get("/workforce/overview", asyncHandler(workforce.getWorkforceOverview));
+
+// ─── Departments ─────────────────────────────────
+router.get("/departments", asyncHandler(workforce.listDepartments));
+router.post("/departments", asyncHandler(workforce.createDepartment));
+router.patch("/departments/:id", asyncHandler(workforce.updateDepartment));
+router.delete("/departments/:id", asyncHandler(workforce.deleteDepartment));
+
+// ─── Performance / Goals / Onboarding / Payroll ──
+router.post("/employees/:id/reviews", asyncHandler(workforce.addReview));
+router.post("/employees/:id/goals", asyncHandler(workforce.addGoal));
+router.patch("/goals/:id", asyncHandler(workforce.updateGoal));
+router.delete("/goals/:id", asyncHandler(workforce.deleteGoal));
+router.post("/employees/:id/onboarding", asyncHandler(workforce.addOnboarding));
+router.patch("/onboarding/:id", asyncHandler(workforce.updateOnboarding));
+router.post("/employees/:id/payslips", asyncHandler(workforce.addPayslip));
+
+// ─── Announcements ───────────────────────────────
+router.get("/announcements", asyncHandler(workforce.listAnnouncements));
+router.post("/announcements", asyncHandler(workforce.createAnnouncement));
+router.delete("/announcements/:id", asyncHandler(workforce.deleteAnnouncement));
+
+// ─── Self-service (employee workspace) ───────────
+router.get("/me/workspace", asyncHandler(workforce.getMyWorkspace));
+router.post("/me/leave", asyncHandler(workforce.requestLeave));
+router.get("/me/payslips", asyncHandler(workforce.getMyPayslips));
+router.patch("/me/onboarding/:id", asyncHandler(workforce.updateMyOnboarding));
+router.patch("/me/goals/:id", asyncHandler(workforce.updateMyGoal));
+
 export default router;
+

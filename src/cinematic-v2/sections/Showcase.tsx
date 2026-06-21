@@ -43,7 +43,7 @@ export default function Showcase() {
             loop
             muted
             playsInline
-            preload="metadata"
+            preload="auto"
           />
         </div>
 

@@ -70,7 +70,7 @@ export default function Hero() {
           loop
           muted
           playsInline
-          preload="metadata"
+          preload="auto"
         >
           {/* True-4K (3840×2160) on desktop; 1080p fallback on smaller/metered screens */}
           <source src={heroVideo4k} type="video/mp4" media="(min-width: 1024px)" />

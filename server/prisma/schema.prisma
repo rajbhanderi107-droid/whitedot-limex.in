@@ -15,6 +15,7 @@ enum Role {
   SALES
   OPERATIONS
   VIEWER
+  EMPLOYEE
 }
 
 enum CompanyStatus {
@@ -139,6 +140,17 @@ model User {
   passwordResets     PasswordResetToken[]
   approvalsCreated   ApprovalRequest[] @relation("ApprovalCreatedBy")
   approvalsDecided   ApprovalRequest[] @relation("ApprovalDecidedBy")
+
+  // Workforce relations
+  employeeProfile      EmployeeProfile?
+  workTasks            WorkTask[]
+  leaveRequests        LeaveRequest[]
+  reviewsReceived      PerformanceReview[]  @relation("ReviewsReceived")
+  reviewsWritten       PerformanceReview[]  @relation("ReviewsWritten")
+  goals                Goal[]
+  onboardingTasks      OnboardingTask[]
+  payslips             Payslip[]
+  announcementsCreated Announcement[]       @relation("AnnouncementCreator")
 
   @@index([email])
   @@index([role])
@@ -726,4 +738,223 @@ model GoogleDataSnapshot {
   createdAt DateTime @default(now())
 
   @@index([createdAt])
+}
+
+// ─── Workforce management enums ───────────────────
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERN
+  FREELANCE
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  ON_LEAVE
+  PROBATION
+  RESIGNED
+  TERMINATED
+}
+
+enum TaskStage {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  DONE
+}
+
+enum LeaveKind {
+  ANNUAL
+  SICK
+  CASUAL
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum GoalStatus {
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+enum AnnouncementAudience {
+  ALL
+  DEPARTMENT
+}
+
+// ─── Workforce management models ──────────────────
+
+model EmployeeProfile {
+  id               String          @id @default(cuid())
+  userId           String          @unique
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  location         String?
+  type             EmploymentType  @default(FULL_TIME)
+  status           EmployeeStatus  @default(ACTIVE)
+  joinedAt         DateTime        @default(now())
+  manager          String?
+  salary           Float           @default(0)
+  kpi              Float           @default(0)
+  tools            String[]
+  workspace        String?
+  notes            String?
+  avatarHue        Int             @default(0)
+  annual           Int             @default(15)
+  sick             Int             @default(10)
+  casual           Int             @default(7)
+  usedAnnual       Int             @default(0)
+  usedSick         Int             @default(0)
+  usedCasual       Int             @default(0)
+  employeeCode     String?
+  departmentId     String?
+  dept             Department?     @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  dateOfBirth      DateTime?
+  gender           String?
+  address          String?
+  emergencyName    String?
+  emergencyPhone   String?
+  bloodGroup       String?
+  bankName         String?
+  bankAccount      String?
+  ifsc             String?
+  taxId            String?
+  probationEndsAt  DateTime?
+  contractEndsAt   DateTime?
+  weeklyHours      Int?
+  currency         String?         @default("INR")
+  payFrequency     String?         @default("MONTHLY")
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([departmentId])
+}
+
+model Department {
+  id               String            @id @default(cuid())
+  name             String            @unique
+  code             String?
+  description      String?
+  headId           String?
+  headName         String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  employees        EmployeeProfile[]
+  announcements    Announcement[]
+}
+
+model WorkTask {
+  id               String          @id @default(cuid())
+  userId           String
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title            String
+  project          String?
+  stage            TaskStage       @default(TODO)
+  priority         Priority        @default(MEDIUM)
+  due              DateTime?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([userId])
+  @@index([stage])
+}
+
+model LeaveRequest {
+  id               String          @id @default(cuid())
+  userId           String
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type             LeaveKind
+  fromDate         DateTime
+  toDate           DateTime
+  days             Int
+  reason           String?
+  status           LeaveStatus     @default(PENDING)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model PerformanceReview {
+  id               String          @id @default(cuid())
+  userId           String
+  user             User            @relation("ReviewsReceived", fields: [userId], references: [id], onDelete: Cascade)
+  reviewerId       String?
+  reviewer         User?           @relation("ReviewsWritten", fields: [reviewerId], references: [id], onDelete: SetNull)
+  period           String
+  rating           Int
+  strengths        String?
+  improvements     String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([userId])
+}
+
+model Goal {
+  id               String          @id @default(cuid())
+  userId           String
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title            String
+  description      String?
+  progress         Int             @default(0)
+  status           GoalStatus      @default(ACTIVE)
+  dueDate          DateTime?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model OnboardingTask {
+  id               String          @id @default(cuid())
+  userId           String
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label            String
+  done             Boolean         @default(false)
+  order            Int             @default(0)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([userId])
+}
+
+model Payslip {
+  id               String          @id @default(cuid())
+  userId           String
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  month            String
+  gross            Float
+  deductions       Float
+  net              Float
+  currency         String          @default("INR")
+  notes            String?
+  issuedAt         DateTime        @default(now())
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([userId])
+}
+
+model Announcement {
+  id               String               @id @default(cuid())
+  title            String
+  body             String
+  audience         AnnouncementAudience @default(ALL)
+  departmentId     String?
+  department       Department?          @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  createdById      String?
+  createdBy        User?                @relation("AnnouncementCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  @@index([departmentId])
+  @@index([createdById])
 }

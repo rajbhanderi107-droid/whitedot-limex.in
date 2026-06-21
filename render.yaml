@@ -53,15 +53,16 @@ services:
         value: https://api.groq.com/openai/v1
       - key: LLM_MODEL
         value: llama-3.3-70b-versatile
-      # AI Agents — real Claude-backed agent runs. Paste the Anthropic API key
+      # AI Agents — OpenAI-backed agent runs. Paste the OpenAI API key
       # in the Render dashboard (sync: false). If unset, the agent-run endpoint
       # returns a graceful 503 and the rest of the portal is unaffected.
-      # ANTHROPIC_MODEL overrides the per-tier default for every agent — leave
-      # blank for the defaults (strategy → claude-opus-4-8, others →
-      # claude-sonnet-4-6), or set e.g. claude-haiku-4-5 to minimise cost.
-      - key: ANTHROPIC_API_KEY
+      # OPENAI_MODEL overrides the per-tier default for every agent — leave
+      # blank for the defaults (strategy → gpt-4o, others → gpt-4o-mini).
+      - key: OPENAI_API_KEY
         sync: false
-      - key: ANTHROPIC_MODEL
+      - key: OPENAI_BASE_URL
+        value: https://api.openai.com/v1
+      - key: OPENAI_MODEL
         sync: false
       # Google Dashboard — service account credentials + property IDs.
       # Set GOOGLE_SERVICE_ACCOUNT_JSON in the Render dashboard (paste the
