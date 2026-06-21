@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-      VITE_API_URL: https://api.whitedotindia.in
+      VITE_API_URL: https://yrsqtsejbvjwzegtkmkr.supabase.co/functions/v1/backend
       # Mapped to job env so the purge step's `if:` can check them safely.
       # (secrets can't be referenced directly inside an `if:` expression)
       CF_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}

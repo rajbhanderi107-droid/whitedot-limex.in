@@ -9,7 +9,7 @@ import publicRoutes from './routes/public.ts';
 import adminRoutes from './routes/admin.ts';
 import portalRoutes from './routes/portal.ts';
 
-const app = new Hono();
+const app = new Hono().basePath('/backend');
 
 const ALLOWED = [
   ...env.FRONTEND_ORIGINS,
