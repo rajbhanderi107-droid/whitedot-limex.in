@@ -6,7 +6,8 @@ import React, {
   useImperativeHandle,
   useMemo,
 } from 'react';
-import { motion, AnimatePresence, type Transition, type VariantLabels, type Target, type AnimationControls, type TargetAndTransition } from 'framer-motion';
+import { motion, AnimatePresence, type Transition, type VariantLabels, type Target, type TargetAndTransition } from 'framer-motion';
+type AnimationControls = ReturnType<typeof import('framer-motion').useAnimationControls>;
 
 function cn(...classes: (string | undefined | null | boolean)[]): string {
   return classes.filter(Boolean).join(' ');
