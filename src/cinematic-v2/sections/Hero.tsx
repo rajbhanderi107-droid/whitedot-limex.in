@@ -1,45 +1,15 @@
 import './Hero.css';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { useCountUp, useGrainField, useReveal } from '../motion';
 import { CONSULTATION_HASH, openConsultationForm } from '../consultationNavigation';
 import SupplyFlow from './SupplyFlow';
 import { useViewportVideo } from '../useViewportVideo';
-
-/** Splits a string into individually animatable character spans, grouped by word to prevent mid-word wrapping on mobile.
- *  globalStart = running char index so the stagger is continuous
- *  across all three headline lines. */
-function chars(text: string, globalStart: number) {
-  let currentIdx = globalStart;
-  return text.split(' ').map((word, wIdx, arr) => {
-    const isLast = wIdx === arr.length - 1;
-    const wordSpan = (
-      <span key={wIdx} className="v2h-word" style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
-        {[...word].map((ch, cIdx) => (
-          <span
-            key={cIdx}
-            className="v2h-char"
-            style={{ '--ci': String(currentIdx++) } as React.CSSProperties}
-          >
-            {ch}
-          </span>
-        ))}
-      </span>
-    );
-    if (!isLast) {
-      currentIdx++; // increment so the timing stays consistent for the next word
-      return <React.Fragment key={wIdx}>{wordSpan}{' '}</React.Fragment>;
-    }
-    return wordSpan;
-  });
-}
 
 // Accent line carries the TBM origin credit beside "to Replace Plastic",
 // sharing the same font and accent color (user-approved layout).
 const LINE1 = 'Sustainable';
 const LINE2 = 'Material';
 const LINE3 = 'to Replace Plastic · Invented by TBM, Japan';
-const OFF2  = LINE1.length;           // 11
-const OFF3  = OFF2 + LINE2.length;    // 19
 const heroVideo4k = `${import.meta.env.BASE_URL}assets/higgsfield/hero-head-background-4k.mp4`;
 const heroVideo1080 = `${import.meta.env.BASE_URL}assets/higgsfield/hero-1080-h264.mp4`;
 const heroPosterSrc = `${import.meta.env.BASE_URL}assets/higgsfield/hero-head-background-poster-4k.jpg`;
@@ -91,17 +61,10 @@ export default function Hero() {
             className="v2h-headline v2-reveal"
             ref={headline.ref}
           >
-            <div className="v2h-animated-title" aria-hidden="true">
-              {/* Each .v2h-line clips vertically so chars rise from below */}
-              <span className="v2h-line">
-                {chars(LINE1, 0)}
-              </span>
-              <span className="v2h-line v2h-rotating-wrapper-line">
-                {chars(LINE2, OFF2)}
-              </span>
-              <span className="v2h-headline-accent v2h-line">
-                {chars(LINE3, OFF3)}
-              </span>
+            <div className="v2h-animated-title">
+              <span className="v2h-line">{LINE1}</span>
+              <span className="v2h-line">{LINE2}</span>
+              <span className="v2h-headline-accent v2h-line">{LINE3}</span>
             </div>
           </div>
 

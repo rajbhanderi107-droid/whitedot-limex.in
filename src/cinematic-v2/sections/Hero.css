@@ -309,19 +309,10 @@
    flowing continuously across all three headline lines.
    ============================================================ */
 
-/* Line wrapper: vertical overflow clip — chars emerge from below */
+/* Line wrapper */
 .v2h-line {
   display: block;
-  overflow: hidden;
   padding-bottom: 0.12em;
-  perspective: 1000px;
-  transform-style: preserve-3d;
-}
-
-/* Character span: inline-block so transforms apply */
-.v2h-char {
-  display: inline-block;
-  transform-style: preserve-3d;
 }
 
 /* Rotating text additions from 21st-dev magic */
