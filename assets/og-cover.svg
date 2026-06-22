@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2a3028" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#050706" stop-opacity="1"/>
+    </radialGradient>
+    <filter id="dotglow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- Subtle grid texture -->
+  <g opacity="0.04" stroke="#9aa893" stroke-width="0.5">
+    <line x1="0" y1="105" x2="1200" y2="105"/>
+    <line x1="0" y1="210" x2="1200" y2="210"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="0" y1="420" x2="1200" y2="420"/>
+    <line x1="0" y1="525" x2="1200" y2="525"/>
+    <line x1="200" y1="0" x2="200" y2="630"/>
+    <line x1="400" y1="0" x2="400" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="800" y1="0" x2="800" y2="630"/>
+    <line x1="1000" y1="0" x2="1000" y2="630"/>
+  </g>
+
+  <!-- Left accent bar -->
+  <rect x="80" y="80" width="2" height="470" fill="#9aa893" opacity="0.3"/>
+
+  <!-- White dot mark -->
+  <circle cx="116" cy="116" r="14" fill="#f5f1e8" filter="url(#dotglow)" opacity="0.95"/>
+  <circle cx="116" cy="116" r="6" fill="#f5f1e8"/>
+
+  <!-- Company name -->
+  <text x="148" y="108" font-family="Georgia, serif" font-size="28" font-weight="400" fill="#f5f1e8" opacity="0.9" letter-spacing="1">White Dot</text>
+  <text x="148" y="136" font-family="Georgia, serif" font-size="16" font-weight="400" fill="#9aa893" letter-spacing="3">LLP</text>
+
+  <!-- Main headline -->
+  <text x="116" y="270" font-family="Georgia, serif" font-size="58" font-weight="400" fill="#f5f1e8" letter-spacing="-1">Authorized LIMEX</text>
+  <text x="116" y="340" font-family="Georgia, serif" font-size="58" font-weight="400" fill="#f5f1e8" letter-spacing="-1">Marketing &amp; Sales</text>
+
+  <!-- Subtitle -->
+  <text x="116" y="402" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#9aa893" letter-spacing="1">Limestone-based plastic replacement · India</text>
+
+  <!-- Divider line -->
+  <line x1="116" y1="440" x2="700" y2="440" stroke="#9aa893" stroke-width="0.5" opacity="0.4"/>
+
+  <!-- Supply chain strip -->
+  <text x="116" y="472" font-family="Arial, sans-serif" font-size="15" fill="#6b7a68" letter-spacing="0.5">TBM Co. Japan</text>
+  <text x="270" y="472" font-family="Arial, sans-serif" font-size="15" fill="#6b7a68">→</text>
+  <text x="296" y="472" font-family="Arial, sans-serif" font-size="15" fill="#6b7a68" letter-spacing="0.5">Seven Dot</text>
+  <text x="396" y="472" font-family="Arial, sans-serif" font-size="15" fill="#6b7a68">→</text>
+  <text x="420" y="472" font-family="Arial, sans-serif" font-size="15" fill="#9aa893" letter-spacing="0.5">White Dot LLP</text>
+
+  <!-- Territory -->
+  <text x="116" y="510" font-family="Arial, sans-serif" font-size="15" fill="#6b7a68" letter-spacing="0.5">Gujarat · Rajasthan · Daman · Diu · Silvassa</text>
+
+  <!-- Domain -->
+  <text x="116" y="558" font-family="Arial, sans-serif" font-size="18" font-weight="400" fill="#9aa893" letter-spacing="1" opacity="0.7">whitedotindia.in</text>
+
+  <!-- Right: limestone composition visual -->
+  <g opacity="0.12">
+    <circle cx="980" cy="315" r="200" fill="none" stroke="#9aa893" stroke-width="0.5"/>
+    <circle cx="980" cy="315" r="150" fill="none" stroke="#9aa893" stroke-width="0.5"/>
+    <circle cx="980" cy="315" r="100" fill="none" stroke="#9aa893" stroke-width="0.5"/>
+    <circle cx="980" cy="315" r="50" fill="none" stroke="#9aa893" stroke-width="0.5"/>
+  </g>
+  <text x="980" y="295" font-family="Georgia, serif" font-size="48" fill="#9aa893" text-anchor="middle" opacity="0.25">CaCO₃</text>
+  <text x="980" y="345" font-family="Arial, sans-serif" font-size="14" fill="#9aa893" text-anchor="middle" opacity="0.2" letter-spacing="2">50%+ LIMESTONE</text>
+</svg>
