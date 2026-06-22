@@ -49,7 +49,6 @@ app.route('/api/auth', authRoutes);
 app.route('/api/public', publicRoutes);
 app.route('/api', workforceRoutes);
 app.route('/api', adminRoutes);
-app.route('/api', workforceRoutes);
 app.route('/api/portal', portalRoutes);
 
 app.notFound((c) => c.json({ success: false, error: { code: 'NOT_FOUND', message: 'API endpoint not found' } }, 404));
