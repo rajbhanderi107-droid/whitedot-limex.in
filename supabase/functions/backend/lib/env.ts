@@ -13,8 +13,8 @@ export const env = {
   LLM_API_KEY: g('LLM_API_KEY'),
   LLM_BASE_URL: g('LLM_BASE_URL') ?? 'https://api.groq.com/openai/v1',
   LLM_MODEL: g('LLM_MODEL') ?? 'llama-3.3-70b-versatile',
-  ANTHROPIC_API_KEY: g('ANTHROPIC_API_KEY'),
-  ANTHROPIC_MODEL: g('ANTHROPIC_MODEL') ?? '',
+  OPENAI_API_KEY: g('OPENAI_API_KEY'),
+  OPENAI_MODEL: g('OPENAI_MODEL') ?? '',
   get smtpConfigured() { return !!this.RESEND_API_KEY; },
   get googleOAuthEnabled() { return !!this.GOOGLE_CLIENT_ID; },
 };

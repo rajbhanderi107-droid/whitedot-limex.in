@@ -8,6 +8,6 @@
     "jose": "npm:jose",
     "bcryptjs": "npm:bcryptjs",
     "@supabase/supabase-js": "npm:@supabase/supabase-js",
-    "@anthropic-ai/sdk": "npm:@anthropic-ai/sdk"
+    "openai": "npm:openai"
   }
 }

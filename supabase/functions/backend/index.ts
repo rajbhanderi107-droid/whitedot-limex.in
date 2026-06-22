@@ -47,6 +47,7 @@ app.get('/', (c) => c.json({ service: 'White Dot LLP — LIMEX CRM API', status:
 
 app.route('/api/auth', authRoutes);
 app.route('/api/public', publicRoutes);
+app.route('/api', workforceRoutes);
 app.route('/api', adminRoutes);
 app.route('/api', workforceRoutes);
 app.route('/api/portal', portalRoutes);

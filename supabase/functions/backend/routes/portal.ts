@@ -124,7 +124,7 @@ app.patch('/ai-agents/:id', async (c) => {
 });
 app.post('/ai-agents/:id/run', async (c) => {
   if (!aiAgentConfigured()) {
-    return sendSuccess(c, { status: 'unavailable', message: 'ANTHROPIC_API_KEY not configured' }, undefined, 503);
+    return sendSuccess(c, { status: 'unavailable', message: 'OPENAI_API_KEY not configured' }, undefined, 503);
   }
   const { input, tier } = await c.req.json();
   const result = await runAgent(c.req.param('id'), input, tier ?? 'specialist');
@@ -193,30 +193,63 @@ const RESOURCE_MAP: Record<string, string> = {
   attendance: 'AttendanceDay', 'location-pings': 'LocationPing',
   employees: 'EmployeeProfile', tasks: 'WorkTask', 'leave-requests': 'LeaveRequest',
 };
+
+function flattenItem(row: Record<string, unknown>) {
+  return { ...(row.data as object), id: row.id, status: row.status, createdAt: row.createdAt, updatedAt: row.updatedAt };
+}
+
 app.get('/r/:resource', async (c) => {
-  const table = RESOURCE_MAP[c.req.param('resource')];
-  if (!table) throw new AppError(404, 'NOT_FOUND', 'Resource not found');
-  const { data } = await db.from(table).select('*').order('createdAt', { ascending: false });
-  return sendSuccess(c, data ?? []);
+  const resource = c.req.param('resource');
+  const table = RESOURCE_MAP[resource];
+  if (table) {
+    const { data } = await db.from(table).select('*').order('createdAt', { ascending: false });
+    return sendSuccess(c, data ?? []);
+  }
+  const { data } = await db.from('PortalItem').select('*').eq('resource', resource).order('createdAt', { ascending: false });
+  return sendSuccess(c, (data ?? []).map(flattenItem));
 });
 app.post('/r/:resource', async (c) => {
-  const table = RESOURCE_MAP[c.req.param('resource')];
-  if (!table) throw new AppError(404, 'NOT_FOUND', 'Resource not found');
-  const { data, error } = await db.from(table).insert(await c.req.json()).select().single();
+  const resource = c.req.param('resource');
+  const table = RESOURCE_MAP[resource];
+  const body = await c.req.json();
+  if (table) {
+    const { data, error } = await db.from(table).insert(body).select().single();
+    if (error) throw error;
+    return sendSuccess(c, data, 'Created', 201);
+  }
+  const { status, ...rest } = body;
+  const row = { id: crypto.randomUUID(), resource, status: status ?? 'ACTIVE', data: rest };
+  const { data: created, error } = await db.from('PortalItem').insert(row).select().single();
   if (error) throw error;
-  return sendSuccess(c, data, 'Created', 201);
+  return sendSuccess(c, flattenItem(created), 'Created', 201);
 });
 app.patch('/r/:resource/:id', async (c) => {
-  const table = RESOURCE_MAP[c.req.param('resource')];
-  if (!table) throw new AppError(404, 'NOT_FOUND', 'Resource not found');
-  const { data, error } = await db.from(table).update(await c.req.json()).eq('id', c.req.param('id')).select().single();
+  const resource = c.req.param('resource');
+  const id = c.req.param('id');
+  const table = RESOURCE_MAP[resource];
+  const body = await c.req.json();
+  if (table) {
+    const { data, error } = await db.from(table).update(body).eq('id', id).select().single();
+    if (error) throw error;
+    return sendSuccess(c, data);
+  }
+  const { status, ...rest } = body;
+  const { data: existing } = await db.from('PortalItem').select('data').eq('id', id).eq('resource', resource).single();
+  const patch: Record<string, unknown> = { updatedAt: new Date().toISOString(), data: { ...(existing?.data ?? {}), ...rest } };
+  if (status !== undefined) patch.status = status;
+  const { data: updated, error } = await db.from('PortalItem').update(patch).eq('id', id).select().single();
   if (error) throw error;
-  return sendSuccess(c, data);
+  return sendSuccess(c, flattenItem(updated));
 });
 app.delete('/r/:resource/:id', async (c) => {
-  const table = RESOURCE_MAP[c.req.param('resource')];
-  if (!table) throw new AppError(404, 'NOT_FOUND', 'Resource not found');
-  await db.from(table).delete().eq('id', c.req.param('id'));
+  const resource = c.req.param('resource');
+  const id = c.req.param('id');
+  const table = RESOURCE_MAP[resource];
+  if (table) {
+    await db.from(table).delete().eq('id', id);
+    return sendSuccess(c, null, 'Deleted');
+  }
+  await db.from('PortalItem').delete().eq('id', id).eq('resource', resource);
   return sendSuccess(c, null, 'Deleted');
 });
 
