@@ -102,15 +102,7 @@ export function AdminLayout({ user, onLogout }: Props) {
           fontSize: 13, fontWeight: 500,
         }}>
           <WifiOff size={15} />
-          <span>Backend offline — Render service is suspended.</span>
-          <a
-            href="https://dashboard.render.com"
-            target="_blank"
-            rel="noreferrer"
-            style={{ color: "#fde68a", textDecoration: "underline", whiteSpace: "nowrap" }}
-          >
-            Resume on Render →
-          </a>
+          <span>Backend offline — server is unreachable. Retrying…</span>
           <button
             onClick={retryBackend}
             disabled={retrying}

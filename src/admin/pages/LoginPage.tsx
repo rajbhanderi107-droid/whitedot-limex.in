@@ -99,7 +99,7 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
   /* ─── Google OAuth popup login ─── */
   const handleGoogleLogin = useCallback(async () => {
     if (!googleConfig?.enabled || !googleConfig.clientId) {
-      setError("Google sign-in needs GOOGLE_CLIENT_ID in Render. The server secret is optional for this recovery flow.");
+      setError("Google sign-in unavailable — GOOGLE_CLIENT_ID not configured. Please sign in with email and password.");
       return;
     }
 
@@ -180,7 +180,7 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
           </button>
           {anyLoading && (
             <p style={{ textAlign: "center", color: "var(--adm-muted)", fontSize: ".75rem", marginTop: ".6rem" }}>
-              Server is waking up (free hosting takes up to 60s on first request). Please wait…
+              Signing in… please wait.
             </p>
           )}
         </form>

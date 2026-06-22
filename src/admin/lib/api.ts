@@ -1,8 +1,8 @@
 const API_BASE =
   import.meta.env.VITE_API_URL ||
   (import.meta.env.DEV
-    ? "http://localhost:54321/functions/v1/backend"
-    : "https://yrsqtsejbvjwzegtkmkr.supabase.co/functions/v1/backend");
+    ? "http://localhost:4000"
+    : "https://api.whitedotindia.in");
 
 const TIMEOUT_MS = 30_000;
 

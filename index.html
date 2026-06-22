@@ -19,6 +19,8 @@
     <meta name="author" content="White Dot LLP" />
     <meta name="geo.region" content="IN-GJ" />
     <meta name="geo.placename" content="Gujarat, India" />
+    <!-- Google Search Console verification — replace content value with the one from Search Console -->
+    <meta name="google-site-verification" content="REPLACE_WITH_SEARCH_CONSOLE_VERIFICATION_CODE" />
 
     <!-- Social / Open Graph. og:image points at the Higgsfield drop slot
          (public/assets/higgsfield/og-cover.jpg) — add the file to activate. -->
@@ -70,6 +72,15 @@
       @media(max-width:380px){.agg-wd-dot{width:8px;height:8px}.agg-wd-ring{width:24px;height:24px}}
     </style>
     <!-- AGGREGATION-WD-END critical-css -->
+
+    <!-- Google Analytics 4 — replace G-XXXXXXXXXX with your real Measurement ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
 
     <!-- Structured Data (JSON-LD) for Search Engines -->
     <script type="application/ld+json">
