@@ -445,7 +445,7 @@ app.get('/departments', async (c) => {
     code: d.code,
     description: d.description,
     headId: d.headId,
-    headName: d.headName,
+    headName: null,
     employeeCount: countMap[d.id] || 0,
     createdAt: d.createdAt,
   }));
@@ -455,10 +455,10 @@ app.get('/departments', async (c) => {
 
 // POST /departments
 app.post('/departments', async (c) => {
-  const { name, code, description, headId, headName } = await c.req.json();
+  const { name, code, description, headId } = await c.req.json();
   const { data, error } = await db
     .from('Department')
-    .insert({ name, code, description, headId, headName })
+    .insert({ name, code, description, headId })
     .select()
     .single();
 
@@ -471,7 +471,7 @@ app.patch('/departments/:id', async (c) => {
   const id = c.req.param('id');
   const body = await c.req.json();
   const data: Record<string, any> = {};
-  for (const key of ['name', 'code', 'description', 'headId', 'headName']) {
+  for (const key of ['name', 'code', 'description', 'headId']) {
     if (body[key] !== undefined) data[key] = body[key];
   }
 

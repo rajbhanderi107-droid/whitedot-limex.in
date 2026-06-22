@@ -23,8 +23,8 @@ app.get('/dashboard', async (c) => {
     db.from('QuoteRequest').select('*', { count: 'exact', head: true }).eq('status', 'NEW'),
     db.from('SampleRequest').select('*', { count: 'exact', head: true }).eq('status', 'NEW'),
     db.from('Company').select('*', { count: 'exact', head: true }),
-    db.from('FollowUpTask').select('*', { count: 'exact', head: true }).eq('completed', false),
-    db.from('Notification').select('*', { count: 'exact', head: true }).eq('read', false),
+    db.from('FollowUpTask').select('*', { count: 'exact', head: true }).eq('status', 'PENDING'),
+    db.from('Notification').select('*', { count: 'exact', head: true }).eq('isRead', false),
   ]);
   const { data: recentInquiries } = await db.from('Inquiry').select('id,name,email,createdAt,status').order('createdAt', { ascending: false }).limit(5);
   return sendSuccess(c, {
@@ -66,7 +66,7 @@ app.get('/inquiries', async (c) => {
 app.get('/inquiries/:id', async (c) => {
   const { data, error } = await db.from('Inquiry').select('*').eq('id', c.req.param('id')).single();
   if (error || !data) throw new AppError(404, 'NOT_FOUND', 'Inquiry not found');
-  const { data: notes } = await db.from('AdminNote').select('*').eq('entityType', 'INQUIRY').eq('entityId', data.id).order('createdAt');
+  const { data: notes } = await db.from('AdminNote').select('*').eq('inquiryId', data.id).order('createdAt');
   return sendSuccess(c, { ...data, notes: notes ?? [] });
 });
 app.patch('/inquiries/:id', async (c) => {
@@ -81,7 +81,8 @@ app.delete('/inquiries/:id', requireRole('SUPER_ADMIN', 'ADMIN'), async (c) => {
 });
 app.post('/inquiries/:id/notes', async (c) => {
   const user = c.get('user') as { id: string };
-  const { data, error } = await db.from('AdminNote').insert({ ...await c.req.json(), entityType: 'INQUIRY', entityId: c.req.param('id'), authorId: user.id }).select().single();
+  const body = await c.req.json();
+  const { data, error } = await db.from('AdminNote').insert({ content: body.content, inquiryId: c.req.param('id'), createdById: user.id }).select().single();
   if (error) throw error;
   return sendSuccess(c, data, 'Note added', 201);
 });
@@ -266,12 +267,12 @@ app.get('/notifications', async (c) => {
 });
 app.patch('/notifications/:id/read', async (c) => {
   const user = c.get('user') as { id: string };
-  await db.from('Notification').update({ read: true }).eq('id', c.req.param('id')).eq('userId', user.id);
+  await db.from('Notification').update({ isRead: true }).eq('id', c.req.param('id')).eq('userId', user.id);
   return sendSuccess(c, null, 'Marked as read');
 });
 app.patch('/notifications/read-all', async (c) => {
   const user = c.get('user') as { id: string };
-  await db.from('Notification').update({ read: true }).eq('userId', user.id).eq('read', false);
+  await db.from('Notification').update({ isRead: true }).eq('userId', user.id).eq('isRead', false);
   return sendSuccess(c, null, 'All marked as read');
 });
 
