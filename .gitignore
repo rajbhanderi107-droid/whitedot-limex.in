@@ -29,3 +29,10 @@ server/tsconfig.tsbuildinfo
 # secrets (never commit)
 server/_gsc_token.json
 *_gsc_token.json
+
+# build/test artifacts (regenerated)
+playwright-report/
+test-results/
+# personal Obsidian/brain notes (not website code)
+docs/whitedot brain/
+docs/brain/

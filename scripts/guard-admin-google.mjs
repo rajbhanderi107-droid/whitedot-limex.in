@@ -44,31 +44,9 @@ const checks = [
       "accessToken",
     ],
   },
-  {
-    file: "server/src/routes/auth.routes.ts",
-    required: [
-      '"/google/config"',
-      '"/google"',
-    ],
-  },
-  {
-    file: "server/src/controllers/googleAuth.controller.ts",
-    required: [
-      "googleConfig",
-      "googleLogin",
-      "GOOGLE_CLIENT_ID",
-      "googleCodeOAuthEnabled",
-      "accessToken",
-    ],
-  },
-  {
-    file: "render.yaml",
-    required: [
-      "GOOGLE_CLIENT_ID",
-      "GOOGLE_CLIENT_SECRET",
-    ],
-  },
 ];
+// Backend (server/) + render.yaml checks removed: backend now lives in the
+// separate whitedot-backend repo, deployed to the Hostinger VPS.
 
 const failures = [];
 

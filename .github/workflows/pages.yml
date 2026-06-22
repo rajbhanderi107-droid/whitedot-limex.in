@@ -1,73 +1,54 @@
-name: Deploy WhiteDot site to GitHub Pages
+name: Deploy frontend to Hostinger VPS
 
 on:
   push:
     branches: ["main"]
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 concurrency:
-  group: "pages"
+  group: "deploy-frontend"
   cancel-in-progress: false
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-      VITE_API_URL: https://yrsqtsejbvjwzegtkmkr.supabase.co/functions/v1/backend
-      # Mapped to job env so the purge step's `if:` can check them safely.
-      # (secrets can't be referenced directly inside an `if:` expression)
-      CF_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
-      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      VITE_API_URL: https://api.whitedotindia.in
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+
       - name: Setup Node
         uses: actions/setup-node@v5
         with:
           node-version: 22
+
       - name: Install dependencies
         run: npm install
+
       - name: Build site
         run: npm run build
-      - name: Deploy static site to gh-pages branch
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          rm -rf /tmp/whitedot-pages
-          mkdir /tmp/whitedot-pages
-          cp -r dist/. /tmp/whitedot-pages/
-          cd /tmp/whitedot-pages
-          git init
-          git checkout -b gh-pages
-          touch .nojekyll
-          git add .
-          git commit -m "Deploy WhiteDot site"
-          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git push --force origin gh-pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Clears the Cloudflare CDN cache so new deploys appear immediately
-      # instead of waiting for the edge TTL to expire. Skipped automatically
-      # until CLOUDFLARE_ZONE_ID and CLOUDFLARE_API_TOKEN secrets are set.
-      - name: Purge Cloudflare cache
-        if: ${{ env.CF_ZONE_ID != '' && env.CF_API_TOKEN != '' }}
-        run: |
-          echo "Purging Cloudflare cache for zone ${CF_ZONE_ID}…"
-          response=$(curl -sS -w '\n%{http_code}' -X POST \
-            "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
-            -H "Authorization: Bearer ${CF_API_TOKEN}" \
-            -H "Content-Type: application/json" \
-            --data '{"purge_everything":true}')
-          body=$(echo "$response" | head -n -1)
-          status=$(echo "$response" | tail -n 1)
-          echo "HTTP $status: $body"
-          if [ "$status" != "200" ]; then
-            echo "::error::Cloudflare purge failed (HTTP $status)"
-            exit 1
-          fi
-          echo "Cloudflare cache purged."
+      - name: Deploy to VPS via rsync
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "dist/"
+          target: "/var/www/whitedot-frontend-new"
+          strip_components: 1
+
+      - name: Swap and reload nginx
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+            rm -rf /var/www/whitedot-frontend
+            mv /var/www/whitedot-frontend-new /var/www/whitedot-frontend
+            nginx -t && systemctl reload nginx
+            echo "Frontend deployed: $(date)"

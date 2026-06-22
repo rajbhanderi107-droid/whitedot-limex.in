@@ -1,7 +1,7 @@
 const g = (k: string) => Deno.env.get(k);
 
 export const env = {
-  JWT_SECRET: g('JWT_SECRET') ?? 'changeme',
+  JWT_SECRET: g('JWT_SECRET') ?? 'whitedot-limex-jwt-secret-key-2024-production-v1-secure',
   FRONTEND_URL: g('FRONTEND_URL') ?? 'https://whitedotindia.in',
   FRONTEND_ORIGINS: (g('FRONTEND_ORIGINS') ?? 'https://whitedotindia.in')
     .split(',').map(s => s.trim()).filter(Boolean),
