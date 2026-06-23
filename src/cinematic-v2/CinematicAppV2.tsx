@@ -36,6 +36,7 @@ const LimexDetail = lazy(() => import('./sections/LimexDetail'));
 const Comparison = lazy(() => import('./sections/Comparison'));
 const Applications = lazy(() => import('./sections/Applications'));
 const CaseStudyFeature = lazy(() => import('./sections/CaseStudyFeature'));
+const CaseStudyPage = lazy(() => import('./sections/CaseStudyPage'));
 const Consultation = lazy(() => import('./sections/Consultation'));
 const GlobalImpact = lazy(() => import('./sections/GlobalImpact'));
 const NewsPage = lazy(() => import('./sections/NewsPage'));
@@ -56,7 +57,9 @@ function LazySectionFallback() {
 
 export default function CinematicAppV2() {
   const route = useHashRoute();
-  const isNewsPage = route.replace(/^#/, '').replace(/^\/+/, '') === 'news';
+  const normalizedRoute = route.replace(/^#/, '').replace(/^\/+/, '');
+  const isNewsPage = normalizedRoute === 'news';
+  const isCaseStudyPage = normalizedRoute === 'case-studies';
 
   // Wake the backend while the visitor is still reading the hero, so the
   // first form submit / assistant message never waits on a cold start.
@@ -69,6 +72,14 @@ export default function CinematicAppV2() {
     return (
       <Suspense fallback={<LazySectionFallback />}>
         <NewsPage />
+      </Suspense>
+    );
+  }
+
+  if (isCaseStudyPage) {
+    return (
+      <Suspense fallback={<LazySectionFallback />}>
+        <CaseStudyPage />
       </Suspense>
     );
   }
