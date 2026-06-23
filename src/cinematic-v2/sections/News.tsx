@@ -65,7 +65,7 @@ function formatSyncedAt(value: string) {
   })}`;
 }
 
-export default function News() {
+export default function News({ full = false }: { full?: boolean } = {}) {
   const [feed, setFeed] = useState<TbmNewsFeed>(FALLBACK_FEED);
   const heading = useReveal<HTMLDivElement>();
   const cards = useStaggerGroup<HTMLDivElement>();
@@ -90,7 +90,7 @@ export default function News() {
     return () => controller.abort();
   }, []);
 
-  const latestItems = useMemo(() => feed.items.slice(0, 5), [feed.items]);
+  const latestItems = useMemo(() => (full ? feed.items : feed.items.slice(0, 5)), [feed.items, full]);
 
   return (
     <section className="v2news v2-bg-light" id="news">

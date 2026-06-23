@@ -1,6 +1,6 @@
 import './foundation.css';
 
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { warmPublicBackend } from '../cinematic/publicApi';
 import Nav from './sections/Nav';
 import Hero from './sections/Hero';
@@ -35,21 +35,43 @@ const Showcase = lazy(() => import('./sections/Showcase'));
 const LimexDetail = lazy(() => import('./sections/LimexDetail'));
 const Comparison = lazy(() => import('./sections/Comparison'));
 const Applications = lazy(() => import('./sections/Applications'));
-const News = lazy(() => import('./sections/News'));
+const CaseStudyFeature = lazy(() => import('./sections/CaseStudyFeature'));
 const Consultation = lazy(() => import('./sections/Consultation'));
 const GlobalImpact = lazy(() => import('./sections/GlobalImpact'));
+const NewsPage = lazy(() => import('./sections/NewsPage'));
+
+function useHashRoute() {
+  const [route, setRoute] = useState(() => window.location.hash);
+  useEffect(() => {
+    const onHash = () => setRoute(window.location.hash);
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
+  return route;
+}
 
 function LazySectionFallback() {
   return <div aria-hidden="true" style={{ minHeight: 1 }} />;
 }
 
 export default function CinematicAppV2() {
+  const route = useHashRoute();
+  const isNewsPage = route.replace(/^#/, '').replace(/^\/+/, '') === 'news';
+
   // Wake the backend while the visitor is still reading the hero, so the
   // first form submit / assistant message never waits on a cold start.
   useEffect(() => {
     const t = window.setTimeout(warmPublicBackend, 3_000);
     return () => window.clearTimeout(t);
   }, []);
+
+  if (isNewsPage) {
+    return (
+      <Suspense fallback={<LazySectionFallback />}>
+        <NewsPage />
+      </Suspense>
+    );
+  }
 
   return (
     <>
@@ -76,7 +98,7 @@ export default function CinematicAppV2() {
             <LimexDetail />
             <Comparison />
             <Applications />
-            <News />
+            <CaseStudyFeature />
             <Consultation />
             <GlobalImpact />
           </Suspense>

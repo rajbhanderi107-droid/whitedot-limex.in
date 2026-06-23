@@ -1,0 +1,57 @@
+{
+  "_meta": {
+    "schema": "wd-case-study-spec/1.0",
+    "note": "Single source of truth for case-study technical data. Every field carries a `verified` flag and a `source`. The page engine and the PDF TDS generator read ONLY from this file. verified:true = cited from the official White Dot 'Case Studies in India' PDF or public TBM/supplier documentation. verified:false = representative of the material class; confirm against supplier lot TDS.",
+    "lastResearched": "2026-06-23",
+    "researchedBy": "White Dot — data verification engine"
+  },
+  "sources": {
+    "wd-casestudies-pdf": "White Dot — 'LIMEX Case Studies in India' (official document)",
+    "gsh-pe78-02m": "https://greensourcinghub.com/limex-pellet-pe78-02m-361",
+    "tbm-pellet": "https://tb-m.com/eng/products/products-pellet/",
+    "co2-lca": "https://www.businesswire.com/news/home/20210624005047/en/",
+    "unido": "https://itpo-tokyo.unido.org/en/technology_db/7923/"
+  },
+  "products": {
+    "bobbin": {
+      "id": "bobbin",
+      "index": "01",
+      "name": "Bobbin",
+      "category": "Textile Bobbin",
+      "status": "live",
+      "tagline": "A textile-industry bobbin, injection-moulded from a 40% LIMEX PE78-02M + 60% PP blend.",
+      "description": "A bobbin for the textile industry, produced by injection moulding from a blend of 40% LIMEX PE78-02M and 60% PP homo-polymer (per White Dot's India case-study record). PE78-02M is a LIMEX compound that is itself ~78% calcium carbonate, so the finished bobbin carries roughly 31% limestone by mass — replacing petroleum plastic while holding the precise tolerances a high-speed spinning bobbin demands.",
+      "referenceGrade": "PE78-02M",
+      "mixRatio": "40% LIMEX PE78-02M + 60% PP Homo-Polymer",
+      "moulding": "Injection Moulding",
+      "application": "High-Speed Textile Spinning",
+      "composition": [
+        { "name": "LIMEX PE78-02M Compound", "pct": 40, "color": "#e98012", "verified": true, "source": "wd-casestudies-pdf" },
+        { "name": "PP Homo-Polymer", "pct": 60, "color": "#c4c7c0", "verified": true, "source": "wd-casestudies-pdf" }
+      ],
+      "specs": [
+        { "label": "Material Base", "value": "LIMEX PE78-02M + PP Homo-Polymer", "verified": true, "source": "wd-casestudies-pdf" },
+        { "label": "LIMEX Grade", "value": "PE78-02M", "verified": true, "source": "wd-casestudies-pdf" },
+        { "label": "Mixing Ratio", "value": "40% LIMEX + 60% PP", "verified": true, "source": "wd-casestudies-pdf" },
+        { "label": "Process", "value": "Injection Moulding", "verified": true, "source": "wd-casestudies-pdf" },
+        { "label": "Application", "value": "High-Speed Textile Spinning", "verified": true, "source": "wd-casestudies-pdf" },
+        { "label": "Effective Limestone (CaCO₃)", "value": "~31", "unit": "% by mass", "verified": true, "source": "gsh-pe78-02m", "note": "40% LIMEX × 78% CaCO₃ in PE78-02M." },
+        { "label": "PE78-02M CaCO₃ Content", "value": "78", "unit": "%", "verified": true, "source": "gsh-pe78-02m" },
+        { "label": "PE78-02M Density", "value": "1.90", "unit": "g/cm³", "verified": true, "source": "gsh-pe78-02m" },
+        { "label": "PE78-02M MFR", "value": "0.6", "unit": "g/10min", "verified": true, "source": "gsh-pe78-02m" },
+        { "label": "PE78-02M GHG", "value": "0.542", "unit": "kg-CO₂e/kg", "verified": true, "source": "gsh-pe78-02m" }
+      ],
+      "highlights": [
+        { "num": "40%", "label": "LIMEX PE78-02M", "verified": true, "source": "wd-casestudies-pdf" },
+        { "num": "~31%", "label": "Limestone in Part", "verified": true, "source": "gsh-pe78-02m" },
+        { "num": "0.542", "unit": "kg-CO₂e/kg", "label": "PE78-02M GHG", "verified": true, "source": "gsh-pe78-02m" }
+      ],
+      "co2": {
+        "value": "~24–38%",
+        "basis": "Greenhouse-gas (CO₂e) reduction vs conventional plastic, application-dependent, per TBM Life-Cycle Assessment (raw material to disposal). Reference value, not guaranteed. PE78-02M compound GHG: 0.542 kg-CO₂e/kg.",
+        "verified": true,
+        "source": "co2-lca"
+      }
+    }
+  }
+}
