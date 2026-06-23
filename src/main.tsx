@@ -141,6 +141,19 @@ function showPublicLoadingPage() {
 }
 
 function renderPublicSite() {
+  // ── COMING SOON MODE ──────────────────────────────────────────────────────
+  // Replace with the full site once ready. Remove this block and uncomment the
+  // v2 / v1 branches below to restore the complete cinematic experience.
+  import("./ComingSoon").then(({ default: ComingSoon }) => {
+    createRoot(document.getElementById("root")!).render(
+      <StrictMode>
+        <ComingSoon />
+      </StrictMode>,
+    );
+  });
+  return;
+  // ── END COMING SOON MODE ─────────────────────────────────────────────────
+
   const useV1 = new URLSearchParams(window.location.search).get("v1") === "1";
 
   if (!useV1) {
