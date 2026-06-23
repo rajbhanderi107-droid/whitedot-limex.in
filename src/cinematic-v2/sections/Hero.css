@@ -276,11 +276,11 @@
   font-family: var(--v2-font-serif);
   font-size: clamp(3.3rem, 6.3vw, 6.3rem);
   font-weight: var(--v2-fw-light);
-  line-height: 0.94;
+  line-height: 1.0;
   letter-spacing: 0;
   color: var(--v2-text);
   margin: 0;
-  max-width: 9.4ch;
+  max-width: 12ch;
   text-shadow:
     0 2px 8px rgba(0, 0, 0, 0.72),
     0 16px 42px rgba(0, 0, 0, 0.58);
