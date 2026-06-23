@@ -80,6 +80,7 @@ export default function Nav() {
 
   const adminBasePath = window.location.hostname.endsWith('github.io') ? '/whitedot-limex.in' : '';
   const adminLoginHref = `${adminBasePath}/#/admin/login`;
+  const caseStudyHref = `${adminBasePath}/case-study/index.html`;
   const forceAdminLogin = () => {
     window.localStorage.removeItem('wd_admin_token');
     setAdminOpen(false);
@@ -113,6 +114,7 @@ export default function Nav() {
               {l.label}
             </a>
           ))}
+          <a href={caseStudyHref} className="v2nav-link">Case Studies</a>
         </nav>
 
         <a href={GMAIL_CONTACT_HREF} className="v2nav-cta" target="_blank" rel="noreferrer">Get in Touch</a>
@@ -203,6 +205,7 @@ export default function Nav() {
               {l.label}
             </a>
           ))}
+          <a href={caseStudyHref} className="v2nav-mobile-link" onClick={closeMenu}>Case Studies</a>
           <a
             className="v2nav-mobile-cta"
             href={GMAIL_CONTACT_HREF}
