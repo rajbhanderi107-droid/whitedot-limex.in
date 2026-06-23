@@ -1,14 +1,4 @@
-/* eslint-disable */
-// model-viewer is a custom element loaded via script tag in index.html
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'model-viewer': any;
-    }
-  }
-}
-
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './CaseStudyFeature.css';
 
 export default function CaseStudyFeature() {
@@ -114,10 +104,9 @@ export default function CaseStudyFeature() {
                   width: '100%',
                   height: '100%',
                   background: 'transparent',
-                  '--poster-color': 'transparent',
                   outline: 'none',
                   pointerEvents: 'none',
-                }}
+                } as React.CSSProperties}
               />
             </div>
 
