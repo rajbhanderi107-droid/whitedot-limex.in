@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Case Study — LIMEX Drain Strainer | White Dot LLP</title>
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&f[]=boska@700,900&display=swap" rel="stylesheet" />
+  <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --wd-bg:          #f6f7f4;
+      --wd-bg-deep:     #eceee9;
+      --wd-surface:     #ffffff;
+      --wd-text:        #1a1d1b;
+      --wd-muted:       #5e6462;
+      --wd-faint:       #8c857a;
+      --wd-accent:      #6e7c63;
+      --wd-accent-glow: rgba(110, 124, 99, 0.30);
+      --wd-line:        rgba(26, 29, 27, 0.10);
+      --wd-line-strong: rgba(26, 29, 27, 0.18);
+      --wd-font-sans:   "Satoshi", ui-sans-serif, system-ui, sans-serif;
+      --wd-font-display:"Boska", Georgia, serif;
+    }
+
+    html, body {
+      height: 100%;
+      background:
+        radial-gradient(ellipse 90% 70% at 50% 38%, #ffffff 0%, #f2f3f0 52%, #e7e9e4 100%);
+      background-attachment: fixed;
+      color: var(--wd-text);
+      font-family: var(--wd-font-sans);
+      overflow-x: hidden;
+    }
+
+    /* ── Page layout ── */
+    .page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: 72px 1fr auto;
+      position: relative;
+    }
+
+    /* ── Ambient gradient orb ── */
+    .page::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 32%, rgba(110,124,99,0.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      border-bottom: 1px solid var(--wd-line);
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-left img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+
+    .nav-wordmark {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .nav-wordmark .brand-name {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--wd-text);
+    }
+
+    .nav-wordmark .brand-sub {
+      font-size: 9.5px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--wd-muted);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-right .divider {
+      width: 1px;
+      height: 28px;
+      background: var(--wd-line-strong);
+    }
+
+    .nav-right img {
+      height: 28px;
+      width: auto;
+      object-fit: contain;
+      filter: brightness(0.9);
+    }
+
+    .nav-right .partner-label {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--wd-faint);
+      margin-bottom: 3px;
+    }
+
+    .nav-right .partner-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .nav-right .logos-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    /* ── Main content ── */
+    main {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px 0;
+      gap: 0;
+    }
+
+    /* Case study kicker */
+    .case-kicker {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--wd-accent);
+      margin-bottom: 12px;
+    }
+
+    .case-title {
+      font-family: var(--wd-font-display);
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--wd-text);
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .case-subtitle {
+      font-size: 14px;
+      color: var(--wd-muted);
+      letter-spacing: 0.01em;
+      margin-bottom: 56px;
+    }
+
+    /* ── 3D Product Rotator ── */
+    .product-stage {
+      position: relative;
+      width: 420px;
+      max-width: 90vw;
+      aspect-ratio: 1 / 1;
+      margin-bottom: 0;
+    }
+
+    /* Soft studio-light backdrop so glossy plastic catches light (like the studio render) */
+    .product-stage::before {
+      content: "";
+      position: absolute;
+      inset: -12% -8% -4%;
+      background: radial-gradient(circle at 50% 40%,
+        rgba(248, 249, 252, 0.20) 0%,
+        rgba(206, 212, 218, 0.10) 36%,
+        rgba(154, 168, 147, 0.04) 58%,
+        transparent 72%);
+      border-radius: 50%;
+      filter: blur(14px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Floating glow platform */
+    .product-stage::after {
+      content: "";
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 40px;
+      background: radial-gradient(ellipse, rgba(154,168,147,0.25) 0%, transparent 70%);
+      border-radius: 50%;
+      filter: blur(8px);
+      animation: floatGlow 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatGlow {
+      from { opacity: 0.6; transform: translateX(-50%) scaleX(0.8); }
+      to   { opacity: 1;   transform: translateX(-50%) scaleX(1.1); }
+    }
+
+    .rotator-wrap {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      z-index: 1;
+      animation: floatProduct 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatProduct {
+      from { transform: translateY(0px); }
+      to   { transform: translateY(-14px); }
+    }
+
+    model-viewer {
+      width: 100%;
+      height: 100%;
+      --poster-color: transparent;
+      background: transparent;
+      outline: none;
+    }
+
+    .mv-loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 26px;
+      height: 26px;
+      margin: -13px 0 0 -13px;
+      border: 2px solid var(--wd-line-strong);
+      border-top-color: var(--wd-accent);
+      border-radius: 50%;
+      animation: mvspin 0.8s linear infinite;
+    }
+
+    @keyframes mvspin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Spin control */
+    .spin-controls {
+      position: absolute;
+      bottom: -72px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .spin-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--wd-line-strong);
+      background: rgba(36, 42, 38, 0.6);
+      color: var(--wd-muted);
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .spin-btn:hover { border-color: var(--wd-accent); color: var(--wd-accent); }
+
+    .spin-label {
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--wd-faint);
+    }
+
+    /* ── Liquid Glass Detail Box ── */
+    .detail-section {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 900px;
+      margin: 110px auto 0;
+      padding: 0 24px 80px;
+    }
+
+    .liquid-glass {
+      position: relative;
+      border-radius: 24px;
+      border: 1px solid rgba(228, 222, 212, 0.14);
+      background:
+        linear-gradient(
+          135deg,
+          rgba(36, 42, 38, 0.72) 0%,
+          rgba(24, 27, 25, 0.60) 50%,
+          rgba(36, 42, 38, 0.68) 100%
+        );
+      backdrop-filter: blur(24px) saturate(1.4);
+      -webkit-backdrop-filter: blur(24px) saturate(1.4);
+      overflow: hidden;
+      padding: 40px 48px 44px;
+    }
+
+    /* Glass shimmer edge */
+    .liquid-glass::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.06) 0%,
+        transparent 40%,
+        rgba(255,255,255,0.03) 100%
+      );
+      pointer-events: none;
+    }
+
+    /* Inner glow spot */
+    .liquid-glass::after {
+      content: "";
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300px;
+      height: 120px;
+      background: radial-gradient(ellipse, rgba(154,168,147,0.12) 0%, transparent 70%);
+      filter: blur(20px);
+      pointer-events: none;
+    }
+
+    .glass-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .glass-product-name {
+      font-family: var(--wd-font-display);
+      font-size: clamp(20px, 3vw, 30px);
+      font-weight: 700;
+      color: var(--wd-text);
+      letter-spacing: -0.01em;
+    }
+
+    .glass-tag {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--wd-bg);
+      background: var(--wd-accent);
+      padding: 5px 12px;
+      border-radius: 100px;
+    }
+
+    .glass-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--wd-line);
+      margin-bottom: 28px;
+    }
+
+    .glass-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 24px 32px;
+    }
+
+    .glass-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .field-label {
+      font-size: 9.5px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--wd-faint);
+    }
+
+    .field-value {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--wd-text);
+      line-height: 1.4;
+    }
+
+    .field-value.accent { color: var(--wd-accent); }
+
+    .glass-desc {
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid var(--wd-line);
+    }
+
+    .glass-desc p {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--wd-muted);
+      max-width: 720px;
+    }
+
+    /* Placeholder state */
+    .placeholder-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--wd-faint);
+      border: 1px dashed rgba(228, 222, 212, 0.2);
+      border-radius: 8px;
+      padding: 6px 12px;
+      margin-top: 8px;
+    }
+
+    .placeholder-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--wd-accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50%       { opacity: 1; }
+    }
+
+    /* ── Footer strip ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--wd-line);
+      padding: 18px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    footer span {
+      font-size: 11px;
+      color: var(--wd-faint);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 640px) {
+      nav { padding: 0 20px; }
+      .nav-wordmark .brand-sub { display: none; }
+      .nav-right .partner-label { display: none; }
+      .liquid-glass { padding: 28px 24px 32px; }
+      .product-stage { width: 300px; }
+      footer { flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a class="nav-left" href="/">
+      <img src="/assets/whitedot-logo-enhanced.svg" alt="White Dot" />
+      <div class="nav-wordmark">
+        <span class="brand-name">White Dot</span>
+        <span class="brand-sub">Material Intelligence</span>
+      </div>
+    </a>
+
+    <div class="nav-right">
+      <div class="divider"></div>
+      <div class="partner-group">
+        <span class="partner-label">In partnership with</span>
+        <div class="logos-row">
+          <img src="/assets/tbm-logo.png" alt="TBM" />
+          <img src="/assets/limex-wordmark.png" alt="LIMEX" />
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <main>
+    <p class="case-kicker">Case Study · Product 01</p>
+    <h1 class="case-title">Made from LIMEX</h1>
+    <p class="case-subtitle">Replacing conventional plastic with limestone-based material</p>
+
+    <!-- 3D Product Viewer -->
+    <div class="product-stage" id="productStage">
+      <div class="rotator-wrap" id="rotatorWrap">
+        <model-viewer
+          id="bobinModel"
+          src="./model/bobin.glb"
+          alt="Bobin — LIMEX drain catcher 3D model"
+          camera-controls
+          touch-action="pan-y"
+          auto-rotate
+          auto-rotate-delay="0"
+          rotation-per-second="28deg"
+          interaction-prompt="none"
+          shadow-intensity="0"
+          exposure="1.15"
+          tone-mapping="neutral"
+          environment-image="neutral"
+          camera-orbit="0deg 78deg 105%"
+          min-camera-orbit="auto auto 70%"
+          max-camera-orbit="auto auto 160%">
+          <div class="mv-loader" slot="progress-bar"></div>
+        </model-viewer>
+      </div>
+
+      <!-- Controls -->
+      <div class="spin-controls">
+        <span class="spin-label">Drag to rotate · scroll to zoom</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- ── DETAIL BOX ── -->
+  <div class="detail-section">
+    <div class="liquid-glass">
+      <div class="glass-header">
+        <h2 class="glass-product-name">Bobin</h2>
+        <span class="glass-tag">LIMEX Composite</span>
+      </div>
+      <div class="glass-divider"></div>
+
+      <div class="glass-grid">
+        <div class="glass-field">
+          <span class="field-label">PP (Polypropylene)</span>
+          <span class="field-value">70%</span>
+        </div>
+        <div class="glass-field">
+          <span class="field-label">LIMEX</span>
+          <span class="field-value accent">30%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <span>© 2026 White Dot LLP · All rights reserved</span>
+    <span>LIMEX is a registered trademark of TBM Co., Ltd., Japan</span>
+  </footer>
+
+</div>
+
+<script>
+  // Pause auto-rotate while the user is interacting, resume shortly after.
+  const mv = document.getElementById('bobinModel');
+  let resumeTimer = null;
+
+  function pauseSpin() {
+    mv.removeAttribute('auto-rotate');
+    if (resumeTimer) clearTimeout(resumeTimer);
+  }
+  function scheduleResume() {
+    if (resumeTimer) clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(() => mv.setAttribute('auto-rotate', ''), 2500);
+  }
+
+  mv.addEventListener('pointerdown', pauseSpin);
+  window.addEventListener('pointerup', scheduleResume);
+  mv.addEventListener('wheel', () => { pauseSpin(); scheduleResume(); }, { passive: true });
+</script>
+</body>
+</html>

@@ -140,20 +140,26 @@ function showPublicLoadingPage() {
   if (loader) loader.setAttribute("data-maintenance", "");
 }
 
-function renderPublicSite() {
-  // ── COMING SOON MODE ──────────────────────────────────────────────────────
-  // Replace with the full site once ready. Remove this block and uncomment the
-  // v2 / v1 branches below to restore the complete cinematic experience.
+// Coming Soon / loading page — now controlled by the `public_loading_enabled`
+// setting from the portal Settings page instead of being hardcoded on.
+function renderComingSoon() {
   import("./ComingSoon").then(({ default: ComingSoon }) => {
     createRoot(document.getElementById("root")!).render(
       <StrictMode>
         <ComingSoon />
       </StrictMode>,
     );
+    // ComingSoon doesn't run the aggregation loader, so dismiss the static
+    // splash itself — otherwise it would cover the page.
+    const loader = document.getElementById("agg-wd-loader");
+    if (loader && !loader.hasAttribute("data-maintenance")) {
+      loader.setAttribute("data-done", "");
+      window.setTimeout(() => loader.remove(), 450);
+    }
   });
-  return;
-  // ── END COMING SOON MODE ─────────────────────────────────────────────────
+}
 
+function renderPublicSite() {
   const useV1 = new URLSearchParams(window.location.search).get("v1") === "1";
 
   if (!useV1) {
@@ -227,10 +233,14 @@ if (isAdmin) {
     </StrictMode>,
   );
 } else {
-  renderPublicSite();
-  window.setTimeout(() => {
-    shouldShowPublicLoading().then((showLoading) => {
-      if (showLoading) showPublicLoadingPage();
-    });
-  }, 1_000);
+  // The portal toggle (`public_loading_enabled`) decides what visitors see:
+  // ON  → animated Coming Soon page; OFF → the full cinematic site.
+  shouldShowPublicLoading().then((showLoading) => {
+    if (showLoading) {
+      showPublicLoadingPage();
+      renderComingSoon();
+    } else {
+      renderPublicSite();
+    }
+  });
 }
