@@ -13,7 +13,6 @@ export default function CaseStudyFeature() {
           src={caseStudyHref}
           title="LIMEX Case Studies"
           loading="lazy"
-          scrolling="no"
           allowFullScreen
         />
         <div className="cs2-iframe-tap">

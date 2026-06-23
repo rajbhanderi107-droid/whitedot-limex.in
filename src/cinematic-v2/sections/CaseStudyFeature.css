@@ -28,30 +28,17 @@
   background: #f7f4ec;
 }
 
-/* On mobile, reduce height and show a tap-to-open link */
 @media (max-width: 768px) {
   .cs2-iframe {
-    height: 520px;
-    pointer-events: none; /* prevent scroll-within-iframe fighting page scroll */
-  }
-  .cs2-iframe-tap {
-    display: flex !important;
+    height: 680px;
+    border-radius: var(--v2-radius-lg);
   }
 }
 
-.cs2-iframe-tap {
-  display: none;
-  justify-content: center;
-  margin-top: 14px;
+@media (max-width: 480px) {
+  .cs2-iframe {
+    height: 620px;
+  }
 }
-.cs2-open-link {
-  font-size: var(--v2-fs-caption);
-  font-weight: var(--v2-fw-semibold);
-  letter-spacing: var(--v2-ls-wide);
-  color: var(--v2-accent);
-  text-decoration: none;
-  border-bottom: 1px solid var(--v2-accent);
-  padding-bottom: 2px;
-  transition: opacity 0.25s;
-}
-.cs2-open-link:hover { opacity: 0.75; }
+
+.cs2-iframe-tap { display: none; }
