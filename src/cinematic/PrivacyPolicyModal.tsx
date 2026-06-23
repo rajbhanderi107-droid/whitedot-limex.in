@@ -189,7 +189,7 @@ export function PrivacyPolicyModal({ open, onClose }: PrivacyPolicyModalProps) {
                 <h4 style={{ color: "#fff", margin: "0.5rem 0 0", fontSize: "1.05rem" }}>3. Data Storage & Security</h4>
                 <p>
                   We implement robust technical and organizational security measures to protect your personal information:
-                  Our databases are hosted on Render-managed environments with role-based access controls and token authorizations (JWT) to secure administrative views. All form submissions are protected against spam via automated rate limiters and honeypot forms.
+                  Our databases and backend are hosted on Hostinger VPS with role-based access controls and token authorizations (JWT) to secure administrative views. All form submissions are protected against spam via automated rate limiters and honeypot forms.
                 </p>
 
                 <h4 style={{ color: "#fff", margin: "0.5rem 0 0", fontSize: "1.05rem" }}>4. Authorized Sharing in the Supply Chain</h4>

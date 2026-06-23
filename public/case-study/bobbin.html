@@ -99,6 +99,66 @@
       .reveal, .reveal-left, .reveal-right { animation: none !important; opacity: 1 !important; }
     }
 
+    /* ─── 21st.dev Cinematic Char Reveal ─── */
+    @keyframes char-reveal {
+      0%   { opacity: 0; filter: blur(16px); transform: translateY(42%) scale(1.14); }
+      50%  { opacity: 0.8; filter: blur(4px); }
+      100% { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
+    }
+    .case-title .char {
+      display: inline-block;
+      opacity: 0;
+      animation: char-reveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation-delay: calc(0.042s * var(--ci) + 0.1s);
+      will-change: transform, opacity, filter;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .case-title .char { animation: none !important; opacity: 1 !important; filter: none !important; transform: none !important; }
+    }
+
+    /* ─── Orbit scan ring (counter-rotating 3rd ring) ─── */
+    .orbit-scan {
+      position: absolute;
+      width: 58%;
+      height: 58%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 1px solid rgba(110, 124, 99, 0.18);
+      animation: rotate-counter 28s linear infinite;
+    }
+    .orbit-scan::before {
+      content: "";
+      position: absolute;
+      top: -3px; left: 50%; transform: translateX(-50%);
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--wd-accent);
+      box-shadow: 0 0 10px 3px var(--wd-accent);
+    }
+    @keyframes rotate-counter {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to   { transform: translate(-50%, -50%) rotate(-360deg); }
+    }
+
+    /* ─── Spec bar fill micro-animation ─── */
+    .spec-fill-bar {
+      height: 2px;
+      background: var(--wd-line);
+      border-radius: 2px;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+    .spec-fill-inner {
+      height: 100%;
+      background: linear-gradient(90deg, var(--orange), rgba(233,128,18,0.35));
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+      width: calc(var(--fill, 0.72) * 100%);
+    }
+    .liquid-glass.in .spec-fill-inner { transform: scaleX(1); }
+
     /* ── Page layout ── */
     .page {
       min-height: 100vh;
@@ -1104,6 +1164,7 @@
         <div class="orbit-dot-track orbit-dot-track-2">
           <div class="orbit-dot orbit-dot-2"></div>
         </div>
+        <div class="orbit-scan"></div>
       </div>
       <div class="stage-grid" aria-hidden="true"></div>
       <div class="rotator-wrap" id="rotatorWrap">
@@ -1224,7 +1285,23 @@
               <span class="spec-label">Flexural Modulus</span>
               <span class="spec-val">2,100 MPa</span>
             </div>
+            <div class="spec-item">
+              <span class="spec-label">HDT (0.45 MPa)</span>
+              <span class="spec-val">110 °C</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">MFR (230 °C)</span>
+              <span class="spec-val">6.5 g/10 min</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Color Stability</span>
+              <span class="spec-val">UV-resistant</span>
+            </div>
           </div>
+          <div class="spec-fill-bar" style="margin-top:10px;">
+            <div class="spec-fill-inner" style="--fill:0.72"></div>
+          </div>
+          <p style="font-size:8px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--wd-faint);margin-top:4px;">LIMEX Composite · Material Score 7.2/10</p>
         </div>
 
         <!-- Action Buttons -->
@@ -1268,6 +1345,21 @@
 </div>
 
 <script>
+  // ─── 21st.dev Cinematic Character Reveal on Title ───
+  (function splitTitle() {
+    const el = document.querySelector('.case-title');
+    if (!el) return;
+    const text = el.textContent;
+    el.textContent = '';
+    [...text].forEach((ch, i) => {
+      const span = document.createElement('span');
+      span.className = 'char';
+      span.style.setProperty('--ci', i);
+      span.textContent = ch === ' ' ? ' ' : ch;
+      el.appendChild(span);
+    });
+  })();
+
   // Pause auto-rotate while the user is interacting, resume shortly after.
   const mv = document.getElementById('bobbinModel');
   let resumeTimer = null;

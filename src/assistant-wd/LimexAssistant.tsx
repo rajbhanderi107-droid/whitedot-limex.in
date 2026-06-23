@@ -44,8 +44,7 @@ export function LimexAssistant() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
 
-  // Focus the input when the panel opens; also nudge the backend awake so
-  // the first chat message doesn't wait on a Render cold start.
+  // Focus the input when the panel opens; also nudge the backend awake.
   useEffect(() => {
     if (open) {
       inputRef.current?.focus();

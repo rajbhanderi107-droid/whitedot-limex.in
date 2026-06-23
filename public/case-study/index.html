@@ -524,6 +524,72 @@
       .card-nav, .card-hero, .product-grid-section, .card-footer { transition: none !important; }
       .hero-card { width: 100%; max-width: 1060px; opacity: 1; transform: none; }
     }
+
+    /* ─── 21st.dev Cinematic Word Reveal ─── */
+    @keyframes cinematic-reveal {
+      0%   { opacity: 0; filter: blur(14px); transform: translateY(38%) scale(1.12); }
+      55%  { opacity: 0.85; filter: blur(3px); }
+      100% { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
+    }
+    .reveal-word {
+      display: inline-block;
+      opacity: 0;
+      animation: cinematic-reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation-delay: var(--wd, 0s);
+      will-change: transform, opacity, filter;
+    }
+    .hero-reveal-active .reveal-word { /* animated when card expands */ }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal-word { animation: none !important; opacity: 1 !important; filter: none !important; transform: none !important; }
+    }
+
+    /* ─── 21st.dev glass inset layer (GlassCard pattern) ─── */
+    .p-card-glass-inset {
+      position: absolute;
+      inset: 7px;
+      border-radius: 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      border-left: 1px solid rgba(255,255,255,0.3);
+      background: linear-gradient(150deg, rgba(255,255,255,0.38) 0%, rgba(255,255,255,0.07) 100%);
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .p-card.live:hover .p-card-glass-inset { opacity: 1; }
+
+    /* ─── Mouse-tracking radial glow (ProductHighlightCard pattern) ─── */
+    .p-card-glow {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0;
+      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      background: radial-gradient(80px circle at var(--gx, 50%) var(--gy, 50%), rgba(233,128,18,0.20), transparent 65%);
+    }
+    .p-card.live:hover .p-card-glow { opacity: 1; }
+
+    /* ─── Enhanced composition bar labels ─── */
+    .comp-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+    }
+    .comp-seg-label {
+      font-size: 7.5px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--wd-faint);
+    }
+    .comp-seg-dot {
+      width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0;
+    }
+    .comp-seg-dot.pp { background: var(--orange); }
+    .comp-seg-dot.limex { background: #c4c7c0; }
   </style>
 </head>
 <body>
@@ -564,7 +630,12 @@
 
     <!-- Headline -->
     <div class="card-hero">
-      <h1>Explore Products Reimagined<br>in <span class="accent">LIMEX</span></h1>
+      <h1 id="heroTitle">
+        <span class="reveal-word" style="--wd:0.62s">Explore</span>
+        <span class="reveal-word" style="--wd:0.72s"> Products</span>
+        <span class="reveal-word" style="--wd:0.82s"> Reimagined</span><br>
+        <span class="reveal-word" style="--wd:0.90s">in </span><span class="reveal-word accent" style="--wd:0.98s">LIMEX</span>
+      </h1>
       <p>Everyday plastic parts, rebuilt with limestone-based material. Select a product to explore it in 3D and see how its composition changes.</p>
       <!-- Stats strip -->
       <div class="hero-stats-strip">
@@ -599,6 +670,8 @@
         <!-- Product 01 — Bobbin (LIVE, featured) -->
         <a class="p-card featured live" href="./bobbin.html" id="bobbinCard" data-product="bobbin">
           <div class="border-beam"></div>
+          <div class="p-card-glass-inset"></div>
+          <div class="p-card-glow"></div>
           <div class="p-card-media">
             <span class="p-card-index">01</span>
             <model-viewer
@@ -621,10 +694,16 @@
               </div>
               <div class="p-card-name">Bobbin</div>
               <div class="p-card-tag">Textile Bobbin · Injection Moulded</div>
-              <div style="display:flex;align-items:center;gap:4px;margin-top:6px;">
-                <span style="width:28px;height:4px;border-radius:100px;background:var(--orange);display:inline-block;"></span>
-                <span style="width:20px;height:4px;border-radius:100px;background:#d3d6d0;display:inline-block;"></span>
-                <span style="font-size:8px;font-weight:600;letter-spacing:0.06em;color:var(--wd-faint);">60% PP · 40% LIMEX</span>
+              <div style="display:flex;align-items:center;gap:0;margin-top:8px;height:5px;border-radius:100px;overflow:hidden;width:80px;">
+                <span style="flex:60;height:100%;background:var(--orange);display:block;"></span>
+                <span style="flex:40;height:100%;background:#d0d3ce;display:block;"></span>
+              </div>
+              <div class="comp-bar-row" style="margin-top:5px;">
+                <span class="comp-seg-dot pp"></span>
+                <span class="comp-seg-label">60% PP</span>
+                <span style="margin:0 4px;color:var(--wd-line-strong);font-size:8px;">·</span>
+                <span class="comp-seg-dot limex"></span>
+                <span class="comp-seg-label">40% LIMEX</span>
               </div>
             </div>
             <span class="p-card-go">→</span>
@@ -675,6 +754,8 @@
         <!-- Product 01 — Bobbin (LIVE, featured) -->
         <a class="p-card featured live" href="./bobbin.html" data-product="bobbin">
           <div class="border-beam"></div>
+          <div class="p-card-glass-inset"></div>
+          <div class="p-card-glow"></div>
           <div class="p-card-media">
             <span class="p-card-index">01</span>
             <model-viewer
@@ -696,10 +777,16 @@
               </div>
               <div class="p-card-name">Bobbin</div>
               <div class="p-card-tag">Textile Bobbin · Injection Moulded</div>
-              <div style="display:flex;align-items:center;gap:4px;margin-top:6px;">
-                <span style="width:28px;height:4px;border-radius:100px;background:var(--orange);display:inline-block;"></span>
-                <span style="width:20px;height:4px;border-radius:100px;background:#d3d6d0;display:inline-block;"></span>
-                <span style="font-size:8px;font-weight:600;letter-spacing:0.06em;color:var(--wd-faint);">60% PP · 40% LIMEX</span>
+              <div style="display:flex;align-items:center;gap:0;margin-top:8px;height:5px;border-radius:100px;overflow:hidden;width:80px;">
+                <span style="flex:60;height:100%;background:var(--orange);display:block;"></span>
+                <span style="flex:40;height:100%;background:#d0d3ce;display:block;"></span>
+              </div>
+              <div class="comp-bar-row" style="margin-top:5px;">
+                <span class="comp-seg-dot pp"></span>
+                <span class="comp-seg-label">60% PP</span>
+                <span style="margin:0 4px;color:var(--wd-line-strong);font-size:8px;">·</span>
+                <span class="comp-seg-dot limex"></span>
+                <span class="comp-seg-label">40% LIMEX</span>
               </div>
             </div>
             <span class="p-card-go">→</span>
@@ -838,6 +925,19 @@
 
   // Start after card expansion completes
   setTimeout(() => { rafId = requestAnimationFrame(tick); }, 1300);
+
+  // ─── 21st.dev Mouse-Tracking Glow per Card ───
+  document.querySelectorAll('.p-card.live').forEach(card => {
+    const glow = card.querySelector('.p-card-glow');
+    if (!glow) return;
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%';
+      const y = ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%';
+      glow.style.setProperty('--gx', x);
+      glow.style.setProperty('--gy', y);
+    });
+  });
 
   // Analytics
   function track(ev, d) { (window.dataLayer = window.dataLayer || []).push(Object.assign({ event: ev }, d || {})); }

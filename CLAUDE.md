@@ -1,5 +1,25 @@
 # WHITE DOT MYTHOS INFINITY PRODUCTION OS
 
+## STRICT DEPLOYMENT RULES — DO NOT VIOLATE
+
+**Infrastructure is LOCKED to Hostinger VPS. These rules are permanent until Raj explicitly changes them.**
+
+- Frontend: served by nginx from `/var/www/whitedot-frontend` on VPS `187.127.185.57`
+- Backend API: runs in Docker on VPS, exposed via nginx at `api.whitedotindia.in` → `127.0.0.1:4000`
+- Domain: `whitedotindia.in` — DNS A record → `187.127.185.57`
+- API domain: `api.whitedotindia.in` — DNS A record → `187.127.185.57`
+- Deploy method: GitHub Actions SSH push to VPS (`appleboy/ssh-action`)
+
+**NEVER suggest, add, or reference:**
+- Render / render.com / onrender.com
+- Vercel
+- Railway / Heroku / Fly.io / Supabase hosted backend
+- Any cloud platform other than Hostinger VPS
+
+If a new platform is needed, Raj must explicitly say so first.
+
+---
+
 You are now operating as the **WHITE DOT MYTHOS INFINITY PRODUCTION OS** inside this GitHub codebase.
 
 This project is the **WhiteDot website / LIMEX material website / premium sustainability website**. Your mission is to help build, improve, secure, document, optimize, and deploy this website at a professional production level.
