@@ -72,55 +72,42 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 24px;
+      align-items: stretch;
+      justify-content: flex-start;
+      padding: 0;
       position: relative;
       z-index: 1;
     }
 
-    /* ─── HERO CARD — expanding showcase (Liquid Glass) ─── */
+    /* ─── HERO CARD — full-page section ─── */
     .hero-card {
       position: relative;
-      width: 160px;
-      max-width: 1060px;
-      border-radius: 28px;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.72) 0%, rgba(246, 247, 244, 0.55) 50%, rgba(255, 255, 255, 0.68) 100%);
-      border: 1px solid rgba(255,255,255,0.6);
-      outline: 1px solid rgba(0,0,0,0.06);
-      backdrop-filter: blur(28px) saturate(1.25);
-      -webkit-backdrop-filter: blur(28px) saturate(1.25);
-      box-shadow: 
-        0 10px 40px rgba(0,0,0,0.04), 
-        0 46px 80px rgba(0,0,0,0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.85);
+      width: 100%;
+      max-width: 100%;
+      border-radius: 0;
+      background: transparent;
+      border: none;
+      outline: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      box-shadow: none;
       overflow: hidden;
-      opacity: 0;
-      transform: scale(0.88);
-      will-change: width, transform, opacity;
+      opacity: 1;
+      transform: none;
+      will-change: auto;
     }
 
-    /* Phase 0: show as compact card with loader */
+    /* Phase 0: no-op (we skip the animation) */
     .hero-card.phase-0 {
       opacity: 1;
-      transform: scale(1);
-      transition: opacity 0.5s ease;
+      transform: none;
     }
 
-    /* Phase 1: expand to full width, reveal content */
+    /* Phase 1: already full width */
     .hero-card.expanded {
       width: 100%;
       opacity: 1;
-      transform: scale(1);
-      transition:
-        width 1.1s cubic-bezier(0.25, 1, 0.28, 1),
-        opacity 0.4s ease,
-        transform 0.85s var(--ease-spring),
-        box-shadow 1.1s var(--ease);
-      box-shadow: 
-        0 12px 42px rgba(0,0,0,0.06), 
-        0 64px 110px rgba(0,0,0,0.09),
-        inset 0 1px 0 rgba(255, 255, 255, 0.85);
+      transform: none;
     }
 
     /* Floating background liquid glass blobs */
@@ -167,22 +154,6 @@
       100% { transform: translate(60px, -50px) scale(1.1); }
     }
 
-    /* ─── LOADER ─── */
-    .card-loader {
-      display: flex; align-items: center; justify-content: center;
-      height: 180px;
-      transition: height 0.6s var(--ease), opacity 0.4s ease;
-    }
-    .hero-card.expanded .card-loader { height: 0; opacity: 0; overflow: hidden; pointer-events: none; }
-    .loader-ring {
-      width: 32px; height: 32px;
-      border: 2.5px solid var(--wd-line);
-      border-top-color: var(--orange);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
     /* ─── INNER NAV ─── */
     .card-nav {
       display: flex; align-items: center; justify-content: space-between;
@@ -191,8 +162,7 @@
       background: rgba(255, 255, 255, 0.35);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      opacity: 0; transform: translateY(-8px);
-      transition: opacity 0.5s var(--ease) 0.45s, transform 0.5s var(--ease) 0.45s;
+      opacity: 1; transform: translateY(0);
     }
     .hero-card.expanded .card-nav { opacity: 1; transform: translateY(0); }
     .card-nav-brand { display: flex; align-items: center; gap: 8px; text-decoration: none; }
@@ -212,8 +182,7 @@
     .card-hero {
       text-align: center;
       padding: 40px 40px 10px;
-      opacity: 0; transform: translateY(16px);
-      transition: opacity 0.6s var(--ease) 0.6s, transform 0.6s var(--ease) 0.6s;
+      opacity: 1; transform: translateY(0);
     }
     .hero-card.expanded .card-hero { opacity: 1; transform: translateY(0); }
     .card-hero h1 {
@@ -270,8 +239,7 @@
     /* ─── PRODUCT GRID ─── */
     .product-grid-section {
       padding: 0;
-      opacity: 0; transform: translateY(20px);
-      transition: opacity 0.7s var(--ease) 0.75s, transform 0.7s var(--ease) 0.75s;
+      opacity: 1; transform: translateY(0);
       overflow: hidden;
       width: 100%;
       position: relative;
@@ -460,8 +428,7 @@
       border-top: 1px solid var(--wd-line);
       display: flex; align-items: center; justify-content: space-between;
       padding: 14px 28px 18px; gap: 12px;
-      opacity: 0; transform: translateY(8px);
-      transition: opacity 0.5s var(--ease) 0.9s, transform 0.5s var(--ease) 0.9s;
+      opacity: 1; transform: translateY(0);
     }
     .hero-card.expanded .card-footer { opacity: 1; transform: translateY(0); }
     .footer-left {
@@ -504,7 +471,7 @@
     .page-footer {
       margin-top: 24px; text-align: center;
       font-size: 11px; color: var(--wd-faint); letter-spacing: 0.04em;
-      opacity: 0; transition: opacity 0.5s var(--ease) 1.2s;
+      opacity: 1;
     }
     .hero-card.expanded ~ .page-footer { opacity: 1; }
 
@@ -523,7 +490,7 @@
     @media (prefers-reduced-motion: reduce) {
       .hero-card, .hero-card.phase-0, .hero-card.expanded,
       .card-nav, .card-hero, .product-grid-section, .card-footer { transition: none !important; }
-      .hero-card { width: 100%; max-width: 1060px; opacity: 1; transform: none; }
+      .hero-card { width: 100%; opacity: 1; transform: none; }
     }
 
     /* ─── 21st.dev Cinematic Word Reveal ─── */
@@ -607,11 +574,6 @@
       <div class="blob blob-green"></div>
     </div>
 
-    <!-- Loader (phase 0) -->
-    <div class="card-loader" id="cardLoader">
-      <div class="loader-ring"></div>
-    </div>
-
     <!-- Inner nav -->
     <div class="card-nav">
       <a class="card-nav-brand" href="/">
@@ -620,8 +582,6 @@
       </a>
       <div class="card-nav-links">
         <a href="/" class="active">Home</a>
-        <a href="/#about">About</a>
-        <a href="/#contact">Contact</a>
       </div>
       <div class="card-nav-right">
         <img src="/assets/tbm-logo.png" alt="TBM" />
@@ -858,23 +818,14 @@
     </div>
   </div>
 
-  <p class="page-footer">© 2026 White Dot LLP · All rights reserved · LIMEX is a trademark of TBM Co., Ltd.</p>
+  <p class="page-footer" style="padding: 0 24px 24px;">© 2026 White Dot LLP · All rights reserved · LIMEX is a trademark of TBM Co., Ltd.</p>
 
 </div>
 
 <script>
-  // ─── Card Expand Animation ───
+  // ─── Card is already full-page — just mark expanded immediately ───
   const card = document.getElementById('heroCard');
-
-  // Phase 0: appear compact with loader
-  requestAnimationFrame(() => {
-    card.classList.add('phase-0');
-    // Phase 1: expand after 1.2s
-    setTimeout(() => {
-      card.classList.remove('phase-0');
-      card.classList.add('expanded');
-    }, 1200);
-  });
+  card.classList.add('expanded');
 
   // ─── 3D Coverflow Marquee Animation ───
   const grid = document.querySelector('.product-grid');
@@ -924,8 +875,8 @@
     rafId = requestAnimationFrame(tick);
   }
 
-  // Start after card expansion completes
-  setTimeout(() => { rafId = requestAnimationFrame(tick); }, 1300);
+  // Start immediately
+  setTimeout(() => { rafId = requestAnimationFrame(tick); }, 100);
 
   // ─── 21st.dev Mouse-Tracking Glow per Card ───
   document.querySelectorAll('.p-card.live').forEach(card => {
