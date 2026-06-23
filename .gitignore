@@ -1,5 +1,5 @@
 node_modules
-dist
+# dist is committed — CI skips build and rsyncs pre-built files directly
 .tools
 .DS_Store
 *.local

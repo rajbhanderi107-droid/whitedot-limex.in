@@ -7,30 +7,16 @@ on:
 
 concurrency:
   group: "deploy-frontend"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-      VITE_API_URL: https://api.whitedotindia.in
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Setup Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: 22
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build site
-        run: npm run build
-
-      - name: Deploy to VPS via rsync
+      - name: Deploy dist to VPS via rsync
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
