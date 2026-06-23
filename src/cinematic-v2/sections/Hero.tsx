@@ -6,7 +6,7 @@ import SupplyFlow from './SupplyFlow';
 import { useViewportVideo } from '../useViewportVideo';
 
 const LINE1 = 'Sustainable';
-const LINE2 = 'Material';
+const LINE2 = 'Innovation';
 
 function splitChars(text: string, startIndex: number) {
   return [...text].map((char, i) => (
@@ -73,6 +73,9 @@ export default function Hero() {
             <div className="v2h-animated-title">
               <span className="v2h-line">{splitChars(LINE1, 0)}</span>
               <span className="v2h-line">{splitChars(LINE2, LINE1.length + 1)}</span>
+              <em className="v2h-headline-accent">
+                to Replace Plastic&nbsp;&middot;&nbsp;Invented by TBM, Japan
+              </em>
             </div>
           </div>
 

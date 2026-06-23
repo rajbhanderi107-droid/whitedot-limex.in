@@ -371,6 +371,29 @@
   }
 }
 
+/* Headline accent — "to Replace Plastic · Invented by TBM, Japan" */
+.v2h-headline-accent {
+  display: block;
+  margin-top: 0.35em;
+  font-style: normal;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.7s var(--v2-ease-out) 1.1s,
+    transform 0.7s var(--v2-ease-out) 1.1s;
+}
+.v2h-headline.v2-reveal.is-in .v2h-headline-accent {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .v2h-headline-accent {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* Sub */
 .v2h-sub {
   font-family: var(--v2-font-sans);
