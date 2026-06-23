@@ -53,6 +53,33 @@ interface WebsiteSetting {
   updatedBy?: { id: string; name: string } | null;
 }
 
+// Canonical settings the portal should always expose, even if the backend DB
+// has no row yet. Keeps the Settings page complete after a fresh DB / migration.
+const DEFAULT_SETTINGS: Array<{ key: string; value: string; type: string; description: string }> = [
+  { key: "company_name", value: "White Dot LLP", type: "TEXT", description: "Company display name" },
+  { key: "company_email", value: "office@whitedotindia.in", type: "EMAIL", description: "Primary contact email" },
+  { key: "company_phone", value: "+918849728938", type: "TEXT", description: "Primary contact phone" },
+  { key: "whatsapp_number", value: "918849728938", type: "TEXT", description: "WhatsApp number (digits only, with country code)" },
+  { key: "company_address", value: "Gujarat, India", type: "TEXT", description: "Company address shown on the website" },
+  { key: "gst_number", value: "", type: "TEXT", description: "GST registration number" },
+  { key: "public_loading_enabled", value: "false", type: "BOOLEAN", description: "Show the Coming Soon / loading page to public visitors" },
+];
+
+/** Merge backend rows with the canonical defaults so every setting renders. */
+function withDefaults(rows: WebsiteSetting[]): WebsiteSetting[] {
+  const existing = new Set(rows.map((r) => r.key));
+  const backfilled = DEFAULT_SETTINGS.filter((d) => !existing.has(d.key)).map((d) => ({
+    id: d.key,
+    key: d.key,
+    value: d.value,
+    type: d.type,
+    description: d.description,
+    updatedAt: new Date(0).toISOString(),
+    updatedBy: null,
+  }));
+  return [...rows, ...backfilled].sort((a, b) => a.key.localeCompare(b.key));
+}
+
 function labelFromKey(key: string) {
   return key.replace(/_/g, " ");
 }
@@ -94,8 +121,9 @@ export function WebsiteSettingsPage() {
     setError("");
     try {
       const res = await api.get<WebsiteSetting[]>("/api/website-settings");
-      setSettings(res.data);
-      setDrafts(Object.fromEntries(res.data.map((setting) => [setting.key, setting.value])));
+      const merged = withDefaults(res.data);
+      setSettings(merged);
+      setDrafts(Object.fromEntries(merged.map((setting) => [setting.key, setting.value])));
     } catch (err) {
       setError(errorMessage(err));
     } finally {

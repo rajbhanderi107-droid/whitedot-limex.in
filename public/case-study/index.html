@@ -117,7 +117,6 @@
       height: 28px;
       width: auto;
       object-fit: contain;
-      filter: brightness(0.9);
     }
 
     .nav-right .partner-label {
@@ -189,40 +188,39 @@
       margin-bottom: 0;
     }
 
-    /* Soft studio-light backdrop so glossy plastic catches light (like the studio render) */
+    /* Soft white studio vignette behind product */
     .product-stage::before {
       content: "";
       position: absolute;
-      inset: -12% -8% -4%;
+      inset: -14% -10% -6%;
       background: radial-gradient(circle at 50% 40%,
-        rgba(248, 249, 252, 0.20) 0%,
-        rgba(206, 212, 218, 0.10) 36%,
-        rgba(154, 168, 147, 0.04) 58%,
-        transparent 72%);
+        #ffffff 0%,
+        rgba(255,255,255,0.7) 34%,
+        transparent 70%);
       border-radius: 50%;
-      filter: blur(14px);
+      filter: blur(16px);
       z-index: 0;
       pointer-events: none;
     }
 
-    /* Floating glow platform */
+    /* Soft contact shadow under the floating product */
     .product-stage::after {
       content: "";
       position: absolute;
-      bottom: -20px;
+      bottom: -18px;
       left: 50%;
       transform: translateX(-50%);
-      width: 200px;
-      height: 40px;
-      background: radial-gradient(ellipse, rgba(154,168,147,0.25) 0%, transparent 70%);
+      width: 210px;
+      height: 36px;
+      background: radial-gradient(ellipse, rgba(26,29,27,0.16) 0%, transparent 70%);
       border-radius: 50%;
-      filter: blur(8px);
+      filter: blur(9px);
       animation: floatGlow 4s ease-in-out infinite alternate;
     }
 
     @keyframes floatGlow {
-      from { opacity: 0.6; transform: translateX(-50%) scaleX(0.8); }
-      to   { opacity: 1;   transform: translateX(-50%) scaleX(1.1); }
+      from { opacity: 0.5; transform: translateX(-50%) scaleX(0.8); }
+      to   { opacity: 0.85; transform: translateX(-50%) scaleX(1.1); }
     }
 
     .rotator-wrap {
@@ -246,22 +244,9 @@
       outline: none;
     }
 
-    .mv-loader {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 26px;
-      height: 26px;
-      margin: -13px 0 0 -13px;
-      border: 2px solid var(--wd-line-strong);
-      border-top-color: var(--wd-accent);
-      border-radius: 50%;
-      animation: mvspin 0.8s linear infinite;
-    }
-
-    @keyframes mvspin {
-      to { transform: rotate(360deg); }
-    }
+    /* Loading indicator fully suppressed */
+    .mv-loader { display: none !important; }
+    model-viewer::part(default-progress-bar) { display: none !important; }
 
     /* Spin control */
     .spin-controls {
@@ -311,16 +296,17 @@
     .liquid-glass {
       position: relative;
       border-radius: 24px;
-      border: 1px solid rgba(228, 222, 212, 0.14);
+      border: 1px solid rgba(26, 29, 27, 0.10);
       background:
         linear-gradient(
           135deg,
-          rgba(36, 42, 38, 0.72) 0%,
-          rgba(24, 27, 25, 0.60) 50%,
-          rgba(36, 42, 38, 0.68) 100%
+          rgba(255, 255, 255, 0.85) 0%,
+          rgba(246, 247, 244, 0.70) 50%,
+          rgba(255, 255, 255, 0.80) 100%
         );
-      backdrop-filter: blur(24px) saturate(1.4);
-      -webkit-backdrop-filter: blur(24px) saturate(1.4);
+      backdrop-filter: blur(20px) saturate(1.2);
+      -webkit-backdrop-filter: blur(20px) saturate(1.2);
+      box-shadow: 0 18px 48px rgba(26, 29, 27, 0.10), inset 0 1px 0 rgba(255,255,255,0.7);
       overflow: hidden;
       padding: 40px 48px 44px;
     }
@@ -333,9 +319,9 @@
       border-radius: 24px;
       background: linear-gradient(
         135deg,
-        rgba(255,255,255,0.06) 0%,
+        rgba(255,255,255,0.5) 0%,
         transparent 40%,
-        rgba(255,255,255,0.03) 100%
+        rgba(255,255,255,0.25) 100%
       );
       pointer-events: none;
     }
@@ -349,7 +335,7 @@
       transform: translateX(-50%);
       width: 300px;
       height: 120px;
-      background: radial-gradient(ellipse, rgba(154,168,147,0.12) 0%, transparent 70%);
+      background: radial-gradient(ellipse, rgba(110,124,99,0.10) 0%, transparent 70%);
       filter: blur(20px);
       pointer-events: none;
     }

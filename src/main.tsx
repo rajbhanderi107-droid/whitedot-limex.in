@@ -118,7 +118,9 @@ async function shouldShowPublicLoading(): Promise<boolean> {
       headers: { Accept: "application/json" },
       signal: controller.signal,
     });
-    if (!res.ok) return true;
+    // Fail open to the real site: only show the Coming Soon page when the
+    // backend explicitly says public_loading_enabled === "true".
+    if (!res.ok) return false;
 
     const json = await res.json();
     const settings = Array.isArray(json.data) ? json.data : [];
