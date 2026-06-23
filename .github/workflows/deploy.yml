@@ -31,4 +31,4 @@ jobs:
           printf '%s\n' "$SSH_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null
-          rsync -avz --delete dist/ root@"$VPS_HOST":/var/www/whitedotindia.in/html/
+          rsync -avz --delete dist/ root@"$VPS_HOST":/var/www/whitedot-frontend/
