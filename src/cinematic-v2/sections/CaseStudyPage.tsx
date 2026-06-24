@@ -58,10 +58,10 @@ export default function CaseStudyPage() {
         const off   = (cx - centerX) / (sRect.width * 0.5);
         const t     = Math.max(-1.6, Math.min(1.6, off));
         const absT  = Math.abs(t);
-        const rotY  = t * 14;
-        const scale = 1 - absT * 0.07;
+        const rotY  = t * 28;
+        const scale = 1 - absT * 0.14;
         const tz    = -absT * 60;
-        const opa   = Math.max(0.72, 1 - absT * 0.18);
+        const opa   = Math.max(0.82, 1 - absT * 0.22);
         c.style.transform = `rotateY(${rotY}deg) scale(${scale}) translateZ(${tz}px)`;
         c.style.opacity   = String(opa);
         c.style.zIndex    = String(Math.round((1 - absT) * 10));
