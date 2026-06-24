@@ -103,8 +103,8 @@
 }
 .csp-hero-card.expanded .csp-card-hero { opacity: 1; transform: translateY(0); }
 .csp-h1 {
-  font-size: clamp(28px,4.2vw,52px); font-weight: 900;
-  letter-spacing: -0.03em; line-height: 1.12; color: var(--cs-text); margin-bottom: 12px;
+  font-size: clamp(32px,5vw,68px); font-weight: 900;
+  letter-spacing: -0.04em; line-height: 1.1; color: var(--cs-text); margin-bottom: 12px;
 }
 .csp-accent { color: var(--cs-green); }
 .csp-hsub { font-size: clamp(12px,1.5vw,14px); line-height: 1.65; color: var(--cs-muted); max-width: 500px; margin: 0 auto; }
@@ -171,7 +171,7 @@
   background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(246,247,244,0.75) 50%, rgba(255,255,255,0.88) 100%);
 }
 .csp-pcard.soon { cursor: default; }
-.csp-pcard.soon .csp-pmedia { filter: saturate(0.15) opacity(0.5); }
+.csp-pcard.soon .csp-pmedia { filter: saturate(0.3) opacity(0.75); }
 .csp-pcard.soon .csp-pname  { color: var(--cs-faint); }
 
 /* Border beam */

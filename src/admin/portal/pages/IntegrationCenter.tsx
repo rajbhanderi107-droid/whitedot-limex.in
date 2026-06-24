@@ -250,7 +250,7 @@ const INTEGRATIONS: Integration[] = [
     group: "Operations",
     risk: "medium",
     icon: Database,
-    auth: "S3/Supabase storage credentials",
+    auth: "Object storage credentials",
     purpose: "Store generated documents, backups and customer assets.",
     capabilities: ["File storage", "Backups", "Signed links"],
   },

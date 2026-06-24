@@ -47,14 +47,8 @@ jobs:
           git push
           echo "pushed=true" >> "$GITHUB_OUTPUT"
 
-      - name: Dispatch Pages deployment
+      - name: Dispatch VPS deployment
         if: ${{ steps.commit-feed.outputs.pushed == 'true' }}
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run pages.yml --ref main
-
-      - name: Dispatch AWS frontend deployment
-        if: ${{ steps.commit-feed.outputs.pushed == 'true' }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run deploy-frontend-aws.yml --ref main
+        run: gh workflow run deploy.yml --ref main

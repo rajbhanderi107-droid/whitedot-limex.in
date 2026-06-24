@@ -52,7 +52,7 @@ export const TOOL_OPTIONS = [
   "Google Workspace", "Zoom", "Loom", "Miro", "Confluence", "Trello",
   "HubSpot", "Salesforce", "Mixpanel", "Amplitude", "Hotjar",
   "Adobe Creative Suite", "Canva", "ChatGPT", "Claude", "Cursor",
-  "AWS Console", "Vercel", "Docker", "Postman",
+  "Docker", "Postman",
   "Excel / Sheets", "Power BI", "Tableau", "QuickBooks", "Tally",
   "WhatsApp Business", "Intercom", "Zendesk", "Freshdesk",
 ];
