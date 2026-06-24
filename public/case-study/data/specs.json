@@ -35,20 +35,20 @@
         { "label": "Mixing Ratio", "value": "40% LIMEX + 60% PP", "verified": true, "source": "wd-casestudies-pdf" },
         { "label": "Process", "value": "Injection Moulding", "verified": true, "source": "wd-casestudies-pdf" },
         { "label": "Application", "value": "High-Speed Textile Spinning", "verified": true, "source": "wd-casestudies-pdf" },
-        { "label": "Effective Limestone (CaCO₃)", "value": "~31", "unit": "% by mass", "verified": true, "source": "gsh-pe78-02m", "note": "40% LIMEX × 78% CaCO₃ in PE78-02M." },
-        { "label": "PE78-02M CaCO₃ Content", "value": "78", "unit": "%", "verified": true, "source": "gsh-pe78-02m" },
-        { "label": "PE78-02M Density", "value": "1.90", "unit": "g/cm³", "verified": true, "source": "gsh-pe78-02m" },
+        { "label": "Effective Limestone (CaCO3)", "value": "~31", "unit": "% by mass", "verified": true, "source": "gsh-pe78-02m", "note": "40% LIMEX × 78% CaCO3 in PE78-02M." },
+        { "label": "PE78-02M CaCO3 Content", "value": "78", "unit": "%", "verified": true, "source": "gsh-pe78-02m" },
+        { "label": "PE78-02M Density", "value": "1.90", "unit": "g/cm3", "verified": true, "source": "gsh-pe78-02m" },
         { "label": "PE78-02M MFR", "value": "0.6", "unit": "g/10min", "verified": true, "source": "gsh-pe78-02m" },
-        { "label": "PE78-02M GHG", "value": "0.542", "unit": "kg-CO₂e/kg", "verified": true, "source": "gsh-pe78-02m" }
+        { "label": "PE78-02M GHG", "value": "0.542", "unit": "kg-CO2e/kg", "verified": true, "source": "gsh-pe78-02m" }
       ],
       "highlights": [
         { "num": "40%", "label": "LIMEX PE78-02M", "verified": true, "source": "wd-casestudies-pdf" },
         { "num": "~31%", "label": "Limestone in Part", "verified": true, "source": "gsh-pe78-02m" },
-        { "num": "0.542", "unit": "kg-CO₂e/kg", "label": "PE78-02M GHG", "verified": true, "source": "gsh-pe78-02m" }
+        { "num": "0.542", "unit": "kg-CO2e/kg", "label": "PE78-02M GHG", "verified": true, "source": "gsh-pe78-02m" }
       ],
       "co2": {
         "value": "~24–38%",
-        "basis": "Greenhouse-gas (CO₂e) reduction vs conventional plastic, application-dependent, per TBM Life-Cycle Assessment (raw material to disposal). Reference value, not guaranteed. PE78-02M compound GHG: 0.542 kg-CO₂e/kg.",
+        "basis": "Greenhouse-gas (CO2e) reduction vs conventional plastic, application-dependent, per TBM Life-Cycle Assessment (raw material to disposal). Reference value, not guaranteed. PE78-02M compound GHG: 0.542 kg-CO2e/kg.",
         "verified": true,
         "source": "co2-lca"
       }

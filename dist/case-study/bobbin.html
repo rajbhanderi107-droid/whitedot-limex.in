@@ -328,10 +328,12 @@
 
     .case-title {
       font-family: var(--wd-font-sans);
-      font-size: clamp(48px, 6.5vw, 104px);
+      font-size: clamp(36px, 5vw, 80px);
       font-weight: 900;
       letter-spacing: -0.035em;
-      line-height: 0.9;
+      line-height: 1.0;
+      white-space: nowrap;
+      overflow: visible;
       color: var(--wd-text);
       margin-bottom: 18px;
       view-transition-name: bobbin-name;
@@ -1113,6 +1115,122 @@
       .bar-credit { margin-left: 0; width: 100%; text-align: center; }
       footer { flex-direction: column; gap: 8px; text-align: center; }
     }
+
+    /* ── PREMIUM ENHANCEMENTS ── */
+
+    /* 1. Multi-layer hero background */
+    html, body {
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 0%, rgba(79,154,53,0.04) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 80% 60%, rgba(79,154,53,0.03) 0%, transparent 50%),
+        radial-gradient(ellipse 120% 90% at 50% 36%, #ffffff 0%, #f4f5f2 50%, #e9ebe6 100%);
+      background-attachment: fixed;
+    }
+
+    /* 2. Ghost title gradient text effect */
+    .ghost-title {
+      background: linear-gradient(180deg, rgba(0,0,0,0.10) 0%, transparent 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* 3. Bigger, more dramatic studio spotlight on product stage */
+    .product-stage::before {
+      inset: -22% -18% -10%;
+      background: radial-gradient(circle at 50% 38%,
+        #ffffff 0%,
+        rgba(255,255,255,0.85) 28%,
+        rgba(255,255,255,0.4) 55%,
+        transparent 72%);
+      filter: blur(20px);
+    }
+
+    /* 4. Reveal blur-in (premium filter transition) */
+    .reveal, .reveal-left, .reveal-right {
+      filter: blur(8px);
+    }
+    .reveal.bob-revealed, .reveal-left.bob-revealed, .reveal-right.bob-revealed {
+      filter: blur(0);
+    }
+
+    /* 5. Composition bar shimmer */
+    .comp-bar {
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.10);
+    }
+    @keyframes comp-shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    .comp-pp {
+      background: linear-gradient(90deg, #5fb040, #4f9a35, #7abe5a, #4f9a35);
+      background-size: 200% auto;
+      animation: comp-shimmer 3s linear 1.5s infinite;
+    }
+
+    /* 6. Animated gradient border on .liquid-glass via @property */
+    @property --grad-angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+    @keyframes spin-border {
+      to { --grad-angle: 360deg; }
+    }
+    .hero-right .liquid-glass {
+      border-image: none;
+      border: none;
+      outline: 1.5px solid transparent;
+      background-origin: border-box;
+      position: relative;
+    }
+    .hero-right .liquid-glass::after {
+      content: "";
+      position: absolute;
+      inset: -1.5px;
+      border-radius: 25px;
+      padding: 1.5px;
+      background: conic-gradient(from var(--grad-angle), rgba(79,154,53,0.08) 0%, rgba(79,154,53,0.40) 25%, rgba(79,154,53,0.08) 50%, rgba(79,154,53,0.40) 75%, rgba(79,154,53,0.08) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 6;
+      animation: spin-border 8s linear infinite;
+    }
+
+    /* 7. Back link animated arrow */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .back-link::before {
+      content: "←";
+      display: inline-block;
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .back-link:hover::before {
+      transform: translateX(-4px);
+    }
+
+    /* 8. Request Sample CTA green glow on hover */
+    @keyframes cta-pulse {
+      0%, 100% { box-shadow: 0 8px 22px rgba(79,154,53,0.28), inset 0 1px 0 rgba(255,255,255,0.2); }
+      50% { box-shadow: 0 14px 32px rgba(79,154,53,0.46), inset 0 1px 0 rgba(255,255,255,0.3); }
+    }
+    .cta-btn.primary:hover {
+      background: linear-gradient(135deg, #6bc94e, #4f9a35);
+      animation: cta-pulse 1.8s ease-in-out infinite;
+    }
+
+    /* 9. Glass footer */
+    footer {
+      background: rgba(255,255,255,0.60);
+      backdrop-filter: blur(12px) saturate(1.2);
+      -webkit-backdrop-filter: blur(12px) saturate(1.2);
+    }
   </style>
 </head>
 <body data-product="bobbin">
@@ -1263,11 +1381,11 @@
             <span class="stat-box-label">Limestone in Part</span>
           </div>
           <div class="glass-stat-box">
-            <span class="stat-box-num">1.90<small style="font-size: 10px; font-weight: 500; margin-left: 2px;">g/cm³</small></span>
+            <span class="stat-box-num">1.90<small style="font-size: 10px; font-weight: 500; margin-left: 2px;">g/cm3</small></span>
             <span class="stat-box-label">PE78-02M Density</span>
           </div>
           <div class="glass-stat-box">
-            <span class="stat-box-num">0.542<small style="font-size: 10px; font-weight: 500; margin-left: 2px;">CO₂e/kg</small></span>
+            <span class="stat-box-num">0.542<small style="font-size: 10px; font-weight: 500; margin-left: 2px;">CO2e/kg</small></span>
             <span class="stat-box-label">PE78-02M GHG</span>
           </div>
         </div>
@@ -1297,12 +1415,12 @@
               <span class="spec-val">40% LIMEX + 60% PP</span>
             </div>
             <div class="spec-item">
-              <span class="spec-label">PE78-02M CaCO₃</span>
+              <span class="spec-label">PE78-02M CaCO3</span>
               <span class="spec-val">78%</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">PE78-02M Density</span>
-              <span class="spec-val">1.90 g/cm³</span>
+              <span class="spec-val">1.90 g/cm3</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">PE78-02M MFR</span>
@@ -1501,6 +1619,12 @@
         });
       }, 500);
     }
+    // Blur-in reveal: mark all reveal elements as revealed with a short delay
+    setTimeout(() => {
+      document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach((el) => {
+        el.classList.add('bob-revealed');
+      });
+    }, 120);
   });
 
   // Analytics hooks
