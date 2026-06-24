@@ -1,4 +1,6 @@
-/* SupplyFlow — origin chain */
+/* ─────────────────────────────────────────────────────────
+   SupplyFlow — premium origin chain
+   ───────────────────────────────────────────────────────── */
 .v2sf {
   background: transparent;
   padding: clamp(2.5rem, 4vw, 4rem) var(--v2-gutter);
@@ -9,141 +11,229 @@
   max-width: var(--v2-container-max);
   margin: 0 auto;
   display: flex;
-  align-items: stretch;
+  align-items: center;
   flex-wrap: wrap;
-  gap: var(--v2-space-4);
+  gap: 0;                /* connectors handle spacing */
 }
 
 .v2sf-step {
   display: flex;
   align-items: center;
-  gap: var(--v2-space-4);
   flex: 1 1 auto;
 }
 
-/* ── Node card ──────────────────────────────────────── */
+/* ── Node card ──────────────────────────────────────────── */
 .v2sf-node {
   display: flex;
   flex-direction: column;
-  gap: var(--v2-space-2);
-  padding: var(--v2-space-5);
-  background: var(--v2-canvas-raised);
-  border: var(--v2-hairline);
-  border-radius: var(--v2-radius-md);
-  min-width: 200px;
+  gap: 6px;
+  padding: 1.5rem 1.75rem;
   flex: 1;
+  min-width: 190px;
+  position: relative;
+  background:
+    linear-gradient(160deg,
+      rgba(255,255,255,0.04) 0%,
+      rgba(255,255,255,0.01) 100%);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  overflow: hidden;
   transition:
-    border-color var(--v2-dur-fast) var(--v2-ease-out),
-    box-shadow   var(--v2-dur-fast) var(--v2-ease-out);
+    border-color 0.3s ease,
+    box-shadow   0.3s ease,
+    transform    0.3s ease;
 }
+
+/* top-edge shine */
+.v2sf-node::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255,0.18) 40%,
+    rgba(255,255,255,0.18) 60%,
+    transparent 100%);
+  pointer-events: none;
+}
+
+/* green accent glow top-left on hover */
+.v2sf-node::after {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: -20px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(79,154,53,0.15) 0%,
+    transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
 .v2sf-node:hover {
-  border-color: var(--v2-accent-dim);
-  box-shadow: 0 0 18px rgba(79, 154, 53, 0.08);
+  border-color: rgba(79,154,53,0.3);
+  box-shadow:
+    0 0 0 1px rgba(79,154,53,0.08),
+    0 8px 32px rgba(0,0,0,0.35);
+  transform: translateY(-2px);
 }
+.v2sf-node:hover::after { opacity: 1; }
 
 .v2sf-num {
   font-family: var(--v2-font-mono);
-  font-size: var(--v2-fs-eyebrow);
-  letter-spacing: var(--v2-ls-widest);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
   color: var(--v2-accent);
+  opacity: 0.9;
 }
 
 .v2sf-name {
   font-family: var(--v2-font-sans);
-  font-size: var(--v2-fs-body);
-  font-weight: var(--v2-fw-semibold);
-  color: var(--v2-text);
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.92);
+  line-height: 1.3;
 }
 
 .v2sf-role {
   font-family: var(--v2-font-sans);
-  font-size: var(--v2-fs-caption);
-  color: var(--v2-text-muted);
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.38);
+  line-height: 1.4;
 }
 
-/* ── Connector slot ─────────────────────────────────── */
+/* ── Connector slot ─────────────────────────────────────── */
 .v2sf-link {
+  flex: 0 0 auto;
+  min-width: clamp(60px, 8vw, 130px);
+  position: relative;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: clamp(100px, 10vw, 160px);
-  flex: 0 0 auto;
+  padding: 0 4px;
 }
 
-/* ── SVG connector ──────────────────────────────────── */
-.v2sf-connector {
-  width: 100%;
-  height: 48px;
-  overflow: visible;
+/* ── Track (base line) ──────────────────────────────────── */
+.v2sf-track {
   display: block;
+  position: absolute;
+  left: 12px;
+  right: 20px;
+  top: 50%;
+  height: 1px;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg,
+    rgba(79,154,53,0.0)  0%,
+    rgba(79,154,53,0.35) 20%,
+    rgba(79,154,53,0.35) 80%,
+    rgba(79,154,53,0.0)  100%);
 }
 
-/* faint base wave rail */
-.v2sf-rail {
-  stroke: rgba(255, 255, 255, 0.08);
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  fill: none;
+/* ── Traveling orb ──────────────────────────────────────── */
+.v2sf-orb {
+  display: block;
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  box-shadow:
+    0 0 6px  2px rgba(255,255,255,0.9),
+    0 0 14px 4px rgba(79,154,53,0.8),
+    0 0 28px 6px rgba(79,154,53,0.35);
+  animation: v2sf-sweep 2s cubic-bezier(0.4,0,0.6,1) infinite;
 }
 
-/* animated gradient trail */
-.v2sf-trail {
-  fill: none;
-  stroke-width: 2;
-  stroke-linecap: round;
-  opacity: 0.7;
-  animation: v2sf-trail-pulse 2.2s ease-in-out infinite;
+@keyframes v2sf-sweep {
+  0%   { left: 12px;              opacity: 0;   }
+  8%   {                          opacity: 1;   }
+  92%  {                          opacity: 1;   }
+  100% { left: calc(100% - 20px); opacity: 0;   }
 }
 
-@keyframes v2sf-trail-pulse {
-  0%, 100% { opacity: 0.4; }
-  50%       { opacity: 0.9; }
-}
-
-/* glowing particle */
-.v2sf-particle {
-  fill: #fff;
-  filter: drop-shadow(0 0 5px var(--v2-accent)) drop-shadow(0 0 12px var(--v2-accent));
-  animation: v2sf-particle-pulse 2.2s ease-in-out infinite;
-}
-
-@keyframes v2sf-particle-pulse {
-  0%, 100% { r: 3;   opacity: 0.8; }
-  50%       { r: 4.5; opacity: 1;   }
-}
-
-/* arrow tip */
+/* ── Arrow cap ──────────────────────────────────────────── */
 .v2sf-arrow {
-  stroke: var(--v2-accent);
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
-  opacity: 0.6;
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 14px;
+  color: rgba(79,154,53,0.55);
+  flex-shrink: 0;
 }
 
-/* ── Reveal ─────────────────────────────────────────── */
+/* ── Reveal ─────────────────────────────────────────────── */
 .v2sf .v2-reveal-group > * {
   opacity: 0;
   transform: translateY(16px);
   transition:
-    opacity  var(--v2-dur-slow) var(--v2-ease-out),
+    opacity   var(--v2-dur-slow) var(--v2-ease-out),
     transform var(--v2-dur-slow) var(--v2-ease-out);
 }
-.v2sf .v2-reveal-group.is-in > *               { opacity: 1; transform: none; }
-.v2sf .v2-reveal-group.is-in > *:nth-child(2)  { transition-delay: 0.1s; }
-.v2sf .v2-reveal-group.is-in > *:nth-child(3)  { transition-delay: 0.2s; }
+.v2sf .v2-reveal-group.is-in > *             { opacity: 1; transform: none; }
+.v2sf .v2-reveal-group.is-in > *:nth-child(2) { transition-delay: 0.1s; }
+.v2sf .v2-reveal-group.is-in > *:nth-child(3) { transition-delay: 0.2s; }
 
-/* ── Mobile ─────────────────────────────────────────── */
+/* ── Mobile ─────────────────────────────────────────────── */
 @media (max-width: 767px) {
-  .v2sf-step  { flex-direction: column; width: 100%; }
-  .v2sf-link  { flex-direction: row; width: 100%; min-width: 0; }
-  .v2sf-connector { height: 34px; }
+  .v2sf-step {
+    flex-direction: column;
+    width: 100%;
+  }
+  .v2sf-link {
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+  }
+  .v2sf-track {
+    left: 50%;
+    right: auto;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    height: auto;
+    transform: none;
+    background: linear-gradient(180deg,
+      rgba(79,154,53,0.0)  0%,
+      rgba(79,154,53,0.35) 20%,
+      rgba(79,154,53,0.35) 80%,
+      rgba(79,154,53,0.0)  100%);
+  }
+  .v2sf-orb {
+    left: 50%;
+    top: 0;
+    animation: v2sf-sweep-v 2s cubic-bezier(0.4,0,0.6,1) infinite;
+  }
+  @keyframes v2sf-sweep-v {
+    0%   { top: 0;              opacity: 0; }
+    8%   {                      opacity: 1; }
+    92%  {                      opacity: 1; }
+    100% { top: calc(100% - 4px); opacity: 0; }
+  }
+  .v2sf-arrow {
+    right: auto;
+    bottom: 2px;
+    top: auto;
+    left: 50%;
+    transform: translateX(-50%) rotate(90deg);
+  }
 }
 
+/* ── Reduced motion ─────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .v2sf .v2-reveal-group > *  { opacity: 1; transform: none; transition: none; }
-  .v2sf-trail                 { animation: none; }
-  .v2sf-particle              { animation: none; }
-  .v2sf-particle animateMotion { display: none; }
+  .v2sf .v2-reveal-group > * { opacity: 1; transform: none; transition: none; }
+  .v2sf-orb                  { animation: none; opacity: 0.6; left: 50%; }
+  .v2sf-node                 { transition: none; }
 }
