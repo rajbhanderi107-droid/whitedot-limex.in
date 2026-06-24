@@ -64,7 +64,28 @@ export function EmployeeWorkspace() {
   }, [id]);
 
   useEffect(() => { load(); }, [load]);
-  useEffect(() => { employeesApi.list().then((r) => setAllIds(r.data.map((e) => ({ id: e.id, name: e.name, jobTitle: e.jobTitle })))).catch(() => {}); }, []);
+
+  useEffect(() => {
+    employeesApi.list()
+      .then((r) => {
+        const list = r.data.map((e) => ({ id: e.id, name: e.name, jobTitle: e.jobTitle }));
+        setAllIds(list);
+        if (!id) {
+          if (list.length > 0) {
+            navigate(`/admin/workspace/${list[0].id}`, { replace: true });
+          } else {
+            setLoading(false);
+            setError("No employees found in directory. Please create an employee first.");
+          }
+        }
+      })
+      .catch((err) => {
+        if (!id) {
+          setLoading(false);
+          setError("Failed to fetch employee list.");
+        }
+      });
+  }, [id, navigate]);
 
   const byStage = useMemo(() => {
     const m: Record<TaskStage, WorkTask[]> = { TODO: [], IN_PROGRESS: [], REVIEW: [], DONE: [] };
