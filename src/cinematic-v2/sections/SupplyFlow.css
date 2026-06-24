@@ -1,4 +1,4 @@
-/* SupplyFlow band — V1 origin chain */
+/* SupplyFlow — origin chain */
 .v2sf {
   background: transparent;
   padding: clamp(2.5rem, 4vw, 4rem) var(--v2-gutter);
@@ -21,6 +21,7 @@
   flex: 1 1 auto;
 }
 
+/* ── Node card ──────────────────────────────────────── */
 .v2sf-node {
   display: flex;
   flex-direction: column;
@@ -31,9 +32,14 @@
   border-radius: var(--v2-radius-md);
   min-width: 200px;
   flex: 1;
-  transition: border-color var(--v2-dur-fast) var(--v2-ease-out);
+  transition:
+    border-color var(--v2-dur-fast) var(--v2-ease-out),
+    box-shadow   var(--v2-dur-fast) var(--v2-ease-out);
 }
-.v2sf-node:hover { border-color: var(--v2-accent-dim); }
+.v2sf-node:hover {
+  border-color: var(--v2-accent-dim);
+  box-shadow: 0 0 18px rgba(79, 154, 53, 0.08);
+}
 
 .v2sf-num {
   font-family: var(--v2-font-mono);
@@ -55,6 +61,7 @@
   color: var(--v2-text-muted);
 }
 
+/* ── Connector slot ─────────────────────────────────── */
 .v2sf-link {
   display: flex;
   align-items: center;
@@ -63,79 +70,80 @@
   flex: 0 0 auto;
 }
 
-/* ── Spiral rotating glow line connector ───────────────────────── */
-.v2sf-spiral {
+/* ── SVG connector ──────────────────────────────────── */
+.v2sf-connector {
   width: 100%;
   height: 48px;
   overflow: visible;
   display: block;
 }
 
-/* faint rail the coil rides */
-.v2sf-spiral-base {
-  stroke: rgba(200, 210, 215, 0.16);
-  stroke-width: 1;
+/* faint base wave rail */
+.v2sf-rail {
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  fill: none;
 }
 
-/* the glowing coil strand — rotates + a living glow pulse */
-.v2sf-spiral-coil {
+/* animated gradient trail */
+.v2sf-trail {
   fill: none;
-  stroke: var(--v2-accent);
   stroke-width: 2;
   stroke-linecap: round;
-  animation: v2sf-spiral-glow 2.4s ease-in-out infinite;
-}
-/* dim back strand for depth */
-.v2sf-spiral-coil--back {
-  stroke: var(--v2-accent-dim);
-  stroke-width: 3.4;
-  opacity: 0.3;
-  animation: none;
-  filter: none;
+  opacity: 0.7;
+  animation: v2sf-trail-pulse 2.2s ease-in-out infinite;
 }
 
-/* group rotates by translating exactly one coil period → seamless spin */
-.v2sf-spiral-rot {
-  animation: v2sf-spiral-spin 3s linear infinite;
+@keyframes v2sf-trail-pulse {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 0.9; }
 }
 
-@keyframes v2sf-spiral-spin {
-  from { transform: translateX(0); }
-  to   { transform: translateX(calc(var(--v2sf-period, 47.12) * -1px)); }
+/* glowing particle */
+.v2sf-particle {
+  fill: #fff;
+  filter: drop-shadow(0 0 5px var(--v2-accent)) drop-shadow(0 0 12px var(--v2-accent));
+  animation: v2sf-particle-pulse 2.2s ease-in-out infinite;
 }
 
-/* breathing glow keeps the line alive as it spins */
-@keyframes v2sf-spiral-glow {
-  0%, 100% {
-    stroke: var(--v2-accent);
-    filter: drop-shadow(0 0 4px rgba(79, 154, 53, 0.6));
-  }
-  50% {
-    stroke: #9fe6a3;
-    filter: drop-shadow(0 0 9px rgba(159, 230, 163, 0.95));
-  }
+@keyframes v2sf-particle-pulse {
+  0%, 100% { r: 3;   opacity: 0.8; }
+  50%       { r: 4.5; opacity: 1;   }
 }
 
-/* Reveal */
+/* arrow tip */
+.v2sf-arrow {
+  stroke: var(--v2-accent);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  opacity: 0.6;
+}
+
+/* ── Reveal ─────────────────────────────────────────── */
 .v2sf .v2-reveal-group > * {
   opacity: 0;
   transform: translateY(16px);
   transition:
-    opacity var(--v2-dur-slow) var(--v2-ease-out),
+    opacity  var(--v2-dur-slow) var(--v2-ease-out),
     transform var(--v2-dur-slow) var(--v2-ease-out);
 }
-.v2sf .v2-reveal-group.is-in > * { opacity: 1; transform: none; }
-.v2sf .v2-reveal-group.is-in > *:nth-child(2) { transition-delay: 0.1s; }
-.v2sf .v2-reveal-group.is-in > *:nth-child(3) { transition-delay: 0.2s; }
+.v2sf .v2-reveal-group.is-in > *               { opacity: 1; transform: none; }
+.v2sf .v2-reveal-group.is-in > *:nth-child(2)  { transition-delay: 0.1s; }
+.v2sf .v2-reveal-group.is-in > *:nth-child(3)  { transition-delay: 0.2s; }
 
+/* ── Mobile ─────────────────────────────────────────── */
 @media (max-width: 767px) {
-  .v2sf-step { flex-direction: column; width: 100%; }
-  .v2sf-link { flex-direction: row; width: 100%; min-width: 0; }
-  .v2sf-spiral { height: 34px; }
+  .v2sf-step  { flex-direction: column; width: 100%; }
+  .v2sf-link  { flex-direction: row; width: 100%; min-width: 0; }
+  .v2sf-connector { height: 34px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .v2sf .v2-reveal-group > * { opacity: 1; transform: none; transition: none; }
-  .v2sf-spiral-rot,
-  .v2sf-spiral-coil { animation: none; }
+  .v2sf .v2-reveal-group > *  { opacity: 1; transform: none; transition: none; }
+  .v2sf-trail                 { animation: none; }
+  .v2sf-particle              { animation: none; }
+  .v2sf-particle animateMotion { display: none; }
 }
