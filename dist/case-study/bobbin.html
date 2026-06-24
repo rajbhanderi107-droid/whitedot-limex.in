@@ -1191,13 +1191,33 @@
       inset: -1.5px;
       border-radius: 25px;
       padding: 1.5px;
-      background: conic-gradient(from var(--grad-angle), rgba(79,154,53,0.08) 0%, rgba(79,154,53,0.40) 25%, rgba(79,154,53,0.08) 50%, rgba(79,154,53,0.40) 75%, rgba(79,154,53,0.08) 100%);
+      background: conic-gradient(from var(--grad-angle), transparent 60%, var(--orange) 80%, transparent 100%);
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
       pointer-events: none;
       z-index: 6;
-      animation: spin-border 8s linear infinite;
+      opacity: 0;
+      transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      animation: spin-border 6s linear infinite;
+    }
+    .hero-right .liquid-glass:hover::after {
+      opacity: 1;
+    }
+
+    /* 21st.dev style mouse-tracking card glow */
+    .hero-right .liquid-glass .card-glow {
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      background: radial-gradient(circle 220px at var(--gx, 50%) var(--gy, 50%), rgba(79, 154, 53, 0.14), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .hero-right .liquid-glass:hover .card-glow {
+      opacity: 1;
     }
 
     /* 7. Back link animated arrow */
@@ -1341,6 +1361,8 @@
     <!-- Right column (Consolidated Specs Panel) -->
     <div class="hero-right reveal-right">
       <div class="liquid-glass">
+        <!-- 21st.dev style mouse-tracking card glow -->
+        <div class="card-glow" aria-hidden="true"></div>
         <!-- Header -->
         <div class="glass-header">
           <span class="glass-eyebrow">Textile Bobbin</span>
@@ -1612,6 +1634,18 @@
   window.addEventListener('load', () => {
     const glass = document.querySelector('.liquid-glass');
     if (glass) {
+      // ─── 21st.dev Mouse-Tracking Glow ───
+      const glow = glass.querySelector('.card-glow');
+      if (glow) {
+        glass.addEventListener('mousemove', (e) => {
+          const r = glass.getBoundingClientRect();
+          const x = e.clientX - r.left;
+          const y = e.clientY - r.top;
+          glow.style.setProperty('--gx', `${(x / r.width * 100).toFixed(1)}%`);
+          glow.style.setProperty('--gy', `${(y / r.height * 100).toFixed(1)}%`);
+        });
+      }
+
       setTimeout(() => {
         glass.classList.add('in');
         document.querySelectorAll('.stat-num .num').forEach((n, i) => {
