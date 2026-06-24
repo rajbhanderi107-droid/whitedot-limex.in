@@ -198,12 +198,18 @@ export default function CaseStudyPage() {
 
             {/* Headline */}
             <div className="csp-card-hero">
+              <div className="csp-eyebrow" style={{ marginBottom: '16px' }}>
+                <span className="csp-rw" style={{ '--wd':'0.4s', fontSize: '10px', fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--cs-green)', display: 'inline-block' } as React.CSSProperties}>Case</span>{' '}
+                <span className="csp-rw" style={{ '--wd':'0.48s', fontSize: '10px', fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--cs-green)', display: 'inline-block' } as React.CSSProperties}>Studies</span>{' '}
+                <span className="csp-rw" style={{ '--wd':'0.56s', fontSize: '10px', fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--cs-green)', display: 'inline-block' } as React.CSSProperties}>·</span>{' '}
+                <span className="csp-rw" style={{ '--wd':'0.64s', fontSize: '10px', fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--cs-green)', display: 'inline-block' } as React.CSSProperties}>India</span>
+              </div>
               <h1 className="csp-h1">
-                <span className="csp-rw" style={{ '--wd':'0.62s' } as React.CSSProperties}>Explore</span>{' '}
-                <span className="csp-rw" style={{ '--wd':'0.72s' } as React.CSSProperties}>Products</span>{' '}
-                <span className="csp-rw" style={{ '--wd':'0.82s' } as React.CSSProperties}>Reimagined</span><br />
-                <span className="csp-rw" style={{ '--wd':'0.90s' } as React.CSSProperties}>in </span>
-                <span className="csp-rw csp-accent" style={{ '--wd':'0.98s' } as React.CSSProperties}>LIMEX</span>
+                <span className="csp-rw" style={{ '--wd':'0.72s' } as React.CSSProperties}>Explore</span>{' '}
+                <span className="csp-rw" style={{ '--wd':'0.8s' } as React.CSSProperties}>Products</span>{' '}
+                <span className="csp-rw" style={{ '--wd':'0.88s' } as React.CSSProperties}>Reimagined</span><br />
+                <span className="csp-rw" style={{ '--wd':'0.96s' } as React.CSSProperties}>in </span>
+                <span className="csp-rw csp-accent" style={{ '--wd':'1.04s' } as React.CSSProperties}>LIMEX</span>
               </h1>
               <p className="csp-hsub">Everyday plastic parts, rebuilt with limestone-based material. Select a product to explore it in 3D and see how its composition changes.</p>
               <div className="csp-hstats">
