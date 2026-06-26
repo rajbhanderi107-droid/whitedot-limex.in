@@ -5,6 +5,8 @@ const basePath = window.location.hostname.endsWith('github.io') ? '/whitedot-lim
 const bobbinHref  = `${basePath}/case-study/bobbin.html`;
 const bobbinModel = `${basePath}/case-study/model/bobbin.glb`;
 const bobbinPoster = `${basePath}/case-study/frames/bobbin_0.webp`;
+const containerHref  = `${basePath}/case-study/container.html`;
+const containerModel = `${basePath}/case-study/model/container-higgsfield-bright-white.glb`;
 
 export default function CaseStudyFeature() {
   const cardRef    = useRef<HTMLDivElement>(null);
@@ -17,7 +19,7 @@ export default function CaseStudyFeature() {
     if (!customElements.get('model-viewer')) {
       const s = document.createElement('script');
       s.type = 'module';
-      s.src = 'https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js';
+      s.src = `${basePath}/case-study/js/model-viewer.min.js`;
       document.head.appendChild(s);
     }
 
@@ -128,21 +130,44 @@ export default function CaseStudyFeature() {
       </a>
 
       {/* 02 — coming soon */}
-      <div className="csp-pcard soon">
+      <a className="csp-pcard featured live" href={containerHref} data-product="container">
+        <div className="csp-border-beam" />
+        <div className="csp-pglass" />
+        <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">02</span>
-          <span className="csp-psoon-badge">Coming soon</span>
-          <span className="csp-psoon-ph">+</span>
+          <model-viewer
+            src={containerModel}
+            alt="Paint container - red body and bright white snap lid 3D model"
+            interaction-prompt="none"
+            shadow-intensity="0"
+            exposure="1.08"
+            tone-mapping="neutral"
+            environment-image="neutral"
+            camera-orbit="28deg 72deg 108%"
+            style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+          />
         </div>
         <div className="csp-pinfo">
           <div>
-            <div className="csp-pname csp-pname--muted">Next Product</div>
-            <div className="csp-ptag">In development</div>
-            <div className="csp-pavail">Available Q3 2026</div>
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+              <span className="csp-pfeatured">New Study</span>
+            </div>
+            <div className="csp-pname">Paint Container</div>
+            <div className="csp-ptag">Paint Pail - 25% LIMEX</div>
+            <div className="csp-pbar">
+              <span style={{ flex:25, height:'100%', background:'var(--cs-green)', display:'block' }} />
+              <span style={{ flex:75, height:'100%', background:'#c4c7c0', display:'block' }} />
+            </div>
+            <div className="csp-pbarlabels">
+              <span className="csp-pdot pp" /><span className="csp-pblabel">25% LIMEX</span>
+              <span className="csp-psep">·</span>
+              <span className="csp-pdot lx" /><span className="csp-pblabel">75% PP</span>
+            </div>
           </div>
           <span className="csp-pgo">→</span>
         </div>
-      </div>
+      </a>
 
       {/* 03 — coming soon */}
       <div className="csp-pcard soon">
@@ -187,11 +212,11 @@ export default function CaseStudyFeature() {
             </h2>
             <p className="csp-hsub">Everyday plastic parts, rebuilt with limestone-based material. Select a product to explore it in 3D and see how its composition changes.</p>
             <div className="csp-hstats">
-              <div className="csp-hs-item"><span className="csp-hs-num">01</span><span className="csp-hs-label">Active Study</span></div>
+              <div className="csp-hs-item"><span className="csp-hs-num">02</span><span className="csp-hs-label">Active Studies</span></div>
               <div className="csp-hs-div" />
               <div className="csp-hs-item"><span className="csp-hs-num">3D</span><span className="csp-hs-label">Interactive</span></div>
               <div className="csp-hs-div" />
-              <div className="csp-hs-item"><span className="csp-hs-num">40<small>%</small></span><span className="csp-hs-label">LIMEX PE78-02M</span></div>
+              <div className="csp-hs-item"><span className="csp-hs-num">100<small>%</small></span><span className="csp-hs-label">LIMEX + Color</span></div>
               <div className="csp-hs-div" />
               <div className="csp-hs-item"><span className="csp-hs-num csp-hs-num--green">~38<small>%</small></span><span className="csp-hs-label">CO₂e Cut (LCA)</span></div>
             </div>
@@ -221,8 +246,8 @@ export default function CaseStudyFeature() {
               </div>
             </div>
             <div className="csp-footer-right">
-              <a className="csp-explore-link" href={bobbinHref}>Explore More</a>
-              <a className="csp-go-btn" href={bobbinHref} aria-label="Open Bobbin case study">→</a>
+              <a className="csp-explore-link" href={containerHref}>Explore New Study</a>
+              <a className="csp-go-btn" href={containerHref} aria-label="Open Paint Container case study">→</a>
             </div>
           </div>
         </div>

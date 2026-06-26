@@ -12,7 +12,7 @@
 
   const PRODUCT = document.body.dataset.product || "bobbin";
   const DATA_URL = new URL("./data/specs.json", document.baseURI).href;
-  const JSPDF_CDN = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+  const JSPDF_URL = new URL("./js/jspdf.umd.min.js", document.baseURI).href;
 
   const ORANGE = [79, 154, 53];   // site accent green
   const INK = [17, 17, 17];
@@ -41,7 +41,7 @@
       host.innerHTML =
         '<span class="tds-verified-dot"></span>' +
         verifiedCount + " of " + p.specs.length +
-        " fields verified against published TBM / supplier data";
+        " fields verified from photo references or published supplier data";
     }
   }
 
@@ -66,7 +66,7 @@
     if (window.jspdf && window.jspdf.jsPDF) return Promise.resolve();
     return new Promise((res, rej) => {
       const s = document.createElement("script");
-      s.src = JSPDF_CDN;
+      s.src = JSPDF_URL;
       s.onload = () => res();
       s.onerror = () => rej(new Error("jsPDF failed to load"));
       document.head.appendChild(s);
@@ -94,10 +94,10 @@
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     doc.setTextColor(200, 200, 196);
-    doc.text("White Dot LLP  ·  Authorized Marketing & Sales — TBM LIMEX", M, 62);
+    doc.text("White Dot LLP  -  Authorized Marketing & Sales - TBM LIMEX", M, 62);
     doc.setTextColor(...ORANGE.map((c) => Math.min(255, c + 40)));
     doc.setFontSize(8);
-    doc.text("CASE STUDY " + (p.index || "") + "  ·  " + (p.referenceGrade || ""), M, 78);
+    doc.text("CASE STUDY " + (p.index || "") + "  -  " + (p.mixRatio || p.referenceGrade || ""), M, 78);
 
     y = 132;
 
@@ -110,7 +110,7 @@
     doc.setFontSize(9.5);
     doc.setTextColor(...MUTE);
     y += 18;
-    const tag = (p.category || "") + "  ·  " + (p.moulding || "") + "  ·  " + (p.application || "");
+    const tag = (p.category || "") + "  -  " + (p.moulding || "") + "  -  " + (p.application || "");
     doc.text(tag, M, y);
 
     // Description
@@ -141,6 +141,19 @@
       y += 18;
     });
     y += 6;
+
+    // Key formulation summary.
+    doc.setFillColor(245, 248, 244);
+    doc.roundedRect(M, y, W - M * 2, 58, 8, 8, "F");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.setTextColor(...INK);
+    doc.text(p.mixRatio || "Per lot TDS", M + 16, y + 24);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.5);
+    doc.setTextColor(...MUTE);
+    doc.text("Declared formulation for this case study. Grade-level values remain subject to final supplier lot TDS.", M + 16, y + 42);
+    y += 78;
 
     // Specs table
     y = sectionTitle(doc, "SPECIFICATIONS", M, y, W);
@@ -191,7 +204,7 @@
     p.specs.concat(p.composition, p.highlights || [], [p.co2 || {}]).forEach((x) => x && x.source && usedKeys.add(x.source));
     const srcLines = [];
     usedKeys.forEach((k) => { if (db.sources[k]) srcLines.push("• " + db.sources[k]); });
-    srcLines.push("• Verified " + (db._meta.lastResearched || "") + ". Fields marked with a dot are cited from the above; unmarked values are representative of the material class and must be confirmed against the supplier lot TDS.");
+    srcLines.push("• Prepared " + (db._meta.lastResearched || "") + ". Photo-reference fields are derived from supplied product images. User-supplied formulation fields are marked unverified until confirmed against final supplier lot TDS.");
     const wrapped = doc.splitTextToSize(srcLines.join("\n"), W - M * 2);
     doc.text(wrapped, M, y);
     y += wrapped.length * 10 + 16;
@@ -202,10 +215,10 @@
     doc.line(M, H - 50, W - M, H - 50);
     doc.setFontSize(7.5);
     doc.setTextColor(...FAINT);
-    doc.text("© 2026 White Dot LLP · LIMEX is a registered trademark of TBM Co., Ltd., Japan", M, H - 34);
-    doc.text("Generated " + new Date().toISOString().slice(0, 10) + " · whitedotindia.in", M, H - 22);
+    doc.text("(c) 2026 White Dot LLP - LIMEX is a registered trademark of TBM Co., Ltd., Japan", M, H - 34);
+    doc.text("Generated " + new Date().toISOString().slice(0, 10) + " - whitedotindia.in", M, H - 22);
 
-    doc.save("White-Dot-TDS-" + p.name + "-" + (p.referenceGrade || "LIMEX") + ".pdf");
+    doc.save("White-Dot-TDS-" + safeFileName(p.name) + "-" + safeFileName(p.mixRatio || p.referenceGrade || "LIMEX") + ".pdf");
     track("tds_download", { product: p.id });
   }
 
@@ -223,6 +236,14 @@
     if (!h) return null;
     const m = h.replace("#", "");
     return [parseInt(m.slice(0, 2), 16), parseInt(m.slice(2, 4), 16), parseInt(m.slice(4, 6), 16)];
+  }
+
+  function safeFileName(s) {
+    return String(s || "")
+      .replace(/%/g, "pct")
+      .replace(/[^a-z0-9]+/gi, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 80);
   }
 
   function track(ev, d) { (window.dataLayer = window.dataLayer || []).push(Object.assign({ event: ev }, d || {})); }

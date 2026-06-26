@@ -10,7 +10,8 @@
     "gsh-pe78-02m": "https://greensourcinghub.com/limex-pellet-pe78-02m-361",
     "tbm-pellet": "https://tb-m.com/eng/products/products-pellet/",
     "co2-lca": "https://www.businesswire.com/news/home/20210624005047/en/",
-    "unido": "https://itpo-tokyo.unido.org/en/technology_db/7923/"
+    "unido": "https://itpo-tokyo.unido.org/en/technology_db/7923/",
+    "photo-reference": "Supplied case-study photos: IMG_9992 front view and IMG_9993 top view"
   },
   "products": {
     "bobbin": {
@@ -51,6 +52,47 @@
         "basis": "Greenhouse-gas (CO2e) reduction vs conventional plastic, application-dependent, per TBM Life-Cycle Assessment (raw material to disposal). Reference value, not guaranteed. PE78-02M compound GHG: 0.542 kg-CO2e/kg.",
         "verified": true,
         "source": "co2-lca"
+      }
+    },
+    "container": {
+      "id": "container",
+      "index": "02",
+      "name": "Paint Container",
+      "category": "Paint Container",
+      "status": "live",
+      "tagline": "A paint container made from a 25% LIMEX + 75% PP blend, modeled from the supplied front and top reference photos.",
+      "description": "A paint container reconstructed from the supplied front view (IMG_9992) and top view (IMG_9993). The model captures the tapered glossy red body, bright white snap lid, double rim, front pull-tab detail, concentric lid rings, faint top embossing and molded-plastic finish. The formulation is 25% LIMEX and 75% PP; exact LIMEX grade, process settings and lot properties should be confirmed against the product TDS before publishing engineering claims.",
+      "referenceGrade": "LIMEX grade pending lot TDS",
+      "mixRatio": "25% LIMEX + 75% PP",
+      "moulding": "Rigid plastic moulding",
+      "application": "Paint packaging container",
+      "composition": [
+        { "name": "LIMEX", "pct": 25, "color": "#4f9a35", "verified": false, "source": "photo-reference", "note": "User supplied formulation; exact LIMEX grade requires lot TDS." },
+        { "name": "PP", "pct": 75, "color": "#c4c7c0", "verified": false, "source": "photo-reference", "note": "User supplied formulation; confirm exact PP grade against product TDS." }
+      ],
+      "specs": [
+        { "label": "Visual Reference", "value": "IMG_9992 front + IMG_9993 top", "verified": true, "source": "photo-reference" },
+        { "label": "Material Base", "value": "LIMEX + PP", "verified": false, "source": "photo-reference", "note": "User supplied formulation; confirm grades against lot TDS." },
+        { "label": "Mixing Ratio", "value": "25% LIMEX + 75% PP", "verified": false, "source": "photo-reference" },
+        { "label": "Body Finish", "value": "Glossy signal-red molded plastic", "verified": true, "source": "photo-reference" },
+        { "label": "Lid Finish", "value": "Bright white molded snap lid", "verified": true, "source": "photo-reference" },
+        { "label": "Geometry", "value": "Tapered cylindrical body with raised rim", "verified": true, "source": "photo-reference" },
+        { "label": "Lid Detail", "value": "Concentric rings, faint embossed instruction arc", "verified": true, "source": "photo-reference" },
+        { "label": "Front Detail", "value": "Small pull-tab panel below lid rim", "verified": true, "source": "photo-reference" },
+        { "label": "LIMEX Grade", "value": "Per lot TDS", "verified": false, "source": "photo-reference" },
+        { "label": "Process", "value": "Confirm with manufacturer", "verified": false, "source": "photo-reference" }
+      ],
+      "highlights": [
+        { "num": "02", "label": "Active Study", "verified": true, "source": "photo-reference" },
+        { "num": "25%", "label": "LIMEX", "verified": false, "source": "photo-reference" },
+        { "num": "75%", "label": "PP", "verified": false, "source": "photo-reference" },
+        { "num": "GLB", "label": "Adobe/Web Model", "verified": true, "source": "photo-reference" }
+      ],
+      "co2": {
+        "value": "Pending",
+        "basis": "CO2e reduction depends on confirmed LIMEX grade, blend ratio, part weight and lifecycle boundary. Do not publish a reduction number until the product formulation is verified.",
+        "verified": false,
+        "source": "photo-reference"
       }
     }
   }
