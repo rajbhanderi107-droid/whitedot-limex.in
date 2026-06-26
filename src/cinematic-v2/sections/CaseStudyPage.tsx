@@ -8,7 +8,7 @@ const bobbinHref  = `${basePath}/case-study/bobbin.html`;
 const bobbinModel = `${basePath}/case-study/model/bobbin.glb`;
 const bobbinPoster = `${basePath}/case-study/frames/bobbin_0.webp`;
 const containerHref  = `${basePath}/case-study/container.html`;
-const containerModel = `${basePath}/case-study/model/container-higgsfield-bright-white.glb`;
+const containerModel = `${basePath}/case-study/model/paint-container-procedural-red-white.glb`;
 
 export default function CaseStudyPage() {
   const cardRef    = useRef<HTMLDivElement>(null);

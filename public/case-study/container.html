@@ -10,7 +10,7 @@
   <meta property="og:type" content="product" />
   <meta property="og:title" content="Paint Container - 25% LIMEX + 75% PP" />
   <meta property="og:description" content="A paint container made from 25% LIMEX + 75% PP. Interactive 3D." />
-  <meta property="og:image" content="https://whitedotindia.in/case-study/frames/container_0.webp" />
+  <meta property="og:image" content="https://whitedotindia.in/case-study/frames/paint-container-procedural-front.png" />
   <meta property="og:url" content="https://whitedotindia.in/case-study/container.html" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -360,6 +360,12 @@
     @media (max-width: 1000px) { .hero-tabs { justify-content: center; } }
 
     .hero-left  { position: relative; z-index: 2; }
+    body[data-product="container"] .hero-left { min-width: 0; }
+    body[data-product="container"] .case-title {
+      font-size: clamp(34px, 4.15vw, 66px);
+      max-width: 340px;
+      white-space: normal;
+    }
     .back-link {
       display: inline-block;
       font-size: 11px;
@@ -774,6 +780,9 @@
       transform-style: preserve-3d;
       will-change: transform;
       transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
+    }
+    @media (min-width: 1001px) {
+      body[data-product="container"] .hero-right .liquid-glass { min-height: 1067px; }
     }
     .hero-right .liquid-glass:hover {
       box-shadow: 
@@ -1359,7 +1368,7 @@
       <div class="rotator-wrap" id="rotatorWrap">
         <model-viewer
           id="containerModel"
-          src="./model/container-higgsfield-bright-white.glb"
+          src="./model/paint-container-procedural-red-white.glb"
           alt="Paint Container - 25% LIMEX + 75% PP 3D model"
           reveal="auto"
           camera-controls
@@ -1373,9 +1382,9 @@
           exposure="1.15"
           tone-mapping="neutral"
           environment-image="neutral"
-          camera-orbit="0deg 76deg 105%"
-          min-camera-orbit="auto auto 70%"
-          max-camera-orbit="auto auto 160%">
+          camera-orbit="0deg 74deg 165%"
+          min-camera-orbit="auto auto 110%"
+          max-camera-orbit="auto auto 220%">
           <div class="mv-loader" slot="progress-bar"></div>
 
           <!-- Hotspots for tabs -->
@@ -1542,12 +1551,16 @@
     if (!el) return;
     const text = el.textContent;
     el.textContent = '';
-    [...text].forEach((ch, i) => {
-      const span = document.createElement('span');
-      span.className = 'char';
-      span.style.setProperty('--ci', i);
-      span.textContent = ch === ' ' ? ' ' : ch;
-      el.appendChild(span);
+    let ci = 0;
+    text.split(' ').forEach((word, wordIndex, words) => {
+      [...word].forEach((ch) => {
+        const span = document.createElement('span');
+        span.className = 'char';
+        span.style.setProperty('--ci', ci++);
+        span.textContent = ch;
+        el.appendChild(span);
+      });
+      if (wordIndex < words.length - 1) el.appendChild(document.createElement('br'));
     });
   })();
 
@@ -1589,7 +1602,7 @@
       
       if (mode === 'overview') {
         // Orbit to beauty shot, resume rotation
-        mv.cameraOrbit = '0deg 76deg 105%';
+        mv.cameraOrbit = '0deg 74deg 165%';
         mv.cameraTarget = '0m 0m 0m';
         mv.setAttribute('auto-rotate', '');
       } else {
@@ -1598,7 +1611,7 @@
         
         if (mode === 'composition') {
           // Zoom in on the body
-          mv.cameraOrbit = '45deg 70deg 85%';
+          mv.cameraOrbit = '45deg 70deg 145%';
           mv.cameraTarget = '0m 0.02m 0m';
           setTimeout(() => {
             const h = document.getElementById('hotspot-comp');
@@ -1609,7 +1622,7 @@
           }, 350);
         } else if (mode === 'material') {
           // Zoom in on top-down structure
-          mv.cameraOrbit = '-45deg 40deg 80%';
+          mv.cameraOrbit = '-45deg 40deg 140%';
           mv.cameraTarget = '0m -0.03m 0m';
           setTimeout(() => {
             const h = document.getElementById('hotspot-mat');
@@ -1653,7 +1666,7 @@
       mv.fieldOfView = '45deg';
       
       setTimeout(() => {
-        mv.cameraOrbit = '0deg 76deg 105%';
+        mv.cameraOrbit = '0deg 74deg 165%';
         mv.fieldOfView = 'auto';
       }, 150);
     }
