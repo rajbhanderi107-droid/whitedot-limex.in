@@ -18,11 +18,11 @@ scene.name = 'WhiteDot Paint Container - 25 LIMEX 75 PP';
 
 const red = new THREE.MeshPhysicalMaterial({
   name: 'glossy red LIMEX PP body',
-  color: new THREE.Color('#f01814'),
-  roughness: 0.28,
+  color: new THREE.Color('#ef1712'),
+  roughness: 0.2,
   metalness: 0,
-  clearcoat: 0.65,
-  clearcoatRoughness: 0.22,
+  clearcoat: 0.9,
+  clearcoatRoughness: 0.14,
 });
 
 const white = new THREE.MeshPhysicalMaterial({
@@ -37,14 +37,16 @@ const white = new THREE.MeshPhysicalMaterial({
 const dark = new THREE.MeshPhysicalMaterial({
   name: 'black handle grip',
   color: new THREE.Color('#171717'),
-  roughness: 0.48,
+  roughness: 0.36,
   metalness: 0,
+  clearcoat: 0.35,
+  clearcoatRoughness: 0.28,
 });
 
 const metal = new THREE.MeshPhysicalMaterial({
   name: 'polished wire handle',
-  color: new THREE.Color('#d8d8d8'),
-  roughness: 0.18,
+  color: new THREE.Color('#eeeeee'),
+  roughness: 0.12,
   metalness: 1,
 });
 
@@ -66,45 +68,55 @@ function torus(name, radius, tube, y, material, scaleY = 1) {
   return m;
 }
 
+function capsuleBetween(name, start, end, radius, material, radialSegments = 24) {
+  const a = new THREE.Vector3(...start);
+  const b = new THREE.Vector3(...end);
+  const mid = a.clone().add(b).multiplyScalar(0.5);
+  const dir = b.clone().sub(a);
+  const len = dir.length();
+  const g = new THREE.CylinderGeometry(radius, radius, len, radialSegments);
+  const m = mesh(g, material, name, [mid.x, mid.y, mid.z]);
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
+  return m;
+}
+
 // Tapered paint pail body: wide top, narrower bottom, molded-plastic proportions.
-mesh(new THREE.CylinderGeometry(1.18, 0.86, 2.25, 160, 4, false), red, 'tapered glossy red paint pail body', [0, 0, 0]);
+mesh(new THREE.CylinderGeometry(1.18, 0.84, 2.25, 192, 6, false), red, 'tapered glossy red paint pail body', [0, 0, 0]);
 torus('rounded lower molded foot ring', 0.87, 0.035, -1.14, red);
 torus('upper red rolled rim under lid', 1.19, 0.055, 1.11, red);
 mesh(new THREE.CylinderGeometry(1.23, 1.18, 0.13, 160), red, 'thick red top collar', [0, 1.1, 0]);
+torus('fine dark separation shadow below white lid', 1.215, 0.008, 1.205, dark);
 
 // Bright white snap lid with concentric molded rings.
-mesh(new THREE.CylinderGeometry(1.34, 1.3, 0.22, 160), white, 'bright white snap lid side wall', [0, 1.28, 0]);
-mesh(new THREE.CylinderGeometry(1.25, 1.25, 0.08, 160), white, 'flat bright white lid top', [0, 1.43, 0]);
+mesh(new THREE.CylinderGeometry(1.34, 1.3, 0.22, 192), white, 'bright white snap lid side wall', [0, 1.28, 0]);
+mesh(new THREE.CylinderGeometry(1.25, 1.25, 0.08, 192), white, 'flat bright white lid top', [0, 1.43, 0]);
 torus('outer raised white lid rim', 1.18, 0.035, 1.485, white);
 torus('middle shallow circular lid ring', 0.82, 0.012, 1.505, white);
 torus('inner shallow circular lid ring', 0.45, 0.01, 1.515, white);
 mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.008, 48), white, 'tiny injection point on lid center', [0, 1.525, 0]);
+torus('lower white snap bead', 1.31, 0.025, 1.19, white);
 
-// Subtle molded highlights/ribs on the glossy red front.
-for (const x of [-0.62, 0.62]) {
-  const rib = mesh(new THREE.BoxGeometry(0.018, 1.52, 0.012), red, 'subtle vertical molded body highlight', [x, -0.12, 0.858]);
-  rib.rotation.y = x < 0 ? -0.08 : 0.08;
-}
-torus('subtle lower body circular mold line', 0.91, 0.008, -0.88, red);
+// Clean wall-paint pails are largely smooth; avoid visible ribs that read as artifacts.
+torus('subtle lower body circular mold line', 0.91, 0.006, -0.88, red);
 
 // Side hinge lugs and wire bail handle.
-for (const x of [-1.22, 1.22]) {
-  mesh(new THREE.SphereGeometry(0.07, 32, 16), red, 'red molded handle attachment lug', [x, 0.72, 0]);
-  mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.14, 32), metal, 'silver handle pivot pin', [x, 0.72, 0], [0, 0, Math.PI / 2]);
+for (const x of [-1.19, 1.19]) {
+  mesh(new THREE.SphereGeometry(0.032, 32, 16), metal, 'small polished handle pivot rivet', [x, 0.68, 0.08]);
+  capsuleBetween('short silver handle pivot pin', [x - Math.sign(x) * 0.04, 0.68, 0.08], [x + Math.sign(x) * 0.04, 0.68, 0.08], 0.012, metal, 16);
 }
 
 const handlePoints = [
-  new THREE.Vector3(-1.24, 0.72, 0),
-  new THREE.Vector3(-1.05, 0.2, 0.82),
-  new THREE.Vector3(-0.48, -0.42, 1.2),
-  new THREE.Vector3(0, -0.58, 1.28),
-  new THREE.Vector3(0.48, -0.42, 1.2),
-  new THREE.Vector3(1.05, 0.2, 0.82),
-  new THREE.Vector3(1.24, 0.72, 0),
+  new THREE.Vector3(-1.15, 0.66, 0.18),
+  new THREE.Vector3(-0.94, 0.18, 0.92),
+  new THREE.Vector3(-0.44, -0.36, 1.17),
+  new THREE.Vector3(0, -0.49, 1.24),
+  new THREE.Vector3(0.44, -0.36, 1.17),
+  new THREE.Vector3(0.94, 0.18, 0.92),
+  new THREE.Vector3(1.15, 0.66, 0.18),
 ];
 const handleCurve = new THREE.CatmullRomCurve3(handlePoints);
-mesh(new THREE.TubeGeometry(handleCurve, 120, 0.012, 16, false), metal, 'arched silver wire bail handle');
-mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.5, 48), dark, 'centered black plastic handle grip', [0, -0.54, 1.28], [0, 0, Math.PI / 2]);
+mesh(new THREE.TubeGeometry(handleCurve, 160, 0.008, 16, false), metal, 'clean arched silver wire bail handle');
+mesh(new THREE.CylinderGeometry(0.048, 0.048, 0.42, 48), dark, 'centered black plastic handle grip', [0, -0.49, 1.245], [0, 0, Math.PI / 2]);
 
 // Add lights/camera metadata so model-viewer and other GLB viewers have a sensible preview.
 const key = new THREE.DirectionalLight(0xffffff, 3);

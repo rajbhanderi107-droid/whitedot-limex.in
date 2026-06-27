@@ -1374,16 +1374,16 @@
           camera-controls
           touch-action="pan-y"
           auto-rotate
-          auto-rotate-delay="0"
-          rotation-per-second="22deg"
+          auto-rotate-delay="5000"
+          rotation-per-second="10deg"
           interpolation-decay="100"
           interaction-prompt="none"
           shadow-intensity="0"
           exposure="1.15"
           tone-mapping="neutral"
           environment-image="neutral"
-          camera-orbit="0deg 74deg 165%"
-          min-camera-orbit="auto auto 110%"
+          camera-orbit="0deg 74deg 135%"
+          min-camera-orbit="auto auto 95%"
           max-camera-orbit="auto auto 220%">
           <div class="mv-loader" slot="progress-bar"></div>
 
@@ -1416,7 +1416,7 @@
         <div class="glass-header">
           <span class="glass-eyebrow">Paint Container</span>
           <h2 class="glass-product-name">Paint Container</h2>
-          <span class="glass-tag">25% LIMEX + 75% PP</span>
+          <span class="glass-tag">LIMEX Composite</span>
         </div>
         <div style="position:absolute;top:22px;right:22px;font-size:48px;font-weight:900;letter-spacing:-0.05em;color:rgba(0,0,0,0.06);line-height:1;pointer-events:none;user-select:none;" aria-hidden="true">02</div>
 
@@ -1429,35 +1429,35 @@
           <div class="comp-seg comp-pp" data-pct="75"></div>
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:6px;margin-bottom:12px;">
-          <span style="font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--wd-faint);">LIMEX</span>
-          <span style="font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--wd-faint);">PP</span>
+          <span style="font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--wd-faint);">LIMEX PE78-02M</span>
+          <span style="font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--wd-faint);">PP HOMO-POLYMER</span>
         </div>
 
         <!-- Composition Stats -->
         <div class="comp-stats">
           <div class="comp-stat">
             <span class="stat-num accent"><span class="num" data-to="25">0</span><small>%</small></span>
-            <span class="stat-label">LIMEX</span>
+            <span class="stat-label">LIMEX PE78-02M</span>
           </div>
           <div class="comp-stat">
             <span class="stat-num"><span class="num" data-to="75">0</span><small>%</small></span>
-            <span class="stat-label">PP</span>
+            <span class="stat-label">PP HOMO-POLYMER</span>
           </div>
         </div>
 
         <!-- Stats Grid -->
         <div class="glass-stats-grid">
           <div class="glass-stat-box">
-            <span class="stat-box-num">25<small style="font-size: 10px; font-weight: 500; margin-left: 2px;">%</small></span>
-            <span class="stat-box-label">LIMEX Content</span>
+            <span class="stat-box-num">~20<small style="font-size: 10px; font-weight: 500; margin-left: 2px;">%</small></span>
+            <span class="stat-box-label">Limestone in Part</span>
           </div>
           <div class="glass-stat-box">
-            <span class="stat-box-num">2<small style="font-size: 10px; font-weight: 500; margin-left: 2px;">views</small></span>
-            <span class="stat-box-label">Photo References</span>
+            <span class="stat-box-num">1.90<small style="font-size: 10px; font-weight: 500; margin-left: 2px;">g/cm3</small></span>
+            <span class="stat-box-label">PE78-02M Density</span>
           </div>
           <div class="glass-stat-box">
-            <span class="stat-box-num">GLB</span>
-            <span class="stat-box-label">Web Model</span>
+            <span class="stat-box-num">0.542<small style="font-size: 10px; font-weight: 500; margin-left: 2px;">CO2e/kg</small></span>
+            <span class="stat-box-label">PE78-02M GHG</span>
           </div>
         </div>
 
@@ -1467,7 +1467,7 @@
           <div class="spec-grid">
             <div class="spec-item">
               <span class="spec-label">Material Base</span>
-              <span class="spec-val">LIMEX + PP</span>
+              <span class="spec-val">Limestone + PP</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">Application</span>
@@ -1475,11 +1475,11 @@
             </div>
             <div class="spec-item">
               <span class="spec-label">Process</span>
-              <span class="spec-val">Rigid Plastic Moulding</span>
+              <span class="spec-val">Injection Moulding</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">LIMEX Grade</span>
-              <span class="spec-val">Per final product sheet</span>
+              <span class="spec-val">PE78-02M</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">Mixing Ratio</span>
@@ -1487,15 +1487,15 @@
             </div>
             <div class="spec-item">
               <span class="spec-label">PE78-02M CaCO3</span>
-              <span class="spec-val">Per final product sheet</span>
+              <span class="spec-val">78%</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">PE78-02M Density</span>
-              <span class="spec-val">Per final product sheet</span>
+              <span class="spec-val">1.90 g/cm3</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">PE78-02M MFR</span>
-              <span class="spec-val">Per final product sheet</span>
+              <span class="spec-val">0.6 g/10 min</span>
             </div>
           </div>
           <div class="spec-fill-bar" style="margin-top:10px;">
@@ -1602,7 +1602,7 @@
       
       if (mode === 'overview') {
         // Orbit to beauty shot, resume rotation
-        mv.cameraOrbit = '0deg 74deg 165%';
+        mv.cameraOrbit = '0deg 74deg 135%';
         mv.cameraTarget = '0m 0m 0m';
         mv.setAttribute('auto-rotate', '');
       } else {
@@ -1611,7 +1611,7 @@
         
         if (mode === 'composition') {
           // Zoom in on the body
-          mv.cameraOrbit = '45deg 70deg 145%';
+          mv.cameraOrbit = '45deg 70deg 118%';
           mv.cameraTarget = '0m 0.02m 0m';
           setTimeout(() => {
             const h = document.getElementById('hotspot-comp');
@@ -1622,7 +1622,7 @@
           }, 350);
         } else if (mode === 'material') {
           // Zoom in on top-down structure
-          mv.cameraOrbit = '-45deg 40deg 140%';
+          mv.cameraOrbit = '-45deg 40deg 120%';
           mv.cameraTarget = '0m -0.03m 0m';
           setTimeout(() => {
             const h = document.getElementById('hotspot-mat');
@@ -1666,7 +1666,7 @@
       mv.fieldOfView = '45deg';
       
       setTimeout(() => {
-        mv.cameraOrbit = '0deg 74deg 165%';
+        mv.cameraOrbit = '0deg 74deg 135%';
         mv.fieldOfView = 'auto';
       }, 150);
     }
