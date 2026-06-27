@@ -467,7 +467,7 @@
       pointer-events: none;
       z-index: 0;
     }
-    
+
     .orbit-ring {
       position: absolute;
       border-radius: 50%;
@@ -476,21 +476,21 @@
       left: 50%;
       transform: translate(-50%, -50%);
     }
-    
+
     .orbit-outer {
       width: 86%;
       height: 86%;
       border: 1px dashed rgba(79, 154, 53, 0.35);
       animation: rotate-clockwise 45s linear infinite;
     }
-    
+
     .orbit-inner {
       width: 70%;
       height: 70%;
       border: 1px solid rgba(79, 154, 53, 0.15);
       background: radial-gradient(circle, rgba(79, 154, 53, 0.03) 0%, transparent 75%);
     }
-    
+
     /* Glowing particle orbiting the inner ring */
     .orbit-dot-track {
       position: absolute;
@@ -501,7 +501,7 @@
       transform: translate(-50%, -50%);
       animation: rotate-clockwise 14s linear infinite;
     }
-    
+
     .orbit-dot {
       position: absolute;
       top: -5px; /* Half of height to center it on the path */
@@ -513,7 +513,7 @@
       border-radius: 50%;
       box-shadow: 0 0 14px 4px var(--orange), 0 0 24px 8px rgba(79, 154, 53, 0.4);
     }
-    
+
     /* Ambient backdrop glow pulse */
     .orbit-glow {
       position: absolute;
@@ -526,12 +526,12 @@
       filter: blur(24px);
       animation: glow-pulse 6s ease-in-out infinite alternate;
     }
-    
+
     @keyframes rotate-clockwise {
       from { transform: translate(-50%, -50%) rotate(0deg); }
       to   { transform: translate(-50%, -50%) rotate(360deg); }
     }
-    
+
     @keyframes glow-pulse {
       0%   { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
       100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
@@ -770,7 +770,7 @@
         );
       backdrop-filter: blur(24px) saturate(1.3);
       -webkit-backdrop-filter: blur(24px) saturate(1.3);
-      box-shadow: 
+      box-shadow:
         0 4px 12px rgba(0, 0, 0, 0.02),
         0 16px 40px rgba(0, 0, 0, 0.06),
         0 40px 80px rgba(0, 0, 0, 0.04),
@@ -785,7 +785,7 @@
       body[data-product="container"] .hero-right .liquid-glass { min-height: 1067px; }
     }
     .hero-right .liquid-glass:hover {
-      box-shadow: 
+      box-shadow:
         0 8px 24px rgba(79, 154, 53, 0.05),
         0 24px 60px rgba(0, 0, 0, 0.08),
         0 50px 100px rgba(0, 0, 0, 0.06),
@@ -1586,20 +1586,20 @@
 
   // 3D Viewport Navigation via Tabs (Overview, Composition, Material)
   const tabs = document.querySelectorAll('.hero-tab');
-  
+
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       tabs.forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
-      
+
       const mode = tab.textContent.toLowerCase();
-      
+
       // Hide all hotspots first with smooth fade
       document.querySelectorAll('.hotspot').forEach(h => {
         h.style.opacity = '0';
         setTimeout(() => h.style.display = 'none', 200);
       });
-      
+
       if (mode === 'overview') {
         // Orbit to beauty shot, resume rotation
         mv.cameraOrbit = '0deg 74deg 135%';
@@ -1608,7 +1608,7 @@
       } else {
         // Stop auto rotation when focusing on specific details
         pauseSpin();
-        
+
         if (mode === 'composition') {
           // Zoom in on the body
           mv.cameraOrbit = '45deg 70deg 118%';
@@ -1639,7 +1639,7 @@
   // Product fly-in and cinematic sweep on load
   let viaTransition = false;
   window.addEventListener('pagereveal', (e) => { if (e.viewTransition) viaTransition = true; });
-  
+
   mv.addEventListener('load', () => {
     // Sync bottom timeline progress bar with model Y-axis rotation (theta)
     const fill = document.querySelector('.bar-fill');
@@ -1660,11 +1660,11 @@
     // If direct load, execute cinematic camera sweep
     if (!viaTransition) {
       document.getElementById('productStage').classList.add('intro');
-      
+
       // Start camera from a wide dramatic zoom and glide into position
       mv.cameraOrbit = '120deg 110deg 220%';
       mv.fieldOfView = '45deg';
-      
+
       setTimeout(() => {
         mv.cameraOrbit = '0deg 74deg 135%';
         mv.fieldOfView = 'auto';
@@ -1689,18 +1689,18 @@
     if (glass) {
       // ─── 21st.dev Mouse-Tracking Glow & 3D Tilt ───
       const glow = glass.querySelector('.card-glow');
-      
+
       glass.addEventListener('mousemove', (e) => {
         const r = glass.getBoundingClientRect();
         const x = e.clientX - r.left;
         const y = e.clientY - r.top;
-        
+
         // Dynamic 3D tilt calculations (max tilt angle 3.5 degrees)
         const tiltX = ((y / r.height) - 0.5) * -7;
         const tiltY = ((x / r.width) - 0.5) * 7;
-        
+
         glass.style.transform = `perspective(1000px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) scale3d(1.01, 1.01, 1.01)`;
-        
+
         if (glow) {
           glow.style.setProperty('--gx', `${(x / r.width * 100).toFixed(1)}%`);
           glow.style.setProperty('--gy', `${(y / r.height * 100).toFixed(1)}%`);
