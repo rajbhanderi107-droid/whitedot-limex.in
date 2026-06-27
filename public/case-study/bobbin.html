@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+  <script type="module" src="./js/model-viewer.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1329,7 +1329,7 @@
 
     <!-- Left column -->
     <div class="hero-left reveal-left">
-      <a class="back-link" href="./">← All Case Studies</a>
+      <a class="back-link" href="./index.html">← All Case Studies</a>
       <p class="case-kicker">Case Study · 01</p>
       <h1 class="case-title">Bobbin</h1>
       <p class="case-subtitle">A textile-industry bobbin, injection-moulded from a 40% LIMEX PE78-02M + 60% PP blend — limestone replacing petroleum plastic by mass.</p>
@@ -1730,6 +1730,10 @@
   function track(event, detail) { (window.dataLayer = window.dataLayer || []).push(Object.assign({ event }, detail || {})); }
   document.querySelectorAll('.cta-btn').forEach(a =>
     a.addEventListener('click', () => track('case_study_cta', { product: 'bobbin', cta: a.textContent.trim() })));
+
+  window.addEventListener('pageshow', () => {
+    document.body.style.opacity = '1';
+  });
 
   // Crossfade fallback for browsers without cross-document View Transitions
   if (!('startViewTransition' in document)) {

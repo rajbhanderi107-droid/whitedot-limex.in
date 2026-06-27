@@ -1338,7 +1338,7 @@
 
     <!-- Left column -->
     <div class="hero-left reveal-left">
-      <a class="back-link" href="./">← All Case Studies</a>
+      <a class="back-link" href="./index.html">← All Case Studies</a>
       <p class="case-kicker">Case Study - 02</p>
       <h1 class="case-title">Paint Container</h1>
       <p class="case-subtitle">A paint container made from a 25% LIMEX + 75% PP blend, with a glossy red body and bright white snap lid.</p>
@@ -1429,19 +1429,19 @@
           <div class="comp-seg comp-pp" data-pct="75"></div>
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:6px;margin-bottom:12px;">
-          <span style="font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--wd-faint);">LIMEX PE78-02M</span>
-          <span style="font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--wd-faint);">PP HOMO-POLYMER</span>
+          <span style="font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--wd-faint);">LIMEX</span>
+          <span style="font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--wd-faint);">PP</span>
         </div>
 
         <!-- Composition Stats -->
         <div class="comp-stats">
           <div class="comp-stat">
             <span class="stat-num accent"><span class="num" data-to="25">0</span><small>%</small></span>
-            <span class="stat-label">LIMEX PE78-02M</span>
+            <span class="stat-label">LIMEX</span>
           </div>
           <div class="comp-stat">
             <span class="stat-num"><span class="num" data-to="75">0</span><small>%</small></span>
-            <span class="stat-label">PP HOMO-POLYMER</span>
+            <span class="stat-label">PP</span>
           </div>
         </div>
 
@@ -1452,12 +1452,12 @@
             <span class="stat-box-label">Limestone in Part</span>
           </div>
           <div class="glass-stat-box">
-            <span class="stat-box-num">1.90<small style="font-size: 10px; font-weight: 500; margin-left: 2px;">g/cm3</small></span>
-            <span class="stat-box-label">PE78-02M Density</span>
+            <span class="stat-box-num">TBD</span>
+            <span class="stat-box-label">Density</span>
           </div>
           <div class="glass-stat-box">
-            <span class="stat-box-num">0.542<small style="font-size: 10px; font-weight: 500; margin-left: 2px;">CO2e/kg</small></span>
-            <span class="stat-box-label">PE78-02M GHG</span>
+            <span class="stat-box-num">TBD</span>
+            <span class="stat-box-label">GHG</span>
           </div>
         </div>
 
@@ -1467,7 +1467,7 @@
           <div class="spec-grid">
             <div class="spec-item">
               <span class="spec-label">Material Base</span>
-              <span class="spec-val">Limestone + PP</span>
+              <span class="spec-val">LIMEX + PP</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">Application</span>
@@ -1479,7 +1479,7 @@
             </div>
             <div class="spec-item">
               <span class="spec-label">LIMEX Grade</span>
-              <span class="spec-val">PE78-02M</span>
+              <span class="spec-val">To be provided</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">Mixing Ratio</span>
@@ -1487,15 +1487,15 @@
             </div>
             <div class="spec-item">
               <span class="spec-label">PE78-02M CaCO3</span>
-              <span class="spec-val">78%</span>
+              <span class="spec-val">To be provided</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">PE78-02M Density</span>
-              <span class="spec-val">1.90 g/cm3</span>
+              <span class="spec-val">To be provided</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">PE78-02M MFR</span>
-              <span class="spec-val">0.6 g/10 min</span>
+              <span class="spec-val">To be provided</span>
             </div>
           </div>
           <div class="spec-fill-bar" style="margin-top:10px;">
@@ -1743,6 +1743,10 @@
   function track(event, detail) { (window.dataLayer = window.dataLayer || []).push(Object.assign({ event }, detail || {})); }
   document.querySelectorAll('.cta-btn').forEach(a =>
     a.addEventListener('click', () => track('case_study_cta', { product: 'container', cta: a.textContent.trim() })));
+
+  window.addEventListener('pageshow', () => {
+    document.body.style.opacity = '1';
+  });
 
   // Crossfade fallback for browsers without cross-document View Transitions
   if (!('startViewTransition' in document)) {

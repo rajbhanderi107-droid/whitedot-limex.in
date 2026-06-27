@@ -29,13 +29,8 @@ export default function CaseStudyPage() {
     // ── Card expand animation ──
     const card = cardRef.current;
     if (card) {
-      requestAnimationFrame(() => {
-        card.classList.add('phase-0');
-        setTimeout(() => {
-          card.classList.remove('phase-0');
-          card.classList.add('expanded');
-        }, 1200);
-      });
+      card.classList.remove('phase-0');
+      card.classList.add('expanded');
     }
 
     // ── 3D Coverflow marquee ──
@@ -80,7 +75,7 @@ export default function CaseStudyPage() {
       rafRef.current = requestAnimationFrame(tick);
     }
 
-    const startTimer = setTimeout(() => { rafRef.current = requestAnimationFrame(tick); }, 1300);
+    const startTimer = window.setTimeout(() => { rafRef.current = requestAnimationFrame(tick); }, 80);
 
     // ── Mouse-tracking glow ──
     document.querySelectorAll<HTMLElement>('.csp-pcard.live').forEach(c => {

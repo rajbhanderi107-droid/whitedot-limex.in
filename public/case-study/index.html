@@ -16,7 +16,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+  <link rel="modulepreload" href="./js/model-viewer.min.js" />
+  <script type="module" src="./js/model-viewer.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -985,6 +986,10 @@
       const name = c.querySelector('.p-card-name');
       if (name) name.style.viewTransitionName = 'bobbin-name';
     });
+  });
+
+  window.addEventListener('pageshow', () => {
+    document.body.style.opacity = '1';
   });
 
   // Crossfade fallback for browsers without View Transitions

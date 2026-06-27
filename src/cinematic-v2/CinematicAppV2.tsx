@@ -1,6 +1,6 @@
 import './foundation.css';
 
-import { Suspense, lazy, useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect, useState, type ReactNode } from 'react';
 import { warmPublicBackend } from '../cinematic/publicApi';
 import Nav from './sections/Nav';
 import Hero from './sections/Hero';
@@ -55,6 +55,18 @@ function LazySectionFallback() {
   return <div aria-hidden="true" style={{ minHeight: 1 }} />;
 }
 
+function LazySection({ children }: { children: ReactNode }) {
+  return <Suspense fallback={<LazySectionFallback />}>{children}</Suspense>;
+}
+
+function dismissStaticPublicLoader() {
+  const loader = document.getElementById('agg-wd-loader');
+  if (!loader || loader.hasAttribute('data-maintenance')) return;
+  loader.setAttribute('data-done', '');
+  document.body.removeAttribute('aria-busy');
+  window.setTimeout(() => loader.remove(), 450);
+}
+
 export default function CinematicAppV2() {
   const route = useHashRoute();
   const normalizedRoute = route.replace(/^#/, '').replace(/^\/+/, '');
@@ -67,6 +79,12 @@ export default function CinematicAppV2() {
     const t = window.setTimeout(warmPublicBackend, 3_000);
     return () => window.clearTimeout(t);
   }, []);
+
+  useEffect(() => {
+    if (isNewsPage || isCaseStudyPage) {
+      dismissStaticPublicLoader();
+    }
+  }, [isNewsPage, isCaseStudyPage]);
 
   if (isNewsPage) {
     return (
@@ -103,16 +121,30 @@ export default function CinematicAppV2() {
         <Nav />
         <main>
           <Hero />
-          <Suspense fallback={<LazySectionFallback />}>
+          <LazySection>
             <MaterialStory />
+          </LazySection>
+          <LazySection>
             <Showcase />
+          </LazySection>
+          <LazySection>
             <LimexDetail />
+          </LazySection>
+          <LazySection>
             <Comparison />
+          </LazySection>
+          <LazySection>
             <Applications />
+          </LazySection>
+          <LazySection>
             <CaseStudyFeature />
+          </LazySection>
+          <LazySection>
             <Consultation />
+          </LazySection>
+          <LazySection>
             <GlobalImpact />
-          </Suspense>
+          </LazySection>
         </main>
         <Footer />
       </div>
