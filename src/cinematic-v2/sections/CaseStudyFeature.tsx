@@ -4,7 +4,6 @@ import './CaseStudyPage.css';
 const basePath = window.location.hostname.endsWith('github.io') ? '/whitedot-limex.in' : '';
 const bobbinHref  = `${basePath}/case-study/bobbin.html`;
 const bobbinModel = `${basePath}/case-study/model/bobbin.glb`;
-const bobbinPoster = `${basePath}/case-study/frames/bobbin_0.webp`;
 const containerHref  = `${basePath}/case-study/container.html`;
 const containerModel = `${basePath}/case-study/model/paint-container-procedural-red-white.glb`;
 
@@ -97,7 +96,6 @@ export default function CaseStudyFeature() {
           {/* @ts-ignore custom element */}
           <model-viewer
             src={bobbinModel}
-            poster={bobbinPoster}
             alt="Bobbin — LIMEX textile bobbin 3D model"
             interaction-prompt="none"
             shadow-intensity="0"
