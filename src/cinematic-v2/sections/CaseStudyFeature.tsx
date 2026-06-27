@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import './CaseStudyPage.css';
 
 const basePath = window.location.hostname.endsWith('github.io') ? '/whitedot-limex.in' : '';
@@ -7,11 +7,41 @@ const bobbinModel = `${basePath}/case-study/model/bobbin.glb`;
 const containerHref  = `${basePath}/case-study/container.html`;
 const containerModel = `${basePath}/case-study/model/paint-container-procedural-red-white.glb`;
 
+type ProductKey = 'overview' | 'bobbin' | 'container';
+
+const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
+  overview: [
+    { value: '02', label: 'Active Studies' },
+    { value: '3D', label: 'Interactive' },
+    { value: <>100<small>%</small></>, label: 'LIMEX + Color' },
+    { value: <>~38<small>%</small></>, label: 'CO2e Cut (LCA)', green: true },
+  ],
+  bobbin: [
+    { value: '01', label: 'Bobbin Study' },
+    { value: <>40<small>%</small></>, label: 'LIMEX' },
+    { value: <>60<small>%</small></>, label: 'PP' },
+    { value: <>~31<small>%</small></>, label: 'Limestone in Part', green: true },
+  ],
+  container: [
+    { value: '02', label: 'Paint Container' },
+    { value: <>25<small>%</small></>, label: 'LIMEX' },
+    { value: <>75<small>%</small></>, label: 'PP' },
+    { value: <>~20<small>%</small></>, label: 'Limestone in Part', green: true },
+  ],
+};
+
 export default function CaseStudyFeature() {
   const cardRef    = useRef<HTMLDivElement>(null);
   const gridRef    = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const rafRef     = useRef<number>(0);
+  const activeProductRef = useRef<ProductKey>('overview');
+  const [activeProduct, setActiveProduct] = useState<ProductKey>('overview');
+  const setActiveProductKey = useCallback((key: ProductKey) => {
+    if (activeProductRef.current === key) return;
+    activeProductRef.current = key;
+    setActiveProduct(key);
+  }, []);
 
   useEffect(() => {
     // ── Inject model-viewer if not already present ──
@@ -37,6 +67,8 @@ export default function CaseStudyFeature() {
     function applyCardTransforms() {
       const sRect   = section!.getBoundingClientRect();
       const centerX = sRect.left + sRect.width / 2;
+      let nearestProduct: ProductKey | null = null;
+      let nearestDistance = Number.POSITIVE_INFINITY;
       grid!.querySelectorAll<HTMLElement>('.csp-pcard').forEach(c => {
         const r     = c.getBoundingClientRect();
         const cx    = r.left + r.width / 2;
@@ -50,7 +82,15 @@ export default function CaseStudyFeature() {
         c.style.transform = `rotateY(${rotY}deg) scale(${scale}) translateZ(${tz}px)`;
         c.style.opacity   = String(opa);
         c.style.zIndex    = String(Math.round((1 - absT) * 10));
+        const product = c.dataset.product as ProductKey | undefined;
+        if ((product === 'bobbin' || product === 'container') && absT < nearestDistance) {
+          nearestProduct = product;
+          nearestDistance = absT;
+        }
       });
+      if (!paused && nearestProduct && nearestDistance < 0.34) {
+        setActiveProductKey(nearestProduct);
+      }
     }
 
     function tick() {
@@ -71,6 +111,10 @@ export default function CaseStudyFeature() {
     section.querySelectorAll<HTMLElement>('.csp-pcard.live').forEach(c => {
       const glow = c.querySelector<HTMLElement>('.csp-pglow');
       if (!glow) return;
+      c.addEventListener('mouseenter', () => {
+        const product = c.dataset.product as ProductKey | undefined;
+        if (product === 'bobbin' || product === 'container') setActiveProductKey(product);
+      });
       c.addEventListener('mousemove', (e: MouseEvent) => {
         const r = c.getBoundingClientRect();
         glow.style.setProperty('--gx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
@@ -81,7 +125,7 @@ export default function CaseStudyFeature() {
     return () => {
       cancelAnimationFrame(rafRef.current);
     };
-  }, []);
+  }, [setActiveProductKey]);
 
   // Product cards — rendered twice for infinite scroll
   const cards = (
@@ -209,14 +253,16 @@ export default function CaseStudyFeature() {
               <span className="csp-rw csp-accent" style={{ '--wd':'0.32s', opacity: 1 } as React.CSSProperties}>LIMEX</span>
             </h2>
             <p className="csp-hsub">Everyday plastic parts, rebuilt with limestone-based material. Select a product to explore it in 3D and see how its composition changes.</p>
-            <div className="csp-hstats">
-              <div className="csp-hs-item"><span className="csp-hs-num">02</span><span className="csp-hs-label">Active Studies</span></div>
-              <div className="csp-hs-div" />
-              <div className="csp-hs-item"><span className="csp-hs-num">3D</span><span className="csp-hs-label">Interactive</span></div>
-              <div className="csp-hs-div" />
-              <div className="csp-hs-item"><span className="csp-hs-num">100<small>%</small></span><span className="csp-hs-label">LIMEX + Color</span></div>
-              <div className="csp-hs-div" />
-              <div className="csp-hs-item"><span className="csp-hs-num csp-hs-num--green">~38<small>%</small></span><span className="csp-hs-label">CO₂e Cut (LCA)</span></div>
+            <div className="csp-hstats" data-active-product={activeProduct}>
+              {productStats[activeProduct].map((stat, index) => (
+                <div className="csp-hs-cell" key={`${activeProduct}-${index}`}>
+                  {index > 0 && <div className="csp-hs-div" />}
+                  <div className="csp-hs-item">
+                    <span className={`csp-hs-num${stat.green ? ' csp-hs-num--green' : ''}`}>{stat.value}</span>
+                    <span className="csp-hs-label">{stat.label}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 

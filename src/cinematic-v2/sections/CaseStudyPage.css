@@ -127,13 +127,51 @@
   display: flex; align-items: center; justify-content: center; gap: 0;
   margin-top: 24px; padding: 16px 32px;
   border-top: 1px solid var(--cs-line); border-bottom: 1px solid var(--cs-line);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.35s var(--cs-ease), border-color 0.35s var(--cs-ease), box-shadow 0.35s var(--cs-ease);
 }
+.csp-hstats::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(79,154,53,0.12), transparent 45%),
+    linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+  transform: translateX(-24%);
+  transition: opacity 0.35s var(--cs-ease), transform 0.55s var(--cs-ease);
+}
+.csp-hstats[data-active-product="bobbin"],
+.csp-hstats[data-active-product="container"] {
+  border-color: rgba(79,154,53,0.22);
+  background: rgba(255,255,255,0.34);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 10px 30px rgba(79,154,53,0.06);
+}
+.csp-hstats[data-active-product="bobbin"]::before,
+.csp-hstats[data-active-product="container"]::before {
+  opacity: 1;
+  transform: translateX(24%);
+}
+.csp-hs-cell { display:flex; align-items:center; min-width:128px; }
 .csp-hs-item { display:flex; flex-direction:column; align-items:center; gap:3px; padding:0 28px; }
 .csp-hs-div  { width:1px; height:32px; background:var(--cs-lineS); flex-shrink:0; }
-.csp-hs-num  { font-size:22px; font-weight:900; letter-spacing:-0.03em; color:var(--cs-text); line-height:1; }
+.csp-hs-num  {
+  font-size:22px; font-weight:900; letter-spacing:-0.03em; color:var(--cs-text); line-height:1;
+  animation: cs-stat-rise 0.32s var(--cs-ease) both;
+}
 .csp-hs-num small { font-size:0.5em; font-weight:700; color:var(--cs-faint); vertical-align:super; }
 .csp-hs-num--green { color: var(--cs-green); }
-.csp-hs-label { font-size:8.5px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--cs-faint); }
+.csp-hs-label {
+  font-size:8.5px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--cs-faint);
+  white-space: nowrap;
+  animation: cs-stat-rise 0.32s var(--cs-ease) 0.03s both;
+}
+@keyframes cs-stat-rise {
+  from { opacity: 0; transform: translateY(7px); filter: blur(5px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
 
 /* ── Product grid (marquee) ── */
 .csp-grid-section {
@@ -246,6 +284,8 @@
 .csp-pdot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
 .csp-pdot.pp { background:var(--cs-green); }
 .csp-pdot.lx { background:#c4c7c0; }
+.csp-pdot--red { background:#e6271e; }
+.csp-pdot--white { background:#eee8df; outline:1px solid rgba(0,0,0,0.16); }
 .csp-pblabel { font-size:7.5px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--cs-faint); }
 .csp-psep { margin:0 4px; color:var(--cs-lineS); font-size:8px; }
 

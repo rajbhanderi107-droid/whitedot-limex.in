@@ -206,7 +206,32 @@
       padding: 16px 32px;
       border-top: 1px solid var(--wd-line);
       border-bottom: 1px solid var(--wd-line);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.35s var(--ease), border-color 0.35s var(--ease), box-shadow 0.35s var(--ease);
     }
+    .hero-stats-strip::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(79,154,53,0.12), transparent 45%), linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+      transform: translateX(-24%);
+      transition: opacity 0.35s var(--ease), transform 0.55s var(--ease);
+    }
+    .hero-stats-strip[data-active-product="bobbin"],
+    .hero-stats-strip[data-active-product="container"] {
+      border-color: rgba(79,154,53,0.22);
+      background: rgba(255,255,255,0.34);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 10px 30px rgba(79,154,53,0.06);
+    }
+    .hero-stats-strip[data-active-product="bobbin"]::before,
+    .hero-stats-strip[data-active-product="container"]::before {
+      opacity: 1;
+      transform: translateX(24%);
+    }
+    .hs-cell { display: flex; align-items: center; min-width: 128px; }
     .hs-item {
       display: flex;
       flex-direction: column;
@@ -230,6 +255,13 @@
       text-transform: uppercase;
       color: var(--wd-faint);
     }
+    .hs-num, .hs-label { animation: statRise 0.32s var(--ease) both; }
+    .hs-label { white-space: nowrap; }
+    @keyframes statRise {
+      from { opacity: 0; transform: translateY(7px); filter: blur(5px); }
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
     .hs-divider {
       width: 1px;
       height: 32px;
@@ -637,26 +669,11 @@
       </h1>
       <p>Everyday plastic parts, rebuilt with limestone-based material. Select a product to explore it in 3D and see how its composition changes.</p>
       <!-- Stats strip -->
-      <div class="hero-stats-strip">
-        <div class="hs-item">
-          <span class="hs-num">01</span>
-          <span class="hs-label">Active Study</span>
-        </div>
-        <div class="hs-divider"></div>
-        <div class="hs-item">
-          <span class="hs-num">3D</span>
-          <span class="hs-label">Interactive</span>
-        </div>
-        <div class="hs-divider"></div>
-        <div class="hs-item">
-          <span class="hs-num">40<small>%</small></span>
-          <span class="hs-label">LIMEX PE78-02M</span>
-        </div>
-        <div class="hs-divider"></div>
-        <div class="hs-item">
-          <span class="hs-num orange">~38<small>%</small></span>
-          <span class="hs-label">CO₂e Cut (LCA)</span>
-        </div>
+      <div class="hero-stats-strip" data-active-product="overview">
+        <div class="hs-cell"><div class="hs-item"><span class="hs-num">02</span><span class="hs-label">Active Studies</span></div></div>
+        <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num">3D</span><span class="hs-label">Interactive</span></div></div>
+        <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num">100<small>%</small></span><span class="hs-label">LIMEX + Color</span></div></div>
+        <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num orange">~38<small>%</small></span><span class="hs-label">CO2e Cut (LCA)</span></div></div>
       </div>
     </div>
 
@@ -911,7 +928,42 @@
   const speed = 0.65;
   let isPaused = false;
   let rafId = null;
-
+  let activeProduct = 'overview';
+  const statsStrip = document.querySelector('.hero-stats-strip');
+  const productStats = {
+    overview: [
+      ['02', 'Active Studies', false],
+      ['3D', 'Interactive', false],
+      ['100<small>%</small>', 'LIMEX + Color', false],
+      ['~38<small>%</small>', 'CO2e Cut (LCA)', true],
+    ],
+    bobbin: [
+      ['01', 'Bobbin Study', false],
+      ['40<small>%</small>', 'LIMEX', false],
+      ['60<small>%</small>', 'PP', false],
+      ['~31<small>%</small>', 'Limestone in Part', true],
+    ],
+    container: [
+      ['02', 'Paint Container', false],
+      ['25<small>%</small>', 'LIMEX', false],
+      ['75<small>%</small>', 'PP', false],
+      ['~20<small>%</small>', 'Limestone in Part', true],
+    ],
+  };
+  function setActiveProduct(product) {
+    if (!statsStrip || !productStats[product] || activeProduct === product) return;
+    activeProduct = product;
+    statsStrip.dataset.activeProduct = product;
+    statsStrip.innerHTML = productStats[product].map((stat, index) => `
+      <div class="hs-cell">
+        ${index > 0 ? '<div class="hs-divider"></div>' : ''}
+        <div class="hs-item">
+          <span class="hs-num${stat[2] ? ' orange' : ''}">${stat[0]}</span>
+          <span class="hs-label">${stat[1]}</span>
+        </div>
+      </div>
+    `).join('');
+  }
   grid.addEventListener('mouseenter', () => isPaused = true);
   grid.addEventListener('mouseleave', () => isPaused = false);
 
@@ -919,6 +971,8 @@
     const sectionRect = section.getBoundingClientRect();
     const centerX = sectionRect.left + sectionRect.width / 2;
     const cards = grid.querySelectorAll('.p-card');
+    let nearestProduct = null;
+    let nearestDistance = Infinity;
 
     cards.forEach(card => {
       const rect = card.getBoundingClientRect();
@@ -937,7 +991,13 @@
       card.style.transform = `rotateY(${rotY}deg) scale(${scaleV}) translateZ(${tz}px)`;
       card.style.opacity   = opa;
       card.style.zIndex    = Math.round((1 - absT) * 10);
+      const product = card.dataset.product;
+      if ((product === 'bobbin' || product === 'container') && absT < nearestDistance) {
+        nearestProduct = product;
+        nearestDistance = absT;
+      }
     });
+    if (!isPaused && nearestProduct && nearestDistance < 0.34) setActiveProduct(nearestProduct);
   }
 
   function tick() {
@@ -958,6 +1018,9 @@
   document.querySelectorAll('.p-card.live').forEach(card => {
     const glow = card.querySelector('.p-card-glow');
     if (!glow) return;
+    card.addEventListener('mouseenter', () => {
+      if (card.dataset.product === 'bobbin' || card.dataset.product === 'container') setActiveProduct(card.dataset.product);
+    });
     card.addEventListener('mousemove', e => {
       const r = card.getBoundingClientRect();
       const x = ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%';
