@@ -12,7 +12,8 @@
     "co2-lca": "https://www.businesswire.com/news/home/20210624005047/en/",
     "unido": "https://itpo-tokyo.unido.org/en/technology_db/7923/",
     "photo-reference": "Supplied case-study photos: IMG_9992 front view and IMG_9993 top view",
-    "motor-cover-photo-reference": "Supplied motor cover photos: front grille, straight-on grille, and side profile views"
+    "motor-cover-photo-reference": "Supplied motor cover photos: front grille, straight-on grille, and side profile views",
+    "araldite-photo-reference": "Supplied Araldite container photos: front view, straight-on view, and blue dispensing base view"
   },
   "products": {
     "bobbin": {
@@ -133,6 +134,41 @@
         "basis": "Greenhouse-gas (CO2e) reduction vs conventional plastic, application-dependent, per TBM Life-Cycle Assessment (raw material to disposal). Reference value, not guaranteed. PE78-02M compound GHG: 0.542 kg-CO2e/kg.",
         "verified": true,
         "source": "co2-lca"
+      }
+    },
+    "aralditeContainer": {
+      "id": "aralditeContainer",
+      "index": "04",
+      "name": "Araldite Container",
+      "category": "Adhesive Dispenser Container",
+      "status": "live",
+      "tagline": "An injection-moulded Araldite adhesive dispenser container, modeled from the supplied reference photos. LIMEX grade and mixing ratio to be confirmed.",
+      "description": "An Araldite adhesive dispenser container, injection-moulded from a LIMEX + PP blend. The 3D model is matched to the supplied reference photos: knurled white screw cap, smooth body, fluted lower grip section and blue flip-top dispensing base. Exact LIMEX grade and mixing ratio are to be confirmed and can be set from the portal.",
+      "referenceGrade": "Not Specified",
+      "mixRatio": "LIMEX + PP Homo-Polymer (ratio TBC)",
+      "moulding": "Injection Moulding",
+      "application": "Adhesive dispenser container",
+      "composition": [
+        { "name": "LIMEX Compound", "pct": 30, "color": "#4f9a35", "verified": false, "source": "araldite-photo-reference" },
+        { "name": "PP Homo-Polymer", "pct": 70, "color": "#c4c7c0", "verified": false, "source": "araldite-photo-reference" }
+      ],
+      "specs": [
+        { "label": "Material Base", "value": "LIMEX + PP Homo-Polymer", "verified": false, "source": "araldite-photo-reference" },
+        { "label": "LIMEX Grade", "value": "Not Specified", "verified": false, "source": "araldite-photo-reference" },
+        { "label": "Mixing Ratio", "value": "To be confirmed", "verified": false, "source": "araldite-photo-reference" },
+        { "label": "Process", "value": "Injection Moulding", "verified": true, "source": "araldite-photo-reference" },
+        { "label": "Application", "value": "Adhesive Dispenser Container", "verified": true, "source": "araldite-photo-reference" }
+      ],
+      "highlights": [
+        { "num": "30%", "label": "LIMEX (TBC)", "verified": false, "source": "araldite-photo-reference" },
+        { "num": "~23%", "label": "Limestone in Part", "verified": false, "source": "araldite-photo-reference" },
+        { "num": "3D", "label": "Photo-Matched", "verified": true, "source": "araldite-photo-reference" }
+      ],
+      "co2": {
+        "value": "Reference only",
+        "basis": "CO2e reduction depends on the confirmed LIMEX grade, mixing ratio, part weight and lifecycle boundary. To be set from the portal once confirmed.",
+        "verified": false,
+        "source": "araldite-photo-reference"
       }
     }
   }
