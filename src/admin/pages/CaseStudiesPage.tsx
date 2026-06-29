@@ -2,7 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Plus, Save, Trash2, RefreshCw, Zap, ChevronDown, ChevronUp, GripVertical } from "lucide-react";
 import { api, ApiError } from "../lib/api.js";
 
-/* ── TDS Grade database — add new grades here as they become available ── */
+/* ── Grade database — you add grades here as you confirm them per product ──
+ * Keys must match what you type in the "LIMEX Grade" field on each product.
+ * cao3: CaCO3 content %, density: g/cm³, mfr: g/10min, ghg: kg-CO2e/kg   */
 const KNOWN_GRADES: Record<string, { cao3: number; density: number; mfr: number; ghg: number }> = {
   "PE78-02M": { cao3: 78, density: 1.90, mfr: 0.6, ghg: 0.542 },
 };
@@ -83,13 +85,31 @@ export function CaseStudiesPage() {
     successTimer.current = setTimeout(() => setSuccessMsg(null), 3000);
   };
 
+  const [seededFromLocal, setSeededFromLocal] = useState(false);
+
   const load = useCallback(async (fresh = false) => {
-    setLoading(true); setError(null);
+    setLoading(true); setError(null); setSeededFromLocal(false);
     try {
       const res = fresh
         ? await api.getFresh<{ products: Products | null }>("/api/case-studies")
         : await api.get<{ products: Products | null }>("/api/case-studies");
-      const p = res.data.products ?? {};
+
+      let p: Products = res.data.products ?? {};
+
+      // DB is empty — seed from bundled specs.json so admin sees existing products
+      if (!res.data.products || Object.keys(p).length === 0) {
+        try {
+          const fb = await fetch("/case-study/data/specs.json");
+          if (fb.ok) {
+            const json = await fb.json();
+            if (json.products && Object.keys(json.products).length > 0) {
+              p = json.products as Products;
+              setSeededFromLocal(true);
+            }
+          }
+        } catch { /* stay empty if fetch fails */ }
+      }
+
       setProducts(p);
       if (!selectedId && Object.keys(p).length) setSelectedId(Object.keys(p)[0]);
     } catch (e) {
@@ -178,6 +198,11 @@ export function CaseStudiesPage() {
 
       {/* ── Editor ── */}
       <main style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column" }}>
+        {seededFromLocal && (
+          <div style={{ background: "#fffbeb", color: "#92400e", padding: "10px 16px", fontSize: 13, borderBottom: "1px solid #fbbf24", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <span>⚠ Loaded from local specs.json — not yet in database. Click <strong>Save All</strong> to persist to the portal.</span>
+          </div>
+        )}
         {error && (
           <div style={{ background: "#fef2f2", color: "#b91c1c", padding: "10px 16px", fontSize: 13, borderBottom: "1px solid #fca5a5" }}>
             {error}
@@ -382,7 +407,7 @@ function ProductEditor({
           style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", background: "#fffbeb", border: "none", cursor: "pointer", fontWeight: 700, fontSize: 13 }}
           onClick={() => setTdsOpen(o => !o)}>
           <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
-            <Zap size={14} style={{ color: "#d97706" }} /> TDS Auto-Calc Engine
+            <Zap size={14} style={{ color: "#d97706" }} /> Grade Auto-Calc Engine — enter your LIMEX grade data, auto-fills specs
           </span>
           {tdsOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         </button>
