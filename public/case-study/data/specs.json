@@ -11,7 +11,8 @@
     "tbm-pellet": "https://tb-m.com/eng/products/products-pellet/",
     "co2-lca": "https://www.businesswire.com/news/home/20210624005047/en/",
     "unido": "https://itpo-tokyo.unido.org/en/technology_db/7923/",
-    "photo-reference": "Supplied case-study photos: IMG_9992 front view and IMG_9993 top view"
+    "photo-reference": "Supplied case-study photos: IMG_9992 front view and IMG_9993 top view",
+    "motor-cover-photo-reference": "Supplied motor cover photos: front grille, straight-on grille, and side profile views"
   },
   "products": {
     "bobbin": {
@@ -92,6 +93,46 @@
         "basis": "CO2e reduction depends on confirmed part weight and lifecycle boundary. PE78-02M compound GHG reference: 0.542 kg-CO2e/kg.",
         "verified": true,
         "source": "gsh-pe78-02m"
+      }
+    },
+    "motorCover": {
+      "id": "motorCover",
+      "index": "03",
+      "name": "Motor Cover",
+      "category": "Motor Fan Cover",
+      "status": "live",
+      "tagline": "A glossy black injection-moulded motor fan cover, produced from a 50% LIMEX PE78-02M + 50% PP blend.",
+      "description": "A motor fan cover produced by injection moulding from an equal-blend formulation of 50% LIMEX PE78-02M and 50% PP homo-polymer. The 3D model is built from supplied reference photos capturing the glossy black cylindrical body, deep outer lip, concentric rounded ventilation slots, central mounting hole, and rear mounting collar with screw holes. At 50% LIMEX, roughly 39% of the finished part mass is limestone — displacing an equal share of petroleum-derived plastic.",
+      "referenceGrade": "PE78-02M",
+      "mixRatio": "50% LIMEX PE78-02M + 50% PP Homo-Polymer",
+      "moulding": "Injection Moulding",
+      "application": "Motor Fan Cover",
+      "composition": [
+        { "name": "LIMEX PE78-02M Compound", "pct": 50, "color": "#4f9a35", "verified": true, "source": "wd-casestudies-pdf" },
+        { "name": "PP Homo-Polymer", "pct": 50, "color": "#c4c7c0", "verified": true, "source": "wd-casestudies-pdf" }
+      ],
+      "specs": [
+        { "label": "Material Base", "value": "LIMEX PE78-02M + PP Homo-Polymer", "verified": true, "source": "wd-casestudies-pdf" },
+        { "label": "LIMEX Grade", "value": "PE78-02M", "verified": true, "source": "wd-casestudies-pdf" },
+        { "label": "Mixing Ratio", "value": "50% LIMEX + 50% PP", "verified": true, "source": "wd-casestudies-pdf" },
+        { "label": "Process", "value": "Injection Moulding", "verified": true, "source": "wd-casestudies-pdf" },
+        { "label": "Application", "value": "Motor Fan Cover", "verified": true, "source": "wd-casestudies-pdf" },
+        { "label": "Effective Limestone (CaCO3)", "value": "~39", "unit": "% by mass", "verified": true, "source": "gsh-pe78-02m", "note": "50% LIMEX × 78% CaCO3 in PE78-02M." },
+        { "label": "PE78-02M CaCO3 Content", "value": "78", "unit": "%", "verified": true, "source": "gsh-pe78-02m" },
+        { "label": "PE78-02M Density", "value": "1.90", "unit": "g/cm³", "verified": true, "source": "gsh-pe78-02m" },
+        { "label": "PE78-02M MFR", "value": "0.6", "unit": "g/10min", "verified": true, "source": "gsh-pe78-02m" },
+        { "label": "PE78-02M GHG", "value": "0.542", "unit": "kg-CO2e/kg", "verified": true, "source": "gsh-pe78-02m" }
+      ],
+      "highlights": [
+        { "num": "50%", "label": "LIMEX PE78-02M", "verified": true, "source": "wd-casestudies-pdf" },
+        { "num": "~39%", "label": "Limestone in Part", "verified": true, "source": "gsh-pe78-02m" },
+        { "num": "0.542", "unit": "kg-CO2e/kg", "label": "PE78-02M GHG", "verified": true, "source": "gsh-pe78-02m" }
+      ],
+      "co2": {
+        "value": "~24–38%",
+        "basis": "Greenhouse-gas (CO2e) reduction vs conventional plastic, application-dependent, per TBM Life-Cycle Assessment (raw material to disposal). Reference value, not guaranteed. PE78-02M compound GHG: 0.542 kg-CO2e/kg.",
+        "verified": true,
+        "source": "co2-lca"
       }
     }
   }

@@ -6,12 +6,14 @@ const bobbinHref  = `${basePath}/case-study/bobbin.html`;
 const bobbinModel = `${basePath}/case-study/model/bobbin.glb`;
 const containerHref  = `${basePath}/case-study/container.html`;
 const containerModel = `${basePath}/case-study/model/paint-container-procedural-red-white.glb`;
+const motorCoverHref   = `${basePath}/case-study/motor-cover.html`;
+const motorCoverModel  = `${basePath}/case-study/model/motor-cover-procedural-black.glb`;
 
-type ProductKey = 'overview' | 'bobbin' | 'container';
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
-    { value: '02', label: 'Active Studies' },
+    { value: '03', label: 'Active Studies' },
     { value: '3D', label: 'Interactive' },
     { value: <>100<small>%</small></>, label: 'LIMEX + Color' },
     { value: <>~38<small>%</small></>, label: 'CO2e Cut (LCA)', green: true },
@@ -27,6 +29,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: <>25<small>%</small></>, label: 'LIMEX' },
     { value: <>75<small>%</small></>, label: 'PP' },
     { value: <>~20<small>%</small></>, label: 'Limestone in Part', green: true },
+  ],
+  motorCover: [
+    { value: '03', label: 'Motor Cover' },
+    { value: <>50<small>%</small></>, label: 'LIMEX' },
+    { value: <>50<small>%</small></>, label: 'PP' },
+    { value: <>~39<small>%</small></>, label: 'Limestone in Part', green: true },
   ],
 };
 
@@ -83,7 +91,7 @@ export default function CaseStudyFeature() {
         c.style.opacity   = String(opa);
         c.style.zIndex    = String(Math.round((1 - absT) * 10));
         const product = c.dataset.product as ProductKey | undefined;
-        if ((product === 'bobbin' || product === 'container') && absT < nearestDistance) {
+        if ((product === 'bobbin' || product === 'container' || product === 'motorCover') && absT < nearestDistance) {
           nearestProduct = product;
           nearestDistance = absT;
         }
@@ -113,7 +121,7 @@ export default function CaseStudyFeature() {
       if (!glow) return;
       c.addEventListener('mouseenter', () => {
         const product = c.dataset.product as ProductKey | undefined;
-        if (product === 'bobbin' || product === 'container') setActiveProductKey(product);
+        if (product === 'bobbin' || product === 'container' || product === 'motorCover') setActiveProductKey(product);
       });
       c.addEventListener('mousemove', (e: MouseEvent) => {
         const r = c.getBoundingClientRect();
@@ -210,23 +218,45 @@ export default function CaseStudyFeature() {
           <span className="csp-pgo">→</span>
         </div>
       </a>
-
-      {/* 03 — coming soon */}
-      <div className="csp-pcard soon">
+      {/* 03 Motor Cover - live */}
+      <a className="csp-pcard featured live" href={motorCoverHref} data-product="motorCover">
+        <div className="csp-border-beam" />
+        <div className="csp-pglass" />
+        <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">03</span>
-          <span className="csp-psoon-badge">Coming soon</span>
-          <span className="csp-psoon-ph">+</span>
+          <model-viewer
+            src={motorCoverModel}
+            alt="Motor Cover — black vented motor fan cover 3D model"
+            interaction-prompt="none"
+            shadow-intensity="0"
+            exposure="1.16"
+            tone-mapping="neutral"
+            environment-image="neutral"
+            camera-orbit="25deg 78deg 112%"
+            style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+          />
         </div>
         <div className="csp-pinfo">
           <div>
-            <div className="csp-pname csp-pname--muted">Next Product</div>
-            <div className="csp-ptag">In development</div>
-            <div className="csp-pavail">Available Q3 2026</div>
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+              <span className="csp-pfeatured">New Study</span>
+            </div>
+            <div className="csp-pname">Motor Cover</div>
+            <div className="csp-ptag">Motor Fan Cover · 50% LIMEX</div>
+            <div className="csp-pbar">
+              <span style={{ flex:50, height:'100%', background:'var(--cs-green)', display:'block' }} />
+              <span style={{ flex:50, height:'100%', background:'#c4c7c0', display:'block' }} />
+            </div>
+            <div className="csp-pbarlabels">
+              <span className="csp-pdot pp" /><span className="csp-pblabel">50% LIMEX</span>
+              <span className="csp-psep">·</span>
+              <span className="csp-pdot lx" /><span className="csp-pblabel">50% PP</span>
+            </div>
           </div>
           <span className="csp-pgo">→</span>
         </div>
-      </div>
+      </a>
     </>
   );
 
@@ -290,8 +320,8 @@ export default function CaseStudyFeature() {
               </div>
             </div>
             <div className="csp-footer-right">
-              <a className="csp-explore-link" href={containerHref}>Explore New Study</a>
-              <a className="csp-go-btn" href={containerHref} aria-label="Open Paint Container case study">→</a>
+              <a className="csp-explore-link" href={motorCoverHref}>Explore New Study</a>
+              <a className="csp-go-btn" href={motorCoverHref} aria-label="Open Moter Cover case study">→</a>
             </div>
           </div>
         </div>

@@ -17,6 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <script type="module" src="./js/model-viewer.min.js"></script>
+  <script src="./js/case-study-engine.js" defer></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1320,7 +1321,7 @@
   </nav>
   <div class="nav-accent-bar" aria-hidden="true">
     <div class="nav-accent-fill"></div>
-    <span class="nav-accent-label">Case Study 01 — Bobbin · TBM LIMEX</span>
+    <span class="nav-accent-label" data-wd-render="nav-accent">Case Study 01 — Bobbin · TBM LIMEX</span>
   </div>
 
   <!-- ── HERO ── -->
@@ -1412,42 +1413,42 @@
         <div style="position:absolute;top:22px;right:22px;font-size:48px;font-weight:900;letter-spacing:-0.05em;color:rgba(0,0,0,0.06);line-height:1;pointer-events:none;user-select:none;" aria-hidden="true">01</div>
 
         <!-- Description -->
-        <p class="glass-desc-text">A bobbin for the textile industry, produced by injection moulding from a blend of <strong>40% LIMEX PE78-02M + 60% PP homo-polymer</strong>. PE78-02M is a LIMEX compound that is itself ~78% calcium carbonate, so the finished bobbin carries roughly 31% limestone by mass — replacing petroleum plastic while holding the precise tolerances a high-speed spinning bobbin demands.</p>
+        <p class="glass-desc-text" data-wd-html="description">A bobbin for the textile industry, produced by injection moulding from a blend of <strong>40% LIMEX PE78-02M + 60% PP homo-polymer</strong>. PE78-02M is a LIMEX compound that is itself ~78% calcium carbonate, so the finished bobbin carries roughly 31% limestone by mass — replacing petroleum plastic while holding the precise tolerances a high-speed spinning bobbin demands.</p>
 
         <!-- Composition Pill Bar -->
-        <div class="comp-bar">
-          <div class="comp-seg comp-limex" data-pct="40"></div>
-          <div class="comp-seg comp-pp" data-pct="60"></div>
+        <div class="comp-bar" data-wd-render="comp-bar">
+          <div class="comp-seg" data-pct="40" style="height:100%;width:0;transition:width 1.6s cubic-bezier(0.16,1,0.3,1);background:#e98012;"></div>
+          <div class="comp-seg" data-pct="60" style="height:100%;width:0;transition:width 1.6s cubic-bezier(0.16,1,0.3,1);background:#c4c7c0;"></div>
         </div>
-        <div style="display:flex;justify-content:space-between;margin-top:6px;margin-bottom:12px;">
-          <span style="font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--wd-faint);">LIMEX PE78-02M</span>
-          <span style="font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--wd-faint);">PP Homo-Polymer</span>
+        <div style="display:flex;justify-content:space-between;margin-top:6px;margin-bottom:12px;" data-wd-render="comp-labels">
+          <span style="font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);">40% LIMEX PE78-02M</span>
+          <span style="font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--wd-faint);">60% PP Homo-Polymer</span>
         </div>
 
         <!-- Composition Stats -->
-        <div class="comp-stats">
+        <div class="comp-stats" data-wd-render="comp-stats">
           <div class="comp-stat">
             <span class="stat-num accent"><span class="num" data-to="40">0</span><small>%</small></span>
             <span class="stat-label">LIMEX PE78-02M</span>
           </div>
           <div class="comp-stat">
-            <span class="stat-num"><span class="num" data-to="60">0</span><small>%</small></span>
-            <span class="stat-label">PP Homo-Polymer</span>
+            <span class="stat-num"><span class="num" data-to="31">0</span><small>%</small></span>
+            <span class="stat-label">Limestone in Part</span>
           </div>
         </div>
 
         <!-- Stats Grid -->
-        <div class="glass-stats-grid">
+        <div class="glass-stats-grid" data-wd-render="stats-grid">
           <div class="glass-stat-box">
-            <span class="stat-box-num">~31<small style="font-size: 10px; font-weight: 500; margin-left: 2px;">%</small></span>
+            <span class="stat-box-num">40%</span>
+            <span class="stat-box-label">LIMEX PE78-02M</span>
+          </div>
+          <div class="glass-stat-box">
+            <span class="stat-box-num">~31%</span>
             <span class="stat-box-label">Limestone in Part</span>
           </div>
           <div class="glass-stat-box">
-            <span class="stat-box-num">1.90<small style="font-size: 10px; font-weight: 500; margin-left: 2px;">g/cm3</small></span>
-            <span class="stat-box-label">PE78-02M Density</span>
-          </div>
-          <div class="glass-stat-box">
-            <span class="stat-box-num">0.542<small style="font-size: 10px; font-weight: 500; margin-left: 2px;">CO2e/kg</small></span>
+            <span class="stat-box-num">0.542</span>
             <span class="stat-box-label">PE78-02M GHG</span>
           </div>
         </div>
@@ -1455,7 +1456,7 @@
         <!-- Specifications Section -->
         <div class="spec-section">
           <span class="spec-section-title">Technical Specifications</span>
-          <div class="spec-grid">
+          <div class="spec-grid" data-wd-render="spec-grid">
             <div class="spec-item">
               <span class="spec-label">Material Base</span>
               <span class="spec-val">Limestone + PP</span>

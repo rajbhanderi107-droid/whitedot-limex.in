@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bobbin — Textile Bobbin in LIMEX | White Dot Case Study</title>
-  <meta name="description" content="Bobbin: a textile-industry bobbin, injection-moulded from 40% LIMEX PE78-02M + 60% PP homo-polymer (~31% limestone in part). Explore it in interactive 3D." />
+  <title>Motor Cover — 50% LIMEX + 50% PP | White Dot Case Study</title>
+  <meta name="description" content="Motor Fan Cover: injection-moulded from a 50% LIMEX PE78-02M + 50% PP blend — ~39% limestone by mass. Glossy black vented cover with concentric grille slots. Explore in interactive 3D." />
   <meta name="theme-color" content="#f7f4ec" />
-  <link rel="canonical" href="https://whitedotindia.in/case-study/bobbin.html" />
+  <link rel="canonical" href="https://whitedotindia.in/case-study/motor-cover.html" />
   <meta property="og:type" content="product" />
-  <meta property="og:title" content="Bobbin — Textile Bobbin in LIMEX" />
-  <meta property="og:description" content="A textile-industry bobbin, injection-moulded from 40% LIMEX PE78-02M + 60% PP. Interactive 3D." />
-  <meta property="og:image" content="https://whitedotindia.in/case-study/frames/bobbin_0.webp" />
-  <meta property="og:url" content="https://whitedotindia.in/case-study/bobbin.html" />
+  <meta property="og:title" content="Motor Cover — 50% LIMEX PE78-02M + 50% PP | White Dot" />
+  <meta property="og:description" content="Motor fan cover injection-moulded from 50% LIMEX PE78-02M + 50% PP. ~39% limestone by mass. Interactive 3D." />
+  <meta property="og:image" content="https://whitedotindia.in/case-study/img/motor-cover-hero.jpg" />
+  <meta property="og:url" content="https://whitedotindia.in/case-study/motor-cover.html" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -337,7 +337,7 @@
       overflow: visible;
       color: var(--wd-text);
       margin-bottom: 18px;
-      view-transition-name: bobbin-name;
+      view-transition-name: motor-cover-name;
     }
 
     .case-subtitle {
@@ -361,6 +361,12 @@
     @media (max-width: 1000px) { .hero-tabs { justify-content: center; } }
 
     .hero-left  { position: relative; z-index: 2; }
+    body[data-product="motorCover"] .hero-left { min-width: 0; }
+    body[data-product="motorCover"] .case-title {
+      font-size: clamp(34px, 4.15vw, 66px);
+      max-width: 340px;
+      white-space: normal;
+    }
     .back-link {
       display: inline-block;
       font-size: 11px;
@@ -462,7 +468,7 @@
       pointer-events: none;
       z-index: 0;
     }
-    
+
     .orbit-ring {
       position: absolute;
       border-radius: 50%;
@@ -471,21 +477,21 @@
       left: 50%;
       transform: translate(-50%, -50%);
     }
-    
+
     .orbit-outer {
       width: 86%;
       height: 86%;
       border: 1px dashed rgba(79, 154, 53, 0.35);
       animation: rotate-clockwise 45s linear infinite;
     }
-    
+
     .orbit-inner {
       width: 70%;
       height: 70%;
       border: 1px solid rgba(79, 154, 53, 0.15);
       background: radial-gradient(circle, rgba(79, 154, 53, 0.03) 0%, transparent 75%);
     }
-    
+
     /* Glowing particle orbiting the inner ring */
     .orbit-dot-track {
       position: absolute;
@@ -496,7 +502,7 @@
       transform: translate(-50%, -50%);
       animation: rotate-clockwise 14s linear infinite;
     }
-    
+
     .orbit-dot {
       position: absolute;
       top: -5px; /* Half of height to center it on the path */
@@ -508,7 +514,7 @@
       border-radius: 50%;
       box-shadow: 0 0 14px 4px var(--orange), 0 0 24px 8px rgba(79, 154, 53, 0.4);
     }
-    
+
     /* Ambient backdrop glow pulse */
     .orbit-glow {
       position: absolute;
@@ -521,12 +527,12 @@
       filter: blur(24px);
       animation: glow-pulse 6s ease-in-out infinite alternate;
     }
-    
+
     @keyframes rotate-clockwise {
       from { transform: translate(-50%, -50%) rotate(0deg); }
       to   { transform: translate(-50%, -50%) rotate(360deg); }
     }
-    
+
     @keyframes glow-pulse {
       0%   { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
       100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
@@ -644,7 +650,7 @@
       --poster-color: transparent;
       background: transparent;
       outline: none;
-      view-transition-name: bobbin-product;
+      view-transition-name: motor-cover-product;
     }
 
     /* Loading indicator fully suppressed */
@@ -765,7 +771,7 @@
         );
       backdrop-filter: blur(24px) saturate(1.3);
       -webkit-backdrop-filter: blur(24px) saturate(1.3);
-      box-shadow: 
+      box-shadow:
         0 4px 12px rgba(0, 0, 0, 0.02),
         0 16px 40px rgba(0, 0, 0, 0.06),
         0 40px 80px rgba(0, 0, 0, 0.04),
@@ -776,8 +782,11 @@
       will-change: transform;
       transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
     }
+    @media (min-width: 1001px) {
+      body[data-product="motorCover"] .hero-right .liquid-glass { min-height: 1067px; }
+    }
     .hero-right .liquid-glass:hover {
-      box-shadow: 
+      box-shadow:
         0 8px 24px rgba(79, 154, 53, 0.05),
         0 24px 60px rgba(0, 0, 0, 0.08),
         0 50px 100px rgba(0, 0, 0, 0.06),
@@ -1294,7 +1303,7 @@
     }
   </style>
 </head>
-<body data-product="bobbin">
+<body data-product="motorCover">
 
 <div class="page">
 
@@ -1321,23 +1330,23 @@
   </nav>
   <div class="nav-accent-bar" aria-hidden="true">
     <div class="nav-accent-fill"></div>
-    <span class="nav-accent-label" data-wd-render="nav-accent">Case Study 01 — Bobbin · TBM LIMEX</span>
+    <span class="nav-accent-label" data-wd-render="nav-accent">Case Study 03 — Motor Cover — 50% LIMEX PE78-02M — TBM LIMEX</span>
   </div>
 
   <!-- ── HERO ── -->
   <main>
-    <div class="ghost-title" aria-hidden="true">BOBBIN</div>
+    <div class="ghost-title" aria-hidden="true">COVER</div>
 
     <!-- Left column -->
     <div class="hero-left reveal-left">
       <a class="back-link" href="./index.html">← All Case Studies</a>
-      <p class="case-kicker">Case Study · 01</p>
-      <h1 class="case-title">Bobbin</h1>
-      <p class="case-subtitle">A textile-industry bobbin, injection-moulded from a 40% LIMEX PE78-02M + 60% PP blend — limestone replacing petroleum plastic by mass.</p>
+      <p class="case-kicker">Case Study — 03</p>
+      <h1 class="case-title">Motor Cover</h1>
+      <p class="case-subtitle">A motor fan cover injection-moulded from a 50% LIMEX PE78-02M + 50% PP blend. ~39% of the part mass is limestone — reducing petroleum plastic content while maintaining moulding precision.</p>
       <div class="hero-tabs">
         <span class="hero-tab active">Overview</span>
-        <span class="hero-tab">Composition</span>
-        <span class="hero-tab">Material</span>
+        <span class="hero-tab">Reference</span>
+        <span class="hero-tab">Details</span>
       </div>
     </div>
 
@@ -1359,37 +1368,37 @@
       <div class="stage-grid" aria-hidden="true"></div>
       <div class="rotator-wrap" id="rotatorWrap">
         <model-viewer
-          id="bobbinModel"
-          src="./model/bobbin.glb"
-          alt="Bobbin — LIMEX textile bobbin 3D model"
+          id="motorCoverModel"
+          src="./model/motor-cover-procedural-black.glb"
+          alt="Motor Cover — 50% LIMEX PE78-02M + 50% PP injection-moulded fan cover 3D model"
           reveal="auto"
           camera-controls
           touch-action="pan-y"
           auto-rotate
-          auto-rotate-delay="0"
-          rotation-per-second="22deg"
+          auto-rotate-delay="5000"
+          rotation-per-second="10deg"
           interpolation-decay="100"
           interaction-prompt="none"
           shadow-intensity="0"
           exposure="1.15"
           tone-mapping="neutral"
           environment-image="neutral"
-          camera-orbit="0deg 76deg 105%"
-          min-camera-orbit="auto auto 70%"
-          max-camera-orbit="auto auto 160%">
+          camera-orbit="25deg 78deg 118%"
+          min-camera-orbit="auto auto 92%"
+          max-camera-orbit="auto auto 220%">
           <div class="mv-loader" slot="progress-bar"></div>
 
           <!-- Hotspots for tabs -->
           <button class="hotspot" id="hotspot-comp" slot="hotspot-1" data-position="0 0.05 0" data-normal="0 1 0" style="display: none;">
             <div class="hotspot-card">
-              <h4>LIMEX Blend</h4>
-              <p>40% LIMEX PE78-02M + 60% PP homo-polymer (~31% limestone).</p>
+              <h4>Vented Cover</h4>
+              <p>Glossy black vented cover with concentric rounded grille openings.</p>
             </div>
           </button>
           <button class="hotspot" id="hotspot-mat" slot="hotspot-2" data-position="0 -0.05 0" data-normal="0 -1 0" style="display: none;">
             <div class="hotspot-card">
-              <h4>High Rigidity</h4>
-              <p>Maintains structure under high-stress textile winding.</p>
+              <h4>Grille Detail</h4>
+              <p>Concentric rounded grille slots and a deep glossy black rim match the supplied photos.</p>
             </div>
           </button>
         </model-viewer>
@@ -1406,33 +1415,33 @@
         <div class="card-glow" aria-hidden="true"></div>
         <!-- Header -->
         <div class="glass-header">
-          <span class="glass-eyebrow">Textile Bobbin</span>
-          <h2 class="glass-product-name">Bobbin</h2>
-          <span class="glass-tag">LIMEX Composite</span>
+          <span class="glass-eyebrow">Motor Cover</span>
+          <h2 class="glass-product-name">Motor Cover</h2>
+          <span class="glass-tag">50% LIMEX · Injection Moulded</span>
         </div>
-        <div style="position:absolute;top:22px;right:22px;font-size:48px;font-weight:900;letter-spacing:-0.05em;color:rgba(0,0,0,0.06);line-height:1;pointer-events:none;user-select:none;" aria-hidden="true">01</div>
+        <div style="position:absolute;top:22px;right:22px;font-size:48px;font-weight:900;letter-spacing:-0.05em;color:rgba(0,0,0,0.06);line-height:1;pointer-events:none;user-select:none;" aria-hidden="true">03</div>
 
         <!-- Description -->
-        <p class="glass-desc-text" data-wd-html="description">A bobbin for the textile industry, produced by injection moulding from a blend of <strong>40% LIMEX PE78-02M + 60% PP homo-polymer</strong>. PE78-02M is a LIMEX compound that is itself ~78% calcium carbonate, so the finished bobbin carries roughly 31% limestone by mass — replacing petroleum plastic while holding the precise tolerances a high-speed spinning bobbin demands.</p>
+        <p class="glass-desc-text" data-wd-html="description">Injection-moulded from <strong>50% LIMEX PE78-02M + 50% PP homo-polymer</strong>. At this ratio, roughly 39% of the part mass is limestone — displacing petroleum plastic while maintaining the precision moulding tolerances required for a motor cover application.</p>
 
         <!-- Composition Pill Bar -->
         <div class="comp-bar" data-wd-render="comp-bar">
-          <div class="comp-seg" data-pct="40" style="height:100%;width:0;transition:width 1.6s cubic-bezier(0.16,1,0.3,1);background:#e98012;"></div>
-          <div class="comp-seg" data-pct="60" style="height:100%;width:0;transition:width 1.6s cubic-bezier(0.16,1,0.3,1);background:#c4c7c0;"></div>
+          <div class="comp-seg" data-pct="50" style="height:100%;width:0;transition:width 1.6s cubic-bezier(0.16,1,0.3,1);background:#4f9a35;"></div>
+          <div class="comp-seg" data-pct="50" style="height:100%;width:0;transition:width 1.6s cubic-bezier(0.16,1,0.3,1);background:#c4c7c0;"></div>
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:6px;margin-bottom:12px;" data-wd-render="comp-labels">
-          <span style="font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);">40% LIMEX PE78-02M</span>
-          <span style="font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--wd-faint);">60% PP Homo-Polymer</span>
+          <span style="font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);">50% LIMEX PE78-02M</span>
+          <span style="font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--wd-faint);">50% PP Homo-Polymer</span>
         </div>
 
         <!-- Composition Stats -->
         <div class="comp-stats" data-wd-render="comp-stats">
           <div class="comp-stat">
-            <span class="stat-num accent"><span class="num" data-to="40">0</span><small>%</small></span>
+            <span class="stat-num accent">~<span class="num" data-to="50">0</span><small>%</small></span>
             <span class="stat-label">LIMEX PE78-02M</span>
           </div>
           <div class="comp-stat">
-            <span class="stat-num"><span class="num" data-to="31">0</span><small>%</small></span>
+            <span class="stat-num">~<span class="num" data-to="39">0</span><small>%</small></span>
             <span class="stat-label">Limestone in Part</span>
           </div>
         </div>
@@ -1440,11 +1449,11 @@
         <!-- Stats Grid -->
         <div class="glass-stats-grid" data-wd-render="stats-grid">
           <div class="glass-stat-box">
-            <span class="stat-box-num">40%</span>
+            <span class="stat-box-num">50%</span>
             <span class="stat-box-label">LIMEX PE78-02M</span>
           </div>
           <div class="glass-stat-box">
-            <span class="stat-box-num">~31%</span>
+            <span class="stat-box-num">~39%</span>
             <span class="stat-box-label">Limestone in Part</span>
           </div>
           <div class="glass-stat-box">
@@ -1457,43 +1466,23 @@
         <div class="spec-section">
           <span class="spec-section-title">Technical Specifications</span>
           <div class="spec-grid" data-wd-render="spec-grid">
-            <div class="spec-item">
-              <span class="spec-label">Material Base</span>
-              <span class="spec-val">Limestone + PP</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">Application</span>
-              <span class="spec-val">High-Speed Textile Spinning</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">Process</span>
-              <span class="spec-val">Injection Moulding</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">LIMEX Grade</span>
-              <span class="spec-val">PE78-02M</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">Mixing Ratio</span>
-              <span class="spec-val">40% LIMEX + 60% PP</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">PE78-02M CaCO3</span>
-              <span class="spec-val">78%</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">PE78-02M Density</span>
-              <span class="spec-val">1.90 g/cm3</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">PE78-02M MFR</span>
-              <span class="spec-val">0.6 g/10 min</span>
-            </div>
+            <div class="spec-item"><span class="spec-label">Material Base</span><span class="spec-val">LIMEX PE78-02M + PP Homo-Polymer</span></div>
+            <div class="spec-item"><span class="spec-label">Application</span><span class="spec-val">Motor Fan Cover</span></div>
+            <div class="spec-item"><span class="spec-label">Process</span><span class="spec-val">Injection Moulding</span></div>
+            <div class="spec-item"><span class="spec-label">LIMEX Grade</span><span class="spec-val">PE78-02M</span></div>
+            <div class="spec-item"><span class="spec-label">Mixing Ratio</span><span class="spec-val highlight">50% LIMEX + 50% PP</span></div>
+            <div class="spec-item"><span class="spec-label">Effective Limestone (CaCO3)</span><span class="spec-val highlight">~39 % by mass</span></div>
+            <div class="spec-item"><span class="spec-label">PE78-02M CaCO3 Content</span><span class="spec-val">78%</span></div>
+            <div class="spec-item"><span class="spec-label">PE78-02M Density</span><span class="spec-val">1.90 g/cm³</span></div>
+            <div class="spec-item"><span class="spec-label">PE78-02M MFR</span><span class="spec-val">0.6 g/10min</span></div>
+            <div class="spec-item"><span class="spec-label">PE78-02M GHG</span><span class="spec-val">0.542 kg-CO₂e/kg</span></div>
           </div>
           <div class="spec-fill-bar" style="margin-top:10px;">
-            <div class="spec-fill-inner" style="--fill:0.40"></div>
+            <div class="spec-fill-inner" style="--fill:0.72"></div>
           </div>
-          <p data-tds-verified-slot style="display:flex;align-items:center;gap:6px;font-size:8px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--wd-faint);margin-top:6px;"></p>
+          <p data-tds-verified-slot style="display:flex;align-items:center;gap:6px;font-size:8px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--wd-faint);margin-top:6px;">
+            <span class="tds-verified-dot"></span>Data sourced from White Dot case-study record &amp; TBM PE78-02M TDS
+          </p>
         </div>
 
         <!-- Action Buttons -->
@@ -1522,7 +1511,7 @@
     <div class="hero-bar reveal reveal-3">
       <div class="bar-track"><span class="bar-fill"></span></div>
       <span class="bar-label">Explore</span>
-      <span class="bar-credit">Product 01 · TBM LIMEX</span>
+      <span class="bar-credit">Motor Cover · 50% LIMEX PE78-02M · TBM</span>
     </div>
   </main>
 
@@ -1543,17 +1532,21 @@
     if (!el) return;
     const text = el.textContent;
     el.textContent = '';
-    [...text].forEach((ch, i) => {
-      const span = document.createElement('span');
-      span.className = 'char';
-      span.style.setProperty('--ci', i);
-      span.textContent = ch === ' ' ? ' ' : ch;
-      el.appendChild(span);
+    let ci = 0;
+    text.split(' ').forEach((word, wordIndex, words) => {
+      [...word].forEach((ch) => {
+        const span = document.createElement('span');
+        span.className = 'char';
+        span.style.setProperty('--ci', ci++);
+        span.textContent = ch;
+        el.appendChild(span);
+      });
+      if (wordIndex < words.length - 1) el.appendChild(document.createElement('br'));
     });
   })();
 
   // Pause auto-rotate while the user is interacting, resume shortly after.
-  const mv = document.getElementById('bobbinModel');
+  const mv = document.getElementById('motorCoverModel');
   let resumeTimer = null;
 
   function pauseSpin() {
@@ -1574,32 +1567,32 @@
 
   // 3D Viewport Navigation via Tabs (Overview, Composition, Material)
   const tabs = document.querySelectorAll('.hero-tab');
-  
+
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       tabs.forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
-      
+
       const mode = tab.textContent.toLowerCase();
-      
+
       // Hide all hotspots first with smooth fade
       document.querySelectorAll('.hotspot').forEach(h => {
         h.style.opacity = '0';
         setTimeout(() => h.style.display = 'none', 200);
       });
-      
+
       if (mode === 'overview') {
         // Orbit to beauty shot, resume rotation
-        mv.cameraOrbit = '0deg 76deg 105%';
+        mv.cameraOrbit = '0deg 74deg 135%';
         mv.cameraTarget = '0m 0m 0m';
         mv.setAttribute('auto-rotate', '');
       } else {
         // Stop auto rotation when focusing on specific details
         pauseSpin();
-        
+
         if (mode === 'composition') {
           // Zoom in on the body
-          mv.cameraOrbit = '45deg 70deg 85%';
+          mv.cameraOrbit = '45deg 70deg 118%';
           mv.cameraTarget = '0m 0.02m 0m';
           setTimeout(() => {
             const h = document.getElementById('hotspot-comp');
@@ -1610,7 +1603,7 @@
           }, 350);
         } else if (mode === 'material') {
           // Zoom in on top-down structure
-          mv.cameraOrbit = '-45deg 40deg 80%';
+          mv.cameraOrbit = '-45deg 40deg 120%';
           mv.cameraTarget = '0m -0.03m 0m';
           setTimeout(() => {
             const h = document.getElementById('hotspot-mat');
@@ -1627,7 +1620,7 @@
   // Product fly-in and cinematic sweep on load
   let viaTransition = false;
   window.addEventListener('pagereveal', (e) => { if (e.viewTransition) viaTransition = true; });
-  
+
   mv.addEventListener('load', () => {
     // Sync bottom timeline progress bar with model Y-axis rotation (theta)
     const fill = document.querySelector('.bar-fill');
@@ -1648,13 +1641,13 @@
     // If direct load, execute cinematic camera sweep
     if (!viaTransition) {
       document.getElementById('productStage').classList.add('intro');
-      
+
       // Start camera from a wide dramatic zoom and glide into position
       mv.cameraOrbit = '120deg 110deg 220%';
       mv.fieldOfView = '45deg';
-      
+
       setTimeout(() => {
-        mv.cameraOrbit = '0deg 76deg 105%';
+        mv.cameraOrbit = '0deg 74deg 135%';
         mv.fieldOfView = 'auto';
       }, 150);
     }
@@ -1677,18 +1670,18 @@
     if (glass) {
       // ─── 21st.dev Mouse-Tracking Glow & 3D Tilt ───
       const glow = glass.querySelector('.card-glow');
-      
+
       glass.addEventListener('mousemove', (e) => {
         const r = glass.getBoundingClientRect();
         const x = e.clientX - r.left;
         const y = e.clientY - r.top;
-        
+
         // Dynamic 3D tilt calculations (max tilt angle 3.5 degrees)
         const tiltX = ((y / r.height) - 0.5) * -7;
         const tiltY = ((x / r.width) - 0.5) * 7;
-        
+
         glass.style.transform = `perspective(1000px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) scale3d(1.01, 1.01, 1.01)`;
-        
+
         if (glow) {
           glow.style.setProperty('--gx', `${(x / r.width * 100).toFixed(1)}%`);
           glow.style.setProperty('--gy', `${(y / r.height * 100).toFixed(1)}%`);
@@ -1730,7 +1723,7 @@
   // Analytics hooks
   function track(event, detail) { (window.dataLayer = window.dataLayer || []).push(Object.assign({ event }, detail || {})); }
   document.querySelectorAll('.cta-btn').forEach(a =>
-    a.addEventListener('click', () => track('case_study_cta', { product: 'bobbin', cta: a.textContent.trim() })));
+    a.addEventListener('click', () => track('case_study_cta', { product: 'motorCover', cta: a.textContent.trim() })));
 
   window.addEventListener('pageshow', () => {
     document.body.style.opacity = '1';
