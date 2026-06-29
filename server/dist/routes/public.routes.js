@@ -5,6 +5,7 @@ import { publicLimiter, chatLimiter } from "../middleware/rateLimit.middleware.j
 import { publicInquirySchema, publicQuoteRequestSchema, publicSampleRequestSchema, calculatorSubmissionSchema, chatSchema, } from "../validators/public.validator.js";
 import * as pub from "../controllers/public.controller.js";
 import { chat } from "../controllers/chat.controller.js";
+import { getCaseStudies } from "../controllers/caseStudy.controller.js";
 const router = Router();
 router.use(publicLimiter);
 router.post("/inquiry", validate(publicInquirySchema), asyncHandler(pub.submitInquiry));
@@ -12,6 +13,7 @@ router.post("/quote-request", validate(publicQuoteRequestSchema), asyncHandler(p
 router.post("/sample-request", validate(publicSampleRequestSchema), asyncHandler(pub.submitSampleRequest));
 router.post("/calculator-submission", validate(calculatorSubmissionSchema), asyncHandler(pub.submitCalculatorSubmission));
 router.get("/settings", asyncHandler(pub.getWebsiteSettings));
+router.get("/case-studies", asyncHandler(getCaseStudies));
 // LIMEX Assistant — tighter, chat-specific rate limit overrides the default.
 router.post("/chat", chatLimiter, validate(chatSchema), asyncHandler(chat));
 export default router;

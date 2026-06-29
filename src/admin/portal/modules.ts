@@ -11,7 +11,7 @@
 
 import {
   Activity, Bell, Building2, Calculator, ClipboardList, FileText, Home,
-  LineChart, Megaphone, MessageSquare, Package, Settings, Users, Boxes,
+  LineChart, Megaphone, MessageSquare, Package, Settings, Users, Boxes, FlaskConical,
   Brain, Workflow, ShieldCheck, Bug, GitBranch, DatabaseBackup, Globe,
   Leaf, BarChart3, Database, Plug, BadgeCheck, Layers, Rocket, Receipt,
   Server, Siren, Megaphone as Ad, Share2, LayoutTemplate, Search, ShoppingCart,
@@ -215,6 +215,8 @@ export const MODULE_GROUPS: ModuleGroup[] = [
       { key: "notifications", label: "Notifications", icon: Bell, path: "/admin/notifications", status: "live",
         blurb: "Central notification & alert center.",
         features: ["Business, security & automation alerts", "Channel routing", "Read/unread & history"] },
+      { key: "case-studies", label: "Case Studies", icon: FlaskConical, path: "/admin/case-studies", status: "live",
+        blurb: "Manage case study products, specs, composition and TDS auto-calc data." },
       { key: "settings", label: "Settings", icon: Settings, path: "/admin/settings", status: "live",
         blurb: "Website & portal settings." },
     ],

@@ -15,6 +15,7 @@ import * as users from "../controllers/user.controller.js";
 import * as notifications from "../controllers/notification.controller.js";
 import * as activityLog from "../controllers/activityLog.controller.js";
 import * as google from "../controllers/google.controller.js";
+import * as caseStudy from "../controllers/caseStudy.controller.js";
 import { updateInquirySchema, updateQuoteRequestSchema, updateSampleRequestSchema, createCompanySchema, updateCompanySchema, createAdminNoteSchema, createFollowUpTaskSchema, updateFollowUpTaskSchema, createDocumentSchema, updateWebsiteSettingSchema, updateBrandLogoSchema, createUserSchema, updateUserSchema, } from "../validators/admin.validator.js";
 const router = Router();
 // All admin routes require authentication
@@ -59,6 +60,9 @@ router.get("/documents", asyncHandler(documents.listDocuments));
 router.post("/documents", validate(createDocumentSchema), asyncHandler(documents.createDocument));
 router.patch("/documents/:id", asyncHandler(documents.updateDocument));
 router.delete("/documents/:id", requireRole("SUPER_ADMIN", "ADMIN"), asyncHandler(documents.deleteDocument));
+// ─── Case Studies ────────────────────────────────
+router.get("/case-studies", asyncHandler(caseStudy.getCaseStudies));
+router.patch("/case-studies", requireRole("SUPER_ADMIN", "ADMIN"), asyncHandler(caseStudy.updateCaseStudies));
 // ─── Website Settings ────────────────────────────
 router.get("/website-settings", asyncHandler(settings.listSettings));
 router.put("/website-settings/brand-logo", requireRole("SUPER_ADMIN", "ADMIN"), validate(updateBrandLogoSchema), asyncHandler(settings.updateBrandLogo));

@@ -20,13 +20,27 @@
   const productId = document.body.dataset.product;
   if (!productId) return;
 
+  /* Try live API first (portal-editable), fall back to bundled specs.json */
+  const API = 'https://api.whitedotindia.in/api/public/case-studies';
   let products;
   try {
-    const res = await fetch('./data/specs.json');
-    ({ products } = await res.json());
-  } catch (e) {
-    console.warn('[WD Engine] Could not load specs.json', e);
-    return;
+    const apiRes = await fetch(API, { signal: AbortSignal.timeout(4000) });
+    if (apiRes.ok) {
+      const json = await apiRes.json();
+      if (json.success && json.data?.products) {
+        products = json.data.products;
+      }
+    }
+  } catch { /* network error or timeout — fall through to local */ }
+
+  if (!products) {
+    try {
+      const res = await fetch('./data/specs.json');
+      ({ products } = await res.json());
+    } catch (e) {
+      console.warn('[WD Engine] Could not load specs.json', e);
+      return;
+    }
   }
 
   const p = products[productId];

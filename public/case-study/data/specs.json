@@ -73,7 +73,7 @@
       ],
       "specs": [
         { "label": "Material Base", "value": "LIMEX PE78-02M + PP Homo-Polymer", "verified": true, "source": "photo-reference" },
-        { "label": "LIMEX Grade", "value": "PE78-02M", "verified": true, "source": "gsh-pe78-02m" },
+        { "label": "LIMEX Grade", "value": "Not Specified", "verified": false, "source": "photo-reference" },
         { "label": "Mixing Ratio", "value": "25% LIMEX + 75% PP", "verified": true, "source": "photo-reference" },
         { "label": "Process", "value": "Injection Moulding", "verified": true, "source": "photo-reference" },
         { "label": "Application", "value": "Paint Packaging", "verified": true, "source": "photo-reference" },
@@ -113,7 +113,7 @@
       ],
       "specs": [
         { "label": "Material Base", "value": "LIMEX PE78-02M + PP Homo-Polymer", "verified": true, "source": "wd-casestudies-pdf" },
-        { "label": "LIMEX Grade", "value": "PE78-02M", "verified": true, "source": "wd-casestudies-pdf" },
+        { "label": "LIMEX Grade", "value": "Not Specified", "verified": false, "source": "wd-casestudies-pdf" },
         { "label": "Mixing Ratio", "value": "50% LIMEX + 50% PP", "verified": true, "source": "wd-casestudies-pdf" },
         { "label": "Process", "value": "Injection Moulding", "verified": true, "source": "wd-casestudies-pdf" },
         { "label": "Application", "value": "Motor Fan Cover", "verified": true, "source": "wd-casestudies-pdf" },

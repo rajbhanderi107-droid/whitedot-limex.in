@@ -33,6 +33,7 @@ import { ForgotPasswordPage } from "./pages/ForgotPasswordPage.js";
 import { ResetPasswordPage } from "./pages/ResetPasswordPage.js";
 import { UserManagementPage } from "./pages/UserManagementPage.js";
 import { WebsiteSettingsPage } from "./pages/WebsiteSettingsPage.js";
+import { CaseStudiesPage } from "./pages/CaseStudiesPage.js";
 import { GoogleDashboardPage } from "./pages/GoogleDashboardPage.js";
 import { MarketingToolsPage } from "./pages/MarketingToolsPage.js";
 import { warmUpBackend } from "./lib/api.js";
@@ -226,6 +227,7 @@ export default function AdminApp() {
           <Route path="/admin/marketing" element={<MarketingToolsPage />} />
           <Route path="/admin/digital-marketing" element={<DigitalMarketing />} />
           <Route path="/admin/settings" element={<WebsiteSettingsPage />} />
+          <Route path="/admin/case-studies" element={<CaseStudiesPage />} />
           <Route path="/admin/users" element={<UserManagementPage />} />
 
           <Route
