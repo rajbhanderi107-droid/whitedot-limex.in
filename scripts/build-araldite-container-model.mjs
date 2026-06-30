@@ -19,35 +19,39 @@ scene.name = 'WhiteDot Araldite Container - LIMEX PP';
 
 /* ── Materials ─────────────────────────────────────────────────────────────── */
 const white = new THREE.MeshPhysicalMaterial({
-  name: 'araldite body - warm white grey LIMEX PP',
-  color: new THREE.Color('#e0e0da'),
-  roughness: 0.46,
+  name: 'araldite body - warm grey LIMEX PP plastic',
+  color: new THREE.Color('#d4d4ce'),   // warmer medium grey matching reference photo
+  roughness: 0.55,                      // matte-ish plastic feel
   metalness: 0,
-  clearcoat: 0.38,
-  clearcoatRoughness: 0.30,
-  sheen: 0.10,
-  sheenRoughness: 0.45,
-  envMapIntensity: 1.05,
+  clearcoat: 0.28,                      // subtle surface sheen
+  clearcoatRoughness: 0.40,
+  sheen: 0.18,
+  sheenColor: new THREE.Color('#c8c8c0'),
+  sheenRoughness: 0.55,
+  envMapIntensity: 1.10,
+  thickness: 0.8,                       // slight subsurface depth
+  attenuationColor: new THREE.Color('#e8e8e0'),
 });
 
 const blue = new THREE.MeshPhysicalMaterial({
-  name: 'araldite cap - glossy blue',
-  color: new THREE.Color('#3351c9'),
-  roughness: 0.16,
+  name: 'araldite cap - deep glossy royal blue',
+  color: new THREE.Color('#2840c2'),    // deep royal blue matching Araldite brand
+  roughness: 0.10,                      // very glossy cap
   metalness: 0,
   clearcoat: 1.0,
-  clearcoatRoughness: 0.07,
-  envMapIntensity: 1.4,
+  clearcoatRoughness: 0.05,
+  reflectivity: 0.9,
+  envMapIntensity: 1.6,
 });
 
 const blueDark = new THREE.MeshPhysicalMaterial({
-  name: 'araldite cap cross divider',
-  color: new THREE.Color('#1e35a2'),
-  roughness: 0.20,
+  name: 'araldite cap cross divider - darker blue',
+  color: new THREE.Color('#1a2d9e'),
+  roughness: 0.15,
   metalness: 0,
-  clearcoat: 0.9,
-  clearcoatRoughness: 0.10,
-  envMapIntensity: 1.2,
+  clearcoat: 0.85,
+  clearcoatRoughness: 0.08,
+  envMapIntensity: 1.3,
 });
 
 function mesh(geometry, material, name, position = [0, 0, 0], rotation = [0, 0, 0]) {

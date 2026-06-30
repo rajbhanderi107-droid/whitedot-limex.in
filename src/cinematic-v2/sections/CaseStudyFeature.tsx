@@ -276,10 +276,11 @@ export default function CaseStudyFeature() {
             src={aralditeModel}
             alt="Araldite Container — LIMEX adhesive dispenser bottle 3D model"
             interaction-prompt="none"
-            shadow-intensity="0"
-            exposure="1.14"
+            shadow-intensity="0.9"
+            shadow-softness="0.8"
+            exposure="1.22"
             tone-mapping="neutral"
-            environment-image="neutral"
+            environment-image="legacy"
             camera-orbit="30deg 72deg 115%"
             style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
           />
