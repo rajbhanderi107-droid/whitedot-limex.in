@@ -82,6 +82,7 @@ const angles = [
   ['rear', '180deg 72deg 8m'],
   ['front-right', '38deg 72deg 8m'],
   ['top', '0deg 18deg 8.4m'],
+  ['bottom', '0deg 128deg 8m'],
 ];
 
 for (const [name, orbit] of angles) {

@@ -29,6 +29,18 @@ const red = new THREE.MeshPhysicalMaterial({
   envMapIntensity: 1.25,
 });
 
+const baseRed = new THREE.MeshPhysicalMaterial({
+  name: 'slightly recessed red molded underside',
+  color: new THREE.Color('#c91412'),
+  roughness: 0.2,
+  metalness: 0,
+  clearcoat: 0.8,
+  clearcoatRoughness: 0.12,
+  sheen: 0.12,
+  sheenRoughness: 0.42,
+  envMapIntensity: 1.1,
+});
+
 const white = new THREE.MeshPhysicalMaterial({
   name: 'bright white LIMEX lid',
   color: new THREE.Color('#ffffff'),
@@ -94,6 +106,9 @@ function capsuleBetween(name, start, end, radius, material, radialSegments = 24)
 
 // Tapered paint pail body: wide top, narrower bottom, molded-plastic proportions.
 const bodyProfile = [
+  new THREE.Vector2(0.0, -1.18),
+  new THREE.Vector2(0.64, -1.18),
+  new THREE.Vector2(0.76, -1.165),
   new THREE.Vector2(0.79, -1.14),
   new THREE.Vector2(0.84, -1.105),
   new THREE.Vector2(0.88, -1.02),
@@ -105,10 +120,15 @@ const bodyProfile = [
 ];
 const body = mesh(new THREE.LatheGeometry(bodyProfile, 256), red, 'premium smooth tapered glossy red paint pail body', [0, 0, 0]);
 body.geometry.computeVertexNormals();
+mesh(new THREE.CylinderGeometry(0.72, 0.76, 0.035, 192), baseRed, 'closed recessed molded red underside disc', [0, -1.195, 0]);
+torus('raised red bottom standing foot rim', 0.78, 0.028, -1.165, red, 0.74);
+torus('subtle recessed underside circular mould ring', 0.46, 0.006, -1.217, baseRed, 0.55);
+torus('fine outer bottom shadow line', 0.825, 0.007, -1.118, dark, 0.7);
 torus('upper red rolled rim under lid', 1.19, 0.055, 1.11, red);
 mesh(new THREE.CylinderGeometry(1.23, 1.18, 0.13, 192), red, 'thick glossy red top collar', [0, 1.1, 0]);
 torus('fine dark separation shadow below white lid', 1.215, 0.008, 1.205, dark);
 roundedBox('small molded red front pull tab', [0.22, 0.08, 0.045], 0.012, red, [0, 1.03, 1.15], [-0.1, 0, 0]);
+roundedBox('fine vertical molded body seam', [0.012, 1.62, 0.018], 0.004, baseRed, [0.985, -0.18, -0.03], [0, 0.06, 0]);
 
 // Bright white snap lid with concentric molded rings.
 mesh(new THREE.CylinderGeometry(1.35, 1.3, 0.22, 256), white, 'bright white snap lid side wall', [0, 1.28, 0]);
@@ -118,6 +138,7 @@ torus('middle shallow circular lid ring', 0.82, 0.012, 1.505, white);
 torus('inner shallow circular lid ring', 0.45, 0.01, 1.515, white);
 mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.008, 48), white, 'tiny injection point on lid center', [0, 1.525, 0]);
 torus('lower white snap bead', 1.31, 0.025, 1.19, white);
+roundedBox('front lid lift-tab notch highlight', [0.26, 0.018, 0.035], 0.008, white, [0, 1.505, 1.04], [0, 0, 0]);
 
 // Side hinge lugs and wire bail handle.
 for (const x of [-1.19, 1.19]) {
