@@ -11,12 +11,14 @@ const containerModel = `${basePath}/case-study/model/paint-container-procedural-
 const motorCoverHref   = `${basePath}/case-study/motor-cover.html`;
 const motorCoverModel  = `${basePath}/case-study/model/motor-cover-procedural-black.glb`;
 const motorCoverPoster = `${basePath}/case-study/img/motor-cover-hero.jpg`;
+const aralditeHref   = `${basePath}/case-study/araldite-container.html`;
+const aralditeModel  = `${basePath}/case-study/model/araldite-container-procedural.glb`;
 
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover';
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
-    { value: '03', label: 'Active Studies' },
+    { value: '04', label: 'Active Studies' },
     { value: '3D', label: 'Interactive' },
     { value: <>100<small>%</small></>, label: 'LIMEX + Color' },
     { value: <>~38<small>%</small></>, label: 'CO2e Cut (LCA)', green: true },
@@ -34,10 +36,16 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: <>~20<small>%</small></>, label: 'Limestone in Part', green: true },
   ],
   motorCover: [
-    { value: '03', label: 'Moter Cover' },
-    { value: '3D', label: 'Reference Model' },
-    { value: 'TDS', label: 'Spec Pending' },
-    { value: 'Live', label: 'Product 03', green: true },
+    { value: '03', label: 'Motor Cover' },
+    { value: <>50<small>%</small></>, label: 'LIMEX' },
+    { value: <>50<small>%</small></>, label: 'PP' },
+    { value: <>~39<small>%</small></>, label: 'Limestone in Part', green: true },
+  ],
+  aralditeContainer: [
+    { value: '04', label: 'Araldite Container' },
+    { value: <>30<small>%</small></>, label: 'LIMEX' },
+    { value: <>70<small>%</small></>, label: 'PP' },
+    { value: <>~23<small>%</small></>, label: 'Limestone in Part', green: true },
   ],
 };
 
@@ -47,12 +55,28 @@ export default function CaseStudyPage() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const rafRef     = useRef<number>(0);
   const activeProductRef = useRef<ProductKey>('overview');
+  const allProductsOpenRef = useRef(false);
   const [activeProduct, setActiveProduct] = useState<ProductKey>('overview');
+  const [allProductsOpen, setAllProductsOpen] = useState(false);
   const setActiveProductKey = useCallback((key: ProductKey) => {
     if (activeProductRef.current === key) return;
     activeProductRef.current = key;
     setActiveProduct(key);
   }, []);
+  const showAllProducts = useCallback(() => {
+    allProductsOpenRef.current = true;
+    setAllProductsOpen(true);
+    setActiveProductKey('overview');
+    cancelAnimationFrame(rafRef.current);
+    requestAnimationFrame(() => {
+      gridRef.current?.querySelectorAll<HTMLElement>('.csp-pcard').forEach((card) => {
+        card.style.transform = 'none';
+        card.style.opacity = '1';
+        card.style.zIndex = '1';
+      });
+      if (gridRef.current) gridRef.current.style.transform = 'none';
+    });
+  }, [setActiveProductKey]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -103,7 +127,7 @@ export default function CaseStudyPage() {
         c.style.opacity   = String(opa);
         c.style.zIndex    = String(Math.round((1 - absT) * 10));
         const product = c.dataset.product as ProductKey | undefined;
-        if ((product === 'bobbin' || product === 'container' || product === 'motorCover') && absT < nearestDistance) {
+        if ((product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer') && absT < nearestDistance) {
           nearestProduct = product;
           nearestDistance = absT;
         }
@@ -120,6 +144,7 @@ export default function CaseStudyPage() {
         if (scrollX >= half) scrollX = 0;
         grid!.style.transform = `translate3d(${-scrollX}px,0,0)`;
       }
+      if (allProductsOpenRef.current) return;
       applyCardTransforms();
       rafRef.current = requestAnimationFrame(tick);
     }
@@ -132,7 +157,7 @@ export default function CaseStudyPage() {
       if (!glow) return;
       c.addEventListener('mouseenter', () => {
         const product = c.dataset.product as ProductKey | undefined;
-        if (product === 'bobbin' || product === 'container' || product === 'motorCover') setActiveProductKey(product);
+        if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer') setActiveProductKey(product);
       });
       c.addEventListener('mousemove', (e: MouseEvent) => {
         const r = c.getBoundingClientRect();
@@ -267,6 +292,46 @@ export default function CaseStudyPage() {
           <span className="csp-pgo">-&gt;</span>
         </div>
       </a>
+      {/* 04 Araldite Container - live */}
+      <a className="csp-pcard featured live" href={aralditeHref} data-product="aralditeContainer">
+        <div className="csp-border-beam" />
+        <div className="csp-pglass" />
+        <div className="csp-pglow" />
+        <div className="csp-pmedia">
+          <span className="csp-pidx">04</span>
+          <model-viewer
+            src={aralditeModel}
+            alt="Araldite Container - LIMEX adhesive dispenser bottle 3D model"
+            interaction-prompt="none"
+            shadow-intensity="0.9"
+            shadow-softness="0.8"
+            exposure="1.22"
+            tone-mapping="neutral"
+            environment-image="legacy"
+            camera-orbit="30deg 72deg 115%"
+            style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+          />
+        </div>
+        <div className="csp-pinfo">
+          <div>
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+              <span className="csp-pfeatured">New Study</span>
+            </div>
+            <div className="csp-pname">Araldite Container</div>
+            <div className="csp-ptag">Adhesive Dispenser - LIMEX + PP</div>
+            <div className="csp-pbar">
+              <span style={{ flex:30, height:'100%', background:'var(--cs-green)', display:'block' }} />
+              <span style={{ flex:70, height:'100%', background:'#c4c7c0', display:'block' }} />
+            </div>
+            <div className="csp-pbarlabels">
+              <span className="csp-pdot pp" /><span className="csp-pblabel">30% LIMEX</span>
+              <span className="csp-psep">-</span>
+              <span className="csp-pdot lx" /><span className="csp-pblabel">70% PP</span>
+            </div>
+          </div>
+          <span className="csp-pgo">-&gt;</span>
+        </div>
+      </a>
     </>
   );
 
@@ -315,11 +380,11 @@ export default function CaseStudyPage() {
             </div>
 
             {/* Product marquee */}
-            <div className="csp-grid-section" ref={sectionRef}>
+            <div className={`csp-grid-section${allProductsOpen ? ' csp-grid-section--all' : ''}`} ref={sectionRef}>
               <div className="csp-lens-wrap">
                 <div className="csp-pgrid" ref={gridRef}>
                   {cards}
-                  {cards}
+                  {!allProductsOpen && cards}
                 </div>
               </div>
             </div>
@@ -338,7 +403,7 @@ export default function CaseStudyPage() {
                 </div>
               </div>
               <div className="csp-footer-right">
-                <a className="csp-explore-link" href={motorCoverHref}>Explore New Study</a>
+                <button className="csp-explore-link" type="button" onClick={showAllProducts}>Explore New Study</button>
                 <a className="csp-go-btn" href={motorCoverHref} aria-label="Open Moter Cover case study">→</a>
               </div>
             </div>
