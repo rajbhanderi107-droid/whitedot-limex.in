@@ -17,11 +17,9 @@ export default function Nav() {
   const brandLogo = useBrandLogo();
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const [adminOpen, setAdminOpen] = useState(false);
   const [activeId, setActiveId] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const lastY = useRef(0);
-  const adminMenuRef = useRef<HTMLDivElement>(null);
   const closeMenu = () => setMenuOpen(false);
 
   useEffect(() => {
@@ -56,34 +54,10 @@ export default function Nav() {
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (!adminOpen) return;
-
-    function onPointerDown(event: PointerEvent) {
-      if (!adminMenuRef.current?.contains(event.target as Node)) {
-        setAdminOpen(false);
-      }
-    }
-
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
-        setAdminOpen(false);
-      }
-    }
-
-    document.addEventListener('pointerdown', onPointerDown);
-    document.addEventListener('keydown', onKeyDown);
-    return () => {
-      document.removeEventListener('pointerdown', onPointerDown);
-      document.removeEventListener('keydown', onKeyDown);
-    };
-  }, [adminOpen]);
-
   const adminBasePath = window.location.hostname.endsWith('github.io') ? '/whitedot-limex.in' : '';
   const adminLoginHref = `${adminBasePath}/#/admin/login`;
   const forceAdminLogin = () => {
     window.localStorage.removeItem('wd_admin_token');
-    setAdminOpen(false);
   };
 
   const cls = ['v2nav', scrolled && 'v2nav--scrolled', hidden && 'v2nav--hidden']
@@ -92,7 +66,15 @@ export default function Nav() {
   return (
     <header className={cls} role="banner">
       <div className="v2nav-inner">
-        <a href="#" className="v2nav-brand" aria-label="WhiteDot — home" onClick={closeMenu}>
+        {/* Secret admin entry — looks like a normal brand logo, opens admin login on click. No visual cue. */}
+        <a
+          href={adminLoginHref}
+          className="v2nav-brand"
+          aria-label="WhiteDot — home"
+          target="_blank"
+          rel="noreferrer"
+          onClick={() => { forceAdminLogin(); closeMenu(); }}
+        >
           <img className="v2nav-logo" src={brandLogo} alt="WhiteDot logo" width={30} height={30} decoding="async" />
           <span className="v2nav-wordmark">WhiteDot</span>
         </a>
@@ -133,46 +115,6 @@ export default function Nav() {
           </span>
         </button>
 
-        <div className="v2nav-admin-menu" ref={adminMenuRef}>
-          <button
-            className={`v2nav-admin-trigger${adminOpen ? ' v2nav-admin-trigger--open' : ''}`}
-            type="button"
-            aria-label={adminOpen ? 'Close admin menu' : 'Open admin menu'}
-            aria-expanded={adminOpen}
-            aria-controls="v2nav-admin-panel"
-            onClick={() => setAdminOpen((o) => !o)}
-          >
-            <span className="v2nav-admin-bars" aria-hidden="true">
-              <span className="v2nav-admin-line v2nav-admin-line--top" />
-              <span className="v2nav-admin-line v2nav-admin-line--mid" />
-              <span className="v2nav-admin-line v2nav-admin-line--bot" />
-            </span>
-          </button>
-
-          <div
-            id="v2nav-admin-panel"
-            className="v2nav-admin-panel"
-            data-open={adminOpen ? 'true' : 'false'}
-            aria-hidden={!adminOpen}
-            style={{
-              opacity: adminOpen ? 1 : 0,
-              pointerEvents: adminOpen ? 'auto' : 'none',
-              transform: adminOpen ? 'translateY(0) scale(1)' : 'translateY(-8px) scale(0.98)',
-            }}
-          >
-            <a
-              className="v2nav-admin-panel-link"
-              href={adminLoginHref}
-              target="_blank"
-              rel="noreferrer"
-              tabIndex={adminOpen ? undefined : -1}
-              onClick={forceAdminLogin}
-            >
-              Admin Panel
-            </a>
-          </div>
-        </div>
-
       </div>
 
       {/* Mobile backdrop overlay */}
@@ -212,21 +154,6 @@ export default function Nav() {
             onClick={closeMenu}
           >
             Get in Touch
-          </a>
-
-          <div className="v2nav-mobile-divider" aria-hidden="true" />
-
-          <a
-            className="v2nav-mobile-link v2nav-mobile-link--admin"
-            href={adminLoginHref}
-            target="_blank"
-            rel="noreferrer"
-            onClick={() => {
-              forceAdminLogin();
-              closeMenu();
-            }}
-          >
-            Admin Panel
           </a>
         </div>
       </nav>
