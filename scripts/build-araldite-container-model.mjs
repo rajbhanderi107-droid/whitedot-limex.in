@@ -1,8 +1,30 @@
+/**
+ * Araldite Container — Photo-accurate GLB builder
+ *
+ * Geometry proportions measured pixel-by-pixel from the 4096×4096 reference render:
+ *
+ *   Section        Height %   Radius vs grip
+ *   Blue cap        11.8 %     0.813
+ *   White collar    14.0 %     0.672  (NARROWEST)
+ *   Barrel body     25.0 %     0.739
+ *   Step shoulder    5.0 %     rapid 0.739 → 1.000
+ *   Grip section    44.2 %     1.000  (WIDEST)
+ *
+ * Total height: 2.60 units  (y = -1.30 → +1.30)
+ * Grip radius reference: 1.05 units
+ *
+ * Texture: front-view strip extracted from reference PNG via sharp,
+ * embedded in GLB as DataTexture (RGBA). Requires OffscreenCanvas polyfill.
+ */
+
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
+import sharp from 'sharp';
 import * as THREE from 'three';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+
+/* ── Node.js polyfills required by GLTFExporter ─────────────────────────── */
 
 globalThis.FileReader = class {
   async readAsArrayBuffer(blob) {
@@ -11,169 +33,314 @@ globalThis.FileReader = class {
   }
 };
 
+globalThis.ImageData = class NodeImageData {
+  constructor(data, width, height) {
+    this.data = data;
+    this.width = width;
+    this.height = height;
+  }
+};
+
+// OffscreenCanvas polyfill — lets GLTFExporter convert DataTexture → PNG
+globalThis.OffscreenCanvas = class NodeOffscreenCanvas {
+  constructor(width, height) {
+    this.width = width;
+    this.height = height;
+    this._imageData = null;
+  }
+  getContext() {
+    const self = this;
+    return {
+      translate() {},
+      scale() {},
+      putImageData(imageData) {
+        self._imageData = imageData;
+      },
+      drawImage(img) {
+        if (img && img.data) {
+          self._imageData = { data: img.data, width: img.width, height: img.height };
+        }
+      },
+    };
+  }
+  async convertToBlob({ type = 'image/png' } = {}) {
+    const id = this._imageData;
+    if (!id) {
+      const buf = await sharp({
+        create: { width: 1, height: 1, channels: 4, background: { r: 200, g: 200, b: 195, alpha: 255 } },
+      }).png().toBuffer();
+      return new Blob([buf], { type });
+    }
+    const rawBuf = Buffer.from(id.data.buffer ?? id.data);
+    const channels = rawBuf.length / (id.width * id.height);
+    const pngBuf = await sharp(rawBuf, {
+      raw: { width: id.width, height: id.height, channels: channels | 0 },
+    }).png().toBuffer();
+    return new Blob([pngBuf], { type });
+  }
+};
+
+/* ── Texture extraction from reference photograph ────────────────────────── */
+//
+// Reference image: 4096×4096
+// Container measured bounds (original pixel coords):
+//   Cap top:       y ≈  200   Container left:  x ≈ 1300
+//   Collar top:    y ≈  550   Container right: x ≈ 2600
+//   Barrel start:  y ≈  950   Container width: ≈ 1300
+//   Grip start:    y ≈ 1700
+//   Base bottom:   y ≈ 3150
+//
+// Body texture covers collar-top → base  (y=550 → y=3150, height=2600)
+// UV V=0 (base, LatheGeometry first point) → PNG top-left (OpenGL flipY=false → V=0 = last row)
+// So row-0 of the extracted PNG = collar top (V=1) and last row = base (V=0) — correct.
+
+const REF_IMAGE = 'C:/Users/rbhan/Downloads/hf_20260630_084316_c04b663e-fc18-4bb9-a3b4-e4c471c2db27.png';
+const TEX_W = 512, TEX_H = 1024;
+
+let bodyTex = null;
+try {
+  const { data, info } = await sharp(REF_IMAGE)
+    .extract({ left: 1300, top: 550, width: 1300, height: 2600 })
+    .resize(TEX_W, TEX_H, { fit: 'fill' })
+    .ensureAlpha()          // RGBA — GLTFExporter requires RGBAFormat
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+
+  bodyTex = new THREE.DataTexture(
+    new Uint8Array(data.buffer, data.byteOffset, data.byteLength),
+    TEX_W, TEX_H,
+    THREE.RGBAFormat,
+  );
+  bodyTex.flipY = false;                   // GLTF convention
+  bodyTex.wrapS = THREE.MirroredRepeatWrapping;
+  bodyTex.wrapT = THREE.ClampToEdgeWrapping;
+  bodyTex.magFilter = THREE.LinearFilter;
+  bodyTex.minFilter = THREE.LinearMipmapLinearFilter;
+  bodyTex.generateMipmaps = false;
+  bodyTex.needsUpdate = true;
+  console.log('✓ Body texture extracted:', info.width, '×', info.height, info.channels, 'ch → RGBA', TEX_W, '×', TEX_H);
+} catch (e) {
+  console.warn('⚠ Texture extraction failed (falling back to PBR color):', e.message);
+}
+
+/* ── Scene setup ─────────────────────────────────────────────────────────── */
 const outDir = resolve('public/case-study/model');
 mkdirSync(outDir, { recursive: true });
 
 const scene = new THREE.Scene();
-scene.name = 'WhiteDot Araldite Container - LIMEX PP';
+scene.name = 'WhiteDot Araldite Container — LIMEX PP Photo-Accurate';
 
-/* ── Materials ─────────────────────────────────────────────────────────────── */
-const white = new THREE.MeshPhysicalMaterial({
-  name: 'araldite body - warm grey LIMEX PP plastic',
-  color: new THREE.Color('#d4d4ce'),   // warmer medium grey matching reference photo
-  roughness: 0.55,                      // matte-ish plastic feel
+/* ── Materials ───────────────────────────────────────────────────────────── */
+
+// Grey PP body — use photo texture when available, PBR colour otherwise
+const bodyMat = new THREE.MeshPhysicalMaterial({
+  name: 'araldite body — LIMEX PP warm grey',
+  ...(bodyTex
+    ? { map: bodyTex, color: new THREE.Color('#ffffff') }
+    : { color: new THREE.Color('#c4c4bc') }),
+  roughness: 0.60,
   metalness: 0,
-  clearcoat: 0.28,                      // subtle surface sheen
-  clearcoatRoughness: 0.40,
-  sheen: 0.18,
-  sheenColor: new THREE.Color('#c8c8c0'),
-  sheenRoughness: 0.55,
-  envMapIntensity: 1.10,
-  thickness: 0.8,                       // slight subsurface depth
-  attenuationColor: new THREE.Color('#e8e8e0'),
+  clearcoat: 0.22,
+  clearcoatRoughness: 0.42,
+  sheen: 0.14,
+  sheenColor: new THREE.Color('#bdbdb5'),
+  sheenRoughness: 0.58,
+  envMapIntensity: 1.00,
 });
 
-const blue = new THREE.MeshPhysicalMaterial({
-  name: 'araldite cap - deep glossy royal blue',
-  color: new THREE.Color('#2840c2'),    // deep royal blue matching Araldite brand
-  roughness: 0.10,                      // very glossy cap
+// White collar (screw section) — brighter than body
+const collarMat = new THREE.MeshPhysicalMaterial({
+  name: 'araldite collar — white PP',
+  color: new THREE.Color('#e4e4e0'),
+  roughness: 0.30,
+  metalness: 0,
+  clearcoat: 0.55,
+  clearcoatRoughness: 0.25,
+  envMapIntensity: 1.30,
+});
+
+// Araldite royal blue cap — very glossy
+const blueMat = new THREE.MeshPhysicalMaterial({
+  name: 'araldite cap — Araldite royal blue',
+  color: new THREE.Color('#2840ca'),
+  roughness: 0.07,
   metalness: 0,
   clearcoat: 1.0,
-  clearcoatRoughness: 0.05,
-  reflectivity: 0.9,
-  envMapIntensity: 1.6,
+  clearcoatRoughness: 0.04,
+  reflectivity: 0.95,
+  envMapIntensity: 1.75,
+  ior: 1.52,
 });
 
-const blueDark = new THREE.MeshPhysicalMaterial({
-  name: 'araldite cap cross divider - darker blue',
-  color: new THREE.Color('#1a2d9e'),
-  roughness: 0.15,
+// Darker blue for divider cross + shadow rings
+const blueDarkMat = new THREE.MeshPhysicalMaterial({
+  name: 'araldite cap divider — dark blue',
+  color: new THREE.Color('#1a2da6'),
+  roughness: 0.14,
   metalness: 0,
-  clearcoat: 0.85,
-  clearcoatRoughness: 0.08,
-  envMapIntensity: 1.3,
+  clearcoat: 0.82,
+  envMapIntensity: 1.20,
 });
 
-function mesh(geometry, material, name, position = [0, 0, 0], rotation = [0, 0, 0]) {
-  const m = new THREE.Mesh(geometry, material);
+/* ── Helpers ─────────────────────────────────────────────────────────────── */
+function mesh(geo, mat, name, pos = [0, 0, 0], rot = [0, 0, 0]) {
+  const m = new THREE.Mesh(geo, mat);
   m.name = name;
-  m.position.set(...position);
-  m.rotation.set(...rotation);
+  m.position.set(...pos);
+  m.rotation.set(...rot);
   m.castShadow = true;
   m.receiveShadow = true;
   scene.add(m);
   return m;
 }
-
-function torus(name, radius, tube, y, material) {
-  const g = new THREE.TorusGeometry(radius, tube, 20, 160);
-  const m = mesh(g, material, name, [0, y, 0], [Math.PI / 2, 0, 0]);
-  return m;
+function ring(name, r, tube, y, mat, seg = 24) {
+  const g = new THREE.TorusGeometry(r, tube, seg, 180);
+  return mesh(g, mat, name, [0, y, 0], [Math.PI / 2, 0, 0]);
 }
 
-/* ── White body — bottom to top
- * Structure: ribbed grip at BOTTOM → smooth barrel body → narrow collar → blue cap on TOP
+/* ═══════════════════════════════════════════════════════════════════════════
+ *  GEOMETRY — photo-accurate proportions (y = −1.30 … +1.30)
  *
- * Y layout (total height -1.22 to +1.33):
- *   -1.22  base rim
- *   -1.12 to -0.50  fluted grip section (wide, ribbed)
- *   -0.50 to -0.32  step into smooth body
- *   -0.32 to +0.72  smooth cylindrical body
- *   +0.72 to +0.86  shoulder narrowing
- *   +0.86 to +0.99  screw collar (subtle ridges in lathe profile)
- */
-const bodyProfile = [
-  new THREE.Vector2(0.55, -1.22),   // bottom base center
-  new THREE.Vector2(0.92, -1.20),   // base collar
-  new THREE.Vector2(1.02, -1.12),   // grip section bottom (wider)
-  new THREE.Vector2(1.04, -0.90),
-  new THREE.Vector2(1.03, -0.52),   // grip section top
-  new THREE.Vector2(0.96, -0.42),   // step shoulder into body
-  new THREE.Vector2(0.90, -0.33),
-  new THREE.Vector2(0.88, 0.08),    // smooth lower body
-  new THREE.Vector2(0.89, 0.52),    // smooth mid body
-  new THREE.Vector2(0.88, 0.68),    // smooth upper body
-  new THREE.Vector2(0.83, 0.79),    // shoulder narrowing
-  new THREE.Vector2(0.78, 0.86),    // collar base
-  new THREE.Vector2(0.80, 0.89),    // collar ridge 1
-  new THREE.Vector2(0.77, 0.92),
-  new THREE.Vector2(0.80, 0.95),    // collar ridge 2
-  new THREE.Vector2(0.77, 0.97),
-  new THREE.Vector2(0.79, 0.99),    // top of white collar
-];
-const body = mesh(new THREE.LatheGeometry(bodyProfile, 256), white, 'araldite white body fluted-bottom');
-body.geometry.computeVertexNormals();
+ *  Y layout (measured from photo, total 2.60 units):
+ *    −1.300  base rim bottom
+ *    −0.151  top of grip  →  step shoulder starts
+ *    −0.021  bottom of barrel  →  step shoulder ends
+ *    +0.629  top of barrel  →  collar starts
+ *    +0.993  top of collar  →  blue cap starts
+ *    +1.300  top of blue cap
+ *
+ *  Radii (grip = 1.050):
+ *    Grip:   1.050   Barrel: 0.780   Collar: 0.705   Cap: 0.855
+ * ═══════════════════════════════════════════════════════════════════════════ */
 
-/* ── Vertical flute ribs — lower grip section (bottom third of container) ──── */
-const FLUTES = 30;
+/* ── 1. Full white body: one LatheGeometry (grip + step + barrel + collar) ── */
+//  Single lathe = one UV space → texture maps cleanly from base (V=0) to collar (V=1)
+const bodyProfile = [
+  // ─ Base rim ─
+  new THREE.Vector2(0.000, -1.300),   // center bottom
+  new THREE.Vector2(0.880, -1.300),   // base inner flat
+  new THREE.Vector2(1.055, -1.278),   // base rim outer flare
+  new THREE.Vector2(1.065, -1.248),   // rim peak
+  new THREE.Vector2(1.050, -1.215),   // into grip wall
+
+  // ─ Grip section (44 % of height — tallest part) ─
+  new THREE.Vector2(1.050, -0.200),   // grip wall (long straight run)
+  new THREE.Vector2(1.040, -0.160),   // step shoulder outer
+
+  // ─ Step shoulder (rapid 30 % inward over 0.13 units) ─
+  new THREE.Vector2(0.850, -0.095),   // rapid taper
+  new THREE.Vector2(0.785, -0.030),   // step resolves into barrel
+
+  // ─ Barrel body (slight barrel curve — widest at mid) ─
+  new THREE.Vector2(0.783, 0.100),
+  new THREE.Vector2(0.782, 0.250),    // widest barrel point
+  new THREE.Vector2(0.780, 0.420),
+  new THREE.Vector2(0.772, 0.560),    // gentle taper toward collar
+  new THREE.Vector2(0.762, 0.629),    // barrel top / collar base
+
+  // ─ White collar (narrower than barrel — screw section) ─
+  new THREE.Vector2(0.712, 0.655),    // step inward into collar
+  new THREE.Vector2(0.706, 0.720),
+  new THREE.Vector2(0.710, 0.790),
+  new THREE.Vector2(0.706, 0.860),
+  new THREE.Vector2(0.712, 0.930),
+  new THREE.Vector2(0.722, 0.965),
+  new THREE.Vector2(0.748, 0.993),    // collar top / cap base
+];
+const bodyMesh = mesh(
+  new THREE.LatheGeometry(bodyProfile, 280),
+  bodyMat, 'araldite white body',
+);
+bodyMesh.geometry.computeVertexNormals();
+
+/* ── 2. Bottom disk cap ──────────────────────────────────────────────────── */
+mesh(new THREE.CircleGeometry(0.880, 80), bodyMat, 'bottom disk',
+  [0, -1.300, 0], [-Math.PI / 2, 0, 0]);
+
+/* ── 3. Vertical flute ribs on grip section ──────────────────────────────── */
+//  32 rounded ribs, centred at y = −0.683 (mid-grip), height 0.98 units
+const FLUTES = 32;
 for (let i = 0; i < FLUTES; i++) {
   const a = (i / FLUTES) * Math.PI * 2;
-  const r = 1.005;  // slightly outside surface so ribs stand proud
+  const r = 1.053;
   mesh(
-    new RoundedBoxGeometry(0.065, 0.56, 0.065, 3, 0.020),
-    white,
-    `flute rib ${i}`,
-    [Math.cos(a) * r, -0.80, Math.sin(a) * r],
+    new RoundedBoxGeometry(0.058, 0.98, 0.058, 3, 0.017),
+    bodyMat, `flute rib ${i}`,
+    [Math.cos(a) * r, -0.683, Math.sin(a) * r],
     [0, -a, 0],
   );
 }
 
-/* ── Thin shadow gap where blue cap meets white collar ──────────────────────── */
-torus('shadow gap cap-to-collar', 0.80, 0.007, 0.990, blueDark);
+/* ── 4. Collar torus rings (4 distinct ridges clearly visible in photo) ──── */
+ring('collar ring 1', 0.712, 0.016, 0.670, collarMat);
+ring('collar ring 2', 0.707, 0.016, 0.755, collarMat);
+ring('collar ring 3', 0.710, 0.016, 0.840, collarMat);
+ring('collar ring 4', 0.714, 0.013, 0.920, collarMat);
 
-/* ── BLUE CAP — sits on TOP (the defining Araldite feature) ─────────────────── */
-const blueCapProfile = [
-  new THREE.Vector2(0.00, 0.96),   // center base (sits on white collar)
-  new THREE.Vector2(0.74, 0.96),   // inner base
-  new THREE.Vector2(0.85, 0.99),   // skirt flares over collar
-  new THREE.Vector2(0.91, 1.04),   // outer cap wall starts
-  new THREE.Vector2(0.92, 1.22),   // cap wall upper
-  new THREE.Vector2(0.88, 1.28),   // top chamfer begins
-  new THREE.Vector2(0.62, 1.32),   // top dome near edge
-  new THREE.Vector2(0.30, 1.338),  // top dome
-  new THREE.Vector2(0.00, 1.340),  // center top
+/* ── 5. Shadow gap between white collar and blue cap ─────────────────────── */
+ring('shadow gap collar→cap', 0.750, 0.009, 0.993, blueDarkMat, 20);
+
+/* ── 6. Blue Araldite top cap (dominating feature of the product) ────────── */
+const capProfile = [
+  new THREE.Vector2(0.000, 0.993),    // centre base
+  new THREE.Vector2(0.720, 0.993),    // inner base
+  new THREE.Vector2(0.820, 1.004),    // skirt flares over collar
+  new THREE.Vector2(0.855, 1.025),    // outer cap wall base
+  new THREE.Vector2(0.860, 1.145),    // outer cap wall
+  new THREE.Vector2(0.850, 1.225),    // wall curves to dome
+  new THREE.Vector2(0.800, 1.268),    // dome shoulder
+  new THREE.Vector2(0.620, 1.293),    // dome
+  new THREE.Vector2(0.340, 1.300),    // near apex
+  new THREE.Vector2(0.000, 1.300),    // centre top
 ];
-mesh(new THREE.LatheGeometry(blueCapProfile, 220), blue, 'blue Araldite top cap');
+mesh(new THREE.LatheGeometry(capProfile, 260), blueMat, 'blue Araldite top cap');
 
-/* ── Cross divider on the blue cap top (+ shape, the flip-top detail) ───────── */
-const crossH = 0.052;
-const crossW = 0.092;
-const crossL = 1.78;
-mesh(
-  new THREE.BoxGeometry(crossW, crossH, crossL),
-  blueDark, 'cross divider X',
-  [0, 1.346, 0],
-);
-mesh(
-  new THREE.BoxGeometry(crossL, crossH, crossW),
-  blueDark, 'cross divider Z',
-  [0, 1.346, 0],
-);
+/* ── 7. Cross divider on cap top (+ mark visible in photo) ──────────────── */
+const CW = 0.088, CH = 0.043, CL = 1.68;
+mesh(new THREE.BoxGeometry(CW, CH, CL), blueDarkMat, 'cap cross X', [0, 1.303, 0]);
+mesh(new THREE.BoxGeometry(CL, CH, CW), blueDarkMat, 'cap cross Z', [0, 1.303, 0]);
 
-/* ── Lights ─────────────────────────────────────────────────────────────────── */
-const key = new THREE.DirectionalLight(0xffffff, 3.0);
-key.position.set(3, 4, 5);
-scene.add(key);
+/* ── 8. Concentric detail rings on cap top ───────────────────────────────── */
+ring('cap inner ring',  0.440, 0.009, 1.296, blueDarkMat, 20);
+ring('cap middle ring', 0.660, 0.007, 1.291, blueDarkMat, 20);
 
-const fill = new THREE.DirectionalLight(0xffffff, 1.2);
-fill.position.set(-3, 2, 4);
-scene.add(fill);
+/* ── 9. Lighting (key + fill + rim + top) ───────────────────────────────── */
+const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
+keyLight.position.set(3, 5, 5);
+scene.add(keyLight);
 
-const rim = new THREE.DirectionalLight(0xffffff, 0.6);
-rim.position.set(0, -3, -4);
-scene.add(rim);
+const fillLight = new THREE.DirectionalLight(0xffffff, 1.1);
+fillLight.position.set(-3, 2, 3);
+scene.add(fillLight);
 
-const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
-camera.name = 'front product camera';
-camera.position.set(0, 0.10, 5.6);
-camera.lookAt(0, 0.06, 0);
-scene.add(camera);
+const rimLight = new THREE.DirectionalLight(0xffffff, 0.5);
+rimLight.position.set(0, -4, -3);
+scene.add(rimLight);
 
-/* ── Export ─────────────────────────────────────────────────────────────────── */
+const topLight = new THREE.DirectionalLight(0xffffff, 0.7);
+topLight.position.set(0, 8, 1);
+scene.add(topLight);
+
+/* ── 10. Camera ──────────────────────────────────────────────────────────── */
+const cam = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+cam.name = 'product front camera';
+cam.position.set(0, 0.10, 5.6);
+cam.lookAt(0, 0.04, 0);
+scene.add(cam);
+
+/* ── Export ──────────────────────────────────────────────────────────────── */
 const exporter = new GLTFExporter();
-const glb = await new Promise((resolveExport, reject) => {
-  exporter.parse(scene, resolveExport, reject, { binary: true, trs: false, onlyVisible: true });
-});
+const glb = await new Promise((res, rej) =>
+  exporter.parse(scene, res, rej, {
+    binary: true,
+    trs: false,
+    onlyVisible: true,
+    embedImages: true,
+    maxTextureSize: 1024,
+  }),
+);
 
-writeFileSync(resolve(outDir, 'araldite-container-procedural.glb'), Buffer.from(glb));
-console.log('✓ GLB written:', resolve(outDir, 'araldite-container-procedural.glb'));
+const outPath = resolve(outDir, 'araldite-container-procedural.glb');
+writeFileSync(outPath, Buffer.from(glb));
+console.log('✓ GLB written:', outPath, `(${(glb.byteLength / 1024 / 1024).toFixed(2)} MB)`);
+console.log(bodyTex ? '✓ Photo texture embedded in GLB' : '⚠ Procedural PBR colors used (no texture)');
