@@ -40,9 +40,9 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
   ],
   aralditeContainer: [
     { value: '04', label: 'Araldite Container' },
-    { value: 'LIMEX', label: 'Grade TBC' },
-    { value: '+PP', label: 'Homo-Polymer' },
-    { value: '3D', label: 'Photo-Matched', green: true },
+    { value: <>30<small>%</small></>, label: 'LIMEX' },
+    { value: <>70<small>%</small></>, label: 'PP' },
+    { value: <>~23<small>%</small></>, label: 'Limestone in Part', green: true },
   ],
 };
 
@@ -290,15 +290,15 @@ export default function CaseStudyFeature() {
               <span className="csp-pfeatured">New Study</span>
             </div>
             <div className="csp-pname">Araldite Container</div>
-            <div className="csp-ptag">Adhesive Dispenser · LIMEX TBC</div>
+            <div className="csp-ptag">Adhesive Dispenser · LIMEX + PP</div>
             <div className="csp-pbar">
               <span style={{ flex:30, height:'100%', background:'var(--cs-green)', display:'block' }} />
               <span style={{ flex:70, height:'100%', background:'#c4c7c0', display:'block' }} />
             </div>
             <div className="csp-pbarlabels">
-              <span className="csp-pdot pp" /><span className="csp-pblabel">LIMEX (TBC)</span>
+              <span className="csp-pdot pp" /><span className="csp-pblabel">30% LIMEX</span>
               <span className="csp-psep">·</span>
-              <span className="csp-pdot lx" /><span className="csp-pblabel">+ PP</span>
+              <span className="csp-pdot lx" /><span className="csp-pblabel">70% PP</span>
             </div>
           </div>
           <span className="csp-pgo">→</span>
