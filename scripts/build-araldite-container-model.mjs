@@ -17,37 +17,37 @@ mkdirSync(outDir, { recursive: true });
 const scene = new THREE.Scene();
 scene.name = 'WhiteDot Araldite Container - LIMEX PP';
 
-/* ── Materials ───────────────────────────────────────────────────────────── */
+/* ── Materials ─────────────────────────────────────────────────────────────── */
 const white = new THREE.MeshPhysicalMaterial({
-  name: 'semi-matte white LIMEX PP body',
-  color: new THREE.Color('#f3f3ee'),
-  roughness: 0.42,
+  name: 'araldite body - warm white grey LIMEX PP',
+  color: new THREE.Color('#e0e0da'),
+  roughness: 0.46,
   metalness: 0,
-  clearcoat: 0.4,
-  clearcoatRoughness: 0.3,
-  sheen: 0.12,
-  sheenRoughness: 0.4,
+  clearcoat: 0.38,
+  clearcoatRoughness: 0.30,
+  sheen: 0.10,
+  sheenRoughness: 0.45,
   envMapIntensity: 1.05,
 });
 
-const whiteCap = new THREE.MeshPhysicalMaterial({
-  name: 'white screw cap',
-  color: new THREE.Color('#f6f6f2'),
-  roughness: 0.36,
+const blue = new THREE.MeshPhysicalMaterial({
+  name: 'araldite cap - glossy blue',
+  color: new THREE.Color('#3351c9'),
+  roughness: 0.16,
   metalness: 0,
-  clearcoat: 0.5,
-  clearcoatRoughness: 0.24,
-  envMapIntensity: 1.1,
+  clearcoat: 1.0,
+  clearcoatRoughness: 0.07,
+  envMapIntensity: 1.4,
 });
 
-const blue = new THREE.MeshPhysicalMaterial({
-  name: 'glossy blue dispensing cap',
-  color: new THREE.Color('#2a45c8'),
-  roughness: 0.22,
+const blueDark = new THREE.MeshPhysicalMaterial({
+  name: 'araldite cap cross divider',
+  color: new THREE.Color('#1e35a2'),
+  roughness: 0.20,
   metalness: 0,
-  clearcoat: 1,
-  clearcoatRoughness: 0.1,
-  envMapIntensity: 1.3,
+  clearcoat: 0.9,
+  clearcoatRoughness: 0.10,
+  envMapIntensity: 1.2,
 });
 
 function mesh(geometry, material, name, position = [0, 0, 0], rotation = [0, 0, 0]) {
@@ -61,99 +61,115 @@ function mesh(geometry, material, name, position = [0, 0, 0], rotation = [0, 0, 
   return m;
 }
 
-function torus(name, radius, tube, y, material, scaleY = 1) {
+function torus(name, radius, tube, y, material) {
   const g = new THREE.TorusGeometry(radius, tube, 20, 160);
   const m = mesh(g, material, name, [0, y, 0], [Math.PI / 2, 0, 0]);
-  m.scale.z = scaleY;
   return m;
 }
 
-/* ── White body — single lathe profile (bottom → top) ──────────────────────
- * Fluted lower grip, smooth tall body, shoulder, knurled screw cap on top.   */
+/* ── White body — bottom to top
+ * Structure: ribbed grip at BOTTOM → smooth barrel body → narrow collar → blue cap on TOP
+ *
+ * Y layout (total height -1.22 to +1.33):
+ *   -1.22  base rim
+ *   -1.12 to -0.50  fluted grip section (wide, ribbed)
+ *   -0.50 to -0.32  step into smooth body
+ *   -0.32 to +0.72  smooth cylindrical body
+ *   +0.72 to +0.86  shoulder narrowing
+ *   +0.86 to +0.99  screw collar (subtle ridges in lathe profile)
+ */
 const bodyProfile = [
-  new THREE.Vector2(0.52, -1.20),  // bottom opening rim (seats blue cap)
-  new THREE.Vector2(0.93, -1.19),  // bottom collar outer
-  new THREE.Vector2(0.97, -1.12),  // flute section bottom (widest grip)
-  new THREE.Vector2(1.00, -0.92),
-  new THREE.Vector2(1.00, -0.58),  // flute section top
-  new THREE.Vector2(0.94, -0.46),  // step into smooth body
-  new THREE.Vector2(0.905, -0.40),
-  new THREE.Vector2(0.90, 0.10),   // straight smooth body
-  new THREE.Vector2(0.905, 0.62),
-  new THREE.Vector2(0.895, 0.74),  // upper body
-  new THREE.Vector2(0.86, 0.82),   // shoulder narrowing
-  new THREE.Vector2(0.82, 0.86),   // neck under cap
+  new THREE.Vector2(0.55, -1.22),   // bottom base center
+  new THREE.Vector2(0.92, -1.20),   // base collar
+  new THREE.Vector2(1.02, -1.12),   // grip section bottom (wider)
+  new THREE.Vector2(1.04, -0.90),
+  new THREE.Vector2(1.03, -0.52),   // grip section top
+  new THREE.Vector2(0.96, -0.42),   // step shoulder into body
+  new THREE.Vector2(0.90, -0.33),
+  new THREE.Vector2(0.88, 0.08),    // smooth lower body
+  new THREE.Vector2(0.89, 0.52),    // smooth mid body
+  new THREE.Vector2(0.88, 0.68),    // smooth upper body
+  new THREE.Vector2(0.83, 0.79),    // shoulder narrowing
+  new THREE.Vector2(0.78, 0.86),    // collar base
+  new THREE.Vector2(0.80, 0.89),    // collar ridge 1
+  new THREE.Vector2(0.77, 0.92),
+  new THREE.Vector2(0.80, 0.95),    // collar ridge 2
+  new THREE.Vector2(0.77, 0.97),
+  new THREE.Vector2(0.79, 0.99),    // top of white collar
 ];
-const body = mesh(new THREE.LatheGeometry(bodyProfile, 256), white, 'smooth white fluted LIMEX PP container body', [0, 0, 0]);
+const body = mesh(new THREE.LatheGeometry(bodyProfile, 256), white, 'araldite white body fluted-bottom');
 body.geometry.computeVertexNormals();
 
-/* ── Vertical flute ribs on the lower grip section ─────────────────────────── */
-const FLUTES = 32;
+/* ── Vertical flute ribs — lower grip section (bottom third of container) ──── */
+const FLUTES = 30;
 for (let i = 0; i < FLUTES; i++) {
   const a = (i / FLUTES) * Math.PI * 2;
-  const r = 0.965;  // embed into the body surface so ribs read as flutes, not pins
+  const r = 1.005;  // slightly outside surface so ribs stand proud
   mesh(
-    new RoundedBoxGeometry(0.058, 0.54, 0.05, 3, 0.018),
+    new RoundedBoxGeometry(0.065, 0.56, 0.065, 3, 0.020),
     white,
-    `vertical flute rib ${i}`,
-    [Math.cos(a) * r, -0.85, Math.sin(a) * r],
+    `flute rib ${i}`,
+    [Math.cos(a) * r, -0.80, Math.sin(a) * r],
     [0, -a, 0],
   );
 }
 
-/* ── Thin separation line where cap meets body ─────────────────────────────── */
-torus('fine shadow gap below screw cap', 0.85, 0.006, 0.875, blue);
+/* ── Thin shadow gap where blue cap meets white collar ──────────────────────── */
+torus('shadow gap cap-to-collar', 0.80, 0.007, 0.990, blueDark);
 
-/* ── White screw cap with knurled grip wall ────────────────────────────────── */
-const capProfile = [
-  new THREE.Vector2(0.84, 0.86),   // cap skirt bottom
-  new THREE.Vector2(0.985, 0.90),  // cap wall flares out
-  new THREE.Vector2(0.99, 1.16),   // cap wall top
-  new THREE.Vector2(0.96, 1.215),  // top chamfer
-  new THREE.Vector2(0.80, 1.245),  // flat-ish domed top
-  new THREE.Vector2(0.40, 1.255),
-  new THREE.Vector2(0.0, 1.258),   // top center
+/* ── BLUE CAP — sits on TOP (the defining Araldite feature) ─────────────────── */
+const blueCapProfile = [
+  new THREE.Vector2(0.00, 0.96),   // center base (sits on white collar)
+  new THREE.Vector2(0.74, 0.96),   // inner base
+  new THREE.Vector2(0.85, 0.99),   // skirt flares over collar
+  new THREE.Vector2(0.91, 1.04),   // outer cap wall starts
+  new THREE.Vector2(0.92, 1.22),   // cap wall upper
+  new THREE.Vector2(0.88, 1.28),   // top chamfer begins
+  new THREE.Vector2(0.62, 1.32),   // top dome near edge
+  new THREE.Vector2(0.30, 1.338),  // top dome
+  new THREE.Vector2(0.00, 1.340),  // center top
 ];
-mesh(new THREE.LatheGeometry(capProfile, 200), whiteCap, 'white knurled screw cap', [0, 0, 0]);
+mesh(new THREE.LatheGeometry(blueCapProfile, 220), blue, 'blue Araldite top cap');
 
-const KNURLS = 58;
-for (let i = 0; i < KNURLS; i++) {
-  const a = (i / KNURLS) * Math.PI * 2;
-  const r = 0.965;  // embed into the cap wall (wall radius ~0.99)
-  mesh(
-    new RoundedBoxGeometry(0.02, 0.23, 0.035, 2, 0.007),
-    whiteCap,
-    `cap knurl ${i}`,
-    [Math.cos(a) * r, 1.02, Math.sin(a) * r],
-    [0, -a, 0],
-  );
-}
+/* ── Cross divider on the blue cap top (+ shape, the flip-top detail) ───────── */
+const crossH = 0.052;
+const crossW = 0.092;
+const crossL = 1.78;
+mesh(
+  new THREE.BoxGeometry(crossW, crossH, crossL),
+  blueDark, 'cross divider X',
+  [0, 1.346, 0],
+);
+mesh(
+  new THREE.BoxGeometry(crossL, crossH, crossW),
+  blueDark, 'cross divider Z',
+  [0, 1.346, 0],
+);
 
-/* ── Blue dispensing cap at the base (container stands on it) ──────────────── */
-mesh(new THREE.CylinderGeometry(0.66, 0.62, 0.16, 200), blue, 'blue dispensing cap base', [0, -1.30, 0]);
-mesh(new THREE.CylinderGeometry(0.62, 0.62, 0.04, 200), blue, 'blue cap flat underside', [0, -1.39, 0]);
-// raised central divider bar (flip-top dispensing spout)
-mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.62, 24), blue, 'blue cap spout divider bar', [0, -1.40, 0], [Math.PI / 2, 0, 0.35]);
-torus('white collar ring around blue cap', 0.70, 0.05, -1.235, white);
-
-/* ── Lights + camera metadata for GLB viewers ──────────────────────────────── */
-const key = new THREE.DirectionalLight(0xffffff, 3);
+/* ── Lights ─────────────────────────────────────────────────────────────────── */
+const key = new THREE.DirectionalLight(0xffffff, 3.0);
 key.position.set(3, 4, 5);
 scene.add(key);
+
 const fill = new THREE.DirectionalLight(0xffffff, 1.2);
 fill.position.set(-3, 2, 4);
 scene.add(fill);
 
+const rim = new THREE.DirectionalLight(0xffffff, 0.6);
+rim.position.set(0, -3, -4);
+scene.add(rim);
+
 const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
 camera.name = 'front product camera';
-camera.position.set(0, 0.1, 5.6);
-camera.lookAt(0, -0.05, 0);
+camera.position.set(0, 0.10, 5.6);
+camera.lookAt(0, 0.06, 0);
 scene.add(camera);
 
+/* ── Export ─────────────────────────────────────────────────────────────────── */
 const exporter = new GLTFExporter();
 const glb = await new Promise((resolveExport, reject) => {
   exporter.parse(scene, resolveExport, reject, { binary: true, trs: false, onlyVisible: true });
 });
 
 writeFileSync(resolve(outDir, 'araldite-container-procedural.glb'), Buffer.from(glb));
-console.log(resolve(outDir, 'araldite-container-procedural.glb'));
+console.log('✓ GLB written:', resolve(outDir, 'araldite-container-procedural.glb'));

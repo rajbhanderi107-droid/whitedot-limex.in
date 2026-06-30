@@ -280,7 +280,7 @@ export default function CaseStudyFeature() {
             exposure="1.14"
             tone-mapping="neutral"
             environment-image="neutral"
-            camera-orbit="25deg 76deg 115%"
+            camera-orbit="30deg 72deg 115%"
             style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
           />
         </div>
