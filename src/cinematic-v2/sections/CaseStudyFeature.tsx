@@ -52,12 +52,28 @@ export default function CaseStudyFeature() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const rafRef     = useRef<number>(0);
   const activeProductRef = useRef<ProductKey>('overview');
+  const allProductsOpenRef = useRef(false);
   const [activeProduct, setActiveProduct] = useState<ProductKey>('overview');
+  const [allProductsOpen, setAllProductsOpen] = useState(false);
   const setActiveProductKey = useCallback((key: ProductKey) => {
     if (activeProductRef.current === key) return;
     activeProductRef.current = key;
     setActiveProduct(key);
   }, []);
+  const showAllProducts = useCallback(() => {
+    allProductsOpenRef.current = true;
+    setAllProductsOpen(true);
+    setActiveProductKey('overview');
+    cancelAnimationFrame(rafRef.current);
+    requestAnimationFrame(() => {
+      gridRef.current?.querySelectorAll<HTMLElement>('.csp-pcard').forEach((card) => {
+        card.style.transform = 'none';
+        card.style.opacity = '1';
+        card.style.zIndex = '1';
+      });
+      if (gridRef.current) gridRef.current.style.transform = 'none';
+    });
+  }, [setActiveProductKey]);
 
   useEffect(() => {
     // ── Inject model-viewer if not already present ──
@@ -116,6 +132,7 @@ export default function CaseStudyFeature() {
         if (scrollX >= half) scrollX = 0;
         grid!.style.transform = `translate3d(${-scrollX}px,0,0)`;
       }
+      if (allProductsOpenRef.current) return;
       applyCardTransforms();
       rafRef.current = requestAnimationFrame(tick);
     }
@@ -274,6 +291,7 @@ export default function CaseStudyFeature() {
           <span className="csp-pidx">04</span>
           <model-viewer
             src={aralditeModel}
+            poster={`${basePath}/case-study/img/araldite-poster.jpg`}
             alt="Araldite Container — LIMEX adhesive dispenser bottle 3D model"
             interaction-prompt="none"
             shadow-intensity="0.9"
@@ -345,11 +363,11 @@ export default function CaseStudyFeature() {
           </div>
 
           {/* Product marquee */}
-          <div className="csp-grid-section">
+          <div className={`csp-grid-section${allProductsOpen ? ' csp-grid-section--all' : ''}`}>
             <div className="csp-lens-wrap">
               <div className="csp-pgrid" ref={gridRef}>
                 {cards}
-                {cards}
+                {!allProductsOpen && cards}
               </div>
             </div>
           </div>
@@ -368,7 +386,7 @@ export default function CaseStudyFeature() {
               </div>
             </div>
             <div className="csp-footer-right">
-              <a className="csp-explore-link" href={motorCoverHref}>Explore New Study</a>
+              <button className="csp-explore-link" type="button" onClick={showAllProducts}>Explore New Study</button>
               <a className="csp-go-btn" href={motorCoverHref} aria-label="Open Moter Cover case study">→</a>
             </div>
           </div>
