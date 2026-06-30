@@ -1,0 +1,35 @@
+name: Deploy Backend (VPS Docker rebuild)
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-backend
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull latest backend source + rebuild container
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 15m
+          script: |
+            set -e
+            cd /opt/whitedot-backend
+            echo "=== before: $(git rev-parse --short HEAD) ==="
+            git fetch origin master
+            git reset --hard origin/master
+            echo "=== after:  $(git rev-parse --short HEAD) ==="
+            docker compose up -d --build api
+            echo "=== waiting for api to come up ==="
+            sleep 8
+            docker compose ps
+            echo "=== health probe (in-container) ==="
+            curl -fsS http://127.0.0.1:4000/api/public/case-studies | head -c 400 || echo "probe failed"
+            echo ""
+            echo "=== done ==="
