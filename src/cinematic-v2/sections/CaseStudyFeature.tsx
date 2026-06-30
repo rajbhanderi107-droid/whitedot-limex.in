@@ -64,7 +64,6 @@ export default function CaseStudyFeature() {
     allProductsOpenRef.current = true;
     setAllProductsOpen(true);
     setActiveProductKey('overview');
-    cancelAnimationFrame(rafRef.current);
     requestAnimationFrame(() => {
       gridRef.current?.querySelectorAll<HTMLElement>('.csp-pcard').forEach((card) => {
         card.style.transform = 'none';
@@ -73,6 +72,11 @@ export default function CaseStudyFeature() {
       });
       if (gridRef.current) gridRef.current.style.transform = 'none';
     });
+  }, [setActiveProductKey]);
+  const hideAllProducts = useCallback(() => {
+    allProductsOpenRef.current = false;
+    setAllProductsOpen(false);
+    setActiveProductKey('overview');
   }, [setActiveProductKey]);
 
   useEffect(() => {
@@ -132,7 +136,10 @@ export default function CaseStudyFeature() {
         if (scrollX >= half) scrollX = 0;
         grid!.style.transform = `translate3d(${-scrollX}px,0,0)`;
       }
-      if (allProductsOpenRef.current) return;
+      if (allProductsOpenRef.current) {
+        rafRef.current = requestAnimationFrame(tick);
+        return;
+      }
       applyCardTransforms();
       rafRef.current = requestAnimationFrame(tick);
     }
@@ -386,8 +393,17 @@ export default function CaseStudyFeature() {
               </div>
             </div>
             <div className="csp-footer-right">
-              <button className="csp-explore-link" type="button" onClick={showAllProducts}>Explore New Study</button>
-              <a className="csp-go-btn" href={motorCoverHref} aria-label="Open Moter Cover case study">→</a>
+              {allProductsOpen ? (
+                <>
+                  <button className="csp-go-btn" type="button" onClick={hideAllProducts} aria-label="Back to product carousel">←</button>
+                  <button className="csp-explore-link" type="button" onClick={hideAllProducts}>Back to Products</button>
+                </>
+              ) : (
+                <>
+                  <button className="csp-explore-link" type="button" onClick={showAllProducts}>Explore New Study</button>
+                  <button className="csp-go-btn" type="button" onClick={showAllProducts} aria-label="Show all case study products">→</button>
+                </>
+              )}
             </div>
           </div>
         </div>
