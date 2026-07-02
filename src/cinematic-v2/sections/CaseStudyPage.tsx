@@ -13,12 +13,14 @@ const motorCoverModel  = `${basePath}/case-study/model/motor-cover-procedural-bl
 const motorCoverPoster = `${basePath}/case-study/img/motor-cover-hero.jpg`;
 const aralditeHref   = `${basePath}/case-study/araldite-container.html`;
 const aralditeModel  = `${basePath}/case-study/model/araldite-container-procedural.glb`;
+const handWashHref   = `${basePath}/case-study/hand-wash-bottle.html`;
+const handWashModel  = `${basePath}/case-study/model/hand-wash-bottle-duo.glb`;
 
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer';
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
-    { value: '04', label: 'Active Studies' },
+    { value: '05', label: 'Active Studies' },
     { value: '3D', label: 'Interactive' },
     { value: <>100<small>%</small></>, label: 'LIMEX + Color' },
     { value: <>~38<small>%</small></>, label: 'CO2e Cut (LCA)', green: true },
@@ -46,6 +48,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: <>30<small>%</small></>, label: 'LIMEX' },
     { value: <>70<small>%</small></>, label: 'PP' },
     { value: <>~23<small>%</small></>, label: 'Limestone in Part', green: true },
+  ],
+  handWashBottle: [
+    { value: '05', label: 'Hand Wash Bottle' },
+    { value: '2', label: 'Colorways' },
+    { value: '3D', label: 'Photo-Matched' },
+    { value: '4', label: 'Real Photos', green: true },
   ],
 };
 
@@ -131,7 +139,7 @@ export default function CaseStudyPage() {
         c.style.opacity   = String(opa);
         c.style.zIndex    = String(Math.round((1 - absT) * 10));
         const product = c.dataset.product as ProductKey | undefined;
-        if ((product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer') && absT < nearestDistance) {
+        if ((product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle') && absT < nearestDistance) {
           nearestProduct = product;
           nearestDistance = absT;
         }
@@ -164,7 +172,7 @@ export default function CaseStudyPage() {
       if (!glow) return;
       c.addEventListener('mouseenter', () => {
         const product = c.dataset.product as ProductKey | undefined;
-        if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer') setActiveProductKey(product);
+        if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle') setActiveProductKey(product);
       });
       c.addEventListener('mousemove', (e: MouseEvent) => {
         const r = c.getBoundingClientRect();
@@ -334,6 +342,46 @@ export default function CaseStudyPage() {
               <span className="csp-pdot pp" /><span className="csp-pblabel">30% LIMEX</span>
               <span className="csp-psep">-</span>
               <span className="csp-pdot lx" /><span className="csp-pblabel">70% PP</span>
+            </div>
+          </div>
+          <span className="csp-pgo">-&gt;</span>
+        </div>
+      </a>
+
+      <a className="csp-pcard featured live" href={handWashHref} data-product="handWashBottle">
+        <div className="csp-border-beam" />
+        <div className="csp-pglass" />
+        <div className="csp-pglow" />
+        <div className="csp-pmedia">
+          <span className="csp-pidx">05</span>
+          <model-viewer
+            src={handWashModel}
+            alt="Hand Wash Bottle - white and green faceted LIMEX pump bottles 3D model"
+            interaction-prompt="none"
+            shadow-intensity="0.9"
+            shadow-softness="0.8"
+            exposure="1.22"
+            tone-mapping="neutral"
+            environment-image="legacy"
+            camera-orbit="20deg 78deg 120%"
+            style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+          />
+        </div>
+        <div className="csp-pinfo">
+          <div>
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+              <span className="csp-pfeatured">New Study</span>
+            </div>
+            <div className="csp-pname">Hand Wash Bottle</div>
+            <div className="csp-ptag">Personal Care Packaging - Two Colorways</div>
+            <div className="csp-pbar">
+              <span style={{ flex:50, height:'100%', background:'#f2efe6', display:'block' }} />
+              <span style={{ flex:50, height:'100%', background:'var(--cs-green)', display:'block' }} />
+            </div>
+            <div className="csp-pbarlabels">
+              <span className="csp-pdot pp" /><span className="csp-pblabel">White</span>
+              <span className="csp-psep">-</span>
+              <span className="csp-pdot lx" /><span className="csp-pblabel">Green</span>
             </div>
           </div>
           <span className="csp-pgo">-&gt;</span>
