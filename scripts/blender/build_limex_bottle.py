@@ -83,6 +83,7 @@ BODY_FINISH = {
 
 BAKE_COLOR_RES = 2048
 BAKE_ROUGH_RES = 1024
+BAKE_NORMAL_RES = 1024   # keeps the GLB web-friendly; facets are geometric
 
 
 # ------------------------------------------------------------------ helpers
@@ -479,7 +480,7 @@ def bake_and_export(bottle: bpy.types.Object, variant: str, models_dir: str,
                                     BAKE_ROUGH_RES, BAKE_ROUGH_RES)
     rough_img.colorspace_settings.name = 'Non-Color'
     normal_img = bpy.data.images.new(f"limex-bottle-{variant}-normal",
-                                     BAKE_COLOR_RES, BAKE_COLOR_RES)
+                                     BAKE_NORMAL_RES, BAKE_NORMAL_RES)
     normal_img.colorspace_settings.name = 'Non-Color'
 
     bpy.ops.object.select_all(action='DESELECT')
