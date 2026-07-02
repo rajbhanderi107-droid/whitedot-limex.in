@@ -36,3 +36,4 @@ test-results/
 # personal Obsidian/brain notes (not website code)
 docs/whitedot brain/
 docs/brain/
+__pycache__/
