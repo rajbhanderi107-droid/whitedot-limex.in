@@ -36,16 +36,15 @@ SEGMENTS = 22              # diamond columns around the body
 # (z, profile radius, quilt depth) — faceted region rings, base to shoulder.
 # Diamonds span two consecutive bands (rhombille tiling); each diamond's
 # center vertex is inset by the row's depth to carve the quilted facets.
+# Few tall bands -> the long elongated diamonds of the reference mould
+# (each diamond ~56mm tall x ~16mm wide on the 120mm body), with the
+# boundary bands reading as base pleats and the accordion shoulder crown.
 FACET_RINGS = [
-    (0.006, 0.0458, 0.0016),
-    (0.018, 0.0512, 0.0022),
-    (0.032, 0.0548, 0.0026),
-    (0.046, 0.0562, 0.0026),
-    (0.060, 0.0558, 0.0026),
-    (0.074, 0.0536, 0.0026),
-    (0.088, 0.0492, 0.0024),
-    (0.100, 0.0432, 0.0022),
-    (0.118, 0.0250, 0.0016),   # long shoulder spikes end here
+    (0.006, 0.0458, 0.0020),
+    (0.034, 0.0550, 0.0032),
+    (0.062, 0.0558, 0.0034),
+    (0.090, 0.0480, 0.0028),
+    (0.118, 0.0250, 0.0014),   # long shoulder spikes end here
 ]
 BOTTOM_RING = (0.0, 0.0400)          # smooth contact ring
 NECK_RINGS = [(0.121, 0.0224), (0.132, 0.0212)]  # smooth neck to collar seat
@@ -337,8 +336,8 @@ def make_pump_material() -> bpy.types.Material:
     mat = bpy.data.materials.new("limex-pump-black")
     bsdf = principled(mat)
     bsdf.inputs["Base Color"].default_value = BLACK
-    bsdf.inputs["Roughness"].default_value = 0.17
-    bsdf.inputs["Specular IOR Level"].default_value = 0.40
+    bsdf.inputs["Roughness"].default_value = 0.45
+    bsdf.inputs["Specular IOR Level"].default_value = 0.25
     return mat
 
 
@@ -408,7 +407,7 @@ def build_studio() -> None:
         look_at(light, Vector((0, 0, 0.09)))
         return light
 
-    area_light("key", (-0.38, -0.34, 0.42), 0.40, 28.0, (1.0, 0.972, 0.930))
+    area_light("key", (-0.38, -0.34, 0.42), 0.40, 24.0, (1.0, 0.972, 0.930))
     area_light("fill", (0.52, -0.42, 0.22), 0.90, 8.0, (0.90, 0.94, 1.0))
     area_light("rim", (0.16, 0.46, 0.34), 0.28, 28.0, (1.0, 1.0, 1.0))
     area_light("top", (0.0, -0.05, 0.75), 0.50, 8.0, (1.0, 0.99, 0.97))
