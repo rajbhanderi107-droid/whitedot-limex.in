@@ -29,7 +29,7 @@
       "moulding": "Injection Moulding",
       "application": "High-Speed Textile Spinning",
       "composition": [
-        { "name": "LIMEX PE78-02M Compound", "pct": 40, "color": "#e98012", "verified": true, "source": "wd-casestudies-pdf" },
+        { "name": "LIMEX PE78-02M Compound", "pct": 40, "color": "#4f9a35", "verified": true, "source": "wd-casestudies-pdf" },
         { "name": "PP Homo-Polymer", "pct": 60, "color": "#c4c7c0", "verified": true, "source": "wd-casestudies-pdf" }
       ],
       "specs": [

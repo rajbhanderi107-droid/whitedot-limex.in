@@ -36,6 +36,10 @@
       --wd-font-display:"Inter", ui-sans-serif, system-ui, sans-serif;
       --ease:           cubic-bezier(0.22, 1, 0.36, 1);
       --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+      /* Timing tokens — keep every micro-interaction on the same clock */
+      --dur-fast:       0.28s;
+      --dur-med:        0.5s;
+      --dur-slow:       0.9s;
     }
 
     html { scroll-behavior: smooth; }
@@ -220,14 +224,12 @@
       transform: translateX(-24%);
       transition: opacity 0.35s var(--ease), transform 0.55s var(--ease);
     }
-    .hero-stats-strip[data-active-product="bobbin"],
-    .hero-stats-strip[data-active-product="container"] {
+    .hero-stats-strip:not([data-active-product="overview"]) {
       border-color: rgba(79,154,53,0.22);
       background: rgba(255,255,255,0.34);
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 10px 30px rgba(79,154,53,0.06);
     }
-    .hero-stats-strip[data-active-product="bobbin"]::before,
-    .hero-stats-strip[data-active-product="container"]::before {
+    .hero-stats-strip:not([data-active-product="overview"])::before {
       opacity: 1;
       transform: translateX(24%);
     }
@@ -255,11 +257,18 @@
       text-transform: uppercase;
       color: var(--wd-faint);
     }
-    .hs-num, .hs-label { animation: statRise 0.32s var(--ease) both; }
+    .hs-num, .hs-label { animation: statRise 0.42s var(--ease) both; }
     .hs-label { white-space: nowrap; }
+    /* Staggered settle — each stat cell lands 55ms after the previous */
+    .hs-cell:nth-child(2) .hs-num, .hs-cell:nth-child(2) .hs-label { animation-delay: 0.055s; }
+    .hs-cell:nth-child(3) .hs-num, .hs-cell:nth-child(3) .hs-label { animation-delay: 0.11s; }
+    .hs-cell:nth-child(4) .hs-num, .hs-cell:nth-child(4) .hs-label { animation-delay: 0.165s; }
     @keyframes statRise {
       from { opacity: 0; transform: translateY(7px); filter: blur(5px); }
       to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hs-num, .hs-label, .hs-divider { animation: none !important; }
     }
 
     .hs-divider {
@@ -321,8 +330,10 @@
       width: 320px;
       flex-shrink: 0;
       /* JS applies 3D coverflow transforms — only transition opacity/box-shadow for hover */
-      transition: box-shadow 0.5s ease, border-color 0.5s ease, background 0.5s ease;
+      transition: box-shadow var(--dur-med) var(--ease), border-color var(--dur-med) var(--ease), background var(--dur-med) var(--ease);
       will-change: transform, opacity;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
     .p-card.live { cursor: pointer; }
     .p-card.live:hover {
@@ -424,7 +435,7 @@
       border: 1px solid var(--wd-line-strong);
       display: flex; align-items: center; justify-content: center;
       font-size: 14px; color: var(--wd-text);
-      transition: background 0.35s var(--ease), color 0.35s var(--ease), border-color 0.35s var(--ease), transform 0.35s var(--ease);
+      transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), transform 0.4s var(--ease-spring);
     }
     .p-card.live:hover .p-card-go {
       background: var(--orange); color: #fff; border-color: var(--orange);
@@ -432,20 +443,45 @@
       box-shadow: 0 6px 16px rgba(79,154,53,0.30);
     }
 
-    /* Coming soon state */
-    .p-card.soon { cursor: default; }
-    .p-card.soon .p-card-media { filter: saturate(0.3) opacity(0.75); }
-    .p-card.soon .p-card-name { color: var(--wd-faint); }
-    .soon-badge {
-      position: absolute; top: 56px; right: 24px;
-      font-size: 8px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--wd-faint); background: rgba(0,0,0,0.04);
-      border: 1px solid var(--wd-line); padding: 4px 9px; border-radius: 100px;
-      z-index: 10;
-    }
+    /* Coming-soon media placeholder — lives inside the standard live card */
     .soon-placeholder {
+      position: relative;
+      width: 112px; height: 112px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 32px; font-weight: 900; color: var(--wd-line-strong);
+      font-size: 30px; font-weight: 900; letter-spacing: -0.03em;
+      color: rgba(79,154,53,0.30);
+      background: radial-gradient(circle at 40% 32%, rgba(255,255,255,0.95), rgba(246,247,244,0.55) 60%, rgba(79,154,53,0.05) 100%);
+      border: 1px solid rgba(79,154,53,0.14);
+      box-shadow: 0 14px 34px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+      animation: soonBreath 5.5s ease-in-out infinite alternate;
+      transition: color var(--dur-med) var(--ease), border-color var(--dur-med) var(--ease);
+    }
+    .p-card.live:hover .soon-placeholder {
+      color: rgba(79,154,53,0.45);
+      border-color: rgba(79,154,53,0.26);
+    }
+    .soon-placeholder::after {
+      content: ""; position: absolute; inset: -10px; border-radius: 50%;
+      border: 1px dashed rgba(79,154,53,0.22);
+      animation: soonOrbit 30s linear infinite;
+    }
+    /* Second, slower counter-rotating ring — quiet idle life on pending cards */
+    .soon-placeholder::before {
+      content: ""; position: absolute; inset: -19px; border-radius: 50%;
+      border: 1px solid rgba(79,154,53,0.08);
+      border-top-color: rgba(79,154,53,0.24);
+      animation: soonOrbitReverse 46s linear infinite;
+    }
+    @keyframes soonBreath { from { transform: scale(1); } to { transform: scale(1.035); } }
+    @keyframes soonOrbit { to { transform: rotate(360deg); } }
+    @keyframes soonOrbitReverse { to { transform: rotate(-360deg); } }
+    @media (prefers-reduced-motion: reduce) {
+      .soon-placeholder, .soon-placeholder::after, .soon-placeholder::before { animation: none !important; }
+    }
+    /* Keyboard parity with hover */
+    .p-card.live:focus-visible {
+      outline: 2px solid var(--orange); outline-offset: 3px;
+      box-shadow: 0 32px 72px rgba(0,0,0,0.16), 0 8px 24px rgba(0,0,0,0.07), inset 0 1.5px 0 rgba(255,255,255,0.92);
     }
 
     /* View transition morph tags */
@@ -493,11 +529,15 @@
       border: 1px solid var(--wd-line-strong);
       display: flex; align-items: center; justify-content: center;
       text-decoration: none; color: var(--wd-text); font-size: 14px;
-      transition: background 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease), transform 0.3s var(--ease);
+      transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), transform 0.4s var(--ease-spring);
     }
     .go-btn:hover {
       background: var(--orange); color: #fff; border-color: var(--orange);
       transform: translateX(2px); box-shadow: 0 6px 18px rgba(79,154,53,0.30);
+    }
+    .go-btn:active { transform: translateX(1px) scale(0.94); }
+    .go-btn:focus-visible, .explore-link:focus-visible, .card-nav-links a:focus-visible, .card-nav-brand:focus-visible {
+      outline: 2px solid var(--orange); outline-offset: 3px;
     }
 
     /* ─── PAGE FOOTER ─── */
@@ -619,8 +659,10 @@
       from { transform: scaleY(0); opacity: 0; }
       to   { transform: scaleY(1); opacity: 1; }
     }
+    /* Short delay only — the strip is rebuilt on every active-product swap,
+       so a long delay would blank the dividers for that long on each change */
     .hs-divider {
-      animation: cs-divider-in 0.6s cubic-bezier(0.22,1,0.36,1) 0.8s both;
+      animation: cs-divider-in 0.45s cubic-bezier(0.22,1,0.36,1) 0.12s both;
     }
     .hs-label {
       font-size: 9px;
@@ -670,340 +712,17 @@
       <p>Everyday plastic parts, rebuilt with limestone-based material. Select a product to explore it in 3D and see how its composition changes.</p>
       <!-- Stats strip -->
       <div class="hero-stats-strip" data-active-product="overview">
-        <div class="hs-cell"><div class="hs-item"><span class="hs-num">03</span><span class="hs-label">Active Studies</span></div></div>
+        <div class="hs-cell"><div class="hs-item"><span class="hs-num">35</span><span class="hs-label">Products Mapped</span></div></div>
+        <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num">04</span><span class="hs-label">Live Studies</span></div></div>
         <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num">3D</span><span class="hs-label">Interactive</span></div></div>
-        <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num">100<small>%</small></span><span class="hs-label">LIMEX + Color</span></div></div>
         <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num orange">~38<small>%</small></span><span class="hs-label">CO2e Cut (LCA)</span></div></div>
       </div>
     </div>
 
-    <!-- Product Grid -->
+    <!-- Product Grid — rendered client-side from data/products.json (35 products), see script at bottom -->
     <div class="product-grid-section">
       <div class="lens-curve-wrapper">
-        <div class="product-grid">
-
-        <!-- Set 1 -->
-        <!-- Product 01 — Bobbin (LIVE, featured) -->
-        <a class="p-card featured live" href="./bobbin.html" id="bobbinCard" data-product="bobbin">
-          <div class="border-beam"></div>
-          <div class="p-card-glass-inset"></div>
-          <div class="p-card-glow"></div>
-          <div class="p-card-media">
-            <span class="p-card-index">01</span>
-            <model-viewer
-              class="vt-target"
-              src="./model/bobbin.glb"
-              alt="Bobbin — LIMEX textile bobbin 3D model"
-              interaction-prompt="none"
-              shadow-intensity="0"
-              exposure="1.15"
-              tone-mapping="neutral"
-              environment-image="neutral"
-              camera-orbit="30deg 75deg 105%">
-            </model-viewer>
-          </div>
-          <div class="p-card-info">
-            <div>
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-                <span style="font-size:7.5px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--orange);background:var(--orange-soft);border:1px solid rgba(79,154,53,0.22);padding:2px 7px;border-radius:100px;">Featured</span>
-              </div>
-              <div class="p-card-name">Bobbin</div>
-              <div class="p-card-tag">Textile Bobbin · Injection Moulded</div>
-              <div style="display:flex;align-items:center;gap:0;margin-top:8px;height:5px;border-radius:100px;overflow:hidden;width:80px;">
-                <span style="flex:40;height:100%;background:var(--orange);display:block;"></span>
-                <span style="flex:60;height:100%;background:#d0d3ce;display:block;"></span>
-              </div>
-              <div class="comp-bar-row" style="margin-top:5px;">
-                <span class="comp-seg-dot pp"></span>
-                <span class="comp-seg-label">40% LIMEX</span>
-                <span style="margin:0 4px;color:var(--wd-line-strong);font-size:8px;">·</span>
-                <span class="comp-seg-dot limex"></span>
-                <span class="comp-seg-label">60% PP</span>
-              </div>
-            </div>
-            <span class="p-card-go">→</span>
-          </div>
-        </a>
-
-        <!-- Product 02 - Paint Container (LIVE) -->
-        <a class="p-card featured live" href="./container.html" data-product="container">
-          <div class="border-beam"></div>
-          <div class="p-card-glass-inset"></div>
-          <div class="p-card-glow"></div>
-          <div class="p-card-media">
-            <span class="p-card-index">02</span>
-            <model-viewer
-              src="./model/paint-container-procedural-red-white.glb"
-              alt="Paint Container - 25% LIMEX + 75% PP 3D model"
-              interaction-prompt="none"
-              shadow-intensity="0"
-              exposure="1.08"
-              tone-mapping="neutral"
-              environment-image="neutral"
-              camera-orbit="28deg 72deg 108%">
-            </model-viewer>
-          </div>
-          <div class="p-card-info">
-            <div>
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-                <span style="font-size:7.5px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--orange);background:var(--orange-soft);border:1px solid rgba(79,154,53,0.22);padding:2px 7px;border-radius:100px;">New Study</span>
-              </div>
-              <div class="p-card-name">Paint Container</div>
-              <div class="p-card-tag">Paint Pail - 25% LIMEX</div>
-              <div style="display:flex;align-items:center;gap:0;margin-top:8px;height:5px;border-radius:100px;overflow:hidden;width:80px;">
-                <span style="flex:25;height:100%;background:var(--orange);display:block;"></span>
-                <span style="flex:75;height:100%;background:#d0d3ce;display:block;"></span>
-              </div>
-              <div class="comp-bar-row" style="margin-top:5px;">
-                <span class="comp-seg-dot pp"></span>
-                <span class="comp-seg-label">25% LIMEX</span>
-                <span style="margin:0 4px;color:var(--wd-line-strong);font-size:8px;">�</span>
-                <span class="comp-seg-dot limex"></span>
-                <span class="comp-seg-label">75% PP</span>
-              </div>
-            </div>
-            <span class="p-card-go">?</span>
-          </div>
-        </a>
-        <!-- Product 03 - Moter Cover (LIVE) -->
-        <a class="p-card featured live" href="./motor-cover.html" data-product="motorCover">
-          <div class="border-beam"></div>
-          <div class="p-card-glass-inset"></div>
-          <div class="p-card-glow"></div>
-          <div class="p-card-media">
-            <span class="p-card-index">03</span>
-            <model-viewer
-              src="./model/motor-cover-procedural-black.glb"
-              alt="Moter Cover - black vented motor cover 3D model"
-              interaction-prompt="none"
-              shadow-intensity="0"
-              exposure="1.16"
-              tone-mapping="neutral"
-              environment-image="neutral"
-              camera-orbit="18deg 75deg 112%">
-            </model-viewer>
-          </div>
-          <div class="p-card-info">
-            <div>
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-                <span style="font-size:7.5px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--orange);background:var(--orange-soft);border:1px solid rgba(79,154,53,0.22);padding:2px 7px;border-radius:100px;">New Model</span>
-              </div>
-              <div class="p-card-name">Moter Cover</div>
-              <div class="p-card-tag">Vented Cover - Visual Reference</div>
-              <div style="display:flex;align-items:center;gap:0;margin-top:8px;height:5px;border-radius:100px;overflow:hidden;width:80px;">
-                <span style="flex:100;height:100%;background:var(--orange);display:block;"></span>
-              </div>
-              <div class="comp-bar-row" style="margin-top:5px;">
-                <span class="comp-seg-dot pp"></span>
-                <span class="comp-seg-label">Material spec pending</span>
-              </div>
-            </div>
-            <span class="p-card-go">-&gt;</span>
-          </div>
-        </a>
-
-        <!-- Product 04 - Araldite Container (LIVE) -->
-        <a class="p-card featured live" href="./araldite-container.html" data-product="aralditeContainer">
-          <div class="border-beam"></div>
-          <div class="p-card-glass-inset"></div>
-          <div class="p-card-glow"></div>
-          <div class="p-card-media">
-            <span class="p-card-index">04</span>
-            <model-viewer
-              src="./model/araldite-container-procedural.glb"
-              alt="Araldite Container — LIMEX adhesive dispenser bottle 3D model"
-              interaction-prompt="none"
-              shadow-intensity="0"
-              exposure="1.14"
-              tone-mapping="neutral"
-              environment-image="neutral"
-              camera-orbit="25deg 76deg 115%">
-            </model-viewer>
-          </div>
-          <div class="p-card-info">
-            <div>
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-                <span style="font-size:7.5px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--orange);background:var(--orange-soft);border:1px solid rgba(79,154,53,0.22);padding:2px 7px;border-radius:100px;">New Study</span>
-              </div>
-              <div class="p-card-name">Araldite Container</div>
-              <div class="p-card-tag">Adhesive Dispenser · LIMEX TBC</div>
-              <div style="display:flex;align-items:center;gap:0;margin-top:8px;height:5px;border-radius:100px;overflow:hidden;width:80px;">
-                <span style="flex:30;height:100%;background:var(--orange);display:block;"></span>
-                <span style="flex:70;height:100%;background:#c4c7c0;display:block;"></span>
-              </div>
-              <div class="comp-bar-row" style="margin-top:5px;">
-                <span class="comp-seg-dot pp"></span>
-                <span class="comp-seg-label">LIMEX (TBC)</span>
-                <span style="margin:0 4px;color:var(--wd-line-strong);font-size:8px;">·</span>
-                <span class="comp-seg-dot limex"></span>
-                <span class="comp-seg-label">+ PP</span>
-              </div>
-            </div>
-            <span class="p-card-go">→</span>
-          </div>
-        </a>
-
-        <!-- Set 2 (duplicates for infinite scrolling) -->
-        <!-- Product 01 — Bobbin (LIVE, featured) -->
-        <a class="p-card featured live" href="./bobbin.html" data-product="bobbin">
-          <div class="border-beam"></div>
-          <div class="p-card-glass-inset"></div>
-          <div class="p-card-glow"></div>
-          <div class="p-card-media">
-            <span class="p-card-index">01</span>
-            <model-viewer
-              src="./model/bobbin.glb"
-              alt="Bobbin — LIMEX textile bobbin 3D model"
-              interaction-prompt="none"
-              shadow-intensity="0"
-              exposure="1.15"
-              tone-mapping="neutral"
-              environment-image="neutral"
-              camera-orbit="30deg 75deg 105%">
-            </model-viewer>
-          </div>
-          <div class="p-card-info">
-            <div>
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-                <span style="font-size:7.5px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--orange);background:var(--orange-soft);border:1px solid rgba(79,154,53,0.22);padding:2px 7px;border-radius:100px;">Featured</span>
-              </div>
-              <div class="p-card-name">Bobbin</div>
-              <div class="p-card-tag">Textile Bobbin · Injection Moulded</div>
-              <div style="display:flex;align-items:center;gap:0;margin-top:8px;height:5px;border-radius:100px;overflow:hidden;width:80px;">
-                <span style="flex:40;height:100%;background:var(--orange);display:block;"></span>
-                <span style="flex:60;height:100%;background:#d0d3ce;display:block;"></span>
-              </div>
-              <div class="comp-bar-row" style="margin-top:5px;">
-                <span class="comp-seg-dot pp"></span>
-                <span class="comp-seg-label">40% LIMEX</span>
-                <span style="margin:0 4px;color:var(--wd-line-strong);font-size:8px;">·</span>
-                <span class="comp-seg-dot limex"></span>
-                <span class="comp-seg-label">60% PP</span>
-              </div>
-            </div>
-            <span class="p-card-go">→</span>
-          </div>
-        </a>
-
-        <!-- Product 02 - Paint Container (LIVE) -->
-        <a class="p-card featured live" href="./container.html" data-product="container">
-          <div class="border-beam"></div>
-          <div class="p-card-glass-inset"></div>
-          <div class="p-card-glow"></div>
-          <div class="p-card-media">
-            <span class="p-card-index">02</span>
-            <model-viewer
-              src="./model/paint-container-procedural-red-white.glb"
-              alt="Paint Container - 25% LIMEX + 75% PP 3D model"
-              interaction-prompt="none"
-              shadow-intensity="0"
-              exposure="1.08"
-              tone-mapping="neutral"
-              environment-image="neutral"
-              camera-orbit="28deg 72deg 108%">
-            </model-viewer>
-          </div>
-          <div class="p-card-info">
-            <div>
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-                <span style="font-size:7.5px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--orange);background:var(--orange-soft);border:1px solid rgba(79,154,53,0.22);padding:2px 7px;border-radius:100px;">New Study</span>
-              </div>
-              <div class="p-card-name">Paint Container</div>
-              <div class="p-card-tag">Paint Pail - 25% LIMEX</div>
-              <div style="display:flex;align-items:center;gap:0;margin-top:8px;height:5px;border-radius:100px;overflow:hidden;width:80px;">
-                <span style="flex:25;height:100%;background:var(--orange);display:block;"></span>
-                <span style="flex:75;height:100%;background:#d0d3ce;display:block;"></span>
-              </div>
-              <div class="comp-bar-row" style="margin-top:5px;">
-                <span class="comp-seg-dot pp"></span>
-                <span class="comp-seg-label">25% LIMEX</span>
-                <span style="margin:0 4px;color:var(--wd-line-strong);font-size:8px;">�</span>
-                <span class="comp-seg-dot limex"></span>
-                <span class="comp-seg-label">75% PP</span>
-              </div>
-            </div>
-            <span class="p-card-go">?</span>
-          </div>
-        </a>
-        <!-- Product 03 - Moter Cover (LIVE) -->
-        <a class="p-card featured live" href="./motor-cover.html" data-product="motorCover">
-          <div class="border-beam"></div>
-          <div class="p-card-glass-inset"></div>
-          <div class="p-card-glow"></div>
-          <div class="p-card-media">
-            <span class="p-card-index">03</span>
-            <model-viewer
-              src="./model/motor-cover-procedural-black.glb"
-              alt="Moter Cover - black vented motor cover 3D model"
-              interaction-prompt="none"
-              shadow-intensity="0"
-              exposure="1.16"
-              tone-mapping="neutral"
-              environment-image="neutral"
-              camera-orbit="18deg 75deg 112%">
-            </model-viewer>
-          </div>
-          <div class="p-card-info">
-            <div>
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-                <span style="font-size:7.5px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--orange);background:var(--orange-soft);border:1px solid rgba(79,154,53,0.22);padding:2px 7px;border-radius:100px;">New Model</span>
-              </div>
-              <div class="p-card-name">Moter Cover</div>
-              <div class="p-card-tag">Vented Cover - Visual Reference</div>
-              <div style="display:flex;align-items:center;gap:0;margin-top:8px;height:5px;border-radius:100px;overflow:hidden;width:80px;">
-                <span style="flex:100;height:100%;background:var(--orange);display:block;"></span>
-              </div>
-              <div class="comp-bar-row" style="margin-top:5px;">
-                <span class="comp-seg-dot pp"></span>
-                <span class="comp-seg-label">Material spec pending</span>
-              </div>
-            </div>
-            <span class="p-card-go">-&gt;</span>
-          </div>
-        </a>
-
-        <!-- Product 04 - Araldite Container (LIVE) -->
-        <a class="p-card featured live" href="./araldite-container.html" data-product="aralditeContainer">
-          <div class="border-beam"></div>
-          <div class="p-card-glass-inset"></div>
-          <div class="p-card-glow"></div>
-          <div class="p-card-media">
-            <span class="p-card-index">04</span>
-            <model-viewer
-              src="./model/araldite-container-procedural.glb"
-              alt="Araldite Container — LIMEX adhesive dispenser bottle 3D model"
-              interaction-prompt="none"
-              shadow-intensity="0"
-              exposure="1.14"
-              tone-mapping="neutral"
-              environment-image="neutral"
-              camera-orbit="25deg 76deg 115%">
-            </model-viewer>
-          </div>
-          <div class="p-card-info">
-            <div>
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-                <span style="font-size:7.5px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--orange);background:var(--orange-soft);border:1px solid rgba(79,154,53,0.22);padding:2px 7px;border-radius:100px;">New Study</span>
-              </div>
-              <div class="p-card-name">Araldite Container</div>
-              <div class="p-card-tag">Adhesive Dispenser · LIMEX TBC</div>
-              <div style="display:flex;align-items:center;gap:0;margin-top:8px;height:5px;border-radius:100px;overflow:hidden;width:80px;">
-                <span style="flex:30;height:100%;background:var(--orange);display:block;"></span>
-                <span style="flex:70;height:100%;background:#c4c7c0;display:block;"></span>
-              </div>
-              <div class="comp-bar-row" style="margin-top:5px;">
-                <span class="comp-seg-dot pp"></span>
-                <span class="comp-seg-label">LIMEX (TBC)</span>
-                <span style="margin:0 4px;color:var(--wd-line-strong);font-size:8px;">·</span>
-                <span class="comp-seg-dot limex"></span>
-                <span class="comp-seg-label">+ PP</span>
-              </div>
-            </div>
-            <span class="p-card-go">→</span>
-          </div>
-        </a>
-
-        </div>
+        <div class="product-grid" id="productGrid"></div>
       </div>
     </div>
 
@@ -1021,8 +740,8 @@
         </div>
       </div>
       <div class="footer-right">
-        <a class="explore-link" href="./motor-cover.html">Explore More</a>
-        <a class="go-btn" href="./motor-cover.html" aria-label="Open Moter Cover case study">→</a>
+        <a class="explore-link" href="./product.html?p=bobbin">Explore More</a>
+        <a class="go-btn" href="./product.html?p=bobbin" aria-label="Open Bobbin case study">→</a>
       </div>
     </div>
   </div>
@@ -1032,25 +751,150 @@
 </div>
 
 <script>
+(async function () {
   // ─── Card is already full-page — just mark expanded immediately ───
   const card = document.getElementById('heroCard');
   card.classList.add('expanded');
+
+  const MODEL_SRC = {
+    bobbin: './model/bobbin.glb',
+    container: './model/paint-container-procedural-red-white.glb',
+    motorCover: './model/motor-cover-procedural-black.glb',
+    aralditeContainer: './model/araldite-container-procedural.glb',
+  };
+  const CAMERA_ORBIT = {
+    bobbin: '30deg 75deg 105%',
+    container: '28deg 72deg 108%',
+    motorCover: '18deg 75deg 112%',
+    aralditeContainer: '25deg 76deg 115%',
+  };
+  const CARD_BADGE = {
+    bobbin: 'Featured',
+    container: 'New Study',
+    motorCover: 'New Model',
+    aralditeContainer: 'New Study',
+  };
+
+  function monogram(name) {
+    const words = (name || '').trim().split(/\s+/).filter(Boolean);
+    if (!words.length) return '?';
+    if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+    return (words[0][0] + words[1][0]).toUpperCase();
+  }
+
+  function buildCardHTML(entry, full) {
+    const isLive = entry.status === 'live';
+    if (!isLive) {
+      // Same card as live products — same chrome, hover, and navigation.
+      // Only the 3D model and spec details are omitted until real data lands.
+      return `
+        <a class="p-card featured live" href="./product.html?p=${entry.slug}" data-product="${entry.id}">
+          <div class="border-beam"></div>
+          <div class="p-card-glass-inset"></div>
+          <div class="p-card-glow"></div>
+          <div class="p-card-media">
+            <span class="p-card-index">${entry.index}</span>
+            <div class="soon-placeholder">${monogram(entry.name)}</div>
+          </div>
+          <div class="p-card-info">
+            <div>
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+                <span style="font-size:7.5px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--orange);background:var(--orange-soft);border:1px solid rgba(79,154,53,0.22);padding:2px 7px;border-radius:100px;">Coming Soon</span>
+              </div>
+              <div class="p-card-name">${entry.name}</div>
+              <div class="p-card-tag">${entry.category}</div>
+            </div>
+            <span class="p-card-go">→</span>
+          </div>
+        </a>`;
+    }
+
+    const comp = (full && full.composition) || [];
+    const a = comp[0], b = comp[1];
+    const barSegs = comp.length
+      ? comp.map(c => `<span style="flex:${c.pct};height:100%;background:${c.color};display:block;"></span>`).join('')
+      : `<span style="flex:100;height:100%;background:var(--orange);display:block;"></span>`;
+    const compLabelRow = a
+      ? `<span class="comp-seg-dot pp"></span>
+         <span class="comp-seg-label">${a.pct}% ${(a.name || '').split(' ')[0]}</span>
+         ${b ? `<span style="margin:0 4px;color:var(--wd-line-strong);font-size:8px;">·</span>
+         <span class="comp-seg-dot limex"></span>
+         <span class="comp-seg-label">${b.pct}% ${(b.name || '').split(' ')[0]}</span>` : ''}`
+      : `<span class="comp-seg-dot pp"></span><span class="comp-seg-label">Material spec pending</span>`;
+
+    return `
+      <a class="p-card featured live" href="./product.html?p=${entry.slug}" data-product="${entry.id}">
+        <div class="border-beam"></div>
+        <div class="p-card-glass-inset"></div>
+        <div class="p-card-glow"></div>
+        <div class="p-card-media">
+          <span class="p-card-index">${entry.index}</span>
+          <model-viewer
+            src="${MODEL_SRC[entry.id] || ''}"
+            alt="${entry.name} — LIMEX 3D model"
+            interaction-prompt="none"
+            shadow-intensity="0"
+            exposure="1.15"
+            tone-mapping="neutral"
+            environment-image="neutral"
+            camera-orbit="${CAMERA_ORBIT[entry.id] || '30deg 75deg 105%'}">
+          </model-viewer>
+        </div>
+        <div class="p-card-info">
+          <div>
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+              <span style="font-size:7.5px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--orange);background:var(--orange-soft);border:1px solid rgba(79,154,53,0.22);padding:2px 7px;border-radius:100px;">${CARD_BADGE[entry.id] || 'Live'}</span>
+            </div>
+            <div class="p-card-name">${entry.name}</div>
+            <div class="p-card-tag">${entry.category}</div>
+            <div style="display:flex;align-items:center;gap:0;margin-top:8px;height:5px;border-radius:100px;overflow:hidden;width:80px;">${barSegs}</div>
+            <div class="comp-bar-row" style="margin-top:5px;">${compLabelRow}</div>
+          </div>
+          <span class="p-card-go">→</span>
+        </div>
+      </a>`;
+  }
+
+  async function renderProductGrid() {
+    const gridEl = document.getElementById('productGrid');
+    let entries = [];
+    let specs = {};
+    try {
+      const [prodRes, specRes] = await Promise.all([
+        fetch('./data/products.json'),
+        fetch('./data/specs.json'),
+      ]);
+      entries = ((await prodRes.json()).products) || [];
+      specs = ((await specRes.json()).products) || {};
+    } catch (e) {
+      console.warn('[WD index.html] could not load product data', e);
+      return;
+    }
+    const cardsHTML = entries.map(entry => buildCardHTML(entry, specs[entry.id])).join('');
+    // Duplicate the set for a seamless infinite-scroll loop.
+    gridEl.innerHTML = cardsHTML + cardsHTML;
+  }
+  await renderProductGrid();
 
   // ─── 3D Coverflow Marquee Animation ───
   const grid = document.querySelector('.product-grid');
   const section = document.querySelector('.product-grid-section');
 
   let scrollX = 0;
-  const speed = 0.65;
+  const BASE_SPEED = 0.65;
+  let currentSpeed = 0; // eased toward target — no hard stop/start jank
   let isPaused = false;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let hoveredCard = null;
+  const hoverLift = new WeakMap(); // per-card lift progress, lerped each frame
   let rafId = null;
   let activeProduct = 'overview';
   const statsStrip = document.querySelector('.hero-stats-strip');
   const productStats = {
     overview: [
-      ['04', 'Active Studies', false],
+      ['35', 'Products Mapped', false],
+      ['04', 'Live Studies', false],
       ['3D', 'Interactive', false],
-      ['100<small>%</small>', 'LIMEX + Color', false],
       ['~38<small>%</small>', 'CO2e Cut (LCA)', true],
     ],
     bobbin: [
@@ -1060,13 +904,13 @@
       ['~31<small>%</small>', 'Limestone in Part', true],
     ],
     container: [
-      ['02', 'Paint Container', false],
+      ['02', 'Paint Bucket', false],
       ['25<small>%</small>', 'LIMEX', false],
       ['75<small>%</small>', 'PP', false],
       ['~20<small>%</small>', 'Limestone in Part', true],
     ],
     motorCover: [
-      ['03', 'Moter Cover', false],
+      ['03', 'Motor Cap', false],
       ['3D', 'Reference Model', false],
       ['TDS', 'Spec Pending', false],
       ['Live', 'Product 03', true],
@@ -1093,7 +937,16 @@
     `).join('');
   }
   grid.addEventListener('mouseenter', () => isPaused = true);
-  grid.addEventListener('mouseleave', () => isPaused = false);
+  grid.addEventListener('mouseleave', () => { isPaused = false; hoveredCard = null; });
+  // Track the hovered live card (delegated — cards are rendered dynamically)
+  grid.addEventListener('mouseover', e => {
+    const c = e.target.closest('.p-card.live');
+    if (c) hoveredCard = c;
+  });
+  grid.addEventListener('mouseout', e => {
+    const c = e.target.closest('.p-card.live');
+    if (c && c === hoveredCard && !(e.relatedTarget && c.contains(e.relatedTarget))) hoveredCard = null;
+  });
 
   function applyCardTransforms() {
     const sectionRect = section.getBoundingClientRect();
@@ -1116,11 +969,20 @@
       const tz     = -absT * 40;       // push back in Z for depth
       const opa    = Math.max(0.72, 1 - absT * 0.18);
 
-      card.style.transform = `rotateY(${rotY}deg) scale(${scaleV}) translateZ(${tz}px)`;
-      card.style.opacity   = opa;
-      card.style.zIndex    = Math.round((1 - absT) * 10);
+      // Hover lift — lerped in the rAF loop so it stays spring-smooth
+      // while JS owns the transform (CSS hover transforms would be overwritten)
+      const prevLift = hoverLift.get(card) || 0;
+      const targetLift = (card === hoveredCard && !reduceMotion) ? 1 : 0;
+      let h = prevLift + (targetLift - prevLift) * 0.12;
+      if (h < 0.001) h = 0;
+      hoverLift.set(card, h);
+
+      card.style.transform =
+        `rotateY(${rotY * (1 - h)}deg) scale(${scaleV + 0.025 * h}) translateZ(${tz + 34 * h}px) translateY(${-6 * h}px)`;
+      card.style.opacity   = opa + (1 - opa) * h;
+      card.style.zIndex    = Math.round((1 - absT) * 10) + (h > 0.05 ? 20 : 0);
       const product = card.dataset.product;
-      if ((product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer') && absT < nearestDistance) {
+      if (product && productStats[product] && absT < nearestDistance) {
         nearestProduct = product;
         nearestDistance = absT;
       }
@@ -1129,10 +991,14 @@
   }
 
   function tick() {
-    if (!isPaused) {
-      scrollX += speed;
+    // Ease speed toward target — gentle decelerate on hover, gentle resume on leave
+    const targetSpeed = (isPaused || reduceMotion) ? 0 : BASE_SPEED;
+    currentSpeed += (targetSpeed - currentSpeed) * 0.055;
+    if (Math.abs(currentSpeed) < 0.002) currentSpeed = 0;
+    if (currentSpeed > 0) {
+      scrollX += currentSpeed;
       const halfWidth = grid.scrollWidth / 2;
-      if (scrollX >= halfWidth) scrollX = 0;
+      if (scrollX >= halfWidth) scrollX -= halfWidth;
       grid.style.transform = `translate3d(${-scrollX}px, 0, 0)`;
     }
     applyCardTransforms();
@@ -1147,7 +1013,7 @@
     const glow = card.querySelector('.p-card-glow');
     if (!glow) return;
     card.addEventListener('mouseenter', () => {
-      if (card.dataset.product === 'bobbin' || card.dataset.product === 'container' || card.dataset.product === 'motorCover' || card.dataset.product === 'aralditeContainer') setActiveProduct(card.dataset.product);
+      if (productStats[card.dataset.product]) setActiveProduct(card.dataset.product);
     });
     card.addEventListener('mousemove', e => {
       const r = card.getBoundingClientRect();
@@ -1173,9 +1039,9 @@
       });
       
       const model = c.querySelector('model-viewer');
-      if (model) model.style.viewTransitionName = 'bobbin-product';
+      if (model) model.style.viewTransitionName = 'product-model';
       const name = c.querySelector('.p-card-name');
-      if (name) name.style.viewTransitionName = 'bobbin-name';
+      if (name) name.style.viewTransitionName = 'product-name';
     });
   });
 
@@ -1183,19 +1049,20 @@
     document.body.style.opacity = '1';
   });
 
-  // Crossfade fallback for browsers without View Transitions
+  // Crossfade fallback for browsers without View Transitions (delegated — cards are added dynamically)
   if (!('startViewTransition' in document)) {
-    document.querySelectorAll('a[href]').forEach(a => {
-      a.addEventListener('click', e => {
-        const href = a.getAttribute('href');
-        if (!href || href.startsWith('#') || a.target === '_blank' || e.metaKey || e.ctrlKey) return;
-        e.preventDefault();
-        document.body.style.transition = 'opacity 0.45s ease';
-        document.body.style.opacity = '0';
-        setTimeout(() => { location.href = href; }, 420);
-      });
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a[href]');
+      if (!a) return;
+      const href = a.getAttribute('href');
+      if (!href || href.startsWith('#') || a.target === '_blank' || e.metaKey || e.ctrlKey) return;
+      e.preventDefault();
+      document.body.style.transition = 'opacity 0.45s ease';
+      document.body.style.opacity = '0';
+      setTimeout(() => { location.href = href; }, 420);
     });
   }
+})();
 </script>
 </body>
 </html>
