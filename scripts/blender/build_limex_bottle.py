@@ -31,20 +31,22 @@ TAU = math.tau
 
 # ---------------------------------------------------------------- parameters
 
-SEGMENTS = 22              # diamond columns around the body
+SEGMENTS = 24              # diamond columns around the body
 
 # (z, profile radius, quilt depth) — faceted region rings, base to shoulder.
 # Diamonds span two consecutive bands (rhombille tiling); each diamond's
 # center vertex is inset by the row's depth to carve the quilted facets.
-# Few tall bands -> the long elongated diamonds of the reference mould
-# (each diamond ~56mm tall x ~16mm wide on the 120mm body), with the
-# boundary bands reading as base pleats and the accordion shoulder crown.
+# Dense stack of elongated diamonds (~37mm tall x ~15mm wide, ratio 2.5:1)
+# so the pattern tiles the whole body with no blank surface, like the
+# reference mould; boundary bands read as base pleats and shoulder crown.
 FACET_RINGS = [
-    (0.006, 0.0458, 0.0020),
-    (0.034, 0.0550, 0.0032),
-    (0.062, 0.0558, 0.0034),
-    (0.090, 0.0480, 0.0028),
-    (0.118, 0.0250, 0.0014),   # long shoulder spikes end here
+    (0.0060, 0.0458, 0.0020),
+    (0.0247, 0.0530, 0.0028),
+    (0.0433, 0.0556, 0.0030),
+    (0.0620, 0.0558, 0.0030),
+    (0.0807, 0.0525, 0.0028),
+    (0.0993, 0.0445, 0.0024),
+    (0.1180, 0.0250, 0.0014),   # shoulder spikes end here
 ]
 BOTTOM_RING = (0.0, 0.0400)          # smooth contact ring
 NECK_RINGS = [(0.121, 0.0224), (0.132, 0.0212)]  # smooth neck to collar seat
