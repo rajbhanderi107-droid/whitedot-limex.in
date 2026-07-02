@@ -76,8 +76,8 @@ BODY_FINISH = {
     "white": dict(color=(0.800, 0.788, 0.762, 1.0), rough_lo=0.46,
                   rough_hi=0.60, wave_bump=0.10, grain_bump=0.020,
                   sheen=0.10, sss=0.020),
-    # vivid waxy chartreuse, glossier with visible mold waviness
-    "green": dict(color=(0.365, 0.665, 0.014, 1.0), rough_lo=0.26,
+    # rich vivid green, glossier with visible mold waviness
+    "green": dict(color=(0.214, 0.673, 0.012, 1.0), rough_lo=0.26,
                   rough_hi=0.40, wave_bump=0.22, grain_bump=0.025,
                   sheen=0.15, sss=0.045),
 }
