@@ -404,3 +404,38 @@
   padding-top: 0;
 }
 
+
+/* Coming-soon media placeholder — same card as live, reserves the 3D model slot */
+.csp-soon-placeholder {
+  position: relative;
+  width: 112px; height: 112px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; font-weight: 900; letter-spacing: -0.03em;
+  color: rgba(79,154,53,0.30);
+  background: radial-gradient(circle at 40% 32%, rgba(255,255,255,0.95), rgba(246,247,244,0.55) 60%, rgba(79,154,53,0.05) 100%);
+  border: 1px solid rgba(79,154,53,0.14);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  animation: cspSoonBreath 5.5s ease-in-out infinite alternate;
+  transition: color 0.5s var(--cs-ease), border-color 0.5s var(--cs-ease);
+}
+.csp-pcard.live:hover .csp-soon-placeholder {
+  color: rgba(79,154,53,0.45);
+  border-color: rgba(79,154,53,0.26);
+}
+.csp-soon-placeholder::after {
+  content: ""; position: absolute; inset: -10px; border-radius: 50%;
+  border: 1px dashed rgba(79,154,53,0.22);
+  animation: cspSoonOrbit 30s linear infinite;
+}
+.csp-soon-placeholder::before {
+  content: ""; position: absolute; inset: -19px; border-radius: 50%;
+  border: 1px solid rgba(79,154,53,0.08);
+  border-top-color: rgba(79,154,53,0.24);
+  animation: cspSoonOrbitReverse 46s linear infinite;
+}
+@keyframes cspSoonBreath { from { transform: scale(1); } to { transform: scale(1.035); } }
+@keyframes cspSoonOrbit { to { transform: rotate(360deg); } }
+@keyframes cspSoonOrbitReverse { to { transform: rotate(-360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .csp-soon-placeholder, .csp-soon-placeholder::after, .csp-soon-placeholder::before { animation: none !important; }
+}

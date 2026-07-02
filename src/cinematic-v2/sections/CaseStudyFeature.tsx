@@ -13,9 +13,51 @@ const aralditeModel  = `${basePath}/case-study/model/araldite-container-procedur
 
 type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer';
 
+// Pending products — same card as live ones; 3D model + spec details land later.
+const pendingProducts: { idx: string; slug: string; name: string; tag: string }[] = [
+  { idx: '05', slug: 'hand-wash-bottle', name: 'Hand Wash Bottle', tag: 'Personal Care Packaging' },
+  { idx: '06', slug: 'hard-dish', name: 'Hard Dish', tag: 'Kitchenware' },
+  { idx: '07', slug: 'consile-pipe', name: 'Consile Pipe', tag: 'Industrial Pipe' },
+  { idx: '08', slug: 'soap-stand', name: 'Soap Stand', tag: 'Bathroom Accessory' },
+  { idx: '09', slug: 'food-oil-can', name: 'Food Oil Can', tag: 'Food Packaging' },
+  { idx: '10', slug: 'dairy-products-container', name: 'Dairy Products Container', tag: 'Dairy Packaging' },
+  { idx: '11', slug: 'lunch-box', name: 'Lunch Box', tag: 'Food Container' },
+  { idx: '12', slug: 'dairy-sweet-container', name: 'Dairy Sweet Container', tag: 'Dairy Packaging' },
+  { idx: '13', slug: 'dairy-round-container', name: 'Dairy Round Container', tag: 'Dairy Packaging' },
+  { idx: '14', slug: 'rectangle-container', name: 'Rectangle Container', tag: 'General Packaging' },
+  { idx: '15', slug: '20mm-hook', name: '20 mm Hook', tag: 'Hardware' },
+  { idx: '16', slug: 'round-pipe', name: 'Round Pipe', tag: 'Industrial Pipe' },
+  { idx: '17', slug: 'appliance-tray', name: 'Fridge / Washing Machine Tray', tag: 'Appliance Component' },
+  { idx: '18', slug: 'motor-fan-blade', name: 'Motor Fan Blade', tag: 'Motor Component' },
+  { idx: '19', slug: 'cup-container', name: 'Cup Container', tag: 'Food Packaging' },
+  { idx: '20', slug: 'tooth-brush', name: 'Tooth Brush', tag: 'Personal Care' },
+  { idx: '21', slug: 'petrol-pipe', name: 'Petrol Pipe', tag: 'Automotive Component' },
+  { idx: '22', slug: 'protein-container', name: 'Protein Container', tag: 'Nutrition Packaging' },
+  { idx: '23', slug: 'rectangle-box', name: 'Rectangle Box', tag: 'General Packaging' },
+  { idx: '24', slug: 'small-round-bottle', name: 'Small Round Bottle', tag: 'General Packaging' },
+  { idx: '25', slug: 'salt-bottle', name: 'Salt Bottle', tag: 'Food Packaging' },
+  { idx: '26', slug: 'light-weight-container', name: 'Light Weight Container', tag: 'General Packaging' },
+  { idx: '27', slug: 'food-tray-dish', name: 'Food Tray Dish', tag: 'Food Packaging' },
+  { idx: '28', slug: 'light-weight-dish', name: 'Light Weight Dish', tag: 'Kitchenware' },
+  { idx: '29', slug: 'dermicool-powder-bottle', name: 'Dermicool Powder Bottle', tag: 'Personal Care Packaging' },
+  { idx: '30', slug: 'woven-thread', name: 'Woven Thread', tag: 'Textile Material' },
+  { idx: '31', slug: 'child-bottle', name: 'Child Bottle', tag: 'Personal Care Packaging' },
+  { idx: '32', slug: 'water-tub', name: 'Water Tub', tag: 'Household Storage' },
+  { idx: '33', slug: 'toilet-seat', name: 'Toilet Seat', tag: 'Sanitaryware' },
+  { idx: '34', slug: 'non-woven-bag', name: 'Non Woven Bag', tag: 'Packaging Textile' },
+  { idx: '35', slug: 'courier-bag', name: 'Courier Bag', tag: 'Logistics Packaging' },
+];
+
+function monogram(name: string): string {
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  if (!words.length) return '?';
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return (words[0][0] + words[1][0]).toUpperCase();
+}
+
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
-    { value: '04', label: 'Active Studies' },
+    { value: '35', label: 'Products in LIMEX' },
     { value: '3D', label: 'Interactive' },
     { value: <>100<small>%</small></>, label: 'LIMEX + Color' },
     { value: <>~38<small>%</small></>, label: 'CO2e Cut (LCA)', green: true },
@@ -330,6 +372,34 @@ export default function CaseStudyFeature() {
           <span className="csp-pgo">→</span>
         </div>
       </a>
+
+      {/* 05–35 — same card, 3D model + details land later */}
+      {pendingProducts.map(p => (
+        <a
+          key={p.slug}
+          className="csp-pcard featured live"
+          href={`${basePath}/case-study/product.html?p=${p.slug}`}
+          data-product={p.slug}
+        >
+          <div className="csp-border-beam" />
+          <div className="csp-pglass" />
+          <div className="csp-pglow" />
+          <div className="csp-pmedia">
+            <span className="csp-pidx">{p.idx}</span>
+            <div className="csp-soon-placeholder">{monogram(p.name)}</div>
+          </div>
+          <div className="csp-pinfo">
+            <div>
+              <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+                <span className="csp-pfeatured">Coming Soon</span>
+              </div>
+              <div className="csp-pname">{p.name}</div>
+              <div className="csp-ptag">{p.tag}</div>
+            </div>
+            <span className="csp-pgo">→</span>
+          </div>
+        </a>
+      ))}
     </>
   );
 
