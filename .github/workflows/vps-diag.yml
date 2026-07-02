@@ -18,7 +18,5 @@ jobs:
             ls -la /etc/nginx/sites-enabled/ 2>/dev/null || true
             echo "=== conf.d ==="
             ls -la /etc/nginx/conf.d/ 2>/dev/null || true
-            for f in $(grep -rl "whitedot-frontend" /etc/nginx/sites-enabled/ /etc/nginx/conf.d/ 2>/dev/null | sort -u); do
-              echo "=== FILE: $f ==="
-              cat "$f"
-            done
+            echo "=== FILE: /etc/nginx/sites-available/whitedotindia.in ==="
+            cat /etc/nginx/sites-available/whitedotindia.in
