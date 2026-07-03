@@ -3,7 +3,8 @@
     "schema": "wd-case-study-spec/1.0",
     "note": "Single source of truth for case-study technical data. Every field carries a `verified` flag and a `source`. The page engine and the PDF TDS generator read ONLY from this file. verified:true = cited from the official White Dot 'Case Studies in India' PDF or public TBM/supplier documentation. verified:false = representative of the material class; confirm against supplier lot TDS.",
     "lastResearched": "2026-06-23",
-    "researchedBy": "White Dot — data verification engine"
+    "researchedBy": "White Dot — data verification engine",
+    "lastUpdated": "2026-07-02"
   },
   "sources": {
     "wd-casestudies-pdf": "White Dot — 'LIMEX Case Studies in India' (official document)",
@@ -13,7 +14,8 @@
     "unido": "https://itpo-tokyo.unido.org/en/technology_db/7923/",
     "photo-reference": "Supplied case-study photos: IMG_9992 front view and IMG_9993 top view",
     "motor-cover-photo-reference": "Supplied motor cover photos: front grille, straight-on grille, and side profile views",
-    "araldite-photo-reference": "Supplied Araldite container photos: front view, straight-on view, and blue dispensing base view"
+    "araldite-photo-reference": "Supplied Araldite container photos: front view, straight-on view, and blue dispensing base view",
+    "hand-wash-photo-reference": "Supplied hand wash bottle photos: white and green faceted pump bottles, duo front views and facet close-ups (IMG_2595/2596/2800/2801)"
   },
   "products": {
     "bobbin": {
@@ -29,25 +31,109 @@
       "moulding": "Injection Moulding",
       "application": "High-Speed Textile Spinning",
       "composition": [
-        { "name": "LIMEX PE78-02M Compound", "pct": 40, "color": "#4f9a35", "verified": true, "source": "wd-casestudies-pdf" },
-        { "name": "PP Homo-Polymer", "pct": 60, "color": "#c4c7c0", "verified": true, "source": "wd-casestudies-pdf" }
+        {
+          "name": "LIMEX PE78-02M Compound",
+          "pct": 40,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-casestudies-pdf"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 60,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-casestudies-pdf"
+        }
       ],
       "specs": [
-        { "label": "Material Base", "value": "LIMEX PE78-02M + PP Homo-Polymer", "verified": true, "source": "wd-casestudies-pdf" },
-        { "label": "LIMEX Grade", "value": "PE78-02M", "verified": true, "source": "wd-casestudies-pdf" },
-        { "label": "Mixing Ratio", "value": "40% LIMEX + 60% PP", "verified": true, "source": "wd-casestudies-pdf" },
-        { "label": "Process", "value": "Injection Moulding", "verified": true, "source": "wd-casestudies-pdf" },
-        { "label": "Application", "value": "High-Speed Textile Spinning", "verified": true, "source": "wd-casestudies-pdf" },
-        { "label": "Effective Limestone (CaCO3)", "value": "~31", "unit": "% by mass", "verified": true, "source": "gsh-pe78-02m", "note": "40% LIMEX × 78% CaCO3 in PE78-02M." },
-        { "label": "PE78-02M CaCO3 Content", "value": "78", "unit": "%", "verified": true, "source": "gsh-pe78-02m" },
-        { "label": "PE78-02M Density", "value": "1.90", "unit": "g/cm3", "verified": true, "source": "gsh-pe78-02m" },
-        { "label": "PE78-02M MFR", "value": "0.6", "unit": "g/10min", "verified": true, "source": "gsh-pe78-02m" },
-        { "label": "PE78-02M GHG", "value": "0.542", "unit": "kg-CO2e/kg", "verified": true, "source": "gsh-pe78-02m" }
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE78-02M + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-casestudies-pdf"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE78-02M",
+          "verified": true,
+          "source": "wd-casestudies-pdf"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "40% LIMEX + 60% PP",
+          "verified": true,
+          "source": "wd-casestudies-pdf"
+        },
+        {
+          "label": "Process",
+          "value": "Injection Moulding",
+          "verified": true,
+          "source": "wd-casestudies-pdf"
+        },
+        {
+          "label": "Application",
+          "value": "High-Speed Textile Spinning",
+          "verified": true,
+          "source": "wd-casestudies-pdf"
+        },
+        {
+          "label": "Effective Limestone (CaCO3)",
+          "value": "~31",
+          "unit": "% by mass",
+          "verified": true,
+          "source": "gsh-pe78-02m",
+          "note": "40% LIMEX × 78% CaCO3 in PE78-02M."
+        },
+        {
+          "label": "PE78-02M CaCO3 Content",
+          "value": "78",
+          "unit": "%",
+          "verified": true,
+          "source": "gsh-pe78-02m"
+        },
+        {
+          "label": "PE78-02M Density",
+          "value": "1.90",
+          "unit": "g/cm3",
+          "verified": true,
+          "source": "gsh-pe78-02m"
+        },
+        {
+          "label": "PE78-02M MFR",
+          "value": "0.6",
+          "unit": "g/10min",
+          "verified": true,
+          "source": "gsh-pe78-02m"
+        },
+        {
+          "label": "PE78-02M GHG",
+          "value": "0.542",
+          "unit": "kg-CO2e/kg",
+          "verified": true,
+          "source": "gsh-pe78-02m"
+        }
       ],
       "highlights": [
-        { "num": "40%", "label": "LIMEX PE78-02M", "verified": true, "source": "wd-casestudies-pdf" },
-        { "num": "~31%", "label": "Limestone in Part", "verified": true, "source": "gsh-pe78-02m" },
-        { "num": "0.542", "unit": "kg-CO2e/kg", "label": "PE78-02M GHG", "verified": true, "source": "gsh-pe78-02m" }
+        {
+          "num": "40%",
+          "label": "LIMEX PE78-02M",
+          "verified": true,
+          "source": "wd-casestudies-pdf"
+        },
+        {
+          "num": "~31%",
+          "label": "Limestone in Part",
+          "verified": true,
+          "source": "gsh-pe78-02m"
+        },
+        {
+          "num": "0.542",
+          "unit": "kg-CO2e/kg",
+          "label": "PE78-02M GHG",
+          "verified": true,
+          "source": "gsh-pe78-02m"
+        }
       ],
       "co2": {
         "value": "~24–38%",
@@ -69,25 +155,109 @@
       "moulding": "Injection Moulding",
       "application": "Paint packaging container",
       "composition": [
-        { "name": "LIMEX PE78-02M Compound", "pct": 25, "color": "#4f9a35", "verified": true, "source": "photo-reference" },
-        { "name": "PP Homo-Polymer", "pct": 75, "color": "#c4c7c0", "verified": true, "source": "photo-reference" }
+        {
+          "name": "LIMEX PE78-02M Compound",
+          "pct": 25,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "photo-reference"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 75,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "photo-reference"
+        }
       ],
       "specs": [
-        { "label": "Material Base", "value": "LIMEX PE78-02M + PP Homo-Polymer", "verified": true, "source": "photo-reference" },
-        { "label": "LIMEX Grade", "value": "Not Specified", "verified": false, "source": "photo-reference" },
-        { "label": "Mixing Ratio", "value": "25% LIMEX + 75% PP", "verified": true, "source": "photo-reference" },
-        { "label": "Process", "value": "Injection Moulding", "verified": true, "source": "photo-reference" },
-        { "label": "Application", "value": "Paint Packaging", "verified": true, "source": "photo-reference" },
-        { "label": "Effective Limestone (CaCO3)", "value": "~20", "unit": "% by mass", "verified": true, "source": "gsh-pe78-02m", "note": "25% LIMEX x 78% CaCO3 in PE78-02M." },
-        { "label": "PE78-02M CaCO3 Content", "value": "78", "unit": "%", "verified": true, "source": "gsh-pe78-02m" },
-        { "label": "PE78-02M Density", "value": "1.90", "unit": "g/cm3", "verified": true, "source": "gsh-pe78-02m" },
-        { "label": "PE78-02M MFR", "value": "0.6", "unit": "g/10min", "verified": true, "source": "gsh-pe78-02m" },
-        { "label": "PE78-02M GHG", "value": "0.542", "unit": "kg-CO2e/kg", "verified": true, "source": "gsh-pe78-02m" }
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE78-02M + PP Homo-Polymer",
+          "verified": true,
+          "source": "photo-reference"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "Not Specified",
+          "verified": false,
+          "source": "photo-reference"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "25% LIMEX + 75% PP",
+          "verified": true,
+          "source": "photo-reference"
+        },
+        {
+          "label": "Process",
+          "value": "Injection Moulding",
+          "verified": true,
+          "source": "photo-reference"
+        },
+        {
+          "label": "Application",
+          "value": "Paint Packaging",
+          "verified": true,
+          "source": "photo-reference"
+        },
+        {
+          "label": "Effective Limestone (CaCO3)",
+          "value": "~20",
+          "unit": "% by mass",
+          "verified": true,
+          "source": "gsh-pe78-02m",
+          "note": "25% LIMEX x 78% CaCO3 in PE78-02M."
+        },
+        {
+          "label": "PE78-02M CaCO3 Content",
+          "value": "78",
+          "unit": "%",
+          "verified": true,
+          "source": "gsh-pe78-02m"
+        },
+        {
+          "label": "PE78-02M Density",
+          "value": "1.90",
+          "unit": "g/cm3",
+          "verified": true,
+          "source": "gsh-pe78-02m"
+        },
+        {
+          "label": "PE78-02M MFR",
+          "value": "0.6",
+          "unit": "g/10min",
+          "verified": true,
+          "source": "gsh-pe78-02m"
+        },
+        {
+          "label": "PE78-02M GHG",
+          "value": "0.542",
+          "unit": "kg-CO2e/kg",
+          "verified": true,
+          "source": "gsh-pe78-02m"
+        }
       ],
       "highlights": [
-        { "num": "25%", "label": "LIMEX PE78-02M", "verified": true, "source": "photo-reference" },
-        { "num": "~20%", "label": "Limestone in Part", "verified": true, "source": "gsh-pe78-02m" },
-        { "num": "0.542", "unit": "kg-CO2e/kg", "label": "PE78-02M GHG", "verified": true, "source": "gsh-pe78-02m" }
+        {
+          "num": "25%",
+          "label": "LIMEX PE78-02M",
+          "verified": true,
+          "source": "photo-reference"
+        },
+        {
+          "num": "~20%",
+          "label": "Limestone in Part",
+          "verified": true,
+          "source": "gsh-pe78-02m"
+        },
+        {
+          "num": "0.542",
+          "unit": "kg-CO2e/kg",
+          "label": "PE78-02M GHG",
+          "verified": true,
+          "source": "gsh-pe78-02m"
+        }
       ],
       "co2": {
         "value": "Reference only",
@@ -109,25 +279,109 @@
       "moulding": "Injection Moulding",
       "application": "Motor Fan Cover",
       "composition": [
-        { "name": "LIMEX PE78-02M Compound", "pct": 50, "color": "#4f9a35", "verified": true, "source": "wd-casestudies-pdf" },
-        { "name": "PP Homo-Polymer", "pct": 50, "color": "#c4c7c0", "verified": true, "source": "wd-casestudies-pdf" }
+        {
+          "name": "LIMEX PE78-02M Compound",
+          "pct": 50,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-casestudies-pdf"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 50,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-casestudies-pdf"
+        }
       ],
       "specs": [
-        { "label": "Material Base", "value": "LIMEX PE78-02M + PP Homo-Polymer", "verified": true, "source": "wd-casestudies-pdf" },
-        { "label": "LIMEX Grade", "value": "Not Specified", "verified": false, "source": "wd-casestudies-pdf" },
-        { "label": "Mixing Ratio", "value": "50% LIMEX + 50% PP", "verified": true, "source": "wd-casestudies-pdf" },
-        { "label": "Process", "value": "Injection Moulding", "verified": true, "source": "wd-casestudies-pdf" },
-        { "label": "Application", "value": "Motor Fan Cover", "verified": true, "source": "wd-casestudies-pdf" },
-        { "label": "Effective Limestone (CaCO3)", "value": "~39", "unit": "% by mass", "verified": true, "source": "gsh-pe78-02m", "note": "50% LIMEX × 78% CaCO3 in PE78-02M." },
-        { "label": "PE78-02M CaCO3 Content", "value": "78", "unit": "%", "verified": true, "source": "gsh-pe78-02m" },
-        { "label": "PE78-02M Density", "value": "1.90", "unit": "g/cm³", "verified": true, "source": "gsh-pe78-02m" },
-        { "label": "PE78-02M MFR", "value": "0.6", "unit": "g/10min", "verified": true, "source": "gsh-pe78-02m" },
-        { "label": "PE78-02M GHG", "value": "0.542", "unit": "kg-CO2e/kg", "verified": true, "source": "gsh-pe78-02m" }
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE78-02M + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-casestudies-pdf"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "Not Specified",
+          "verified": false,
+          "source": "wd-casestudies-pdf"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "50% LIMEX + 50% PP",
+          "verified": true,
+          "source": "wd-casestudies-pdf"
+        },
+        {
+          "label": "Process",
+          "value": "Injection Moulding",
+          "verified": true,
+          "source": "wd-casestudies-pdf"
+        },
+        {
+          "label": "Application",
+          "value": "Motor Fan Cover",
+          "verified": true,
+          "source": "wd-casestudies-pdf"
+        },
+        {
+          "label": "Effective Limestone (CaCO3)",
+          "value": "~39",
+          "unit": "% by mass",
+          "verified": true,
+          "source": "gsh-pe78-02m",
+          "note": "50% LIMEX × 78% CaCO3 in PE78-02M."
+        },
+        {
+          "label": "PE78-02M CaCO3 Content",
+          "value": "78",
+          "unit": "%",
+          "verified": true,
+          "source": "gsh-pe78-02m"
+        },
+        {
+          "label": "PE78-02M Density",
+          "value": "1.90",
+          "unit": "g/cm³",
+          "verified": true,
+          "source": "gsh-pe78-02m"
+        },
+        {
+          "label": "PE78-02M MFR",
+          "value": "0.6",
+          "unit": "g/10min",
+          "verified": true,
+          "source": "gsh-pe78-02m"
+        },
+        {
+          "label": "PE78-02M GHG",
+          "value": "0.542",
+          "unit": "kg-CO2e/kg",
+          "verified": true,
+          "source": "gsh-pe78-02m"
+        }
       ],
       "highlights": [
-        { "num": "50%", "label": "LIMEX PE78-02M", "verified": true, "source": "wd-casestudies-pdf" },
-        { "num": "~39%", "label": "Limestone in Part", "verified": true, "source": "gsh-pe78-02m" },
-        { "num": "0.542", "unit": "kg-CO2e/kg", "label": "PE78-02M GHG", "verified": true, "source": "gsh-pe78-02m" }
+        {
+          "num": "50%",
+          "label": "LIMEX PE78-02M",
+          "verified": true,
+          "source": "wd-casestudies-pdf"
+        },
+        {
+          "num": "~39%",
+          "label": "Limestone in Part",
+          "verified": true,
+          "source": "gsh-pe78-02m"
+        },
+        {
+          "num": "0.542",
+          "unit": "kg-CO2e/kg",
+          "label": "PE78-02M GHG",
+          "verified": true,
+          "source": "gsh-pe78-02m"
+        }
       ],
       "co2": {
         "value": "~24–38%",
@@ -149,21 +403,80 @@
       "moulding": "Injection Moulding",
       "application": "Adhesive Dispenser Container",
       "composition": [
-        { "name": "LIMEX Compound", "pct": 30, "color": "#4f9a35", "verified": true, "source": "araldite-photo-reference" },
-        { "name": "PP Homo-Polymer", "pct": 70, "color": "#c4c7c0", "verified": true, "source": "araldite-photo-reference" }
+        {
+          "name": "LIMEX Compound",
+          "pct": 30,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "araldite-photo-reference"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 70,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "araldite-photo-reference"
+        }
       ],
       "specs": [
-        { "label": "Material Base", "value": "LIMEX + PP Homo-Polymer", "verified": true, "source": "araldite-photo-reference" },
-        { "label": "LIMEX Grade", "value": "LIMEX Compound", "verified": true, "source": "araldite-photo-reference" },
-        { "label": "Mixing Ratio", "value": "30% LIMEX + 70% PP", "verified": true, "source": "araldite-photo-reference" },
-        { "label": "Effective Limestone (CaCO3)", "value": "~23", "unit": "% by mass", "verified": true, "source": "gsh-pe78-02m", "note": "30% LIMEX × ~78% CaCO3 in compound." },
-        { "label": "Process", "value": "Injection Moulding", "verified": true, "source": "araldite-photo-reference" },
-        { "label": "Application", "value": "Adhesive Dispenser Container", "verified": true, "source": "araldite-photo-reference" }
+        {
+          "label": "Material Base",
+          "value": "LIMEX + PP Homo-Polymer",
+          "verified": true,
+          "source": "araldite-photo-reference"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "LIMEX Compound",
+          "verified": true,
+          "source": "araldite-photo-reference"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "30% LIMEX + 70% PP",
+          "verified": true,
+          "source": "araldite-photo-reference"
+        },
+        {
+          "label": "Effective Limestone (CaCO3)",
+          "value": "~23",
+          "unit": "% by mass",
+          "verified": true,
+          "source": "gsh-pe78-02m",
+          "note": "30% LIMEX × ~78% CaCO3 in compound."
+        },
+        {
+          "label": "Process",
+          "value": "Injection Moulding",
+          "verified": true,
+          "source": "araldite-photo-reference"
+        },
+        {
+          "label": "Application",
+          "value": "Adhesive Dispenser Container",
+          "verified": true,
+          "source": "araldite-photo-reference"
+        }
       ],
       "highlights": [
-        { "num": "30%", "label": "LIMEX", "verified": true, "source": "araldite-photo-reference" },
-        { "num": "~23%", "label": "Limestone in Part", "verified": true, "source": "araldite-photo-reference" },
-        { "num": "3D", "label": "Photo-Matched", "verified": true, "source": "araldite-photo-reference" }
+        {
+          "num": "30%",
+          "label": "LIMEX",
+          "verified": true,
+          "source": "araldite-photo-reference"
+        },
+        {
+          "num": "~23%",
+          "label": "Limestone in Part",
+          "verified": true,
+          "source": "araldite-photo-reference"
+        },
+        {
+          "num": "3D",
+          "label": "Photo-Matched",
+          "verified": true,
+          "source": "araldite-photo-reference"
+        }
       ],
       "co2": {
         "value": "Reference only",
@@ -171,6 +484,62 @@
         "verified": true,
         "source": "co2-lca"
       }
+    },
+    "handWashBottle": {
+      "id": "handWashBottle",
+      "index": "05",
+      "name": "Hand Wash Bottle",
+      "category": "Personal Care Packaging",
+      "status": "live",
+      "application": "Hand Wash Dispenser Bottle",
+      "tagline": "A faceted hand wash dispenser bottle in two colorways, modeled in 3D from the supplied product photos. Verified LIMEX composition data is in progress.",
+      "description": "A hand wash dispenser bottle with a distinctive elongated diamond mould pattern and a black pump head, produced in white and green colorways. The interactive 3D model shows both variants side by side and is photo-matched to the supplied reference photography, including the quilted facet geometry, matte pump finish and colors. Verified LIMEX composition and supplier spec data for this product are in progress - no figures are published until confirmed.",
+      "highlights": [
+        {
+          "num": "2",
+          "label": "Colorways",
+          "source": "hand-wash-photo-reference",
+          "verified": true
+        },
+        {
+          "num": "3D",
+          "label": "Photo-Matched",
+          "source": "hand-wash-photo-reference",
+          "verified": true
+        },
+        {
+          "num": "4",
+          "label": "Real Photos",
+          "source": "hand-wash-photo-reference",
+          "verified": true
+        }
+      ],
+      "specs": [
+        {
+          "label": "Application",
+          "value": "Hand Wash Dispenser Bottle",
+          "source": "hand-wash-photo-reference",
+          "verified": true
+        },
+        {
+          "label": "Colorways",
+          "value": "White / Green",
+          "source": "hand-wash-photo-reference",
+          "verified": true
+        },
+        {
+          "label": "Closure",
+          "value": "Black Pump Dispenser",
+          "source": "hand-wash-photo-reference",
+          "verified": true
+        },
+        {
+          "label": "Material Base",
+          "value": "LIMEX blend - verification in progress",
+          "source": "hand-wash-photo-reference",
+          "verified": false
+        }
+      ]
     }
   }
 }

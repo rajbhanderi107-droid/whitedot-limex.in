@@ -761,18 +761,21 @@
     container: './model/paint-container-procedural-red-white.glb',
     motorCover: './model/motor-cover-procedural-black.glb',
     aralditeContainer: './model/araldite-container-procedural.glb',
+    handWashBottle: './model/hand-wash-bottle-duo.glb',
   };
   const CAMERA_ORBIT = {
     bobbin: '30deg 75deg 105%',
     container: '28deg 72deg 108%',
     motorCover: '18deg 75deg 112%',
     aralditeContainer: '25deg 76deg 115%',
+    handWashBottle: '20deg 78deg 120%',
   };
   const CARD_BADGE = {
     bobbin: 'Featured',
     container: 'New Study',
     motorCover: 'New Model',
     aralditeContainer: 'New Study',
+    handWashBottle: 'New Study',
   };
 
   function monogram(name) {
@@ -832,6 +835,7 @@
           <model-viewer
             src="${MODEL_SRC[entry.id] || ''}"
             alt="${entry.name} — LIMEX 3D model"
+            loading="lazy"
             interaction-prompt="none"
             shadow-intensity="0"
             exposure="1.15"
@@ -893,7 +897,7 @@
   const productStats = {
     overview: [
       ['35', 'Products Mapped', false],
-      ['04', 'Live Studies', false],
+      ['05', 'Live Studies', false],
       ['3D', 'Interactive', false],
       ['~38<small>%</small>', 'CO2e Cut (LCA)', true],
     ],
@@ -920,6 +924,12 @@
       ['LIMEX', 'Grade TBC', false],
       ['+PP', 'Homo-Polymer', false],
       ['3D', 'Photo-Matched', true],
+    ],
+    handWashBottle: [
+      ['05', 'Hand Wash Bottle', false],
+      ['2', 'Colorways', false],
+      ['3D', 'Static Preview', false],
+      ['Live', 'Product 05', true],
     ],
   };
   function setActiveProduct(product) {

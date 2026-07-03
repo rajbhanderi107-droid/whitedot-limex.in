@@ -102,11 +102,22 @@
       50%  { opacity: 0.8; filter: blur(4px); }
       100% { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
     }
+    .case-title .word {
+      display: inline-block;
+      white-space: nowrap;
+    }
+
     .case-title .char {
       display: inline-block; opacity: 0; white-space: pre;
       animation: char-reveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       animation-delay: calc(0.042s * var(--ci) + 0.1s);
       will-change: transform, opacity, filter;
+    }
+
+    body[data-product="handWashBottle"] .case-title {
+      font-size: clamp(34px, 3.75vw, 54px);
+      line-height: 1.02;
+      max-width: 520px;
     }
     @media (prefers-reduced-motion: reduce) {
       .case-title .char { animation: none !important; opacity: 1 !important; filter: none !important; transform: none !important; }
@@ -791,12 +802,14 @@
     container: './model/paint-container-procedural-red-white.glb',
     motorCover: './model/motor-cover-procedural-black.glb',
     aralditeContainer: './model/araldite-container-procedural.glb',
+    handWashBottle: './model/hand-wash-bottle-duo.glb',
   };
   const CAMERA_ORBIT = {
     bobbin: '0deg 76deg 105%',
     container: '0deg 76deg 108%',
     motorCover: '0deg 76deg 112%',
     aralditeContainer: '0deg 76deg 115%',
+    handWashBottle: '0deg 78deg 120%',
   };
 
   document.body.dataset.product = entry.id;
@@ -824,16 +837,24 @@
   document.getElementById('caseSubtitle').textContent =
     full.tagline || (isLive ? entry.category : `${entry.category} — 3D model and verified LIMEX composition data are in progress for this product.`);
 
-  // Split title into chars for cinematic reveal
+  // Split title into words, then chars, so headings never wrap between letters.
   (function splitTitle() {
     const text = titleEl.textContent;
     titleEl.textContent = '';
-    [...text].forEach((ch, i) => {
-      const span = document.createElement('span');
-      span.className = 'char';
-      span.style.setProperty('--ci', i);
-      span.textContent = ch === ' ' ? ' ' : ch;
-      titleEl.appendChild(span);
+    let charIndex = 0;
+    text.split(' ').forEach((word, wordIndex, words) => {
+      const wordSpan = document.createElement('span');
+      wordSpan.className = 'word';
+      [...word].forEach((ch) => {
+        const span = document.createElement('span');
+        span.className = 'char';
+        span.style.setProperty('--ci', charIndex);
+        span.textContent = ch;
+        wordSpan.appendChild(span);
+        charIndex += 1;
+      });
+      titleEl.appendChild(wordSpan);
+      if (wordIndex < words.length - 1) titleEl.appendChild(document.createTextNode(' '));
     });
   })();
 
