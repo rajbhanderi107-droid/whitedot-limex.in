@@ -38,6 +38,16 @@ jobs:
           target: "/var/www/whitedot-frontend-new"
           strip_components: 1
 
+      - name: Upload nginx site config
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: root
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "deploy/nginx/whitedotindia.in.conf"
+          target: "/tmp/whitedot-nginx"
+          strip_components: 2
+
       - name: Atomic swap + nginx reload
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -46,7 +56,23 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             set -e
-            rm -rf /var/www/whitedot-frontend
+            CONF_SRC=/tmp/whitedot-nginx/whitedotindia.in.conf
+            CONF_DST=/etc/nginx/sites-available/whitedotindia.in
+            if [ -f "$CONF_SRC" ] && ! cmp -s "$CONF_SRC" "$CONF_DST"; then
+              cp "$CONF_DST" "${CONF_DST}.bak"
+              cp "$CONF_SRC" "$CONF_DST"
+              if ! nginx -t; then
+                echo "New nginx config failed validation — rolling back"
+                cp "${CONF_DST}.bak" "$CONF_DST"
+                nginx -t
+                exit 1
+              fi
+              echo "nginx site config updated from repo"
+            fi
+            rm -rf /tmp/whitedot-nginx
+            rm -rf /var/www/whitedot-frontend-prev
+            [ -d /var/www/whitedot-frontend ] && mv /var/www/whitedot-frontend /var/www/whitedot-frontend-prev
             mv /var/www/whitedot-frontend-new /var/www/whitedot-frontend
+            rm -rf /var/www/whitedot-frontend-prev
             nginx -t && systemctl reload nginx
             echo "Deployed: $(date)"
