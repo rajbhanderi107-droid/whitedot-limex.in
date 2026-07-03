@@ -4,7 +4,7 @@
     "note": "Single source of truth for case-study technical data. Every field carries a `verified` flag and a `source`. The page engine and the PDF TDS generator read ONLY from this file. verified:true = cited from the official White Dot 'Case Studies in India' PDF or public TBM/supplier documentation. verified:false = representative of the material class; confirm against supplier lot TDS.",
     "lastResearched": "2026-06-23",
     "researchedBy": "White Dot — data verification engine",
-    "lastUpdated": "2026-07-02"
+    "lastUpdated": "2026-07-03"
   },
   "sources": {
     "wd-casestudies-pdf": "White Dot — 'LIMEX Case Studies in India' (official document)",
