@@ -21,12 +21,14 @@ const handWashHref   = `${basePath}/case-study/hand-wash-bottle.html`;
 const handWashModel  = `${basePath}/case-study/model/hand-wash-bottle-duo.glb`;
 const hardDishHref   = `${basePath}/case-study/product.html?p=hard-dish`;
 const hardDishModel  = `${basePath}/case-study/model/lunchbox-tray-four-color-lineup.glb`;
+const consilePipeHref  = `${basePath}/case-study/consile-pipe.html`;
+const consilePipeModel = `${basePath}/case-study/model/consile-pipe-procedural.glb`;
 
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish';
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
-    { value: '06', label: 'Active Studies' },
+    { value: '07', label: 'Active Studies' },
     { value: '3D', label: 'Interactive' },
     { value: <>100<small>%</small></>, label: 'LIMEX + Color' },
     { value: <>~38<small>%</small></>, label: 'CO2e Cut (LCA)', green: true },
@@ -66,6 +68,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: '4', label: 'Colorways' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 06', green: true },
+  ],
+  consilePipe: [
+    { value: '07', label: 'Concealed Pipe' },
+    { value: 'ISI', label: 'Style Marking' },
+    { value: '3D', label: 'Photo-Matched' },
+    { value: 'Live', label: 'Product 07', green: true },
   ],
 };
 
@@ -151,7 +159,7 @@ export default function CaseStudyPage() {
         c.style.opacity   = String(opa);
         c.style.zIndex    = String(Math.round((1 - absT) * 10));
         const product = c.dataset.product as ProductKey | undefined;
-        if ((product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish') && absT < nearestDistance) {
+        if ((product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe') && absT < nearestDistance) {
           nearestProduct = product;
           nearestDistance = absT;
         }
@@ -185,7 +193,7 @@ export default function CaseStudyPage() {
         if (!glow) return;
         c.addEventListener('mouseenter', () => {
           const product = c.dataset.product as ProductKey | undefined;
-          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish') setActiveProductKey(product);
+          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe') setActiveProductKey(product);
         });
         c.addEventListener('mousemove', (e: MouseEvent) => {
           const r = c.getBoundingClientRect();
@@ -474,6 +482,49 @@ export default function CaseStudyPage() {
               <span className="csp-pdot pp" /><span className="csp-pblabel">Navy - White</span>
               <span className="csp-psep">-</span>
               <span className="csp-pdot lx" /><span className="csp-pblabel">Coral - Mint</span>
+            </div>
+          </div>
+          <span className="csp-pgo">-&gt;</span>
+        </div>
+      </a>
+
+      {/* 07 Concealed Pipe - live */}
+      <a className="csp-pcard featured live" href={consilePipeHref} data-product="consilePipe">
+        <div className="csp-border-beam" />
+        <div className="csp-pglass" />
+        <div className="csp-pglow" />
+        <div className="csp-pmedia">
+          <span className="csp-pidx">07</span>
+          {isMobileViewport ? (
+            <div className="csp-soon-placeholder">CP</div>
+          ) : (
+            // @ts-ignore custom element
+            <model-viewer
+              src={consilePipeModel}
+              alt="Concealed Pipe - black rigid conduit pipe with blue stripe and embossed ISI marking 3D model"
+              loading="lazy"
+              interaction-prompt="none"
+              shadow-intensity="0"
+              exposure="1.15"
+              tone-mapping="neutral"
+              environment-image="neutral"
+              camera-orbit="80deg 76deg 60%"
+              style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+            />
+          )}
+        </div>
+        <div className="csp-pinfo">
+          <div>
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+              <span className="csp-pfeatured">New Model</span>
+            </div>
+            <div className="csp-pname">Concealed Pipe</div>
+            <div className="csp-ptag">Rigid Conduit Pipe - Visual Reference</div>
+            <div className="csp-pbar">
+              <span style={{ flex:100, height:'100%', background:'var(--cs-green)', display:'block' }} />
+            </div>
+            <div className="csp-pbarlabels">
+              <span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span>
             </div>
           </div>
           <span className="csp-pgo">-&gt;</span>
