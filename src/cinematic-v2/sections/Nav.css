@@ -302,6 +302,8 @@
 /* ── Hamburger button (mobile only) ──────────────────────────────────────── */
 
 .v2nav-hamburger {
+  position: relative;
+  z-index: calc(var(--v2-z-nav) + 2);
   display: none;
   align-items: center;
   justify-content: center;

@@ -52,8 +52,8 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
   handWashBottle: [
     { value: '05', label: 'Hand Wash Bottle' },
     { value: '2', label: 'Colorways' },
-    { value: '3D', label: 'Photo-Matched' },
-    { value: '4', label: 'Real Photos', green: true },
+    { value: '3D', label: 'Static Preview' },
+    { value: 'Live', label: 'Product 05', green: true },
   ],
 };
 
