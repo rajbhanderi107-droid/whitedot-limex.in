@@ -253,6 +253,22 @@
   color: #ffffff;
 }
 
+/* Showcase sits on the light band, but its lazy-loaded section CSS is
+   injected after this file and re-asserts dark-canvas text colors at equal
+   specificity. The .v2-root prefix makes these corrections deterministic. */
+.v2-root .v2sc-title {
+  color: var(--v2-light-title);
+}
+.v2-root .v2sc-sub {
+  color: var(--v2-light-body);
+}
+.v2-root .v2sc-caption {
+  color: var(--v2-light-muted);
+}
+.v2-root .v2sc-frame {
+  border-color: var(--v2-light-line-strong);
+}
+
 .v2nav--scrolled {
   background: rgba(255, 253, 248, 0.92);
   border-bottom-color: var(--v2-light-line);
