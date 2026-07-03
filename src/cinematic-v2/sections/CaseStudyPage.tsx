@@ -201,6 +201,7 @@ export default function CaseStudyPage() {
           <model-viewer
             src={bobbinModel}
             alt="Bobbin — LIMEX textile bobbin 3D model"
+            loading="lazy"
             interaction-prompt="none"
             shadow-intensity="0"
             exposure="1.15"
@@ -241,6 +242,7 @@ export default function CaseStudyPage() {
           <model-viewer
             src={containerModel}
             alt="Paint container - red body and bright white snap lid 3D model"
+            loading="lazy"
             interaction-prompt="none"
             shadow-intensity="0"
             exposure="1.08"
@@ -281,6 +283,7 @@ export default function CaseStudyPage() {
             src={motorCoverModel}
             poster={motorCoverPoster}
             alt="Moter Cover - black vented motor cover 3D model"
+            loading="lazy"
             interaction-prompt="none"
             shadow-intensity="0"
             exposure="1.16"
@@ -317,6 +320,7 @@ export default function CaseStudyPage() {
           <model-viewer
             src={aralditeModel}
             alt="Araldite Container - LIMEX adhesive dispenser bottle 3D model"
+            loading="lazy"
             interaction-prompt="none"
             shadow-intensity="0.9"
             shadow-softness="0.8"
@@ -357,6 +361,7 @@ export default function CaseStudyPage() {
           <model-viewer
             src={handWashModel}
             alt="Hand Wash Bottle - white and green faceted LIMEX pump bottles 3D model"
+            loading="lazy"
             interaction-prompt="none"
             shadow-intensity="0.9"
             shadow-softness="0.8"
