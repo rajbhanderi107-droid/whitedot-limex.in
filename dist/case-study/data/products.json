@@ -11,7 +11,7 @@
     { "id": "aralditeContainer",  "index": "04", "slug": "araldite-container",   "name": "Araldite Container",              "category": "Adhesive Dispenser Container",  "status": "live",    "photos": [] },
     { "id": "handWashBottle",     "index": "05", "slug": "hand-wash-bottle",     "name": "Hand Wash Bottle",                "category": "Personal Care Packaging",       "status": "live",    "photos": [] },
     { "id": "hardDish",           "index": "06", "slug": "hard-dish",            "name": "Hard Dish",                       "category": "Kitchenware",                    "status": "live",    "photos": [] },
-    { "id": "consilePipe",        "index": "07", "slug": "consile-pipe",         "name": "Consile Pipe",                    "category": "Industrial Pipe",                "status": "pending", "photos": [] },
+    { "id": "consilePipe",        "index": "07", "slug": "consile-pipe",         "name": "Concealed Pipe",                  "category": "Industrial Pipe",                "status": "live",    "photos": [] },
     { "id": "soapStand",          "index": "08", "slug": "soap-stand",           "name": "Soap Stand",                      "category": "Bathroom Accessory",             "status": "pending", "photos": [] },
     { "id": "foodOilCan",         "index": "09", "slug": "food-oil-can",         "name": "Food Oil Can",                    "category": "Food Packaging",                 "status": "pending", "photos": [] },
     { "id": "dairyProductsContainer", "index": "10", "slug": "dairy-products-container", "name": "Dairy Products Container", "category": "Dairy Packaging",           "status": "pending", "photos": [] },
