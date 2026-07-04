@@ -26,7 +26,8 @@ MM = 0.001  # build in metres; all sizes below are mm * MM
 
 # Lid
 LID_A, LID_B = 59.0, 44.0          # footprint half length / half width
-LID_N = 3.4                        # superellipse exponent — softer, pillow-like corners
+LID_N = 5.2                        # superellipse exponent — rectangular body with
+                                   # tight curved corners, not an oval/pillow blob
 DOME_H = 22.0                      # dome height above skirt top — flatter, lower profile
 DOME_P, DOME_Q = 4.2, 0.55         # pillow profile z = H*(1-s^P)^Q — wide flat plateau,
                                    # curvature pushed hard toward the outer edge
@@ -45,27 +46,26 @@ GRAIN_PAIR_GAP, GRAIN_TILT = 1.7, math.radians(29)
 GRAIN_S_MAX = 0.97                 # grains run almost to the dome edge (per top photo)
 
 # Bow (centred on dome apex)
-BOW_LOBE = (13.0, 13.0, 4.6)       # half-extents of each lobe — round balloon
+BOW_LOBE = (13.0, 13.0, 9.0)       # half-extents of each lobe — round balloon
                                    # shape (per top-view photo), roughly equal
-                                   # X/Y rather than an elongated blade; lower
-                                   # profile to sit closer to the flatter dome
+                                   # X/Y; measured tip height ~17mm above dome apex
 BOW_LOBE_X = 14.5                  # lobe centre offset from knot — more separation
 BOW_LOBE_TILT = math.radians(5)    # lie almost flat — no upward wing lift
-KNOT = (7.0, 5.0, 5.0)             # narrow waist so the two lobes read as distinct
+KNOT = (7.0, 5.0, 6.5)             # narrow waist so the two lobes read as distinct
 TAIL_LEN, TAIL_WID, TAIL_TH = 20.0, 7.0, 1.5
 
 # Base tray
 BASE_A, BASE_B = 62.0, 47.0
-BASE_N = 3.4                        # matches the lid's softer corner radius
+BASE_N = 5.2                        # rectangular body, tight curved corners (matches lid)
 BASE_H = 21.0                      # tub wall top (hidden behind the band)
 BASE_WALL = 2.2
-BASE_WAVES, BASE_WAVE_A = 30, 1.3  # measured: ~30 waves/perimeter, fine crimp
+BASE_WAVES, BASE_WAVE_A = 26, 1.3  # measured: ~26 scallops/perimeter
 BASE_FLARE = 1.06                  # rim flares slightly outward
 
 # Darker sage scalloped rim trim around the base top — thin wavy piping
 # (the "dark green strip, uneven but in pattern" seen right below the lid)
 BAND_Z0, BAND_Z1 = 16.5, BASE_H    # thin band bottom / top, flush with wall top
-BAND_WAVE_A = 1.3
+BAND_WAVE_A = 2.1                  # deeper, more visible scallop (per photo)
 BAND_FLARE = 1.05
 
 # Drain insert — a separate elevated green tray with its own scalloped rim,
@@ -112,6 +112,14 @@ def superellipse(t, a, b, n):
     x = a * math.copysign(abs(c) ** (2.0 / n), c)
     y = b * math.copysign(abs(s) ** (2.0 / n), s)
     return x, y
+
+
+def scallop_wave(theta, n_waves):
+    """Shell-like scallop: sharper rounded crests, a shorter gentle trough —
+    a plain sine reads as a fine ripple, not the rim's distinct shell shape."""
+    w = math.sin(n_waves * theta)
+    shaped = math.copysign(abs(w) ** 0.72, w)
+    return 0.72 * shaped + 0.28 * math.sin(2 * n_waves * theta - 0.6)
 
 
 class EdgeRadius:
@@ -354,9 +362,9 @@ def build_bow():
 
     rot_l = Matrix.Rotation(math.radians(6), 4, "Z") @ Matrix.Rotation(+BOW_LOBE_TILT, 4, "Y")
     rot_r = Matrix.Rotation(math.radians(-6), 4, "Z") @ Matrix.Rotation(-BOW_LOBE_TILT, 4, "Y")
-    add_sphere((-BOW_LOBE_X, 0, apex_z + 1.6), BOW_LOBE, rot_l, pinch=+1.0)
-    add_sphere((+BOW_LOBE_X, 0, apex_z + 1.6), BOW_LOBE, rot_r, pinch=-1.0)
-    add_sphere((0, 0, apex_z + 1.8), KNOT)  # knot
+    add_sphere((-BOW_LOBE_X, 0, apex_z + 6.5), BOW_LOBE, rot_l, pinch=+1.0)
+    add_sphere((+BOW_LOBE_X, 0, apex_z + 6.5), BOW_LOBE, rot_r, pinch=-1.0)
+    add_sphere((0, 0, apex_z + 6.8), KNOT)  # knot
 
     # ribbon tails: flat tapered boxes draped diagonally down-out from the knot
     for sx in (-1, 1):
@@ -436,7 +444,7 @@ def build_base_band():
             t = 2 * math.pi * i / SEGS
             x, y = superellipse(t, BASE_A, BASE_B, BASE_N)
             phi = math.atan2(y, x)
-            z = z0 + BAND_WAVE_A * math.sin(BASE_WAVES * phi)
+            z = z0 + BAND_WAVE_A * scallop_wave(phi, BASE_WAVES)
             ring.append(bm.verts.new((x * scale * MM, y * scale * MM, z * MM)))
         rings.append(ring)
     bridge_rings(bm, rings, close_top=True)
