@@ -170,10 +170,13 @@ def new_object(name, mesh, material):
 
 def make_material(name, rgba, rough):
     """Semi-gloss injection-moulded plastic: lowish roughness + a thin
-    clearcoat, matching the crisp specular streaks visible on the real sample."""
+    clearcoat, a faint procedural "orange peel" micro-bump (real moulded
+    plastic is never perfectly smooth), matching the crisp specular streaks
+    visible on the real sample."""
     mat = bpy.data.materials.new(name)
     mat.use_nodes = True
-    bsdf = mat.node_tree.nodes["Principled BSDF"]
+    nt = mat.node_tree
+    bsdf = nt.nodes["Principled BSDF"]
     bsdf.inputs["Base Color"].default_value = rgba
     bsdf.inputs["Roughness"].default_value = rough
     for coat_w, coat_r in (("Coat Weight", "Coat Roughness"), ("Clearcoat", "Clearcoat Roughness")):
@@ -181,6 +184,16 @@ def make_material(name, rgba, rough):
             bsdf.inputs[coat_w].default_value = 0.35
             bsdf.inputs[coat_r].default_value = 0.12
             break
+
+    noise = nt.nodes.new("ShaderNodeTexNoise")
+    noise.inputs["Scale"].default_value = 480.0
+    noise.inputs["Detail"].default_value = 2.0
+    noise.inputs["Roughness"].default_value = 0.55
+    bump = nt.nodes.new("ShaderNodeBump")
+    bump.inputs["Strength"].default_value = 0.06
+    bump.inputs["Distance"].default_value = 0.0006
+    nt.links.new(noise.outputs["Fac"], bump.inputs["Height"])
+    nt.links.new(bump.outputs["Normal"], bsdf.inputs["Normal"])
     return mat
 
 
@@ -574,12 +587,45 @@ print(f"GLB written: {GLB_OUT} ({os.path.getsize(GLB_OUT) / 1e6:.2f} MB)")
 if DO_RENDER:
     os.makedirs(RENDER_DIR, exist_ok=True)
     scene.render.engine = "CYCLES"
-    scene.cycles.samples = 128
+    scene.cycles.samples = 160
     scene.cycles.use_denoising = True
-    scene.render.resolution_x, scene.render.resolution_y = 1400, 1050
+    scene.cycles.denoiser = "OPENIMAGEDENOISE"
+    # 4K UHD-class output at the same 4:3 framing as the earlier previews
+    scene.render.resolution_x, scene.render.resolution_y = 3840, 2880
+    scene.render.resolution_percentage = 100
     scene.render.film_transparent = False
     scene.view_settings.view_transform = "Filmic"  # soft highlight rolloff, keeps hue
     scene.view_settings.look = "Medium Contrast"
+    scene.view_settings.exposure = 0.15
+
+    # ---- compositor color grade: subtle bloom + warm-highlight/cool-shadow
+    # split-tone + gentle sharpen, the standard "clean product shot" grade ----
+    scene.use_nodes = True
+    ct = scene.node_tree
+    ct.nodes.clear()
+    rl = ct.nodes.new("CompositorNodeRLayers")
+    glare = ct.nodes.new("CompositorNodeGlare")
+    glare.glare_type = "FOG_GLOW"
+    glare.quality = "HIGH"
+    glare.threshold = 1.05
+    glare.mix = -0.6  # mostly the sharp base image, just a whisper of bloom
+    balance = ct.nodes.new("CompositorNodeColorBalance")
+    balance.correction_method = "LIFT_GAMMA_GAIN"
+    balance.lift = (0.985, 0.99, 1.01)     # faint cool lift in the shadows
+    balance.gamma = (1.0, 1.0, 1.0)
+    balance.gain = (1.02, 1.008, 0.985)    # faint warm gain in the highlights
+    sharpen = ct.nodes.new("CompositorNodeFilter")
+    sharpen.filter_type = "SHARPEN"
+    sharpen_mix = ct.nodes.new("CompositorNodeMixRGB")
+    sharpen_mix.blend_type = "MIX"
+    sharpen_mix.inputs["Fac"].default_value = 0.25
+    composite = ct.nodes.new("CompositorNodeComposite")
+    ct.links.new(rl.outputs["Image"], glare.inputs["Image"])
+    ct.links.new(glare.outputs["Image"], balance.inputs["Image"])
+    ct.links.new(balance.outputs["Image"], sharpen_mix.inputs[1])
+    ct.links.new(balance.outputs["Image"], sharpen.inputs["Image"])
+    ct.links.new(sharpen.outputs["Image"], sharpen_mix.inputs[2])
+    ct.links.new(sharpen_mix.outputs["Image"], composite.inputs["Image"])
 
     world = bpy.data.worlds.new("Studio")
     world.use_nodes = True
