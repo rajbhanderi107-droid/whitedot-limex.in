@@ -74,9 +74,9 @@ BAND_FLARE = 1.06                  # a visible lip from the front, not a thick f
 # and the cuts cast a soft shadow / reveal the paler tub through each slot.
 INS_A, INS_B = 53.0, 38.5
 INS_TH = 2.6
-INS_Z = 6.0                        # plate top height inside base — sits deep in the
-                                   # tub so the explode reveal reads as rising out of
-                                   # a real cavity, not lifting off a shallow surface
+INS_Z = 9.0                        # plate top height inside base — sits deep enough
+                                   # to read as a real cavity, but not so deep that
+                                   # the rim visibly occludes it mid-rise
 INS_BORDER_H, INS_BORDER_W = 3.2, 3.0
 N_SLOTS = 13                       # measured: width:pitch ratio ~0.6, length ~70% of short axis
 SLOT_HALF_L, SLOT_R = 27.0, 2.1    # slot half length (Y) and half width
@@ -401,21 +401,27 @@ def build_bow():
 
 # ---------------------------------------------------------------- 2. BASE
 def build_base():
-    # pale green-white tub body (band is a separate darker part)
+    """Single-color pale tub — the wavy scalloped rim is part of this same
+    mesh/material now (no separate darker trim overlapping the insert)."""
     bm = bmesh.new()
     rings = []
-    profile = [  # (scale, z_mm)
-        (0.90, 0.0),
-        (0.985, 3.0),
-        (1.0, 8.0),
-        (1.0, BASE_H),
+    profile = [  # (scale, z_mm, wavy)
+        (0.90, 0.0, False),
+        (0.985, 3.0, False),
+        (1.0, 8.0, False),
+        (1.0, BAND_Z0, False),
+        (1.005, BAND_Z0, True),
+        (BAND_FLARE, BAND_Z0 + 1.4, True),
+        (BAND_FLARE, BASE_H, True),      # wavy top edge
     ]
-    for scale, z0 in profile:
+    for scale, z0, wavy in profile:
         ring = []
         for i in range(SEGS):
             t = 2 * math.pi * i / SEGS
             x, y = superellipse(t, BASE_A, BASE_B, BASE_N)
-            ring.append(bm.verts.new((x * scale * MM, y * scale * MM, z0 * MM)))
+            phi = math.atan2(y, x)
+            z = z0 + (BAND_WAVE_A * scallop_wave(phi, BASE_WAVES) if wavy else 0.0)
+            ring.append(bm.verts.new((x * scale * MM, y * scale * MM, z * MM)))
         rings.append(ring)
     bridge_rings(bm, rings, close_bottom=True)
     mesh = bpy.data.meshes.new("BaseTray")
@@ -424,36 +430,6 @@ def build_base():
     obj = new_object("BaseTray", mesh, mat_tub)
     solid = obj.modifiers.new("shell", "SOLIDIFY")
     solid.thickness = BASE_WALL * MM
-    solid.offset = -1.0
-    return obj
-
-
-def build_base_band():
-    """Thin darker-sage scalloped rim trim — a single wavy piping course
-    sitting right at the top of the tub wall, distinct from the pale body."""
-    bm = bmesh.new()
-    rings = []
-    profile = [  # (scale, z_mm)
-        (1.005, BAND_Z0),                # base of the trim (flush with wall)
-        (BAND_FLARE, BAND_Z0 + 1.4),     # flares out slightly
-        (BAND_FLARE, BAND_Z1),           # wavy top edge
-    ]
-    for scale, z0 in profile:
-        ring = []
-        for i in range(SEGS):
-            t = 2 * math.pi * i / SEGS
-            x, y = superellipse(t, BASE_A, BASE_B, BASE_N)
-            phi = math.atan2(y, x)
-            z = z0 + BAND_WAVE_A * scallop_wave(phi, BASE_WAVES)
-            ring.append(bm.verts.new((x * scale * MM, y * scale * MM, z * MM)))
-        rings.append(ring)
-    bridge_rings(bm, rings, close_top=True)
-    mesh = bpy.data.meshes.new("BaseBand")
-    bm.to_mesh(mesh)
-    bm.free()
-    obj = new_object("BaseBand", mesh, mat_sage_deep)
-    solid = obj.modifiers.new("shell", "SOLIDIFY")
-    solid.thickness = 1.3 * MM
     solid.offset = -1.0
     return obj
 
@@ -528,12 +504,11 @@ lid_shell = build_lid()
 lid_grains = build_grains()
 lid_bow = build_bow()
 base = build_base()
-band = build_base_band()
 insert, cutter = build_insert()
 
 # apply modifiers so the GLB carries clean static meshes
 dg = bpy.context.evaluated_depsgraph_get()
-for obj in (base, band, insert):
+for obj in (base, insert):
     ev = obj.evaluated_get(dg)
     mesh = bpy.data.meshes.new_from_object(ev)
     old = obj.data
@@ -573,7 +548,12 @@ for f, lo, ro in ((1, closed_loc, zero_rot), (32, closed_loc, zero_rot),
                   (70, open_loc, open_rot), (104, open_loc, open_rot),
                   (142, closed_loc, zero_rot), (F_END, closed_loc, zero_rot)):
     key_xform(lid_root, f, lo, ro)
-for f, lo in ((1, ins_lo), (44, ins_lo), (80, ins_hi), (104, ins_hi), (142, ins_lo), (F_END, ins_lo)):
+# Insert starts rising the instant the lid does and finishes quickly — by
+# the time the lid has risen enough to expose the tub's interior, the
+# insert is already clear. A slow rise spends too long with the tub
+# wall/rim occluding it from the side, reading as the rim "cutting"
+# through the insert.
+for f, lo in ((1, ins_lo), (32, ins_lo), (46, ins_hi), (104, ins_hi), (118, ins_lo), (F_END, ins_lo)):
     key_xform(insert, f, lo)
 
 # name the glTF animation "Explode" via same-named NLA tracks
