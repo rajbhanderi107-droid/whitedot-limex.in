@@ -23,12 +23,14 @@ const hardDishHref   = `${basePath}/case-study/product.html?p=hard-dish`;
 const hardDishModel  = `${basePath}/case-study/model/lunchbox-tray-four-color-lineup.glb`;
 const consilePipeHref  = `${basePath}/case-study/consile-pipe.html`;
 const consilePipeModel = `${basePath}/case-study/model/consile-pipe-procedural.glb`;
+const soapStandHref   = `${basePath}/case-study/product.html?p=soap-stand`;
+const soapStandModel  = `${basePath}/case-study/model/soap-stand-procedural.glb`;
 
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe';
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
-    { value: '07', label: 'Active Studies' },
+    { value: '08', label: 'Active Studies' },
     { value: '3D', label: 'Interactive' },
     { value: <>100<small>%</small></>, label: 'LIMEX + Color' },
     { value: <>~38<small>%</small></>, label: 'CO2e Cut (LCA)', green: true },
@@ -75,6 +77,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 07', green: true },
   ],
+  soapStand: [
+    { value: '08', label: 'Soap Stand' },
+    { value: '3', label: 'Part Assembly' },
+    { value: '3D', label: 'Photo-Matched' },
+    { value: 'Live', label: 'Product 08', green: true },
+  ],
 };
 
 export default function CaseStudyPage() {
@@ -120,6 +128,10 @@ export default function CaseStudyPage() {
       s.src = `${basePath}/case-study/js/model-viewer.min.js`;
       document.head.appendChild(s);
     }
+    gridRef.current?.querySelectorAll<HTMLElement>('[data-product="soapStand"] model-viewer').forEach((model) => {
+      model.setAttribute('autoplay', '');
+      model.setAttribute('animation-name', 'Explode');
+    });
 
     // ── Card expand animation ──
     const card = cardRef.current;
@@ -163,7 +175,7 @@ export default function CaseStudyPage() {
           c.style.zIndex    = String(Math.round((1 - absT) * 10));
         }
         const product = c.dataset.product as ProductKey | undefined;
-        if ((product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe') && absT < nearestDistance) {
+        if ((product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand') && absT < nearestDistance) {
           nearestProduct = product;
           nearestDistance = absT;
         }
@@ -197,7 +209,7 @@ export default function CaseStudyPage() {
         if (!glow) return;
         c.addEventListener('mouseenter', () => {
           const product = c.dataset.product as ProductKey | undefined;
-          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe') setActiveProductKey(product);
+          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand') setActiveProductKey(product);
         });
         c.addEventListener('mousemove', (e: MouseEvent) => {
           const r = c.getBoundingClientRect();
@@ -529,6 +541,55 @@ export default function CaseStudyPage() {
             </div>
             <div className="csp-pbarlabels">
               <span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span>
+            </div>
+          </div>
+          <span className="csp-pgo">-&gt;</span>
+        </div>
+      </a>
+
+      {/* 08 Soap Stand - live */}
+      <a className="csp-pcard featured live" href={soapStandHref} data-product="soapStand">
+        <div className="csp-border-beam" />
+        <div className="csp-pglass" />
+        <div className="csp-pglow" />
+        <div className="csp-pmedia">
+          <span className="csp-pidx">08</span>
+          {isMobileViewport ? (
+            <div className="csp-soon-placeholder">SS</div>
+          ) : (
+            // @ts-ignore custom element
+            <model-viewer
+              src={soapStandModel}
+              alt="Soap Stand - cream and sage LIMEX soap dish with bow lid and slotted drain tray 3D model"
+              loading="lazy"
+              autoplay
+              animation-name="Explode"
+              interaction-prompt="none"
+              shadow-intensity="0"
+              exposure="1.15"
+              tone-mapping="neutral"
+              environment-image="neutral"
+              camera-orbit="26deg 76deg 118%"
+              style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+            />
+          )}
+        </div>
+        <div className="csp-pinfo">
+          <div>
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+              <span className="csp-pfeatured">New Model</span>
+            </div>
+            <div className="csp-pname">Soap Stand</div>
+            <div className="csp-ptag">Bathroom Accessory - 3 Part Assembly</div>
+            <div className="csp-pbar">
+              <span style={{ flex:34, height:'100%', background:'#f2efe6', display:'block' }} />
+              <span style={{ flex:33, height:'100%', background:'#b8cbae', display:'block' }} />
+              <span style={{ flex:33, height:'100%', background:'#7d9e75', display:'block' }} />
+            </div>
+            <div className="csp-pbarlabels">
+              <span className="csp-pdot pp" /><span className="csp-pblabel">Cream</span>
+              <span className="csp-psep">-</span>
+              <span className="csp-pdot lx" /><span className="csp-pblabel">Sage Green</span>
             </div>
           </div>
           <span className="csp-pgo">-&gt;</span>

@@ -25,6 +25,7 @@ skills-lock.json
 server/tsconfig.tsbuildinfo
 *.tsbuildinfo
 .vite/
+.codex-bpy/
 
 # secrets (never commit)
 server/_gsc_token.json

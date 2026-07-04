@@ -16,7 +16,8 @@
     "motor-cover-photo-reference": "Supplied motor cover photos: front grille, straight-on grille, and side profile views",
     "araldite-photo-reference": "Supplied Araldite container photos: front view, straight-on view, and blue dispensing base view",
     "hand-wash-photo-reference": "Supplied hand wash bottle photos: white and green faceted pump bottles, duo front views and facet close-ups (IMG_2595/2596/2800/2801)",
-    "consile-pipe-photo-reference": "Supplied concealed pipe photos: two angles of the same black rigid conduit pipe segment showing the blue stripe and embossed '0090 M' end marking"
+    "consile-pipe-photo-reference": "Supplied concealed pipe photos: two angles of the same black rigid conduit pipe segment showing the blue stripe and embossed '0090 M' end marking",
+    "soap-stand-photo-reference": "Supplied soap stand photos: open cream lid with red 15% limest marking, sage slotted drain tray, cream patterned lid with bow, and side view showing cream/green/cream stack with uneven darker green strip."
   },
   "products": {
     "bobbin": {
@@ -650,6 +651,62 @@
           "label": "Material Base",
           "value": "LIMEX blend - verification in progress",
           "source": "consile-pipe-photo-reference",
+          "verified": false
+        }
+      ]
+    },
+    "soapStand": {
+      "id": "soapStand",
+      "index": "08",
+      "name": "Soap Stand",
+      "category": "Bathroom Accessory",
+      "status": "live",
+      "application": "Bathroom Soap Dish",
+      "tagline": "A three-part soap stand modeled from the supplied product photos, with cream LIMEX body, sage slotted tray, wavy dark-green strip, patterned lid and raised bow.",
+      "description": "A bathroom soap stand rebuilt as an interactive 3D model from the supplied references. The model captures the cream lower dish, sage green removable slotted drain tray, uneven darker green strip below the wavy rim, cream rounded lid, raised knitted leaf pattern, bow detail, and red marker traces from the physical sample. Verified supplier TDS and exact formulation data are still pending, so no mechanical or CO2 figures are published for this product.",
+      "highlights": [
+        {
+          "num": "3",
+          "label": "Part Assembly",
+          "source": "soap-stand-photo-reference",
+          "verified": true
+        },
+        {
+          "num": "3D",
+          "label": "Photo-Matched",
+          "source": "soap-stand-photo-reference",
+          "verified": true
+        },
+        {
+          "num": "15%",
+          "label": "Sample Marking",
+          "source": "soap-stand-photo-reference",
+          "verified": true
+        }
+      ],
+      "specs": [
+        {
+          "label": "Application",
+          "value": "Bathroom Soap Dish",
+          "source": "soap-stand-photo-reference",
+          "verified": true
+        },
+        {
+          "label": "Visible Parts",
+          "value": "Cream lid / Sage slotted tray / Cream lower dish",
+          "source": "soap-stand-photo-reference",
+          "verified": true
+        },
+        {
+          "label": "Visible Details",
+          "value": "Raised bow, knitted leaf texture, wavy rim, long drain slots",
+          "source": "soap-stand-photo-reference",
+          "verified": true
+        },
+        {
+          "label": "Material Base",
+          "value": "LIMEX blend - verification in progress",
+          "source": "soap-stand-photo-reference",
           "verified": false
         }
       ]
