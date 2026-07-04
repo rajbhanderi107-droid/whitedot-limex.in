@@ -663,7 +663,7 @@
       "status": "live",
       "application": "Covered Soap Dish with Drain Insert",
       "tagline": "A three-part covered soap dish sample marked '15% Limex', modeled in 3D from the supplied product photos.",
-      "description": "A covered soap dish in three moulded parts: a cream pillow-domed lid with an all-over knitted rice-grain emboss and a sculpted bow, a sage-green base tray with a scalloped rim, and a sage-green drain insert with 13 drainage slots that lets the soap dry between uses. The sample lid interior is handwritten '15% Limex', indicating a 15% LIMEX blend for this trial part. The interactive 3D model is photo-matched to the supplied reference photography and animates the three-part assembly. Full supplier composition and spec data are in progress - no further figures are published until confirmed.",
+      "description": "A covered soap dish in three moulded parts: a cream pillow-domed lid with an all-over knitted rice-grain emboss and a sculpted bow, a matching cream base tray with a scalloped rim, and a sage-green drain insert with 13 drainage slots that lets the soap dry between uses. The sample lid interior is handwritten '15% Limex', indicating a 15% LIMEX blend for this trial part. The interactive 3D model is photo-matched to the supplied reference photography and animates the three-part assembly. Full supplier composition and spec data are in progress - no further figures are published until confirmed.",
       "highlights": [
         {
           "num": "15%",
@@ -705,7 +705,7 @@
         },
         {
           "label": "Colorways",
-          "value": "Cream Lid / Sage Green Base + Insert",
+          "value": "Cream Lid + Base / Sage Green Insert",
           "source": "soap-stand-photo-reference",
           "verified": true
         },
