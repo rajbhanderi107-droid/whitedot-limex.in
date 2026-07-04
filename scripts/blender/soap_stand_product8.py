@@ -401,18 +401,49 @@ def build_bow():
 
 # ---------------------------------------------------------------- 2. BASE
 def build_base():
-    """Single-color pale tub — the wavy scalloped rim is part of this same
-    mesh/material now (no separate darker trim overlapping the insert)."""
+    """Plain pale tub — PLAIN straight top rim, no wave baked in. This rim is
+    the real mechanical mating surface the lid skirt overlaps/seals against.
+    The scallop lives entirely on the separate RimStrip (see build_rim_strip),
+    which wraps the outside of the seam purely for looks."""
+    bm = bmesh.new()
+    rings = []
+    profile = [  # (scale, z_mm)
+        (0.90, 0.0),
+        (0.985, 3.0),
+        (1.0, 8.0),
+        (1.0, BASE_H),      # plain flat rim -- the actual seal surface
+    ]
+    for scale, z0 in profile:
+        ring = []
+        for i in range(SEGS):
+            t = 2 * math.pi * i / SEGS
+            x, y = superellipse(t, BASE_A, BASE_B, BASE_N)
+            ring.append(bm.verts.new((x * scale * MM, y * scale * MM, z0 * MM)))
+        rings.append(ring)
+    bridge_rings(bm, rings, close_bottom=True)
+    mesh = bpy.data.meshes.new("BaseTray")
+    bm.to_mesh(mesh)
+    bm.free()
+    obj = new_object("BaseTray", mesh, mat_tub)
+    solid = obj.modifiers.new("shell", "SOLIDIFY")
+    solid.thickness = BASE_WALL * MM
+    solid.offset = -1.0
+    return obj
+
+
+def build_rim_strip():
+    """Cosmetic-only scalloped sleeve wrapped around the OUTSIDE of the
+    lid/base seam. NOT fused into BaseTray and carries no structural role —
+    it just visually drops down to meet the base's top surface. Sits flush
+    against (not projecting over) the tray's own plain wall, so it can never
+    occlude the drain insert rising up through the tray opening."""
     bm = bmesh.new()
     rings = []
     profile = [  # (scale, z_mm, wavy)
-        (0.90, 0.0, False),
-        (0.985, 3.0, False),
-        (1.0, 8.0, False),
         (1.0, BAND_Z0, False),
         (1.005, BAND_Z0, True),
         (BAND_FLARE, BAND_Z0 + 1.4, True),
-        (BAND_FLARE, BASE_H, True),      # wavy top edge
+        (BAND_FLARE, BASE_H, True),
     ]
     for scale, z0, wavy in profile:
         ring = []
@@ -423,13 +454,13 @@ def build_base():
             z = z0 + (BAND_WAVE_A * scallop_wave(phi, BASE_WAVES) if wavy else 0.0)
             ring.append(bm.verts.new((x * scale * MM, y * scale * MM, z * MM)))
         rings.append(ring)
-    bridge_rings(bm, rings, close_bottom=True)
-    mesh = bpy.data.meshes.new("BaseTray")
+    bridge_rings(bm, rings)
+    mesh = bpy.data.meshes.new("RimStrip")
     bm.to_mesh(mesh)
     bm.free()
-    obj = new_object("BaseTray", mesh, mat_tub)
+    obj = new_object("RimStrip", mesh, mat_sage_deep)
     solid = obj.modifiers.new("shell", "SOLIDIFY")
-    solid.thickness = BASE_WALL * MM
+    solid.thickness = 1.0 * MM
     solid.offset = -1.0
     return obj
 
@@ -504,11 +535,12 @@ lid_shell = build_lid()
 lid_grains = build_grains()
 lid_bow = build_bow()
 base = build_base()
+rim_strip = build_rim_strip()
 insert, cutter = build_insert()
 
 # apply modifiers so the GLB carries clean static meshes
 dg = bpy.context.evaluated_depsgraph_get()
-for obj in (base, insert):
+for obj in (base, rim_strip, insert):
     ev = obj.evaluated_get(dg)
     mesh = bpy.data.meshes.new_from_object(ev)
     old = obj.data
