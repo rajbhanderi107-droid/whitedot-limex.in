@@ -713,7 +713,7 @@
       <!-- Stats strip -->
       <div class="hero-stats-strip" data-active-product="overview">
         <div class="hs-cell"><div class="hs-item"><span class="hs-num">35</span><span class="hs-label">Products Mapped</span></div></div>
-        <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num">04</span><span class="hs-label">Live Studies</span></div></div>
+        <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num">08</span><span class="hs-label">Live Studies</span></div></div>
         <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num">3D</span><span class="hs-label">Interactive</span></div></div>
         <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num orange">~38<small>%</small></span><span class="hs-label">CO2e Cut (LCA)</span></div></div>
       </div>
@@ -763,6 +763,8 @@
     aralditeContainer: './model/araldite-container-procedural.glb',
     handWashBottle: './model/hand-wash-bottle-duo.glb',
     hardDish: './model/lunchbox-tray-four-color-lineup.glb',
+    consilePipe: './model/consile-pipe-procedural.glb',
+    soapStand: './model/soap-stand-procedural.glb',
   };
   const CAMERA_ORBIT = {
     bobbin: '30deg 75deg 105%',
@@ -771,6 +773,8 @@
     aralditeContainer: '25deg 76deg 115%',
     handWashBottle: '20deg 78deg 120%',
     hardDish: '20deg 80deg 115%',
+    consilePipe: '80deg 76deg 85%',
+    soapStand: '26deg 76deg 118%',
   };
   const CARD_BADGE = {
     bobbin: 'Featured',
@@ -779,6 +783,8 @@
     aralditeContainer: 'New Study',
     handWashBottle: 'New Study',
     hardDish: 'New Model',
+    consilePipe: 'New Model',
+    soapStand: 'New Model',
   };
 
   function monogram(name) {
@@ -845,6 +851,7 @@
             tone-mapping="neutral"
             environment-image="neutral"
             camera-orbit="${CAMERA_ORBIT[entry.id] || '30deg 75deg 105%'}">
+            ${entry.id === 'soapStand' ? '<div class="mv-loader" slot="progress-bar"></div>' : ''}
           </model-viewer>
         </div>
         <div class="p-card-info">
@@ -900,7 +907,7 @@
   const productStats = {
     overview: [
       ['35', 'Products Mapped', false],
-      ['06', 'Live Studies', false],
+      ['08', 'Live Studies', false],
       ['3D', 'Interactive', false],
       ['~38<small>%</small>', 'CO2e Cut (LCA)', true],
     ],
@@ -939,6 +946,18 @@
       ['4', 'Colorways', false],
       ['3D', 'Photo-Matched', false],
       ['Live', 'Product 06', true],
+    ],
+    consilePipe: [
+      ['07', 'Concealed Pipe', false],
+      ['ISI', 'Style Marking', false],
+      ['3D', 'Photo-Matched', false],
+      ['Live', 'Product 07', true],
+    ],
+    soapStand: [
+      ['08', 'Soap Stand', false],
+      ['3', 'Part Assembly', false],
+      ['3D', 'Photo-Matched', false],
+      ['Live', 'Product 08', true],
     ],
   };
   function setActiveProduct(product) {

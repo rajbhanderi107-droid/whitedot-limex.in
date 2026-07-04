@@ -4,7 +4,7 @@
     "note": "Single source of truth for case-study technical data. Every field carries a `verified` flag and a `source`. The page engine and the PDF TDS generator read ONLY from this file. verified:true = cited from the official White Dot 'Case Studies in India' PDF or public TBM/supplier documentation. verified:false = representative of the material class; confirm against supplier lot TDS.",
     "lastResearched": "2026-06-23",
     "researchedBy": "White Dot — data verification engine",
-    "lastUpdated": "2026-07-03"
+    "lastUpdated": "2026-07-04"
   },
   "sources": {
     "wd-casestudies-pdf": "White Dot — 'LIMEX Case Studies in India' (official document)",
@@ -17,7 +17,7 @@
     "araldite-photo-reference": "Supplied Araldite container photos: front view, straight-on view, and blue dispensing base view",
     "hand-wash-photo-reference": "Supplied hand wash bottle photos: white and green faceted pump bottles, duo front views and facet close-ups (IMG_2595/2596/2800/2801)",
     "consile-pipe-photo-reference": "Supplied concealed pipe photos: two angles of the same black rigid conduit pipe segment showing the blue stripe and embossed '0090 M' end marking",
-    "soap-stand-photo-reference": "Supplied soap stand photos: open cream lid with red 15% limest marking, sage slotted drain tray, cream patterned lid with bow, and side view showing cream/green/cream stack with uneven darker green strip."
+    "soap-stand-photo-reference": "Supplied soap stand photos: closed front view, knit-embossed lid top view with bow, and open view showing the slotted drain insert and '15% Limex' handwritten on the lid interior (IMG_2604/2605/2606)"
   },
   "products": {
     "bobbin": {
@@ -661,13 +661,19 @@
       "name": "Soap Stand",
       "category": "Bathroom Accessory",
       "status": "live",
-      "application": "Bathroom Soap Dish",
-      "tagline": "A three-part soap stand modeled from the supplied product photos, with cream LIMEX body, sage slotted tray, wavy dark-green strip, patterned lid and raised bow.",
-      "description": "A bathroom soap stand rebuilt as an interactive 3D model from the supplied references. The model captures the cream lower dish, sage green removable slotted drain tray, uneven darker green strip below the wavy rim, cream rounded lid, raised knitted leaf pattern, bow detail, and red marker traces from the physical sample. Verified supplier TDS and exact formulation data are still pending, so no mechanical or CO2 figures are published for this product.",
+      "application": "Covered Soap Dish with Drain Insert",
+      "tagline": "A three-part covered soap dish sample marked '15% Limex', modeled in 3D from the supplied product photos.",
+      "description": "A covered soap dish in three moulded parts: a cream pillow-domed lid with an all-over knitted rice-grain emboss and a sculpted bow, a sage-green base tray with a scalloped rim, and a sage-green drain insert with 13 drainage slots that lets the soap dry between uses. The sample lid interior is handwritten '15% Limex', indicating a 15% LIMEX blend for this trial part. The interactive 3D model is photo-matched to the supplied reference photography and animates the three-part assembly. Full supplier composition and spec data are in progress - no further figures are published until confirmed.",
       "highlights": [
         {
+          "num": "15%",
+          "label": "LIMEX (marked on sample)",
+          "source": "soap-stand-photo-reference",
+          "verified": true
+        },
+        {
           "num": "3",
-          "label": "Part Assembly",
+          "label": "Moulded Parts",
           "source": "soap-stand-photo-reference",
           "verified": true
         },
@@ -676,36 +682,36 @@
           "label": "Photo-Matched",
           "source": "soap-stand-photo-reference",
           "verified": true
-        },
-        {
-          "num": "15%",
-          "label": "Sample Marking",
-          "source": "soap-stand-photo-reference",
-          "verified": true
         }
       ],
       "specs": [
         {
           "label": "Application",
-          "value": "Bathroom Soap Dish",
+          "value": "Covered Soap Dish with Drain Insert",
           "source": "soap-stand-photo-reference",
           "verified": true
         },
         {
-          "label": "Visible Parts",
-          "value": "Cream lid / Sage slotted tray / Cream lower dish",
+          "label": "Parts",
+          "value": "Embossed Lid + Drain Insert (13 Slots) + Scalloped Base",
           "source": "soap-stand-photo-reference",
           "verified": true
         },
         {
-          "label": "Visible Details",
-          "value": "Raised bow, knitted leaf texture, wavy rim, long drain slots",
+          "label": "Sample Marking",
+          "value": "\"15% Limex\" handwritten on lid interior",
+          "source": "soap-stand-photo-reference",
+          "verified": true
+        },
+        {
+          "label": "Colorways",
+          "value": "Cream Lid / Sage Green Base + Insert",
           "source": "soap-stand-photo-reference",
           "verified": true
         },
         {
           "label": "Material Base",
-          "value": "LIMEX blend - verification in progress",
+          "value": "15% LIMEX blend - full mix verification in progress",
           "source": "soap-stand-photo-reference",
           "verified": false
         }

@@ -23,8 +23,8 @@ const hardDishHref   = `${basePath}/case-study/product.html?p=hard-dish`;
 const hardDishModel  = `${basePath}/case-study/model/lunchbox-tray-four-color-lineup.glb`;
 const consilePipeHref  = `${basePath}/case-study/consile-pipe.html`;
 const consilePipeModel = `${basePath}/case-study/model/consile-pipe-procedural.glb`;
-const soapStandHref   = `${basePath}/case-study/product.html?p=soap-stand`;
-const soapStandModel  = `${basePath}/case-study/model/soap-stand-procedural.glb`;
+const soapStandHref  = `${basePath}/case-study/product.html?p=soap-stand`;
+const soapStandModel = `${basePath}/case-study/model/soap-stand-procedural.glb`;
 
 type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand';
 
@@ -79,7 +79,7 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
   ],
   soapStand: [
     { value: '08', label: 'Soap Stand' },
-    { value: '3', label: 'Part Assembly' },
+    { value: <>15<small>%</small></>, label: 'LIMEX (Sample)' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 08', green: true },
   ],
@@ -128,10 +128,6 @@ export default function CaseStudyPage() {
       s.src = `${basePath}/case-study/js/model-viewer.min.js`;
       document.head.appendChild(s);
     }
-    gridRef.current?.querySelectorAll<HTMLElement>('[data-product="soapStand"] model-viewer').forEach((model) => {
-      model.setAttribute('autoplay', '');
-      model.setAttribute('animation-name', 'Explode');
-    });
 
     // ── Card expand animation ──
     const card = cardRef.current;
@@ -560,16 +556,16 @@ export default function CaseStudyPage() {
             // @ts-ignore custom element
             <model-viewer
               src={soapStandModel}
-              alt="Soap Stand - cream and sage LIMEX soap dish with bow lid and slotted drain tray 3D model"
+              alt="Soap Stand - covered soap dish with knit-embossed lid, bow and drain insert 3D model"
               loading="lazy"
-              autoplay
-              animation-name="Explode"
               interaction-prompt="none"
               shadow-intensity="0"
-              exposure="1.15"
+              exposure="1.1"
               tone-mapping="neutral"
               environment-image="neutral"
-              camera-orbit="26deg 76deg 118%"
+              camera-orbit="35deg 70deg 92%"
+              autoplay
+              animation-name="Explode"
               style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
             />
           )}
@@ -580,16 +576,13 @@ export default function CaseStudyPage() {
               <span className="csp-pfeatured">New Model</span>
             </div>
             <div className="csp-pname">Soap Stand</div>
-            <div className="csp-ptag">Bathroom Accessory - 3 Part Assembly</div>
+            <div className="csp-ptag">Covered Soap Dish - 15% LIMEX Sample</div>
             <div className="csp-pbar">
-              <span style={{ flex:34, height:'100%', background:'#f2efe6', display:'block' }} />
-              <span style={{ flex:33, height:'100%', background:'#b8cbae', display:'block' }} />
-              <span style={{ flex:33, height:'100%', background:'#7d9e75', display:'block' }} />
+              <span style={{ flex:15, height:'100%', background:'var(--cs-green)', display:'block' }} />
+              <span style={{ flex:85, height:'100%', background:'#d0d3ce', display:'block' }} />
             </div>
             <div className="csp-pbarlabels">
-              <span className="csp-pdot pp" /><span className="csp-pblabel">Cream</span>
-              <span className="csp-psep">-</span>
-              <span className="csp-pdot lx" /><span className="csp-pblabel">Sage Green</span>
+              <span className="csp-pdot pp" /><span className="csp-pblabel">15% LIMEX (marked on sample)</span>
             </div>
           </div>
           <span className="csp-pgo">-&gt;</span>

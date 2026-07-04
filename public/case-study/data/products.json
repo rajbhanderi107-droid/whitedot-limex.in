@@ -2,7 +2,7 @@
   "_meta": {
     "schema": "wd-case-study-products/1.1",
     "note": "Canonical list of all 35 planned case-study products. `status:\"live\"` entries have a real 3D model + verified specs (full detail lives in specs.json under the same `id` key — this file reads specs.json at runtime for those). `status:\"pending\"` entries intentionally omit composition/specs/highlights — never invent LIMEX composition percentages, CO2 numbers, or supplier specs for unverified products. Use honest 'coming soon' / 'pending' language only. `photos` is an array of real (non-3D-render) product photography objects `{src, alt}` for the Real Product Photography gallery on product.html — currently empty for all 35 products until genuine photography is supplied; the template renders an honest 'coming soon' placeholder when empty and a full gallery/lightbox the moment 1+ entries are added, with zero template changes required.",
-    "lastUpdated": "2026-07-03"
+    "lastUpdated": "2026-07-04"
   },
   "products": [
     { "id": "bobbin",             "index": "01", "slug": "bobbin",              "name": "Bobbin",                          "category": "Textile Bobbin",                 "status": "live",    "photos": [] },

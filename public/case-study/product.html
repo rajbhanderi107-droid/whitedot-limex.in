@@ -815,7 +815,11 @@
     handWashBottle: '0deg 78deg 120%',
     hardDish: '0deg 80deg 115%',
     consilePipe: '80deg 76deg 85%',
-    soapStand: '0deg 76deg 118%',
+    soapStand: '35deg 70deg 100%',
+  };
+  // Products whose GLB carries a baked animation to autoplay on the stage.
+  const MODEL_ANIMATION = {
+    soapStand: 'Explode',
   };
 
   document.body.dataset.product = entry.id;
@@ -881,7 +885,6 @@
           camera-controls
           touch-action="pan-y"
           auto-rotate
-          ${entry.id === 'soapStand' ? 'autoplay animation-name="Explode"' : ''}
           auto-rotate-delay="0"
           rotation-per-second="22deg"
           interpolation-decay="100"
@@ -892,7 +895,8 @@
           environment-image="neutral"
           camera-orbit="${CAMERA_ORBIT[entry.id] || '0deg 76deg 105%'}"
           min-camera-orbit="auto auto 70%"
-          max-camera-orbit="auto auto 160%">
+          max-camera-orbit="auto auto 160%"
+          ${MODEL_ANIMATION[entry.id] ? `autoplay animation-name="${MODEL_ANIMATION[entry.id]}"` : ''}>
           <div class="mv-loader" slot="progress-bar"></div>
         </model-viewer>
       </div>`;
