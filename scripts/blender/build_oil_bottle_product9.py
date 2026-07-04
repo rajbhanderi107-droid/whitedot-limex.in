@@ -132,21 +132,25 @@ GRIP_RIB_THICK = 2.0 * SCALE_Y   # mm half-thickness (Y) of the lens before pinc
 # So: keep |x| small (inside the cap radius) through the whole cap-height
 # span, and do all the real clearance work with a big y (depth) offset —
 # the actual non-intersection test is the 3D distance to the cap centre.
+# The apex must also not exceed CAP_Z1 (225 here, pre-scale) — the dead-on
+# front reference photo shows an absolutely clean silhouette with nothing
+# above the cap at all, so any part of the loop taller than the cap (even
+# at x=0) would show as a bump/artifact poking above it.
 HANDLE_HALF_PATH = [
     (x * SCALE_X, y * SCALE_Y, z * SCALE_Z) for x, y, z in [
         (-20.0, 15.0, 158.0),   # foot — buried well inside the straight body wall
         (-18.0, 18.0, 176.0),   # rising out through the shoulder surface
-        (-4.0, 34.0, 196.0),    # entering cap-height zone: |x|+tube_half < cap radius
+        (-6.0, 30.0, 194.0),    # entering cap-height zone: |x|+tube_half < cap radius
                                 # (hidden from dead-front) while dist-to-cap-centre
                                 # clears cap radius + tube half-width (no clipping)
-        (-4.0, 36.0, 213.0),
-        (-4.0, 28.0, 226.0),    # just above the cap top, still tucked narrow
-        (-2.0, 14.0, 238.0),
-        (0.0, 5.0, 246.0),      # apex — shared centre point
+        (-5.0, 32.0, 206.0),
+        (-3.0, 22.0, 217.0),    # still tucked narrow, staying under the cap top
+        (0.0, 9.0, 223.0),
+        (0.0, 3.0, 225.0),      # apex — shared centre point, at (not above) cap top
     ]
 ]
 HANDLE_W, HANDLE_T = 20.0 * SCALE_AVG, 15.0 * SCALE_AVG  # per-rail cross-section
-HANDLE_SEGMENTS = 48                   # samples along each half (smoothed)
+HANDLE_SEGMENTS = 72                   # samples along each half (smoothed)
 
 # ---------------------------------------------------------------- materials
 def srgb_to_linear(c):
@@ -458,7 +462,7 @@ def build_handle():
 
     bm = bmesh.new()
     rings = []
-    n_ring = 14
+    n_ring = 22
     n = len(path)
 
     # Precompute tangents, then propagate a rotation-minimizing frame by
