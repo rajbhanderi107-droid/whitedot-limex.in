@@ -805,6 +805,7 @@
     handWashBottle: './model/hand-wash-bottle-duo.glb',
     hardDish: './model/lunchbox-tray-four-color-lineup.glb',
     consilePipe: './model/consile-pipe-procedural.glb',
+    soapStand: './model/soap-stand-procedural.glb',
   };
   const CAMERA_ORBIT = {
     bobbin: '0deg 76deg 105%',
@@ -814,6 +815,11 @@
     handWashBottle: '0deg 78deg 120%',
     hardDish: '0deg 80deg 115%',
     consilePipe: '80deg 76deg 85%',
+    soapStand: '35deg 70deg 100%',
+  };
+  // Products whose GLB carries a baked animation to autoplay on the stage.
+  const MODEL_ANIMATION = {
+    soapStand: 'Explode',
   };
 
   document.body.dataset.product = entry.id;
@@ -889,7 +895,8 @@
           environment-image="neutral"
           camera-orbit="${CAMERA_ORBIT[entry.id] || '0deg 76deg 105%'}"
           min-camera-orbit="auto auto 70%"
-          max-camera-orbit="auto auto 160%">
+          max-camera-orbit="auto auto 160%"
+          ${MODEL_ANIMATION[entry.id] ? `autoplay animation-name="${MODEL_ANIMATION[entry.id]}"` : ''}>
           <div class="mv-loader" slot="progress-bar"></div>
         </model-viewer>
       </div>`;
