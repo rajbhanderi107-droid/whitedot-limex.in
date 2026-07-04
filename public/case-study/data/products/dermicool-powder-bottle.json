@@ -1,0 +1,13 @@
+{
+  "id": "dermicoolPowderBottle",
+  "index": "29",
+  "slug": "dermicool-powder-bottle",
+  "name": "Dermicool Powder Bottle",
+  "category": "Personal Care Packaging",
+  "status": "pending",
+  "modelFile": null,
+  "htmlPage": null,
+  "composition": null,
+  "specs": null,
+  "note": "No verified LIMEX composition/CO2/supplier data exists yet for this product. Do not fabricate percentages or specs — populate only from the official White Dot 'LIMEX Case Studies in India' PDF or verified supplier TDS, matching the pattern in specs.json (see bobbin/container/motorCover/aralditeContainer)."
+}
