@@ -96,12 +96,16 @@ RIDGE_HALFWIDTH = 0.55               # ridge fades to 0 by |x_norm| > this fract
 # Neck + cap — the reference photos show the cap sitting almost directly on
 # the shoulder peak, with only a very short white collar visible below the
 # threads, not a long cylindrical neck
-NECK_R = 17.0 * SCALE_XY
+# dimensions card gives cap diameter ~45mm (radius 22.5mm); the photo-scaled
+# draft had it at ~59mm dia, so apply the card's measured correction on top
+# of the general rescale
+CAP_CARD_FIX = 22.5 / (19.2 * SCALE_XY)
+NECK_R = 17.0 * SCALE_XY * CAP_CARD_FIX
 NECK_Z0, NECK_Z1 = SHOULDER_Z1, SHOULDER_Z1 + 7.0 * SCALE_Z
-CAP_R0, CAP_R1 = 19.2 * SCALE_XY, 18.6 * SCALE_XY  # cap radius: base, top (very slight taper)
+CAP_R0, CAP_R1 = 19.2 * SCALE_XY * CAP_CARD_FIX, 18.6 * SCALE_XY * CAP_CARD_FIX  # base, top
 CAP_Z0, CAP_Z1 = NECK_Z1, NECK_Z1 + 21.0 * SCALE_Z
 CAP_FLUTES = 22
-CAP_FLUTE_DEPTH = 0.55 * SCALE_XY
+CAP_FLUTE_DEPTH = 0.55 * SCALE_XY * CAP_CARD_FIX
 CAP_FLUTE_Z0_FRAC = 0.10             # flutes start a little above the cap base
 CAP_TOP_ROUND = 2.2 * SCALE_Z        # mm — small rounded/beveled top edge
 
@@ -138,13 +142,17 @@ GRIP_RIB_THICK = 2.0 * SCALE_Y   # mm half-thickness (Y) of the lens before pinc
 # at x=0) would show as a bump/artifact poking above it.
 HANDLE_HALF_PATH = [
     (x * SCALE_X, y * SCALE_Y, z * SCALE_Z) for x, y, z in [
-        (-20.0, 15.0, 158.0),   # foot — buried well inside the straight body wall
-        (-18.0, 18.0, 176.0),   # rising out through the shoulder surface
-        (-6.0, 30.0, 194.0),    # entering cap-height zone: |x|+tube_half < cap radius
-                                # (hidden from dead-front) while dist-to-cap-centre
-                                # clears cap radius + tube half-width (no clipping)
-        (-5.0, 32.0, 206.0),
-        (-3.0, 22.0, 217.0),    # still tucked narrow, staying under the cap top
+        (-20.0, 15.0, 135.0),   # foot — buried well inside the straight body wall
+                                # (lowered to bring the handle's total span up
+                                # toward the dimensions card's ~120mm handle size)
+        (-18.0, 18.0, 153.0),   # rising out through the shoulder surface
+        (-3.0, 30.0, 194.0),    # entering cap-height zone: |x|+tube_half < cap
+                                # radius (hidden from dead-front) — x tightened
+                                # after the card's 45mm cap dia shrank the cap
+                                # radius, while dist-to-cap-centre still clears
+                                # cap radius + tube half-width (no clipping)
+        (-3.0, 32.0, 206.0),
+        (-2.0, 22.0, 217.0),    # still tucked narrow, staying under the cap top
         (0.0, 9.0, 223.0),
         (0.0, 3.0, 225.0),      # apex — shared centre point, at (not above) cap top
     ]
@@ -353,7 +361,7 @@ def build_neck():
     # photos as a white flange a bit wider than the yellow cap itself.
     profile = [
         (NECK_Z0, NECK_R),
-        (NECK_Z0 + 0.5 * (NECK_Z1 - NECK_Z0), NECK_R + 8.0 * SCALE_XY),
+        (NECK_Z0 + 0.5 * (NECK_Z1 - NECK_Z0), NECK_R + 8.0 * SCALE_XY * CAP_CARD_FIX),
         (NECK_Z1, CAP_R0),
     ]
     bm = bmesh.new()
