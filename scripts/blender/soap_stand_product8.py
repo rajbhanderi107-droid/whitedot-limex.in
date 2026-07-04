@@ -66,7 +66,7 @@ BASE_FLARE = 1.06                  # rim flares slightly outward
 # (the "dark green strip, uneven but in pattern" seen right below the lid)
 BAND_Z0, BAND_Z1 = 16.5, BASE_H    # thin band bottom / top, flush with wall top
 BAND_WAVE_A = 1.15                 # measured: peak-to-trough ~2.3mm off the photo
-BAND_FLARE = 1.05
+BAND_FLARE = 1.13                  # protruding lip/flange, not a flush color band
 
 # Drain insert — a separate elevated green tray with its own scalloped rim,
 # sitting inside the pale base with a gap below its floor. Measured from the
