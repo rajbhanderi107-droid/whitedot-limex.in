@@ -2,6 +2,10 @@ import React, { useCallback, useEffect, useRef, useState, type ReactNode } from 
 import './CaseStudyPage.css';
 
 const basePath = window.location.hostname.endsWith('github.io') ? '/whitedot-limex.in' : '';
+
+// iOS Safari crashes when multiple WebGL contexts (model-viewer) are active simultaneously.
+// Serve static placeholders on mobile; interactive 3D only on desktop (≥1024px).
+const isMobileViewport = typeof window !== 'undefined' && window.innerWidth < 1024;
 const bobbinHref  = `${basePath}/case-study/bobbin.html`;
 const bobbinModel = `${basePath}/case-study/model/bobbin.glb`;
 const containerHref  = `${basePath}/case-study/container.html`;
@@ -10,15 +14,20 @@ const motorCoverHref   = `${basePath}/case-study/motor-cover.html`;
 const motorCoverModel  = `${basePath}/case-study/model/motor-cover-procedural-black.glb`;
 const aralditeHref   = `${basePath}/case-study/araldite-container.html`;
 const aralditeModel  = `${basePath}/case-study/model/araldite-container-procedural.glb`;
+const handWashHref   = `${basePath}/case-study/hand-wash-bottle.html`;
+const handWashModel  = `${basePath}/case-study/model/hand-wash-bottle-duo.glb`;
+const hardDishHref   = `${basePath}/case-study/product.html?p=hard-dish`;
+const hardDishModel  = `${basePath}/case-study/model/lunchbox-tray-four-color-lineup.glb`;
+const consilePipeHref  = `${basePath}/case-study/consile-pipe.html`;
+const consilePipeModel = `${basePath}/case-study/model/consile-pipe-procedural.glb`;
+const soapStandHref  = `${basePath}/case-study/product.html?p=soap-stand`;
+const soapStandModel = `${basePath}/case-study/model/soap-stand-procedural.glb`;
 
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer';
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand';
+const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand']);
 
 // Pending products — same card as live ones; 3D model + spec details land later.
 const pendingProducts: { idx: string; slug: string; name: string; tag: string }[] = [
-  { idx: '05', slug: 'hand-wash-bottle', name: 'Hand Wash Bottle', tag: 'Personal Care Packaging' },
-  { idx: '06', slug: 'hard-dish', name: 'Hard Dish', tag: 'Kitchenware' },
-  { idx: '07', slug: 'consile-pipe', name: 'Consile Pipe', tag: 'Industrial Pipe' },
-  { idx: '08', slug: 'soap-stand', name: 'Soap Stand', tag: 'Bathroom Accessory' },
   { idx: '09', slug: 'food-oil-can', name: 'Food Oil Can', tag: 'Food Packaging' },
   { idx: '10', slug: 'dairy-products-container', name: 'Dairy Products Container', tag: 'Dairy Packaging' },
   { idx: '11', slug: 'lunch-box', name: 'Lunch Box', tag: 'Food Container' },
@@ -86,6 +95,30 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: <>70<small>%</small></>, label: 'PP' },
     { value: <>~23<small>%</small></>, label: 'Limestone in Part', green: true },
   ],
+  handWashBottle: [
+    { value: '05', label: 'Hand Wash Bottle' },
+    { value: '2', label: 'Colorways' },
+    { value: '3D', label: 'Static Preview' },
+    { value: 'Live', label: 'Product 05', green: true },
+  ],
+  hardDish: [
+    { value: '06', label: 'Hard Dish' },
+    { value: '4', label: 'Colorways' },
+    { value: '3D', label: 'Photo-Matched' },
+    { value: 'Live', label: 'Product 06', green: true },
+  ],
+  consilePipe: [
+    { value: '07', label: 'Concealed Pipe' },
+    { value: 'ISI', label: 'Style Marking' },
+    { value: '3D', label: 'Photo-Matched' },
+    { value: 'Live', label: 'Product 07', green: true },
+  ],
+  soapStand: [
+    { value: '08', label: 'Soap Stand' },
+    { value: <>15<small>%</small></>, label: 'LIMEX (Sample)' },
+    { value: '3D', label: 'Photo-Matched' },
+    { value: 'Live', label: 'Product 08', green: true },
+  ],
 };
 
 export default function CaseStudyFeature() {
@@ -122,8 +155,8 @@ export default function CaseStudyFeature() {
   }, [setActiveProductKey]);
 
   useEffect(() => {
-    // ── Inject model-viewer if not already present ──
-    if (!customElements.get('model-viewer')) {
+    // ── Inject model-viewer only on desktop — mobile Safari crashes with multiple WebGL contexts ──
+    if (!isMobileViewport && !customElements.get('model-viewer')) {
       const s = document.createElement('script');
       s.type = 'module';
       s.src = `${basePath}/case-study/js/model-viewer.min.js`;
@@ -138,6 +171,7 @@ export default function CaseStudyFeature() {
     let scrollX  = 0;
     const speed  = 0.65;
     let paused   = false;
+    let visible  = false;
 
     grid.addEventListener('mouseenter', () => { paused = true; });
     grid.addEventListener('mouseleave', () => { paused = false; });
@@ -153,15 +187,20 @@ export default function CaseStudyFeature() {
         const off   = (cx - centerX) / (sRect.width * 0.5);
         const t     = Math.max(-1.6, Math.min(1.6, off));
         const absT  = Math.abs(t);
-        const rotY  = t * 28;
-        const scale = 1 - absT * 0.14;
-        const tz    = -absT * 60;
-        const opa   = Math.max(0.82, 1 - absT * 0.22);
-        c.style.transform = `rotateY(${rotY}deg) scale(${scale}) translateZ(${tz}px)`;
-        c.style.opacity   = String(opa);
-        c.style.zIndex    = String(Math.round((1 - absT) * 10));
+        // 3D coverflow transforms promote every card (~70 with the duplicated
+        // list) to its own GPU layer — too much memory for iOS Safari. Flat
+        // marquee on mobile; the grid's translate3d still scrolls the strip.
+        if (!isMobileViewport) {
+          const rotY  = t * 28;
+          const scale = 1 - absT * 0.14;
+          const tz    = -absT * 60;
+          const opa   = Math.max(0.82, 1 - absT * 0.22);
+          c.style.transform = `rotateY(${rotY}deg) scale(${scale}) translateZ(${tz}px)`;
+          c.style.opacity   = String(opa);
+          c.style.zIndex    = String(Math.round((1 - absT) * 10));
+        }
         const product = c.dataset.product as ProductKey | undefined;
-        if ((product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer') && absT < nearestDistance) {
+        if (product && liveProductKeys.has(product) && absT < nearestDistance) {
           nearestProduct = product;
           nearestDistance = absT;
         }
@@ -172,40 +211,56 @@ export default function CaseStudyFeature() {
     }
 
     function tick() {
+      // Pause RAF loop when section is off-screen to save CPU/GPU on mobile.
+      if (!visible) {
+        rafRef.current = 0;
+        return;
+      }
       if (!paused) {
         scrollX += speed;
         const half = grid!.scrollWidth / 2;
         if (scrollX >= half) scrollX = 0;
         grid!.style.transform = `translate3d(${-scrollX}px,0,0)`;
       }
-      if (allProductsOpenRef.current) {
-        rafRef.current = requestAnimationFrame(tick);
-        return;
+      if (!allProductsOpenRef.current) {
+        applyCardTransforms();
       }
-      applyCardTransforms();
       rafRef.current = requestAnimationFrame(tick);
     }
 
-    // Start marquee
-    rafRef.current = requestAnimationFrame(tick);
+    // Gate the RAF loop on visibility so it doesn't run offscreen.
+    const visIO = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible && !rafRef.current) {
+          rafRef.current = requestAnimationFrame(tick);
+        }
+      },
+      { threshold: 0 },
+    );
+    visIO.observe(section);
 
-    // ── Mouse-tracking glow ──
-    section.querySelectorAll<HTMLElement>('.csp-pcard.live').forEach(c => {
-      const glow = c.querySelector<HTMLElement>('.csp-pglow');
-      if (!glow) return;
-      c.addEventListener('mouseenter', () => {
-        const product = c.dataset.product as ProductKey | undefined;
-        if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer') setActiveProductKey(product);
+    // ── Mouse-tracking glow (desktop only) ──
+    if (!isMobileViewport) {
+      section.querySelectorAll<HTMLElement>('.csp-pcard.live').forEach(c => {
+        const glow = c.querySelector<HTMLElement>('.csp-pglow');
+        if (!glow) return;
+        c.addEventListener('mouseenter', () => {
+          const product = c.dataset.product as ProductKey | undefined;
+          if (product && liveProductKeys.has(product)) setActiveProductKey(product);
+        });
+        c.addEventListener('mousemove', (e: MouseEvent) => {
+          const r = c.getBoundingClientRect();
+          glow.style.setProperty('--gx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+          glow.style.setProperty('--gy', ((e.clientY - r.top)  / r.height * 100).toFixed(1) + '%');
+        });
       });
-      c.addEventListener('mousemove', (e: MouseEvent) => {
-        const r = c.getBoundingClientRect();
-        glow.style.setProperty('--gx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
-        glow.style.setProperty('--gy', ((e.clientY - r.top)  / r.height * 100).toFixed(1) + '%');
-      });
-    });
+    }
 
     return () => {
-      cancelAnimationFrame(rafRef.current);
+      visIO.disconnect();
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
     };
   }, [setActiveProductKey]);
 
@@ -219,18 +274,23 @@ export default function CaseStudyFeature() {
         <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">01</span>
-          {/* @ts-ignore custom element */}
-          <model-viewer
-            src={bobbinModel}
-            alt="Bobbin — LIMEX textile bobbin 3D model"
-            interaction-prompt="none"
-            shadow-intensity="0"
-            exposure="1.15"
-            tone-mapping="neutral"
-            environment-image="neutral"
-            camera-orbit="30deg 75deg 105%"
-            style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
-          />
+          {isMobileViewport ? (
+            <div className="csp-soon-placeholder">BO</div>
+          ) : (
+            // @ts-ignore custom element
+            <model-viewer
+              src={bobbinModel}
+              alt="Bobbin — LIMEX textile bobbin 3D model"
+              loading="lazy"
+              interaction-prompt="none"
+              shadow-intensity="0"
+              exposure="1.15"
+              tone-mapping="neutral"
+              environment-image="neutral"
+              camera-orbit="30deg 75deg 105%"
+              style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+            />
+          )}
         </div>
         <div className="csp-pinfo">
           <div>
@@ -253,24 +313,30 @@ export default function CaseStudyFeature() {
         </div>
       </a>
 
-      {/* 02 — coming soon */}
+      {/* 02 Paint Container — live */}
       <a className="csp-pcard featured live" href={containerHref} data-product="container">
         <div className="csp-border-beam" />
         <div className="csp-pglass" />
         <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">02</span>
-          <model-viewer
-            src={containerModel}
-            alt="Paint container - red body and bright white snap lid 3D model"
-            interaction-prompt="none"
-            shadow-intensity="0"
-            exposure="1.08"
-            tone-mapping="neutral"
-            environment-image="neutral"
-            camera-orbit="28deg 72deg 108%"
-            style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
-          />
+          {isMobileViewport ? (
+            <div className="csp-soon-placeholder">PC</div>
+          ) : (
+            // @ts-ignore custom element
+            <model-viewer
+              src={containerModel}
+              alt="Paint container - red body and bright white snap lid 3D model"
+              loading="lazy"
+              interaction-prompt="none"
+              shadow-intensity="0"
+              exposure="1.08"
+              tone-mapping="neutral"
+              environment-image="neutral"
+              camera-orbit="28deg 72deg 108%"
+              style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+            />
+          )}
         </div>
         <div className="csp-pinfo">
           <div>
@@ -299,17 +365,23 @@ export default function CaseStudyFeature() {
         <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">03</span>
-          <model-viewer
-            src={motorCoverModel}
-            alt="Motor Cover — black vented motor fan cover 3D model"
-            interaction-prompt="none"
-            shadow-intensity="0"
-            exposure="1.16"
-            tone-mapping="neutral"
-            environment-image="neutral"
-            camera-orbit="25deg 78deg 112%"
-            style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
-          />
+          {isMobileViewport ? (
+            <div className="csp-soon-placeholder">MC</div>
+          ) : (
+            // @ts-ignore custom element
+            <model-viewer
+              src={motorCoverModel}
+              alt="Motor Cover — black vented motor fan cover 3D model"
+              loading="lazy"
+              interaction-prompt="none"
+              shadow-intensity="0"
+              exposure="1.16"
+              tone-mapping="neutral"
+              environment-image="neutral"
+              camera-orbit="25deg 78deg 112%"
+              style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+            />
+          )}
         </div>
         <div className="csp-pinfo">
           <div>
@@ -338,19 +410,25 @@ export default function CaseStudyFeature() {
         <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">04</span>
-          <model-viewer
-            src={aralditeModel}
-            poster={`${basePath}/case-study/img/araldite-poster.jpg`}
-            alt="Araldite Container — LIMEX adhesive dispenser bottle 3D model"
-            interaction-prompt="none"
-            shadow-intensity="0.9"
-            shadow-softness="0.8"
-            exposure="1.22"
-            tone-mapping="neutral"
-            environment-image="legacy"
-            camera-orbit="30deg 72deg 115%"
-            style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
-          />
+          {isMobileViewport ? (
+            <div className="csp-soon-placeholder">AC</div>
+          ) : (
+            // @ts-ignore custom element
+            <model-viewer
+              src={aralditeModel}
+              poster={`${basePath}/case-study/img/araldite-poster.jpg`}
+              alt="Araldite Container — LIMEX adhesive dispenser bottle 3D model"
+              loading="lazy"
+              interaction-prompt="none"
+              shadow-intensity="0.9"
+              shadow-softness="0.8"
+              exposure="1.22"
+              tone-mapping="neutral"
+              environment-image="legacy"
+              camera-orbit="30deg 72deg 115%"
+              style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+            />
+          )}
         </div>
         <div className="csp-pinfo">
           <div>
@@ -373,7 +451,191 @@ export default function CaseStudyFeature() {
         </div>
       </a>
 
-      {/* 05–35 — same card, 3D model + details land later */}
+      {/* 05 Hand Wash Bottle — live */}
+      <a className="csp-pcard featured live" href={handWashHref} data-product="handWashBottle">
+        <div className="csp-border-beam" />
+        <div className="csp-pglass" />
+        <div className="csp-pglow" />
+        <div className="csp-pmedia">
+          <span className="csp-pidx">05</span>
+          {isMobileViewport ? (
+            <div className="csp-soon-placeholder">HW</div>
+          ) : (
+            // @ts-ignore custom element
+            <model-viewer
+              src={handWashModel}
+              alt="Hand Wash Bottle - white and green faceted LIMEX pump bottles 3D model"
+              loading="lazy"
+              interaction-prompt="none"
+              shadow-intensity="0.9"
+              shadow-softness="0.8"
+              exposure="1.22"
+              tone-mapping="neutral"
+              environment-image="legacy"
+              camera-orbit="20deg 78deg 120%"
+              style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+            />
+          )}
+        </div>
+        <div className="csp-pinfo">
+          <div>
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+              <span className="csp-pfeatured">New Study</span>
+            </div>
+            <div className="csp-pname">Hand Wash Bottle</div>
+            <div className="csp-ptag">Personal Care Packaging - Two Colorways</div>
+            <div className="csp-pbar">
+              <span style={{ flex:50, height:'100%', background:'#f2efe6', display:'block' }} />
+              <span style={{ flex:50, height:'100%', background:'var(--cs-green)', display:'block' }} />
+            </div>
+            <div className="csp-pbarlabels">
+              <span className="csp-pdot pp" /><span className="csp-pblabel">White</span>
+              <span className="csp-psep">-</span>
+              <span className="csp-pdot lx" /><span className="csp-pblabel">Green</span>
+            </div>
+          </div>
+          <span className="csp-pgo">-&gt;</span>
+        </div>
+      </a>
+
+      {/* 06 Hard Dish - live */}
+      <a className="csp-pcard featured live" href={hardDishHref} data-product="hardDish">
+        <div className="csp-border-beam" />
+        <div className="csp-pglass" />
+        <div className="csp-pglow" />
+        <div className="csp-pmedia">
+          <span className="csp-pidx">06</span>
+          {isMobileViewport ? (
+            <div className="csp-soon-placeholder">HD</div>
+          ) : (
+            // @ts-ignore custom element
+            <model-viewer
+              src={hardDishModel}
+              alt="Hard Dish - four-colorway 3-compartment LIMEX serving dish 3D model"
+              loading="lazy"
+              interaction-prompt="none"
+              shadow-intensity="0.9"
+              shadow-softness="0.8"
+              exposure="1.22"
+              tone-mapping="neutral"
+              environment-image="legacy"
+              camera-orbit="20deg 80deg 115%"
+              style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+            />
+          )}
+        </div>
+        <div className="csp-pinfo">
+          <div>
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+              <span className="csp-pfeatured">New Model</span>
+            </div>
+            <div className="csp-pname">Hard Dish</div>
+            <div className="csp-ptag">Kitchenware - Four Colorways</div>
+            <div className="csp-pbar">
+              <span style={{ flex:25, height:'100%', background:'#3b4a77', display:'block' }} />
+              <span style={{ flex:25, height:'100%', background:'#f2efe6', display:'block' }} />
+              <span style={{ flex:25, height:'100%', background:'#ef7250', display:'block' }} />
+              <span style={{ flex:25, height:'100%', background:'#a9d4b4', display:'block' }} />
+            </div>
+            <div className="csp-pbarlabels">
+              <span className="csp-pdot pp" /><span className="csp-pblabel">Navy - White</span>
+              <span className="csp-psep">-</span>
+              <span className="csp-pdot lx" /><span className="csp-pblabel">Coral - Mint</span>
+            </div>
+          </div>
+          <span className="csp-pgo">-&gt;</span>
+        </div>
+      </a>
+
+      {/* 07 Concealed Pipe - live */}
+      <a className="csp-pcard featured live" href={consilePipeHref} data-product="consilePipe">
+        <div className="csp-border-beam" />
+        <div className="csp-pglass" />
+        <div className="csp-pglow" />
+        <div className="csp-pmedia">
+          <span className="csp-pidx">07</span>
+          {isMobileViewport ? (
+            <div className="csp-soon-placeholder">CP</div>
+          ) : (
+            // @ts-ignore custom element
+            <model-viewer
+              src={consilePipeModel}
+              alt="Concealed Pipe - black rigid conduit pipe with blue stripe and embossed ISI marking 3D model"
+              loading="lazy"
+              interaction-prompt="none"
+              shadow-intensity="0"
+              exposure="1.15"
+              tone-mapping="neutral"
+              environment-image="neutral"
+              camera-orbit="80deg 76deg 60%"
+              style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+            />
+          )}
+        </div>
+        <div className="csp-pinfo">
+          <div>
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+              <span className="csp-pfeatured">New Model</span>
+            </div>
+            <div className="csp-pname">Concealed Pipe</div>
+            <div className="csp-ptag">Rigid Conduit Pipe - Visual Reference</div>
+            <div className="csp-pbar">
+              <span style={{ flex:100, height:'100%', background:'var(--cs-green)', display:'block' }} />
+            </div>
+            <div className="csp-pbarlabels">
+              <span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span>
+            </div>
+          </div>
+          <span className="csp-pgo">-&gt;</span>
+        </div>
+      </a>
+
+      {/* 08 Soap Stand - live */}
+      <a className="csp-pcard featured live" href={soapStandHref} data-product="soapStand">
+        <div className="csp-border-beam" />
+        <div className="csp-pglass" />
+        <div className="csp-pglow" />
+        <div className="csp-pmedia">
+          <span className="csp-pidx">08</span>
+          {isMobileViewport ? (
+            <div className="csp-soon-placeholder">SS</div>
+          ) : (
+            // @ts-ignore custom element
+            <model-viewer
+              src={soapStandModel}
+              alt="Soap Stand - covered soap dish with knit-embossed lid, bow and drain insert 3D model"
+              loading="lazy"
+              interaction-prompt="none"
+              shadow-intensity="0"
+              exposure="1.1"
+              tone-mapping="neutral"
+              environment-image="neutral"
+              camera-orbit="35deg 70deg 92%"
+              autoplay
+              animation-name="Explode"
+              style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+            />
+          )}
+        </div>
+        <div className="csp-pinfo">
+          <div>
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+              <span className="csp-pfeatured">New Model</span>
+            </div>
+            <div className="csp-pname">Soap Stand</div>
+            <div className="csp-ptag">Covered Soap Dish - 15% LIMEX Sample</div>
+            <div className="csp-pbar">
+              <span style={{ flex:15, height:'100%', background:'var(--cs-green)', display:'block' }} />
+              <span style={{ flex:85, height:'100%', background:'#d0d3ce', display:'block' }} />
+            </div>
+            <div className="csp-pbarlabels">
+              <span className="csp-pdot pp" /><span className="csp-pblabel">15% LIMEX (marked on sample)</span>
+            </div>
+          </div>
+          <span className="csp-pgo">-&gt;</span>
+        </div>
+      </a>
+
       {pendingProducts.map(p => (
         <a
           key={p.slug}

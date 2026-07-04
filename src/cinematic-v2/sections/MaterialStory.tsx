@@ -271,41 +271,11 @@ export default function MaterialStory() {
     );
     scenes.forEach((el) => playIO.observe(el));
 
-    // Auto-advance: scroll to next scene every 5 s when section is in view
-    const FALLBACK_MS = 5000;
-    let fbTimer: ReturnType<typeof setInterval> | null = null;
-    let fbIdx = 0;
-
-    function startFallbackAuto() {
-      fbIdx = 0;
-      fbTimer = setInterval(() => {
-        fbIdx = (fbIdx + 1) % N;
-        const el = scenes[fbIdx];
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        arm(fbIdx);
-      }, FALLBACK_MS);
-    }
-
-    const fbIO = new IntersectionObserver(
-      (entries) => {
-        const e = entries[0];
-        if (e.isIntersecting && !fbTimer) startFallbackAuto();
-        if (!e.isIntersecting && fbTimer) {
-          clearInterval(fbTimer);
-          fbTimer = null;
-          fbIdx = 0;
-        }
-      },
-      { threshold: 0.1 }
-    );
-    fbIO.observe(root!);
+    // Arm the first two scenes immediately so video posters show on mobile.
+    arm(0);
 
     cleanup = () => {
       playIO.disconnect();
-      fbIO.disconnect();
-      if (fbTimer) clearInterval(fbTimer);
     };
     return () => cleanup();
   }, [heavy]);

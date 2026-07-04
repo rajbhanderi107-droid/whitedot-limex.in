@@ -23,6 +23,9 @@ const heroVideo4k = `${import.meta.env.BASE_URL}assets/higgsfield/hero-head-back
 const heroVideo1080 = `${import.meta.env.BASE_URL}assets/higgsfield/hero-1080-h264.mp4`;
 const heroPosterSrc = `${import.meta.env.BASE_URL}assets/higgsfield/hero-head-background-poster-4k.jpg`;
 
+// On mobile, only serve the 1080p version to avoid memory pressure on iOS Safari.
+const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 1024;
+
 export default function Hero() {
   const grain    = useGrainField<HTMLDivElement>({ count: 80, speed: 0.7 });
   const headline = useReveal<HTMLDivElement>({ threshold: 0.1 });
@@ -49,10 +52,10 @@ export default function Hero() {
           loop
           muted
           playsInline
-          preload="auto"
+          preload={isMobileDevice ? 'metadata' : 'none'}
         >
-          {/* True-4K (3840×2160) on desktop; 1080p fallback on smaller/metered screens */}
-          <source src={heroVideo4k} type="video/mp4" media="(min-width: 1024px)" />
+          {/* Only serve 4K to desktop — mobile gets 1080p to prevent iOS memory crash */}
+          {!isMobileDevice && <source src={heroVideo4k} type="video/mp4" />}
           <source src={heroVideo1080} type="video/mp4" />
         </video>
       </div>

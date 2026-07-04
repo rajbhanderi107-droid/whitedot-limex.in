@@ -25,6 +25,7 @@ skills-lock.json
 server/tsconfig.tsbuildinfo
 *.tsbuildinfo
 .vite/
+.codex-bpy/
 
 # secrets (never commit)
 server/_gsc_token.json
@@ -33,6 +34,8 @@ server/_gsc_token.json
 # build/test artifacts (regenerated)
 playwright-report/
 test-results/
+scripts/blender/renders/
 # personal Obsidian/brain notes (not website code)
 docs/whitedot brain/
 docs/brain/
+__pycache__/

@@ -16,10 +16,24 @@ initBrandWordmark();
 // Retire any previously-registered service worker (from the prior site) so it
 // cannot serve stale cached content over the new experience.
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker
-    .getRegistrations()
-    .then((regs) => regs.forEach((r) => r.unregister()))
-    .catch(() => {});
+  const clearStaleAppShell = async () => {
+    const hadController = Boolean(navigator.serviceWorker.controller);
+    const regs = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(regs.map((registration) => registration.unregister()));
+
+    if ("caches" in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((key) => caches.delete(key)));
+    }
+
+    const refreshKey = "wd_sw_retired_refresh_v2";
+    if (hadController && window.sessionStorage.getItem(refreshKey) !== "1") {
+      window.sessionStorage.setItem(refreshKey, "1");
+      window.location.reload();
+    }
+  };
+
+  clearStaleAppShell().catch(() => {});
 }
 
 // Google Analytics (GA4)
