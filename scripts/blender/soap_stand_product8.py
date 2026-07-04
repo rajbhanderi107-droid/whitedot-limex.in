@@ -74,7 +74,9 @@ BAND_FLARE = 1.06                  # a visible lip from the front, not a thick f
 # and the cuts cast a soft shadow / reveal the paler tub through each slot.
 INS_A, INS_B = 53.0, 38.5
 INS_TH = 2.6
-INS_Z = 11.0                       # plate top height inside base — elevated, with a reveal gap
+INS_Z = 6.0                        # plate top height inside base — sits deep in the
+                                   # tub so the explode reveal reads as rising out of
+                                   # a real cavity, not lifting off a shallow surface
 INS_BORDER_H, INS_BORDER_W = 3.2, 3.0
 N_SLOTS = 13                       # measured: width:pitch ratio ~0.6, length ~70% of short axis
 SLOT_HALF_L, SLOT_R = 27.0, 2.1    # slot half length (Y) and half width
@@ -98,7 +100,7 @@ def srgb8(r, g, b):
 COL_CREAM = srgb8(219, 216, 207)       # measured off the lid, even top-view light
 COL_SAGE = srgb8(151, 147, 133)        # insert + band base tone (lit floor sample)
 COL_SAGE_DEEP = srgb8(82, 98, 62)      # darker scalloped band (shadowed wall sample)
-COL_TUB = srgb8(196, 201, 184)         # pale green-white tub body
+COL_TUB = srgb8(214, 217, 204)         # pale green-white tub body — brighter still
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 GLB_OUT = os.path.join(REPO, "public", "case-study", "model", "soap-stand-procedural.glb")
@@ -662,6 +664,8 @@ if DO_RENDER:
     light("Fill", (-0.32, -0.12, 0.28), 1.1, 0.7)
     light("Rim", (0.0, 0.38, 0.34), 2.0, 0.3)
     light("Top", (0.0, 0.0, 0.55), 1.6, 0.5)
+    light("Basin", (0.0, -0.05, 0.30), 1.8, 0.55)  # extra fill so the recessed
+                                                    # interior doesn't read dark/over-saturated
 
     # ground plane — dark satin surface (like the photos' black cloth) with a
     # touch of gloss so it picks up a faint contact reflection
