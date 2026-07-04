@@ -439,3 +439,31 @@
 @media (prefers-reduced-motion: reduce) {
   .csp-soon-placeholder, .csp-soon-placeholder::after, .csp-soon-placeholder::before { animation: none !important; }
 }
+
+/* ── Mobile GPU-memory guard (≤1023px, matches the JS isMobileViewport gate) ──
+   The carousel renders ~70 cards (list duplicated for the infinite marquee).
+   With blur(24px) backdrop-filter + will-change on every card, iOS Safari
+   promotes each one to its own GPU layer with a live blur pass — hundreds of
+   MB of GPU memory at 3x DPR, which kills the tab ("A problem repeatedly
+   occurred") even with WebGL fully disabled. On mobile the glass reads the
+   same as a near-opaque card, so trade the blur for a solid surface and drop
+   the hover-only layers that can never fire on touch. */
+@media (max-width: 1023px) {
+  .csp-pcard {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: linear-gradient(135deg, #fdfdfc 0%, #f3f4f0 50%, #fafaf8 100%) !important;
+    will-change: auto !important;
+  }
+  .csp-hero-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  /* hover-only effects — dead weight on touch, each an extra composited layer */
+  .csp-border-beam, .csp-pglass, .csp-pglow { display: none !important; }
+  /* ~60 placeholder monograms × 3 infinite animations each = ~180 composited
+     layers; freeze them — the static rings read identically at a glance */
+  .csp-soon-placeholder,
+  .csp-soon-placeholder::after,
+  .csp-soon-placeholder::before { animation: none !important; }
+}
