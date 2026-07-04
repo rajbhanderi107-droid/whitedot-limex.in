@@ -9,7 +9,7 @@
 ## Files
 - Data: `public/case-study/data/products/lunch-box.json`
 - 3D model: `MISSING — not yet built`
-- HTML page: `MISSING — not yet built`
+- HTML page: `product.html?p=lunch-box  (generic template, no dedicated file)`
 - Reference photos: `photos[]` empty in products.json — none supplied yet
 
 ## Composition / Specs

@@ -9,7 +9,7 @@
 ## Files
 - Data: `public/case-study/data/products/dermicool-powder-bottle.json`
 - 3D model: `MISSING — not yet built`
-- HTML page: `MISSING — not yet built`
+- HTML page: `product.html?p=dermicool-powder-bottle  (generic template, no dedicated file)`
 - Reference photos: `photos[]` empty in products.json — none supplied yet
 
 ## Composition / Specs

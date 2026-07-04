@@ -4,19 +4,19 @@
 - **index:** 08  
 - **slug:** `soap-stand`  
 - **category:** Bathroom Accessory  
-- **status:** pending  
+- **status:** live  
 
 ## Files
 - Data: `public/case-study/data/products/soap-stand.json`
-- 3D model: `MISSING — not yet built`
-- HTML page: `MISSING — not yet built`
+- 3D model: `model/soap-stand-procedural.glb`
+- HTML page: `product.html?p=soap-stand  (generic template, no dedicated file)`
 - Reference photos: `photos[]` empty in products.json — none supplied yet
 
 ## Composition / Specs
-_Pending — no verified LIMEX composition, CO2, or supplier spec data exists yet. Do not invent numbers._
+See `public/case-study/data/products/soap-stand.json` — verified against the official White Dot LIMEX Case Studies India PDF.
 
 ## Notes / TODO
-- [ ] Source verified LIMEX composition/spec data (official PDF or supplier TDS)
-- [ ] Build 3D model (`public/case-study/model/`)
-- [ ] Build HTML case-study page (`public/case-study/{slug}.html`, follow bobbin.html pattern)
-- [ ] Add products.json photos[] once real photography exists
+- [x] 3D model built
+- [x] HTML case-study page built
+- [x] Specs verified and in specs.json
+- [ ] Real product photography (photos[] still empty)

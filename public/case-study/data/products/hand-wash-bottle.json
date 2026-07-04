@@ -1,13 +1,58 @@
 {
   "id": "handWashBottle",
   "index": "05",
-  "slug": "hand-wash-bottle",
   "name": "Hand Wash Bottle",
   "category": "Personal Care Packaging",
-  "status": "pending",
-  "modelFile": null,
-  "htmlPage": null,
-  "composition": null,
-  "specs": null,
-  "note": "No verified LIMEX composition/CO2/supplier data exists yet for this product. Do not fabricate percentages or specs — populate only from the official White Dot 'LIMEX Case Studies in India' PDF or verified supplier TDS, matching the pattern in specs.json (see bobbin/container/motorCover/aralditeContainer)."
+  "status": "live",
+  "application": "Hand Wash Dispenser Bottle",
+  "tagline": "A faceted hand wash dispenser bottle in two colorways, modeled in 3D from the supplied product photos. Verified LIMEX composition data is in progress.",
+  "description": "A hand wash dispenser bottle with a distinctive elongated diamond mould pattern and a black pump head, produced in white and green colorways. The interactive 3D model shows both variants side by side and is photo-matched to the supplied reference photography, including the quilted facet geometry, matte pump finish and colors. Verified LIMEX composition and supplier spec data for this product are in progress - no figures are published until confirmed.",
+  "highlights": [
+    {
+      "num": "2",
+      "label": "Colorways",
+      "source": "hand-wash-photo-reference",
+      "verified": true
+    },
+    {
+      "num": "3D",
+      "label": "Photo-Matched",
+      "source": "hand-wash-photo-reference",
+      "verified": true
+    },
+    {
+      "num": "4",
+      "label": "Real Photos",
+      "source": "hand-wash-photo-reference",
+      "verified": true
+    }
+  ],
+  "specs": [
+    {
+      "label": "Application",
+      "value": "Hand Wash Dispenser Bottle",
+      "source": "hand-wash-photo-reference",
+      "verified": true
+    },
+    {
+      "label": "Colorways",
+      "value": "White / Green",
+      "source": "hand-wash-photo-reference",
+      "verified": true
+    },
+    {
+      "label": "Closure",
+      "value": "Black Pump Dispenser",
+      "source": "hand-wash-photo-reference",
+      "verified": true
+    },
+    {
+      "label": "Material Base",
+      "value": "LIMEX blend - verification in progress",
+      "source": "hand-wash-photo-reference",
+      "verified": false
+    }
+  ],
+  "modelFile": "model/hand-wash-bottle-duo.glb",
+  "htmlPage": "hand-wash-bottle.html"
 }

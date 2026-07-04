@@ -9,7 +9,7 @@
 ## Files
 - Data: `public/case-study/data/products/appliance-tray.json`
 - 3D model: `MISSING — not yet built`
-- HTML page: `MISSING — not yet built`
+- HTML page: `product.html?p=appliance-tray  (generic template, no dedicated file)`
 - Reference photos: `photos[]` empty in products.json — none supplied yet
 
 ## Composition / Specs

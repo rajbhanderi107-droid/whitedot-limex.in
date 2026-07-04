@@ -1,22 +1,22 @@
-# Consile Pipe  
+# Concealed Pipe  
 
 - **id:** `consilePipe`  
 - **index:** 07  
 - **slug:** `consile-pipe`  
 - **category:** Industrial Pipe  
-- **status:** pending  
+- **status:** live  
 
 ## Files
 - Data: `public/case-study/data/products/consile-pipe.json`
-- 3D model: `MISSING — not yet built`
-- HTML page: `MISSING — not yet built`
+- 3D model: `model/consile-pipe-procedural.glb`
+- HTML page: `consile-pipe.html`
 - Reference photos: `photos[]` empty in products.json — none supplied yet
 
 ## Composition / Specs
-_Pending — no verified LIMEX composition, CO2, or supplier spec data exists yet. Do not invent numbers._
+See `public/case-study/data/products/consile-pipe.json` — verified against the official White Dot LIMEX Case Studies India PDF.
 
 ## Notes / TODO
-- [ ] Source verified LIMEX composition/spec data (official PDF or supplier TDS)
-- [ ] Build 3D model (`public/case-study/model/`)
-- [ ] Build HTML case-study page (`public/case-study/{slug}.html`, follow bobbin.html pattern)
-- [ ] Add products.json photos[] once real photography exists
+- [x] 3D model built
+- [x] HTML case-study page built
+- [x] Specs verified and in specs.json
+- [ ] Real product photography (photos[] still empty)
