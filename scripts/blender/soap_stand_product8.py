@@ -422,15 +422,9 @@ def build_base():
     bm.to_mesh(mesh)
     bm.free()
     obj = new_object("BaseTray", mesh, mat_tub)
-    obj.data.materials.append(mat_sage_deep)
     solid = obj.modifiers.new("shell", "SOLIDIFY")
     solid.thickness = BASE_WALL * MM
     solid.offset = -1.0
-    # Outside stays pale (matches the closed-view photo); the solidify-
-    # generated inner surface — the cavity floor/walls revealed once the
-    # insert lifts — is pushed to the dark-green material slot instead.
-    solid.material_offset = 1
-    solid.material_offset_rim = 1
     return obj
 
 
