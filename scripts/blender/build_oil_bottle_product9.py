@@ -71,14 +71,18 @@ BASE_PROFILE = [  # (scale, z_mm) — bottom to BODY_Z0
 # ridge crease. NECK_Y offsets the neck slightly forward of the body centroid.
 SHOULDER_Z1 = 197.0                 # neck-base height
 NECK_Y = -5.0                       # neck centre, mm forward of body centroid
-RIDGE_AMP_MAX = 7.5                 # extra mm of front-ridge rise at the neck base
-RIDGE_HALFWIDTH = 0.40               # ridge fades to 0 by |x_norm| > this fraction
+RIDGE_AMP_MAX = 3.0                 # extra mm of front-ridge rise at the neck base —
+                                     # the reference shows only a soft, barely-raised
+                                     # crease, not a pointed tent
+RIDGE_HALFWIDTH = 0.55               # ridge fades to 0 by |x_norm| > this fraction
 
-# Neck + cap
+# Neck + cap — the reference photos show the cap sitting almost directly on
+# the shoulder peak, with only a very short white collar visible below the
+# threads, not a long cylindrical neck
 NECK_R = 17.0
-NECK_Z0, NECK_Z1 = SHOULDER_Z1, 213.0
+NECK_Z0, NECK_Z1 = SHOULDER_Z1, 204.0
 CAP_R0, CAP_R1 = 19.2, 18.6          # cap radius: base, top (very slight taper)
-CAP_Z0, CAP_Z1 = NECK_Z1, 234.0
+CAP_Z0, CAP_Z1 = NECK_Z1, 225.0
 CAP_FLUTES = 22
 CAP_FLUTE_DEPTH = 0.55
 CAP_FLUTE_Z0_FRAC = 0.10             # flutes start a little above the cap base
@@ -246,11 +250,17 @@ def ridge_envelope(k, peak_k=0.78):
 def ridge_bump(x_norm, y_norm, k):
     """Extra +Z rise on the front (y<0) half only, peaking at x=0, fading to
     zero by |x_norm| > RIDGE_HALFWIDTH and following ridge_envelope(k) up the
-    shoulder loft (0 at body-top AND at neck-base, peak in between)."""
+    shoulder loft (0 at body-top AND at neck-base, peak in between). Uses a
+    raised-cosine profile (zero slope at the crest) rather than a linear tent
+    — a linear tent has a sharp corner at x=0 that reads as a pointed ridge
+    even at a small amplitude; the reference shows only a soft, rounded
+    crease."""
     if y_norm >= 0:
         return 0.0
-    tent = max(0.0, 1.0 - abs(x_norm) / RIDGE_HALFWIDTH)
-    return RIDGE_AMP_MAX * ridge_envelope(k) * tent
+    if abs(x_norm) >= RIDGE_HALFWIDTH:
+        return 0.0
+    bump = 0.5 * (1.0 + math.cos(math.pi * x_norm / RIDGE_HALFWIDTH))
+    return RIDGE_AMP_MAX * ridge_envelope(k) * bump
 
 
 def build_shoulder():
@@ -565,10 +575,13 @@ if DO_RENDER:
         bpy.ops.render.render(write_still=True)
         print("rendered", name)
 
-    shoot("front.png", Vector((0.0, -0.34, 0.115)), 0.115)
-    shoot("three_quarter_front.png", Vector((0.24, -0.28, 0.14)), 0.115)
-    shoot("three_quarter_back.png", Vector((0.24, 0.28, 0.15)), 0.12)
-    shoot("side.png", Vector((0.34, 0.0, 0.115)), 0.115)
-    shoot("top.png", Vector((0.05, -0.10, 0.42)), 0.16)
+    # framed generously enough to keep the full assembly (base to handle
+    # apex, ~250mm) in frame with margin, matching the reference photos'
+    # composition — the earlier tighter framing was clipping the cap/handle
+    shoot("front.png", Vector((0.0, -0.46, 0.125)), 0.125)
+    shoot("three_quarter_front.png", Vector((0.30, -0.36, 0.145)), 0.125)
+    shoot("three_quarter_back.png", Vector((0.30, 0.36, 0.155)), 0.13)
+    shoot("side.png", Vector((0.46, 0.0, 0.125)), 0.125)
+    shoot("top.png", Vector((0.06, -0.12, 0.48)), 0.17)
 
 print("DONE")
