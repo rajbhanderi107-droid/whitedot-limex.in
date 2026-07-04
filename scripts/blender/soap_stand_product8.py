@@ -59,13 +59,13 @@ BASE_A, BASE_B = 62.0, 47.0
 BASE_N = 5.2                        # rectangular body, tight curved corners (matches lid)
 BASE_H = 21.0                      # tub wall top (hidden behind the band)
 BASE_WALL = 2.2
-BASE_WAVES, BASE_WAVE_A = 26, 1.3  # measured: ~26 scallops/perimeter
+BASE_WAVES = 28                    # measured: ~15.5mm wave pitch around the perimeter
 BASE_FLARE = 1.06                  # rim flares slightly outward
 
 # Darker sage scalloped rim trim around the base top — thin wavy piping
 # (the "dark green strip, uneven but in pattern" seen right below the lid)
 BAND_Z0, BAND_Z1 = 16.5, BASE_H    # thin band bottom / top, flush with wall top
-BAND_WAVE_A = 2.1                  # deeper, more visible scallop (per photo)
+BAND_WAVE_A = 1.15                 # measured: peak-to-trough ~2.3mm off the photo
 BAND_FLARE = 1.05
 
 # Drain insert — a separate elevated green tray with its own scalloped rim,
@@ -115,11 +115,9 @@ def superellipse(t, a, b, n):
 
 
 def scallop_wave(theta, n_waves):
-    """Shell-like scallop: sharper rounded crests, a shorter gentle trough —
-    a plain sine reads as a fine ripple, not the rim's distinct shell shape."""
-    w = math.sin(n_waves * theta)
-    shaped = math.copysign(abs(w) ** 0.72, w)
-    return 0.72 * shaped + 0.28 * math.sin(2 * n_waves * theta - 0.6)
+    """Smooth, near-symmetric ripple — measured directly off the photo's rim
+    edge, which is a gentle regular sine, not a sharp shell/zigzag shape."""
+    return math.sin(n_waves * theta)
 
 
 class EdgeRadius:
