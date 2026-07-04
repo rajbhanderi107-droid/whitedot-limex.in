@@ -14,10 +14,17 @@ shoulder ridge + handle wings). Pencil marks visible on the IMG_2609/2610
 sample surface are hand-drawn measurement annotations on the physical
 sample, not moulded features, and are not reproduced.
 
-Estimated dimensions (no scale reference in the photos; sized to the
-proportions measured off the photos and to a plausible ~1 L HDPE bottle):
-234 x 94 x 64 mm (H x W x D), consistent with the bobbin/hand-wash-bottle/
-soap-stand case-study family already in this repo.
+Dimensions: scaled to a supplied "Product Dimensions Card - 4L Jerrycan"
+(145mm W x ~98mm D footprint — the two numbers that were internally
+consistent across every view on that card). The card's height figures were
+corrupted/contradictory ("93km" in one view, "~1.5m" in another) so the
+overall height (~300mm) is instead back-solved from the stated 4L capacity
+at that footprint, which lines up with known real 4L HDPE jerrycan
+dimensions (~145 x 95-98 x 280-300mm). All other proportions below were
+photo-calibrated at ~1L scale (234 x 94 x 64mm) and are carried forward
+using explicit SCALE_X/SCALE_Y/SCALE_Z factors rather than re-measured, so
+every shape relationship (ridge, ribs, handle path) stays faithful to the
+sample photos at the card's real-world size.
 
 Key derived facts (why the shoulder/handle are built the way they are):
   - IMG_2610 (dead-on front) shows a completely clean, uninterrupted
@@ -52,26 +59,36 @@ MM = 0.001  # build in metres; all sizes below are mm * MM
 
 SEGS = 128  # perimeter segments for all swept rings
 
+# Scale factors from the photo-calibrated ~1L proportions (94 x 64 x 225mm)
+# up to the dimensions card's 4L footprint (145 x 98mm) and a height
+# back-solved from the stated 4L capacity at that footprint (~300mm) — see
+# module docstring for why the card's own height figures aren't usable.
+SCALE_X = 145.0 / 94.0
+SCALE_Y = 98.0 / 64.0
+SCALE_Z = 300.0 / 225.0
+SCALE_XY = (SCALE_X + SCALE_Y) / 2.0   # for radial (circular) features
+SCALE_AVG = (SCALE_X + SCALE_Y + SCALE_Z) / 3.0  # for small isotropic details
+
 # Body (superellipse cross-section, rounded-rectangle)
-BODY_A, BODY_B = 47.0, 32.0        # half-width / half-depth at max girth
+BODY_A, BODY_B = 47.0 * SCALE_X, 32.0 * SCALE_Y  # half-width / half-depth at max girth
 BODY_N = 4.4                        # superellipse exponent — softly rounded corners
-BODY_Z0, BODY_Z1 = 8.0, 172.0        # straight-wall span (above the base fillet)
+BODY_Z0, BODY_Z1 = 8.0 * SCALE_Z, 172.0 * SCALE_Z    # straight-wall span (above the base fillet)
 BODY_BASE_SCALE = 0.965             # very slight inward draft toward the base
 BODY_TOP_FLARE = 1.012              # very slight outward flare toward the shoulder
 
 # Base fillet (wall -> flat bottom)
 BASE_PROFILE = [  # (scale, z_mm) — bottom to BODY_Z0
     (0.90, 0.0),
-    (0.945, 1.6),
-    (0.985, 4.2),
+    (0.945, 1.6 * SCALE_Z),
+    (0.985, 4.2 * SCALE_Z),
     (1.0, BODY_Z0),
 ]
 
 # Shoulder loft: body-top ring -> small neck-base ring, with a growing front
 # ridge crease. NECK_Y offsets the neck slightly forward of the body centroid.
-SHOULDER_Z1 = 197.0                 # neck-base height
-NECK_Y = -5.0                       # neck centre, mm forward of body centroid
-RIDGE_AMP_MAX = 3.0                 # extra mm of front-ridge rise at the neck base —
+SHOULDER_Z1 = 197.0 * SCALE_Z        # neck-base height
+NECK_Y = -5.0 * SCALE_Y              # neck centre, mm forward of body centroid
+RIDGE_AMP_MAX = 3.0 * SCALE_Z        # extra mm of front-ridge rise at the neck base —
                                      # the reference shows only a soft, barely-raised
                                      # crease, not a pointed tent
 RIDGE_HALFWIDTH = 0.55               # ridge fades to 0 by |x_norm| > this fraction
@@ -79,49 +96,56 @@ RIDGE_HALFWIDTH = 0.55               # ridge fades to 0 by |x_norm| > this fract
 # Neck + cap — the reference photos show the cap sitting almost directly on
 # the shoulder peak, with only a very short white collar visible below the
 # threads, not a long cylindrical neck
-NECK_R = 17.0
-NECK_Z0, NECK_Z1 = SHOULDER_Z1, 204.0
-CAP_R0, CAP_R1 = 19.2, 18.6          # cap radius: base, top (very slight taper)
-CAP_Z0, CAP_Z1 = NECK_Z1, 225.0
+NECK_R = 17.0 * SCALE_XY
+NECK_Z0, NECK_Z1 = SHOULDER_Z1, SHOULDER_Z1 + 7.0 * SCALE_Z
+CAP_R0, CAP_R1 = 19.2 * SCALE_XY, 18.6 * SCALE_XY  # cap radius: base, top (very slight taper)
+CAP_Z0, CAP_Z1 = NECK_Z1, NECK_Z1 + 21.0 * SCALE_Z
 CAP_FLUTES = 22
-CAP_FLUTE_DEPTH = 0.55
+CAP_FLUTE_DEPTH = 0.55 * SCALE_XY
 CAP_FLUTE_Z0_FRAC = 0.10             # flutes start a little above the cap base
-CAP_TOP_ROUND = 2.2                  # mm — small rounded/beveled top edge
+CAP_TOP_ROUND = 2.2 * SCALE_Z        # mm — small rounded/beveled top edge
 
 TOTAL_H = CAP_Z1
 
 # Front-seam tick-mark nubs (small ribs breaking up the mould parting line)
-SEAM_NUBS_Z = (150.0, 163.0, 177.0, 188.0)
-SEAM_NUB = (1.6, 3.4, 1.0)            # half-extents mm: X, Y(depth), Z
+SEAM_NUBS_Z = tuple(z * SCALE_Z for z in (150.0, 163.0, 177.0, 188.0))
+SEAM_NUB = (1.6 * SCALE_X, 3.4 * SCALE_Y, 1.0 * SCALE_Z)  # half-extents mm: X, Y(depth), Z
 
 # Grip ribs — 3 pointed lens shapes on the front (−Y) face, bottom to top
 GRIP_RIBS = [
-    dict(z=36.0, half_len=34.0, half_h=4.6),
-    dict(z=55.0, half_len=29.0, half_h=4.2),
-    dict(z=74.0, half_len=19.0, half_h=3.6),
+    dict(z=36.0 * SCALE_Z, half_len=34.0 * SCALE_X, half_h=4.6 * SCALE_Z),
+    dict(z=55.0 * SCALE_Z, half_len=29.0 * SCALE_X, half_h=4.2 * SCALE_Z),
+    dict(z=74.0 * SCALE_Z, half_len=19.0 * SCALE_X, half_h=3.6 * SCALE_Z),
 ]
-GRIP_RIB_DEPTH = 2.6   # mm raised proud of the front face
-GRIP_RIB_THICK = 2.0   # mm half-thickness (Y) of the lens before pinch-taper
+GRIP_RIB_DEPTH = 2.6 * SCALE_Y   # mm raised proud of the front face
+GRIP_RIB_THICK = 2.0 * SCALE_Y   # mm half-thickness (Y) of the lens before pinch-taper
 
 # Handle — a two-rail bail (bucket-handle topology): both rails plant into
-# the back shoulder near x = +-RAIL_X, rise, and are bridged by a single arch
-# over the top. The X-separation is what clears the cap cylinder (radius
-# ~19mm centred at x=0) — a single centreline path at x=0 was tried first and
-# it clipped straight through the cap in every version that closed the loop
-# in the Y-Z plane alone, since no Y-offset alone gave enough clearance
-# without the loop reading as a small closed-off back hump instead of the
-# big see-through oval the reference photos show. Half-path below runs from
-# the left foot to the shared apex; build_handle() mirrors it for the right
-# rail so the whole assembly is exact X=0 symmetric.
+# the back shoulder, rise, and are bridged by a single arch over the top.
+# Clearing the cap cylinder (radius ~19mm at x=0) is NOT about keeping the
+# rails' X far from centre — for a dead-on front view, a point is hidden
+# behind the cap whenever its |x| is within the cap's own radius, no matter
+# how deep (large y) it sits, because the cap is a solid cylinder blocking
+# that whole ray. A wide-X design (tried first) put the rails OUTSIDE the
+# cap's radius while still above shoulder height, so nothing occluded them
+# and they showed through as a triangular gap in a dead-on front render.
+# So: keep |x| small (inside the cap radius) through the whole cap-height
+# span, and do all the real clearance work with a big y (depth) offset —
+# the actual non-intersection test is the 3D distance to the cap centre.
 HANDLE_HALF_PATH = [
-    (-18.0, 12.0, 158.0),   # foot — buried well inside the straight body wall
-    (-24.0, 18.0, 178.0),   # rising out through the shoulder surface
-    (-25.0, 24.0, 198.0),
-    (-22.0, 22.0, 220.0),   # dist to cap-centre (0,-5,z) stays > cap radius + tube half-width
-    (-14.0, 12.0, 238.0),   # clear of the cap top (234) already
-    (0.0, 4.0, 248.0),      # apex — shared centre point, above cap-top height
+    (x * SCALE_X, y * SCALE_Y, z * SCALE_Z) for x, y, z in [
+        (-20.0, 15.0, 158.0),   # foot — buried well inside the straight body wall
+        (-18.0, 18.0, 176.0),   # rising out through the shoulder surface
+        (-4.0, 34.0, 196.0),    # entering cap-height zone: |x|+tube_half < cap radius
+                                # (hidden from dead-front) while dist-to-cap-centre
+                                # clears cap radius + tube half-width (no clipping)
+        (-4.0, 36.0, 213.0),
+        (-4.0, 28.0, 226.0),    # just above the cap top, still tucked narrow
+        (-2.0, 14.0, 238.0),
+        (0.0, 5.0, 246.0),      # apex — shared centre point
+    ]
 ]
-HANDLE_W, HANDLE_T = 20.0, 15.0        # per-rail cross-section: local width, thickness
+HANDLE_W, HANDLE_T = 20.0 * SCALE_AVG, 15.0 * SCALE_AVG  # per-rail cross-section
 HANDLE_SEGMENTS = 48                   # samples along each half (smoothed)
 
 # ---------------------------------------------------------------- materials
@@ -321,13 +345,20 @@ def build_seam_nubs():
 
 # ---------------------------------------------------------------- 3. NECK + CAP
 def build_neck():
+    # a gentle flared collar just below the cap — visible in the reference
+    # photos as a white flange a bit wider than the yellow cap itself.
+    profile = [
+        (NECK_Z0, NECK_R),
+        (NECK_Z0 + 0.5 * (NECK_Z1 - NECK_Z0), NECK_R + 8.0 * SCALE_XY),
+        (NECK_Z1, CAP_R0),
+    ]
     bm = bmesh.new()
     rings = []
-    for z in (NECK_Z0, NECK_Z1):
+    for z, r in profile:
         ring = []
         for i in range(SEGS):
             t = 2 * math.pi * i / SEGS
-            x, y = math.cos(t) * NECK_R, math.sin(t) * NECK_R
+            x, y = math.cos(t) * r, math.sin(t) * r
             ring.append(bm.verts.new((x * MM, (y + NECK_Y) * MM, z * MM)))
         rings.append(ring)
     bridge_rings(bm, rings)
@@ -578,10 +609,12 @@ if DO_RENDER:
     # framed generously enough to keep the full assembly (base to handle
     # apex, ~250mm) in frame with margin, matching the reference photos'
     # composition — the earlier tighter framing was clipping the cap/handle
-    shoot("front.png", Vector((0.0, -0.46, 0.125)), 0.125)
-    shoot("three_quarter_front.png", Vector((0.30, -0.36, 0.145)), 0.125)
-    shoot("three_quarter_back.png", Vector((0.30, 0.36, 0.155)), 0.13)
-    shoot("side.png", Vector((0.46, 0.0, 0.125)), 0.125)
-    shoot("top.png", Vector((0.06, -0.12, 0.48)), 0.17)
+    # camera distances/targets scaled up along with the model (now a ~300mm
+    # 4L jerrycan instead of the earlier ~225mm 1L-scale draft)
+    shoot("front.png", Vector((0.0, -0.67, 0.167)), 0.167)
+    shoot("three_quarter_front.png", Vector((0.44, -0.52, 0.193)), 0.167)
+    shoot("three_quarter_back.png", Vector((0.44, 0.52, 0.207)), 0.173)
+    shoot("side.png", Vector((0.67, 0.0, 0.167)), 0.167)
+    shoot("top.png", Vector((0.09, -0.17, 0.64)), 0.227)
 
 print("DONE")
