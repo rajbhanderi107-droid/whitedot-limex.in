@@ -26,11 +26,14 @@ MM = 0.001  # build in metres; all sizes below are mm * MM
 
 # Lid
 LID_A, LID_B = 59.0, 44.0          # footprint half length / half width
-LID_N = 4.2                        # superellipse exponent (rounded rect)
-DOME_H = 34.0                      # dome height above skirt top
-DOME_P, DOME_Q = 2.35, 0.72        # pillow profile z = H*(1-s^P)^Q
+LID_N = 3.4                        # superellipse exponent — softer, pillow-like corners
+DOME_H = 22.0                      # dome height above skirt top — flatter, lower profile
+DOME_P, DOME_Q = 4.2, 0.55         # pillow profile z = H*(1-s^P)^Q — wide flat plateau,
+                                   # curvature pushed hard toward the outer edge
 SKIRT_H = 6.0                      # skirt band below dome edge
-SKIRT_WAVES, SKIRT_WAVE_A = 22, 1.2
+SKIRT_WAVES, SKIRT_WAVE_A = 22, 0.0  # flat/straight — only the green base rim is
+                                     # scalloped in the reference photo; a wavy
+                                     # cream edge on top of that doubled the wave
 LID_Z = 27.0                       # skirt TOP height above ground when closed
                                    # (skirt bottom sits flush with the tray rim,
                                    # so the wavy green trim peeks through the gaps)
@@ -42,15 +45,18 @@ GRAIN_PAIR_GAP, GRAIN_TILT = 1.7, math.radians(29)
 GRAIN_S_MAX = 0.97                 # grains run almost to the dome edge (per top photo)
 
 # Bow (centred on dome apex)
-BOW_LOBE = (15.0, 9.5, 7.6)        # half-extents of each lobe
-BOW_LOBE_X = 14.0                  # lobe centre offset from knot
-BOW_LOBE_TILT = math.radians(14)   # outer lobe ends lift up like wings
-KNOT = (7.0, 9.0, 7.4)
+BOW_LOBE = (13.0, 13.0, 4.6)       # half-extents of each lobe — round balloon
+                                   # shape (per top-view photo), roughly equal
+                                   # X/Y rather than an elongated blade; lower
+                                   # profile to sit closer to the flatter dome
+BOW_LOBE_X = 14.5                  # lobe centre offset from knot — more separation
+BOW_LOBE_TILT = math.radians(5)    # lie almost flat — no upward wing lift
+KNOT = (7.0, 5.0, 5.0)             # narrow waist so the two lobes read as distinct
 TAIL_LEN, TAIL_WID, TAIL_TH = 20.0, 7.0, 1.5
 
 # Base tray
 BASE_A, BASE_B = 62.0, 47.0
-BASE_N = 4.2
+BASE_N = 3.4                        # matches the lid's softer corner radius
 BASE_H = 21.0                      # tub wall top (hidden behind the band)
 BASE_WALL = 2.2
 BASE_WAVES, BASE_WAVE_A = 30, 1.3  # measured: ~30 waves/perimeter, fine crimp
@@ -348,9 +354,9 @@ def build_bow():
 
     rot_l = Matrix.Rotation(math.radians(6), 4, "Z") @ Matrix.Rotation(+BOW_LOBE_TILT, 4, "Y")
     rot_r = Matrix.Rotation(math.radians(-6), 4, "Z") @ Matrix.Rotation(-BOW_LOBE_TILT, 4, "Y")
-    add_sphere((-BOW_LOBE_X, 0, apex_z + 3.2), BOW_LOBE, rot_l, pinch=+1.0)
-    add_sphere((+BOW_LOBE_X, 0, apex_z + 3.2), BOW_LOBE, rot_r, pinch=-1.0)
-    add_sphere((0, 0, apex_z + 3.4), KNOT)  # knot
+    add_sphere((-BOW_LOBE_X, 0, apex_z + 1.6), BOW_LOBE, rot_l, pinch=+1.0)
+    add_sphere((+BOW_LOBE_X, 0, apex_z + 1.6), BOW_LOBE, rot_r, pinch=-1.0)
+    add_sphere((0, 0, apex_z + 1.8), KNOT)  # knot
 
     # ribbon tails: flat tapered boxes draped diagonally down-out from the knot
     for sx in (-1, 1):
@@ -587,11 +593,13 @@ print(f"GLB written: {GLB_OUT} ({os.path.getsize(GLB_OUT) / 1e6:.2f} MB)")
 if DO_RENDER:
     os.makedirs(RENDER_DIR, exist_ok=True)
     scene.render.engine = "CYCLES"
-    scene.cycles.samples = 160
+    scene.cycles.samples = int(os.environ.get("SOAP_SAMPLES", "160"))
     scene.cycles.use_denoising = True
     scene.cycles.denoiser = "OPENIMAGEDENOISE"
     # 4K UHD-class output at the same 4:3 framing as the earlier previews
-    scene.render.resolution_x, scene.render.resolution_y = 3840, 2880
+    # (SOAP_RES_X env override lets iteration renders run at a cheaper size)
+    res_x = int(os.environ.get("SOAP_RES_X", "3840"))
+    scene.render.resolution_x, scene.render.resolution_y = res_x, int(res_x * 2880 / 3840)
     scene.render.resolution_percentage = 100
     scene.render.film_transparent = False
     scene.view_settings.view_transform = "Filmic"  # soft highlight rolloff, keeps hue
@@ -665,7 +673,11 @@ if DO_RENDER:
     scene.collection.objects.link(cam)
     scene.camera = cam
 
+    only = os.environ.get("SOAP_ONLY")  # comma-separated shot names, for quick iteration
+
     def shoot(name, loc, target_z, frame):
+        if only and name not in only.split(","):
+            return
         scene.frame_set(frame)
         cam.location = loc
         look = Vector((0, 0, target_z)) - cam.location
