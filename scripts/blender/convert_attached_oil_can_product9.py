@@ -4,8 +4,8 @@ The scan GLB is a single untextured mesh, so this script preserves the
 uploaded geometry while applying the same colour/material grade used by the
 previous live oil-can model:
 
-* warm eggshell HDPE body
-* bright yellow ribbed cap
+* warm white HDPE body matched to the latest product photo
+* natural yellow ribbed cap
 * embedded 4K base-color and normal textures
 * real 208 mm model height and centered base
 
@@ -41,8 +41,12 @@ def srgb8(r: int, g: int, b: int) -> tuple[float, float, float, float]:
     return (srgb_to_linear(r / 255), srgb_to_linear(g / 255), srgb_to_linear(b / 255), 1.0)
 
 
-BODY = srgb8(236, 231, 221)
-CAP = srgb8(230, 176, 24)
+# Latest reference photo: the product is white. The beige/grey tone visible in
+# the photo comes from soft indoor light, reflections, and shadow, so the albedo
+# stays warm white and the viewer exposure carries the tonal match.
+BODY = srgb8(238, 235, 226)
+# Reference cap is a clean saturated lemon-yellow. Avoid mustard/orange.
+CAP = srgb8(255, 213, 0)
 
 
 def clean_scene() -> None:
@@ -53,27 +57,48 @@ def clean_scene() -> None:
             block.remove(item)
 
 
-def make_texture(name: str, rgba: tuple[float, float, float, float], normal: bool = False) -> bpy.types.Image:
+def hash01(x: int, y: int, seed: int = 17) -> float:
+    n = (x * 374761393 + y * 668265263 + seed * 1442695041) & 0xFFFFFFFF
+    n = (n ^ (n >> 13)) * 1274126177 & 0xFFFFFFFF
+    return ((n ^ (n >> 16)) & 0xFFFFFF) / float(0xFFFFFF)
+
+
+def make_texture(
+    name: str,
+    rgba: tuple[float, float, float, float],
+    normal: bool = False,
+    dirty: bool = False,
+) -> bpy.types.Image:
     img = bpy.data.images.new(name, TEXTURE_RES, TEXTURE_RES, alpha=True, float_buffer=False)
     total = TEXTURE_RES * TEXTURE_RES * 4
     pix = array("f", [0.0]) * total
     r, g, b, a = rgba
 
-    # Deterministic fine plastic grain. Kept subtle so the model reads polished,
-    # not dirty, while still carrying real 4K texture data in the GLB.
+    # Deterministic fine plastic grain plus low-frequency unevenness. The body
+    # stays white; only faint rubbed dirt/scuffs are added like the real sample.
     for y in range(TEXTURE_RES):
         row = y * TEXTURE_RES * 4
         sy = math.sin(y * 0.031)
         for x in range(TEXTURE_RES):
             i = row + x * 4
-            n = math.sin(x * 0.071 + sy * 2.1) * math.sin((x + y) * 0.019)
+            fine = math.sin(x * 0.071 + sy * 2.1) * math.sin((x + y) * 0.019)
+            broad = math.sin(x * 0.0047 + y * 0.0029) * 0.5 + math.sin(x * 0.011 - y * 0.006) * 0.35
+            dirt = 0.0
+            if dirty:
+                # Sparse grey specks and soft vertical smudges like the real
+                # sample photo, but not a beige recolor.
+                rnd = hash01(x // 11, y // 11, 29)
+                if rnd > 0.989:
+                    dirt -= 0.055 * (rnd - 0.989) / 0.011
+                smudge = max(0.0, math.sin(x * 0.009 + 1.8) * math.sin(y * 0.005 - 0.7))
+                dirt -= 0.014 * smudge
             if normal:
-                pix[i] = 0.5 + n * 0.018
-                pix[i + 1] = 0.5 + math.sin(y * 0.067) * 0.014
+                pix[i] = 0.5 + fine * (0.010 if dirty else 0.014) + broad * 0.004
+                pix[i + 1] = 0.5 + math.sin(y * 0.067) * (0.008 if dirty else 0.012)
                 pix[i + 2] = 1.0
                 pix[i + 3] = 1.0
             else:
-                gain = 1.0 + n * 0.025
+                gain = 1.0 + fine * (0.018 if dirty else 0.022) + broad * (0.020 if dirty else 0.006) + dirt
                 pix[i] = min(max(r * gain, 0.0), 1.0)
                 pix[i + 1] = min(max(g * gain, 0.0), 1.0)
                 pix[i + 2] = min(max(b * gain, 0.0), 1.0)
@@ -92,27 +117,30 @@ def make_material(name: str, color: tuple[float, float, float, float], roughness
     links = mat.node_tree.links
     bsdf = nodes.get("Principled BSDF")
 
-    base_img = make_texture(f"{name}_4K_BaseColor", color, normal=False)
-    normal_img = make_texture(f"{name}_4K_Normal", color, normal=True)
+    dirty = "Body" in name
+    base_img = make_texture(f"{name}_4K_BaseColor", color, normal=False, dirty=dirty)
+    normal_img = make_texture(f"{name}_4K_Normal", color, normal=True, dirty=dirty)
 
     tex_base = nodes.new("ShaderNodeTexImage")
     tex_base.image = base_img
     tex_normal = nodes.new("ShaderNodeTexImage")
     tex_normal.image = normal_img
     normal_map = nodes.new("ShaderNodeNormalMap")
-    normal_map.inputs["Strength"].default_value = 0.16 if "Body" in name else 0.10
+    normal_map.inputs["Strength"].default_value = 0.075 if "Body" in name else 0.055
 
     links.new(tex_base.outputs["Color"], bsdf.inputs["Base Color"])
     links.new(tex_normal.outputs["Color"], normal_map.inputs["Color"])
     links.new(normal_map.outputs["Normal"], bsdf.inputs["Normal"])
     bsdf.inputs["Roughness"].default_value = roughness
+    if "Specular IOR Level" in bsdf.inputs:
+        bsdf.inputs["Specular IOR Level"].default_value = 0.42 if "Body" in name else 0.55
     bsdf.inputs["Metallic"].default_value = 0.0
     if "Alpha" in bsdf.inputs:
         bsdf.inputs["Alpha"].default_value = 1.0
     for coat_w, coat_r in (("Coat Weight", "Coat Roughness"), ("Clearcoat", "Clearcoat Roughness")):
         if coat_w in bsdf.inputs:
-            bsdf.inputs[coat_w].default_value = 0.26
-            bsdf.inputs[coat_r].default_value = 0.18
+            bsdf.inputs[coat_w].default_value = 0.08 if "Body" in name else 0.18
+            bsdf.inputs[coat_r].default_value = 0.38 if "Body" in name else 0.22
             break
     mat.diffuse_color = color
     return mat
@@ -240,8 +268,8 @@ def setup_render(obj: bpy.types.Object) -> None:
 def main() -> None:
     clean_scene()
     obj = import_user_model()
-    body_mat = make_material("OilCanBody_4K_OldGrade", BODY, 0.27)
-    cap_mat = make_material("OilCanCap_4K_OldGrade", CAP, 0.20)
+    body_mat = make_material("OilCanBody_4K_PhotoWhite", BODY, 0.52)
+    cap_mat = make_material("OilCanCap_4K_PhotoYellow", CAP, 0.28)
     obj.data.materials.append(body_mat)
     obj.data.materials.append(cap_mat)
     box_project_uv(obj)
