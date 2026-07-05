@@ -156,19 +156,53 @@ GRIP_RIB_THICK = 2.0 * SCALE_Y   # mm half-thickness (Y) of the lens before pinc
 # span instead of narrowing back toward centre before the apex; the loop
 # reads a bit boxier/deeper as a direct consequence of the card's chunkier
 # handle spec, rather than tapering elegantly the way the slimmer draft did.
+# The reference photos (3/4 views) show a big, dominant loop spanning
+# nearly the whole top of the bottle — much wider than a first pass that
+# only widened enough to satisfy the cap-clearance math. The body's front
+# wall is a full-width opaque shell for any z below BODY_Z1, so the loop's
+# lower/wider run can go as wide as the body itself and still stay hidden
+# from a dead-on front view; only the top, once above the shoulder, has to
+# narrow down to duck past the (much smaller) cap.
 HANDLE_HALF_PATH = [
     (x * SCALE_X, y * SCALE_Y, z * SCALE_Z) for x, y, z in [
-        (-20.0, 15.0, 135.0),   # foot — buried well inside the straight body wall
-                                # (lowered to bring the handle's total span up
-                                # toward the dimensions card's ~120mm handle size)
-        (-18.0, 18.0, 153.0),   # rising out through the shoulder surface
-        (-3.0, 30.0, 194.0),    # entering cap-height zone
-        (-2.0, 30.0, 204.0),
-        (-2.0, 30.0, 215.0),
-        (-1.0, 30.0, 223.0),
-        (0.0, 30.0, 225.0),     # apex — shared centre point, at (not above) cap top
+        (-30.0, 12.0, 120.0),   # foot — wide, buried deep in the straight body
+                                # wall (well below BODY_Z1) where the body's
+                                # own front wall hides anything this wide
+        (-29.0, 17.0, 150.0),   # still below the shoulder, still hidden
+        (-27.0, 21.0, 170.0),   # width held near-constant — a gradual taper
+        (-20.0, 26.0, 185.0),   # the whole way up read as triangular/pointed
+                                # rather than the reference's big rounded-oval
+                                # hole; staying wide until the last moment and
+                                # only pinching narrow right before the cap
+                                # zone reads much closer to that oval shape
+        (-16.0, 30.0, 194.0),   # taper stops here, NOT at x=0 — the card's
+                                # literal 35mm-thick tube means the mirrored
+                                # left/right rails would physically fuse into
+                                # a solid blob if their centrelines converged
+                                # any closer than roughly one tube-width apart
+                                # (a first pass that closed to x=0 did exactly
+                                # that, reading as a self-crossed "X" rather
+                                # than a loop). Stopping at |x|=16 (unscaled)
+                                # keeps a true ~48mm gap between the two
+                                # rails' centres at the top — more than the
+                                # tube's own ~35mm width — so the arch stays a
+                                # clean two-sided loop. Trade-off: this is
+                                # wider than the ~22mm cap radius, so a slim
+                                # sliver of handle is visible beside the cap
+                                # from a dead-on front view; unavoidable once
+                                # the grip cross-section is this chunky.
+        (-16.0, 30.0, 210.0),
+        (-16.0, 28.0, 222.0),
+        (-16.0, 20.0, 225.0),   # rail terminus — the mirrored right rail's
+                                # matching point is 32mm away in x, joined by
+                                # an explicit BRIDGE_APEX (not by converging
+                                # to a shared x=0 point, which is what fused
+                                # the two thick rails together before)
     ]
 ]
+BRIDGE_APEX = (0.0 * SCALE_X, 20.0 * SCALE_Y, 225.0 * SCALE_Z)  # connects the
+# two rail tops across the middle; held at the same z as the rail ends (not
+# above) so it stays within the cap's height and doesn't poke above it
 # Card literal: "Handle Grip Section — Grip Width 35mm, Finger Clearance
 # Depth 30mm, Grip Height 45mm". Applied directly as the rail cross-section.
 HANDLE_W, HANDLE_T = 35.0, 30.0        # per-rail cross-section: width, depth
@@ -508,28 +542,49 @@ def build_grip_ribs():
 
 
 # ---------------------------------------------------------------- 5. HANDLE
-def catmull_rom_3d(points, n_samples):
-    """Smooth a coarse 3D polyline into n_samples points."""
-    pts = [points[0]] + list(points) + [points[-1]]
+def catmull_rom_3d(points, n_samples, alpha=0.5):
+    """Smooth a coarse 3D polyline into n_samples points using a centripetal
+    (chord-length-parametrized) Catmull-Rom spline. The handle path's control
+    points are very unevenly spaced (long ~30mm gaps down at the foot next to
+    ~2mm gaps up near the apex) — a plain *uniform*-parameter Catmull-Rom
+    (equal parameter step per segment regardless of actual distance) badly
+    overshoots on data like that, which is what was folding the two mirrored
+    rails into a self-intersecting X near the top. Centripetal parametrization
+    (segment parameter step proportional to distance**0.5) is the standard
+    fix and stays well-behaved for any spacing."""
+    pts = [Vector(points[0])] + [Vector(p) for p in points] + [Vector(points[-1])]
+    n = len(pts)
+    tk = [0.0]
+    for i in range(1, n):
+        d = (pts[i] - pts[i - 1]).length
+        tk.append(tk[-1] + max(d, 1e-6) ** alpha)
+
     out = []
     segs = len(points) - 1
     for i in range(n_samples):
         u = i / (n_samples - 1) * segs
         seg = min(int(u), segs - 1)
-        t = u - seg
-        p0, p1, p2, p3 = (Vector(pts[seg]), Vector(pts[seg + 1]),
-                          Vector(pts[seg + 2]), Vector(pts[seg + 3]))
-        out.append(0.5 * ((2 * p1) + (-p0 + p2) * t
-                           + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t
-                           + (-p0 + 3 * p1 - 3 * p2 + p3) * t ** 3))
+        frac = u - seg
+        p0, p1, p2, p3 = pts[seg], pts[seg + 1], pts[seg + 2], pts[seg + 3]
+        t0, t1, t2, t3 = tk[seg], tk[seg + 1], tk[seg + 2], tk[seg + 3]
+        t = t1 + frac * (t2 - t1)
+
+        a1 = p0 * ((t1 - t) / (t1 - t0)) + p1 * ((t - t0) / (t1 - t0))
+        a2 = p1 * ((t2 - t) / (t2 - t1)) + p2 * ((t - t1) / (t2 - t1))
+        a3 = p2 * ((t3 - t) / (t3 - t2)) + p3 * ((t - t2) / (t3 - t2))
+        b1 = a1 * ((t2 - t) / (t2 - t0)) + a2 * ((t - t0) / (t2 - t0))
+        b2 = a2 * ((t3 - t) / (t3 - t1)) + a3 * ((t - t1) / (t3 - t1))
+        c = b1 * ((t2 - t) / (t2 - t1)) + b2 * ((t - t1) / (t2 - t1))
+        out.append(c)
     return out
 
 
 def build_handle():
-    # mirror the half path (drop the shared apex from the mirrored half so
-    # it isn't duplicated) to get one continuous left-to-right 3D route
-    right_half = [(-x, y, z) for (x, y, z) in reversed(HANDLE_HALF_PATH[:-1])]
-    control = HANDLE_HALF_PATH + right_half
+    # mirror the half path around an explicit bridge point to get one
+    # continuous left-to-right 3D route (see BRIDGE_APEX above for why this
+    # isn't simply "converge both halves to a shared x=0 point")
+    right_half = [(-x, y, z) for (x, y, z) in reversed(HANDLE_HALF_PATH)]
+    control = HANDLE_HALF_PATH + [BRIDGE_APEX] + right_half
     path = catmull_rom_3d(control, HANDLE_SEGMENTS * 2)
 
     bm = bmesh.new()
