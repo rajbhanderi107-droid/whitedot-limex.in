@@ -14,17 +14,22 @@ shoulder ridge + handle wings). Pencil marks visible on the IMG_2609/2610
 sample surface are hand-drawn measurement annotations on the physical
 sample, not moulded features, and are not reproduced.
 
-Dimensions: scaled to a supplied "Product Dimensions Card - 4L Jerrycan"
-(145mm W x ~98mm D footprint — the two numbers that were internally
-consistent across every view on that card). The card's height figures were
-corrupted/contradictory ("93km" in one view, "~1.5m" in another) so the
-overall height (~300mm) is instead back-solved from the stated 4L capacity
-at that footprint, which lines up with known real 4L HDPE jerrycan
-dimensions (~145 x 95-98 x 280-300mm). All other proportions below were
-photo-calibrated at ~1L scale (234 x 94 x 64mm) and are carried forward
-using explicit SCALE_X/SCALE_Y/SCALE_Z factors rather than re-measured, so
-every shape relationship (ridge, ribs, handle path) stays faithful to the
-sample photos at the card's real-world size.
+Dimensions: two supplied "Product Dimensions Card - 4L Jerrycan" images
+were provided, and they disagree with each other on several numbers (depth
+98mm vs 90mm; wall 2.0mm vs 2.5/4.0mm) while both repeat the same
+nonsensical artifacts (heights labelled "93km" / "~1.5m", scrambled
+tolerance boxes) — clear signs both are independently AI-generated mockups,
+not real measurements of one physical part. Per direction, the SECOND card
+is authoritative where the two conflict. Numbers actually used: width
+145mm (both cards agree), depth ~90mm (card 2), cap diameter ~45mm (card
+1), handle grip width 35mm (card 2). Overall height (~300mm) is
+back-solved from the stated 4L capacity at that footprint, since neither
+card's height figures are legible/consistent — this lines up with known
+real 4L HDPE jerrycan dimensions (~145 x 90-98 x 280-300mm). All other
+proportions below were photo-calibrated at ~1L scale (234 x 94 x 64mm) and
+are carried forward using explicit SCALE_X/SCALE_Y/SCALE_Z factors rather
+than re-measured, so every shape relationship (ridge, ribs, handle path)
+stays faithful to the sample photos at the card's real-world size.
 
 Key derived facts (why the shoulder/handle are built the way they are):
   - IMG_2610 (dead-on front) shows a completely clean, uninterrupted
@@ -60,27 +65,30 @@ MM = 0.001  # build in metres; all sizes below are mm * MM
 SEGS = 128  # perimeter segments for all swept rings
 
 # Scale factors from the photo-calibrated ~1L proportions (94 x 64 x 225mm)
-# up to the dimensions card's 4L footprint (145 x 98mm) and a height
+# up to the dimensions card's 4L footprint (145 x 90mm) and a height
 # back-solved from the stated 4L capacity at that footprint (~300mm) — see
 # module docstring for why the card's own height figures aren't usable.
 SCALE_X = 145.0 / 94.0
-SCALE_Y = 98.0 / 64.0
-SCALE_Z = 300.0 / 225.0
+SCALE_Y = 90.0 / 64.0  # depth 90mm per the second (superseding) dimensions card
+SCALE_Z = 329.5 / 225.0  # re-solved for 4L capacity at the new 145x90mm footprint
 SCALE_XY = (SCALE_X + SCALE_Y) / 2.0   # for radial (circular) features
 SCALE_AVG = (SCALE_X + SCALE_Y + SCALE_Z) / 3.0  # for small isotropic details
 
-# Body (superellipse cross-section, rounded-rectangle)
+# Body — literal rounded-rectangle (straight walls + true circular-arc
+# corners, not a superellipse approximation) per the card's "Internal Corner
+# Radius: R5.0mm / R8.0mm": R8.0mm is applied as the main wall-to-wall
+# corner; R5.0mm sets the base fillet height below (BODY_Z0).
 BODY_A, BODY_B = 47.0 * SCALE_X, 32.0 * SCALE_Y  # half-width / half-depth at max girth
-BODY_N = 4.4                        # superellipse exponent — softly rounded corners
-BODY_Z0, BODY_Z1 = 8.0 * SCALE_Z, 172.0 * SCALE_Z    # straight-wall span (above the base fillet)
+BODY_CORNER_R = 8.0 * SCALE_XY       # card literal: Internal Corner Radius R8.0mm
+BODY_Z0, BODY_Z1 = 5.0 * SCALE_Z, 172.0 * SCALE_Z    # straight-wall span (above the base fillet)
 BODY_BASE_SCALE = 0.965             # very slight inward draft toward the base
 BODY_TOP_FLARE = 1.012              # very slight outward flare toward the shoulder
 
-# Base fillet (wall -> flat bottom)
+# Base fillet (wall -> flat bottom), spanning the R5.0mm base height above
 BASE_PROFILE = [  # (scale, z_mm) — bottom to BODY_Z0
     (0.90, 0.0),
-    (0.945, 1.6 * SCALE_Z),
-    (0.985, 4.2 * SCALE_Z),
+    (0.945, 1.0 * SCALE_Z),
+    (0.985, 2.625 * SCALE_Z),
     (1.0, BODY_Z0),
 ]
 
@@ -105,7 +113,7 @@ NECK_Z0, NECK_Z1 = SHOULDER_Z1, SHOULDER_Z1 + 7.0 * SCALE_Z
 CAP_R0, CAP_R1 = 19.2 * SCALE_XY * CAP_CARD_FIX, 18.6 * SCALE_XY * CAP_CARD_FIX  # base, top
 CAP_Z0, CAP_Z1 = NECK_Z1, NECK_Z1 + 21.0 * SCALE_Z
 CAP_FLUTES = 22
-CAP_FLUTE_DEPTH = 0.55 * SCALE_XY * CAP_CARD_FIX
+CAP_FLUTE_DEPTH = 2.5   # mm — card literal: "Cap Thread Pitch 2.5mm, 60 deg"
 CAP_FLUTE_Z0_FRAC = 0.10             # flutes start a little above the cap base
 CAP_TOP_ROUND = 2.2 * SCALE_Z        # mm — small rounded/beveled top edge
 
@@ -140,24 +148,30 @@ GRIP_RIB_THICK = 2.0 * SCALE_Y   # mm half-thickness (Y) of the lens before pinc
 # front reference photo shows an absolutely clean silhouette with nothing
 # above the cap at all, so any part of the loop taller than the cap (even
 # at x=0) would show as a bump/artifact poking above it.
+#
+# The card's literal Grip Width/Depth (35 x 30mm) makes the tube itself
+# bigger than the ~45mm cap it passes — clearing it by keeping |x| small
+# (as the earlier, slimmer draft did) is no longer enough on its own, so
+# y stays at a near-constant ~30mm plateau through the whole cap-height
+# span instead of narrowing back toward centre before the apex; the loop
+# reads a bit boxier/deeper as a direct consequence of the card's chunkier
+# handle spec, rather than tapering elegantly the way the slimmer draft did.
 HANDLE_HALF_PATH = [
     (x * SCALE_X, y * SCALE_Y, z * SCALE_Z) for x, y, z in [
         (-20.0, 15.0, 135.0),   # foot — buried well inside the straight body wall
                                 # (lowered to bring the handle's total span up
                                 # toward the dimensions card's ~120mm handle size)
         (-18.0, 18.0, 153.0),   # rising out through the shoulder surface
-        (-3.0, 30.0, 194.0),    # entering cap-height zone: |x|+tube_half < cap
-                                # radius (hidden from dead-front) — x tightened
-                                # after the card's 45mm cap dia shrank the cap
-                                # radius, while dist-to-cap-centre still clears
-                                # cap radius + tube half-width (no clipping)
-        (-3.0, 32.0, 206.0),
-        (-2.0, 22.0, 217.0),    # still tucked narrow, staying under the cap top
-        (0.0, 9.0, 223.0),
-        (0.0, 3.0, 225.0),      # apex — shared centre point, at (not above) cap top
+        (-3.0, 30.0, 194.0),    # entering cap-height zone
+        (-2.0, 30.0, 204.0),
+        (-2.0, 30.0, 215.0),
+        (-1.0, 30.0, 223.0),
+        (0.0, 30.0, 225.0),     # apex — shared centre point, at (not above) cap top
     ]
 ]
-HANDLE_W, HANDLE_T = 20.0 * SCALE_AVG, 15.0 * SCALE_AVG  # per-rail cross-section
+# Card literal: "Handle Grip Section — Grip Width 35mm, Finger Clearance
+# Depth 30mm, Grip Height 45mm". Applied directly as the rail cross-section.
+HANDLE_W, HANDLE_T = 35.0, 30.0        # per-rail cross-section: width, depth
 HANDLE_SEGMENTS = 72                   # samples along each half (smoothed)
 
 # ---------------------------------------------------------------- materials
@@ -185,6 +199,39 @@ def superellipse(t, a, b, n):
     x = a * math.copysign(abs(c) ** (2.0 / n), c)
     y = b * math.copysign(abs(s) ** (2.0 / n), s)
     return x, y
+
+
+def rounded_rect(t, a, b, r):
+    """A literal rounded rectangle — straight walls meeting true circular-arc
+    corners of radius r (not a superellipse approximation) — sampled by
+    casting a ray from the origin at angle t and finding where it crosses
+    the boundary. Degenerates to an ellipse/circle when r >= min(a, b)."""
+    r = max(0.0, min(r, a, b))
+    c, s = math.cos(t), math.sin(t)
+    if r <= 1e-9:
+        if abs(c) < 1e-9:
+            return 0.0, math.copysign(b, s)
+        if abs(s) < 1e-9:
+            return math.copysign(a, c), 0.0
+        k = min(a / abs(c), b / abs(s))
+        return k * c, k * s
+    ax, ay = a - r, b - r
+    if abs(c) > 1e-9:
+        k_edge = a / abs(c)
+        y_at = k_edge * s
+        if abs(y_at) <= ay + 1e-9:
+            return k_edge * c, y_at
+    if abs(s) > 1e-9:
+        k_edge = b / abs(s)
+        x_at = k_edge * c
+        if abs(x_at) <= ax + 1e-9:
+            return x_at, k_edge * s
+    cx, cy = math.copysign(ax, c or 1.0), math.copysign(ay, s or 1.0)
+    bcoef = -2.0 * (c * cx + s * cy)
+    ccoef = cx * cx + cy * cy - r * r
+    disc = max(bcoef * bcoef - 4.0 * ccoef, 0.0)
+    k = (-bcoef + math.sqrt(disc)) / 2.0
+    return k * c, k * s
 
 
 def lerp(a, b, k):
@@ -253,7 +300,7 @@ def build_body():
         ring = []
         for i in range(SEGS):
             t = 2 * math.pi * i / SEGS
-            x, y = superellipse(t, BODY_A, BODY_B, BODY_N)
+            x, y = rounded_rect(t, BODY_A, BODY_B, BODY_CORNER_R)
             ring.append(bm.verts.new((x * scale * BODY_BASE_SCALE * MM,
                                        y * scale * BODY_BASE_SCALE * MM, z * MM)))
         rings.append(ring)
@@ -262,7 +309,7 @@ def build_body():
         ring = []
         for i in range(SEGS):
             t = 2 * math.pi * i / SEGS
-            x, y = superellipse(t, BODY_A, BODY_B, BODY_N)
+            x, y = rounded_rect(t, BODY_A, BODY_B, BODY_CORNER_R)
             ring.append(bm.verts.new((x * scale * MM, y * scale * MM, z * MM)))
         rings.append(ring)
     bridge_rings(bm, rings, close_bottom=True)
@@ -270,6 +317,23 @@ def build_body():
     bm.to_mesh(mesh)
     bm.free()
     return new_object("Body", mesh, mat_body)
+
+
+def build_gate_mark():
+    """Card literal: QC checkpoint "Gate Mark — 0.5mm Diameter (0.5mm
+    Plug)" — the injection gate witness mark, at the base centre."""
+    bm = bmesh.new()
+    bmesh.ops.create_cone(
+        bm, cap_ends=True, segments=16,
+        radius1=0.25 * SCALE_XY * MM, radius2=0.0,
+        depth=0.35 * SCALE_Z * MM,
+    )
+    for v in bm.verts:
+        v.co.z += 0.175 * SCALE_Z * MM
+    mesh = bpy.data.meshes.new("GateMark")
+    bm.to_mesh(mesh)
+    bm.free()
+    return new_object("GateMark", mesh, mat_body)
 
 
 # ---------------------------------------------------------------- 2. SHOULDER
@@ -308,13 +372,13 @@ def build_shoulder():
         ks = smoothstep(k)
         a = lerp(BODY_A * BODY_TOP_FLARE, NECK_R, ks)
         b = lerp(BODY_B * BODY_TOP_FLARE, NECK_R, ks)
-        n_exp = lerp(BODY_N, 2.0, ks)
+        r_corner = lerp(BODY_CORNER_R, min(a, b), ks)  # r == min(a,b) is a circle
         cy = lerp(0.0, NECK_Y, ks)  # ring centre drifts forward toward the neck
         z0 = lerp(BODY_Z1, SHOULDER_Z1, k)
         ring = []
         for i in range(SEGS):
             t = 2 * math.pi * i / SEGS
-            x, y = superellipse(t, a, b, n_exp)
+            x, y = rounded_rect(t, a, b, r_corner)
             x_norm = x / max(a, 1e-6)
             y_norm = y / max(b, 1e-6)
             z = z0 + ridge_bump(x_norm, y_norm, k)
@@ -541,10 +605,11 @@ neck = build_neck()
 cap = build_cap()
 ribs = build_grip_ribs()
 handle = build_handle()
+gate_mark = build_gate_mark()
 
 root = bpy.data.objects.new("OilBottle", None)
 bpy.context.scene.collection.objects.link(root)
-for part in (body, shoulder, nubs, neck, cap, ribs, handle):
+for part in (body, shoulder, nubs, neck, cap, ribs, handle, gate_mark):
     part.parent = root
 
 # ---------------------------------------------------------------- export GLB
