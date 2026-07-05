@@ -96,11 +96,14 @@ def srgb8(r, g, b):
     return (srgb_to_linear(r / 255), srgb_to_linear(g / 255), srgb_to_linear(b / 255), 1.0)
 
 
-# Colors calibrated from sampled photo pixels (sRGB 0-255 -> linear for Blender)
-COL_CREAM = srgb8(219, 216, 207)       # measured off the lid, even top-view light
-COL_SAGE = srgb8(151, 147, 133)        # insert + band base tone (lit floor sample)
-COL_SAGE_DEEP = srgb8(82, 98, 62)      # darker scalloped band (shadowed wall sample)
-COL_TUB = srgb8(214, 217, 204)         # pale green-white tub body — brighter still
+# Colors re-calibrated by direct pixel-median sampling of the reference photos
+# (IMG_2604 front / IMG_2605 top / IMG_2606 open) — the previous values were
+# guessed from small unrepresentative patches (one landed partly in a shadow)
+# and rendered noticeably darker/greener than the real sample.
+COL_CREAM = srgb8(215, 212, 200)       # lid pillow body — median of leaf-texture patch, top-view photo
+COL_SAGE = srgb8(170, 174, 152)        # drain insert floor — median of open-view interior sage patch
+COL_SAGE_DEEP = srgb8(118, 123, 99)    # scalloped rim strip — median of front-view strip patch (was too dark/saturated)
+COL_TUB = srgb8(150, 148, 132)         # outer tub wall — median of front-view wall patch (was much too pale/white)
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 GLB_OUT = os.path.join(REPO, "public", "case-study", "model", "soap-stand-procedural.glb")
@@ -598,6 +601,9 @@ for obj in (lid_root, insert):
     obj.animation_data.action = None
 
 # ---------------------------------------------------------------- export GLB
+bpy.context.view_layer.objects.active = base
+for o in bpy.context.scene.objects:
+    o.select_set(True)
 os.makedirs(os.path.dirname(GLB_OUT), exist_ok=True)
 bpy.ops.export_scene.gltf(
     filepath=GLB_OUT,
@@ -622,38 +628,53 @@ if DO_RENDER:
     scene.render.resolution_x, scene.render.resolution_y = res_x, int(res_x * 2880 / 3840)
     scene.render.resolution_percentage = 100
     scene.render.film_transparent = False
-    scene.view_settings.view_transform = "Filmic"  # soft highlight rolloff, keeps hue
-    scene.view_settings.look = "Medium Contrast"
-    scene.view_settings.exposure = 0.15
+    # Standard (not Filmic) so the muted sage/cream colors read literally --
+    # Filmic's highlight rolloff + the +0.15 exposure boost were washing the
+    # calibrated material colors out toward white/grey against the ref photos.
+    scene.view_settings.view_transform = "Standard"
+    scene.view_settings.look = "None"
+    scene.view_settings.exposure = 0.0
 
     # ---- compositor color grade: subtle bloom + warm-highlight/cool-shadow
     # split-tone + gentle sharpen, the standard "clean product shot" grade ----
+    # Blender 5.x restructured the whole compositor: Scene.node_tree ->
+    # Scene.compositing_node_group (a node group, like Geometry Nodes), and
+    # CompositorNodeGlare/ColorBalance/Filter/MixRGB all lost or renamed their
+    # properties (glare_type/quality/threshold/mix gone, ColorBalance's
+    # lift/gamma/gain replaced by a whitepoint model, MixRGB removed
+    # outright). Porting this cosmetic grade node-for-node is out of scope
+    # here — skip it on 5.x and rely on Filmic + the calibrated material
+    # colors alone, which is what actually needs to match the reference
+    # photos. Falls back to the full graph on pre-5.x Blender.
     scene.use_nodes = True
-    ct = scene.node_tree
-    ct.nodes.clear()
-    rl = ct.nodes.new("CompositorNodeRLayers")
-    glare = ct.nodes.new("CompositorNodeGlare")
-    glare.glare_type = "FOG_GLOW"
-    glare.quality = "HIGH"
-    glare.threshold = 1.05
-    glare.mix = -0.6  # mostly the sharp base image, just a whisper of bloom
-    balance = ct.nodes.new("CompositorNodeColorBalance")
-    balance.correction_method = "LIFT_GAMMA_GAIN"
-    balance.lift = (0.985, 0.99, 1.01)     # faint cool lift in the shadows
-    balance.gamma = (1.0, 1.0, 1.0)
-    balance.gain = (1.02, 1.008, 0.985)    # faint warm gain in the highlights
-    sharpen = ct.nodes.new("CompositorNodeFilter")
-    sharpen.filter_type = "SHARPEN"
-    sharpen_mix = ct.nodes.new("CompositorNodeMixRGB")
-    sharpen_mix.blend_type = "MIX"
-    sharpen_mix.inputs["Fac"].default_value = 0.25
-    composite = ct.nodes.new("CompositorNodeComposite")
-    ct.links.new(rl.outputs["Image"], glare.inputs["Image"])
-    ct.links.new(glare.outputs["Image"], balance.inputs["Image"])
-    ct.links.new(balance.outputs["Image"], sharpen_mix.inputs[1])
-    ct.links.new(balance.outputs["Image"], sharpen.inputs["Image"])
-    ct.links.new(sharpen.outputs["Image"], sharpen_mix.inputs[2])
-    ct.links.new(sharpen_mix.outputs["Image"], composite.inputs["Image"])
+    if not hasattr(scene, "compositing_node_group"):
+        ct = scene.node_tree
+        ct.nodes.clear()
+        rl = ct.nodes.new("CompositorNodeRLayers")
+        glare = ct.nodes.new("CompositorNodeGlare")
+        glare.glare_type = "FOG_GLOW"
+        glare.quality = "HIGH"
+        glare.threshold = 1.05
+        glare.mix = -0.6  # mostly the sharp base image, just a whisper of bloom
+        balance = ct.nodes.new("CompositorNodeColorBalance")
+        balance.correction_method = "LIFT_GAMMA_GAIN"
+        balance.lift = (0.985, 0.99, 1.01)     # faint cool lift in the shadows
+        balance.gamma = (1.0, 1.0, 1.0)
+        balance.gain = (1.02, 1.008, 0.985)    # faint warm gain in the highlights
+        sharpen = ct.nodes.new("CompositorNodeFilter")
+        sharpen.filter_type = "SHARPEN"
+        sharpen_mix = ct.nodes.new("CompositorNodeMixRGB")
+        sharpen_mix.blend_type = "MIX"
+        sharpen_mix.inputs["Fac"].default_value = 0.25
+        composite = ct.nodes.new("CompositorNodeComposite")
+        ct.links.new(rl.outputs["Image"], glare.inputs["Image"])
+        ct.links.new(glare.outputs["Image"], balance.inputs["Image"])
+        ct.links.new(balance.outputs["Image"], sharpen_mix.inputs[1])
+        ct.links.new(balance.outputs["Image"], sharpen.inputs["Image"])
+        ct.links.new(sharpen.outputs["Image"], sharpen_mix.inputs[2])
+        ct.links.new(sharpen_mix.outputs["Image"], composite.inputs["Image"])
+    else:
+        scene.use_nodes = False
 
     world = bpy.data.worlds.new("Studio")
     world.use_nodes = True
@@ -672,11 +693,11 @@ if DO_RENDER:
 
     # Small, bright key light -> crisp specular streak on the glossy plastic,
     # like the highlight visible along the rim/wall in the reference photos.
-    light("Key", (0.22, -0.32, 0.42), 5.5, 0.16)
-    light("Fill", (-0.32, -0.12, 0.28), 1.1, 0.7)
-    light("Rim", (0.0, 0.38, 0.34), 2.0, 0.3)
-    light("Top", (0.0, 0.0, 0.55), 1.6, 0.5)
-    light("Basin", (0.0, -0.05, 0.30), 1.8, 0.55)  # extra fill so the recessed
+    light("Key", (0.22, -0.32, 0.42), 1.9, 0.22)
+    light("Fill", (-0.32, -0.12, 0.28), 0.6, 0.7)
+    light("Rim", (0.0, 0.38, 0.34), 0.9, 0.3)
+    light("Top", (0.0, 0.0, 0.55), 0.55, 0.5)
+    light("Basin", (0.0, -0.05, 0.30), 0.8, 0.55)  # extra fill so the recessed
                                                     # interior doesn't read dark/over-saturated
 
     # ground plane — dark satin surface (like the photos' black cloth) with a
