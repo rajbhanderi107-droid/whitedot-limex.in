@@ -17,6 +17,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="modulepreload" href="./js/model-viewer.min.js" />
+  <link rel="modulepreload" href="./js/model-preload.js" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/bobbin.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/paint-container-procedural-red-white.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/motor-cover-procedural-black.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/araldite-container-procedural.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/hand-wash-bottle-duo.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/lunchbox-tray-four-color-lineup.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/consile-pipe-procedural.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/soap-stand-procedural.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/oil-bottle-procedural.glb" />
+  <script type="module" src="./js/model-preload.js"></script>
   <script type="module" src="./js/model-viewer.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -847,7 +858,7 @@
           <model-viewer
             src="${MODEL_SRC[entry.id] || ''}"
             alt="${entry.name} — LIMEX 3D model"
-            loading="lazy"
+            loading="eager"
             interaction-prompt="none"
             shadow-intensity="${entry.id === 'foodOilCan' ? '1.0' : '0'}"
             exposure="${entry.id === 'foodOilCan' ? '0.82' : '1.15'}"

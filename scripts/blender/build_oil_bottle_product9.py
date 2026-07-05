@@ -175,7 +175,7 @@ def srgb8(r, g, b):
 
 
 COL_BODY = srgb8(236, 231, 221)   # warm eggshell-white HDPE, sampled off reference photo
-COL_CAP = srgb8(230, 176, 24)     # bright egg-yolk yellow ribbed screw cap, sampled off reference photo
+COL_CAP = srgb8(255, 196, 18)     # saturated egg-yolk yellow; keep the cap visibly yellow in model-viewer
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 GLB_OUT = os.path.join(REPO, "public", "case-study", "model", "oil-bottle-procedural.glb")
@@ -420,7 +420,7 @@ def build_collar():
     mesh = bpy.data.meshes.new("Collar")
     bm.to_mesh(mesh)
     bm.free()
-    return new_object("Collar", mesh, mat_body)
+    return new_object("Collar", mesh, mat_cap)
 
 
 def build_cap():
@@ -624,7 +624,7 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 scene = bpy.context.scene
 
 mat_body = make_material("OilBottleBody", COL_BODY, 0.27)
-mat_cap = make_material("OilBottleCap", COL_CAP, 0.20)
+mat_cap = make_material("OilBottleCap", COL_CAP, 0.16)
 
 body = build_body()
 wedge = build_wedge()
@@ -647,6 +647,7 @@ for part in (body, wedge, collar, cap, ribs, handle, ticks, creases, gate_mark):
 # exported GLB previously looked flat/textureless in model-viewer. Bake it to
 # real base-color + tangent-space normal images per part so the exported
 # glTF carries genuine baseColorTexture / normalTexture maps.
+DO_BAKE = os.environ.get("OIL_BAKE", "0") != "0"
 BAKE_RES = int(os.environ.get("OIL_BAKE_RES", "2048"))
 TEXTURED_PARTS = (body, wedge, collar, cap, ribs, handle, ticks, creases)
 
@@ -739,8 +740,9 @@ def bake_part_textures(obj):
     img_nrm.pack()
 
 
-for part in TEXTURED_PARTS:
-    bake_part_textures(part)
+if DO_BAKE:
+    for part in TEXTURED_PARTS:
+        bake_part_textures(part)
 
 # ---------------------------------------------------------------- export GLB
 os.makedirs(os.path.dirname(GLB_OUT), exist_ok=True)
