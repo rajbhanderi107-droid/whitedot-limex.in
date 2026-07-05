@@ -765,6 +765,7 @@
     hardDish: './model/lunchbox-tray-four-color-lineup.glb',
     consilePipe: './model/consile-pipe-procedural.glb',
     soapStand: './model/soap-stand-procedural.glb',
+    foodOilCan: './model/oil-bottle-procedural.glb',
   };
   const CAMERA_ORBIT = {
     bobbin: '30deg 75deg 105%',
@@ -775,6 +776,7 @@
     hardDish: '20deg 80deg 115%',
     consilePipe: '80deg 76deg 85%',
     soapStand: '26deg 76deg 118%',
+    foodOilCan: '35deg 74deg 118%',
   };
   const CARD_BADGE = {
     bobbin: 'Featured',
@@ -785,6 +787,7 @@
     hardDish: 'New Model',
     consilePipe: 'New Model',
     soapStand: 'New Model',
+    foodOilCan: 'New Model',
   };
 
   function monogram(name) {
@@ -907,7 +910,7 @@
   const productStats = {
     overview: [
       ['35', 'Products Mapped', false],
-      ['08', 'Live Studies', false],
+      ['09', 'Live Studies', false],
       ['3D', 'Interactive', false],
       ['~38<small>%</small>', 'CO2e Cut (LCA)', true],
     ],
@@ -958,6 +961,12 @@
       ['3', 'Part Assembly', false],
       ['3D', 'Photo-Matched', false],
       ['Live', 'Product 08', true],
+    ],
+    foodOilCan: [
+      ['09', 'Food Oil Can', false],
+      ['145', 'mm Wide Face', false],
+      ['3D', 'Photo-Matched', false],
+      ['Live', 'Product 09', true],
     ],
   };
   function setActiveProduct(product) {

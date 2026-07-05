@@ -22,13 +22,14 @@ const consilePipeHref  = `${basePath}/case-study/consile-pipe.html`;
 const consilePipeModel = `${basePath}/case-study/model/consile-pipe-procedural.glb`;
 const soapStandHref  = `${basePath}/case-study/product.html?p=soap-stand`;
 const soapStandModel = `${basePath}/case-study/model/soap-stand-procedural.glb`;
+const foodOilCanHref  = `${basePath}/case-study/product.html?p=food-oil-can`;
+const foodOilCanModel = `${basePath}/case-study/model/oil-bottle-procedural.glb`;
 
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand';
-const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand']);
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan';
+const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan']);
 
 // Pending products — same card as live ones; 3D model + spec details land later.
 const pendingProducts: { idx: string; slug: string; name: string; tag: string }[] = [
-  { idx: '09', slug: 'food-oil-can', name: 'Food Oil Can', tag: 'Food Packaging' },
   { idx: '10', slug: 'dairy-products-container', name: 'Dairy Products Container', tag: 'Dairy Packaging' },
   { idx: '11', slug: 'lunch-box', name: 'Lunch Box', tag: 'Food Container' },
   { idx: '12', slug: 'dairy-sweet-container', name: 'Dairy Sweet Container', tag: 'Dairy Packaging' },
@@ -118,6 +119,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: <>15<small>%</small></>, label: 'LIMEX (Sample)' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 08', green: true },
+  ],
+  foodOilCan: [
+    { value: '09', label: 'Food Oil Can' },
+    { value: '145', label: 'mm Wide Face' },
+    { value: '3D', label: 'Photo-Matched' },
+    { value: 'Live', label: 'Product 09', green: true },
   ],
 };
 
@@ -630,6 +637,49 @@ export default function CaseStudyFeature() {
             </div>
             <div className="csp-pbarlabels">
               <span className="csp-pdot pp" /><span className="csp-pblabel">15% LIMEX (marked on sample)</span>
+            </div>
+          </div>
+          <span className="csp-pgo">-&gt;</span>
+        </div>
+      </a>
+
+      {/* 09 Food Oil Can - live */}
+      <a className="csp-pcard featured live" href={foodOilCanHref} data-product="foodOilCan">
+        <div className="csp-border-beam" />
+        <div className="csp-pglass" />
+        <div className="csp-pglow" />
+        <div className="csp-pmedia">
+          <span className="csp-pidx">09</span>
+          {isMobileViewport ? (
+            <div className="csp-soon-placeholder">FO</div>
+          ) : (
+            // @ts-ignore custom element
+            <model-viewer
+              src={foodOilCanModel}
+              alt="Food Oil Can - wide offset-cap oil jug with moulded handle 3D model"
+              loading="lazy"
+              interaction-prompt="none"
+              shadow-intensity="0"
+              exposure="1.12"
+              tone-mapping="neutral"
+              environment-image="neutral"
+              camera-orbit="35deg 74deg 118%"
+              style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+            />
+          )}
+        </div>
+        <div className="csp-pinfo">
+          <div>
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+              <span className="csp-pfeatured">New Model</span>
+            </div>
+            <div className="csp-pname">Food Oil Can</div>
+            <div className="csp-ptag">Offset-Cap Oil Can - Visual Reference</div>
+            <div className="csp-pbar">
+              <span style={{ flex:100, height:'100%', background:'var(--cs-green)', display:'block' }} />
+            </div>
+            <div className="csp-pbarlabels">
+              <span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span>
             </div>
           </div>
           <span className="csp-pgo">-&gt;</span>

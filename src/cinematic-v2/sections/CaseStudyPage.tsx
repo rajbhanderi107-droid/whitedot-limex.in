@@ -25,12 +25,14 @@ const consilePipeHref  = `${basePath}/case-study/consile-pipe.html`;
 const consilePipeModel = `${basePath}/case-study/model/consile-pipe-procedural.glb`;
 const soapStandHref  = `${basePath}/case-study/product.html?p=soap-stand`;
 const soapStandModel = `${basePath}/case-study/model/soap-stand-procedural.glb`;
+const foodOilCanHref  = `${basePath}/case-study/product.html?p=food-oil-can`;
+const foodOilCanModel = `${basePath}/case-study/model/oil-bottle-procedural.glb`;
 
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand';
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
-    { value: '08', label: 'Active Studies' },
+    { value: '09', label: 'Active Studies' },
     { value: '3D', label: 'Interactive' },
     { value: <>100<small>%</small></>, label: 'LIMEX + Color' },
     { value: <>~38<small>%</small></>, label: 'CO2e Cut (LCA)', green: true },
@@ -82,6 +84,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: <>15<small>%</small></>, label: 'LIMEX (Sample)' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 08', green: true },
+  ],
+  foodOilCan: [
+    { value: '09', label: 'Food Oil Can' },
+    { value: '145', label: 'mm Wide Face' },
+    { value: '3D', label: 'Photo-Matched' },
+    { value: 'Live', label: 'Product 09', green: true },
   ],
 };
 
@@ -171,7 +179,7 @@ export default function CaseStudyPage() {
           c.style.zIndex    = String(Math.round((1 - absT) * 10));
         }
         const product = c.dataset.product as ProductKey | undefined;
-        if ((product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand') && absT < nearestDistance) {
+        if ((product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan') && absT < nearestDistance) {
           nearestProduct = product;
           nearestDistance = absT;
         }
@@ -205,7 +213,7 @@ export default function CaseStudyPage() {
         if (!glow) return;
         c.addEventListener('mouseenter', () => {
           const product = c.dataset.product as ProductKey | undefined;
-          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand') setActiveProductKey(product);
+          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan') setActiveProductKey(product);
         });
         c.addEventListener('mousemove', (e: MouseEvent) => {
           const r = c.getBoundingClientRect();
@@ -583,6 +591,49 @@ export default function CaseStudyPage() {
             </div>
             <div className="csp-pbarlabels">
               <span className="csp-pdot pp" /><span className="csp-pblabel">15% LIMEX (marked on sample)</span>
+            </div>
+          </div>
+          <span className="csp-pgo">-&gt;</span>
+        </div>
+      </a>
+
+      {/* 09 Food Oil Can - live */}
+      <a className="csp-pcard featured live" href={foodOilCanHref} data-product="foodOilCan">
+        <div className="csp-border-beam" />
+        <div className="csp-pglass" />
+        <div className="csp-pglow" />
+        <div className="csp-pmedia">
+          <span className="csp-pidx">09</span>
+          {isMobileViewport ? (
+            <div className="csp-soon-placeholder">FO</div>
+          ) : (
+            // @ts-ignore custom element
+            <model-viewer
+              src={foodOilCanModel}
+              alt="Food Oil Can - wide offset-cap oil jug with moulded handle 3D model"
+              loading="lazy"
+              interaction-prompt="none"
+              shadow-intensity="0"
+              exposure="1.12"
+              tone-mapping="neutral"
+              environment-image="neutral"
+              camera-orbit="35deg 74deg 118%"
+              style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+            />
+          )}
+        </div>
+        <div className="csp-pinfo">
+          <div>
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+              <span className="csp-pfeatured">New Model</span>
+            </div>
+            <div className="csp-pname">Food Oil Can</div>
+            <div className="csp-ptag">Offset-Cap Oil Can - Visual Reference</div>
+            <div className="csp-pbar">
+              <span style={{ flex:100, height:'100%', background:'var(--cs-green)', display:'block' }} />
+            </div>
+            <div className="csp-pbarlabels">
+              <span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span>
             </div>
           </div>
           <span className="csp-pgo">-&gt;</span>
