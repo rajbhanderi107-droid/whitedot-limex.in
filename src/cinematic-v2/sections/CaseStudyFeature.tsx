@@ -659,11 +659,11 @@ export default function CaseStudyFeature() {
               alt="Food Oil Can - wide offset-cap oil jug with moulded handle 3D model"
               loading="lazy"
               interaction-prompt="none"
-              shadow-intensity="0"
-              exposure="1.12"
+              shadow-intensity="0.85"
+              exposure="0.86"
               tone-mapping="neutral"
               environment-image="neutral"
-              camera-orbit="35deg 74deg 118%"
+              camera-orbit="22deg 72deg 108%"
               style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
             />
           )}

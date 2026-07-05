@@ -817,7 +817,7 @@
     hardDish: '0deg 80deg 115%',
     consilePipe: '80deg 76deg 85%',
     soapStand: '35deg 70deg 100%',
-    foodOilCan: '35deg 74deg 118%',
+    foodOilCan: '22deg 72deg 108%',
   };
   // Products whose GLB carries a baked animation to autoplay on the stage.
   const MODEL_ANIMATION = {
@@ -891,8 +891,8 @@
           rotation-per-second="22deg"
           interpolation-decay="100"
           interaction-prompt="none"
-          shadow-intensity="0"
-          exposure="1.15"
+          shadow-intensity="${entry.id === 'foodOilCan' ? '0.85' : '0'}"
+          exposure="${entry.id === 'foodOilCan' ? '0.86' : '1.15'}"
           tone-mapping="neutral"
           environment-image="neutral"
           camera-orbit="${CAMERA_ORBIT[entry.id] || '0deg 76deg 105%'}"
