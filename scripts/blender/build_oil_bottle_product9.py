@@ -174,8 +174,8 @@ def srgb8(r, g, b):
     return (srgb_to_linear(r / 255), srgb_to_linear(g / 255), srgb_to_linear(b / 255), 1.0)
 
 
-COL_BODY = srgb8(232, 224, 214)   # off-white HDPE, sampled off a lit flat panel
-COL_CAP = srgb8(207, 163, 47)     # mustard-yellow ribbed screw cap
+COL_BODY = srgb8(236, 231, 221)   # warm eggshell-white HDPE, sampled off reference photo
+COL_CAP = srgb8(230, 176, 24)     # bright egg-yolk yellow ribbed screw cap, sampled off reference photo
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 GLB_OUT = os.path.join(REPO, "public", "case-study", "model", "oil-bottle-procedural.glb")
@@ -306,8 +306,15 @@ def apply_boolean_and_bake(obj, cutter):
     boolmod = obj.modifiers.new("cut", "BOOLEAN")
     boolmod.operation = "DIFFERENCE"
     boolmod.object = cutter
-    boolmod.solver = "EXACT"
+    # Blender 5.1's EXACT solver silently returns an empty mesh for this
+    # slab+cylinder cut; MANIFOLD (new in 5.x) handles it. Keep EXACT as
+    # the fallback for the bpy 5.0 wheel, which has no MANIFOLD enum.
+    try:
+        boolmod.solver = "MANIFOLD"
+    except TypeError:
+        boolmod.solver = "EXACT"
     cutter.hide_render = True
+    bpy.context.view_layer.update()
     dg = bpy.context.evaluated_depsgraph_get()
     ev = obj.evaluated_get(dg)
     mesh2 = bpy.data.meshes.new_from_object(ev)
@@ -616,8 +623,8 @@ def build_panel_creases():
 bpy.ops.wm.read_factory_settings(use_empty=True)
 scene = bpy.context.scene
 
-mat_body = make_material("OilBottleBody", COL_BODY, 0.34)
-mat_cap = make_material("OilBottleCap", COL_CAP, 0.28)
+mat_body = make_material("OilBottleBody", COL_BODY, 0.27)
+mat_cap = make_material("OilBottleCap", COL_CAP, 0.20)
 
 body = build_body()
 wedge = build_wedge()
@@ -633,6 +640,107 @@ root = bpy.data.objects.new("OilBottle", None)
 bpy.context.scene.collection.objects.link(root)
 for part in (body, wedge, collar, cap, ribs, handle, ticks, creases, gate_mark):
     part.parent = root
+
+# ---------------------------------------------------------------- bake real image textures
+# Blender's procedural noise->bump chain is Blender-only: the glTF exporter
+# drops it (no Image Texture node = nothing to reference), which is why the
+# exported GLB previously looked flat/textureless in model-viewer. Bake it to
+# real base-color + tangent-space normal images per part so the exported
+# glTF carries genuine baseColorTexture / normalTexture maps.
+BAKE_RES = int(os.environ.get("OIL_BAKE_RES", "2048"))
+TEXTURED_PARTS = (body, wedge, collar, cap, ribs, handle, ticks, creases)
+
+scene.render.engine = "CYCLES"
+prefs = bpy.context.preferences.addons.get("cycles")
+try:
+    scene.cycles.device = "GPU" if prefs and prefs.preferences.compute_device_type != "NONE" else "CPU"
+except Exception:
+    scene.cycles.device = "CPU"
+scene.cycles.samples = 48
+scene.render.bake.use_pass_direct = False
+scene.render.bake.use_pass_indirect = False
+scene.render.bake.use_pass_color = True
+scene.render.bake.margin = 4
+
+
+def box_project_uv(obj):
+    """Headless-safe UV unwrap: 6-cell box projection (3 dominant axes x 2
+    signs, each cell its own 1/6 tile of UV space, normalized to the mesh
+    bbox). No overlapping texels between opposing faces, no bpy.ops, works
+    identically in -b background mode. Seams are irrelevant here — the baked
+    detail is isotropic orange-peel noise."""
+    mesh = obj.data
+    if not mesh.uv_layers:
+        mesh.uv_layers.new(name="UVMap")
+    uv = mesh.uv_layers.active.data
+    lo = [min(v.co[i] for v in mesh.vertices) for i in range(3)]
+    hi = [max(v.co[i] for v in mesh.vertices) for i in range(3)]
+    span = [max(hi[i] - lo[i], 1e-9) for i in range(3)]
+    PAD = 0.01
+    for poly in mesh.polygons:
+        n = poly.normal
+        ax = max(range(3), key=lambda i: abs(n[i]))
+        sign_cell = 0 if n[ax] >= 0 else 1
+        ua, va = ((1, 2), (0, 2), (0, 1))[ax]
+        cell = ax * 2 + sign_cell          # 0..5
+        col, row = cell % 3, cell // 3     # 3 x 2 grid
+        for li in poly.loop_indices:
+            co = mesh.vertices[mesh.loops[li].vertex_index].co
+            u = (co[ua] - lo[ua]) / span[ua]
+            v = (co[va] - lo[va]) / span[va]
+            u = PAD + u * (1 / 3 - 2 * PAD) + col / 3
+            v = PAD + v * (1 / 2 - 2 * PAD) + row / 2
+            uv[li].uv = (u, v)
+
+
+def bake_part_textures(obj):
+    src_mat = obj.data.materials[0]
+    mat = src_mat.copy()
+    mat.name = f"{obj.name}_Baked"
+    obj.data.materials[0] = mat
+    nt = mat.node_tree
+    bsdf = nt.nodes["Principled BSDF"]
+
+    for o in bpy.context.view_layer.objects:
+        o.select_set(False)
+    obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj
+
+    box_project_uv(obj)
+
+    img_col = bpy.data.images.new(f"{obj.name}_BaseColor", BAKE_RES, BAKE_RES)
+    img_nrm = bpy.data.images.new(f"{obj.name}_Normal", BAKE_RES, BAKE_RES)
+    img_nrm.colorspace_settings.name = "Non-Color"
+
+    tex_col = nt.nodes.new("ShaderNodeTexImage")
+    tex_col.image = img_col
+    tex_nrm = nt.nodes.new("ShaderNodeTexImage")
+    tex_nrm.image = img_nrm
+
+    for n in nt.nodes:
+        n.select = False
+    tex_col.select = True
+    nt.nodes.active = tex_col
+    scene.cycles.bake_type = "DIFFUSE"
+    bpy.ops.object.bake(type="DIFFUSE")
+
+    for n in nt.nodes:
+        n.select = False
+    tex_nrm.select = True
+    nt.nodes.active = tex_nrm
+    scene.cycles.bake_type = "NORMAL"
+    bpy.ops.object.bake(type="NORMAL")
+
+    nrm_map_node = nt.nodes.new("ShaderNodeNormalMap")
+    nt.links.new(tex_nrm.outputs["Color"], nrm_map_node.inputs["Color"])
+    nt.links.new(nrm_map_node.outputs["Normal"], bsdf.inputs["Normal"])
+    nt.links.new(tex_col.outputs["Color"], bsdf.inputs["Base Color"])
+    img_col.pack()
+    img_nrm.pack()
+
+
+for part in TEXTURED_PARTS:
+    bake_part_textures(part)
 
 # ---------------------------------------------------------------- export GLB
 os.makedirs(os.path.dirname(GLB_OUT), exist_ok=True)
