@@ -9,7 +9,7 @@ permissions:
 
 env:
   AWS_REGION: ap-south-1
-  S3_BUCKET: whitedot-frontend
+  S3_BUCKET: ""
   VITE_API_URL: https://api.whitedotindia.in
 
 jobs:
@@ -34,8 +34,22 @@ jobs:
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Discover deployment bucket
+        id: bucket
+        run: |
+          set -euo pipefail
+          buckets=$(aws s3api list-buckets --query 'Buckets[].Name' --output text)
+          echo "Available buckets: ${buckets}"
+          bucket=$(printf '%s\n' ${buckets} | grep -E 'whitedot|white-dot|limex' | head -n 1 || true)
+          if [ -z "$bucket" ]; then
+            echo "::error::No WhiteDot/LIMEX S3 bucket found in this AWS account."
+            exit 1
+          fi
+          echo "bucket=${bucket}" >> "$GITHUB_OUTPUT"
+          echo "Using bucket: ${bucket}"
+
       - name: Sync to S3
-        run: aws s3 sync dist/ "s3://${{ env.S3_BUCKET }}" --delete
+        run: aws s3 sync dist/ "s3://${{ steps.bucket.outputs.bucket }}" --delete
 
       - name: Invalidate CloudFront
         run: |
