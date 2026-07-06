@@ -41,10 +41,10 @@ def srgb8(r: int, g: int, b: int) -> tuple[float, float, float, float]:
     return (srgb_to_linear(r / 255), srgb_to_linear(g / 255), srgb_to_linear(b / 255), 1.0)
 
 
-# Pure bright white body — no warm tint. Real HDPE is a clean opaque white.
-BODY_COLOR = srgb8(252, 252, 250)
-# Vivid red cap — common on Indian cooking oil cans (matching real product photos)
-CAP_COLOR = srgb8(210, 35, 30)
+# Pure bright white body — clean opaque HDPE white matching the product photo.
+BODY_COLOR = srgb8(250, 248, 244)
+# Golden yellow cap — matching the real product photo
+CAP_COLOR = srgb8(235, 190, 20)
 # Collar/ring piece — slightly off-white to differentiate from body
 COLLAR_COLOR = srgb8(245, 242, 235)
 
