@@ -1,59 +1,42 @@
-# Deploy & cache — why a change may not show up immediately
+# Deploy & cache
 
-The site is served through **two cache layers**:
+WhiteDot production is served from the Hostinger VPS.
 
+Current live path:
+
+```txt
+Visitor browser -> GoDaddy DNS -> Hostinger VPS -> nginx -> /var/www/whitedot-frontend
 ```
-Browser ──▶ Cloudflare (your DNS/CDN) ──▶ GitHub Pages (Fastly) ──▶ gh-pages branch
-```
 
-When you push to `main`, the `Deploy WhiteDot site to GitHub Pages` workflow
-rebuilds `dist/` and force-pushes it to the `gh-pages` branch. GitHub Pages
-serves it, and **Cloudflare caches the assets at its edge** (CSS/JS for up to
-4 hours). That edge cache is the usual reason a fresh deploy "doesn't show up"
-— the new files exist at the origin, but Cloudflare keeps serving the old ones
-until their TTL expires.
+## Production deploy
 
-## Automatic fix (already wired in)
+Production deploys are handled by GitHub Actions:
 
-`.github/workflows/pages.yml` has a **Purge Cloudflare cache** step that runs
-after every successful deploy and clears the edge cache, so updates go live
-right away. It **skips automatically** until you add the two secrets below —
-so the deploy never fails just because the secrets aren't set.
+- Workflow: `.github/workflows/deploy.yml`
+- Trigger: push to `main` or manual `workflow_dispatch`
+- Build command: `npm ci && npm run build`
+- Upload target: `/var/www/whitedot-frontend-new`
+- Live directory after atomic swap: `/var/www/whitedot-frontend`
+- Web server: nginx on the Hostinger VPS
 
-## One-time setup — add the two secrets
+The workflow builds the Vite site, uploads `dist/` to the VPS, swaps it into the live directory, validates nginx, and reloads nginx.
 
-1. **Get a Cloudflare API token**
-   - Cloudflare dashboard → *My Profile* → *API Tokens* → *Create Token*
-   - Use the **"Edit zone"** template (or a custom token with the
-     **Zone → Cache Purge → Purge** permission), scoped to the
-     `whitedotindia.in` zone.
-   - Copy the generated token.
+## DNS
 
-2. **Get your Zone ID**
-   - Cloudflare dashboard → select the `whitedotindia.in` domain →
-     *Overview* → right sidebar → **Zone ID**. Copy it.
+DNS is managed in GoDaddy. The live domain should point to the Hostinger VPS:
 
-3. **Add both as GitHub repository secrets**
-   - GitHub repo → *Settings* → *Secrets and variables* → *Actions* →
-     *New repository secret*:
-     - `CLOUDFLARE_API_TOKEN` → the token from step 1
-     - `CLOUDFLARE_ZONE_ID` → the Zone ID from step 2
+- `whitedotindia.in`
+- `www.whitedotindia.in`
 
-Once both secrets exist, the next push to `main` will purge the cache
-automatically and your change appears on `whitedotindia.in` within seconds.
+The expected A record target is the current Hostinger VPS IP used by the deployment secrets.
 
-## Seeing a change before the cache clears (manual)
+## When the site is not reachable
 
-- **Hard refresh:** `Ctrl+Shift+R` (Windows) / `Cmd+Shift+R` (Mac)
-- **Incognito / private window**
-- Append a dummy query: `https://whitedotindia.in/?v=2`
-- **Purge everything manually:** Cloudflare dashboard → *Caching* →
-  *Configuration* → *Purge Everything*
+Use the VPS repair workflow:
 
-## Note on hashed assets
+- Workflow: `.github/workflows/vps-web-repair.yml`
+- Name: `Repair VPS Web Reachability`
 
-Vite fingerprints every JS/CSS file (e.g. `CinematicAppV2-BY5kMWLB.css`).
-Because the filename changes whenever the content changes, the only file that
-*must* be re-fetched after a deploy is `index.html`, which points at the new
-hashed files. GitHub Pages serves `index.html` with a short 10-minute TTL, and
-the Cloudflare purge above flushes it immediately.
+That workflow restarts nginx, verifies ports `80` and `443`, opens local firewall rules when needed, and runs public smoke checks from GitHub Actions.
+
+If GitHub Actions can reach the site but a local network cannot, the issue is likely outside the repo and VPS OS, such as GoDaddy DNS propagation, Hostinger network/firewall, or the local ISP route to the VPS.
