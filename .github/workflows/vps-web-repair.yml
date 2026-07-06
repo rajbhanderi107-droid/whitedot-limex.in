@@ -1,0 +1,70 @@
+name: Repair VPS Web Reachability
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: repair-vps-web
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect and repair VPS web ports
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: root
+          key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 10m
+          script: |
+            set -e
+
+            echo "=== host ==="
+            hostname
+            date -u
+
+            echo "=== nginx config ==="
+            nginx -t
+
+            echo "=== ensure nginx is running ==="
+            systemctl enable nginx >/dev/null 2>&1 || true
+            systemctl restart nginx
+            systemctl --no-pager --full status nginx | sed -n '1,18p'
+
+            echo "=== listening sockets before firewall repair ==="
+            ss -ltnp | grep -E ':(80|443)\b' || true
+
+            echo "=== open OS firewall web ports when firewall managers are active ==="
+            if command -v ufw >/dev/null 2>&1; then
+              ufw allow 22/tcp
+              ufw allow 80/tcp
+              ufw allow 443/tcp
+              ufw status verbose || true
+            fi
+
+            if command -v firewall-cmd >/dev/null 2>&1 && firewall-cmd --state >/dev/null 2>&1; then
+              firewall-cmd --permanent --add-service=http
+              firewall-cmd --permanent --add-service=https
+              firewall-cmd --reload
+              firewall-cmd --list-all
+            fi
+
+            echo "=== listening sockets after repair ==="
+            ss -ltnp | grep -E ':(80|443)\b'
+
+            echo "=== local frontend probes ==="
+            curl -fsS -o /tmp/whitedot-root.html -w 'http status=%{http_code}\n' \
+              -H 'Host: whitedotindia.in' http://127.0.0.1/
+            head -c 220 /tmp/whitedot-root.html
+            echo
+
+            curl -kfsS -o /tmp/whitedot-https.html -w 'https status=%{http_code}\n' \
+              -H 'Host: whitedotindia.in' https://127.0.0.1/ || true
+
+      - name: Public smoke test from GitHub runner
+        run: |
+          set -e
+          curl -L --connect-timeout 12 --max-time 30 -I https://whitedotindia.in/
+          curl -L --connect-timeout 12 --max-time 30 -I https://www.whitedotindia.in/
