@@ -24,13 +24,14 @@ const soapStandHref  = `${basePath}/case-study/product.html?p=soap-stand`;
 const soapStandModel = `${basePath}/case-study/model/soap-stand-procedural.glb`;
 const foodOilCanHref  = `${basePath}/case-study/product.html?p=food-oil-can`;
 const foodOilCanModel = `${basePath}/case-study/model/oil-bottle-procedural.glb`;
+const dairyContainerHref  = `${basePath}/case-study/product.html?p=dairy-products-container`;
+const dairyContainerModel = `${basePath}/case-study/model/dairy-container-procedural.glb`;
 
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan';
-const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan']);
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer';
+const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer']);
 
 // Pending products — same card as live ones; 3D model + spec details land later.
 const pendingProducts: { idx: string; slug: string; name: string; tag: string }[] = [
-  { idx: '10', slug: 'dairy-products-container', name: 'Dairy Products Container', tag: 'Dairy Packaging' },
   { idx: '11', slug: 'lunch-box', name: 'Lunch Box', tag: 'Food Container' },
   { idx: '12', slug: 'dairy-sweet-container', name: 'Dairy Sweet Container', tag: 'Dairy Packaging' },
   { idx: '13', slug: 'dairy-round-container', name: 'Dairy Round Container', tag: 'Dairy Packaging' },
@@ -125,6 +126,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: '145', label: 'mm Wide Face' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 09', green: true },
+  ],
+  dairyProductsContainer: [
+    { value: '10', label: 'Dairy Container' },
+    { value: '68.5', label: 'mm Total Height' },
+    { value: '3D', label: 'Spec-Matched' },
+    { value: 'Live', label: 'Product 10', green: true },
   ],
 };
 
@@ -675,6 +682,51 @@ export default function CaseStudyFeature() {
             </div>
             <div className="csp-pname">Food Oil Can</div>
             <div className="csp-ptag">Offset-Cap Oil Can - Visual Reference</div>
+            <div className="csp-pbar">
+              <span style={{ flex:100, height:'100%', background:'var(--cs-green)', display:'block' }} />
+            </div>
+            <div className="csp-pbarlabels">
+              <span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span>
+            </div>
+          </div>
+          <span className="csp-pgo">-&gt;</span>
+        </div>
+      </a>
+
+      {/* 10 Dairy Products Container - live */}
+      <a className="csp-pcard featured live" href={dairyContainerHref} data-product="dairyProductsContainer">
+        <div className="csp-border-beam" />
+        <div className="csp-pglass" />
+        <div className="csp-pglow" />
+        <div className="csp-pmedia">
+          <span className="csp-pidx">10</span>
+          {isMobileViewport ? (
+            <div className="csp-soon-placeholder">DC</div>
+          ) : (
+            // @ts-ignore custom element
+            <model-viewer
+              src={dairyContainerModel}
+              alt="Dairy Products Container - tapered sample tub with snap-fit twist lid 3D model"
+              loading="lazy"
+              interaction-prompt="none"
+              shadow-intensity="0"
+              exposure="1.15"
+              tone-mapping="neutral"
+              environment-image="neutral"
+              camera-orbit="28deg 74deg 112%"
+              autoplay
+              animation-name="Explode"
+              style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+            />
+          )}
+        </div>
+        <div className="csp-pinfo">
+          <div>
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+              <span className="csp-pfeatured">New Model</span>
+            </div>
+            <div className="csp-pname">Dairy Products Container</div>
+            <div className="csp-ptag">Tapered Sample Tub - Visual Reference</div>
             <div className="csp-pbar">
               <span style={{ flex:100, height:'100%', background:'var(--cs-green)', display:'block' }} />
             </div>

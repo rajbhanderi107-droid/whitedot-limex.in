@@ -1,0 +1,58 @@
+{
+  "id": "consilePipe",
+  "index": "07",
+  "name": "Concealed Pipe",
+  "category": "Industrial Pipe",
+  "status": "live",
+  "application": "Concealed Rigid Conduit Pipe",
+  "tagline": "A rigid concealed conduit pipe, modeled in 3D from the supplied reference photos. Verified LIMEX composition data is in progress.",
+  "description": "A rigid electrical conduit pipe used in concealed civil/wall wiring, with a printed blue longitudinal identification stripe and an embossed ISI-style size/batch marking ('0090 M' flanked by directional arrows) near one end. The interactive 3D model is photo-matched to the supplied reference photography, including the flat sawn cut ends that expose the pipe's wall thickness and hollow bore. Verified LIMEX composition and supplier spec data for this product are in progress - no figures are published until confirmed.",
+  "highlights": [
+    {
+      "num": "3D",
+      "label": "Photo-Matched",
+      "source": "consile-pipe-photo-reference",
+      "verified": true
+    },
+    {
+      "num": "0090 M",
+      "label": "ISI-Style Marking",
+      "source": "consile-pipe-photo-reference",
+      "verified": true
+    },
+    {
+      "num": "2",
+      "label": "Reference Angles",
+      "source": "consile-pipe-photo-reference",
+      "verified": true
+    }
+  ],
+  "specs": [
+    {
+      "label": "Application",
+      "value": "Concealed Rigid Conduit Pipe",
+      "source": "consile-pipe-photo-reference",
+      "verified": true
+    },
+    {
+      "label": "End Finish",
+      "value": "Sawn Flat Cut, No Fittings",
+      "source": "consile-pipe-photo-reference",
+      "verified": true
+    },
+    {
+      "label": "Marking",
+      "value": "\"0090\" + \"M\" with directional arrows (ISI-style)",
+      "source": "consile-pipe-photo-reference",
+      "verified": true
+    },
+    {
+      "label": "Material Base",
+      "value": "LIMEX blend - verification in progress",
+      "source": "consile-pipe-photo-reference",
+      "verified": false
+    }
+  ],
+  "modelFile": "model/consile-pipe-procedural.glb",
+  "htmlPage": "consile-pipe.html"
+}

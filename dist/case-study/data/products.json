@@ -2,7 +2,7 @@
   "_meta": {
     "schema": "wd-case-study-products/1.1",
     "note": "Canonical list of all 35 planned case-study products. `status:\"live\"` entries have a real 3D model + verified specs (full detail lives in specs.json under the same `id` key — this file reads specs.json at runtime for those). `status:\"pending\"` entries intentionally omit composition/specs/highlights — never invent LIMEX composition percentages, CO2 numbers, or supplier specs for unverified products. Use honest 'coming soon' / 'pending' language only. `photos` is an array of real (non-3D-render) product photography objects `{src, alt}` for the Real Product Photography gallery on product.html — currently empty for all 35 products until genuine photography is supplied; the template renders an honest 'coming soon' placeholder when empty and a full gallery/lightbox the moment 1+ entries are added, with zero template changes required.",
-    "lastUpdated": "2026-07-05"
+    "lastUpdated": "2026-07-06"
   },
   "products": [
     { "id": "bobbin",             "index": "01", "slug": "bobbin",              "name": "Bobbin",                          "category": "Textile Bobbin",                 "status": "live",    "photos": [] },
@@ -14,7 +14,7 @@
     { "id": "consilePipe",        "index": "07", "slug": "consile-pipe",         "name": "Concealed Pipe",                  "category": "Industrial Pipe",                "status": "live",    "photos": [] },
     { "id": "soapStand",          "index": "08", "slug": "soap-stand",           "name": "Soap Stand",                      "category": "Bathroom Accessory",             "status": "live",    "photos": [] },
     { "id": "foodOilCan",         "index": "09", "slug": "food-oil-can",         "name": "Food Oil Can",                    "category": "Food Packaging",                 "status": "live",    "photos": [] },
-    { "id": "dairyProductsContainer", "index": "10", "slug": "dairy-products-container", "name": "Dairy Products Container", "category": "Dairy Packaging",           "status": "pending", "photos": [] },
+    { "id": "dairyProductsContainer", "index": "10", "slug": "dairy-products-container", "name": "Dairy Products Container", "category": "Dairy Packaging",           "status": "live",    "photos": [] },
     { "id": "lunchBox",           "index": "11", "slug": "lunch-box",            "name": "Lunch Box",                       "category": "Food Container",                 "status": "pending", "photos": [] },
     { "id": "dairySweetContainer","index": "12", "slug": "dairy-sweet-container","name": "Dairy Sweet Container",           "category": "Dairy Packaging",                "status": "pending", "photos": [] },
     { "id": "dairyRoundContainer","index": "13", "slug": "dairy-round-container","name": "Dairy Round Container",           "category": "Dairy Packaging",                "status": "pending", "photos": [] },

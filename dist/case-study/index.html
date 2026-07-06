@@ -766,6 +766,7 @@
     consilePipe: './model/consile-pipe-procedural.glb',
     soapStand: './model/soap-stand-procedural.glb',
     foodOilCan: './model/oil-bottle-procedural.glb',
+    dairyProductsContainer: './model/dairy-container-procedural.glb',
   };
   const CAMERA_ORBIT = {
     bobbin: '30deg 75deg 105%',
@@ -776,7 +777,8 @@
     hardDish: '20deg 80deg 115%',
     consilePipe: '80deg 76deg 85%',
     soapStand: '26deg 76deg 118%',
-    foodOilCan: '35deg 74deg 118%',
+    foodOilCan: '22deg 72deg 108%',
+    dairyProductsContainer: '28deg 74deg 112%',
   };
   const CARD_BADGE = {
     bobbin: 'Featured',
@@ -788,6 +790,7 @@
     consilePipe: 'New Model',
     soapStand: 'New Model',
     foodOilCan: 'New Model',
+    dairyProductsContainer: 'New Model',
   };
 
   function monogram(name) {
@@ -849,8 +852,8 @@
             alt="${entry.name} — LIMEX 3D model"
             loading="lazy"
             interaction-prompt="none"
-            shadow-intensity="0"
-            exposure="1.15"
+            shadow-intensity="${entry.id === 'foodOilCan' ? '0.85' : '0'}"
+            exposure="${entry.id === 'foodOilCan' ? '0.86' : '1.15'}"
             tone-mapping="neutral"
             environment-image="neutral"
             camera-orbit="${CAMERA_ORBIT[entry.id] || '30deg 75deg 105%'}">
@@ -910,7 +913,7 @@
   const productStats = {
     overview: [
       ['35', 'Products Mapped', false],
-      ['09', 'Live Studies', false],
+      ['10', 'Live Studies', false],
       ['3D', 'Interactive', false],
       ['~38<small>%</small>', 'CO2e Cut (LCA)', true],
     ],
@@ -967,6 +970,12 @@
       ['145', 'mm Wide Face', false],
       ['3D', 'Photo-Matched', false],
       ['Live', 'Product 09', true],
+    ],
+    dairyProductsContainer: [
+      ['10', 'Dairy Container', false],
+      ['68.5', 'mm Total Height', false],
+      ['3D', 'Spec-Matched', false],
+      ['Live', 'Product 10', true],
     ],
   };
   function setActiveProduct(product) {

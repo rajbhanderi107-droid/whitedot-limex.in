@@ -4,7 +4,7 @@
     "note": "Single source of truth for case-study technical data. Every field carries a `verified` flag and a `source`. The page engine and the PDF TDS generator read ONLY from this file. verified:true = cited from the official White Dot 'Case Studies in India' PDF or public TBM/supplier documentation. verified:false = representative of the material class; confirm against supplier lot TDS.",
     "lastResearched": "2026-06-23",
     "researchedBy": "White Dot — data verification engine",
-    "lastUpdated": "2026-07-05"
+    "lastUpdated": "2026-07-06"
   },
   "sources": {
     "wd-casestudies-pdf": "White Dot — 'LIMEX Case Studies in India' (official document)",
@@ -18,7 +18,8 @@
     "hand-wash-photo-reference": "Supplied hand wash bottle photos: white and green faceted pump bottles, duo front views and facet close-ups (IMG_2595/2596/2800/2801)",
     "consile-pipe-photo-reference": "Supplied concealed pipe photos: two angles of the same black rigid conduit pipe segment showing the blue stripe and embossed '0090 M' end marking",
     "soap-stand-photo-reference": "Supplied soap stand photos: closed front view, knit-embossed lid top view with bow, and open view showing the slotted drain insert and '15% Limex' handwritten on the lid interior (IMG_2604/2605/2606)",
-    "oil-bottle-photo-reference": "Supplied oil can / lubricant jug photos and dimensions card: wide rounded-rectangle body, offset fluted cap, moulded handle, side grip ribs, and measured 145 mm width / 96 mm depth / 208 mm height references"
+    "oil-bottle-photo-reference": "Supplied oil can / lubricant jug photos and dimensions card: wide rounded-rectangle body, offset fluted cap, moulded handle, side grip ribs, and measured 145 mm width / 96 mm depth / 208 mm height references",
+    "dairy-container-spec-sheet": "Supplied dairy sample tub photos (IMG_2613/2614/2615) and a precise 3D modeling specification sheet (IMG_2849): tapered frustum body, snap-fit twist lid with embossed lid text and tamper tab, all dimensions measured in mm to +/-0.1mm tolerance"
   },
   "products": {
     "bobbin": {
@@ -776,6 +777,68 @@
           "label": "Material Base",
           "value": "LIMEX blend - verification in progress",
           "source": "oil-bottle-photo-reference",
+          "verified": false
+        }
+      ]
+    },
+    "dairyProductsContainer": {
+      "id": "dairyProductsContainer",
+      "index": "10",
+      "name": "Dairy Products Container",
+      "category": "Dairy Packaging",
+      "status": "live",
+      "application": "Tapered Sample Tub / Dairy Container",
+      "tagline": "A squat tapered dairy sample tub with a snap-fit twist lid, modeled to a precise millimeter specification sheet.",
+      "description": "A tapered frustum-shaped sample tub with a snap-fit twist lid: outward flange skirt over the container rim, a recessed lid field carrying embossed identification text and curved tamper instructions, an integrated tear-strip tab, and a matching rim security-lock nub. The interactive 3D model follows the supplied photo set and modeling specification sheet exactly, to a stated tolerance of +/-0.1mm on the critical rim/seal diameters. Verified supplier composition and CO2 data are still in progress, so no LIMEX percentage or mechanical values are published for this product.",
+      "highlights": [
+        {
+          "num": "3D",
+          "label": "Spec-Matched",
+          "source": "dairy-container-spec-sheet",
+          "verified": true
+        },
+        {
+          "num": "68.5",
+          "label": "mm Total Height",
+          "source": "dairy-container-spec-sheet",
+          "verified": true
+        },
+        {
+          "num": "82.5",
+          "label": "mm Lid Diameter",
+          "source": "dairy-container-spec-sheet",
+          "verified": true
+        }
+      ],
+      "specs": [
+        {
+          "label": "Application",
+          "value": "Tapered Sample Tub / Dairy Container",
+          "source": "dairy-container-spec-sheet",
+          "verified": true
+        },
+        {
+          "label": "Reference Dimensions",
+          "value": "82.5 mm max lid diameter x 68.5 mm total height",
+          "source": "dairy-container-spec-sheet",
+          "verified": true
+        },
+        {
+          "label": "Body",
+          "value": "Tapered frustum, 75.0 mm top / 64.0 mm bottom outer diameter, 66.0 mm body height",
+          "source": "dairy-container-spec-sheet",
+          "verified": true
+        },
+        {
+          "label": "Lid",
+          "value": "Snap-fit twist lid, 6.5 mm thick, with tamper-evident tear-strip tab",
+          "source": "dairy-container-spec-sheet",
+          "verified": true
+        },
+        {
+          "label": "Material Base",
+          "value": "LIMEX blend - verification in progress",
+          "source": "dairy-container-spec-sheet",
           "verified": false
         }
       ]
