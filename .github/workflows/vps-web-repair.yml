@@ -44,6 +44,25 @@ jobs:
               ufw status verbose || true
             fi
 
+            echo "=== remove common local deny rules that can block visitors ==="
+            if command -v fail2ban-client >/dev/null 2>&1; then
+              fail2ban-client status || true
+              for jail in $(fail2ban-client status 2>/dev/null | sed -n 's/.*Jail list:[[:space:]]*//p' | tr ',' ' '); do
+                fail2ban-client status "$jail" || true
+              done
+            fi
+
+            if command -v iptables >/dev/null 2>&1; then
+              iptables -S INPUT || true
+              iptables -C INPUT -p tcp --dport 80 -j ACCEPT 2>/dev/null || iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+              iptables -C INPUT -p tcp --dport 443 -j ACCEPT 2>/dev/null || iptables -I INPUT -p tcp --dport 443 -j ACCEPT
+              iptables -S INPUT || true
+            fi
+
+            if command -v nft >/dev/null 2>&1; then
+              nft list ruleset || true
+            fi
+
             if command -v firewall-cmd >/dev/null 2>&1 && firewall-cmd --state >/dev/null 2>&1; then
               firewall-cmd --permanent --add-service=http
               firewall-cmd --permanent --add-service=https
