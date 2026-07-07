@@ -44,7 +44,7 @@ def srgb8(r: int, g: int, b: int) -> tuple[float, float, float, float]:
 # Pure bright white body — clean opaque HDPE white matching the product photo.
 BODY_COLOR = srgb8(250, 248, 244)
 # Golden yellow cap — matching the real product photo
-CAP_COLOR = srgb8(235, 190, 20)
+CAP_COLOR = srgb8(230, 176, 24)
 # Collar/ring piece — slightly off-white to differentiate from body
 COLLAR_COLOR = srgb8(245, 242, 235)
 
