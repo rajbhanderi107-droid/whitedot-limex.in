@@ -1,0 +1,64 @@
+{
+  "id": "soapStand",
+  "index": "08",
+  "name": "Soap Stand",
+  "category": "Bathroom Accessory",
+  "status": "live",
+  "application": "Covered Soap Dish with Drain Insert",
+  "tagline": "A three-part covered soap dish sample marked '15% Limex', modeled in 3D from the supplied product photos.",
+  "description": "A covered soap dish in three moulded parts: a cream pillow-domed lid with an all-over knitted rice-grain emboss and a sculpted bow, a matching cream base tray with a scalloped rim, and a sage-green drain insert with 13 drainage slots that lets the soap dry between uses. The sample lid interior is handwritten '15% Limex', indicating a 15% LIMEX blend for this trial part. The interactive 3D model is photo-matched to the supplied reference photography and animates the three-part assembly. Full supplier composition and spec data are in progress - no further figures are published until confirmed.",
+  "highlights": [
+    {
+      "num": "15%",
+      "label": "LIMEX (marked on sample)",
+      "source": "soap-stand-photo-reference",
+      "verified": true
+    },
+    {
+      "num": "3",
+      "label": "Moulded Parts",
+      "source": "soap-stand-photo-reference",
+      "verified": true
+    },
+    {
+      "num": "3D",
+      "label": "Photo-Matched",
+      "source": "soap-stand-photo-reference",
+      "verified": true
+    }
+  ],
+  "specs": [
+    {
+      "label": "Application",
+      "value": "Covered Soap Dish with Drain Insert",
+      "source": "soap-stand-photo-reference",
+      "verified": true
+    },
+    {
+      "label": "Parts",
+      "value": "Embossed Lid + Drain Insert (13 Slots) + Scalloped Base",
+      "source": "soap-stand-photo-reference",
+      "verified": true
+    },
+    {
+      "label": "Sample Marking",
+      "value": "\"15% Limex\" handwritten on lid interior",
+      "source": "soap-stand-photo-reference",
+      "verified": true
+    },
+    {
+      "label": "Colorways",
+      "value": "Cream Lid + Base / Sage Green Insert",
+      "source": "soap-stand-photo-reference",
+      "verified": true
+    },
+    {
+      "label": "Material Base",
+      "value": "15% LIMEX blend - full mix verification in progress",
+      "source": "soap-stand-photo-reference",
+      "verified": false
+    }
+  ],
+  "modelFile": "model/soap-stand-procedural.glb",
+  "htmlPage": "product.html?p=soap-stand  (generic template, no dedicated file)"
+}

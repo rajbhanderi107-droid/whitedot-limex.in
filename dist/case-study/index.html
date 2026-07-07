@@ -860,8 +860,9 @@
             alt="${entry.name} — LIMEX 3D model"
             loading="eager"
             interaction-prompt="none"
-            shadow-intensity="${entry.id === 'foodOilCan' ? '1.0' : '0'}"
-            exposure="${entry.id === 'foodOilCan' ? '0.82' : '1.15'}"
+            shadow-intensity="${entry.id === 'foodOilCan' ? '0.9' : '0'}"
+            shadow-softness="${entry.id === 'foodOilCan' ? '0.8' : '1'}"
+            exposure="${entry.id === 'foodOilCan' ? '1.0' : '1.15'}"
             tone-mapping="neutral"
             environment-image="neutral"
             camera-orbit="${CAMERA_ORBIT[entry.id] || '30deg 75deg 105%'}">
