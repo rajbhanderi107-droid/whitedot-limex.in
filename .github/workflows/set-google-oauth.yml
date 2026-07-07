@@ -1,0 +1,51 @@
+name: Set Google OAuth Env on VPS
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: set-google-oauth
+  cancel-in-progress: false
+
+jobs:
+  set-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Write GOOGLE_CLIENT_ID/SECRET into backend .env and restart api
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: root
+          key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 10m
+          envs: GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET
+          script: |
+            set -e
+            cd /opt/whitedot-backend
+            ENV_FILE=.env
+            touch "$ENV_FILE"
+
+            set_kv() {
+              key="$1"
+              value="$2"
+              if grep -q "^${key}=" "$ENV_FILE"; then
+                sed -i "s|^${key}=.*|${key}=${value}|" "$ENV_FILE"
+              else
+                echo "${key}=${value}" >> "$ENV_FILE"
+              fi
+            }
+
+            set_kv "GOOGLE_CLIENT_ID" "$GOOGLE_CLIENT_ID"
+            set_kv "GOOGLE_CLIENT_SECRET" "$GOOGLE_CLIENT_SECRET"
+
+            echo "=== restarting api container ==="
+            docker compose up -d
+            docker compose restart api
+            sleep 6
+
+            echo "=== verifying google oauth config endpoint ==="
+            curl -fsS -m 8 http://127.0.0.1:4000/api/auth/google/config
+            echo ""

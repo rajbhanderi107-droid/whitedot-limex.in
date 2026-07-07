@@ -1,0 +1,54 @@
+name: Repair VPS API Reachability
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "diagnose or repair"
+        required: true
+        default: "diagnose"
+
+concurrency:
+  group: repair-vps-api
+  cancel-in-progress: false
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect VPS API stack
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: root
+          key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 10m
+          script: |
+            set -e
+            echo "MODE=${{ github.event.inputs.mode }}"
+
+            echo "=== nginx sites ==="
+            ls -la /etc/nginx/sites-enabled/ /etc/nginx/sites-available/ 2>/dev/null || true
+            ls -la /etc/nginx/conf.d/ 2>/dev/null || true
+
+            echo "=== configs mentioning api.whitedotindia.in ==="
+            grep -rl "api.whitedotindia.in" /etc/nginx/ 2>/dev/null || echo "none found"
+            for f in $(grep -rl "api.whitedotindia.in" /etc/nginx/ 2>/dev/null); do
+              echo "----- $f -----"
+              cat "$f"
+            done
+
+            echo "=== docker containers ==="
+            docker ps -a
+            echo "=== compose dir ==="
+            ls -la /opt/whitedot-backend 2>/dev/null || true
+            cat /opt/whitedot-backend/docker-compose.yml 2>/dev/null || true
+
+            echo "=== local API probe ==="
+            curl -fsS -m 8 http://127.0.0.1:4000/api/health || echo "PORT 4000 PROBE FAILED"
+            echo ""
+            echo "=== probe via nginx :80 with Host header ==="
+            curl -sS -m 8 -i -H 'Host: api.whitedotindia.in' http://127.0.0.1/api/health | head -20 || true
+
+            echo "=== recent api container logs ==="
+            cd /opt/whitedot-backend 2>/dev/null && docker compose logs --tail 40 api 2>/dev/null || true
