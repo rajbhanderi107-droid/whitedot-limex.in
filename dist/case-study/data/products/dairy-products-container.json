@@ -4,9 +4,10 @@
   "slug": "dairy-products-container",
   "name": "Dairy Products Container",
   "category": "Dairy Packaging",
-  "status": "pending",
+  "status": "live",
+  "modelFile": "public/case-study/model/dairy-products-container.glb",
   "htmlPage": "product.html?p=dairy-products-container  (generic template, no dedicated file)",
   "composition": null,
   "specs": null,
-  "note": "3D model removed — was photo-matched to the wrong product. No verified LIMEX composition/CO2/supplier data exists yet for this product. Do not fabricate percentages or specs — populate only from the official White Dot 'LIMEX Case Studies in India' PDF or verified supplier TDS, matching the pattern in specs.json (see bobbin/container/motorCover/aralditeContainer)."
+  "note": "3D model rebuilt from scratch as a precisely dimensioned CAD model (SketchUp), matched to a measured reference spec sheet: total height 68.5mm, body height 66.0mm, top OD 75.0mm, bottom OD 64.0mm, taper ~5.5deg, lid height 6.5mm, lid OD 82.5mm, tamper-tab 10x5mm, semi-gloss opaque white PP. Wall/floor thickness (1.0mm/1.2mm) and tab thickness (1.5mm) are reasonable assumptions not present on the spec sheet. No verified LIMEX composition/CO2/supplier data exists yet for this product — do not fabricate percentages or specs; populate only from the official White Dot 'LIMEX Case Studies in India' PDF or verified supplier TDS, matching the pattern in specs.json (see bobbin/container/motorCover/aralditeContainer)."
 }

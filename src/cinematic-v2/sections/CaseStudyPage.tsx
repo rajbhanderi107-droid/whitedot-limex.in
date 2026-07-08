@@ -28,6 +28,8 @@ const soapStandHref  = `${basePath}/case-study/product.html?p=soap-stand`;
 const soapStandModel = `${basePath}/case-study/model/soap-stand-procedural.glb`;
 const foodOilCanHref  = `${basePath}/case-study/product.html?p=food-oil-can`;
 const foodOilCanModel = `${basePath}/case-study/model/oil-bottle-procedural.glb`;
+const dairyContainerHref  = `${basePath}/case-study/product.html?p=dairy-products-container`;
+const dairyContainerModel = `${basePath}/case-study/model/dairy-products-container.glb`;
 const liveProductModelUrls = [
   bobbinModel,
   containerModel,
@@ -38,13 +40,14 @@ const liveProductModelUrls = [
   consilePipeModel,
   soapStandModel,
   foodOilCanModel,
+  dairyContainerModel,
 ];
 
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan';
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
-    { value: '09', label: 'Active Studies' },
+    { value: '10', label: 'Active Studies' },
     { value: '3D', label: 'Interactive' },
     { value: <>100<small>%</small></>, label: 'LIMEX + Color' },
     { value: <>~38<small>%</small></>, label: 'CO2e Cut (LCA)', green: true },
@@ -102,6 +105,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: '145', label: 'mm Wide Face' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 09', green: true },
+  ],
+  dairyContainer: [
+    { value: '10', label: 'Dairy Products Container' },
+    { value: 'Dairy', label: 'Packaging' },
+    { value: '3D', label: 'Spec-Matched' },
+    { value: 'Live', label: 'Product 10', green: true },
   ],
 };
 
@@ -195,7 +204,7 @@ export default function CaseStudyPage() {
           c.style.zIndex    = String(Math.round((1 - absT) * 10));
         }
         const product = c.dataset.product as ProductKey | undefined;
-        if ((product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan') && absT < nearestDistance) {
+        if ((product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan' || product === 'dairyContainer') && absT < nearestDistance) {
           nearestProduct = product;
           nearestDistance = absT;
         }
@@ -229,7 +238,7 @@ export default function CaseStudyPage() {
         if (!glow) return;
         c.addEventListener('mouseenter', () => {
           const product = c.dataset.product as ProductKey | undefined;
-          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan') setActiveProductKey(product);
+          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan' || product === 'dairyContainer') setActiveProductKey(product);
         });
         c.addEventListener('mousemove', (e: MouseEvent) => {
           const r = c.getBoundingClientRect();
@@ -646,6 +655,50 @@ export default function CaseStudyPage() {
             </div>
             <div className="csp-pname">Food Oil Can</div>
             <div className="csp-ptag">Offset-Cap Oil Can - Visual Reference</div>
+            <div className="csp-pbar">
+              <span style={{ flex:100, height:'100%', background:'var(--cs-green)', display:'block' }} />
+            </div>
+            <div className="csp-pbarlabels">
+              <span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span>
+            </div>
+          </div>
+          <span className="csp-pgo">-&gt;</span>
+        </div>
+      </a>
+
+      {/* 10 Dairy Products Container — live */}
+      <a className="csp-pcard featured live" href={dairyContainerHref} data-product="dairyContainer">
+        <div className="csp-border-beam" />
+        <div className="csp-pglass" />
+        <div className="csp-pglow" />
+        <div className="csp-pmedia">
+          <span className="csp-pidx">10</span>
+          {isMobileViewport ? (
+            <div className="csp-soon-placeholder">DC</div>
+          ) : (
+            // @ts-ignore custom element
+            <model-viewer
+              src={dairyContainerModel}
+              alt="Dairy Products Container - white round dairy tub with snap-fit lid, modeled to measured spec 3D model"
+              loading="eager"
+              interaction-prompt="none"
+              shadow-intensity="0.9"
+              shadow-softness="0.8"
+              exposure="1.0"
+              tone-mapping="neutral"
+              environment-image="neutral"
+              camera-orbit="22deg 76deg 108%"
+              style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+            />
+          )}
+        </div>
+        <div className="csp-pinfo">
+          <div>
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+              <span className="csp-pfeatured">New Model</span>
+            </div>
+            <div className="csp-pname">Dairy Products Container</div>
+            <div className="csp-ptag">Round Dairy Tub - Modeled to Measured Spec</div>
             <div className="csp-pbar">
               <span style={{ flex:100, height:'100%', background:'var(--cs-green)', display:'block' }} />
             </div>
