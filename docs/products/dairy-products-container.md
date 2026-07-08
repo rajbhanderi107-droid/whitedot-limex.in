@@ -8,7 +8,7 @@
 
 ## Files
 - Data: `public/case-study/data/products/dairy-products-container.json`
-- 3D model: `MISSING — not yet built`
+- 3D model: `REMOVED — was photo-matched to the wrong product, deleted 2026-07-08`
 - HTML page: `product.html?p=dairy-products-container  (generic template, no dedicated file)`
 - Reference photos: `photos[]` empty in products.json — none supplied yet
 
