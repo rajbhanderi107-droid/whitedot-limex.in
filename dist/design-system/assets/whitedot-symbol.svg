@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">WhiteDot symbol</title>
+  <desc id="desc">A premium WhiteDot monogram mark inspired by limestone, circular material flow, and industrial distribution.</desc>
+  <defs>
+    <linearGradient id="bg" x1="9" y1="7" x2="55" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#586480"></stop>
+      <stop offset="0.55" stop-color="#776C82"></stop>
+      <stop offset="1" stop-color="#483A54"></stop>
+    </linearGradient>
+    <linearGradient id="stone" x1="19" y1="16" x2="45" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"></stop>
+      <stop offset="0.48" stop-color="#F5F1E8"></stop>
+      <stop offset="1" stop-color="#C9C2B4"></stop>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="2.4" result="blur"></feGaussianBlur>
+      <feMerge>
+        <feMergeNode in="blur"></feMergeNode>
+        <feMergeNode in="SourceGraphic"></feMergeNode>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#050706"></rect>
+  <path d="M11 35C12.8 21.8 22.2 12 34.1 12c7.7 0 13.5 3.6 17.8 8.6" fill="none" stroke="url(#bg)" stroke-width="5" stroke-linecap="round"></path>
+  <path d="M53 29c-1.5 14-10.8 23-23.5 23-7.9 0-14.3-3.4-18.5-9" fill="none" stroke="#414F40" stroke-width="5" stroke-linecap="round"></path>
+  <circle cx="32" cy="32" r="13.5" fill="url(#stone)" filter="url(#glow)"></circle>
+  <path d="M24 27.5c4.1-4.8 11.8-4.9 16.1-.3M22.8 35.4c5.8 3.3 13.2 3.3 18.7-.2" fill="none" stroke="#8A826D" stroke-width="1.5" stroke-linecap="round" opacity="0.58"></path>
+  <circle cx="24.5" cy="24.5" r="2.1" fill="#F8D4D6"></circle>
+  <circle cx="43" cy="42.5" r="1.9" fill="#B9C5E1"></circle>
+</svg>
