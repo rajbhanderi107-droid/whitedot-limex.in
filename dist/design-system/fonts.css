@@ -1,8 +1,0 @@
-/* White Dot brand font loader for the GitHub Pages design-system preview.
-   Uses CDN font delivery so the website repository does not carry large CJK
-   font binaries. The downloaded OTF files remain in the local whitedot/fonts
-   folder for source handoff use. */
-
-@import url("https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&f[]=satoshi-italic@400,500,700&f[]=boska@400,500,700,900&f[]=boska-italic@400,500,700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap");

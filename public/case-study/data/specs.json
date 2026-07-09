@@ -779,6 +779,68 @@
           "verified": false
         }
       ]
+    },
+    "dairyProductsContainer": {
+      "id": "dairyProductsContainer",
+      "index": "10",
+      "name": "Dairy Products Container",
+      "category": "Dairy Packaging",
+      "status": "live",
+      "application": "Snap-Lid Dairy Tub (Curd / Dairy Cup)",
+      "tagline": "A tapered round dairy tub sample with a tamper-seal pull-tab lid, modeled in 3D from the supplied product photos.",
+      "description": "A tapered round dairy container (curd/dahi-style cup) with a snap-fit lid and an integrated tamper-seal pull tab hinged off the rim. The interactive 3D model follows the supplied photo set (front, lid-underside, and three-quarter views). No dimensions card was supplied with these photos, so body proportions and tab size are visual estimates, not calipered measurements. Verified supplier composition and food-contact data are still in progress, so no LIMEX percentage, mechanical values, or CO2 figures are published for this product.",
+      "highlights": [
+        {
+          "num": "3D",
+          "label": "Photo-Matched",
+          "source": "dairy-container-photo-reference",
+          "verified": true
+        },
+        {
+          "num": "1",
+          "label": "Snap-Fit Lid + Tamper Tab",
+          "source": "dairy-container-photo-reference",
+          "verified": true
+        },
+        {
+          "num": "~100",
+          "label": "mm Est. Top Diameter",
+          "source": "dairy-container-photo-reference",
+          "verified": false
+        }
+      ],
+      "specs": [
+        {
+          "label": "Application",
+          "value": "Snap-Lid Dairy Tub (Curd / Dairy Cup)",
+          "source": "dairy-container-photo-reference",
+          "verified": true
+        },
+        {
+          "label": "Estimated Dimensions",
+          "value": "~104 mm top diameter x ~80 mm base diameter x ~70 mm height (visual estimate, no dimensions card supplied)",
+          "source": "dairy-container-photo-reference",
+          "verified": false
+        },
+        {
+          "label": "Lid",
+          "value": "Snap-fit lid with hinged tamper-seal pull tab",
+          "source": "dairy-container-photo-reference",
+          "verified": true
+        },
+        {
+          "label": "Colorway",
+          "value": "Satin white body and lid",
+          "source": "dairy-container-photo-reference",
+          "verified": true
+        },
+        {
+          "label": "Material Base",
+          "value": "LIMEX blend - verification in progress",
+          "source": "dairy-container-photo-reference",
+          "verified": false
+        }
+      ]
     }
   }
 }

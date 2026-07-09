@@ -112,9 +112,9 @@ export function SectionVideo({
           if (entry.isIntersecting) {
             setMounted(true);
             setSettled(true);
-          } else {
-            setMounted(false);
           }
+          // Never unmount — keep the video element in the DOM so it
+          // doesn't lose its source and fail to resume.
         }
       },
       { rootMargin: "300px 0px", threshold: 0 },
@@ -144,11 +144,37 @@ export function SectionVideo({
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+
+    video.loop = true; // enforce loop
+    video.muted = true;
+
     if (inView) {
       void video.play().catch(() => undefined);
     } else {
       video.pause();
     }
+
+    // Safety net: restart if browser doesn't honour loop
+    const onEnded = () => {
+      if (inView) {
+        try { video.currentTime = 0; } catch { /* not ready */ }
+        void video.play().catch(() => undefined);
+      }
+    };
+    video.addEventListener('ended', onEnded);
+
+    // Re-trigger play after tab regains focus
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible' && inView && video.paused) {
+        void video.play().catch(() => undefined);
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    return () => {
+      video.removeEventListener('ended', onEnded);
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
   }, [mounted, inView]);
 
   /**

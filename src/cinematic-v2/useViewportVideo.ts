@@ -15,18 +15,18 @@ export function useViewportVideo(
     const video = videoRef.current;
     if (!video) return undefined;
 
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) {
-      video.pause();
-      return undefined;
-    }
+    // Track whether the video is currently supposed to be playing.
+    let shouldPlay = false;
 
     const play = () => {
+      shouldPlay = true;
       video.muted = true;
+      video.loop = true; // enforce loop attribute in case it was missing
       void video.play().catch(() => undefined);
     };
 
     const pause = () => {
+      shouldPlay = false;
       video.pause();
       if (resetWhenHidden) {
         try {
@@ -37,9 +37,33 @@ export function useViewportVideo(
       }
     };
 
+    // Safety net: if the browser somehow doesn't honour the loop attribute,
+    // restart playback when the video reaches the end.
+    const onEnded = () => {
+      if (shouldPlay) {
+        try { video.currentTime = 0; } catch { /* not ready */ }
+        void video.play().catch(() => undefined);
+      }
+    };
+    video.addEventListener('ended', onEnded);
+
+    // Re-trigger play after the browser tab regains focus — mobile browsers
+    // (especially iOS Safari) suspend media when the tab is hidden and do
+    // NOT always auto-resume when it becomes visible again.
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && shouldPlay && video.paused) {
+        void video.play().catch(() => undefined);
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
     if (!('IntersectionObserver' in window)) {
       if (eager) play();
-      return pause;
+      return () => {
+        pause();
+        video.removeEventListener('ended', onEnded);
+        document.removeEventListener('visibilitychange', onVisibilityChange);
+      };
     }
 
     const observer = new IntersectionObserver(
@@ -56,6 +80,8 @@ export function useViewportVideo(
     return () => {
       observer.disconnect();
       pause();
+      video.removeEventListener('ended', onEnded);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
     };
   }, [eager, resetWhenHidden, rootMargin, threshold, videoRef]);
 }

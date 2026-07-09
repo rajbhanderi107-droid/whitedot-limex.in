@@ -8,6 +8,7 @@ const LIVE_CASE_STUDY_MODELS = [
   '../model/consile-pipe-procedural.glb',
   '../model/soap-stand-procedural.glb',
   '../model/oil-bottle-procedural.glb',
+  '../model/dairy-container-procedural.glb',
 ].map((path) => new URL(path, import.meta.url).href);
 
 const cache = window.__WD_CASE_STUDY_MODEL_PRELOADS__ || new Map();

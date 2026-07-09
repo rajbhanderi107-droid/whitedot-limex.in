@@ -64,6 +64,10 @@ export function Consultation() {
     const video = videoRef.current;
     if (!section || !video || reduce) return undefined;
 
+    video.loop = true; // enforce loop
+    video.muted = true;
+    let isInView = false;
+
     const resetVideo = () => {
       video.pause();
       try {
@@ -77,6 +81,7 @@ export function Consultation() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
+        isInView = entry.isIntersecting;
         if (entry.isIntersecting) {
           void video.play().catch(() => undefined);
         } else {
@@ -87,9 +92,29 @@ export function Consultation() {
     );
 
     observer.observe(section);
+
+    // Safety net: restart if browser doesn't honour loop
+    const onEnded = () => {
+      if (isInView) {
+        try { video.currentTime = 0; } catch { /* not ready */ }
+        void video.play().catch(() => undefined);
+      }
+    };
+    video.addEventListener('ended', onEnded);
+
+    // Re-trigger play after tab regains focus
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible' && isInView && video.paused) {
+        void video.play().catch(() => undefined);
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
     return () => {
       observer.disconnect();
       resetVideo();
+      video.removeEventListener('ended', onEnded);
+      document.removeEventListener('visibilitychange', onVisibility);
     };
   }, [reduce]);
 

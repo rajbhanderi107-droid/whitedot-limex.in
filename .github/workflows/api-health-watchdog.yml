@@ -1,0 +1,62 @@
+name: API Health Watchdog
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: api-health-watchdog
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      healthy: ${{ steps.probe.outputs.healthy }}
+    steps:
+      - name: Probe public API
+        id: probe
+        run: |
+          code=$(curl -s -o /dev/null -m 15 -w "%{http_code}" https://api.whitedotindia.in/api/health || echo "000")
+          echo "public status: $code"
+          if [ "$code" = "200" ]; then
+            echo "healthy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "healthy=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  heal:
+    needs: check
+    if: needs.check.outputs.healthy == 'false'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restart backend + nginx on VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: root
+          key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 10m
+          script: |
+            set -e
+            echo "=== watchdog heal $(date -u) ==="
+            cd /opt/whitedot-backend
+            docker compose up -d
+            docker compose restart api || true
+            systemctl restart nginx
+            sleep 8
+            curl -fsS -m 8 http://127.0.0.1:4000/api/health
+            echo ""
+            curl -sS -m 8 -o /dev/null -w 'via nginx :80 -> %{http_code}\n' \
+              -H 'Host: api.whitedotindia.in' http://127.0.0.1/api/health
+
+      - name: Re-probe public API after heal
+        run: |
+          sleep 10
+          code=$(curl -s -o /dev/null -m 15 -w "%{http_code}" https://api.whitedotindia.in/api/health || echo "000")
+          echo "public status after heal: $code"
+          if [ "$code" != "200" ]; then
+            echo "::warning::API still unhealthy after VPS heal — likely Cloudflare-side (SSL mode must be Full (strict)) or DNS issue. Check dash.cloudflare.com."
+            exit 1
+          fi

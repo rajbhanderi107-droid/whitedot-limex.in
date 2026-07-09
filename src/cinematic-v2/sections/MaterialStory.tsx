@@ -79,16 +79,45 @@ export default function MaterialStory() {
   }, [armed]);
 
   // Play only the active scene's film; pause the rest. (Both modes.)
+  // Also add 'ended' safety net and visibilitychange resume for resilient looping.
   useEffect(() => {
+    const handlers: Array<() => void> = [];
+
     videoRefs.current.forEach((vid, i) => {
       if (!vid) return;
+      vid.loop = true; // enforce loop
+      vid.muted = true;
+
       if (i === active) {
         const p = vid.play();
         if (p && typeof p.catch === 'function') p.catch(() => undefined);
+
+        // Safety net: restart if the browser doesn't honour loop
+        const onEnded = () => {
+          try { vid.currentTime = 0; } catch { /* not ready */ }
+          void vid.play().catch(() => undefined);
+        };
+        vid.addEventListener('ended', onEnded);
+        handlers.push(() => vid.removeEventListener('ended', onEnded));
       } else if (!vid.paused) {
         vid.pause();
       }
     });
+
+    // Resume the active video after the tab regains focus
+    const onVisibility = () => {
+      if (document.visibilityState !== 'visible') return;
+      const activeVid = videoRefs.current[active];
+      if (activeVid && activeVid.paused) {
+        void activeVid.play().catch(() => undefined);
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    return () => {
+      handlers.forEach((h) => h());
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
   }, [active, armed]);
 
   /* ---------------- PINNED (heavy) vs FALLBACK setup ---------------- */
@@ -209,16 +238,7 @@ export default function MaterialStory() {
             autoInterval = setInterval(() => {
               if (cancelled) { stopAutoPlay(); return; }
               autoIdx = (autoIdx + 1) % N;
-              if (autoIdx === 0) {
-                // Completed full cycle — scroll past section then stop
-                stopAutoPlay();
-                gsap.to(window, {
-                  scrollTo: { y: getSectionTop() + N * window.innerHeight, autoKill: false },
-                  duration: 1.1,
-                  ease: 'power2.inOut',
-                });
-                return;
-              }
+              // Loop continuously — wrap back to scene 0 seamlessly
               jumpToScene(autoIdx);
             }, SLIDE_MS);
           }

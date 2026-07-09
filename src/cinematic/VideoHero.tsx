@@ -50,7 +50,8 @@ export function VideoHero() {
     const obs = new IntersectionObserver(
       ([entry]) => {
         setInView(entry.isIntersecting);
-        setMounted(entry.isIntersecting);
+        // Never unmount — keep the video element in the DOM
+        if (entry.isIntersecting) setMounted(true);
       },
       { threshold: 0 }
     );
@@ -64,11 +65,37 @@ export function VideoHero() {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+
+    video.loop = true; // enforce loop
+    video.muted = true;
+
     if (inView) {
       void video.play().catch(() => {});
     } else {
       video.pause();
     }
+
+    // Safety net: restart if browser doesn't honour loop
+    const onEnded = () => {
+      if (inView) {
+        try { video.currentTime = 0; } catch { /* not ready */ }
+        void video.play().catch(() => {});
+      }
+    };
+    video.addEventListener('ended', onEnded);
+
+    // Re-trigger play after tab regains focus
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible' && inView && video.paused) {
+        void video.play().catch(() => {});
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    return () => {
+      video.removeEventListener('ended', onEnded);
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
   }, [mounted, inView]);
 
   /**
