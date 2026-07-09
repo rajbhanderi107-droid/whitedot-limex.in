@@ -278,7 +278,7 @@ export function SectionVideo({
           muted
           loop
           playsInline
-          preload="none"
+          preload="auto"
           style={objectPosition ? { objectPosition } : undefined}
         />
       )}

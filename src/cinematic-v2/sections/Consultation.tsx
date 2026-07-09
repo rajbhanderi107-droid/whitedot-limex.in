@@ -94,7 +94,7 @@ export default function Consultation() {
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
           />
         </div>
 

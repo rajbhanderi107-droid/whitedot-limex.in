@@ -52,7 +52,7 @@ export default function Hero() {
           loop
           muted
           playsInline
-          preload={isMobileDevice ? 'metadata' : 'none'}
+          preload={isMobileDevice ? 'metadata' : 'auto'}
         >
           {/* Only serve 4K to desktop — mobile gets 1080p to prevent iOS memory crash */}
           {!isMobileDevice && <source src={heroVideo4k} type="video/mp4" />}

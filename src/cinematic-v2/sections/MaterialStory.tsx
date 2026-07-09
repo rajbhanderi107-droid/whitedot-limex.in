@@ -342,7 +342,7 @@ export default function MaterialStory() {
                       muted
                       loop
                       playsInline
-                      preload="none"
+                      preload="auto"
                       aria-hidden="true"
                       tabIndex={-1}
                     >
