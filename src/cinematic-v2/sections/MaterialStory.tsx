@@ -9,9 +9,11 @@ import { SceneScience, SceneImpact } from './StoryScenes';
    crossfading every 15s. No separate pages, no GSAP scroll-scrub.
 
    First viewing is gated: once the section fully fills the viewport, page
-   scroll is locked and the 8 scenes play through once in sequence — the
-   viewer can't scroll past the section until the whole film has been shown.
-   Scroll unlocks automatically the moment scene 8 finishes its dwell.
+   scroll is captured — scroll/swipe/arrow input advances to the next scene
+   instead of moving the page, so the viewer can't skip past the section
+   without passing through all 8, but can move through them as fast as they
+   like by scrolling. Each scene still auto-advances on its own after 15s if
+   left alone. Scroll releases automatically once scene 8 is passed.
 
    After that first full watch, the section is "completed" for this mount
    and behaves as a normal ambient loop (auto-advances forever while on
@@ -154,17 +156,137 @@ export default function MaterialStory() {
     };
   }, [active, armed]);
 
-  // Once the viewer has watched all 8 scenes once, never lock scroll again.
+  // Once the viewer has watched (or scrolled through) all 8 scenes once,
+  // never capture scroll again.
   const [completed, setCompleted] = useState(false);
-  const [locked, setLocked] = useState(false);
 
-  /* ---------------- Gate: lock scroll once the film fills the viewport ---------------- */
+  /* ---------------- Gate + captured playthrough ----------------
+     While captured: wheel/touch/arrow input advances (or rewinds) one scene
+     per gesture instead of moving the page — so the viewer can blow through
+     all 8 in seconds by scrolling, or leave it alone and each scene
+     auto-advances after 15s. Scrolling forward past scene 8, or the scene-8
+     timer firing, releases capture for good (this mount never re-locks).
+     Scrolling backward out of scene 0 releases capture without marking it
+     complete, so returning to the section later re-arms the gate. */
   useEffect(() => {
-    if (completed) return undefined;
     const root = rootRef.current;
-    if (!root || typeof IntersectionObserver === 'undefined') {
+    if (!root) return undefined;
+    if (typeof IntersectionObserver === 'undefined') {
       setCompleted(true); // no IO support — skip the gate, fall back to ambient loop
       return undefined;
+    }
+
+    const html = document.documentElement;
+    let completedFlag = false;
+    let capturing = false;
+    let canCapture = true; // debounce: don't instantly re-capture right after a release
+    let idx = 0;
+    let throttled = false;
+    let throttleTimeout: ReturnType<typeof setTimeout> | null = null;
+    let interval: ReturnType<typeof setInterval> | null = null;
+    let touchStartY = 0;
+    let prevHtmlOverflow = '';
+    let prevBodyOverflow = '';
+
+    const stopTimer = () => {
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
+      }
+    };
+    const startTimer = () => {
+      stopTimer();
+      interval = setInterval(() => advance(1), SLIDE_MS);
+    };
+
+    const setScene = (i: number) => {
+      idx = i;
+      setActive(i);
+      arm(i);
+    };
+
+    function release(markCompleted: boolean) {
+      if (!capturing) return;
+      capturing = false;
+      stopTimer();
+      window.removeEventListener('wheel', onWheel);
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('keydown', onKeydown);
+      html.style.overflow = prevHtmlOverflow;
+      document.body.style.overflow = prevBodyOverflow;
+      if (markCompleted) {
+        completedFlag = true;
+        setCompleted(true);
+      } else {
+        canCapture = false;
+      }
+    }
+
+    function advance(dir: 1 | -1) {
+      if (throttled) return;
+      const next = idx + dir;
+      if (next >= N) {
+        release(true);
+        return;
+      }
+      if (next < 0) {
+        release(false);
+        return;
+      }
+      setScene(next);
+      throttled = true;
+      throttleTimeout = setTimeout(() => {
+        throttled = false;
+      }, 450);
+      if (capturing) startTimer(); // manual advance resets the auto-dwell clock
+    }
+
+    function onWheel(e: WheelEvent) {
+      e.preventDefault();
+      advance(e.deltaY > 0 ? 1 : -1);
+    }
+    function onTouchStart(e: TouchEvent) {
+      touchStartY = e.touches[0].clientY;
+    }
+    function onTouchMove(e: TouchEvent) {
+      e.preventDefault();
+      const dy = touchStartY - e.touches[0].clientY;
+      if (Math.abs(dy) > 30) {
+        advance(dy > 0 ? 1 : -1);
+        touchStartY = e.touches[0].clientY;
+      }
+    }
+    function onKeydown(e: KeyboardEvent) {
+      if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
+        e.preventDefault();
+        advance(1);
+      } else if (['ArrowUp', 'PageUp'].includes(e.key)) {
+        e.preventDefault();
+        advance(-1);
+      }
+    }
+
+    function capture() {
+      if (capturing || completedFlag) return;
+      capturing = true;
+      setScene(0);
+      root!.scrollIntoView({ block: 'start' });
+
+      // The page's actual scrolling box is <html> (documentElement) in
+      // standards mode, not <body> — locking only body.style.overflow leaves
+      // scrollbar-drag, keyboard, and programmatic scroll unblocked.
+      prevHtmlOverflow = html.style.overflow;
+      prevBodyOverflow = document.body.style.overflow;
+      html.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+
+      window.addEventListener('wheel', onWheel, { passive: false });
+      window.addEventListener('touchstart', onTouchStart, { passive: true });
+      window.addEventListener('touchmove', onTouchMove, { passive: false });
+      window.addEventListener('keydown', onKeydown);
+
+      startTimer();
     }
 
     // A sticky site header overlaps the top of the viewport, so a fully
@@ -172,63 +294,26 @@ export default function MaterialStory() {
     // 0.9 comfortably accounts for that overlap without triggering early.
     const io = new IntersectionObserver(
       ([entry]) => {
-        if (entry.intersectionRatio >= 0.9) setLocked(true);
+        if (completedFlag) return;
+        if (entry.intersectionRatio >= 0.9) {
+          if (canCapture) capture();
+        } else {
+          canCapture = true; // dropped low enough — re-arm for next approach
+        }
       },
       { threshold: [0, 0.5, 0.9, 1] }
     );
     io.observe(root);
-    return () => io.disconnect();
-  }, [completed]);
-
-  /* ---------------- Locked playthrough: scenes 0..N-1 once, then unlock ---------------- */
-  useEffect(() => {
-    if (!locked) return undefined;
-
-    rootRef.current?.scrollIntoView({ block: 'start' });
-
-    // The page's actual scrolling box is <html> (documentElement) in
-    // standards mode, not <body> — locking only body.style.overflow leaves
-    // scrollbar-drag, keyboard, and programmatic scroll unblocked.
-    const html = document.documentElement;
-    const prevHtmlOverflow = html.style.overflow;
-    const prevBodyOverflow = document.body.style.overflow;
-    html.style.overflow = 'hidden';
-    document.body.style.overflow = 'hidden';
-
-    const preventScroll = (e: Event) => e.preventDefault();
-    const preventKeys = (e: KeyboardEvent) => {
-      if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' ', 'Home', 'End'].includes(e.key)) {
-        e.preventDefault();
-      }
-    };
-    window.addEventListener('wheel', preventScroll, { passive: false });
-    window.addEventListener('touchmove', preventScroll, { passive: false });
-    window.addEventListener('keydown', preventKeys);
-
-    setActive(0);
-    arm(0);
-    let idx = 0;
-    const interval = setInterval(() => {
-      idx += 1;
-      if (idx >= N) {
-        clearInterval(interval);
-        setCompleted(true);
-        setLocked(false);
-        return;
-      }
-      setActive(idx);
-      arm(idx);
-    }, SLIDE_MS);
 
     return () => {
-      clearInterval(interval);
-      html.style.overflow = prevHtmlOverflow;
-      document.body.style.overflow = prevBodyOverflow;
-      window.removeEventListener('wheel', preventScroll);
-      window.removeEventListener('touchmove', preventScroll);
-      window.removeEventListener('keydown', preventKeys);
+      io.disconnect();
+      release(false);
+      if (throttleTimeout) clearTimeout(throttleTimeout);
     };
-  }, [locked]);
+    // Mount-only: all mutable state lives in closure vars above so this
+    // effect (and its global listeners) is set up exactly once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /* ---------------- After completion: ambient auto-advance, no lock ---------------- */
   useEffect(() => {
