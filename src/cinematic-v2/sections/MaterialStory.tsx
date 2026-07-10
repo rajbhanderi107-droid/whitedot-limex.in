@@ -62,18 +62,35 @@ export default function MaterialStory() {
     });
   };
 
-  // Once a scene is armed, call load() on its <video> exactly once.
+  // Once a scene is armed, inject its <source> elements and call load() —
+  // both in the same synchronous pass, so there is no window where load()
+  // could fire against a <video> whose sources haven't committed to the DOM
+  // yet (previously the sources were JSX, gated on `armed` state, and loaded
+  // via a separate effect also keyed on `armed` — two React render/commit
+  // cycles that could in principle race on a slow/interrupted render).
   useEffect(() => {
     armed.forEach((i) => {
       if (loadedRef.current.has(i)) return;
       const vid = videoRefs.current[i];
-      if (vid) {
-        loadedRef.current.add(i);
-        try {
-          vid.load();
-        } catch {
-          /* ignore */
-        }
+      if (!vid) return;
+      loadedRef.current.add(i);
+
+      const n = SCENE_IDS[i];
+      if (vid.children.length === 0) {
+        const webm = document.createElement('source');
+        webm.src = storyAsset(`assets/videos/story/scene-${n}.webm`);
+        webm.type = 'video/webm';
+        const mp4 = document.createElement('source');
+        mp4.src = storyAsset(`assets/videos/story/scene-${n}.mp4`);
+        mp4.type = 'video/mp4';
+        vid.appendChild(webm);
+        vid.appendChild(mp4);
+      }
+
+      try {
+        vid.load();
+      } catch {
+        /* ignore */
       }
     });
   }, [armed]);
@@ -361,20 +378,10 @@ export default function MaterialStory() {
                       preload="auto"
                       aria-hidden="true"
                       tabIndex={-1}
-                    >
-                      {armed.has(i) && (
-                        <>
-                          <source
-                            src={storyAsset(`assets/videos/story/scene-${n}.webm`)}
-                            type="video/webm"
-                          />
-                          <source
-                            src={storyAsset(`assets/videos/story/scene-${n}.mp4`)}
-                            type="video/mp4"
-                          />
-                        </>
-                      )}
-                    </video>
+                    />
+                    {/* <source> elements are injected imperatively (see the
+                        arm/load effect above) so setting src and calling
+                        load() happen atomically, with no React render gap. */}
                   </>
                 )}
               </div>
