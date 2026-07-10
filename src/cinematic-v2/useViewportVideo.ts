@@ -57,10 +57,26 @@ export function useViewportVideo(
     };
     document.addEventListener('visibilitychange', onVisibilityChange);
 
+    // Watchdog: the safety nets above only fire AFTER a video has
+    // successfully started (ended/visibilitychange). If play() silently
+    // stalls — readyState never advances past HAVE_NOTHING (a rejected
+    // autoplay promise, a network hiccup mid-buffer, a stuck fetch) —
+    // nothing ever retries and the video sits frozen on its poster frame
+    // forever. Poll periodically and force a fresh load()+play() if a
+    // video that should be playing is paused or still has no data.
+    const watchdog = window.setInterval(() => {
+      if (!shouldPlay) return;
+      if (video.paused || video.readyState === 0) {
+        try { video.load(); } catch { /* ignore */ }
+        void video.play().catch(() => undefined);
+      }
+    }, 4000);
+
     if (!('IntersectionObserver' in window)) {
       if (eager) play();
       return () => {
         pause();
+        window.clearInterval(watchdog);
         video.removeEventListener('ended', onEnded);
         document.removeEventListener('visibilitychange', onVisibilityChange);
       };
@@ -80,6 +96,7 @@ export function useViewportVideo(
     return () => {
       observer.disconnect();
       pause();
+      window.clearInterval(watchdog);
       video.removeEventListener('ended', onEnded);
       document.removeEventListener('visibilitychange', onVisibilityChange);
     };

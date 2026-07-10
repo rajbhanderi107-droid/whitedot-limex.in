@@ -114,9 +114,25 @@ export default function MaterialStory() {
     };
     document.addEventListener('visibilitychange', onVisibility);
 
+    // Watchdog: 'ended'/visibilitychange only fire once a video has
+    // successfully started. If play() silently stalls (readyState never
+    // leaves HAVE_NOTHING — a rejected autoplay promise, a stuck fetch),
+    // nothing above ever retries and the scene sits frozen on its poster.
+    // Poll the active scene's video and force a fresh load()+play() if it
+    // should be playing but isn't.
+    const watchdog = window.setInterval(() => {
+      const activeVid = videoRefs.current[active];
+      if (!activeVid) return;
+      if (activeVid.paused || activeVid.readyState === 0) {
+        try { activeVid.load(); } catch { /* ignore */ }
+        void activeVid.play().catch(() => undefined);
+      }
+    }, 4000);
+
     return () => {
       handlers.forEach((h) => h());
       document.removeEventListener('visibilitychange', onVisibility);
+      window.clearInterval(watchdog);
     };
   }, [active, armed]);
 
