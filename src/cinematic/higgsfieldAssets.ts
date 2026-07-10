@@ -42,7 +42,7 @@ export interface HiggsfieldRaw {
 const RAW: HiggsfieldRaw = {
   heroVideo: null, // Higgsfield loop slot — drop "assets/higgsfield/born-loop.mp4" here
   heroPoster: null,
-  heroImage: "assets/higgsfield/born-still.jpg", // brand still (code-built; replace with a Higgsfield frame anytime)
+  heroImage: null, // disabled — was "assets/higgsfield/born-still.jpg"
   sectionImages: {},
   textures: { stone: null, paper: null, polymer: null },
   ogImage: "assets/higgsfield/og-cover.jpg",
