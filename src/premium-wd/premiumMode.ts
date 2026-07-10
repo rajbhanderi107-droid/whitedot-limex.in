@@ -55,14 +55,18 @@ function readOverride(): Flag | null {
   return null;
 }
 
-/** Adaptive gate: weak or motion-averse devices get the simple site even when
- *  premiumMode is built in. This keeps the flagship smooth where it can be and
- *  graceful where it cannot. */
+/** Adaptive gate: weak devices get the simple site even when premiumMode is
+ *  built in. This keeps the flagship smooth where it can be and graceful
+ *  where it cannot.
+ *
+ *  Deliberately does NOT check prefers-reduced-motion: the premium layer's
+ *  motion is muted decorative background video + card styling, not
+ *  scroll-jacking or vestibular-risk motion, and the site owner wants the
+ *  full premium presentation (including looping video) shown regardless of
+ *  that OS/browser accessibility signal. Only real device-capability limits
+ *  (slow connection, low memory, low core count) fall back to simple mode. */
 function deviceCanRender(): boolean {
   if (typeof window === "undefined") return true;
-
-  const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-  if (reduce) return false;
 
   const nav = navigator as Navigator & {
     deviceMemory?: number;
