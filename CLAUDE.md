@@ -1,5 +1,9 @@
 # WHITE DOT MYTHOS INFINITY PRODUCTION OS
 
+**→ Read `docs/AI_AGENT_ONBOARDING.md` first.** It has the deploy pipeline
+gotchas, a recurring file-corruption pattern to check for, and the product
+data model — all learned the hard way. Saves you from repeating known mistakes.
+
 ## STRICT DEPLOYMENT RULES — DO NOT VIOLATE
 
 **Infrastructure is LOCKED to Hostinger VPS. These rules are permanent until Raj explicitly changes them.**

@@ -1,26 +1,32 @@
 import './MaterialStory.css';
 import { useEffect, useRef, useState } from 'react';
-import { useHeavyMotion } from '../motion';
 import { SceneScience, SceneImpact } from './StoryScenes';
 
 /* ---------------------------------------------------------------------------
-   MaterialStory — the "Born from CO₂" scroll film (cinematic-v2).
+   MaterialStory — the "Born from CO₂" film (cinematic-v2).
    ---------------------------------------------------------------------------
-   8 full-bleed video scenes crossfade as the user scrolls a single PINNED
-   section (GSAP ScrollTrigger, scrubbed). Pure film — no text overlays; the
-   scenes carry the story themselves.
+   8 full-bleed video scenes, all stacked on ONE fixed-height section,
+   crossfading every 15s. No separate pages, no GSAP scroll-scrub.
 
-   Two modes, chosen by useHeavyMotion() (premium + no-reduced-motion + desktop):
-     • PINNED  — scenes stacked absolutely, opacity crossfade driven by scrub.
-     • FALLBACK — scenes stacked in normal flow, each ~1 viewport tall, simple
-                  IntersectionObserver play/pause (mobile, low-end,
-                  reduced-motion). No pin, no scrub, native scroll.
+   First viewing is gated: once the section fully fills the viewport, page
+   scroll is captured — scroll/swipe/arrow input advances to the next scene
+   instead of moving the page, so the viewer can't skip past the section
+   without passing through all 8, but can move through them as fast as they
+   like by scrolling. Each scene still auto-advances on its own after 15s if
+   left alone. Scroll releases automatically once scene 8 is passed.
+
+   After that first full watch, the section is "completed" for this mount
+   and behaves as a normal ambient loop (auto-advances forever while on
+   screen, never locks scroll again) — so returning to it on a later scroll
+   doesn't re-trap the viewer.
 
    Performance contract: videos lazy-load (preload="none", <source> injected
    only for the active scene ±1); only the on-screen scene's film decodes;
    posters are the instant placeholders so there is never an empty hole and no
-   layout shift; reduced-motion shows posters only (CSS hides <video>).
+   layout shift.
 --------------------------------------------------------------------------- */
+
+const SLIDE_MS = 15000;
 
 const BASE = import.meta.env.BASE_URL;
 const asset = (p: string) => `${BASE}${p}`.replace(/\/{2,}/g, '/');
@@ -39,11 +45,8 @@ const LIVE_SCENES: Record<number, typeof SceneScience> = {
 };
 
 export default function MaterialStory() {
-  const heavy = useHeavyMotion();
-
   const rootRef = useRef<HTMLElement | null>(null);
   const viewportRef = useRef<HTMLDivElement | null>(null);
-  const sceneRefs = useRef<(HTMLElement | null)[]>([]);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const loadedRef = useRef<Set<number>>(new Set());
 
@@ -62,18 +65,35 @@ export default function MaterialStory() {
     });
   };
 
-  // Once a scene is armed, call load() on its <video> exactly once.
+  // Once a scene is armed, inject its <source> elements and call load() —
+  // both in the same synchronous pass, so there is no window where load()
+  // could fire against a <video> whose sources haven't committed to the DOM
+  // yet (previously the sources were JSX, gated on `armed` state, and loaded
+  // via a separate effect also keyed on `armed` — two React render/commit
+  // cycles that could in principle race on a slow/interrupted render).
   useEffect(() => {
     armed.forEach((i) => {
       if (loadedRef.current.has(i)) return;
       const vid = videoRefs.current[i];
-      if (vid) {
-        loadedRef.current.add(i);
-        try {
-          vid.load();
-        } catch {
-          /* ignore */
-        }
+      if (!vid) return;
+      loadedRef.current.add(i);
+
+      const n = SCENE_IDS[i];
+      if (vid.children.length === 0) {
+        const webm = document.createElement('source');
+        webm.src = storyAsset(`assets/videos/story/scene-${n}.webm`);
+        webm.type = 'video/webm';
+        const mp4 = document.createElement('source');
+        mp4.src = storyAsset(`assets/videos/story/scene-${n}.mp4`);
+        mp4.type = 'video/mp4';
+        vid.appendChild(webm);
+        vid.appendChild(mp4);
+      }
+
+      try {
+        vid.load();
+      } catch {
+        /* ignore */
       }
     });
   }, [armed]);
@@ -114,191 +134,234 @@ export default function MaterialStory() {
     };
     document.addEventListener('visibilitychange', onVisibility);
 
+    // Watchdog: 'ended'/visibilitychange only fire once a video has
+    // successfully started. If play() silently stalls (readyState never
+    // leaves HAVE_NOTHING — a rejected autoplay promise, a stuck fetch),
+    // nothing above ever retries and the scene sits frozen on its poster.
+    // Poll the active scene's video and force a fresh load()+play() if it
+    // should be playing but isn't.
+    const watchdog = window.setInterval(() => {
+      const activeVid = videoRefs.current[active];
+      if (!activeVid) return;
+      if (activeVid.paused || activeVid.readyState === 0) {
+        try { activeVid.load(); } catch { /* ignore */ }
+        void activeVid.play().catch(() => undefined);
+      }
+    }, 4000);
+
     return () => {
       handlers.forEach((h) => h());
       document.removeEventListener('visibilitychange', onVisibility);
+      window.clearInterval(watchdog);
     };
   }, [active, armed]);
 
-  /* ---------------- PINNED (heavy) vs FALLBACK setup ---------------- */
+  // Once the viewer has watched (or scrolled through) all 8 scenes once,
+  // never capture scroll again.
+  const [completed, setCompleted] = useState(false);
+
+  /* ---------------- Gate + captured playthrough ----------------
+     While captured: wheel/touch/arrow input advances (or rewinds) one scene
+     per gesture instead of moving the page — so the viewer can blow through
+     all 8 in seconds by scrolling, or leave it alone and each scene
+     auto-advances after 15s. Scrolling forward past scene 8, or the scene-8
+     timer firing, releases capture for good (this mount never re-locks).
+     Scrolling backward out of scene 0 releases capture without marking it
+     complete, so returning to the section later re-arms the gate. */
   useEffect(() => {
     const root = rootRef.current;
-    const viewport = viewportRef.current;
-    if (!root || !viewport) return;
-
-    const scenes = sceneRefs.current.filter(Boolean) as HTMLElement[];
-    if (scenes.length !== N) return;
-
-    let cancelled = false;
-    let cleanup: () => void = () => {};
-
-    if (heavy) {
-      // ---- Pinned, scrubbed crossfade via GSAP ScrollTrigger ----
-      root.classList.add('v2story--pinned');
-
-      Promise.all([
-        import('gsap'),
-        import('gsap/ScrollTrigger'),
-        import('gsap/ScrollToPlugin'),
-      ]).then(([{ gsap }, { ScrollTrigger }, { ScrollToPlugin }]) => {
-          if (cancelled) return;
-          gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
-
-          const ctx = gsap.context(() => {
-            /* Seamless dissolve: scenes stack by z-index and only the INCOMING
-               scene fades in over the top — the outgoing one stays fully
-               opaque beneath until covered, so there is never a mid-fade dip
-               where the background shows through. The covered scene is then
-               silently hidden (invisible switch, reverses cleanly on
-               back-scrub). */
-            scenes.forEach((el, i) => {
-              gsap.set(el, { zIndex: i + 1, autoAlpha: i === 0 ? 1 : 0 });
-              gsap.set(el.querySelector('.v2story__media'), { scale: 1 });
-            });
-
-            const tl = gsap.timeline({
-              defaults: { ease: 'none' },
-              scrollTrigger: {
-                trigger: root,
-                start: 'top top',
-                end: () => '+=' + window.innerHeight * (N - 1),
-                pin: viewport,
-                pinSpacing: true,
-                scrub: 0.8,
-                anticipatePin: 1,
-                invalidateOnRefresh: true,
-                // settle on a whole scene so the user never rests mid-crossfade.
-                // inertia:false = snap from the CURRENT position, never from a
-                // velocity projection — fast flicks can't skip several scenes.
-                snap: {
-                  snapTo: 1 / (N - 1),
-                  duration: { min: 0.25, max: 0.6 },
-                  ease: 'power2.inOut',
-                  delay: 0.1,
-                  inertia: false,
-                },
-                onUpdate: (self) => {
-                  const idx = Math.round(self.progress * (N - 1));
-                  setActive(idx);
-                  arm(idx);
-                },
-              },
-            });
-
-            for (let k = 0; k < N - 1; k++) {
-              const cur = scenes[k];
-              const nxt = scenes[k + 1];
-              tl
-                // incoming scene dissolves in on top, easing from a gentle zoom
-                .fromTo(nxt, { autoAlpha: 0 }, { autoAlpha: 1, duration: 1 }, k)
-                .fromTo(
-                  nxt.querySelector('.v2story__media'),
-                  { scale: 1.07 },
-                  { scale: 1, duration: 1 },
-                  k
-                )
-                // outgoing scene keeps drifting beneath — no fade, no dip
-                .fromTo(
-                  cur.querySelector('.v2story__media'),
-                  { scale: 1 },
-                  { scale: 1.045, duration: 1 },
-                  k
-                )
-                // once fully covered, hide it (invisible to the user)
-                .set(cur, { autoAlpha: 0 }, k + 0.999);
-            }
-
-            // Settle layout once images/fonts are in.
-            ScrollTrigger.refresh();
-          }, root);
-
-          // ── AUTO-PLAY: setInterval-based, no onComplete chaining ──────
-          const SLIDE_MS = 4500;
-          let autoInterval: ReturnType<typeof setInterval> | null = null;
-          let autoIdx = 0;
-
-          function getSectionTop(): number {
-            return root!.getBoundingClientRect().top + window.scrollY;
-          }
-
-          function jumpToScene(idx: number) {
-            if (cancelled) return;
-            gsap.killTweensOf(window);
-            gsap.to(window, {
-              scrollTo: { y: getSectionTop() + idx * window.innerHeight, autoKill: false },
-              duration: 0.9,
-              ease: 'power2.inOut',
-            });
-          }
-
-          function startAutoPlay() {
-            if (autoInterval) return;
-            autoIdx = 0;
-            jumpToScene(0);
-            autoInterval = setInterval(() => {
-              if (cancelled) { stopAutoPlay(); return; }
-              autoIdx = (autoIdx + 1) % N;
-              // Loop continuously — wrap back to scene 0 seamlessly
-              jumpToScene(autoIdx);
-            }, SLIDE_MS);
-          }
-
-          function stopAutoPlay() {
-            if (autoInterval) { clearInterval(autoInterval); autoInterval = null; }
-            gsap.killTweensOf(window);
-          }
-
-          // Watch the section root (never hidden by GSAP)
-          const autoIO = new IntersectionObserver(([e]) => {
-            if (e.isIntersecting) startAutoPlay();
-            else stopAutoPlay();
-          }, { threshold: 0.15 });
-          autoIO.observe(root!);
-          // ── END AUTO-PLAY ──────────────────────────────────────────────
-
-          cleanup = () => {
-            ctx.revert();
-            autoIO.disconnect();
-            stopAutoPlay();
-          };
-        }
-      );
-
-      return () => {
-        cancelled = true;
-        cleanup();
-        root.classList.remove('v2story--pinned');
-      };
-    }
-
-    // ---- Fallback: IO play/pause + auto-advance, native scroll ----
+    if (!root) return undefined;
     if (typeof IntersectionObserver === 'undefined') {
-      setActive(0);
-      return;
+      setCompleted(true); // no IO support — skip the gate, fall back to ambient loop
+      return undefined;
     }
 
-    const playIO = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          const i = Number((e.target as HTMLElement).dataset.scene);
-          if (e.isIntersecting) {
-            setActive(i);
-            arm(i);
-          }
-        });
-      },
-      { threshold: 0.55 }
-    );
-    scenes.forEach((el) => playIO.observe(el));
+    const html = document.documentElement;
+    let completedFlag = false;
+    let capturing = false;
+    let canCapture = true; // debounce: don't instantly re-capture right after a release
+    let idx = 0;
+    let throttled = false;
+    let throttleTimeout: ReturnType<typeof setTimeout> | null = null;
+    let interval: ReturnType<typeof setInterval> | null = null;
+    let touchStartY = 0;
+    let prevHtmlOverflow = '';
+    let prevBodyOverflow = '';
 
-    // Arm the first two scenes immediately so video posters show on mobile.
-    arm(0);
-
-    cleanup = () => {
-      playIO.disconnect();
+    const stopTimer = () => {
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
+      }
     };
-    return () => cleanup();
-  }, [heavy]);
+    const startTimer = () => {
+      stopTimer();
+      interval = setInterval(() => advance(1), SLIDE_MS);
+    };
+
+    const setScene = (i: number) => {
+      idx = i;
+      setActive(i);
+      arm(i);
+    };
+
+    function release(markCompleted: boolean) {
+      if (!capturing) return;
+      capturing = false;
+      stopTimer();
+      window.removeEventListener('wheel', onWheel);
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('keydown', onKeydown);
+      html.style.overflow = prevHtmlOverflow;
+      document.body.style.overflow = prevBodyOverflow;
+      if (markCompleted) {
+        // Keep the gate available for a later re-entry, including a reverse
+        // traversal from scene 8 back to scene 1.
+        completedFlag = false;
+        canCapture = false;
+        setCompleted(true);
+      } else {
+        canCapture = false;
+      }
+    }
+
+    function advance(dir: 1 | -1) {
+      if (throttled) return;
+      const next = idx + dir;
+      if (next >= N) {
+        release(true);
+        return;
+      }
+      if (next < 0) {
+        release(false);
+        return;
+      }
+      setScene(next);
+      throttled = true;
+      throttleTimeout = setTimeout(() => {
+        throttled = false;
+      }, 450);
+      if (capturing) startTimer(); // manual advance resets the auto-dwell clock
+    }
+
+    function onWheel(e: WheelEvent) {
+      e.preventDefault();
+      advance(e.deltaY > 0 ? 1 : -1);
+    }
+    function onTouchStart(e: TouchEvent) {
+      touchStartY = e.touches[0].clientY;
+    }
+    function onTouchMove(e: TouchEvent) {
+      e.preventDefault();
+      const dy = touchStartY - e.touches[0].clientY;
+      if (Math.abs(dy) > 30) {
+        advance(dy > 0 ? 1 : -1);
+        touchStartY = e.touches[0].clientY;
+      }
+    }
+    function onKeydown(e: KeyboardEvent) {
+      if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
+        e.preventDefault();
+        advance(1);
+      } else if (['ArrowUp', 'PageUp'].includes(e.key)) {
+        e.preventDefault();
+        advance(-1);
+      }
+    }
+
+    function capture() {
+      if (capturing || completedFlag) return;
+      capturing = true;
+      setScene(0);
+      root!.scrollIntoView({ block: 'start' });
+
+      // The page's actual scrolling box is <html> (documentElement) in
+      // standards mode, not <body> — locking only body.style.overflow leaves
+      // scrollbar-drag, keyboard, and programmatic scroll unblocked.
+      prevHtmlOverflow = html.style.overflow;
+      prevBodyOverflow = document.body.style.overflow;
+      html.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+
+      window.addEventListener('wheel', onWheel, { passive: false });
+      window.addEventListener('touchstart', onTouchStart, { passive: true });
+      window.addEventListener('touchmove', onTouchMove, { passive: false });
+      window.addEventListener('keydown', onKeydown);
+
+      startTimer();
+    }
+
+    // A sticky site header overlaps the top of the viewport, so a fully
+    // scrolled-into-place 100vh section never reaches ~0.98 intersection —
+    // 0.9 comfortably accounts for that overlap without triggering early.
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (completedFlag) return;
+        if (entry.intersectionRatio >= 0.9) {
+          if (canCapture) capture();
+        } else {
+          canCapture = true; // dropped low enough — re-arm for next approach
+        }
+      },
+      { threshold: [0, 0.5, 0.9, 1] }
+    );
+    io.observe(root);
+
+    return () => {
+      io.disconnect();
+      release(false);
+      if (throttleTimeout) clearTimeout(throttleTimeout);
+    };
+    // Mount-only: all mutable state lives in closure vars above so this
+    // effect (and its global listeners) is set up exactly once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /* ---------------- After completion: ambient auto-advance, no lock ---------------- */
+  useEffect(() => {
+    if (!completed) return undefined;
+
+    let interval: ReturnType<typeof setInterval> | null = null;
+
+    const start = () => {
+      if (interval) return;
+      interval = setInterval(() => {
+        setActive((prev) => {
+          const next = (prev + 1) % N;
+          arm(next);
+          return next;
+        });
+      }, SLIDE_MS);
+    };
+
+    const stop = () => {
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
+      }
+    };
+
+    const root = rootRef.current;
+    if (!root || typeof IntersectionObserver === 'undefined') {
+      start();
+      return () => stop();
+    }
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) start();
+        else stop();
+      },
+      { threshold: 0.3 }
+    );
+    io.observe(root);
+
+    return () => {
+      io.disconnect();
+      stop();
+    };
+  }, [completed]);
 
   return (
     <section
@@ -314,11 +377,8 @@ export default function MaterialStory() {
           return (
             <article
               key={n}
-              className="v2story__scene"
+              className={`v2story__scene${i === active ? ' is-active' : ''}`}
               data-scene={i}
-              ref={(el) => {
-                sceneRefs.current[i] = el;
-              }}
             >
               <div className="v2story__media">
                 {Live ? (
@@ -345,20 +405,10 @@ export default function MaterialStory() {
                       preload="auto"
                       aria-hidden="true"
                       tabIndex={-1}
-                    >
-                      {armed.has(i) && (
-                        <>
-                          <source
-                            src={storyAsset(`assets/videos/story/scene-${n}.webm`)}
-                            type="video/webm"
-                          />
-                          <source
-                            src={storyAsset(`assets/videos/story/scene-${n}.mp4`)}
-                            type="video/mp4"
-                          />
-                        </>
-                      )}
-                    </video>
+                    />
+                    {/* <source> elements are injected imperatively (see the
+                        arm/load effect above) so setting src and calling
+                        load() happen atomically, with no React render gap. */}
                   </>
                 )}
               </div>
@@ -366,13 +416,23 @@ export default function MaterialStory() {
           );
         })}
 
-        {/* scene progress — current chapter indicator (pinned mode only) */}
-        <ol className="v2story__progress" aria-hidden="true">
+        {/* scene progress — current chapter indicator */}
+        <ol className="v2story__progress" aria-label="Material story scenes">
           {SCENE_IDS.map((n, i) => (
             <li
               key={n}
-              className={`v2story__dot${i === active ? ' is-active' : ''}`}
-            />
+            >
+              <button
+                type="button"
+                className={`v2story__dot${i === active ? ' is-active' : ''}`}
+                aria-label={`View material story scene ${n}`}
+                aria-current={i === active ? 'step' : undefined}
+                onClick={() => {
+                  setActive(i);
+                  arm(i);
+                }}
+              />
+            </li>
           ))}
         </ol>
       </div>

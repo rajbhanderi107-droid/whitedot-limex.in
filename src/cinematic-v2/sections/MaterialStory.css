@@ -1,11 +1,10 @@
 /* =====================================================================
-   MaterialStory — "Born from CO₂" pinned scroll film (cinematic-v2)
+   MaterialStory — "Born from CO₂" film (cinematic-v2)
    ---------------------------------------------------------------------
-   Pure film: 8 full-bleed video scenes, no text overlays. Two layouts
-   share the same markup:
-     • default          → FALLBACK: scenes stack in normal flow, ~1 vh each.
-     • .v2story--pinned → PINNED:  scenes overlap absolutely, GSAP crossfades.
-   All motion is transform/opacity only.
+   Pure film: 8 full-bleed video scenes, no text overlays, one fixed-height
+   section. Scenes overlap absolutely and crossfade automatically on a
+   timer (see MaterialStory.tsx) — no scroll-jacking, no separate pages.
+   All motion is opacity only.
    ===================================================================== */
 
 .v2story {
@@ -15,31 +14,28 @@
   border-block: var(--v2-hairline);
 }
 
-/* The element that gets pinned (pinned mode) / the flow container (fallback) */
 .v2story__viewport {
   position: relative;
   width: 100%;
-}
-
-/* ---- PINNED MODE: viewport is one screen tall, scenes overlap ---- */
-.v2story--pinned .v2story__viewport {
   height: 100vh;
   height: 100svh;
   overflow: hidden;
 }
-.v2story--pinned .v2story__scene {
+
+.v2story__scene {
   position: absolute;
   inset: 0;
-  /* GSAP drives autoAlpha (opacity + visibility) */
-}
-
-/* ---- FALLBACK MODE: each scene is its own ~viewport-tall block ---- */
-.v2story__scene {
-  position: relative;
-  min-height: 100vh;
-  min-height: 100svh;
   width: 100%;
   overflow: hidden;
+  opacity: 0;
+  z-index: 1;
+  transition: opacity 1.2s ease;
+  pointer-events: auto;
+}
+.v2story__scene.is-active {
+  opacity: 1;
+  z-index: 2;
+  pointer-events: auto;
 }
 
 /* ------------------------------------------------------------------ */
@@ -74,9 +70,9 @@
 /* ------------------------------------------------------------------ */
 /* PROGRESS DOTS — current chapter indicator                          */
 /* ------------------------------------------------------------------ */
-/* Lives inside the pinned viewport, so it only appears while the section is
-   pinned on screen and never floats over neighbouring sections.
-   z-index sits above the scene stack (scenes are z 1..N). */
+/* Lives inside the viewport, so it only appears while the section is on
+   screen and never floats over neighbouring sections.
+   z-index sits above the scene stack (scenes are z 1..2). */
 .v2story__progress {
   position: absolute;
   z-index: 20;
@@ -91,11 +87,11 @@
   margin: 0;
   pointer-events: none;
 }
-/* fallback (non-pinned) stacks scenes — the dot rail has no fixed anchor there */
-.v2story:not(.v2story--pinned) .v2story__progress {
-  display: none;
-}
 .v2story__dot {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
   inline-size: 6px;
   block-size: 6px;
   border-radius: 50%;
@@ -109,7 +105,7 @@
 .v2story__dot.is-active {
   background: var(--v2-sky);
   transform: scale(1.6);
-  animation: v2story-dot-timer 4s linear 1 forwards;
+  animation: v2story-dot-timer 15s linear 1 forwards;
 }
 
 @keyframes v2story-dot-timer {
@@ -121,19 +117,15 @@
 /* RESPONSIVE                                                          */
 /* ------------------------------------------------------------------ */
 @media (max-width: 767px) {
-  .v2story__progress {
-    display: none;
-  }
+  .v2story__progress { right: 1rem; }
 }
 
-/* ------------------------------------------------------------------ */
-/* REDUCED MOTION — posters only, no film                              */
-/* ------------------------------------------------------------------ */
-@media (prefers-reduced-motion: reduce) {
-  .v2story__video {
-    display: none !important;
-  }
-}
+/* Note: this section previously force-hid .v2story__video under
+   prefers-reduced-motion (showing only the static poster). The site owner
+   wants the muted looping background film shown regardless of that OS
+   accessibility signal — see src/premium-wd/premiumMode.ts for the matching
+   JS-side decision. Removed so this CSS rule can't silently re-hide the
+   video out from under that JS logic. */
 
 @media (max-width: 767px) {
   .v2story__video,

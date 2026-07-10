@@ -5,14 +5,6 @@
   "name": "Dairy Products Container",
   "category": "Dairy Packaging",
   "status": "live",
-<<<<<<< Updated upstream
-  "modelFile": "public/case-study/model/dairy-products-container.glb",
-  "htmlPage": "product.html?p=dairy-products-container  (generic template, no dedicated file)",
-  "composition": null,
-  "specs": null,
-  "note": "3D model live (photo-matched white round dairy container). No verified LIMEX composition/CO2/supplier data exists yet for this product. Do not fabricate percentages or specs — populate only from the official White Dot 'LIMEX Case Studies in India' PDF or verified supplier TDS, matching the pattern in specs.json (see bobbin/container/motorCover/aralditeContainer)."
-}
-=======
   "application": "Snap-Lid Dairy Tub (Curd / Dairy Cup)",
   "tagline": "A tapered round dairy tub sample with a tamper-seal pull-tab lid, modeled in 3D from the supplied product photos.",
   "description": "A tapered round dairy container (curd/dahi-style cup) with a snap-fit lid and an integrated tamper-seal pull tab hinged off the rim. The interactive 3D model follows the supplied photo set (front, lid-underside, and three-quarter views). No dimensions card was supplied with these photos, so body proportions and tab size are visual estimates, not calipered measurements. Verified supplier composition and food-contact data are still in progress, so no LIMEX percentage, mechanical values, or CO2 figures are published for this product.",
@@ -69,6 +61,6 @@
     }
   ],
   "modelFile": "model/dairy-container-procedural.glb",
-  "htmlPage": "product.html?p=dairy-products-container  (generic template, no dedicated file)"
+  "htmlPage": "product.html?p=dairy-products-container  (generic template, no dedicated file)",
+  "note": "3D model rebuilt from scratch as a clean lathe-revolved mesh, dimensioned to the measured reference spec: total height 68.5mm, top OD 75mm, bottom OD 64mm, taper ~5.5deg, lid flange OD 82.5mm. Semi-gloss opaque white PP with a baked fleck-speckle base color texture (unified across body, lid, and tear tab). No verified LIMEX composition/CO2/supplier data exists yet for this product — do not fabricate percentages or specs; populate only from the official White Dot 'LIMEX Case Studies in India' PDF or verified supplier TDS, matching the pattern in specs.json (see bobbin/container/motorCover/aralditeContainer)."
 }
->>>>>>> Stashed changes
