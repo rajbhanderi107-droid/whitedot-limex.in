@@ -26,11 +26,9 @@ const consilePipeModel = `${basePath}/case-study/model/consile-pipe-procedural.g
 const soapStandHref  = `${basePath}/case-study/product.html?p=soap-stand`;
 const soapStandModel = `${basePath}/case-study/model/soap-stand-procedural.glb`;
 const foodOilCanHref  = `${basePath}/case-study/product.html?p=food-oil-can`;
-const foodOilCanModel = `${basePath}/case-study/model/oil-bottle-procedural.glb`;
-const foodOilCanPoster = `${basePath}/case-study/img/food-oil-can-card.png`;
+const foodOilCanCardModel = `${basePath}/case-study/model/oil-bottle-card.glb`;
 const dairyContainerHref  = `${basePath}/case-study/product.html?p=dairy-products-container`;
 const dairyContainerModel = `${basePath}/case-study/model/dairy-products-container.glb`;
-const dairyContainerPoster = `${basePath}/case-study/img/dairy-products-container-card.png`;
 
 type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer';
 
@@ -614,7 +612,8 @@ export default function CaseStudyPage() {
         <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">09</span>
-          <img src={foodOilCanPoster} alt="Food Oil Can product preview" loading="eager" decoding="async" />
+          {/* @ts-ignore custom element */}
+          <model-viewer src={foodOilCanCardModel} alt="Food Oil Can 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="22deg 72deg 108%" style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }} />
         </div>
         <div className="csp-pinfo">
           <div>
@@ -641,7 +640,8 @@ export default function CaseStudyPage() {
         <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">10</span>
-          <img src={dairyContainerPoster} alt="Dairy Products Container product preview" loading="eager" decoding="async" />
+          {/* @ts-ignore custom element */}
+          <model-viewer src={dairyContainerModel} alt="Dairy Products Container 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="22deg 76deg 108%" style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }} />
         </div>
         <div className="csp-pinfo">
           <div>

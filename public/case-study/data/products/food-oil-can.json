@@ -60,6 +60,6 @@
       "verified": false
     }
   ],
-  "modelFile": "model/oil-bottle-procedural.glb",
+  "modelFile": "model/oil-bottle-procedural-fast.glb",
   "htmlPage": "product.html?p=food-oil-can  (generic template, no dedicated file)"
 }
