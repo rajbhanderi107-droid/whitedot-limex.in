@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
-import { warmCaseStudyModelCache } from '../productModelPreload';
 import './CaseStudyPage.css';
 
 const basePath = window.location.hostname.endsWith('github.io') ? '/whitedot-limex.in' : '';
@@ -27,18 +26,6 @@ const foodOilCanHref  = `${basePath}/case-study/product.html?p=food-oil-can`;
 const foodOilCanModel = `${basePath}/case-study/model/oil-bottle-procedural.glb`;
 const dairyContainerHref  = `${basePath}/case-study/product.html?p=dairy-products-container`;
 const dairyContainerModel = `${basePath}/case-study/model/dairy-products-container.glb`;
-const liveProductModelUrls = [
-  bobbinModel,
-  containerModel,
-  motorCoverModel,
-  aralditeModel,
-  handWashModel,
-  hardDishModel,
-  consilePipeModel,
-  soapStandModel,
-  foodOilCanModel,
-  dairyContainerModel,
-];
 
 type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer';
 const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'dairyProductsContainer']);
@@ -182,10 +169,6 @@ export default function CaseStudyFeature() {
   }, [setActiveProductKey]);
 
   useEffect(() => {
-    if (!isMobileViewport) {
-      warmCaseStudyModelCache(liveProductModelUrls);
-    }
-
     // ── Inject model-viewer only on desktop — mobile Safari crashes with multiple WebGL contexts ──
     if (!isMobileViewport && !customElements.get('model-viewer')) {
       const s = document.createElement('script');
@@ -312,7 +295,7 @@ export default function CaseStudyFeature() {
             <model-viewer
               src={bobbinModel}
               alt="Bobbin — LIMEX textile bobbin 3D model"
-              loading="eager"
+              loading="lazy"
               interaction-prompt="none"
               shadow-intensity="0"
               exposure="1.15"
@@ -358,7 +341,7 @@ export default function CaseStudyFeature() {
             <model-viewer
               src={containerModel}
               alt="Paint container - red body and bright white snap lid 3D model"
-              loading="eager"
+              loading="lazy"
               interaction-prompt="none"
               shadow-intensity="0"
               exposure="1.08"
@@ -403,7 +386,7 @@ export default function CaseStudyFeature() {
             <model-viewer
               src={motorCoverModel}
               alt="Motor Cover — black vented motor fan cover 3D model"
-              loading="eager"
+              loading="lazy"
               interaction-prompt="none"
               shadow-intensity="0"
               exposure="1.16"
@@ -449,7 +432,7 @@ export default function CaseStudyFeature() {
               src={aralditeModel}
               poster={`${basePath}/case-study/img/araldite-poster.jpg`}
               alt="Araldite Container — LIMEX adhesive dispenser bottle 3D model"
-              loading="eager"
+              loading="lazy"
               interaction-prompt="none"
               shadow-intensity="0.9"
               shadow-softness="0.8"
@@ -496,7 +479,7 @@ export default function CaseStudyFeature() {
             <model-viewer
               src={handWashModel}
               alt="Hand Wash Bottle - white and green faceted LIMEX pump bottles 3D model"
-              loading="eager"
+              loading="lazy"
               interaction-prompt="none"
               shadow-intensity="0.9"
               shadow-softness="0.8"
@@ -543,7 +526,7 @@ export default function CaseStudyFeature() {
             <model-viewer
               src={hardDishModel}
               alt="Hard Dish - four-colorway 3-compartment LIMEX serving dish 3D model"
-              loading="eager"
+              loading="lazy"
               interaction-prompt="none"
               shadow-intensity="0.9"
               shadow-softness="0.8"
@@ -592,7 +575,7 @@ export default function CaseStudyFeature() {
             <model-viewer
               src={consilePipeModel}
               alt="Concealed Pipe - black rigid conduit pipe with blue stripe and embossed ISI marking 3D model"
-              loading="eager"
+              loading="lazy"
               interaction-prompt="none"
               shadow-intensity="0"
               exposure="1.15"
@@ -635,7 +618,7 @@ export default function CaseStudyFeature() {
             <model-viewer
               src={soapStandModel}
               alt="Soap Stand - covered soap dish with knit-embossed lid, bow and drain insert 3D model"
-              loading="eager"
+              loading="lazy"
               interaction-prompt="none"
               shadow-intensity="0"
               exposure="1.1"
@@ -681,7 +664,7 @@ export default function CaseStudyFeature() {
             <model-viewer
               src=""
               alt="Food Oil Can - wide offset-cap oil jug with moulded handle 3D model"
-              loading="eager"
+              loading="lazy"
               interaction-prompt="none"
               shadow-intensity="0.9"
               shadow-softness="0.8"
@@ -725,7 +708,7 @@ export default function CaseStudyFeature() {
             <model-viewer
               src={dairyContainerModel}
               alt="Dairy Products Container - tapered round tub with snap-fit lid and tamper-seal tab 3D model"
-              loading="eager"
+              loading="lazy"
               interaction-prompt="none"
               shadow-intensity="0.9"
               shadow-softness="0.8"
