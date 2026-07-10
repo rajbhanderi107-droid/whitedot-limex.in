@@ -126,14 +126,12 @@
   }
 }
 
-/* ------------------------------------------------------------------ */
-/* REDUCED MOTION — posters only, no film                              */
-/* ------------------------------------------------------------------ */
-@media (prefers-reduced-motion: reduce) {
-  .v2story__video {
-    display: none !important;
-  }
-}
+/* Note: this section previously force-hid .v2story__video under
+   prefers-reduced-motion (showing only the static poster). The site owner
+   wants the muted looping background film shown regardless of that OS
+   accessibility signal — see src/premium-wd/premiumMode.ts for the matching
+   JS-side decision. Removed so this CSS rule can't silently re-hide the
+   video out from under that JS logic. */
 
 @media (max-width: 767px) {
   .v2story__video,
