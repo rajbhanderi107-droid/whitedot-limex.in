@@ -81,7 +81,7 @@ def body_half_widths(z):
 # square-ish cap plateau whose centre sits toward the cap end (x-).
 WEDGE_Z0, WEDGE_Z1 = BODY_Z1, 184.0
 PLATEAU_CX = -32.0                   # plateau (and cap) centre, x offset
-PLATEAU_A, PLATEAU_B = 28.0, 28.0    # plateau half-extents
+PLATEAU_A, PLATEAU_B = 22.5, 22.5    # shoulder matches the 45mm cap footprint
 PLATEAU_CORNER_R = 10.0
 
 # Collar + cap (cap dia 45mm per card), centred on the plateau
@@ -175,7 +175,7 @@ def srgb8(r, g, b):
 
 
 COL_BODY = srgb8(236, 231, 221)   # warm eggshell-white HDPE, sampled off reference photo
-COL_CAP = srgb8(255, 196, 18)     # saturated egg-yolk yellow; keep the cap visibly yellow in model-viewer
+COL_CAP = srgb8(198, 142, 12)     # darker matte mustard-yellow cap tone
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 GLB_OUT = os.path.join(REPO, "public", "case-study", "model", "oil-bottle-procedural.glb")
@@ -491,6 +491,10 @@ def build_handle():
     the closed outline, extrude +-HANDLE_HALF_T in Y as pillowed slices, cap
     the faces, then punch the tilted oval finger hole through along Y."""
     outline = closed_catmull_2d(HANDLE_OUTLINE, 96)
+    # Keep the molded handle transition outside the 45mm cap silhouette.
+    # The cap spans x=-54.5..-9.5mm around PLATEAU_CX=-32mm; clipping the
+    # upper attachment at -3mm prevents white handle geometry from crossing it.
+    outline = [(max(x, -3.0) if z >= 188.0 else x, z) for x, z in outline]
     cx = sum(p[0] for p in outline) / len(outline)
     cz = sum(p[1] for p in outline) / len(outline)
 
@@ -624,7 +628,7 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 scene = bpy.context.scene
 
 mat_body = make_material("OilBottleBody", COL_BODY, 0.27)
-mat_cap = make_material("OilBottleCap", COL_CAP, 0.16)
+mat_cap = make_material("OilBottleCap", COL_CAP, 0.30)
 
 body = build_body()
 wedge = build_wedge()
