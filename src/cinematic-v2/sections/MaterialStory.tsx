@@ -5,10 +5,18 @@ import { SceneScience, SceneImpact } from './StoryScenes';
 /* ---------------------------------------------------------------------------
    MaterialStory — the "Born from CO₂" film (cinematic-v2).
    ---------------------------------------------------------------------------
-   8 full-bleed video scenes, all stacked on ONE fixed-height section and
-   crossfaded automatically every 15s — no scroll-jacking, no separate pages.
-   The section auto-advances whenever it's on screen and pauses when it
-   isn't. Same behavior on every device (desktop, mobile, reduced-motion).
+   8 full-bleed video scenes, all stacked on ONE fixed-height section,
+   crossfading every 15s. No separate pages, no GSAP scroll-scrub.
+
+   First viewing is gated: once the section fully fills the viewport, page
+   scroll is locked and the 8 scenes play through once in sequence — the
+   viewer can't scroll past the section until the whole film has been shown.
+   Scroll unlocks automatically the moment scene 8 finishes its dwell.
+
+   After that first full watch, the section is "completed" for this mount
+   and behaves as a normal ambient loop (auto-advances forever while on
+   screen, never locks scroll again) — so returning to it on a later scroll
+   doesn't re-trap the viewer.
 
    Performance contract: videos lazy-load (preload="none", <source> injected
    only for the active scene ±1); only the on-screen scene's film decodes;
@@ -146,9 +154,85 @@ export default function MaterialStory() {
     };
   }, [active, armed]);
 
-  /* ---------------- Auto-advance: one page, timer-driven crossfade ---------------- */
+  // Once the viewer has watched all 8 scenes once, never lock scroll again.
+  const [completed, setCompleted] = useState(false);
+  const [locked, setLocked] = useState(false);
+
+  /* ---------------- Gate: lock scroll once the film fills the viewport ---------------- */
   useEffect(() => {
+    if (completed) return undefined;
+    const root = rootRef.current;
+    if (!root || typeof IntersectionObserver === 'undefined') {
+      setCompleted(true); // no IO support — skip the gate, fall back to ambient loop
+      return undefined;
+    }
+
+    // A sticky site header overlaps the top of the viewport, so a fully
+    // scrolled-into-place 100vh section never reaches ~0.98 intersection —
+    // 0.9 comfortably accounts for that overlap without triggering early.
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.intersectionRatio >= 0.9) setLocked(true);
+      },
+      { threshold: [0, 0.5, 0.9, 1] }
+    );
+    io.observe(root);
+    return () => io.disconnect();
+  }, [completed]);
+
+  /* ---------------- Locked playthrough: scenes 0..N-1 once, then unlock ---------------- */
+  useEffect(() => {
+    if (!locked) return undefined;
+
+    rootRef.current?.scrollIntoView({ block: 'start' });
+
+    // The page's actual scrolling box is <html> (documentElement) in
+    // standards mode, not <body> — locking only body.style.overflow leaves
+    // scrollbar-drag, keyboard, and programmatic scroll unblocked.
+    const html = document.documentElement;
+    const prevHtmlOverflow = html.style.overflow;
+    const prevBodyOverflow = document.body.style.overflow;
+    html.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+
+    const preventScroll = (e: Event) => e.preventDefault();
+    const preventKeys = (e: KeyboardEvent) => {
+      if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' ', 'Home', 'End'].includes(e.key)) {
+        e.preventDefault();
+      }
+    };
+    window.addEventListener('wheel', preventScroll, { passive: false });
+    window.addEventListener('touchmove', preventScroll, { passive: false });
+    window.addEventListener('keydown', preventKeys);
+
+    setActive(0);
     arm(0);
+    let idx = 0;
+    const interval = setInterval(() => {
+      idx += 1;
+      if (idx >= N) {
+        clearInterval(interval);
+        setCompleted(true);
+        setLocked(false);
+        return;
+      }
+      setActive(idx);
+      arm(idx);
+    }, SLIDE_MS);
+
+    return () => {
+      clearInterval(interval);
+      html.style.overflow = prevHtmlOverflow;
+      document.body.style.overflow = prevBodyOverflow;
+      window.removeEventListener('wheel', preventScroll);
+      window.removeEventListener('touchmove', preventScroll);
+      window.removeEventListener('keydown', preventKeys);
+    };
+  }, [locked]);
+
+  /* ---------------- After completion: ambient auto-advance, no lock ---------------- */
+  useEffect(() => {
+    if (!completed) return undefined;
 
     let interval: ReturnType<typeof setInterval> | null = null;
 
@@ -189,7 +273,7 @@ export default function MaterialStory() {
       io.disconnect();
       stop();
     };
-  }, []);
+  }, [completed]);
 
   return (
     <section
