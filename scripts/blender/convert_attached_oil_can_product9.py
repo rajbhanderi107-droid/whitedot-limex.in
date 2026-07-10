@@ -213,7 +213,8 @@ def assign_cap_material(obj: bpy.types.Object) -> None:
             ((point.x - cap_center.x) / rx) ** 2 + ((point.y - cap_center.y) / ry) ** 2 <= 1.35
             for point in face_points
         )
-        is_cap = face_inside and (cap_side or cap_top)
+        cap_top_region = radial <= 0.55
+        is_cap = face_inside and (cap_side or (cap_top and cap_top_region))
         poly.material_index = 1 if is_cap else 0
         cap_faces += int(is_cap)
     print(f"Assigned cap material to {cap_faces} / {len(me.polygons)} faces")
