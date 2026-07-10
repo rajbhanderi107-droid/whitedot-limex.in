@@ -46,7 +46,8 @@ def srgb8(r: int, g: int, b: int) -> tuple[float, float, float, float]:
 # stays warm white and the viewer exposure carries the tonal match.
 BODY = srgb8(238, 235, 226)
 # Reference cap is a clean saturated lemon-yellow. Avoid mustard/orange.
-CAP = srgb8(255, 213, 0)
+# Reference-matched warm golden yellow: softer and less neon than the first pass.
+CAP = srgb8(239, 198, 45)
 
 
 def clean_scene() -> None:
@@ -192,15 +193,27 @@ def assign_cap_material(obj: bpy.types.Object) -> None:
         minv.y + dims.y * 0.51,
         minv.z + dims.z * 0.865,
     ))
-    rx = dims.x * 0.18
-    ry = dims.y * 0.24
-    z_min = minv.z + dims.z * 0.76
+    # Tight cap-only mask. The earlier mask reached into the shoulder and
+    # spread yellow onto the body; keep the radius and lower bound confined to
+    # the cylindrical yellow cap visible in the reference photos.
+    rx = dims.x * 0.28
+    ry = dims.y * 0.23
+    z_min = minv.z + dims.z * 0.90
 
     cap_faces = 0
     for poly in me.polygons:
         center = obj.matrix_world @ poly.center
         radial = ((center.x - cap_center.x) / rx) ** 2 + ((center.y - cap_center.y) / ry) ** 2
-        is_cap = center.z >= z_min and radial <= 1.25
+        world_normal = obj.matrix_world.to_3x3() @ poly.normal
+        cap_side = center.z >= z_min and abs(world_normal.z) < 0.45
+        cap_top = center.z >= minv.z + dims.z * 0.96
+        face_points = [obj.matrix_world @ me.vertices[me.loops[li].vertex_index].co for li in poly.loop_indices]
+        face_inside = all(
+            point.z >= z_min and
+            ((point.x - cap_center.x) / rx) ** 2 + ((point.y - cap_center.y) / ry) ** 2 <= 1.35
+            for point in face_points
+        )
+        is_cap = face_inside and (cap_side or cap_top)
         poly.material_index = 1 if is_cap else 0
         cap_faces += int(is_cap)
     print(f"Assigned cap material to {cap_faces} / {len(me.polygons)} faces")

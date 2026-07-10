@@ -634,7 +634,7 @@ export default function CaseStudyPage() {
           ) : (
             // @ts-ignore custom element
             <model-viewer
-              src={foodOilCanModel}
+              src=""
               alt="Food Oil Can - wide offset-cap oil jug with moulded handle 3D model"
               loading="eager"
               interaction-prompt="none"

@@ -26,7 +26,7 @@ const soapStandModel = `${basePath}/case-study/model/soap-stand-procedural.glb`;
 const foodOilCanHref  = `${basePath}/case-study/product.html?p=food-oil-can`;
 const foodOilCanModel = `${basePath}/case-study/model/oil-bottle-procedural.glb`;
 const dairyContainerHref  = `${basePath}/case-study/product.html?p=dairy-products-container`;
-const dairyContainerModel = `${basePath}/case-study/model/dairy-container-procedural.glb`;
+const dairyContainerModel = `${basePath}/case-study/model/dairy-products-container.glb`;
 const liveProductModelUrls = [
   bobbinModel,
   containerModel,
@@ -41,7 +41,7 @@ const liveProductModelUrls = [
 ];
 
 type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer';
-const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer']);
+const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'dairyProductsContainer']);
 
 // Pending products — same card as live ones; 3D model + spec details land later.
 const pendingProducts: { idx: string; slug: string; name: string; tag: string }[] = [
@@ -141,8 +141,8 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: 'Live', label: 'Product 09', green: true },
   ],
   dairyProductsContainer: [
-    { value: '10', label: 'Dairy Container' },
-    { value: '1', label: 'Snap-Fit Lid + Tab' },
+    { value: '10', label: 'Dairy Products Container' },
+    { value: 'Dairy', label: 'Packaging' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 10', green: true },
   ],
@@ -679,7 +679,7 @@ export default function CaseStudyFeature() {
           ) : (
             // @ts-ignore custom element
             <model-viewer
-              src={foodOilCanModel}
+              src=""
               alt="Food Oil Can - wide offset-cap oil jug with moulded handle 3D model"
               loading="eager"
               interaction-prompt="none"
