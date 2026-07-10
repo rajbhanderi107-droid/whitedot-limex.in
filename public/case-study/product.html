@@ -15,7 +15,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="modulepreload" href="./js/model-preload.js" />
   <link rel="modulepreload" href="./js/model-viewer.min.js" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/bobbin.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/paint-container-procedural-red-white.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/motor-cover-procedural-black.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/araldite-container-procedural.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/hand-wash-bottle-duo.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/lunchbox-tray-four-color-lineup.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/consile-pipe-procedural.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/soap-stand-procedural.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/oil-bottle-procedural.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/dairy-container-procedural.glb" />
+  <script type="module" src="./js/model-preload.js"></script>
   <script type="module" src="./js/model-viewer.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -809,7 +821,7 @@
     soapStand: './model/soap-stand-procedural.glb',
     foodOilCan: './model/oil-bottle-procedural.glb',
     dairyProductsContainer: './model/dairy-container-procedural.glb',
-    lunchBox: './model/lunch-box.glb',
+    lunchBox: './model/lunchbox-tray-four-color-lineup.glb',
   };
   const CAMERA_ORBIT = {
     bobbin: '0deg 76deg 105%',
@@ -822,7 +834,6 @@
     soapStand: '35deg 70deg 100%',
     foodOilCan: '22deg 72deg 108%',
     dairyProductsContainer: '18deg 74deg 108%',
-    lunchBox: '38deg 68deg 108%',
   };
   // Products whose GLB carries a baked animation to autoplay on the stage.
   const MODEL_ANIMATION = {

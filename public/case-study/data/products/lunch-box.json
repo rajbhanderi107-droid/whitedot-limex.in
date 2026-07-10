@@ -2,12 +2,12 @@
   "id": "lunchBox",
   "index": "11",
   "slug": "lunch-box",
-  "name": "Lunch Box",
+  "name": "Lunchbox",
   "category": "Food Container",
   "status": "live",
-  "modelFile": "./model/lunch-box.glb",
-  "htmlPage": "product.html?p=lunch-box (generic template, driven by specs.json[\"lunchBox\"])",
+  "modelFile": "model/lunchbox-tray-four-color-lineup.glb",
+  "htmlPage": "product.html?p=lunch-box  (generic template, no dedicated file)",
   "composition": null,
-  "specs": "see specs.json[\"lunchBox\"]",
-  "note": "3D model built to the calipered dimensions on the official product measurement detail card (200x145x65mm, R12mm corners, 4x uniform 65mm buckle flaps). No verified LIMEX composition/CO2/supplier data exists yet — do not fabricate percentages or specs. Populate composition only from the official White Dot 'LIMEX Case Studies in India' PDF or verified supplier TDS, matching the pattern in specs.json (see bobbin/container/motorCover/aralditeContainer)."
+  "specs": null,
+  "note": "No verified LIMEX composition/CO2/supplier data exists yet for this product. Do not fabricate percentages or specs — populate only from the official White Dot 'LIMEX Case Studies in India' PDF or verified supplier TDS, matching the pattern in specs.json (see bobbin/container/motorCover/aralditeContainer)."
 }

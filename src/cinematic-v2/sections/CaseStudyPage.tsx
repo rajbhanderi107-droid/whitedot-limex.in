@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import Nav from './Nav';
 import Footer from './Footer';
+import { warmCaseStudyModelCache } from '../productModelPreload';
 import './CaseStudyPage.css';
 
 const basePath = window.location.hostname.endsWith('github.io') ? '/whitedot-limex.in' : '';
@@ -26,12 +27,26 @@ const consilePipeModel = `${basePath}/case-study/model/consile-pipe-procedural.g
 const soapStandHref  = `${basePath}/case-study/product.html?p=soap-stand`;
 const soapStandModel = `${basePath}/case-study/model/soap-stand-procedural.glb`;
 const foodOilCanHref  = `${basePath}/case-study/product.html?p=food-oil-can`;
-const foodOilCanCardModel = `${basePath}/case-study/model/oil-bottle-card.glb`;
+const foodOilCanModel = `${basePath}/case-study/model/oil-bottle-procedural.glb`;
 const dairyContainerHref  = `${basePath}/case-study/product.html?p=dairy-products-container`;
-const dairyContainerModel = `${basePath}/case-study/model/dairy-products-container.glb`;
-const lunchboxHref  = `${basePath}/case-study/product.html?p=lunch-box`;
-const lunchboxModel = `${basePath}/case-study/model/lunch-box.glb`;
+const dairyContainerModel = `${basePath}/case-study/model/dairy-container-procedural.glb`;
+const lunchboxModel = `${basePath}/case-study/model/lunchbox-tray-four-color-lineup.glb`;
+const liveProductModelUrls = [
+  bobbinModel,
+  containerModel,
+  motorCoverModel,
+  aralditeModel,
+  handWashModel,
+  hardDishModel,
+  consilePipeModel,
+  soapStandModel,
+  foodOilCanModel,
+  dairyContainerModel,
+  lunchboxModel,
+];
+
 type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox';
+
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
     { value: '10', label: 'Active Studies' },
@@ -97,15 +112,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: '10', label: 'Dairy Products Container' },
     { value: 'Dairy', label: 'Packaging' },
     { value: '3D', label: 'Photo-Matched' },
-    { value: '10', label: 'Dairy Products Container' },
-    { value: 'Dairy', label: 'Packaging' },
-    { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 10', green: true },
   ],
   lunchBox: [
-    { value: '11', label: 'Lunch Box' },
-    { value: '4', label: 'Buckle Flaps' },
-    { value: '3D', label: 'Dimension-Matched' },
+    { value: '11', label: 'Lunchbox Study' },
+    { value: '3D', label: 'Interactive Model' },
+    { value: '4', label: 'Colorways' },
     { value: 'Live', label: 'Product 11', green: true },
   ],
 };
@@ -145,6 +157,10 @@ export default function CaseStudyPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    if (!isMobileViewport) {
+      warmCaseStudyModelCache(liveProductModelUrls);
+    }
 
     // ── Inject model-viewer only on desktop — mobile Safari crashes with multiple WebGL contexts ──
     if (!isMobileViewport && !customElements.get('model-viewer')) {
@@ -263,7 +279,7 @@ export default function CaseStudyPage() {
             <model-viewer
               src={bobbinModel}
               alt="Bobbin — LIMEX textile bobbin 3D model"
-              loading="lazy"
+              loading="eager"
               interaction-prompt="none"
               shadow-intensity="0"
               exposure="1.15"
@@ -295,6 +311,18 @@ export default function CaseStudyPage() {
         </div>
       </a>
 
+      {/* 11 Lunchbox - live */}
+      <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=lunch-box`} data-product="lunchBox">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">11</span>
+          {isMobileViewport ? <div className="csp-soon-placeholder">LB</div> : (
+            // @ts-ignore custom element
+            <model-viewer src={lunchboxModel} alt="Lunchbox - four-colorway 3D model" loading="eager" interaction-prompt="none" shadow-intensity="0.9" exposure="1.1" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 78deg 115%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Lunchbox</div><div className="csp-ptag">Food Container - Four Colorways</div><div className="csp-pbar"><span style={{flex:25,height:'100%',background:'#3b4a77',display:'block'}} /><span style={{flex:25,height:'100%',background:'#f2efe6',display:'block'}} /><span style={{flex:25,height:'100%',background:'#ef7250',display:'block'}} /><span style={{flex:25,height:'100%',background:'#a9d4b4',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Navy - White</span><span className="csp-psep">-</span><span className="csp-pdot lx" /><span className="csp-pblabel">Coral - Mint</span></div></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
       {/* 02 — coming soon */}
       <a className="csp-pcard featured live" href={containerHref} data-product="container">
         <div className="csp-border-beam" />
@@ -309,7 +337,7 @@ export default function CaseStudyPage() {
             <model-viewer
               src={containerModel}
               alt="Paint container - red body and bright white snap lid 3D model"
-              loading="lazy"
+              loading="eager"
               interaction-prompt="none"
               shadow-intensity="0"
               exposure="1.08"
@@ -355,7 +383,7 @@ export default function CaseStudyPage() {
               src={motorCoverModel}
               poster={motorCoverPoster}
               alt="Moter Cover - black vented motor cover 3D model"
-              loading="lazy"
+              loading="eager"
               interaction-prompt="none"
               shadow-intensity="0"
               exposure="1.16"
@@ -397,7 +425,7 @@ export default function CaseStudyPage() {
             <model-viewer
               src={aralditeModel}
               alt="Araldite Container - LIMEX adhesive dispenser bottle 3D model"
-              loading="lazy"
+              loading="eager"
               interaction-prompt="none"
               shadow-intensity="0.9"
               shadow-softness="0.8"
@@ -443,7 +471,7 @@ export default function CaseStudyPage() {
             <model-viewer
               src={handWashModel}
               alt="Hand Wash Bottle - white and green faceted LIMEX pump bottles 3D model"
-              loading="lazy"
+              loading="eager"
               interaction-prompt="none"
               shadow-intensity="0.9"
               shadow-softness="0.8"
@@ -490,7 +518,7 @@ export default function CaseStudyPage() {
             <model-viewer
               src={hardDishModel}
               alt="Hard Dish - four-colorway 3-compartment LIMEX serving dish 3D model"
-              loading="lazy"
+              loading="eager"
               interaction-prompt="none"
               shadow-intensity="0.9"
               shadow-softness="0.8"
@@ -539,7 +567,7 @@ export default function CaseStudyPage() {
             <model-viewer
               src={consilePipeModel}
               alt="Concealed Pipe - black rigid conduit pipe with blue stripe and embossed ISI marking 3D model"
-              loading="lazy"
+              loading="eager"
               interaction-prompt="none"
               shadow-intensity="0"
               exposure="1.15"
@@ -582,7 +610,7 @@ export default function CaseStudyPage() {
             <model-viewer
               src={soapStandModel}
               alt="Soap Stand - covered soap dish with knit-embossed lid, bow and drain insert 3D model"
-              loading="lazy"
+              loading="eager"
               interaction-prompt="none"
               shadow-intensity="0"
               exposure="1.1"
@@ -621,8 +649,24 @@ export default function CaseStudyPage() {
         <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">09</span>
-          {/* @ts-ignore custom element */}
-          <model-viewer src={foodOilCanCardModel} alt="Food Oil Can 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="22deg 72deg 108%" style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }} />
+          {isMobileViewport ? (
+            <div className="csp-soon-placeholder">FO</div>
+          ) : (
+            // @ts-ignore custom element
+            <model-viewer
+              src={foodOilCanModel}
+              alt="Food Oil Can - wide offset-cap oil jug with moulded handle 3D model"
+              loading="eager"
+              interaction-prompt="none"
+              shadow-intensity="0.9"
+              shadow-softness="0.8"
+              exposure="1.0"
+              tone-mapping="neutral"
+              environment-image="neutral"
+              camera-orbit="22deg 72deg 108%"
+              style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+            />
+          )}
         </div>
         <div className="csp-pinfo">
           <div>
@@ -649,8 +693,24 @@ export default function CaseStudyPage() {
         <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">10</span>
-          {/* @ts-ignore custom element */}
-          <model-viewer src={dairyContainerModel} alt="Dairy Products Container 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="22deg 76deg 108%" style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }} />
+          {isMobileViewport ? (
+            <div className="csp-soon-placeholder">DC</div>
+          ) : (
+            // @ts-ignore custom element
+            <model-viewer
+              src={dairyContainerModel}
+              alt="Dairy Products Container - white round dairy tub 3D model"
+              loading="eager"
+              interaction-prompt="none"
+              shadow-intensity="0.9"
+              shadow-softness="0.8"
+              exposure="1.0"
+              tone-mapping="neutral"
+              environment-image="neutral"
+              camera-orbit="22deg 76deg 108%"
+              style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
+            />
+          )}
         </div>
         <div className="csp-pinfo">
           <div>
@@ -668,18 +728,6 @@ export default function CaseStudyPage() {
           </div>
           <span className="csp-pgo">-&gt;</span>
         </div>
-      </a>
-
-      {/* 11 Lunch Box - live */}
-      <a className="csp-pcard featured live" href={lunchboxHref} data-product="lunchBox">
-        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">11</span>
-          {isMobileViewport ? <div className="csp-soon-placeholder">LB</div> : (
-            // @ts-ignore custom element
-            <model-viewer src={lunchboxModel} alt="Lunch Box 3D model" loading="eager" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="38deg 68deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
-          )}
-        </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Lunch Box</div><div className="csp-ptag">Mini Bento Container - Visual Reference</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
       </a>
     </>
   );
