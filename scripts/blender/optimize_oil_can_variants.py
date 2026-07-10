@@ -15,6 +15,13 @@ SOURCE = os.path.join(PUBLIC, "oil-bottle-procedural.glb")
 def export_variant(filename: str, texture_size: int) -> None:
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=SOURCE)
+    # The supplied asset carries Blender helper cubes. They are not part of the
+    # jug and can occlude it in model-viewer after export.
+    meshes = [obj for obj in bpy.context.scene.objects if obj.type == "MESH"]
+    keep = max(meshes, key=lambda obj: len(obj.data.polygons))
+    for obj in meshes:
+        if obj != keep:
+            bpy.data.objects.remove(obj, do_unlink=True)
     for image in bpy.data.images:
         if image.size[0] > texture_size or image.size[1] > texture_size:
             image.scale(texture_size, texture_size)
