@@ -30,20 +30,6 @@ const foodOilCanCardModel = `${basePath}/case-study/model/oil-bottle-card.glb`;
 const dairyContainerHref  = `${basePath}/case-study/product.html?p=dairy-products-container`;
 const dairyContainerModel = `${basePath}/case-study/model/dairy-products-container.glb`;
 const lunchboxModel = `${basePath}/case-study/model/lunchbox-tray-four-color-lineup.glb`;
-const liveProductModelUrls = [
-  bobbinModel,
-  containerModel,
-  motorCoverModel,
-  aralditeModel,
-  handWashModel,
-  hardDishModel,
-  consilePipeModel,
-  soapStandModel,
-  foodOilCanModel,
-  dairyContainerModel,
-  lunchboxModel,
-];
-
 type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox';
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
