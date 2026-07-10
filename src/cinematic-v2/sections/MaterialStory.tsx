@@ -216,7 +216,10 @@ export default function MaterialStory() {
       html.style.overflow = prevHtmlOverflow;
       document.body.style.overflow = prevBodyOverflow;
       if (markCompleted) {
-        completedFlag = true;
+        // Keep the gate available for a later re-entry, including a reverse
+        // traversal from scene 8 back to scene 1.
+        completedFlag = false;
+        canCapture = false;
         setCompleted(true);
       } else {
         canCapture = false;
@@ -414,12 +417,22 @@ export default function MaterialStory() {
         })}
 
         {/* scene progress — current chapter indicator */}
-        <ol className="v2story__progress" aria-hidden="true">
+        <ol className="v2story__progress" aria-label="Material story scenes">
           {SCENE_IDS.map((n, i) => (
             <li
               key={n}
-              className={`v2story__dot${i === active ? ' is-active' : ''}`}
-            />
+            >
+              <button
+                type="button"
+                className={`v2story__dot${i === active ? ' is-active' : ''}`}
+                aria-label={`View material story scene ${n}`}
+                aria-current={i === active ? 'step' : undefined}
+                onClick={() => {
+                  setActive(i);
+                  arm(i);
+                }}
+              />
+            </li>
           ))}
         </ol>
       </div>

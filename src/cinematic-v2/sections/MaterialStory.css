@@ -30,7 +30,7 @@
   opacity: 0;
   z-index: 1;
   transition: opacity 1.2s ease;
-  pointer-events: none;
+  pointer-events: auto;
 }
 .v2story__scene.is-active {
   opacity: 1;
@@ -88,6 +88,10 @@
   pointer-events: none;
 }
 .v2story__dot {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
   inline-size: 6px;
   block-size: 6px;
   border-radius: 50%;
@@ -113,9 +117,7 @@
 /* RESPONSIVE                                                          */
 /* ------------------------------------------------------------------ */
 @media (max-width: 767px) {
-  .v2story__progress {
-    display: none;
-  }
+  .v2story__progress { right: 1rem; }
 }
 
 /* Note: this section previously force-hid .v2story__video under
