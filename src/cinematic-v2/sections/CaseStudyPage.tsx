@@ -29,7 +29,7 @@ const soapStandModel = `${basePath}/case-study/model/soap-stand-procedural.glb`;
 const foodOilCanHref  = `${basePath}/case-study/product.html?p=food-oil-can`;
 const foodOilCanModel = `${basePath}/case-study/model/oil-bottle-procedural.glb`;
 const dairyContainerHref  = `${basePath}/case-study/product.html?p=dairy-products-container`;
-const dairyContainerModel = `${basePath}/case-study/model/dairy-products-container.glb`;
+const dairyContainerModel = `${basePath}/case-study/model/dairy-container-procedural.glb`;
 const liveProductModelUrls = [
   bobbinModel,
   containerModel,
