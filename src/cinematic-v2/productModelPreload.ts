@@ -64,27 +64,27 @@ export function observeViewportModels(root: HTMLElement) {
   const viewers = [...root.querySelectorAll<HTMLElement>('model-viewer[data-model-src]')];
   if (!viewers.length) return () => undefined;
 
+  // Load each model exactly once when it first nears the viewport, then stop
+  // observing. Detaching src on exit forced a full GLB re-parse every marquee
+  // loop (26 viewers x ~13 MB), freezing the main thread ("page not
+  // responding"). model-viewer 3.x shares one WebGL context and skips
+  // rendering offscreen scenes, so keeping loaded models attached is cheap.
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
         const viewer = entry.target as HTMLElement;
         const src = viewer.dataset.modelSrc;
-        if (!src) return;
-
-        if (entry.isIntersecting) {
-          if (viewer.getAttribute('src') !== src) viewer.setAttribute('src', src);
-        } else {
-          viewer.removeAttribute('src');
-        }
+        if (src && viewer.getAttribute('src') !== src) viewer.setAttribute('src', src);
+        observer.unobserve(viewer);
       });
     },
-    { rootMargin: '500px 35%', threshold: 0.01 },
+    { rootMargin: '300px 25%', threshold: 0.01 },
   );
 
   viewers.forEach((viewer) => observer.observe(viewer));
 
   return () => {
     observer.disconnect();
-    viewers.forEach((viewer) => viewer.removeAttribute('src'));
   };
 }
