@@ -26,13 +26,14 @@ const foodOilCanHref  = `${basePath}/case-study/product.html?p=food-oil-can`;
 const foodOilCanCardModel = `${basePath}/case-study/model/oil-bottle-card.glb`;
 const dairyContainerHref  = `${basePath}/case-study/product.html?p=dairy-products-container`;
 const dairyContainerModel = `${basePath}/case-study/model/dairy-products-container.glb`;
+const lunchBoxHref  = `${basePath}/case-study/product.html?p=lunch-box`;
+const lunchBoxModel = `${basePath}/case-study/model/lunch-box.glb`;
 
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer';
-const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'dairyProductsContainer']);
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox';
+const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'dairyProductsContainer', 'lunchBox']);
 
 // Pending products — same card as live ones; 3D model + spec details land later.
 const pendingProducts: { idx: string; slug: string; name: string; tag: string }[] = [
-  { idx: '11', slug: 'lunch-box', name: 'Lunch Box', tag: 'Food Container' },
   { idx: '12', slug: 'dairy-sweet-container', name: 'Dairy Sweet Container', tag: 'Dairy Packaging' },
   { idx: '13', slug: 'dairy-round-container', name: 'Dairy Round Container', tag: 'Dairy Packaging' },
   { idx: '14', slug: 'rectangle-container', name: 'Rectangle Container', tag: 'General Packaging' },
@@ -132,6 +133,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: 'Dairy', label: 'Packaging' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 10', green: true },
+  ],
+  lunchBox: [
+    { value: '11', label: 'Lunch Box' },
+    { value: '4', label: 'Buckle Flaps' },
+    { value: '3D', label: 'Dimension-Matched' },
+    { value: 'Live', label: 'Product 11', green: true },
   ],
 };
 
@@ -695,6 +702,34 @@ export default function CaseStudyFeature() {
             </div>
             <div className="csp-pname">Dairy Products Container</div>
             <div className="csp-ptag">Snap-Lid Dairy Tub - Visual Reference</div>
+            <div className="csp-pbar">
+              <span style={{ flex:100, height:'100%', background:'var(--cs-green)', display:'block' }} />
+            </div>
+            <div className="csp-pbarlabels">
+              <span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span>
+            </div>
+          </div>
+          <span className="csp-pgo">-&gt;</span>
+        </div>
+      </a>
+
+      {/* 11 Lunch Box - live */}
+      <a className="csp-pcard featured live" href={lunchBoxHref} data-product="lunchBox">
+        <div className="csp-border-beam" />
+        <div className="csp-pglass" />
+        <div className="csp-pglow" />
+        <div className="csp-pmedia">
+          <span className="csp-pidx">11</span>
+          {/* @ts-ignore custom element */}
+          <model-viewer src={lunchBoxModel} alt="Lunch Box 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="38deg 68deg 108%" style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }} />
+        </div>
+        <div className="csp-pinfo">
+          <div>
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+              <span className="csp-pfeatured">New Model</span>
+            </div>
+            <div className="csp-pname">Lunch Box</div>
+            <div className="csp-ptag">Mini Bento Container - Visual Reference</div>
             <div className="csp-pbar">
               <span style={{ flex:100, height:'100%', background:'var(--cs-green)', display:'block' }} />
             </div>

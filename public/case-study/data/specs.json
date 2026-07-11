@@ -841,6 +841,68 @@
           "verified": false
         }
       ]
+    },
+    "lunchBox": {
+      "id": "lunchBox",
+      "index": "11",
+      "name": "Lunch Box",
+      "category": "Food Container",
+      "status": "live",
+      "application": "Mini Bento Food Container",
+      "tagline": "A rectangular bento-style food container with a four-side buckle-flap latch and sealing lip, modeled in 3D from the supplied product photos and measurement detail card.",
+      "description": "A rectangular food-grade PP/ABS lunch box with a cream-white recessed-groove lid and a red base, sealed by a continuous gasket lip and secured by four identical buckle flaps (one per side, each with a recessed twin-window grip). The interactive 3D model is built to the calipered dimensions supplied on the product's official measurement detail card. Verified supplier composition and food-contact data are still in progress, so no LIMEX percentage, mechanical values, or CO2 figures are published for this product.",
+      "highlights": [
+        {
+          "num": "3D",
+          "label": "Dimension-Matched",
+          "source": "lunch-box-detail-card",
+          "verified": true
+        },
+        {
+          "num": "4",
+          "label": "Uniform Buckle Flaps",
+          "source": "lunch-box-detail-card",
+          "verified": true
+        },
+        {
+          "num": "200x145x65",
+          "label": "mm Footprint x Height",
+          "source": "lunch-box-detail-card",
+          "verified": true
+        }
+      ],
+      "specs": [
+        {
+          "label": "Application",
+          "value": "Mini Bento Food Container",
+          "source": "lunch-box-detail-card",
+          "verified": true
+        },
+        {
+          "label": "Dimensions",
+          "value": "200 mm x 145 mm x 65 mm (L x W x H), R12 mm corner radius",
+          "source": "lunch-box-detail-card",
+          "verified": true
+        },
+        {
+          "label": "Lid",
+          "value": "Cream-white recessed-groove lid with 4x uniform buckle-flap latches (65 mm each) and a continuous sealing gasket lip",
+          "source": "lunch-box-detail-card",
+          "verified": true
+        },
+        {
+          "label": "Colorway",
+          "value": "Red base, cream-white lid and flaps",
+          "source": "lunch-box-detail-card",
+          "verified": true
+        },
+        {
+          "label": "Material Base",
+          "value": "Food-grade PP/ABS - LIMEX blend verification in progress",
+          "source": "lunch-box-detail-card",
+          "verified": false
+        }
+      ]
     }
   }
 }

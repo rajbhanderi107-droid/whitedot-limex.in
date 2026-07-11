@@ -19,7 +19,7 @@
       { "src": "img/dairy-products-container-2.jpg", "alt": "Dairy Products Container - three-quarter tilted view showing the tapered body" },
       { "src": "img/dairy-products-container-3.jpg", "alt": "Dairy Products Container - underside of lid showing embossed seal ring and break-tab" }
     ] },
-    { "id": "lunchBox",           "index": "11", "slug": "lunch-box",            "name": "Lunchbox",                        "category": "Food Container",                 "status": "live",    "modelFile": "model/lunchbox-tray-four-color-lineup.glb", "photos": [] },
+    { "id": "lunchBox",           "index": "11", "slug": "lunch-box",            "name": "Lunch Box",                       "category": "Food Container",                 "status": "live",    "photos": [] },
     { "id": "dairySweetContainer","index": "12", "slug": "dairy-sweet-container","name": "Dairy Sweet Container",           "category": "Dairy Packaging",                "status": "pending", "photos": [] },
     { "id": "dairyRoundContainer","index": "13", "slug": "dairy-round-container","name": "Dairy Round Container",           "category": "Dairy Packaging",                "status": "pending", "photos": [] },
     { "id": "rectangleContainer", "index": "14", "slug": "rectangle-container",  "name": "Rectangle Container",              "category": "General Packaging",             "status": "pending", "photos": [] },
