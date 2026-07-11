@@ -20,7 +20,7 @@
       { "src": "img/dairy-products-container-3.jpg", "alt": "Dairy Products Container - underside of lid showing embossed seal ring and break-tab" }
     ] },
     { "id": "lunchBox",           "index": "11", "slug": "lunch-box",            "name": "Lunchbox",                        "category": "Food Container",                 "status": "live",    "modelFile": "model/lunchbox-tray-four-color-lineup.glb", "photos": [] },
-    { "id": "dairySweetContainer","index": "12", "slug": "dairy-sweet-container","name": "Dairy Sweet Container",           "category": "Dairy Packaging",                "status": "pending", "photos": [] },
+    { "id": "dairySweetContainer","index": "12", "slug": "dairy-sweet-container","name": "Dairy Sweet Container",           "category": "Dairy Packaging",                "status": "live",    "modelFile": "model/dairy-sweet-container-procedural.glb", "photos": [] },
     { "id": "dairyRoundContainer","index": "13", "slug": "dairy-round-container","name": "Dairy Round Container",           "category": "Dairy Packaging",                "status": "pending", "photos": [] },
     { "id": "rectangleContainer", "index": "14", "slug": "rectangle-container",  "name": "Rectangle Container",              "category": "General Packaging",             "status": "pending", "photos": [] },
     { "id": "hook20mm",           "index": "15", "slug": "20mm-hook",            "name": "20 mm Hook",                      "category": "Hardware",                       "status": "pending", "photos": [] },

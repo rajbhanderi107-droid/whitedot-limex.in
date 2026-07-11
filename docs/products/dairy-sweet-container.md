@@ -4,11 +4,11 @@
 - **index:** 12  
 - **slug:** `dairy-sweet-container`  
 - **category:** Dairy Packaging  
-- **status:** pending  
+- **status:** live
 
 ## Files
 - Data: `public/case-study/data/products/dairy-sweet-container.json`
-- 3D model: `MISSING — not yet built`
+- 3D model: `public/case-study/model/dairy-sweet-container-procedural.glb`
 - HTML page: `product.html?p=dairy-sweet-container  (generic template, no dedicated file)`
 - Reference photos: `photos[]` empty in products.json — none supplied yet
 

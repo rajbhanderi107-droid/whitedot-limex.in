@@ -780,6 +780,28 @@
         }
       ]
     },
+    "dairySweetContainer": {
+      "id": "dairySweetContainer",
+      "index": "12",
+      "name": "Dairy Sweet Container",
+      "category": "Dairy Packaging",
+      "status": "live",
+      "application": "D-500 food-grade sweet container",
+      "tagline": "A photo- and blueprint-matched rectangular sweet container with a deep internal cavity and snap-fit lid.",
+      "description": "A bright white food-grade PP sweet container modeled from the supplied product photos and D-500 technical references, including the tapered body, thin overhanging lid, deep cavity, internal base, and molded markings.",
+      "highlights": [
+        { "num": "3D", "label": "Photo + Blueprint Matched", "source": "dairy-sweet-container-reference", "verified": true },
+        { "num": "50", "label": "mm Internal Depth", "source": "dairy-sweet-container-spec-sheet", "verified": true },
+        { "num": "500", "label": "ml Total Volume", "source": "dairy-sweet-container-spec-sheet", "verified": true }
+      ],
+      "specs": [
+        { "label": "Material", "value": "Food-grade PP / opaque white", "source": "dairy-sweet-container-spec-sheet", "verified": true },
+        { "label": "External Top", "value": "250 x 150 mm", "source": "dairy-sweet-container-spec-sheet", "verified": true },
+        { "label": "Internal Base", "value": "120 x 120 mm nominal", "source": "dairy-sweet-container-spec-sheet", "verified": true },
+        { "label": "Internal Depth", "value": "50 mm nominal", "source": "dairy-sweet-container-spec-sheet", "verified": true },
+        { "label": "Molded Markings", "value": "HAVMOR PLAST PVT LTD. / D-500 / REUSABLE / FOOD SAFE / PP5 / FREEZER SAFE", "source": "dairy-sweet-container-reference", "verified": true }
+      ]
+    },
     "dairyProductsContainer": {
       "id": "dairyProductsContainer",
       "index": "10",
