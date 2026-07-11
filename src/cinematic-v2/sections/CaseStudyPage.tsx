@@ -295,18 +295,6 @@ export default function CaseStudyPage() {
         </div>
       </a>
 
-      {/* 11 Lunch Box - live */}
-      <a className="csp-pcard featured live" href={lunchboxHref} data-product="lunchBox">
-        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">11</span>
-          {isMobileViewport ? <div className="csp-soon-placeholder">LB</div> : (
-            // @ts-ignore custom element
-            <model-viewer src={lunchboxModel} alt="Lunch Box 3D model" loading="eager" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="38deg 68deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
-          )}
-        </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Lunch Box</div><div className="csp-ptag">Mini Bento Container - Visual Reference</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
-      </a>
-
       {/* 02 — coming soon */}
       <a className="csp-pcard featured live" href={containerHref} data-product="container">
         <div className="csp-border-beam" />
@@ -680,6 +668,18 @@ export default function CaseStudyPage() {
           </div>
           <span className="csp-pgo">-&gt;</span>
         </div>
+      </a>
+
+      {/* 11 Lunch Box - live */}
+      <a className="csp-pcard featured live" href={lunchboxHref} data-product="lunchBox">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">11</span>
+          {isMobileViewport ? <div className="csp-soon-placeholder">LB</div> : (
+            // @ts-ignore custom element
+            <model-viewer src={lunchboxModel} alt="Lunch Box 3D model" loading="eager" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="38deg 68deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Lunch Box</div><div className="csp-ptag">Mini Bento Container - Visual Reference</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
       </a>
     </>
   );
