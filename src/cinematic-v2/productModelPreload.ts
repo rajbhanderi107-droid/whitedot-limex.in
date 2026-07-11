@@ -11,6 +11,8 @@ export const liveCaseStudyModelUrls = [
   '/case-study/model/soap-stand-procedural.glb',
   '/case-study/model/oil-bottle-procedural.glb',
   '/case-study/model/dairy-sweet-container-procedural.glb',
+  '/case-study/model/lunch-box.glb',
+  '/case-study/model/Havmor_D500_Bowl.glb',
 ];
 
 function addPreloadHint(url: string) {

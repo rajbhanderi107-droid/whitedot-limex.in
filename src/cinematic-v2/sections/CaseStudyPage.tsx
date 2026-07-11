@@ -30,7 +30,9 @@ const foodOilCanHref  = `${basePath}/case-study/product.html?p=food-oil-can`;
 const foodOilCanModel = `${basePath}/case-study/model/oil-bottle-procedural.glb`;
 const dairyContainerHref  = `${basePath}/case-study/product.html?p=dairy-products-container`;
 const dairyContainerModel = `${basePath}/case-study/model/dairy-container-procedural.glb`;
-const lunchboxModel = `${basePath}/case-study/model/lunchbox-tray-four-color-lineup.glb`;
+const lunchboxModel = `${basePath}/case-study/model/lunch-box.glb`;
+const dairySweetContainerModel = `${basePath}/case-study/model/dairy-sweet-container-procedural.glb`;
+const dairyRoundContainerModel = `${basePath}/case-study/model/Havmor_D500_Bowl.glb`;
 const liveProductModelUrls = [
   bobbinModel,
   containerModel,
@@ -40,16 +42,18 @@ const liveProductModelUrls = [
   hardDishModel,
   consilePipeModel,
   soapStandModel,
-  foodOilCanCardModel,
+  foodOilCanModel,
   dairyContainerModel,
   lunchboxModel,
+  dairySweetContainerModel,
+  dairyRoundContainerModel,
 ];
 
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox';
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
-    { value: '10', label: 'Active Studies' },
+    { value: '13', label: 'Active Studies' },
     { value: '3D', label: 'Interactive' },
     { value: <>100<small>%</small></>, label: 'LIMEX + Color' },
     { value: <>~38<small>%</small></>, label: 'CO2e Cut (LCA)', green: true },
@@ -117,8 +121,20 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
   lunchBox: [
     { value: '11', label: 'Lunchbox Study' },
     { value: '3D', label: 'Interactive Model' },
-    { value: '4', label: 'Colorways' },
+    { value: 'Mini', label: 'Bento Container' },
     { value: 'Live', label: 'Product 11', green: true },
+  ],
+  dairySweetContainer: [
+    { value: '12', label: 'Dairy Sweet Container' },
+    { value: '50', label: 'mm Internal Depth' },
+    { value: 'PP', label: 'Food-Grade Material' },
+    { value: 'Live', label: 'Product 12', green: true },
+  ],
+  dairyRoundContainer: [
+    { value: '13', label: 'Havmor D500 Bowl' },
+    { value: '3D', label: 'Interactive Model' },
+    { value: 'D500', label: 'Dairy Bowl' },
+    { value: 'Live', label: 'Product 13', green: true },
   ],
 };
 
@@ -317,13 +333,37 @@ export default function CaseStudyPage() {
         <div className="csp-pmedia"><span className="csp-pidx">11</span>
           {isMobileViewport ? <div className="csp-soon-placeholder">LB</div> : (
             // @ts-ignore custom element
-            <model-viewer src={lunchboxModel} alt="Lunchbox - four-colorway 3D model" loading="eager" interaction-prompt="none" shadow-intensity="0.9" exposure="1.1" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 78deg 115%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer src={lunchboxModel} alt="Lunch Box mini bento container 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="38deg 68deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Lunchbox</div><div className="csp-ptag">Food Container - Four Colorways</div><div className="csp-pbar"><span style={{flex:25,height:'100%',background:'#3b4a77',display:'block'}} /><span style={{flex:25,height:'100%',background:'#f2efe6',display:'block'}} /><span style={{flex:25,height:'100%',background:'#ef7250',display:'block'}} /><span style={{flex:25,height:'100%',background:'#a9d4b4',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Navy - White</span><span className="csp-psep">-</span><span className="csp-pdot lx" /><span className="csp-pblabel">Coral - Mint</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Lunch Box</div><div className="csp-ptag">Mini Bento Container - Visual Reference</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 02 — coming soon */}
+      {/* 12 Dairy Sweet Container - live */}
+      <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=dairy-sweet-container`} data-product="dairySweetContainer">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">12</span>
+          {isMobileViewport ? <div className="csp-soon-placeholder">DS</div> : (
+            // @ts-ignore custom element
+            <model-viewer src={dairySweetContainerModel} alt="Dairy Sweet Container D-500 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.75" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="legacy" camera-orbit="18deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Dairy Sweet Container</div><div className="csp-ptag">D-500 Food Container - 50 mm Internal Depth</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Food-grade PP</span></div></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
+      {/* 13 Havmor D500 Bowl - live */}
+      <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=dairy-round-container`} data-product="dairyRoundContainer">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">13</span>
+          {isMobileViewport ? <div className="csp-soon-placeholder">D5</div> : (
+            // @ts-ignore custom element
+            <model-viewer src={dairyRoundContainerModel} alt="Havmor D500 Bowl 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.08" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 72deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Havmor D500 Bowl</div><div className="csp-ptag">Dairy Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
       <a className="csp-pcard featured live" href={containerHref} data-product="container">
         <div className="csp-border-beam" />
         <div className="csp-pglass" />
