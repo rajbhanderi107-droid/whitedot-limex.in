@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { observeViewportModels } from '../productModelPreload';
 import './CaseStudyPage.css';
 
 const basePath = window.location.hostname.endsWith('github.io') ? '/whitedot-limex.in' : '';
@@ -201,6 +202,7 @@ export default function CaseStudyFeature() {
     const grid    = gridRef.current;
     const section = sectionRef.current;
     if (!grid || !section) return;
+    const stopViewportModels = observeViewportModels(grid);
 
     let scrollX  = 0;
     const speed  = 0.65;
@@ -292,6 +294,7 @@ export default function CaseStudyFeature() {
     }
 
     return () => {
+      stopViewportModels();
       visIO.disconnect();
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = 0;
@@ -313,9 +316,9 @@ export default function CaseStudyFeature() {
           ) : (
             // @ts-ignore custom element
             <model-viewer
-              src={bobbinModel}
+              data-model-src={bobbinModel}
               alt="Bobbin — LIMEX textile bobbin 3D model"
-              loading="lazy"
+              loading="eager"
               interaction-prompt="none"
               shadow-intensity="0"
               exposure="1.15"
@@ -359,9 +362,9 @@ export default function CaseStudyFeature() {
           ) : (
             // @ts-ignore custom element
             <model-viewer
-              src={containerModel}
+              data-model-src={containerModel}
               alt="Paint container - red body and bright white snap lid 3D model"
-              loading="lazy"
+              loading="eager"
               interaction-prompt="none"
               shadow-intensity="0"
               exposure="1.08"
@@ -404,9 +407,9 @@ export default function CaseStudyFeature() {
           ) : (
             // @ts-ignore custom element
             <model-viewer
-              src={motorCoverModel}
+              data-model-src={motorCoverModel}
               alt="Motor Cover — black vented motor fan cover 3D model"
-              loading="lazy"
+              loading="eager"
               interaction-prompt="none"
               shadow-intensity="0"
               exposure="1.16"
@@ -449,10 +452,10 @@ export default function CaseStudyFeature() {
           ) : (
             // @ts-ignore custom element
             <model-viewer
-              src={aralditeModel}
+              data-model-src={aralditeModel}
               poster={`${basePath}/case-study/img/araldite-poster.jpg`}
               alt="Araldite Container — LIMEX adhesive dispenser bottle 3D model"
-              loading="lazy"
+              loading="eager"
               interaction-prompt="none"
               shadow-intensity="0.9"
               shadow-softness="0.8"
@@ -497,9 +500,9 @@ export default function CaseStudyFeature() {
           ) : (
             // @ts-ignore custom element
             <model-viewer
-              src={handWashModel}
+              data-model-src={handWashModel}
               alt="Hand Wash Bottle - white and green faceted LIMEX pump bottles 3D model"
-              loading="lazy"
+              loading="eager"
               interaction-prompt="none"
               shadow-intensity="0.9"
               shadow-softness="0.8"
@@ -544,9 +547,9 @@ export default function CaseStudyFeature() {
           ) : (
             // @ts-ignore custom element
             <model-viewer
-              src={hardDishModel}
+              data-model-src={hardDishModel}
               alt="Hard Dish - four-colorway 3-compartment LIMEX serving dish 3D model"
-              loading="lazy"
+              loading="eager"
               interaction-prompt="none"
               shadow-intensity="0.9"
               shadow-softness="0.8"
@@ -593,9 +596,9 @@ export default function CaseStudyFeature() {
           ) : (
             // @ts-ignore custom element
             <model-viewer
-              src={consilePipeModel}
+              data-model-src={consilePipeModel}
               alt="Concealed Pipe - black rigid conduit pipe with blue stripe and embossed ISI marking 3D model"
-              loading="lazy"
+              loading="eager"
               interaction-prompt="none"
               shadow-intensity="0"
               exposure="1.15"
@@ -636,9 +639,9 @@ export default function CaseStudyFeature() {
           ) : (
             // @ts-ignore custom element
             <model-viewer
-              src={soapStandModel}
+              data-model-src={soapStandModel}
               alt="Soap Stand - covered soap dish with knit-embossed lid, bow and drain insert 3D model"
-              loading="lazy"
+              loading="eager"
               interaction-prompt="none"
               shadow-intensity="0"
               exposure="1.1"
@@ -682,9 +685,9 @@ export default function CaseStudyFeature() {
           ) : (
             // @ts-ignore custom element
             <model-viewer
-              src={foodOilCanModel}
+              data-model-src={foodOilCanModel}
               alt="Food Oil Can - wide offset-cap oil jug with moulded handle 3D model"
-              loading="lazy"
+              loading="eager"
               interaction-prompt="none"
               shadow-intensity="0.9"
               shadow-softness="0.8"
@@ -726,9 +729,9 @@ export default function CaseStudyFeature() {
           ) : (
             // @ts-ignore custom element
             <model-viewer
-              src={dairyContainerModel}
+              data-model-src={dairyContainerModel}
               alt="Dairy Products Container - tapered round tub with snap-fit lid and tamper-seal tab 3D model"
-              loading="lazy"
+              loading="eager"
               interaction-prompt="none"
               shadow-intensity="0.9"
               shadow-softness="0.8"
@@ -764,7 +767,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">11</span>
           {isMobileViewport ? <div className="csp-soon-placeholder">LB</div> : (
             // @ts-ignore custom element
-            <model-viewer src={lunchBoxModel} alt="Lunch Box mini bento container 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="38deg 68deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={lunchBoxModel} alt="Lunch Box mini bento container 3D model" loading="eager" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="38deg 68deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Lunch Box</div><div className="csp-ptag">Mini Bento Container - Visual Reference</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
@@ -784,9 +787,9 @@ export default function CaseStudyFeature() {
             {isMobileViewport ? <div className="csp-soon-placeholder">DS</div> : (
               // @ts-ignore custom element
               <model-viewer
-                src={dairySweetContainerModel}
+              data-model-src={dairySweetContainerModel}
                 alt="Dairy Sweet Container - D-500 food-grade PP container 3D model"
-                loading="lazy"
+              loading="eager"
                 interaction-prompt="none"
                 shadow-intensity="0.75"
                 shadow-softness="0.8"
@@ -816,7 +819,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">13</span>
           {isMobileViewport ? <div className="csp-soon-placeholder">D5</div> : (
             // @ts-ignore custom element
-            <model-viewer src={dairyRoundContainerModel} alt="Havmor D500 Bowl 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.08" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 72deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={dairyRoundContainerModel} alt="Havmor D500 Bowl 3D model" loading="eager" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.08" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 72deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Havmor D500 Bowl</div><div className="csp-ptag">Dairy Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>

@@ -59,3 +59,32 @@ export function warmCaseStudyModelCache(urls = liveCaseStudyModelUrls) {
     );
   });
 }
+
+export function observeViewportModels(root: HTMLElement) {
+  const viewers = [...root.querySelectorAll<HTMLElement>('model-viewer[data-model-src]')];
+  if (!viewers.length) return () => undefined;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const viewer = entry.target as HTMLElement;
+        const src = viewer.dataset.modelSrc;
+        if (!src) return;
+
+        if (entry.isIntersecting) {
+          if (viewer.getAttribute('src') !== src) viewer.setAttribute('src', src);
+        } else {
+          viewer.removeAttribute('src');
+        }
+      });
+    },
+    { rootMargin: '500px 35%', threshold: 0.01 },
+  );
+
+  viewers.forEach((viewer) => observer.observe(viewer));
+
+  return () => {
+    observer.disconnect();
+    viewers.forEach((viewer) => viewer.removeAttribute('src'));
+  };
+}
