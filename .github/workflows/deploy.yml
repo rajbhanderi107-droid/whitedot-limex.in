@@ -28,7 +28,9 @@ jobs:
           npm ci
           npm run build
 
-      - name: Upload dist to VPS staging dir
+      - name: Upload dist to Hostinger VPS staging dir
+        id: upload_primary
+        continue-on-error: true
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -37,6 +39,23 @@ jobs:
           source: "dist/"
           target: "/var/www/whitedot-frontend-new"
           strip_components: 1
+          timeout: 60s
+          command_timeout: 10m
+          rm: true
+
+      - name: Retry Hostinger upload after connection timeout
+        if: steps.upload_primary.outcome == 'failure'
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: root
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "dist/"
+          target: "/var/www/whitedot-frontend-new"
+          strip_components: 1
+          timeout: 60s
+          command_timeout: 10m
+          rm: true
 
       - name: Atomic swap + nginx reload
         uses: appleboy/ssh-action@v1.0.3
