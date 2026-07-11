@@ -21,7 +21,7 @@
     ] },
     { "id": "lunchBox",           "index": "11", "slug": "lunch-box",            "name": "Lunchbox",                        "category": "Food Container",                 "status": "live",    "modelFile": "model/lunchbox-tray-four-color-lineup.glb", "photos": [] },
     { "id": "dairySweetContainer","index": "12", "slug": "dairy-sweet-container","name": "Dairy Sweet Container",           "category": "Dairy Packaging",                "status": "live",    "modelFile": "model/dairy-sweet-container-procedural.glb", "photos": [] },
-    { "id": "dairyRoundContainer","index": "13", "slug": "dairy-round-container","name": "Dairy Round Container",           "category": "Dairy Packaging",                "status": "pending", "photos": [] },
+    { "id": "dairyRoundContainer","index": "13", "slug": "dairy-round-container","name": "Havmor D500 Bowl",                 "category": "Dairy Packaging",                "status": "live",    "modelFile": "model/Havmor_D500_Bowl.glb", "photos": [] },
     { "id": "rectangleContainer", "index": "14", "slug": "rectangle-container",  "name": "Rectangle Container",              "category": "General Packaging",             "status": "pending", "photos": [] },
     { "id": "hook20mm",           "index": "15", "slug": "20mm-hook",            "name": "20 mm Hook",                      "category": "Hardware",                       "status": "pending", "photos": [] },
     { "id": "roundPipe",          "index": "16", "slug": "round-pipe",           "name": "Round Pipe",                      "category": "Industrial Pipe",                "status": "pending", "photos": [] },

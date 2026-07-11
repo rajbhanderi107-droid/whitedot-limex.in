@@ -40,7 +40,7 @@ const liveProductModelUrls = [
   hardDishModel,
   consilePipeModel,
   soapStandModel,
-  foodOilCanModel,
+  foodOilCanCardModel,
   dairyContainerModel,
   lunchboxModel,
 ];
