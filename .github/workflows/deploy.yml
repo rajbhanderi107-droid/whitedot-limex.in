@@ -31,7 +31,7 @@ jobs:
       - name: Upload dist to Hostinger VPS staging dir
         id: upload_primary
         continue-on-error: true
-        uses: appleboy/scp-action@v0.1.7
+        uses: appleboy/scp-action@v1.0.0
         with:
           host: ${{ secrets.VPS_HOST }}
           username: root
@@ -45,7 +45,7 @@ jobs:
 
       - name: Retry Hostinger upload after connection timeout
         if: steps.upload_primary.outcome == 'failure'
-        uses: appleboy/scp-action@v0.1.7
+        uses: appleboy/scp-action@v1.0.0
         with:
           host: ${{ secrets.VPS_HOST }}
           username: root
