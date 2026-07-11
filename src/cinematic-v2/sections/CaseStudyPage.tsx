@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import Nav from './Nav';
 import Footer from './Footer';
-import { observeViewportModels } from '../productModelPreload';
+import { observeViewportModels, warmCaseStudyModelCache } from '../productModelPreload';
 import './CaseStudyPage.css';
 
 const basePath = window.location.hostname.endsWith('github.io') ? '/whitedot-limex.in' : '';
@@ -178,6 +178,10 @@ export default function CaseStudyPage() {
     const section = sectionRef.current;
     if (!grid || !section) return;
     const stopViewportModels = observeViewportModels(grid);
+    const product13Warmup = window.setTimeout(
+      () => warmCaseStudyModelCache([dairyRoundContainerModel]),
+      900,
+    );
 
     let scrollX  = 0;
     const speed  = 0.65;
@@ -255,6 +259,7 @@ export default function CaseStudyPage() {
 
     return () => {
       stopViewportModels();
+      window.clearTimeout(product13Warmup);
       cancelAnimationFrame(rafRef.current);
       clearTimeout(startTimer);
     };
