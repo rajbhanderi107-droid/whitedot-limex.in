@@ -854,9 +854,9 @@
         <div class="p-card-media">
           <span class="p-card-index">${entry.index}</span>
           <model-viewer
-            src="${MODEL_SRC[entry.id] || ''}"
+            data-model-src="${MODEL_SRC[entry.id] || ''}"
             alt="${entry.name} — LIMEX 3D model"
-            loading="eager"
+            loading="lazy"
             interaction-prompt="none"
             shadow-intensity="${entry.id === 'foodOilCan' ? '0.9' : '0'}"
             shadow-softness="${entry.id === 'foodOilCan' ? '0.8' : '1'}"
@@ -902,6 +902,78 @@
     gridEl.innerHTML = cardsHTML + cardsHTML;
   }
   await renderProductGrid();
+
+  // ─── Staggered, concurrency-limited model activation ───────────────────────
+  // This grid holds ~2x the live product count in <model-viewer> elements (one
+  // set x2 for the infinite-scroll loop). Setting `src` on all of them at once
+  // makes three.js parse every GLB back-to-back on the main thread — that burst
+  // freezes the tab ("page isn't responding"). Instead we feed src-activation
+  // through a queue that keeps at most MAX_CONCURRENT parses in flight and hands
+  // each one to the browser during idle time, and only activate a model once its
+  // card nears the viewport. Mirrors src/cinematic-v2/productModelPreload.ts.
+  (function lazyActivateModels(root) {
+    const MAX_CONCURRENT = 2;
+    const LOAD_TIMEOUT_MS = 8000;
+    const queue = [];
+    const queued = new WeakSet();
+    let active = 0;
+
+    const scheduleIdle = 'requestIdleCallback' in window
+      ? (cb) => window.requestIdleCallback(cb, { timeout: 300 })
+      : (cb) => window.setTimeout(cb, 32);
+
+    function pump() {
+      while (active < MAX_CONCURRENT && queue.length) {
+        const task = queue.shift();
+        active++;
+        scheduleIdle(() => runActivation(task));
+      }
+    }
+
+    function runActivation({ viewer, src }) {
+      if (!viewer.isConnected) { active--; pump(); return; }
+      let settled = false;
+      const done = () => {
+        if (settled) return;
+        settled = true;
+        viewer.removeEventListener('load', done);
+        viewer.removeEventListener('error', done);
+        window.clearTimeout(timer);
+        active--;
+        pump();
+      };
+      const timer = window.setTimeout(done, LOAD_TIMEOUT_MS);
+      viewer.addEventListener('load', done, { once: true });
+      viewer.addEventListener('error', done, { once: true });
+      if (viewer.getAttribute('src') !== src) {
+        viewer.setAttribute('src', src);
+      } else {
+        done();
+      }
+    }
+
+    function enqueue(viewer, src) {
+      if (queued.has(viewer) || viewer.getAttribute('src') === src) return;
+      queued.add(viewer);
+      queue.push({ viewer, src });
+      pump();
+    }
+
+    const viewers = [...root.querySelectorAll('model-viewer[data-model-src]')];
+    if (!viewers.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const viewer = entry.target;
+        const src = viewer.dataset.modelSrc;
+        if (src) enqueue(viewer, src);
+        observer.unobserve(viewer);
+      });
+    }, { rootMargin: '300px 25%', threshold: 0.01 });
+
+    viewers.forEach((viewer) => observer.observe(viewer));
+  })(document.getElementById('productGrid'));
 
   // ─── 3D Coverflow Marquee Animation ───
   const grid = document.querySelector('.product-grid');
