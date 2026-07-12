@@ -38,12 +38,11 @@ const rectangleContainerModel = `${basePath}/case-study/model/rectangle-containe
 const roundPipeModel = `${basePath}/case-study/model/round-pipe-procedural.glb`;
 const hook20mmHref = `${basePath}/case-study/product.html?p=20mm-hook`;
 const hook20mmModel = `${basePath}/case-study/model/product-15-g1-clip.glb`;
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm';
-const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer', 'lunchBox', 'dairySweetContainer', 'dairyRoundContainer', 'rectangleContainer', 'hook20mm']);
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe';
+const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer', 'lunchBox', 'dairySweetContainer', 'dairyRoundContainer', 'rectangleContainer', 'hook20mm', 'roundPipe']);
 
 // Pending products — same card as live ones; 3D model + spec details land later.
 const pendingProducts: { idx: string; slug: string; name: string; tag: string }[] = [
-  { idx: '16', slug: 'round-pipe', name: 'Round Pipe', tag: 'Industrial Pipe' },
   { idx: '17', slug: 'appliance-tray', name: 'Fridge / Washing Machine Tray', tag: 'Appliance Component' },
   { idx: '18', slug: 'motor-fan-blade', name: 'Motor Fan Blade', tag: 'Motor Component' },
   { idx: '19', slug: 'cup-container', name: 'Cup Container', tag: 'Food Packaging' },
@@ -168,6 +167,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: '19', label: 'mm Overall Width' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 15', green: true },
+  ],
+  roundPipe: [
+    { value: '16', label: 'Round Pipe' },
+    { value: '3D', label: 'Interactive Model' },
+    { value: 'Pending', label: 'Verified Specs' },
+    { value: 'Live', label: 'Product 16', green: true },
   ],
 };
 
@@ -882,6 +887,18 @@ export default function CaseStudyFeature() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">20 mm Hook</div><div className="csp-ptag">Hardware - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Photo-matched geometry</span></div></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
+      {/* 16 Round Pipe - live model, verified composition pending */}
+      <a className="csp-pcard featured live" href={`${basePath}/case-study/round-pipe.html`} data-product="roundPipe">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">16</span>
+          {isMobileViewport ? <div className="csp-soon-placeholder">RP</div> : (
+            // @ts-ignore custom element
+            <model-viewer data-model-src={roundPipeModel} alt="Round Pipe molded plastic 3D model" loading="eager" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="80deg 76deg 92%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Round Pipe</div><div className="csp-ptag">Industrial Pipe - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
       {pendingProducts.map(p => (
         <a
           key={p.slug}
@@ -896,15 +913,12 @@ export default function CaseStudyFeature() {
           <div className="csp-pglow" />
           <div className="csp-pmedia">
             <span className="csp-pidx">{p.idx}</span>
-            {p.slug === 'round-pipe' && !isMobileViewport ? (
-              // @ts-ignore custom element
-              <model-viewer data-model-src={roundPipeModel} alt="Round Pipe molded plastic 3D model" loading="eager" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="80deg 76deg 92%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
-            ) : <div className="csp-soon-placeholder">{monogram(p.name)}</div>}
+            <div className="csp-soon-placeholder">{monogram(p.name)}</div>
           </div>
           <div className="csp-pinfo">
             <div>
               <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
-                <span className="csp-pfeatured">{p.slug === 'round-pipe' ? 'New Model' : 'Coming Soon'}</span>
+                <span className="csp-pfeatured">Coming Soon</span>
               </div>
               <div className="csp-pname">{p.name}</div>
               <div className="csp-ptag">{p.tag}</div>

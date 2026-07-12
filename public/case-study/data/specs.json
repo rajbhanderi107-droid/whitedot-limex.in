@@ -968,6 +968,26 @@
         { "label": "Material Appearance", "value": "Warm ivory semi-matte prototype plastic", "source": "product-15 supplied photograph", "verified": true },
         { "label": "Composition", "value": "Not published; supplier formulation not verified", "source": "product-15 supplied references", "verified": false }
       ]
+    },
+    "roundPipe": {
+      "id": "roundPipe",
+      "index": "16",
+      "name": "Round Pipe",
+      "category": "Industrial Pipe",
+      "status": "live",
+      "application": "Industrial round pipe visual reference",
+      "tagline": "A single-piece molded round pipe reconstructed as an interactive 3D visual reference. Supplier formulation and LIMEX composition remain unpublished until verified.",
+      "description": "An interactive 3D visual reference for the Round Pipe case study. The model is published for product exploration; no LIMEX composition, CO2, supplier, or performance figures are claimed until supported by approved technical documentation.",
+      "highlights": [
+        { "num": "3D", "label": "Interactive Model", "source": "White Dot Round Pipe visual reference", "verified": true },
+        { "num": "16", "label": "Product Index", "source": "White Dot case-study registry", "verified": true },
+        { "num": "Pending", "label": "Verified Specs", "source": "Supplier TDS / approved product sheet", "verified": false }
+      ],
+      "specs": [
+        { "label": "Construction", "value": "Single-piece molded pipe visual reference", "source": "White Dot 3D visual reference", "verified": true },
+        { "label": "Model Asset", "value": "round-pipe-procedural.glb", "source": "White Dot case-study model asset", "verified": true },
+        { "label": "Composition", "value": "Not published; supplier formulation not verified", "source": "Pending approved LIMEX documentation", "verified": false }
+      ]
     }
   }
 }

@@ -4,7 +4,7 @@
 - **index:** 16  
 - **slug:** `round-pipe`  
 - **category:** Industrial Pipe  
-- **status:** pending  
+- **status:** live
 
 ## Files
 - Data: `public/case-study/data/products/round-pipe.json`
