@@ -115,9 +115,45 @@ def ribbon(name, y0_mm, y1_mm, x0_mm, x1_mm):
 # slot centers = 8 mm; nominal prong bands are 3.5 / 4 / 3.5 mm.
 ribbon("G1_Central_Bridge", -9.5, 9.5, 8.3, 41.7)
 bands = [(-9.5, -6.0), (-2.0, 2.0), (6.0, 9.5)]
+prong_objs = {}
 for side, xa, xb in (("Left", 0.0, 9.0), ("Right", 41.0, 50.0)):
     for idx, (y0, y1) in enumerate(bands, 1):
-        ribbon(f"G1_{side}_Prong_{idx}", y0, y1, xa, xb)
+        obj = ribbon(f"G1_{side}_Prong_{idx}", y0, y1, xa, xb)
+        prong_objs[f"{side}_{idx}"] = obj
+
+# Open-top M3 screw notch cut into the free tip of G1_Left_Prong_1: a
+# rectangular slot cut inward from the tip edge (not a closed through-hole),
+# splitting the tip into two flanking walls so a screw shank can be dropped
+# in from the open end.
+screw_target = prong_objs["Left_1"]
+notch_y0_mm, notch_y1_mm = -9.5, -6.0
+notch_width_mm = 1.8
+notch_y_center_mm = (notch_y0_mm + notch_y1_mm) * 0.5
+notch_depth_mm = 3.0          # how far the slot cuts inward from the tip
+notch_overshoot_mm = 3.0      # extra length past the tip so the cut is open, not enclosed
+tip_z_mm = PATH[nearest_index(0.0)].y / MM
+
+bpy.ops.mesh.primitive_cube_add(location=(
+    (notch_depth_mm - notch_overshoot_mm) * 0.5 * MM,
+    notch_y_center_mm * MM,
+    tip_z_mm * MM,
+))
+notch_cutter = bpy.context.object
+notch_cutter.name = "Screw_Notch_Cutter_M3"
+notch_cutter.dimensions = (
+    (notch_depth_mm + notch_overshoot_mm) * MM,
+    notch_width_mm * MM,
+    4.0 * MM,
+)
+
+bool_mod = screw_target.modifiers.new("Screw notch M3", "BOOLEAN")
+bool_mod.operation = 'DIFFERENCE'
+bool_mod.object = notch_cutter
+bool_mod.solver = 'MANIFOLD'
+
+bpy.context.view_layer.objects.active = screw_target
+bpy.ops.object.modifier_apply(modifier=bool_mod.name)
+bpy.data.objects.remove(notch_cutter, do_unlink=True)
 
 # Presentation plinth (not exported).
 bpy.ops.mesh.primitive_cylinder_add(vertices=96, radius=0.050, depth=0.003, location=(0.025, 0, -0.0032))
