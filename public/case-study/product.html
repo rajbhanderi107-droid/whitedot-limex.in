@@ -27,6 +27,7 @@
   <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/soap-stand-procedural.glb" />
   <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/oil-bottle-procedural.glb" />
   <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/dairy-container-procedural.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/round-pipe-procedural.glb" />
   <script type="module" src="./js/model-preload.js"></script>
   <script type="module" src="./js/model-viewer.min.js"></script>
   <style>
@@ -808,6 +809,7 @@
   }
 
   const isLive = entry.status === 'live';
+  const hasModel = Boolean(entry.modelFile);
   const full = isLive ? (specData[entry.id] || {}) : {};
 
   const MODEL_SRC = {
@@ -826,6 +828,7 @@
     dairyRoundContainer: './model/Havmor_D500_Bowl.glb',
     rectangleContainer: './model/rectangle-container-d250.glb',
     hook20mm: './model/product-15-g1-clip.glb',
+    roundPipe: './model/round-pipe-procedural.glb',
   };
   const CAMERA_ORBIT = {
     bobbin: '0deg 76deg 105%',
@@ -843,6 +846,7 @@
     dairyRoundContainer: '18deg 72deg 112%',
     rectangleContainer: '18deg 68deg 112%',
     hook20mm: '42deg 68deg 105%',
+    roundPipe: '80deg 76deg 92%',
   };
   // Products whose GLB carries a baked animation to autoplay on the stage.
   const MODEL_ANIMATION = {
@@ -900,7 +904,7 @@
   // ── 3D stage ──
   const stageContent = document.getElementById('stageContent');
   let mv = null;
-  if (isLive) {
+  if (isLive || hasModel) {
     document.getElementById('spinControls').style.display = '';
     stageContent.innerHTML = `
       <div class="rotator-wrap" id="rotatorWrap">

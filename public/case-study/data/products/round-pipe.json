@@ -5,7 +5,7 @@
   "name": "Round Pipe",
   "category": "Industrial Pipe",
   "status": "pending",
-  "modelFile": null,
+  "modelFile": "model/round-pipe-procedural.glb",
   "htmlPage": "round-pipe.html",
   "composition": null,
   "specs": null,

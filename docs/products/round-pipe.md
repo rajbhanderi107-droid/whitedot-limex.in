@@ -8,7 +8,7 @@
 
 ## Files
 - Data: `public/case-study/data/products/round-pipe.json`
-- 3D model: `MISSING — not yet built`
+- 3D model: `public/case-study/model/round-pipe-procedural.glb`
 - HTML page: `round-pipe.html` (SEO-friendly redirect to `product.html?p=round-pipe`)
 - Reference photos: `photos[]` empty in products.json — none supplied yet
 
@@ -17,6 +17,6 @@ _Pending — no verified LIMEX composition, CO2, or supplier spec data exists ye
 
 ## Notes / TODO
 - [ ] Source verified LIMEX composition/spec data (official PDF or supplier TDS)
-- [ ] Build 3D model (`public/case-study/model/`)
+- [x] Build 3D model (`public/case-study/model/round-pipe-procedural.glb`)
 - [ ] Build HTML case-study page (`public/case-study/{slug}.html`, follow bobbin.html pattern)
 - [ ] Add products.json photos[] once real photography exists
