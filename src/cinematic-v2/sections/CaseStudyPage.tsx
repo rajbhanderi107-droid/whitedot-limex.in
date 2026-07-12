@@ -33,7 +33,8 @@ const dairyContainerModel = `${basePath}/case-study/model/dairy-container-proced
 const lunchboxModel = `${basePath}/case-study/model/lunch-box.glb`;
 const dairySweetContainerModel = `${basePath}/case-study/model/dairy-sweet-container-procedural.glb`;
 const dairyRoundContainerModel = `${basePath}/case-study/model/Havmor_D500_Bowl.glb`;
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer';
+const rectangleContainerModel = `${basePath}/case-study/model/rectangle-container-d250.glb`;
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
@@ -119,6 +120,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: '3D', label: 'Interactive Model' },
     { value: 'D500', label: 'Dairy Bowl' },
     { value: 'Live', label: 'Product 13', green: true },
+  ],
+  rectangleContainer: [
+    { value: '14', label: 'HAVMOR D-250 Container' },
+    { value: '250×190', label: 'mm Lid Envelope' },
+    { value: '3D', label: 'Photo-Matched' },
+    { value: 'Live', label: 'Product 14', green: true },
   ],
 };
 
@@ -247,7 +254,7 @@ export default function CaseStudyPage() {
         if (!glow) return;
         c.addEventListener('mouseenter', () => {
           const product = c.dataset.product as ProductKey | undefined;
-          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan' || product === 'dairyContainer') setActiveProductKey(product);
+          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan' || product === 'dairyContainer' || product === 'lunchBox' || product === 'dairySweetContainer' || product === 'dairyRoundContainer' || product === 'rectangleContainer') setActiveProductKey(product);
         });
         c.addEventListener('mousemove', (e: MouseEvent) => {
           const r = c.getBoundingClientRect();
@@ -755,6 +762,18 @@ export default function CaseStudyPage() {
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Havmor D500 Bowl</div><div className="csp-ptag">Dairy Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
+      {/* 14 HAVMOR D-250 Rectangle Container - live */}
+      <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=rectangle-container`} data-product="rectangleContainer">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">14</span>
+          {isMobileViewport ? <div className="csp-soon-placeholder">D2</div> : (
+            // @ts-ignore custom element
+            <model-viewer data-model-src={rectangleContainerModel} alt="HAVMOR D-250 rectangular container 3D model" loading="eager" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.75" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 70deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">HAVMOR D-250 Container</div><div className="csp-ptag">One-Piece Molded Plastic Container - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Photo-matched geometry</span></div></div><span className="csp-pgo">-&gt;</span></div>
       </a>
     </>
   );

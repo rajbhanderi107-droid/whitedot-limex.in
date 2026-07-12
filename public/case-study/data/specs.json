@@ -925,6 +925,27 @@
           "verified": false
         }
       ]
+    },
+    "rectangleContainer": {
+      "id": "rectangleContainer",
+      "index": "14",
+      "name": "HAVMOR D-250 Container",
+      "category": "General Packaging",
+      "status": "live",
+      "application": "General packaging container",
+      "tagline": "A photo-matched one-piece HAVMOR D-250 molded plastic container reconstructed from supplied photographs and technical blueprints.",
+      "description": "A single-piece rectangular container with a continuous molded rim, tapered walls, recessed interior base panel, ejector marks, injection point, and molded HAVMOR / REUSABLE / D-250 markings. No LIMEX formulation or supplier composition is claimed.",
+      "highlights": [
+        { "num": "3D", "label": "Photo-Matched", "source": "D-250 supplied photos and blueprints", "verified": true },
+        { "num": "250x190", "label": "mm Lid Envelope", "source": "D-250 lid blueprint", "verified": true },
+        { "num": "1", "label": "One-Piece Container", "source": "supplied product photos", "verified": true }
+      ],
+      "specs": [
+        { "label": "Envelope", "value": "250 mm x 190 mm lid-envelope reference", "source": "D-250 lid blueprint", "verified": true },
+        { "label": "Construction", "value": "One-piece tapered container with continuous molded rim and recessed interior base", "source": "supplied product photos", "verified": true },
+        { "label": "Material Appearance", "value": "Polished opaque polypropylene-style plastic", "source": "supplied product photos and 3D reconstruction", "verified": true },
+        { "label": "Composition", "value": "Not published; supplier formulation not verified", "source": "supplied product photos", "verified": false }
+      ]
     }
   }
 }
