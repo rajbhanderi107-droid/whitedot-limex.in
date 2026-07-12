@@ -294,18 +294,6 @@ export default function CaseStudyPage() {
   // Product cards — rendered twice for infinite scroll
   const cards = (
     <>
-      {/* Newest live study first: Product 15 20 mm Hook */}
-      <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=20mm-hook`} data-product="hook20mm">
-        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">15</span>
-          {isMobileViewport ? <div className="csp-soon-placeholder">G1</div> : (
-            // @ts-ignore custom element
-            <model-viewer data-model-src={hook20mmModel} alt="20 mm hook plastic 3D model" loading="eager" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="0.85" tone-mapping="neutral" environment-image="neutral" camera-orbit="42deg 68deg 105%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
-          )}
-        </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">20 mm Hook</div><div className="csp-ptag">Hardware - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Photo-matched geometry</span></div></div><span className="csp-pgo">-&gt;</span></div>
-      </a>
-
       {/* 01 Bobbin — live */}
       <a className="csp-pcard featured live" href={bobbinHref} data-product="bobbin">
         <div className="csp-border-beam" />
@@ -805,6 +793,18 @@ export default function CaseStudyPage() {
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">HAVMOR D-250 Container</div><div className="csp-ptag">One-Piece Molded Plastic Container - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Photo-matched geometry</span></div></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
+      {/* 15 20 mm Hook — live (newest); shown in numeric sequence after 14 */}
+      <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=20mm-hook`} data-product="hook20mm">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">15</span>
+          {isMobileViewport ? <div className="csp-soon-placeholder">G1</div> : (
+            // @ts-ignore custom element
+            <model-viewer data-model-src={hook20mmModel} alt="20 mm hook plastic 3D model" loading="eager" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="0.85" tone-mapping="neutral" environment-image="neutral" camera-orbit="42deg 68deg 105%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">20 mm Hook</div><div className="csp-ptag">Hardware - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Photo-matched geometry</span></div></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
     </>
