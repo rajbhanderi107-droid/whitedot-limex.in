@@ -89,21 +89,19 @@ cavity=tapered_box("dimensioned interior cavity cutter", (W-WALL*2,D-WALL*2,CAVI
 boolean=body.modifiers.new("hollow food container cavity", "BOOLEAN"); boolean.operation='DIFFERENCE'; boolean.solver='EXACT'; boolean.object=cavity
 bpy.context.view_layer.objects.active=body; bpy.ops.object.modifier_apply(modifier=boolean.name)
 bpy.data.objects.remove(cavity, do_unlink=True)
-# Photo-matched lid: a narrower snap skirt beneath a thin, flat outer plate.
-lid=rounded_box("narrow snap fit lid skirt", (W+4,D+4,3.2), (0,0,H+1.6), lid_mat, 2.4)
-rounded_box("thin flat outer lid plate", (W+LID_OVERHANG*2,D+LID_OVERHANG*2,2.0), (0,0,H+5.0), lid_mat, 2.2)
-lid_top = H + 6.0
-rounded_box("flat shallow recessed lid panel", (W-26,D-26,0.55), (0,0,lid_top-0.42), lid_mat, 4)
-torus_rect("thin lid cavity perimeter rim", (W-22,D-22), lid_top+0.05, lid_mat, 0.55, 0.4)
-# Two fine seam lines visible in the supplied front photo.
-torus_rect("thin lower lid seam", (W+4,D+4), H+1.1, lid_mat, 0.65, 0.4)
-torus_rect("thin body collar", (W-4,D-6), H-1.5, body_mat, 0.75, 0.45)
+# Continuous closed lid: the skirt and top plate overlap so the assembled
+# container reads as injection-moulded plastic without floating dark seams.
+lid=rounded_box("continuous snap fit lid skirt", (W+4,D+4,5.0), (0,0,H-0.2), lid_mat, 2.6)
+rounded_box("continuous overhanging lid top", (W+LID_OVERHANG*2,D+LID_OVERHANG*2,2.4), (0,0,H+2.6), lid_mat, 2.8)
+lid_top = H + 3.8
+rounded_box("shallow molded lid panel", (W-26,D-26,0.60), (0,0,lid_top-0.50), lid_mat, 4)
+torus_rect("molded lid panel perimeter", (W-22,D-22), lid_top-0.08, lid_mat, 0.65, 0.45)
 text_marking("HAVMOR PLAST PVT LTD.", (0,22,CAVITY_FLOOR+0.60), 0.82)
 text_marking("D-500", (0,8,CAVITY_FLOOR+0.60), 0.82)
 text_marking("REUSABLE", (0,-6,CAVITY_FLOOR+0.60), 0.82)
 text_marking("FOOD SAFE   PP5   FREEZER SAFE", (0,-21,CAVITY_FLOOR+0.60), 0.62)
-torus_rect("internal stiffening rib", (W-32,D-32), H+0.30, body_mat, 1.0, 0.7)
-torus_rect("fine R3 edge rib", (W-18,D-18), H+0.65, body_mat, 0.8, 0.5)
+# The body rim is formed by the continuous shell itself. Avoid stacked bars at
+# the closure line; they created the false multi-part appearance in the viewer.
 
 # studio setup
 scene=bpy.context.scene; scene.render.engine='BLENDER_EEVEE'; scene.render.resolution_x=3840; scene.render.resolution_y=2160; scene.render.resolution_percentage=100
