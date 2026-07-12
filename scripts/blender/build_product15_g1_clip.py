@@ -54,13 +54,15 @@ def ribbon(name, y0_mm, y1_mm, x0_mm, x1_mm, taper_tip_mm=0.0, taper_at='none'):
     for i,p in enumerate(path):
         tangent=(path[min(len(path)-1,i+1)]-path[max(0,i-1)]).normalized(); normal=Vector((-tangent.y,tangent.x)); lo=p-normal*(THICKNESS*.5); hi=p+normal*(THICKNESS*.5)
         scale = 1.0
+        min_scale = 0.12
         if taper_tip_mm > 0:
-            if taper_at == 'end':
-                dist_mm = (total_len - cum[i]) / MM
-                if dist_mm < taper_tip_mm: scale = max(0.12, dist_mm / taper_tip_mm)
-            elif taper_at == 'start':
-                dist_mm = cum[i] / MM
-                if dist_mm < taper_tip_mm: scale = max(0.12, dist_mm / taper_tip_mm)
+            dist_mm = None
+            if taper_at == 'end': dist_mm = (total_len - cum[i]) / MM
+            elif taper_at == 'start': dist_mm = cum[i] / MM
+            if dist_mm is not None and dist_mm < taper_tip_mm:
+                t = max(0.0, min(1.0, 1.0 - dist_mm / taper_tip_mm))
+                ease = t * t * (3.0 - 2.0 * t)  # smoothstep: zero slope at both ends, no visible kink
+                scale = 1.0 - (1.0 - min_scale) * ease
         ya, yb = ycenter - yhalf*scale, ycenter + yhalf*scale
         verts += [(lo.x,ya,lo.y),(lo.x,yb,lo.y),(hi.x,ya,hi.y),(hi.x,yb,hi.y)]
     for i in range(len(path)-1):
