@@ -146,7 +146,7 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
   ],
   dairySweetContainer: [
     { value: '12', label: 'Dairy Sweet Container' },
-    { value: '50', label: 'mm Internal Depth' },
+    { value: '200×140×50', label: 'mm Compact Envelope' },
     { value: 'PP', label: 'Food-Grade Material' },
     { value: 'Live', label: 'Product 12', green: true },
   ],
@@ -849,7 +849,7 @@ export default function CaseStudyFeature() {
             <div>
               <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}><span className="csp-pfeatured">New Model</span></div>
               <div className="csp-pname">Dairy Sweet Container</div>
-              <div className="csp-ptag">D-500 Food Container - 50 mm Internal Depth</div>
+              <div className="csp-ptag">Compact PP Container - Smaller Than Product 14</div>
               <div className="csp-pbar"><span style={{ flex:100, height:'100%', background:'var(--cs-green)', display:'block' }} /></div>
               <div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Food-grade PP</span></div>
             </div>

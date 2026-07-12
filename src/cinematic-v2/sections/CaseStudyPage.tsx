@@ -112,7 +112,7 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
   ],
   dairySweetContainer: [
     { value: '12', label: 'Dairy Sweet Container' },
-    { value: '50', label: 'mm Internal Depth' },
+    { value: '200×140×50', label: 'mm Compact Envelope' },
     { value: 'PP', label: 'Food-Grade Material' },
     { value: 'Live', label: 'Product 12', green: true },
   ],
@@ -780,7 +780,7 @@ export default function CaseStudyPage() {
             <model-viewer data-model-src={dairySweetContainerModel} alt="Dairy Sweet Container D-500 3D model" loading="eager" interaction-prompt="none" shadow-intensity="0.75" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="legacy" camera-orbit="18deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Dairy Sweet Container</div><div className="csp-ptag">D-500 Food Container - 50 mm Internal Depth</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Food-grade PP</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Dairy Sweet Container</div><div className="csp-ptag">Compact PP Container - Smaller Than Product 14</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Food-grade PP</span></div></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 13 Havmor D500 Bowl - live */}
