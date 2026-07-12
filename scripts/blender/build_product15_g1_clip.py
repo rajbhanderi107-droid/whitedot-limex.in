@@ -43,14 +43,28 @@ def nearest_index(x_mm):
 def add_bevel(obj):
     bevel = obj.modifiers.new("Edge softening R0.20mm", "BEVEL"); bevel.width = 0.55 * MM; bevel.segments = 5; bevel.limit_method = 'NONE'
 
-def ribbon(name, y0_mm, y1_mm, x0_mm, x1_mm):
+def ribbon(name, y0_mm, y1_mm, x0_mm, x1_mm, taper_tip_mm=0.0, taper_at='none'):
     a, b = nearest_index(x0_mm), nearest_index(x1_mm); path = PATH[min(a,b):max(a,b)+1]; verts=[]; faces=[]
+    n = len(path)
     y0, y1 = y0_mm*MM, y1_mm*MM
+    ycenter, yhalf = (y0+y1)*0.5, (y1-y0)*0.5
+    cum=[0.0]
+    for i in range(1,n): cum.append(cum[-1] + (path[i]-path[i-1]).length)
+    total_len = cum[-1] if cum[-1] > 0 else 1.0
     for i,p in enumerate(path):
         tangent=(path[min(len(path)-1,i+1)]-path[max(0,i-1)]).normalized(); normal=Vector((-tangent.y,tangent.x)); lo=p-normal*(THICKNESS*.5); hi=p+normal*(THICKNESS*.5)
-        verts += [(lo.x,y0,lo.y),(lo.x,y1,lo.y),(hi.x,y0,hi.y),(hi.x,y1,hi.y)]
+        scale = 1.0
+        if taper_tip_mm > 0:
+            if taper_at == 'end':
+                dist_mm = (total_len - cum[i]) / MM
+                if dist_mm < taper_tip_mm: scale = max(0.12, dist_mm / taper_tip_mm)
+            elif taper_at == 'start':
+                dist_mm = cum[i] / MM
+                if dist_mm < taper_tip_mm: scale = max(0.12, dist_mm / taper_tip_mm)
+        ya, yb = ycenter - yhalf*scale, ycenter + yhalf*scale
+        verts += [(lo.x,ya,lo.y),(lo.x,yb,lo.y),(hi.x,ya,hi.y),(hi.x,yb,hi.y)]
     for i in range(len(path)-1):
-        n,q=i*4,(i+1)*4; faces += [(n,q,q+1,n+1),(n+2,n+3,q+3,q+2),(n,n+2,q+2,q),(n+1,q+1,q+3,n+3)]
+        n2,q=i*4,(i+1)*4; faces += [(n2,q,q+1,n2+1),(n2+2,n2+3,q+3,q+2),(n2,n2+2,q+2,q),(n2+1,q+1,q+3,n2+3)]
     faces += [(0,1,3,2)]; e=(len(path)-1)*4; faces += [(e,e+2,e+3,e+1)]
     mesh=bpy.data.meshes.new(name+"_Mesh"); mesh.from_pydata(verts,[],faces); mesh.update(); obj=bpy.data.objects.new(name,mesh); bpy.context.collection.objects.link(obj); obj.data.materials.append(part_mat); add_bevel(obj); return obj
 
@@ -62,10 +76,16 @@ def angled_local_notch(obj, center_mm, y_center_mm, width_mm=3.25, depth_mm=1.45
     bpy.context.view_layer.objects.active=obj; mod=obj.modifiers.new("Angled local notch","BOOLEAN"); mod.operation='DIFFERENCE'; mod.solver='EXACT'; mod.object=cutter; bpy.ops.object.modifier_apply(modifier=mod.name); bpy.data.objects.remove(cutter,do_unlink=True); add_bevel(obj)
 
 ribbon("G1_Central_Bridge", -9.5, 9.5, 8.3, 41.7)
-bands=[(-9.5,-6.0),(-2.0,2.0),(6.0,9.5)]
-for side,xa,xb in (("Left",0.0,9.0),("Right",41.0,50.0)):
+# Right side reads trident-like in the reference: tines a bit wider than the
+# left side, tapering to a point near the tip instead of a blunt rounded end.
+LEFT_BANDS = [(-9.5,-6.0),(-2.0,2.0),(6.0,9.5)]
+RIGHT_BANDS = [(-9.9,-5.7),(-2.3,2.3),(5.7,9.9)]
+for side, xa, xb, bands, taper_at in (
+    ("Left", 0.0, 9.0, LEFT_BANDS, 'none'),
+    ("Right", 41.0, 50.0, RIGHT_BANDS, 'end'),
+):
     for idx,(y0,y1) in enumerate(bands,1):
-        prong=ribbon(f"G1_{side}_Prong_{idx}",y0,y1,xa,xb)
+        prong=ribbon(f"G1_{side}_Prong_{idx}",y0,y1,xa,xb, taper_tip_mm=(3.5 if taper_at=='end' else 0.0), taper_at=taper_at)
         if idx==2: angled_local_notch(prong, xa+2.6 if side=="Left" else xb-2.6, (y0+y1)*.5)
 
 bpy.ops.mesh.primitive_cylinder_add(vertices=96,radius=.050,depth=.003,location=(.025,0,-.0032)); plinth=bpy.context.object; plinth.name="Preview_Plinth_NOT_EXPORTED"; plinth.scale.y=.62; plinth.data.materials.append(dark_mat); bevel=plinth.modifiers.new("Soft rim","BEVEL"); bevel.width=.002; bevel.segments=5
