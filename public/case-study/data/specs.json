@@ -946,6 +946,28 @@
         { "label": "Material Appearance", "value": "Polished opaque polypropylene-style plastic", "source": "supplied product photos and 3D reconstruction", "verified": true },
         { "label": "Composition", "value": "Not published; supplier formulation not verified", "source": "supplied product photos", "verified": false }
       ]
+    },
+    "hook20mm": {
+      "id": "hook20mm",
+      "index": "15",
+      "name": "20 mm Hook",
+      "category": "Hardware",
+      "status": "live",
+      "application": "20 mm three-prong hook",
+      "tagline": "A warm-white plastic 20 mm hook reconstructed in 3D from the supplied prototype photograph and dimensional reference cards.",
+      "description": "A flexible W-profile retaining clip with three rounded prongs at each end, two 4 mm slots, and a warm ivory prototype-plastic finish. The interactive model follows the supplied photography and drawing references. Supplier formulation and LIMEX composition remain unpublished.",
+      "highlights": [
+        { "num": "3D", "label": "Photo-Matched", "source": "product-15 supplied references", "verified": true },
+        { "num": "19", "label": "mm Overall Width", "source": "product-15 tolerance card", "verified": true },
+        { "num": "3+3", "label": "Rounded Prongs", "source": "product-15 supplied photograph", "verified": true }
+      ],
+      "specs": [
+        { "label": "Overall Width", "value": "19 mm nominal", "source": "product-15 tolerance card", "verified": true },
+        { "label": "Slot Geometry", "value": "2 slots per end, 4 mm nominal width on 8 mm centers", "source": "product-15 tolerance card", "verified": true },
+        { "label": "Construction", "value": "One-piece formed plastic clip with W-profile bends and curled tips", "source": "product-15 supplied references", "verified": true },
+        { "label": "Material Appearance", "value": "Warm ivory semi-matte prototype plastic", "source": "product-15 supplied photograph", "verified": true },
+        { "label": "Composition", "value": "Not published; supplier formulation not verified", "source": "product-15 supplied references", "verified": false }
+      ]
     }
   }
 }
