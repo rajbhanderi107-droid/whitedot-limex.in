@@ -809,7 +809,7 @@
       // Same card as live products — same chrome, hover, and navigation.
       // Only the 3D model and spec details are omitted until real data lands.
       return `
-        <a class="p-card featured live" href="./product.html?p=${entry.slug}" data-product="${entry.id}">
+        <a class="p-card featured live" href="${entry.slug === 'round-pipe' ? './round-pipe.html' : `./product.html?p=${entry.slug}`}" data-product="${entry.id}">
           <div class="border-beam"></div>
           <div class="p-card-glass-inset"></div>
           <div class="p-card-glow"></div>
@@ -844,7 +844,7 @@
       : `<span class="comp-seg-dot pp"></span><span class="comp-seg-label">Material spec pending</span>`;
 
     return `
-      <a class="p-card featured live" href="./product.html?p=${entry.slug}" data-product="${entry.id}">
+      <a class="p-card featured live" href="${entry.slug === 'round-pipe' ? './round-pipe.html' : `./product.html?p=${entry.slug}`}" data-product="${entry.id}">
         <div class="border-beam"></div>
         <div class="p-card-glass-inset"></div>
         <div class="p-card-glow"></div>

@@ -9,7 +9,7 @@
 ## Files
 - Data: `public/case-study/data/products/round-pipe.json`
 - 3D model: `MISSING — not yet built`
-- HTML page: `product.html?p=round-pipe  (generic template, no dedicated file)`
+- HTML page: `round-pipe.html` (SEO-friendly redirect to `product.html?p=round-pipe`)
 - Reference photos: `photos[]` empty in products.json — none supplied yet
 
 ## Composition / Specs

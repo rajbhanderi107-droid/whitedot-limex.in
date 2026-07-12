@@ -885,7 +885,9 @@ export default function CaseStudyFeature() {
         <a
           key={p.slug}
           className="csp-pcard featured live"
-          href={`${basePath}/case-study/product.html?p=${p.slug}`}
+          href={p.slug === 'round-pipe'
+            ? `${basePath}/case-study/round-pipe.html`
+            : `${basePath}/case-study/product.html?p=${p.slug}`}
           data-product={p.slug}
         >
           <div className="csp-border-beam" />
