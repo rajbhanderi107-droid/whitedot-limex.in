@@ -223,17 +223,30 @@ export default function CaseStudyFeature() {
     grid.addEventListener('mouseenter', () => { paused = true; });
     grid.addEventListener('mouseleave', () => { paused = false; });
 
+    const cardEls = [...grid.querySelectorAll<HTMLElement>('.csp-pcard')];
+
     function applyCardTransforms() {
       const sRect   = section!.getBoundingClientRect();
       const centerX = sRect.left + sRect.width / 2;
+      const halfW   = sRect.width * 0.5;
       let nearestProduct: ProductKey | null = null;
       let nearestDistance = Number.POSITIVE_INFINITY;
-      grid!.querySelectorAll<HTMLElement>('.csp-pcard').forEach(c => {
-        const r     = c.getBoundingClientRect();
-        const cx    = r.left + r.width / 2;
-        const off   = (cx - centerX) / (sRect.width * 0.5);
-        const t     = Math.max(-1.6, Math.min(1.6, off));
-        const absT  = Math.abs(t);
+
+      // ── READ PASS ── measure every card first, before touching any style.
+      // Interleaving getBoundingClientRect() with style writes forced a
+      // synchronous reflow per card (~56 cards) every frame — the marquee's
+      // main-thread jank. Batching all reads, then all writes, is one reflow
+      // per frame instead of one per card.
+      const offsets = cardEls.map((c) => {
+        const r  = c.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        return Math.max(-1.6, Math.min(1.6, (cx - centerX) / halfW));
+      });
+
+      // ── WRITE PASS ── apply transforms; no layout reads in this loop.
+      cardEls.forEach((c, i) => {
+        const t    = offsets[i];
+        const absT = Math.abs(t);
         // 3D coverflow transforms promote every card (~70 with the duplicated
         // list) to its own GPU layer — too much memory for iOS Safari. Flat
         // marquee on mobile; the grid's translate3d still scrolls the strip.
