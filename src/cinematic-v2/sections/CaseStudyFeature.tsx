@@ -35,6 +35,7 @@ const dairyRoundContainerHref = `${basePath}/case-study/product.html?p=dairy-rou
 const dairyRoundContainerModel = `${basePath}/case-study/model/Havmor_D500_Bowl.glb`;
 const rectangleContainerHref = `${basePath}/case-study/product.html?p=rectangle-container`;
 const rectangleContainerModel = `${basePath}/case-study/model/rectangle-container-d250.glb`;
+const roundPipeModel = `${basePath}/case-study/model/round-pipe-procedural.glb`;
 const hook20mmHref = `${basePath}/case-study/product.html?p=20mm-hook`;
 const hook20mmModel = `${basePath}/case-study/model/product-15-g1-clip.glb`;
 type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm';
@@ -895,12 +896,15 @@ export default function CaseStudyFeature() {
           <div className="csp-pglow" />
           <div className="csp-pmedia">
             <span className="csp-pidx">{p.idx}</span>
-            <div className="csp-soon-placeholder">{monogram(p.name)}</div>
+            {p.slug === 'round-pipe' && !isMobileViewport ? (
+              // @ts-ignore custom element
+              <model-viewer data-model-src={roundPipeModel} alt="Round Pipe molded plastic 3D model" loading="eager" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="80deg 76deg 92%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            ) : <div className="csp-soon-placeholder">{monogram(p.name)}</div>}
           </div>
           <div className="csp-pinfo">
             <div>
               <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
-                <span className="csp-pfeatured">Coming Soon</span>
+                <span className="csp-pfeatured">{p.slug === 'round-pipe' ? 'New Model' : 'Coming Soon'}</span>
               </div>
               <div className="csp-pname">{p.name}</div>
               <div className="csp-ptag">{p.tag}</div>
