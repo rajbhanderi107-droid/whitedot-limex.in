@@ -1,6 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 
-const HARD_CAP_MS = 4000;
+const HARD_CAP_MS = 6000;
+
+// Only "above the fold" asset types gate the loader — fonts, core JS/CSS,
+// icons, and images. Full-length hero video and the case-study 3D model
+// warmup (13 GLBs, several MB each) stream in progressively after reveal
+// and must NOT hold the loader open; they finish long after paint.
+function isCriticalResource(name: string): boolean {
+  return (
+    name.endsWith(".js") ||
+    name.endsWith(".css") ||
+    name.endsWith(".woff2") ||
+    name.endsWith(".woff") ||
+    name.endsWith(".svg") ||
+    name.endsWith(".webp") ||
+    name.endsWith(".png") ||
+    name.endsWith(".jpg") ||
+    name.endsWith(".jpeg")
+  );
+}
 
 export function useLoadProgress(): { progress: number; ready: boolean } {
   const [progress, setProgress] = useState(0);
@@ -10,12 +28,10 @@ export function useLoadProgress(): { progress: number; ready: boolean } {
   useEffect(() => {
     if (settled.current) return;
 
-    let expected = 0;
-    let loaded = 0;
     let fontsReady = false;
     let resourcesDone = false;
 
-    const bump = () => {
+    const bump = (loaded: number, expected: number) => {
       if (settled.current) return;
       const total = expected || 1;
       const resourceFraction = Math.min(loaded / total, 1) * 0.7;
@@ -34,26 +50,20 @@ export function useLoadProgress(): { progress: number; ready: boolean } {
       if (resourcesDone && fontsReady) finish();
     };
 
-    const observer = new PerformanceObserver((list) => {
-      for (const entry of list.getEntries()) {
-        if (
-          entry.entryType === "resource" &&
-          (entry.name.endsWith(".js") ||
-            entry.name.endsWith(".css") ||
-            entry.name.endsWith(".woff2") ||
-            entry.name.endsWith(".woff") ||
-            entry.name.endsWith(".svg") ||
-            entry.name.endsWith(".webp"))
-        ) {
-          expected++;
-          if ((entry as PerformanceResourceTiming).responseEnd > 0) {
-            loaded++;
-          }
-        }
-      }
-      bump();
-    });
+    const recount = () => {
+      const entries = performance
+        .getEntriesByType("resource")
+        .filter((e) => isCriticalResource(e.name));
+      const expected = entries.length || 1;
+      const loaded = entries.filter(
+        (e) => (e as PerformanceResourceTiming).responseEnd > 0,
+      ).length;
+      resourcesDone = loaded >= expected && expected > 0;
+      bump(loaded, expected);
+      checkComplete();
+    };
 
+    const observer = new PerformanceObserver(recount);
     try {
       observer.observe({ type: "resource", buffered: true });
     } catch {
@@ -62,21 +72,10 @@ export function useLoadProgress(): { progress: number; ready: boolean } {
 
     document.fonts.ready.then(() => {
       fontsReady = true;
-      bump();
-      checkComplete();
+      recount();
     });
 
-    const poll = setInterval(() => {
-      const entries = performance.getEntriesByType("resource");
-      expected = entries.length || 1;
-      loaded = entries.filter(
-        (e) => (e as PerformanceResourceTiming).responseEnd > 0,
-      ).length;
-      resourcesDone = loaded >= expected && expected > 0;
-      bump();
-      checkComplete();
-    }, 200);
-
+    const poll = setInterval(recount, 200);
     const cap = setTimeout(finish, HARD_CAP_MS);
 
     return () => {
