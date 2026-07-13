@@ -13,6 +13,12 @@ export const liveCaseStudyModelUrls = [
   '/case-study/model/dairy-sweet-container-procedural.glb',
   '/case-study/model/lunch-box.glb',
   '/case-study/model/Havmor_D500_Bowl.glb',
+  '/case-study/model/dairy-container-procedural.glb',
+  '/case-study/model/rectangle-container-d250.glb',
+  '/case-study/model/product-15-g1-clip.glb',
+  '/case-study/model/round-pipe-procedural.glb',
+  '/case-study/model/product-17-appliance-tray.glb',
+  '/case-study/model/product-18-impeller.glb',
 ];
 
 function addPreloadHint(url: string) {
@@ -68,7 +74,7 @@ export function warmCaseStudyModelCache(urls = liveCaseStudyModelUrls) {
 // that keeps at most MAX_CONCURRENT parses in flight and hands each one to the
 // browser during idle time, so the main thread never blocks long enough to hang.
 // Everything still loads — just spread across a few frames instead of one.
-const MAX_CONCURRENT_MODEL_LOADS = 2;
+const MAX_CONCURRENT_MODEL_LOADS = 3;
 const MODEL_LOAD_TIMEOUT_MS = 8000;
 
 type ActivationTask = { viewer: HTMLElement; src: string };
@@ -151,7 +157,7 @@ export function observeViewportModels(root: HTMLElement) {
         observer.unobserve(viewer);
       });
     },
-    { rootMargin: '300px 25%', threshold: 0.01 },
+    { rootMargin: '900px 40%', threshold: 0.01 },
   );
 
   viewers.forEach((viewer) => observer.observe(viewer));

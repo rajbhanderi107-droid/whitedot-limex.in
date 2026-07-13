@@ -214,8 +214,14 @@ export default function CaseStudyPage() {
     if (!grid || !section) return;
     const stopViewportModels = observeViewportModels(grid);
     const product13Warmup = window.setTimeout(
-      () => warmCaseStudyModelCache([dairyRoundContainerModel]),
-      900,
+      () => warmCaseStudyModelCache([
+        bobbinModel, containerModel, motorCoverModel, aralditeModel, handWashModel,
+        hardDishModel, consilePipeModel, soapStandModel, foodOilCanModel,
+        dairyContainerModel, lunchboxModel, dairySweetContainerModel,
+        dairyRoundContainerModel, rectangleContainerModel, hook20mmModel,
+        roundPipeModel, applianceTrayModel, motorFanBladeModel,
+      ]),
+      50,
     );
 
     let scrollX  = 0;
