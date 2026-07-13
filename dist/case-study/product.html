@@ -15,7 +15,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="modulepreload" href="./js/model-preload.js" />
   <link rel="modulepreload" href="./js/model-viewer.min.js" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/bobbin.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/paint-container-procedural-red-white.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/motor-cover-procedural-black.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/araldite-container-procedural.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/hand-wash-bottle-duo.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/lunchbox-tray-four-color-lineup.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/consile-pipe-procedural.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/soap-stand-procedural.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/oil-bottle-procedural.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/dairy-container-procedural.glb" />
+  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/round-pipe-procedural.glb" />
+  <script type="module" src="./js/model-preload.js"></script>
   <script type="module" src="./js/model-viewer.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -796,6 +809,7 @@
   }
 
   const isLive = entry.status === 'live';
+  const hasModel = Boolean(entry.modelFile);
   const full = isLive ? (specData[entry.id] || {}) : {};
 
   const MODEL_SRC = {
@@ -807,11 +821,16 @@
     hardDish: './model/lunchbox-tray-four-color-lineup.glb',
     consilePipe: './model/consile-pipe-procedural.glb',
     soapStand: './model/soap-stand-procedural.glb',
-    foodOilCan: './model/oil-bottle-procedural-fast.glb',
-    dairyProductsContainer: './model/dairy-products-container.glb',
     foodOilCan: './model/oil-bottle-procedural.glb',
     dairyProductsContainer: './model/dairy-container-procedural.glb',
-    lunchBox: './model/lunchbox-tray-four-color-lineup.glb',
+    lunchBox: './model/lunch-box.glb',
+    dairySweetContainer: './model/dairy-sweet-container-procedural.glb',
+    dairyRoundContainer: './model/Havmor_D500_Bowl.glb',
+    rectangleContainer: './model/rectangle-container-d250.glb',
+    hook20mm: './model/product-15-g1-clip.glb',
+    roundPipe: './model/round-pipe-procedural.glb',
+    applianceTray: './model/product-17-appliance-tray.glb',
+    motorFanBlade: './model/product-18-impeller.glb',
   };
   const CAMERA_ORBIT = {
     bobbin: '0deg 76deg 105%',
@@ -824,6 +843,14 @@
     soapStand: '35deg 70deg 100%',
     foodOilCan: '22deg 72deg 108%',
     dairyProductsContainer: '18deg 74deg 108%',
+    lunchBox: '38deg 68deg 108%',
+    dairySweetContainer: '18deg 76deg 112%',
+    dairyRoundContainer: '18deg 72deg 112%',
+    rectangleContainer: '18deg 68deg 112%',
+    hook20mm: '42deg 68deg 105%',
+    roundPipe: '80deg 76deg 92%',
+    applianceTray: '28deg 74deg 108%',
+    motorFanBlade: '28deg 62deg 108%',
   };
   // Products whose GLB carries a baked animation to autoplay on the stage.
   const MODEL_ANIMATION = {
@@ -881,7 +908,7 @@
   // ── 3D stage ──
   const stageContent = document.getElementById('stageContent');
   let mv = null;
-  if (isLive) {
+  if (isLive || hasModel) {
     document.getElementById('spinControls').style.display = '';
     stageContent.innerHTML = `
       <div class="rotator-wrap" id="rotatorWrap">
@@ -898,9 +925,9 @@
           rotation-per-second="22deg"
           interpolation-decay="100"
           interaction-prompt="none"
-          shadow-intensity="${entry.id === 'foodOilCan' ? '0.9' : '0'}"
-          shadow-softness="${entry.id === 'foodOilCan' ? '0.8' : '1'}"
-          exposure="${entry.id === 'foodOilCan' ? '1.0' : '1.15'}"
+          shadow-intensity="${['foodOilCan', 'dairyRoundContainer'].includes(entry.id) ? '0.9' : '0'}"
+          shadow-softness="${['foodOilCan', 'dairyRoundContainer'].includes(entry.id) ? '0.8' : '1'}"
+          exposure="${entry.id === 'foodOilCan' ? '1.0' : entry.id === 'dairyRoundContainer' ? '1.08' : '1.15'}"
           tone-mapping="neutral"
           environment-image="neutral"
           camera-orbit="${CAMERA_ORBIT[entry.id] || '0deg 76deg 105%'}"

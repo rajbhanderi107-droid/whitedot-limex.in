@@ -780,6 +780,28 @@
         }
       ]
     },
+    "dairySweetContainer": {
+      "id": "dairySweetContainer",
+      "index": "12",
+      "name": "Dairy Sweet Container",
+      "category": "Dairy Packaging",
+      "status": "live",
+      "application": "D-500 food-grade sweet container",
+      "tagline": "A compact warm-white polypropylene sweet container with a deep cavity and snap-fit lid, smaller on every axis than Product 14.",
+      "description": "A compact food-grade PP sweet container rebuilt as the smaller plastic counterpart to Product 14. The revised model has a 200 x 140 x 50 mm overall envelope, thinner moulded walls, a shallower tapered body, rounded corners, a snap-fit lid, and a warm semi-matte polypropylene finish. The older supplied dimension cards conflict, so these corrected model dimensions follow the user's direct product comparison and remain pending caliper verification.",
+      "highlights": [
+        { "num": "3D", "label": "Photo + Blueprint Matched", "source": "dairy-sweet-container-reference", "verified": true },
+        { "num": "40", "label": "mm Modelled Internal Depth", "source": "user-corrected product relationship", "verified": false },
+        { "num": "500", "label": "ml Total Volume", "source": "dairy-sweet-container-spec-sheet", "verified": true }
+      ],
+      "specs": [
+        { "label": "Material", "value": "Food-grade PP / opaque white", "source": "dairy-sweet-container-spec-sheet", "verified": true },
+        { "label": "Modelled Envelope", "value": "200 x 140 x 50 mm (L x W x H), smaller than Product 14 on every axis", "source": "user-corrected product relationship", "verified": false },
+        { "label": "Internal Base", "value": "158 x 102 mm modelled", "source": "user-corrected product relationship", "verified": false },
+        { "label": "Internal Depth", "value": "40 mm modelled", "source": "user-corrected product relationship", "verified": false },
+        { "label": "Molded Markings", "value": "HAVMOR PLAST PVT LTD. / D-500 / REUSABLE / FOOD SAFE / PP5 / FREEZER SAFE", "source": "dairy-sweet-container-reference", "verified": true }
+      ]
+    },
     "dairyProductsContainer": {
       "id": "dairyProductsContainer",
       "index": "10",
@@ -840,6 +862,153 @@
           "source": "dairy-container-photo-reference",
           "verified": false
         }
+      ]
+    },
+    "lunchBox": {
+      "id": "lunchBox",
+      "index": "11",
+      "name": "Lunch Box",
+      "category": "Food Container",
+      "status": "live",
+      "application": "Mini Bento Food Container",
+      "tagline": "A rectangular bento-style food container with a four-side buckle-flap latch and sealing lip, modeled in 3D from the supplied product photos and measurement detail card.",
+      "description": "A rectangular food-grade PP/ABS lunch box with a cream-white recessed-groove lid and a red base, sealed by a continuous gasket lip and secured by four identical buckle flaps (one per side, each with a recessed twin-window grip). The interactive 3D model is built to the calipered dimensions supplied on the product's official measurement detail card. Verified supplier composition and food-contact data are still in progress, so no LIMEX percentage, mechanical values, or CO2 figures are published for this product.",
+      "highlights": [
+        {
+          "num": "3D",
+          "label": "Dimension-Matched",
+          "source": "lunch-box-detail-card",
+          "verified": true
+        },
+        {
+          "num": "4",
+          "label": "Uniform Buckle Flaps",
+          "source": "lunch-box-detail-card",
+          "verified": true
+        },
+        {
+          "num": "200x145x65",
+          "label": "mm Footprint x Height",
+          "source": "lunch-box-detail-card",
+          "verified": true
+        }
+      ],
+      "specs": [
+        {
+          "label": "Application",
+          "value": "Mini Bento Food Container",
+          "source": "lunch-box-detail-card",
+          "verified": true
+        },
+        {
+          "label": "Dimensions",
+          "value": "200 mm x 145 mm x 65 mm (L x W x H), R12 mm corner radius",
+          "source": "lunch-box-detail-card",
+          "verified": true
+        },
+        {
+          "label": "Lid",
+          "value": "Cream-white recessed-groove lid with 4x uniform buckle-flap latches (65 mm each) and a continuous sealing gasket lip",
+          "source": "lunch-box-detail-card",
+          "verified": true
+        },
+        {
+          "label": "Colorway",
+          "value": "Red base, cream-white lid and flaps",
+          "source": "lunch-box-detail-card",
+          "verified": true
+        },
+        {
+          "label": "Material Base",
+          "value": "Food-grade PP/ABS - LIMEX blend verification in progress",
+          "source": "lunch-box-detail-card",
+          "verified": false
+        }
+      ]
+    },
+    "rectangleContainer": {
+      "id": "rectangleContainer",
+      "index": "14",
+      "name": "HAVMOR D-250 Container",
+      "category": "General Packaging",
+      "status": "live",
+      "application": "General packaging container",
+      "tagline": "A photo-matched one-piece HAVMOR D-250 molded plastic container reconstructed from supplied photographs and technical blueprints.",
+      "description": "A single-piece rectangular container with a continuous molded rim, tapered walls, recessed interior base panel, ejector marks, injection point, and molded HAVMOR / REUSABLE / D-250 markings. No LIMEX formulation or supplier composition is claimed.",
+      "highlights": [
+        { "num": "3D", "label": "Photo-Matched", "source": "D-250 supplied photos and blueprints", "verified": true },
+        { "num": "250x190", "label": "mm Lid Envelope", "source": "D-250 lid blueprint", "verified": true },
+        { "num": "1", "label": "One-Piece Container", "source": "supplied product photos", "verified": true }
+      ],
+      "specs": [
+        { "label": "Envelope", "value": "250 mm x 190 mm lid-envelope reference", "source": "D-250 lid blueprint", "verified": true },
+        { "label": "Construction", "value": "One-piece tapered container with continuous molded rim and recessed interior base", "source": "supplied product photos", "verified": true },
+        { "label": "Material Appearance", "value": "Polished opaque polypropylene-style plastic", "source": "supplied product photos and 3D reconstruction", "verified": true },
+        { "label": "Composition", "value": "Not published; supplier formulation not verified", "source": "supplied product photos", "verified": false }
+      ]
+    },
+    "hook20mm": {
+      "id": "hook20mm",
+      "index": "15",
+      "name": "20 mm Hook",
+      "category": "Hardware",
+      "status": "live",
+      "application": "20 mm three-prong hook",
+      "tagline": "A warm-white plastic 20 mm hook reconstructed in 3D from the supplied prototype photograph and dimensional reference cards.",
+      "description": "A flexible W-profile retaining clip with three rounded prongs at each end, two 4 mm slots, and a warm ivory prototype-plastic finish. The interactive model follows the supplied photography and drawing references. Supplier formulation and LIMEX composition remain unpublished.",
+      "highlights": [
+        { "num": "3D", "label": "Photo-Matched", "source": "product-15 supplied references", "verified": true },
+        { "num": "19", "label": "mm Overall Width", "source": "product-15 tolerance card", "verified": true },
+        { "num": "3+3", "label": "Rounded Prongs", "source": "product-15 supplied photograph", "verified": true }
+      ],
+      "specs": [
+        { "label": "Overall Width", "value": "19 mm nominal", "source": "product-15 tolerance card", "verified": true },
+        { "label": "Slot Geometry", "value": "2 slots per end, 4 mm nominal width on 8 mm centers", "source": "product-15 tolerance card", "verified": true },
+        { "label": "Construction", "value": "One-piece formed plastic clip with W-profile bends and curled tips", "source": "product-15 supplied references", "verified": true },
+        { "label": "Material Appearance", "value": "Warm ivory semi-matte prototype plastic", "source": "product-15 supplied photograph", "verified": true },
+        { "label": "Composition", "value": "Not published; supplier formulation not verified", "source": "product-15 supplied references", "verified": false }
+      ]
+    },
+    "roundPipe": {
+      "id": "roundPipe",
+      "index": "16",
+      "name": "Round Pipe",
+      "category": "Industrial Pipe",
+      "status": "live",
+      "application": "Industrial round pipe visual reference",
+      "tagline": "A single-piece molded round pipe reconstructed as an interactive 3D visual reference. Supplier formulation and LIMEX composition remain unpublished until verified.",
+      "description": "An interactive 3D visual reference for the Round Pipe case study. The model is published for product exploration; no LIMEX composition, CO2, supplier, or performance figures are claimed until supported by approved technical documentation.",
+      "highlights": [
+        { "num": "3D", "label": "Interactive Model", "source": "White Dot Round Pipe visual reference", "verified": true },
+        { "num": "16", "label": "Product Index", "source": "White Dot case-study registry", "verified": true },
+        { "num": "Pending", "label": "Verified Specs", "source": "Supplier TDS / approved product sheet", "verified": false }
+      ],
+      "specs": [
+        { "label": "Construction", "value": "Single-piece molded pipe visual reference", "source": "White Dot 3D visual reference", "verified": true },
+        { "label": "Model Asset", "value": "round-pipe-procedural.glb", "source": "White Dot case-study model asset", "verified": true },
+        { "label": "Composition", "value": "Not published; supplier formulation not verified", "source": "Pending approved LIMEX documentation", "verified": false }
+      ]
+    },
+    "motorFanBlade": {
+      "id": "motorFanBlade",
+      "index": "18",
+      "name": "Motor Fan Blade",
+      "category": "Motor Component",
+      "status": "live",
+      "application": "12-blade industrial motor impeller / fan blade",
+      "tagline": "A blueprint-matched 12-blade industrial impeller reconstructed as an interactive 3D visual reference. Supplier formulation and LIMEX composition remain unpublished until verified.",
+      "description": "An interactive 3D visual reference for the Motor Fan Blade case study — a one-piece molded 12-blade radial impeller with an 88 mm diameter baseplate, a central hub carrying a 10 mm shaft bore and set-screw provision, and 12 curved blades rising 13.2 mm off the baseplate. No LIMEX composition, CO2, supplier, or performance figures are claimed until supported by approved technical documentation.",
+      "highlights": [
+        { "num": "3D", "label": "Interactive Model", "source": "White Dot Motor Fan Blade visual reference", "verified": true },
+        { "num": "12", "label": "Radial Blades", "source": "White Dot Motor Fan Blade visual reference", "verified": true },
+        { "num": "Pending", "label": "Verified Specs", "source": "Supplier TDS / approved product sheet", "verified": false }
+      ],
+      "specs": [
+        { "label": "Baseplate Diameter", "value": "88 mm nominal", "source": "White Dot 3D visual reference", "verified": true },
+        { "label": "Blade Crown Height", "value": "13.2 mm above baseplate", "source": "White Dot 3D visual reference", "verified": true },
+        { "label": "Overall Envelope", "value": "120.005 mm x 120.005 mm x 19.516 mm", "source": "White Dot 3D visual reference", "verified": true },
+        { "label": "Hub / Bore", "value": "Central hub with 10 mm shaft bore and set-screw provision", "source": "White Dot 3D visual reference", "verified": true },
+        { "label": "Composition", "value": "Not published; supplier formulation not verified", "source": "Pending approved LIMEX documentation", "verified": false }
       ]
     }
   }
