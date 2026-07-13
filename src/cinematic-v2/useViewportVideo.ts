@@ -66,10 +66,15 @@ export function useViewportVideo(
     // video that should be playing is paused or still has no data.
     const watchdog = window.setInterval(() => {
       if (!shouldPlay) return;
-      if (video.paused || video.readyState === 0) {
+      if (document.visibilityState !== 'visible') return;
+      // load() discards the buffer and re-downloads the whole file — reserve
+      // it for a truly dead element (no data at all). A merely paused video
+      // just needs play(), otherwise a browser-throttled tab re-fetches the
+      // video every 4s forever, saturating network and main thread.
+      if (video.readyState === 0) {
         try { video.load(); } catch { /* ignore */ }
-        void video.play().catch(() => undefined);
       }
+      if (video.paused) void video.play().catch(() => undefined);
     }, 4000);
 
     if (!('IntersectionObserver' in window)) {

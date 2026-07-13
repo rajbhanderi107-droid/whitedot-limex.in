@@ -49,6 +49,11 @@ export default function MaterialStory() {
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const loadedRef = useRef<Set<number>>(new Set());
+  // Whether the story section is near the viewport — the active scene's video
+  // pauses while the user is elsewhere on the page so it isn't decoding
+  // (and the watchdog isn't reviving it) in the background.
+  const sectionInViewRef = useRef(true);
+  const activeIndexRef = useRef(0);
 
   // Which scenes have their <source> tags injected (lazy). Seed first two.
   const [armed, setArmed] = useState<Set<number>>(() => new Set([0, 1]));
@@ -109,8 +114,10 @@ export default function MaterialStory() {
       vid.muted = true;
 
       if (i === active) {
-        const p = vid.play();
-        if (p && typeof p.catch === 'function') p.catch(() => undefined);
+        if (sectionInViewRef.current) {
+          const p = vid.play();
+          if (p && typeof p.catch === 'function') p.catch(() => undefined);
+        }
 
         // Safety net: restart if the browser doesn't honour loop
         const onEnded = () => {
@@ -143,10 +150,16 @@ export default function MaterialStory() {
     const watchdog = window.setInterval(() => {
       const activeVid = videoRefs.current[active];
       if (!activeVid) return;
-      if (activeVid.paused || activeVid.readyState === 0) {
+      // Don't fight intentional pauses: tab hidden or section offscreen.
+      if (document.visibilityState !== 'visible') return;
+      if (!sectionInViewRef.current) return;
+      // load() discards the buffer and re-downloads the file — reserve it for
+      // a truly dead element. A merely paused video only needs play(),
+      // otherwise a throttled tab re-fetches every scene video every 4s.
+      if (activeVid.readyState === 0) {
         try { activeVid.load(); } catch { /* ignore */ }
-        void activeVid.play().catch(() => undefined);
       }
+      if (activeVid.paused) void activeVid.play().catch(() => undefined);
     }, 4000);
 
     return () => {
@@ -155,6 +168,33 @@ export default function MaterialStory() {
       window.clearInterval(watchdog);
     };
   }, [active, armed]);
+
+  useEffect(() => {
+    activeIndexRef.current = active;
+  }, [active]);
+
+  // Pause the active scene while the whole section is offscreen; resume the
+  // moment it comes back. Without this the active loop keeps decoding for as
+  // long as the user browses the rest of the page.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root || typeof IntersectionObserver === 'undefined') return undefined;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        sectionInViewRef.current = entry.isIntersecting;
+        const vid = videoRefs.current[activeIndexRef.current];
+        if (!vid) return;
+        if (entry.isIntersecting) {
+          void vid.play().catch(() => undefined);
+        } else if (!vid.paused) {
+          vid.pause();
+        }
+      },
+      { rootMargin: '300px 0px' },
+    );
+    io.observe(root);
+    return () => io.disconnect();
+  }, []);
 
   // Once the viewer has watched (or scrolled through) all 8 scenes once,
   // never capture scroll again.

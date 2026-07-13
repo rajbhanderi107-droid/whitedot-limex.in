@@ -19,8 +19,10 @@ function splitChars(text: string, startIndex: number) {
     </span>
   ));
 }
-const heroVideo4k = `${import.meta.env.BASE_URL}assets/higgsfield/hero-head-background-4k.mp4`;
-const heroVideo1080 = `${import.meta.env.BASE_URL}assets/higgsfield/hero-1080-h264.mp4`;
+// Single 1080p encode for every device. The 4K master (22.7Mbps) stuttered on
+// mid-range GPUs and its 22.8MB download raced the rest of the page; behind the
+// scrim the denoised 3.4Mbps 1080p is visually identical.
+const heroVideo = `${import.meta.env.BASE_URL}assets/higgsfield/hero-1080-optimized.mp4`;
 const heroPosterSrc = `${import.meta.env.BASE_URL}assets/higgsfield/hero-head-background-poster-4k.jpg`;
 
 // On mobile, only serve the 1080p version to avoid memory pressure on iOS Safari.
@@ -54,9 +56,7 @@ export default function Hero() {
           playsInline
           preload={isMobileDevice ? 'metadata' : 'auto'}
         >
-          {/* Only serve 4K to desktop — mobile gets 1080p to prevent iOS memory crash */}
-          {!isMobileDevice && <source src={heroVideo4k} type="video/mp4" />}
-          <source src={heroVideo1080} type="video/mp4" />
+          <source src={heroVideo} type="video/mp4" />
         </video>
       </div>
       <span className="v2h-environment-scrim" aria-hidden="true" />
