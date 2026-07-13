@@ -234,16 +234,13 @@ export default function CaseStudyFeature() {
     const grid    = gridRef.current;
     const section = sectionRef.current;
     if (!grid || !section) return;
+    // Homepage embed — competes with the hero video/images for bandwidth on
+    // first paint, so only warm the couple of cards visible without scrolling.
+    // The rest lean on observeViewportModels' widened rootMargin instead.
     const stopViewportModels = observeViewportModels(grid);
     const product13Warmup = window.setTimeout(
-      () => warmCaseStudyModelCache([
-        bobbinModel, containerModel, motorCoverModel, aralditeModel, handWashModel,
-        hardDishModel, consilePipeModel, soapStandModel, foodOilCanModel,
-        dairyContainerModel, lunchBoxModel, dairySweetContainerModel,
-        dairyRoundContainerModel, rectangleContainerModel, hook20mmModel,
-        roundPipeModel, applianceTrayModel, motorFanBladeModel,
-      ]),
-      50,
+      () => warmCaseStudyModelCache([bobbinModel, containerModel, motorCoverModel]),
+      900,
     );
 
     let scrollX  = 0;
