@@ -527,33 +527,33 @@
 /* reduced motion - finished state, zero motion                        */
 /* ------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
-  .wds3 *,
-  .wds5 *,
-  .wds8 * {
+  :root:not([data-premium='on']) .wds3 *,
+  :root:not([data-premium='on']) .wds5 *,
+  :root:not([data-premium='on']) .wds8 * {
     animation: none !important;
   }
-  .wds3 .wds3-img,
-  .wds3 .wds3-copy,
-  .wds3 .wds3-labelgrp text,
-  .wds3 .wds3-limex,
-  .wds3 .wds3-dhead,
-  .wds3 .wds3-dash,
-  .wds5 .wds5-eyebrow,
-  .wds5 .wds5-photo,
-  .wds5 .wds5-reflect,
-  .wds5 .wds5-caption,
-  .wds8 .wds8-frame,
-  .wds8 .wds8-paper-glow,
-  .wds8 .wds8-haze,
-  .wds8 .wds8-dust circle {
+  :root:not([data-premium='on']) .wds3 .wds3-img,
+  :root:not([data-premium='on']) .wds3 .wds3-copy,
+  :root:not([data-premium='on']) .wds3 .wds3-labelgrp text,
+  :root:not([data-premium='on']) .wds3 .wds3-limex,
+  :root:not([data-premium='on']) .wds3 .wds3-dhead,
+  :root:not([data-premium='on']) .wds3 .wds3-dash,
+  :root:not([data-premium='on']) .wds5 .wds5-eyebrow,
+  :root:not([data-premium='on']) .wds5 .wds5-photo,
+  :root:not([data-premium='on']) .wds5 .wds5-reflect,
+  :root:not([data-premium='on']) .wds5 .wds5-caption,
+  :root:not([data-premium='on']) .wds8 .wds8-frame,
+  :root:not([data-premium='on']) .wds8 .wds8-paper-glow,
+  :root:not([data-premium='on']) .wds8 .wds8-haze,
+  :root:not([data-premium='on']) .wds8 .wds8-dust circle {
     opacity: 1;
     transform: none;
     filter: none;
   }
-  .wds5 .wds5-line > span { transform: none; }
-  .wds3 .wds3-arrow,
-  .wds8 .wds8-ring,
-  .wds8 .wds8-sweep {
+  :root:not([data-premium='on']) .wds5 .wds5-line > span { transform: none; }
+  :root:not([data-premium='on']) .wds3 .wds3-arrow,
+  :root:not([data-premium='on']) .wds8 .wds8-ring,
+  :root:not([data-premium='on']) .wds8 .wds8-sweep {
     stroke-dashoffset: 0;
   }
 }

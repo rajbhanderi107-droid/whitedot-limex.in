@@ -374,7 +374,7 @@
   transform: translateY(0);
 }
 @media (prefers-reduced-motion: reduce) {
-  .v2h-headline-accent {
+  :root:not([data-premium='on']) .v2h-headline-accent {
     opacity: 1;
     transform: none;
     transition: none;
@@ -759,27 +759,45 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .v2h-headline.v2-reveal,
-  .v2h-sub.v2-reveal,
-  .v2h-cta.v2-reveal,
-  .v2h-eco.v2-reveal,
-  .v2h-proof.v2-reveal,
-  .v2h-proof.v2-reveal .v2h-proof-kicker,
-  .v2h-proof.v2-reveal .v2h-proof-grid > div,
-  .v2h-scroll-line {
+  :root:not([data-premium='on']) .v2h-headline.v2-reveal,
+  :root:not([data-premium='on']) .v2h-sub.v2-reveal,
+  :root:not([data-premium='on']) .v2h-cta.v2-reveal,
+  :root:not([data-premium='on']) .v2h-eco.v2-reveal,
+  :root:not([data-premium='on']) .v2h-proof.v2-reveal,
+  :root:not([data-premium='on']) .v2h-proof.v2-reveal .v2h-proof-kicker,
+  :root:not([data-premium='on']) .v2h-proof.v2-reveal .v2h-proof-grid > div,
+  :root:not([data-premium='on']) .v2h-scroll-line {
     animation: none;
     opacity: 1;
     transform: none;
     filter: none;
   }
-  .v2h-proof.v2-reveal .v2h-proof-kicker {
+  :root:not([data-premium='on']) .v2h-proof.v2-reveal .v2h-proof-kicker {
     letter-spacing: var(--v2-ls-widest);
   }
-  .v2h-proof::before {
+  :root:not([data-premium='on']) .v2h-proof::before {
     transform: scaleX(1);
   }
-  .v2h-proof.is-in::after {
+  :root:not([data-premium='on']) .v2h-proof.is-in::after {
     animation: none;
+  }
+
+  /* Premium mode keeps the lightweight identity motion visible. These
+     overrides are intentionally limited to the headline, proof sheen and
+     scroll cue; the hero video remains on its native paint path. */
+  [data-premium='on'] .v2h-headline.is-in .v2h-char {
+    animation-name: v2h-char-rise;
+    animation-duration: 0.72s !important;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-delay: calc(var(--ci, 0) * 0.028s + 0.04s);
+    animation-fill-mode: both;
+    animation-iteration-count: 1 !important;
+  }
+  [data-premium='on'] .v2h-proof.is-in::after {
+    animation: v2h-proof-sheen 1.4s var(--v2-ease-out) 1.25s 1 both !important;
+  }
+  [data-premium='on'] .v2h-scroll-line {
+    animation: v2h-pulse 2s ease-in-out infinite !important;
   }
 }
 

@@ -454,8 +454,16 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .v2ap-card { opacity: 1; transform: none; transition: none; }
-  .v2ap-industry-icon * { animation: none !important; }
+  :root:not([data-premium='on']) .v2ap-card { opacity: 1; transform: none; transition: none; }
+
+  /* Keep the small, viewport-scoped product icons alive in premium mode.
+     Offscreen cards still lose .is-animating, so this does not create
+     background animation work. */
+  [data-premium='on'] .v2ap-card.is-animating .v2ap-industry-icon * {
+    animation-duration: 1.9s !important;
+    animation-iteration-count: infinite !important;
+    animation-play-state: running !important;
+  }
 }
 
 @media (max-width: 767px) {

@@ -616,10 +616,9 @@ html, body {
   opacity: 1;
 }
 
-/* Heavy reveal motion ONLY when premium on AND motion allowed.
-   Default (no premium / reduced motion / SSR) => content is visible,
-   no transform — CLS-safe, never hidden behind JS. */
-@media (prefers-reduced-motion: no-preference) {
+/* Lightweight reveal motion follows premium mode. Heavy parallax and grain
+   remain independently gated below. */
+@media (min-width: 768px) {
   [data-premium='on'] .v2-reveal {
     opacity: 0;
     transform: translate3d(0, 18px, 0);
@@ -677,12 +676,19 @@ html, body {
 }
 
 /* ------------------------------------------------------------------ */
-/* REDUCED MOTION — kill all non-essential motion                     */
+/* REDUCED MOTION — simple mode stays static. Premium homepage motion
+   stays enabled by owner policy; case-study content remains static. */
 /* ------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
-  .v2-root *,
-  .v2-root *::before,
-  .v2-root *::after {
+  :root:not([data-premium='on']) .v2-root *,
+  :root:not([data-premium='on']) .v2-root *::before,
+  :root:not([data-premium='on']) .v2-root *::after,
+  :root[data-premium='on'] .v2-root .csp-main,
+  :root[data-premium='on'] .v2-root .csp-main *,
+  :root[data-premium='on'] .v2-root .csp-main::before,
+  :root[data-premium='on'] .v2-root .csp-main::after,
+  :root[data-premium='on'] .v2-root .csp-main *::before,
+  :root[data-premium='on'] .v2-root .csp-main *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
@@ -691,8 +697,10 @@ html, body {
   .v2-grain-field {
     display: none !important;
   }
-  .v2-reveal,
-  .v2-reveal-group > * {
+  :root:not([data-premium='on']) .v2-reveal,
+  :root:not([data-premium='on']) .v2-reveal-group > *,
+  :root[data-premium='on'] .csp-main .v2-reveal,
+  :root[data-premium='on'] .csp-main .v2-reveal-group > * {
     opacity: 1 !important;
     transform: none !important;
   }

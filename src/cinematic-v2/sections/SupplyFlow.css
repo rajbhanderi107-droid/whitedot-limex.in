@@ -172,6 +172,12 @@
   height: 14px;
   color: rgba(79,154,53,0.55);
   flex-shrink: 0;
+  animation: v2sf-arrow-breathe 2s ease-in-out infinite;
+}
+
+@keyframes v2sf-arrow-breathe {
+  0%, 100% { opacity: 0.48; filter: drop-shadow(0 0 0 rgba(79,154,53,0)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 5px rgba(79,154,53,0.8)); }
 }
 
 /* ── Reveal ─────────────────────────────────────────────── */
@@ -233,7 +239,32 @@
 
 /* ── Reduced motion ─────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .v2sf .v2-reveal-group > * { opacity: 1; transform: none; transition: none; }
-  .v2sf-orb                  { animation: none; opacity: 0.6; left: 50%; }
-  .v2sf-node                 { transition: none; }
+  :root:not([data-premium='on']) .v2sf .v2-reveal-group > * { opacity: 1; transform: none; transition: none; }
+  :root:not([data-premium='on']) .v2sf-orb { animation: none; opacity: 0.6; left: 50%; }
+  :root:not([data-premium='on']) .v2sf-node { transition: none; }
+
+  /* The premium experience intentionally keeps these tiny brand signals
+     alive even when the OS requests reduced page motion. They are isolated
+     transform/opacity SVG effects and do not re-enable video compositing. */
+  [data-premium='on'] .v2sf-orb {
+    left: 12px;
+    animation-name: v2sf-sweep;
+    animation-duration: 2s !important;
+    animation-iteration-count: infinite !important;
+    animation-play-state: running !important;
+  }
+  [data-premium='on'] .v2sf-arrow {
+    animation-name: v2sf-arrow-breathe;
+    animation-duration: 2s !important;
+    animation-iteration-count: infinite !important;
+    animation-play-state: running !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (max-width: 767px) {
+  [data-premium='on'] .v2sf-orb {
+    left: 50%;
+    top: 0;
+    animation-name: v2sf-sweep-v;
+  }
 }

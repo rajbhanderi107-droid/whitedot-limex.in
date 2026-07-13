@@ -133,8 +133,8 @@
 .v2-reveal-group.is-in .v2m-prop { opacity: 1; transform: none; }
 
 @media (prefers-reduced-motion: reduce) {
-  .v2m-prop { opacity: 1; transform: none; transition: none; }
-  .v2m-prop:hover { transform: none; }
+  :root:not([data-premium='on']) .v2m-prop { opacity: 1; transform: none; transition: none; }
+  :root:not([data-premium='on']) .v2m-prop:hover { transform: none; }
 }
 
 @media (max-width: 767px) {

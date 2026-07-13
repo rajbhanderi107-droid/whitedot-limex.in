@@ -62,10 +62,10 @@ export function heavyMotionAllowed(): boolean {
   return isPremiumOn() && !prefersReducedMotion() && !isMobile();
 }
 
-/** Light reveal allowed: premium on, motion not reduced (any width — CSS
- *  disables on mobile anyway). */
+/** Light reveal allowed in premium mode; CSS keeps mobile and case-study
+ *  presentation static while heavy effects remain reduced-motion gated. */
 export function revealMotionAllowed(): boolean {
-  return isPremiumOn() && !prefersReducedMotion();
+  return isPremiumOn();
 }
 
 /* ================================================================== */

@@ -142,8 +142,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .v2ld .v2-reveal,
-  .v2ld .v2-reveal-group > * {
+  :root:not([data-premium='on']) .v2ld .v2-reveal,
+  :root:not([data-premium='on']) .v2ld .v2-reveal-group > * {
     opacity: 1;
     transform: none;
     transition: none;
@@ -214,7 +214,7 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .v2ld-block--compat {
+  :root:not([data-premium='on']) .v2ld-block--compat {
     transition: none !important;
     transform: none !important;
   }

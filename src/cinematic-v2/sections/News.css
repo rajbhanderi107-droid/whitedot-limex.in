@@ -278,8 +278,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .v2news-category,
-  .v2news-item {
+  :root:not([data-premium='on']) .v2news-category,
+  :root:not([data-premium='on']) .v2news-item {
     transition: none;
   }
 }

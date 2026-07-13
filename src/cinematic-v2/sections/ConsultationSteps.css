@@ -71,7 +71,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .v2cs .v2-reveal-group > * {
+  :root:not([data-premium='on']) .v2cs .v2-reveal-group > * {
     opacity: 1;
     transform: none;
     transition: none;

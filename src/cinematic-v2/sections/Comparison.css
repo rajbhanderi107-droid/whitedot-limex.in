@@ -226,9 +226,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .v2cmp .v2-reveal { opacity: 1; transform: none; transition: none; }
-  .v2cmp-rows { animation: none; }
-  .v2cmp-row { animation: none; }
-  .v2cmp-visual img,
-  .v2cmp-visual::before { animation: none; }
+  :root:not([data-premium='on']) .v2cmp .v2-reveal { opacity: 1; transform: none; transition: none; }
+  :root:not([data-premium='on']) .v2cmp-rows { animation: none; }
+  :root:not([data-premium='on']) .v2cmp-row { animation: none; }
+  :root:not([data-premium='on']) .v2cmp-visual img,
+  :root:not([data-premium='on']) .v2cmp-visual::before { animation: none; }
 }

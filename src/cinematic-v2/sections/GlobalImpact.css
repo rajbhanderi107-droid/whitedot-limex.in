@@ -163,11 +163,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .v2gi-bg,
-  .v2gi::before {
+  :root:not([data-premium='on']) .v2gi-bg,
+  :root:not([data-premium='on']) .v2gi::before {
     animation: none;
   }
-  .v2gi-inner .v2-reveal {
+  :root:not([data-premium='on']) .v2gi-inner .v2-reveal {
     opacity: 1;
     transform: none;
     transition: none;

@@ -85,8 +85,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .v2sc::before, .v2ap::before, .v2con::before,
-  .v2sc::after,  .v2ap::after,  .v2con::after {
+  :root:not([data-premium='on']) .v2sc::before,
+  :root:not([data-premium='on']) .v2ap::before,
+  :root:not([data-premium='on']) .v2con::before,
+  :root:not([data-premium='on']) .v2sc::after,
+  :root:not([data-premium='on']) .v2ap::after,
+  :root:not([data-premium='on']) .v2con::after {
     animation: none !important;
   }
 }
