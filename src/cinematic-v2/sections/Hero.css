@@ -106,24 +106,9 @@
   object-fit: cover;
   object-position: 64% center;
   opacity: 1;
-  /* GPU promotion only — no scale, no filter (both degrade 4K sharpness via resampling) */
-  transform: translate3d(0, 0, 0);
-  will-change: transform;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-/* Slow Ken Burns on the hero media — premium desktop only.
-   Gentle range (1.008 → 1.04) keeps the 4K frame sharp instead of upscaling it. */
-@media (prefers-reduced-motion: no-preference) and (min-width: 768px) {
-  [data-premium='on'] .v2h-higgsfield-video {
-    animation: v2h-kenburns 42s var(--v2-ease-in-out) infinite alternate;
-    will-change: transform;
-  }
-}
-@keyframes v2h-kenburns {
-  from { transform: translate3d(0, 0, 0) scale(1); }
-  to   { transform: translate3d(-0.6%, -0.4%, 0) scale(1.032); }
+  /* Let the browser choose the native video paint path. Forcing a transformed
+     GPU layer here caused black frames on some drivers and added a second
+     per-frame composition pass on top of video decoding. */
 }
 
 .v2h-environment::before {

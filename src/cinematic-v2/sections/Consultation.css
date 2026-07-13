@@ -59,8 +59,10 @@
   height: 100%;
   object-fit: cover;
   object-position: center 64%;
-  transform: scale(1.02);
-  filter: saturate(0.95) contrast(1.03) brightness(1.02);
+  /* Keep decoded frames on the browser's native video paint path. CSS
+     transforms and filters promote video to an extra compositor surface,
+     which can render black on unstable GPU drivers and costs a full-frame
+     filter pass on every frame. */
 }
 
 .v2con-visual::before {
@@ -194,9 +196,4 @@
 @media (max-width: 639px) {
   .v2con-aside { flex-direction: column; }
   .v2con-card { flex: unset; }
-  .v2con-visual video { transform: scale(1.08); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .v2con-visual video { transform: scale(1.02); }
 }

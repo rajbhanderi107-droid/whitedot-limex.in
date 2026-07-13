@@ -46,7 +46,6 @@
   inset: 0;
   overflow: hidden;
   background: var(--v2-canvas-sunken);
-  will-change: transform;
 }
 
 .v2story__poster,
