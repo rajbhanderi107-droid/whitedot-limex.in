@@ -88,7 +88,9 @@
   width: 100%;
   pointer-events: none;
   z-index: 0;
-  background: var(--v2-canvas);
+  background-color: var(--v2-canvas);
+  background-size: cover;
+  background-position: 64% center;
   overflow: hidden;
 }
 

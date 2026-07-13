@@ -44,8 +44,16 @@ export default function Hero() {
 
   return (
     <section className="v2h" aria-label="Hero">
-      {/* Limestone hero loop — white-bg stone, edges feathered into the dark canvas */}
-      <div className="v2h-environment" aria-hidden="true">
+      {/* Limestone hero loop — white-bg stone, edges feathered into the dark canvas.
+          backgroundImage is a real fallback layer, not just <video poster>: if the
+          <video> ever fails to paint (GPU/driver hiccup, decode error, autoplay
+          blocked on some device), this still shows the intended shot instead of
+          the flat --v2-canvas fill underneath. */}
+      <div
+        className="v2h-environment"
+        aria-hidden="true"
+        style={{ backgroundImage: `url(${heroPosterSrc})` }}
+      >
         <video
           ref={videoRef}
           className="v2h-higgsfield-video"
