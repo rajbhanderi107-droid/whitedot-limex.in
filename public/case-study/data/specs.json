@@ -988,6 +988,28 @@
         { "label": "Model Asset", "value": "round-pipe-procedural.glb", "source": "White Dot case-study model asset", "verified": true },
         { "label": "Composition", "value": "Not published; supplier formulation not verified", "source": "Pending approved LIMEX documentation", "verified": false }
       ]
+    },
+    "motorFanBlade": {
+      "id": "motorFanBlade",
+      "index": "18",
+      "name": "Motor Fan Blade",
+      "category": "Motor Component",
+      "status": "live",
+      "application": "12-blade industrial motor impeller / fan blade",
+      "tagline": "A blueprint-matched 12-blade industrial impeller reconstructed as an interactive 3D visual reference. Supplier formulation and LIMEX composition remain unpublished until verified.",
+      "description": "An interactive 3D visual reference for the Motor Fan Blade case study — a one-piece molded 12-blade radial impeller with an 88 mm diameter baseplate, a central hub carrying a 10 mm shaft bore and set-screw provision, and 12 curved blades rising 13.2 mm off the baseplate. No LIMEX composition, CO2, supplier, or performance figures are claimed until supported by approved technical documentation.",
+      "highlights": [
+        { "num": "3D", "label": "Interactive Model", "source": "White Dot Motor Fan Blade visual reference", "verified": true },
+        { "num": "12", "label": "Radial Blades", "source": "White Dot Motor Fan Blade visual reference", "verified": true },
+        { "num": "Pending", "label": "Verified Specs", "source": "Supplier TDS / approved product sheet", "verified": false }
+      ],
+      "specs": [
+        { "label": "Baseplate Diameter", "value": "88 mm nominal", "source": "White Dot 3D visual reference", "verified": true },
+        { "label": "Blade Crown Height", "value": "13.2 mm above baseplate", "source": "White Dot 3D visual reference", "verified": true },
+        { "label": "Overall Envelope", "value": "120.005 mm x 120.005 mm x 19.516 mm", "source": "White Dot 3D visual reference", "verified": true },
+        { "label": "Hub / Bore", "value": "Central hub with 10 mm shaft bore and set-screw provision", "source": "White Dot 3D visual reference", "verified": true },
+        { "label": "Composition", "value": "Not published; supplier formulation not verified", "source": "Pending approved LIMEX documentation", "verified": false }
+      ]
     }
   }
 }
