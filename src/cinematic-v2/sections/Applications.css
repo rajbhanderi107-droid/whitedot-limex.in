@@ -86,147 +86,177 @@
   opacity: 0.9;
 }
 
+.v2ap-card.is-animating .ia-pack-flap,
 .v2ap-card:hover .ia-pack-flap,
 .v2ap-card:focus-within .ia-pack-flap {
   animation: ia-flap-land 1.9s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
   transform-origin: 58px 36px;
 }
 
+.v2ap-card.is-animating .ia-pack-box,
 .v2ap-card:hover .ia-pack-box,
 .v2ap-card:focus-within .ia-pack-box {
   animation: ia-box-squash 1.9s cubic-bezier(0.22, 1, 0.36, 1) infinite;
   transform-origin: 58px 76px;
 }
 
+.v2ap-card.is-animating .ia-paper-top,
 .v2ap-card:hover .ia-paper-top,
 .v2ap-card:focus-within .ia-paper-top {
   animation: ia-sheet-slide 2.1s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
 }
 
+.v2ap-card.is-animating .ia-paper-low,
 .v2ap-card:hover .ia-paper-low,
 .v2ap-card:focus-within .ia-paper-low {
   animation: ia-sheet-dip 2.1s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
+.v2ap-card.is-animating .ia-ink,
 .v2ap-card:hover .ia-ink,
 .v2ap-card:focus-within .ia-ink {
   stroke-dasharray: 72;
   animation: ia-write-line 2.1s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
+.v2ap-card.is-animating .ia-ram,
 .v2ap-card:hover .ia-ram,
 .v2ap-card:focus-within .ia-ram {
   animation: ia-ram-press 1.7s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 
+.v2ap-card.is-animating .ia-melt,
 .v2ap-card:hover .ia-melt,
 .v2ap-card:focus-within .ia-melt {
   animation: ia-melt-drop 1.7s cubic-bezier(0.22, 1, 0.36, 1) infinite;
   transform-origin: 58px 39px;
 }
 
+.v2ap-card.is-animating .ia-fill,
 .v2ap-card:hover .ia-fill,
 .v2ap-card:focus-within .ia-fill {
   stroke-dasharray: 32;
   animation: ia-fill-line 1.7s ease-in-out infinite;
 }
 
+.v2ap-card.is-animating .ia-store-awning,
 .v2ap-card:hover .ia-store-awning,
 .v2ap-card:focus-within .ia-store-awning {
   animation: ia-awning-open 2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
   transform-origin: 58px 36px;
 }
 
+.v2ap-card.is-animating .ia-door,
 .v2ap-card:hover .ia-door,
 .v2ap-card:focus-within .ia-door {
   animation: ia-door-open 2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
   transform-origin: 41px 67px;
 }
 
+.v2ap-card.is-animating .ia-dot-pop,
 .v2ap-card:hover .ia-dot-pop,
 .v2ap-card:focus-within .ia-dot-pop,
+.v2ap-card.is-animating .ia-product-pop,
 .v2ap-card:hover .ia-product-pop,
 .v2ap-card:focus-within .ia-product-pop {
   animation: ia-pop-out 1.9s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
   transform-origin: center;
 }
 
+.v2ap-card.is-animating .ia-sheet-1,
 .v2ap-card:hover .ia-sheet-1,
 .v2ap-card:focus-within .ia-sheet-1 {
   animation: ia-top-sheet-return 2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
 }
 
+.v2ap-card.is-animating .ia-sheet-2,
 .v2ap-card:hover .ia-sheet-2,
 .v2ap-card:focus-within .ia-sheet-2,
+.v2ap-card.is-animating .ia-sheet-3,
 .v2ap-card:hover .ia-sheet-3,
 .v2ap-card:focus-within .ia-sheet-3 {
   animation: ia-lower-sheet-dip 2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
+.v2ap-card.is-animating .ia-mold-open-left,
 .v2ap-card:hover .ia-mold-open-left,
 .v2ap-card:focus-within .ia-mold-open-left {
   animation: ia-mold-left 1.9s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
 }
 
+.v2ap-card.is-animating .ia-mold-open-right,
 .v2ap-card:hover .ia-mold-open-right,
 .v2ap-card:focus-within .ia-mold-open-right {
   animation: ia-mold-right 1.9s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
 }
 
+.v2ap-card.is-animating .ia-gift-lid,
 .v2ap-card:hover .ia-gift-lid,
 .v2ap-card:focus-within .ia-gift-lid {
   animation: ia-lid-settle 2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
 }
 
+.v2ap-card.is-animating .ia-bow-left,
 .v2ap-card:hover .ia-bow-left,
 .v2ap-card:focus-within .ia-bow-left,
+.v2ap-card.is-animating .ia-bow-right,
 .v2ap-card:hover .ia-bow-right,
 .v2ap-card:focus-within .ia-bow-right {
   animation: ia-bow-follow 2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
   transform-origin: 58px 33px;
 }
 
+.v2ap-card.is-animating .ia-steam,
 .v2ap-card:hover .ia-steam,
 .v2ap-card:focus-within .ia-steam {
   animation: ia-steam-rise 2.3s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
+.v2ap-card.is-animating .ia-steam-2,
 .v2ap-card:hover .ia-steam-2,
 .v2ap-card:focus-within .ia-steam-2 { animation-delay: 0.18s; }
+.v2ap-card.is-animating .ia-steam-3,
 .v2ap-card:hover .ia-steam-3,
 .v2ap-card:focus-within .ia-steam-3 { animation-delay: 0.36s; }
 
+.v2ap-card.is-animating .ia-lid,
 .v2ap-card:hover .ia-lid,
 .v2ap-card:focus-within .ia-lid {
   animation: ia-lid-settle 2.3s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
 }
 
+.v2ap-card.is-animating .ia-shuttle,
 .v2ap-card:hover .ia-shuttle,
 .v2ap-card:focus-within .ia-shuttle {
   animation: ia-shuttle-run 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 
+.v2ap-card.is-animating .ia-sack,
 .v2ap-card:hover .ia-sack,
 .v2ap-card:focus-within .ia-sack {
   animation: ia-sack-breathe 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
   transform-origin: 58px 84px;
 }
 
+.v2ap-card.is-animating .ia-fmcg-bottle,
 .v2ap-card:hover .ia-fmcg-bottle,
 .v2ap-card:focus-within .ia-fmcg-bottle {
   animation: ia-fmcg-bob 1.9s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
   transform-origin: 39px 78px;
 }
+.v2ap-card.is-animating .ia-fmcg-tube,
 .v2ap-card:hover .ia-fmcg-tube,
 .v2ap-card:focus-within .ia-fmcg-tube {
   animation: ia-fmcg-bob 1.9s cubic-bezier(0.34, 1.56, 0.64, 1) infinite 0.18s;
   transform-origin: 59px 79px;
 }
+.v2ap-card.is-animating .ia-fmcg-box,
 .v2ap-card:hover .ia-fmcg-box,
 .v2ap-card:focus-within .ia-fmcg-box {
   animation: ia-fmcg-bob 1.9s cubic-bezier(0.34, 1.56, 0.64, 1) infinite 0.36s;
   transform-origin: 80px 79px;
 }
+.v2ap-card.is-animating .ia-fmcg-spark,
 .v2ap-card:hover .ia-fmcg-spark,
 .v2ap-card:focus-within .ia-fmcg-spark {
   animation: ia-pop-out 1.9s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;

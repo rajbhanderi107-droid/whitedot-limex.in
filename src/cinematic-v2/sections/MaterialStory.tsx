@@ -439,6 +439,7 @@ export default function MaterialStory() {
                         videoRefs.current[i] = el;
                       }}
                       poster={poster}
+                      autoPlay={i === active}
                       muted
                       loop
                       playsInline

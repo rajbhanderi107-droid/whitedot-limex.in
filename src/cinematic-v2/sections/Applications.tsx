@@ -1,4 +1,5 @@
 import './Applications.css';
+import { useEffect } from 'react';
 import { useReveal, useStaggerGroup } from '../motion';
 import IndustryAnimatedIcon, { type IndustryIconName } from './IndustryAnimatedIcons';
 
@@ -73,6 +74,30 @@ const SECTORS = [
 export default function Applications() {
   const headline = useReveal<HTMLDivElement>();
   const cards = useStaggerGroup<HTMLDivElement>();
+
+  useEffect(() => {
+    const grid = cards.ref.current;
+    if (!grid) return;
+
+    const cardElements = Array.from(grid.querySelectorAll<HTMLElement>('.v2ap-card'));
+
+    if (typeof IntersectionObserver === 'undefined') {
+      cardElements.forEach((card) => card.classList.add('is-animating'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          entry.target.classList.toggle('is-animating', entry.isIntersecting);
+        });
+      },
+      { threshold: 0.35 },
+    );
+
+    cardElements.forEach((card) => observer.observe(card));
+    return () => observer.disconnect();
+  }, [cards.ref]);
 
   return (
     <section className="v2ap v2-bg-light" id="applications">
