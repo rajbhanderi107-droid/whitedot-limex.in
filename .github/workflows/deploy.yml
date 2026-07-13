@@ -14,9 +14,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: '20'
           cache: 'npm'
@@ -28,44 +28,65 @@ jobs:
           npm ci
           npm run build
 
-      - name: Upload dist to Hostinger VPS staging dir
-        id: upload_primary
-        continue-on-error: true
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: root
-          key: ${{ secrets.VPS_SSH_KEY }}
-          source: "dist/"
-          target: "/var/www/whitedot-frontend-new"
-          strip_components: 1
-          timeout: 60s
-          command_timeout: 10m
-          rm: true
+      - name: Configure VPS SSH
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/whitedot_deploy
+          chmod 600 ~/.ssh/whitedot_deploy
+          for attempt in 1 2 3; do
+            ssh-keyscan -T 10 -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null && break
+            sleep 3
+          done
+          test -s ~/.ssh/known_hosts
 
-      - name: Retry Hostinger upload after connection timeout
-        if: steps.upload_primary.outcome == 'failure'
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: root
-          key: ${{ secrets.VPS_SSH_KEY }}
-          source: "dist/"
-          target: "/var/www/whitedot-frontend-new"
-          strip_components: 1
-          timeout: 60s
-          command_timeout: 10m
-          rm: true
+      - name: Prepare atomic VPS staging dir
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          ssh -i ~/.ssh/whitedot_deploy -o ConnectTimeout=30 root@"$VPS_HOST" '
+            set -e
+            command -v rsync >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq rsync)
+            rm -rf /var/www/whitedot-frontend-new
+            mkdir -p /var/www/whitedot-frontend-new
+            if [ -d /var/www/whitedot-frontend ]; then
+              cp -al /var/www/whitedot-frontend/. /var/www/whitedot-frontend-new/
+            fi
+          '
+
+      - name: Incrementally sync changed frontend files
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          for attempt in 1 2; do
+            rsync -a --checksum --delete --delay-updates --partial --stats \
+              -e "ssh -i ~/.ssh/whitedot_deploy -o ConnectTimeout=30" \
+              dist/ root@"$VPS_HOST":/var/www/whitedot-frontend-new/ && exit 0
+            sleep 5
+          done
+          exit 1
 
       - name: Atomic swap + nginx reload
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: root
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          ssh -i ~/.ssh/whitedot_deploy -o ConnectTimeout=30 root@"$VPS_HOST" '
             set -e
-            rm -rf /var/www/whitedot-frontend
+            test -s /var/www/whitedot-frontend-new/index.html
+            nginx -t
+            rm -rf /var/www/whitedot-frontend-previous
+            if [ -d /var/www/whitedot-frontend ]; then
+              mv /var/www/whitedot-frontend /var/www/whitedot-frontend-previous
+            fi
             mv /var/www/whitedot-frontend-new /var/www/whitedot-frontend
-            nginx -t && systemctl reload nginx
+            if ! systemctl reload nginx; then
+              rm -rf /var/www/whitedot-frontend
+              mv /var/www/whitedot-frontend-previous /var/www/whitedot-frontend
+              systemctl reload nginx || true
+              exit 1
+            fi
+            rm -rf /var/www/whitedot-frontend-previous
             echo "Deployed: $(date)"
+          '
