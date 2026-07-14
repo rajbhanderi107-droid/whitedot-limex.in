@@ -26,7 +26,7 @@ const wordmarkGroup = {
 };
 const letterVariant = {
   hidden: { opacity: 0, y: 8 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.16, 1, 0.3, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.16, 1, 0.3, 1] as const } },
 };
 
 export default function Nav() {
@@ -149,7 +149,7 @@ export default function Nav() {
               className="v2nav-tagline"
               initial={playIntro ? { opacity: 0, y: 4 } : false}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1], delay: 0.95 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const, delay: 0.95 }}
             >
               by Seven Dot
             </fm.span>
