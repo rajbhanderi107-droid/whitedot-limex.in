@@ -76,7 +76,10 @@ export default function Nav() {
           onClick={() => { forceAdminLogin(); closeMenu(); }}
         >
           <img className="v2nav-logo" src={brandLogo} alt="WhiteDot logo" width={30} height={30} decoding="async" />
-          <span className="v2nav-wordmark">WhiteDot</span>
+          <span className="v2nav-brand-text">
+            <span className="v2nav-wordmark">WhiteDot</span>
+            <span className="v2nav-tagline">by Seven Dot</span>
+          </span>
         </a>
 
         <nav className="v2nav-links" aria-label="Primary navigation">

@@ -51,6 +51,12 @@
   flex-shrink: 0;
 }
 
+.v2nav-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
 .v2nav-wordmark {
   font-family: var(--v2-font-serif);
   font-size: 1.15rem;
@@ -59,8 +65,17 @@
   letter-spacing: 0.01em;
 }
 
+.v2nav-tagline {
+  font-family: var(--v2-font-sans);
+  font-size: 0.68rem;
+  font-weight: var(--v2-fw-regular);
+  color: var(--v2-text-muted);
+  letter-spacing: 0.01em;
+}
+
 @media (max-width: 600px) {
   .v2nav-logo { width: 26px; height: 26px; }
+  .v2nav-tagline { font-size: 0.6rem; }
 }
 
 /* Desktop links */
