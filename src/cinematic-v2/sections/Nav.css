@@ -43,12 +43,31 @@
   flex-shrink: 0;
 }
 
+.v2nav-logo-wrap {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
 .v2nav-logo {
   width: 30px;
   height: 30px;
   object-fit: contain;
   display: block;
   flex-shrink: 0;
+}
+
+.v2nav-sparkle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  margin: -1.5px 0 0 -1.5px;
+  border-radius: 50%;
+  background: var(--v2-accent);
+  box-shadow: 0 0 6px 1px rgba(79, 154, 53, 0.8);
+  pointer-events: none;
 }
 
 .v2nav-brand-text {

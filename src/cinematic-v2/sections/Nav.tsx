@@ -24,10 +24,26 @@ const wordmarkGroup = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.035, delayChildren: 0.58 } },
 };
+// Aceternity "text generate effect" style — blur-in, not just fade+slide.
 const letterVariant = {
-  hidden: { opacity: 0, y: 8 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.16, 1, 0.3, 1] as const } },
+  hidden: { opacity: 0, y: 8, filter: 'blur(6px)' },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { duration: 0.32, ease: [0.16, 1, 0.3, 1] as const },
+  },
 };
+
+// Sparkle burst around the icon — fixed positions so it's deterministic (no hydration drift).
+const SPARKLES = [
+  { x: -16, y: -10, delay: 0.02 },
+  { x: 14, y: -14, delay: 0.08 },
+  { x: 20, y: 4, delay: 0.14 },
+  { x: -20, y: 6, delay: 0.05 },
+  { x: 8, y: 18, delay: 0.11 },
+  { x: -8, y: 16, delay: 0.17 },
+] as const;
 
 export default function Nav() {
   const brandLogo = useBrandLogo();
@@ -123,15 +139,26 @@ export default function Nav() {
           rel="noreferrer"
           onClick={() => { forceAdminLogin(); closeMenu(); }}
         >
-          <img
-            ref={logoIconRef}
-            className="v2nav-logo"
-            src={brandLogo}
-            alt="WhiteDot logo"
-            width={30}
-            height={30}
-            decoding="async"
-          />
+          <span className="v2nav-logo-wrap">
+            <img
+              ref={logoIconRef}
+              className="v2nav-logo"
+              src={brandLogo}
+              alt="WhiteDot logo"
+              width={30}
+              height={30}
+              decoding="async"
+            />
+            {playIntro && SPARKLES.map((s, i) => (
+              <fm.span
+                key={i}
+                className="v2nav-sparkle"
+                initial={{ opacity: 0, x: 0, y: 0, scale: 0 }}
+                animate={{ opacity: [0, 1, 0], x: s.x, y: s.y, scale: [0, 1, 0.4] }}
+                transition={{ duration: 0.9, delay: 0.15 + s.delay, ease: 'easeOut' }}
+              />
+            ))}
+          </span>
           <span className="v2nav-brand-text">
             <fm.span
               className="v2nav-wordmark"
