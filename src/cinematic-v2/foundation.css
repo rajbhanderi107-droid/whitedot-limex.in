@@ -63,10 +63,11 @@ html, body {
   --v2-hairline-strong: 1px solid rgba(255, 255, 255, 0.20);
   --v2-border-on-light: 1px solid rgba(0, 0, 0, 0.12);
 
-  /* type families — English-native Inter primary, Noto Sans JP fallback only */
-  --v2-font-serif: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
-  --v2-font-sans: 'Inter', 'Noto Sans JP', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --v2-font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+  /* One type family across the public LIMEX experience. */
+  --v2-font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --v2-font-serif: var(--v2-font-family);
+  --v2-font-sans: var(--v2-font-family);
+  --v2-font-mono: var(--v2-font-family);
 
   /* weights */
   --v2-fw-light: 300;
@@ -159,6 +160,12 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   font-feature-settings: 'kern' 1, 'liga' 1;
+}
+
+/* Keep inline LIMEX/TBM labels in the same family as the surrounding page. */
+.v2-root .wd-limex,
+.v2-root .wd-tbm {
+  font-family: var(--v2-font-family);
 }
 
 /* ------------------------------------------------------------------ */
