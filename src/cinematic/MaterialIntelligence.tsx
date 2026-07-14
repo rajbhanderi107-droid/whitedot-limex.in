@@ -8,7 +8,7 @@ import { usePremium } from "../premium-wd";
 const LimexOrb = lazy(() => import("./LimexOrb"));
 
 const leftLabels = [
-  { t: "Mineral composition", d: "50%+ calcium carbonate (CaCO₃), formed from captured CO₂." },
+  { t: "Mineral composition", d: "50%+ calcium carbonate (CaCO₃), derived from limestone." },
   { t: "Reduced plastic dependency", d: "Replaces a large share of petroleum-based plastic in the blend." },
   { t: "Sustainability value", d: "Lower carbon footprint with practical recycling pathways." },
 ];
@@ -41,8 +41,8 @@ export function MaterialIntelligence() {
         <span className="cine-kicker">LIMEX Material Intelligence</span>
         <h2>Half laboratory. Half future material.</h2>
         <p className="lead">
-          A CO₂-based material engineered to behave like plastic on the production line —
-          while quietly using far less of it.
+          LIMEX is built on limestone-derived calcium carbonate supplied
+          through TBM and engineered for practical industrial use.
         </p>
       </div>
 

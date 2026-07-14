@@ -1,7 +1,7 @@
 // START: Claude Mythos Premium Ad Showcase Section
 //
 // This file previously rendered the 4-stage scroll-pinned "Material Core"
-// narrative (whose first stage was titled "Born from CO₂"). It has been
+// narrative (whose first stage described the limestone-derived foundation). It has been
 // replaced with a single-screen premium ad showcase intended to host the
 // future Whitedot LIMEX launch film.
 //
@@ -87,7 +87,7 @@ export function MaterialCore() {
             Watch the Future of Sustainable Materials
           </h2>
           <p className="cine-showcase-sub">
-            A cinematic look at how carbon innovation becomes premium material possibility.
+            A cinematic look at how limestone-derived mineral technology becomes a practical material possibility.
           </p>
         </motion.header>
 
@@ -174,7 +174,7 @@ export function MaterialCore() {
           animate={enter.animate}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: reduce ? 0 : 0.24 }}
         >
-          From captured carbon to next-generation material innovation.
+          From limestone-derived mineral technology to next-generation material applications.
         </motion.p>
       </div>
     </section>

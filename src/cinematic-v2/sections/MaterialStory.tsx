@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { SceneScience, SceneImpact } from './StoryScenes';
 
 /* ---------------------------------------------------------------------------
-   MaterialStory — the "Born from CO₂" film (cinematic-v2).
+   MaterialStory — the limestone-to-industry film (cinematic-v2).
    ---------------------------------------------------------------------------
    8 full-bleed video scenes, all stacked on ONE fixed-height section,
    crossfading every 15s. No separate pages, no GSAP scroll-scrub.
@@ -408,7 +408,7 @@ export default function MaterialStory() {
       className="v2story"
       id="material"
       ref={rootRef}
-      aria-label="LIMEX material story — born from CO₂"
+      aria-label="LIMEX material story — from limestone to industry"
     >
       <div className="v2story__viewport" ref={viewportRef}>
         {SCENE_IDS.map((n, i) => {
@@ -453,6 +453,19 @@ export default function MaterialStory() {
                   </>
                 )}
               </div>
+              {i === 0 && (
+                <div className="v2story__opening-copy">
+                  <p className="v2story__opening-eyebrow">LIMEX Material Intelligence</p>
+                  <h2 className="v2story__opening-title">
+                    Rooted in limestone.<br />
+                    Built for industry.
+                  </h2>
+                  <p className="v2story__opening-lead">
+                    LIMEX is built on limestone-derived calcium carbonate
+                    supplied through TBM and engineered for practical industrial use.
+                  </p>
+                </div>
+              )}
             </article>
           );
         })}

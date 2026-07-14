@@ -15,8 +15,8 @@ export default function Showcase() {
             Watch the Future of Sustainable Materials
           </h2>
           <p className="v2sc-sub">
-            A cinematic look at how carbon innovation becomes premium material
-            possibility.
+            A cinematic look at how limestone-derived mineral technology becomes
+            a practical material possibility.
           </p>
         </div>
 
@@ -45,7 +45,7 @@ export default function Showcase() {
         </div>
 
         <p className="v2sc-caption v2-reveal" ref={caption.ref}>
-          From captured carbon to next-generation material innovation.
+          From limestone-derived mineral technology to next-generation material applications.
         </p>
       </div>
     </section>

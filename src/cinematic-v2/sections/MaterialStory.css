@@ -1,7 +1,7 @@
 /* =====================================================================
-   MaterialStory — "Born from CO₂" film (cinematic-v2)
+   MaterialStory — limestone-to-industry film (cinematic-v2)
    ---------------------------------------------------------------------
-   Pure film: 8 full-bleed video scenes, no text overlays, one fixed-height
+   Eight full-bleed video scenes with a corrective opening copy layer, one fixed-height
    section. Scenes overlap absolutely and crossfade automatically on a
    timer (see MaterialStory.tsx) — no scroll-jacking, no separate pages.
    All motion is opacity only.
@@ -66,6 +66,57 @@
      decoded frames, so the poster shows through with no fade flicker. */
 }
 
+/* Scene 1's original film contains outdated CO2-origin copy baked into the
+   pixels. This live layer masks that copy while preserving the limestone film
+   and gives the material story accurate, selectable text. */
+.v2story__opening-copy {
+  position: absolute;
+  z-index: 4;
+  inset: 0 auto 0 0;
+  width: min(58vw, 70rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(5.5rem, 10vh, 8rem) clamp(2rem, 5.7vw, 7rem);
+  color: #202322;
+  background: linear-gradient(
+    90deg,
+    #f5f2eb 0%,
+    #f5f2eb 78%,
+    rgba(245, 242, 235, 0.97) 88%,
+    rgba(245, 242, 235, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.v2story__opening-eyebrow {
+  margin: 0 0 clamp(1.7rem, 4vh, 3.2rem);
+  color: #3f7f40;
+  font-size: clamp(0.72rem, 1.1vw, 1.35rem);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.v2story__opening-title {
+  margin: 0;
+  max-width: 10.5em;
+  font-size: clamp(2.6rem, 5.35vw, 6.4rem);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.06;
+}
+
+.v2story__opening-lead {
+  margin: clamp(1.7rem, 4vh, 3.4rem) 0 0;
+  max-width: 29em;
+  font-size: clamp(1rem, 1.55vw, 1.75rem);
+  font-weight: 400;
+  letter-spacing: -0.012em;
+  line-height: 1.55;
+}
+
 /* ------------------------------------------------------------------ */
 /* PROGRESS DOTS — current chapter indicator                          */
 /* ------------------------------------------------------------------ */
@@ -117,6 +168,26 @@
 /* ------------------------------------------------------------------ */
 @media (max-width: 767px) {
   .v2story__progress { right: 1rem; }
+
+  .v2story__opening-copy {
+    width: 76%;
+    padding: 4.5rem 2.75rem 4.5rem 1.5rem;
+    background: linear-gradient(
+      90deg,
+      #f5f2eb 0%,
+      #f5f2eb 82%,
+      rgba(245, 242, 235, 0) 100%
+    );
+  }
+
+  .v2story__opening-title {
+    font-size: clamp(2.25rem, 10.5vw, 4.25rem);
+  }
+
+  .v2story__opening-lead {
+    font-size: clamp(0.9rem, 3.8vw, 1.1rem);
+    line-height: 1.45;
+  }
 }
 
 /* Note: this section previously force-hid .v2story__video under
@@ -132,5 +203,11 @@
     /* Prevent heavy horizontal cropping of burned-in text on mobile */
     object-fit: contain;
     background-color: #040a08; /* var(--v2-canvas-sunken) */
+  }
+
+  .v2story__scene[data-scene='0'] .v2story__media,
+  .v2story__scene[data-scene='0'] .v2story__video,
+  .v2story__scene[data-scene='0'] .v2story__poster {
+    background-color: #f5f2eb;
   }
 }

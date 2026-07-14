@@ -19,10 +19,10 @@ export default function Material() {
       <div className="v2m-inner">
         <div className="v2-reveal" ref={headline.ref}>
           <p className="v2-eyebrow">LIMEX Material Intelligence</p>
-          <h2 className="v2m-title">Born from CO₂. Built for industry.</h2>
+          <h2 className="v2m-title">Rooted in limestone. Built for industry.</h2>
           <p className="v2m-lead">
-            A CO₂-based material engineered to behave like plastic on the
-            production line — while quietly using far less of it.
+            LIMEX is built on limestone-derived calcium carbonate
+            supplied through TBM and engineered for practical industrial use.
           </p>
         </div>
 
@@ -30,10 +30,10 @@ export default function Material() {
           {/* Stage 01 */}
           <div className="v2m-prop">
             <span className="v2m-stage-eyebrow">Stage 01</span>
-            <h3 className="v2m-prop-label">Born from CO₂</h3>
+            <h3 className="v2m-prop-label">Limestone-derived foundation</h3>
             <p className="v2m-prop-body">
-              LIMEX begins with captured CO₂ that is formed into calcium
-              carbonate, giving it a strong, abundant mineral foundation.
+              LIMEX uses calcium carbonate derived from limestone supplied
+              through TBM as its mineral foundation.
             </p>
           </div>
 

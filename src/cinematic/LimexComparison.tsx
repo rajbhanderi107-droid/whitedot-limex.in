@@ -24,7 +24,7 @@ const data: Record<Tab, Row[]> = {
     },
     {
       category: "Positioning",
-      limex: "A performance-oriented, CO₂-based material system.",
+      limex: "A performance-oriented, limestone-derived material system.",
       filler: "A basic filler with limited technical purpose.",
     },
   ],
@@ -126,7 +126,7 @@ export function LimexComparison() {
       <h2>A material system, not a weight additive.</h2>
       <p className="lead">
         Ordinary fillers are commonly used to increase weight or reduce cost. LIMEX material
-        is positioned differently — a CO₂-based material system with controlled quality,
+        is positioned differently — a limestone-derived material system with controlled quality,
         technical consistency and application support. Compare them by what actually matters on your
         line.
       </p>

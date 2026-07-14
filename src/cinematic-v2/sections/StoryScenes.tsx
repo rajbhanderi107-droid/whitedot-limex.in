@@ -3,7 +3,7 @@ import { Fragment } from 'react';
 import type { CSSProperties } from 'react';
 
 /* ---------------------------------------------------------------------------
-   StoryScenes — live, code-animated slides for the "Born from CO₂" film.
+   StoryScenes — live, code-animated slides for the limestone material film.
    Replaces selected static/blank videos with SVG diagrams that
    draw themselves every time the scene becomes active (CSS animations keyed
    off the `is-active` class). Light-cream slide aesthetic matches the rest of
