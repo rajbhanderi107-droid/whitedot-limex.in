@@ -44,7 +44,7 @@ const SCIENCE_DISHES: DishSpec[] = [
 const SCIENCE_LABELS: { x: number; lines: [string, string] }[] = [
   { x: 352, lines: ['Limestone', 'CaCO₃'] },
   { x: 820, lines: ['High-purity', 'Calcium carbonate'] },
-  { x: 1290, lines: ['Bio-based', 'Polymers'] },
+  { x: 1290, lines: ['Polymer', ''] },
 ];
 
 export function SceneScience({ active }: SceneProps) {
@@ -57,7 +57,7 @@ export function SceneScience({ active }: SceneProps) {
         </h3>
         <p className="wds3-sub">
           Our proprietary process converts limestone into high-purity calcium
-          carbonate, blended with bio-based polymers to create LIMEX.
+          carbonate, blended with polymer to create LIMEX.
         </p>
       </div>
 
