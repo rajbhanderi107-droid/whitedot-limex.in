@@ -30,7 +30,7 @@ const SLIDE_MS = 15000;
 
 const BASE = import.meta.env.BASE_URL;
 const asset = (p: string) => `${BASE}${p}`.replace(/\/{2,}/g, '/');
-const STORY_ASSET_VERSION = '20260715-scene4-moulding';
+const STORY_ASSET_VERSION = '20260715-scene4-moulding-b';
 const storyAsset = (p: string) => `${asset(p)}?v=${STORY_ASSET_VERSION}`;
 
 const N = 8;
