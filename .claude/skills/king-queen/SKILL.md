@@ -26,7 +26,7 @@ pattern, brand tokens). This skill is the *orchestration layer* on top of it.
 The site must feel: calm, sustainable, premium, organic, futuristic, emotionally
 intelligent, Japanese-minimalism-inspired — nature blended with technology.
 Theme: **"Nature evolving into future material technology."**
-Finale tagline: **"Built from CO₂. Designed for the Planet."**
+Finale tagline: **"Built from limestone. Engineered for industry."**
 
 **NEVER:** neon, gaming-style FX, oversaturation, random particles, loud/aggressive
 transitions, chaotic motion. Speed = slow–medium only. Quality > quantity. Every
@@ -48,7 +48,7 @@ animation must serve the story.
 3. **Plan → phase → QUEEN gate → deploy.** Never one giant batch. Verify
    `npm run build` and run the QUEEN performance pass before every deploy.
 4. **Brand + voice:** dark `#050706`/`#181b19`, sage `#9aa893`, limestone-cream
-   `#f5f1e8`. Procurement-grade copy, no emoji. LIMEX is **CO₂-based → calcium
+   `#f5f1e8`. Procurement-grade copy, no emoji. LIMEX is **limestone-derived → calcium
    carbonate**, never "limestone-based" (the rock visual is fine; the *wording*
    isn't).
 5. Run KING build agents on **Opus 4.7**.
@@ -58,7 +58,7 @@ animation must serve the story.
 |---|---|
 | Storyboard Director / pacing | (orchestrator) + `wd-creative-director` |
 | Motion Architect / scroll-linked easing & inertia | `wd-animation-designer` |
-| LIMEX Material Visualizer (CO₂→CaCO₃ molecular) | `wd-webgl-architect` |
+| LIMEX Material Visualizer (limestone→CaCO₃ material process) | `wd-webgl-architect` |
 | Environmental VFX (dust, debris, fog, ambient) | `wd-webgl-architect` |
 | UI Cinematic Designer (floating type, glass) | `wd-uiux-systems` |
 | Scroll Choreography (model⇄content sync) | `wd-animation-designer` |
@@ -95,8 +95,8 @@ forms; liquid flow as resin enters; structured/industrial as products form).
 
 ## 20-route storyboard (one pinned scene, single progress ref)
 01 dark + single floating stone + dust + slow rotation · 02 soft light reveals
-texture · 03 microscopic mineral cracks · 04 CO₂ particles orbit · 05 surface
-absorbs particles · 06 internal calcium structures form · 07 splits into layered
+texture · 03 microscopic mineral cracks · 04 limestone grains orbit · 05 surface
+reveals mineral structure · 06 internal calcium structures form · 07 splits into layered
 mineral sheets · 08 molecular line systems emerge · 09 particles reorganize into
 cleaner geometry · 10 transparent resin flows through · 11 LIMEX composition
 stabilizes · 12 refines into futuristic material · 13 surface smooths · 14

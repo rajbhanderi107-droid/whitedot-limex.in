@@ -114,9 +114,9 @@ Model: Nano Banana 2 · 16:9
 **V1 CONTENT (exact):**
 - Kicker: `LIMEX Material Intelligence`
 - H2: `Half laboratory. Half future material.`
-- Lead: `A CO₂-based material engineered to behave like plastic on the production line — while quietly using far less of it.`
+- Lead: `A limestone-derived material engineered to behave like plastic on the production line — while quietly using far less of it.`
 - Left labels:
-  - `Mineral composition` — `50%+ calcium carbonate (CaCO₃), formed from captured CO₂.`
+  - `Mineral composition` — `50%+ calcium carbonate (CaCO₃), derived from limestone supplied through TBM.`
   - `Reduced plastic dependency` — `Replaces a large share of petroleum-based plastic in the blend.`
   - `Sustainability value` — `Lower carbon footprint with practical recycling pathways.`
 - Right labels:
@@ -147,7 +147,7 @@ Model: Nano Banana 2 · 1:1
 - H2: `Watch the Future of Sustainable Materials`
 - Sub: `A cinematic look at how carbon innovation becomes premium material possibility.`
 - Placeholder plate: `Whitedot LIMEX Launch Film` / `Coming Soon`
-- Caption: `From captured carbon to next-generation material innovation.`
+- Caption: `From limestone to next-generation material innovation.`
 
 **GREEN-THEME ANIMATION ($9000)**
 - Glass video frame rises (y:44→0, scale .985→1, 1.1s) with a reflection line sweeping the top edge.
@@ -157,7 +157,7 @@ Model: Nano Banana 2 · 1:1
 
 **HIGGSFIELD PROMPT (launch-film loop 05 — the centerpiece)**
 ```
-Cinematic product film: captured carbon becomes white limestone becomes a finished
+Cinematic product film: mined limestone becomes calcium carbonate, then a finished
 sustainable material object, slow macro transitions, sage-green studio lighting,
 premium advertising film grade, calcium carbonate dust resolving into a smooth
 formed product, no text, no logo, no sci-fi, elegant and restrained, 6-second loop
@@ -234,7 +234,7 @@ Model: Higgsfield video model · 16:9 · **centerpiece — highest priority**
 **V1 CONTENT (exact):**
 - Kicker: `LIMEX Pellets vs Local Filler`
 - H2: `A material system, not a weight additive.`
-- Lead: `Ordinary fillers are commonly used to increase weight or reduce cost. LIMEX material is positioned differently — a CO₂-based material system with controlled quality, technical consistency and application support. Compare them by what actually matters on your line.`
+- Lead: `Ordinary fillers are commonly used to increase weight or reduce cost. LIMEX material is positioned differently — a limestone-derived material system with controlled quality, technical consistency and application support. Compare them by what actually matters on your line.`
 - Tabs: `Purpose` · `Processing` · `Performance` · `Quality` · `Cost Impact` · `Applications`
 - (Each tab's full LIMEX-vs-filler rows are V1 verbatim in `LimexComparison.tsx` — e.g. Purpose: `Material intent` LIMEX `Developed to reduce plastic consumption while supporting selected technical properties.` vs filler `Typically added mainly to increase weight or lower per-kg cost.` … all 6 tabs preserved exactly.)
 - Note: `Choosing between LIMEX Pellets and ordinary filler should not be based on per-kg price alone — the real value depends on processing stability, loading percentage, product performance, machine life, finishing quality, rejection rate and the final application. Final formulation, dosage and performance should always be validated through trials and official grade-specific technical data.`

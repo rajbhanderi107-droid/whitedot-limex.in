@@ -10,7 +10,7 @@ type Tab = (typeof TABS)[number];
 const DATA: Record<Tab, Row[]> = {
   Purpose: [
     { category: 'Material intent', limex: 'Developed to reduce plastic consumption while supporting selected technical properties.', filler: 'Typically added mainly to increase weight or lower per-kg cost.' },
-    { category: 'Positioning', limex: 'A performance-oriented, CO₂-based material system.', filler: 'A basic filler with limited technical purpose.' },
+    { category: 'Positioning', limex: 'A performance-oriented, limestone-derived material system.', filler: 'A basic filler with limited technical purpose.' },
   ],
   Processing: [
     { category: 'Processability', limex: 'Designed to process like plastic after proper blending — subject to grade, dosage and machine condition.', filler: 'Can cause lumps, finishing defects and inconsistent processing.' },
@@ -53,7 +53,7 @@ export default function Comparison() {
           </h2>
           <p className="v2cmp-lead">
             Ordinary fillers are commonly used to increase weight or reduce cost.
-            LIMEX material is positioned differently — a CO₂-based material system
+            LIMEX material is positioned differently — a limestone-derived material system
             with controlled quality, technical consistency and application support.
             Compare them by what actually matters on your line.
           </p>

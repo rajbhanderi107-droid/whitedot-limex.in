@@ -46,7 +46,7 @@
     <text x="540" y="298" fill="#f5f1e8" font-size="52" font-weight="300" letter-spacing="9.36">WHITE DOT</text>
     <text x="540" y="328" fill="#9aa893" font-size="13" font-weight="400" letter-spacing="1.56">AUTHORIZED LIMEX MARKETING &amp; SALES</text>
     <line x1="540" y1="348" x2="860" y2="348" stroke="#9aa893" stroke-opacity="0.18" stroke-width="0.5"/>
-    <text x="540" y="374" fill="#f5f1e8" fill-opacity="0.72" font-size="16" font-weight="300" letter-spacing="0.64">Built from CO₂. Designed for the Planet.</text>
+    <text x="540" y="374" fill="#f5f1e8" fill-opacity="0.72" font-size="16" font-weight="300" letter-spacing="0.64">Built from limestone. Engineered for industry.</text>
   </g>
 
   <rect width="1200" height="630" filter="url(#grain)" opacity="0.045"/>

@@ -451,9 +451,9 @@ H2 (.v2o-title):
   begins as limestone
 
 Lead paragraph (.v2o-lead):
-  Calcium carbonate — the mineral record of ancient marine life —
-  is the foundation of LIMEX. An abundant, naturally occurring
-  resource repurposed for modern material needs.
+  Calcium carbonate derived from limestone is the mineral foundation
+  of LIMEX. Supplied through TBM, it is engineered for modern material
+  applications.
 ```
 
 ### HIGGSFIELD PROMPT — STORYBOARD STILL 07
@@ -553,7 +553,7 @@ Cards settled at full opacity. Scroll continues → Conversion section → Frame
 ## ─────────────────────────────────────────────────────────
 
 ### NARRATIVE LINE
-The process made visual. Three steps in a vertical flow: CO₂ → CaCO₃ → LIMEX. Each step is a compression of geological and industrial time. This is the heartbeat of the brand narrative — the impossible-sounding idea that carbon dioxide, over millions of years of marine life, becomes the white stone, which becomes a practical material for modern packaging.
+The process made visual. Three steps in a vertical flow: LIMESTONE → CaCO₃ → LIMEX. Each step shows how a mined mineral resource becomes a practical material for modern packaging through TBM's material technology.
 
 The numbered list (ol element) is deliberate — this is a sequence, not a collection.
 
@@ -563,7 +563,7 @@ The numbered list (ol element) is deliberate — this is a sequence, not a colle
 - Lead: one paragraph explaining the production chain
 - Three `li` items in `ol.v2cv-steps`:
   - Each has: connector line (vertical hairline), symbol (large), h3, p
-  - Symbol values: CO₂ / CaCO₃ / LIMEX
+  - Symbol values: LIMESTONE / CaCO₃ / LIMEX
 - Connector lines visually link the steps into a pipeline
 
 ### ANIMATION WORKFLOW
@@ -599,16 +599,16 @@ Lead:
   volumes of water.
 
 Step 1:
-  Symbol: CO₂
-  Label: Carbon Dioxide
-  Description: Atmospheric carbon captured through natural geological
-               processes over millions of years.
+  Symbol: LIMESTONE
+  Label: Mineral Source
+  Description: Limestone supplied through TBM as the mineral source
+               for LIMEX material technology.
 
 Step 2:
   Symbol: CaCO₃
   Label: Calcium Carbonate
-  Description: The mineral record of ancient marine life — limestone —
-               abundant in the natural world.
+  Description: Calcium carbonate derived from limestone and prepared
+               for the LIMEX material process.
 
 Step 3:
   Symbol: LIMEX
@@ -620,7 +620,7 @@ Step 3:
 ### HIGGSFIELD PROMPT — STORYBOARD STILL 09
 ```
 Three-step vertical process diagram on dark canvas, each step has a large
-chemical symbol (CO₂, CaCO₃, LIMEX) with a label and description text,
+material marker (LIMESTONE, CaCO₃, LIMEX) with a label and description text,
 thin vertical connector lines between steps suggesting a pipeline, dark background,
 muted accent color on symbols, clean scientific diagram aesthetic, no ornamentation,
 precision layout, Japanese technical precision visual language

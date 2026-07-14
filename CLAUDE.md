@@ -321,7 +321,7 @@ Animations should be:
 Animation style should support WhiteDot's LIMEX story:
 
 ```txt
-CO2 -> Calcium Carbonate -> LIMEX Material -> Plastic Replacement -> Paper Replacement -> FMCG -> Sustainability -> Premium Material Innovation
+Limestone -> Calcium Carbonate -> LIMEX Material -> Plastic Replacement -> Paper Replacement -> FMCG -> Sustainability -> Premium Material Innovation
 ```
 
 Do not create animations that:
