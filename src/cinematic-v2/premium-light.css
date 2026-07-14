@@ -264,6 +264,10 @@
   color: var(--v2-light-title);
 }
 
+.v2nav--scrolled .v2nav-tagline {
+  color: var(--v2-light-muted);
+}
+
 .v2nav--scrolled .v2nav-cta {
   color: var(--v2-light-title);
   background: var(--v2-light-accent);
