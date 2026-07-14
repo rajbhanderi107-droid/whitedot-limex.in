@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { motion as fm } from 'framer-motion';
+import gsap from 'gsap';
 import { CONSULTATION_HASH, GMAIL_CONTACT_HREF, openConsultationForm } from '../consultationNavigation';
 import { useBrandLogo } from '../../useBrandLogo';
 import './Nav.css';
@@ -13,8 +15,54 @@ const LINKS = [
   { label: 'Consultation', href: CONSULTATION_HASH },
 ] as const;
 
+const WORDMARK_LETTERS = 'WhiteDot'.split('');
+
+/** Plays once per page load — a hard refresh replays it, SPA re-renders don't. */
+let logoIntroPlayed = false;
+
+const wordmarkGroup = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.035, delayChildren: 0.58 } },
+};
+const letterVariant = {
+  hidden: { opacity: 0, y: 8 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.16, 1, 0.3, 1] } },
+};
+
 export default function Nav() {
   const brandLogo = useBrandLogo();
+  const logoIconRef = useRef<HTMLImageElement>(null);
+  const [playIntro] = useState(() => {
+    if (logoIntroPlayed) return false;
+    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return false;
+    return true;
+  });
+
+  // GSAP — logo mark: pop-in on load, then a slow ambient glow pulse.
+  useLayoutEffect(() => {
+    if (!playIntro || !logoIconRef.current) return;
+    logoIntroPlayed = true;
+    const el = logoIconRef.current;
+    const tl = gsap.timeline({ defaults: { ease: 'back.out(1.7)' } });
+    tl.fromTo(
+      el,
+      { scale: 0.3, rotate: -25, opacity: 0 },
+      { scale: 1, rotate: 0, opacity: 1, duration: 0.7 },
+    );
+    const glow = gsap.to(el, {
+      filter: 'drop-shadow(0 0 6px rgba(79, 154, 53, 0.55))',
+      duration: 1.4,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+      delay: 0.7,
+    });
+    return () => {
+      tl.kill();
+      glow.kill();
+      gsap.set(el, { clearProps: 'all' });
+    };
+  }, [playIntro]);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [activeId, setActiveId] = useState('');
@@ -75,10 +123,36 @@ export default function Nav() {
           rel="noreferrer"
           onClick={() => { forceAdminLogin(); closeMenu(); }}
         >
-          <img className="v2nav-logo" src={brandLogo} alt="WhiteDot logo" width={30} height={30} decoding="async" />
+          <img
+            ref={logoIconRef}
+            className="v2nav-logo"
+            src={brandLogo}
+            alt="WhiteDot logo"
+            width={30}
+            height={30}
+            decoding="async"
+          />
           <span className="v2nav-brand-text">
-            <span className="v2nav-wordmark">WhiteDot</span>
-            <span className="v2nav-tagline">by Seven Dot</span>
+            <fm.span
+              className="v2nav-wordmark"
+              initial={playIntro ? 'hidden' : false}
+              animate="visible"
+              variants={wordmarkGroup}
+            >
+              {WORDMARK_LETTERS.map((ch, i) => (
+                <fm.span key={i} style={{ display: 'inline-block' }} variants={letterVariant}>
+                  {ch}
+                </fm.span>
+              ))}
+            </fm.span>
+            <fm.span
+              className="v2nav-tagline"
+              initial={playIntro ? { opacity: 0, y: 4 } : false}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1], delay: 0.95 }}
+            >
+              by Seven Dot
+            </fm.span>
           </span>
         </a>
 
