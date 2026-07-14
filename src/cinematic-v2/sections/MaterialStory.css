@@ -117,6 +117,57 @@
   line-height: 1.55;
 }
 
+/* Scene 8 also contains obsolete CO2-origin copy baked into every video
+   frame. Cover only its left copy field so the animated LIMEX finale remains. */
+.v2story__finale-copy {
+  position: absolute;
+  z-index: 4;
+  inset: 0 auto 0 0;
+  width: min(48vw, 58rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(5rem, 9vh, 7.5rem) clamp(2rem, 5.7vw, 7rem);
+  color: #202322;
+  background: linear-gradient(
+    90deg,
+    #f5f2eb 0%,
+    #f5f2eb 76%,
+    rgba(245, 242, 235, 0.98) 86%,
+    rgba(245, 242, 235, 0) 100%
+  );
+  font-family: var(--v2-font-family);
+  pointer-events: none;
+}
+
+.v2story__finale-eyebrow {
+  margin: 0 0 clamp(1.5rem, 3.5vh, 2.8rem);
+  color: #3f7f40;
+  font-size: clamp(0.72rem, 0.95vw, 1rem);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.v2story__finale-title {
+  margin: 0;
+  max-width: 11em;
+  font-size: clamp(2.1rem, 4vw, 4.8rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.12;
+}
+
+.v2story__finale-lead {
+  margin: clamp(1.5rem, 3.5vh, 2.8rem) 0 0;
+  max-width: 28em;
+  font-size: clamp(0.95rem, 1.25vw, 1.35rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.55;
+}
+
 /* ------------------------------------------------------------------ */
 /* PROGRESS DOTS — current chapter indicator                          */
 /* ------------------------------------------------------------------ */
@@ -188,6 +239,26 @@
     font-size: clamp(0.9rem, 3.8vw, 1.1rem);
     line-height: 1.45;
   }
+
+  .v2story__finale-copy {
+    width: 58%;
+    padding: 4.5rem 2rem 4.5rem 1.5rem;
+    background: linear-gradient(
+      90deg,
+      #f5f2eb 0%,
+      #f5f2eb 80%,
+      rgba(245, 242, 235, 0) 100%
+    );
+  }
+
+  .v2story__finale-title {
+    font-size: clamp(1.55rem, 7vw, 2.25rem);
+  }
+
+  .v2story__finale-lead {
+    font-size: clamp(0.78rem, 3vw, 0.95rem);
+    line-height: 1.45;
+  }
 }
 
 /* Note: this section previously force-hid .v2story__video under
@@ -207,7 +278,10 @@
 
   .v2story__scene[data-scene='0'] .v2story__media,
   .v2story__scene[data-scene='0'] .v2story__video,
-  .v2story__scene[data-scene='0'] .v2story__poster {
+  .v2story__scene[data-scene='0'] .v2story__poster,
+  .v2story__scene[data-scene='7'] .v2story__media,
+  .v2story__scene[data-scene='7'] .v2story__video,
+  .v2story__scene[data-scene='7'] .v2story__poster {
     background-color: #f5f2eb;
   }
 }

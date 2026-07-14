@@ -466,6 +466,18 @@ export default function MaterialStory() {
                   </p>
                 </div>
               )}
+              {i === N - 1 && (
+                <div className="v2story__finale-copy">
+                  <p className="v2story__finale-eyebrow">LIMEX</p>
+                  <h3 className="v2story__finale-title">
+                    Built from limestone.<br />
+                    Engineered for industry.
+                  </h3>
+                  <p className="v2story__finale-lead">
+                    Material intelligence for the real world.
+                  </p>
+                </div>
+              )}
             </article>
           );
         })}
