@@ -11,7 +11,6 @@ const LINKS = [
   { label: 'Compare', href: '#comparison' },
   { label: 'Applications', href: '#applications' },
   { label: 'Case Studies', href: '#/case-studies' },
-  { label: 'News', href: '#/news' },
   { label: 'Consultation', href: CONSULTATION_HASH },
 ] as const;
 

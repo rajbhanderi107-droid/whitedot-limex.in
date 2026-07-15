@@ -39,7 +39,6 @@ const CaseStudyFeature = lazy(() => import('./sections/CaseStudyFeature'));
 const CaseStudyPage = lazy(() => import('./sections/CaseStudyPage'));
 const Consultation = lazy(() => import('./sections/Consultation'));
 const GlobalImpact = lazy(() => import('./sections/GlobalImpact'));
-const NewsPage = lazy(() => import('./sections/NewsPage'));
 
 function useHashRoute() {
   const [route, setRoute] = useState(() => window.location.hash);
@@ -70,7 +69,6 @@ function dismissStaticPublicLoader() {
 export default function CinematicAppV2() {
   const route = useHashRoute();
   const normalizedRoute = route.replace(/^#/, '').replace(/^\/+/, '');
-  const isNewsPage = normalizedRoute === 'news';
   const isCaseStudyPage = normalizedRoute === 'case-studies';
 
   // Wake the backend while the visitor is still reading the hero, so the
@@ -81,18 +79,10 @@ export default function CinematicAppV2() {
   }, []);
 
   useEffect(() => {
-    if (isNewsPage || isCaseStudyPage) {
+    if (isCaseStudyPage) {
       dismissStaticPublicLoader();
     }
-  }, [isNewsPage, isCaseStudyPage]);
-
-  if (isNewsPage) {
-    return (
-      <Suspense fallback={<LazySectionFallback />}>
-        <NewsPage />
-      </Suspense>
-    );
-  }
+  }, [isCaseStudyPage]);
 
   if (isCaseStudyPage) {
     return (
