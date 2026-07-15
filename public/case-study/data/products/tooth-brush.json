@@ -2,12 +2,12 @@
   "id": "toothBrush",
   "index": "20",
   "slug": "tooth-brush",
-  "name": "Tooth Brush",
+  "name": "Tooth Brush Collection",
   "category": "Personal Care",
-  "status": "pending",
-  "modelFile": null,
+  "status": "live",
+  "modelFile": "model/product-20-toothbrush-collection.glb",
   "htmlPage": "product.html?p=tooth-brush  (generic template, no dedicated file)",
   "composition": null,
   "specs": null,
-  "note": "No verified LIMEX composition/CO2/supplier data exists yet for this product. Do not fabricate percentages or specs — populate only from the official White Dot 'LIMEX Case Studies in India' PDF or verified supplier TDS, matching the pattern in specs.json (see bobbin/container/motorCover/aralditeContainer)."
+  "note": "3D model is photo-matched (toothbrush collection, red/white/cavity colour masks). No verified LIMEX composition/CO2/supplier data exists yet for this product. Do not fabricate percentages or specs — populate only from the official White Dot 'LIMEX Case Studies in India' PDF or verified supplier TDS, matching the pattern in specs.json (see bobbin/container/motorCover/aralditeContainer)."
 }
