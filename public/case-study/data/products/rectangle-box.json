@@ -2,7 +2,7 @@
   "id": "rectangleBox",
   "index": "23",
   "slug": "rectangle-box",
-  "name": "Rectangle Box",
+  "name": "Rectangle Container",
   "category": "General Packaging",
   "status": "live",
   "modelFile": "model/product-23-rectangle-box.glb",
