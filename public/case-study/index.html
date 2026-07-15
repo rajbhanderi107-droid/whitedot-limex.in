@@ -870,11 +870,11 @@
             alt="${entry.name} — LIMEX 3D model"
             loading="lazy"
             interaction-prompt="none"
-            shadow-intensity="${entry.id === 'foodOilCan' ? '0.9' : '0'}"
-            shadow-softness="${entry.id === 'foodOilCan' ? '0.8' : '1'}"
-            exposure="${entry.id === 'foodOilCan' ? '1.0' : '1.15'}"
+            shadow-intensity="${['foodOilCan', 'smallRoundBottle'].includes(entry.id) ? '0.9' : '0'}"
+            shadow-softness="${['foodOilCan', 'smallRoundBottle'].includes(entry.id) ? '0.8' : '1'}"
+            exposure="${entry.id === 'foodOilCan' ? '1.0' : entry.id === 'smallRoundBottle' ? '1.25' : '1.15'}"
             tone-mapping="neutral"
-            environment-image="neutral"
+            environment-image="${entry.id === 'smallRoundBottle' ? 'legacy' : 'neutral'}"
             camera-orbit="${CAMERA_ORBIT[entry.id] || '30deg 75deg 105%'}">
             ${entry.id === 'soapStand' ? '<div class="mv-loader" slot="progress-bar"></div>' : ''}
           </model-viewer>
