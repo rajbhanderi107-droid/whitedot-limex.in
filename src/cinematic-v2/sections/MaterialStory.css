@@ -124,11 +124,22 @@
   z-index: 4;
   inset: 0 auto 0 0;
   width: min(48vw, 58rem);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: clamp(5rem, 9vh, 7.5rem) clamp(2rem, 5.7vw, 7rem);
   color: #202322;
+  font-family: var(--v2-font-family);
+  pointer-events: none;
+}
+
+.v2story__finale-copy::before,
+.v2story__finale-copy::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  opacity: 1;
+  transition: opacity 120ms linear;
+}
+
+.v2story__finale-copy::before {
   background: linear-gradient(
     90deg,
     #f5f2eb 0%,
@@ -136,8 +147,56 @@
     rgba(245, 242, 235, 0.98) 86%,
     rgba(245, 242, 235, 0) 100%
   );
-  font-family: var(--v2-font-family);
-  pointer-events: none;
+}
+
+.v2story__finale-copy::after {
+  right: auto;
+  width: 52%;
+  background: linear-gradient(
+    90deg,
+    #f5f2eb 0%,
+    #f5f2eb 76%,
+    rgba(245, 242, 235, 0) 100%
+  );
+  opacity: 0;
+}
+
+.v2story__finale-copy-inner {
+  position: relative;
+  z-index: 1;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(5rem, 9vh, 7.5rem) clamp(2rem, 5.7vw, 7rem);
+  opacity: 1;
+  transform: translateX(0);
+  transition:
+    opacity 480ms ease,
+    transform 480ms ease;
+}
+
+.v2story__scene.is-finale-exiting .v2story__finale-copy-inner {
+  opacity: 0;
+  transform: translateX(-3rem);
+}
+
+/* The baked CO2 line fades and travels left between 1.9s and 2.75s. Narrow
+   its cover after the replacement words leave so the centered LIMEX stays
+   visible, then clear the final left strip once the obsolete line is gone. */
+.v2story__scene.is-finale-exiting .v2story__finale-copy::before {
+  opacity: 0;
+  transition-delay: 360ms;
+}
+
+.v2story__scene.is-finale-exiting .v2story__finale-copy::after {
+  opacity: 1;
+  transition-delay: 360ms;
+}
+
+.v2story__scene.is-finale-clear .v2story__finale-copy::after {
+  opacity: 0;
+  transition-delay: 0ms;
 }
 
 .v2story__finale-eyebrow {
@@ -242,7 +301,13 @@
 
   .v2story__finale-copy {
     width: 58%;
+  }
+
+  .v2story__finale-copy-inner {
     padding: 4.5rem 2rem 4.5rem 1.5rem;
+  }
+
+  .v2story__finale-copy::before {
     background: linear-gradient(
       90deg,
       #f5f2eb 0%,

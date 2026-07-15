@@ -58,6 +58,8 @@ export default function MaterialStory() {
   // Which scenes have their <source> tags injected (lazy). Seed first two.
   const [armed, setArmed] = useState<Set<number>>(() => new Set([0, 1]));
   const [active, setActive] = useState(0);
+  const [finaleExiting, setFinaleExiting] = useState(false);
+  const [finaleClear, setFinaleClear] = useState(false);
 
   // Grow the armed set to cover active ±1 (called from scroll/IO callbacks).
   const arm = (i: number) => {
@@ -417,7 +419,7 @@ export default function MaterialStory() {
           return (
             <article
               key={n}
-              className={`v2story__scene${i === active ? ' is-active' : ''}`}
+              className={`v2story__scene${i === active ? ' is-active' : ''}${i === N - 1 && finaleExiting ? ' is-finale-exiting' : ''}${i === N - 1 && finaleClear ? ' is-finale-clear' : ''}`}
               data-scene={i}
             >
               <div className="v2story__media">
@@ -446,6 +448,11 @@ export default function MaterialStory() {
                       preload="auto"
                       aria-hidden="true"
                       tabIndex={-1}
+                      onTimeUpdate={i === N - 1 ? (event) => {
+                        const time = event.currentTarget.currentTime;
+                        setFinaleExiting(time >= 1.9);
+                        setFinaleClear(time >= 2.75);
+                      } : undefined}
                     />
                     {/* <source> elements are injected imperatively (see the
                         arm/load effect above) so setting src and calling
@@ -468,14 +475,16 @@ export default function MaterialStory() {
               )}
               {i === N - 1 && (
                 <div className="v2story__finale-copy">
-                  <p className="v2story__finale-eyebrow">LIMEX</p>
-                  <h3 className="v2story__finale-title">
-                    Built from limestone.<br />
-                    Engineered for industry.
-                  </h3>
-                  <p className="v2story__finale-lead">
-                    Material intelligence for the real world.
-                  </p>
+                  <div className="v2story__finale-copy-inner">
+                    <p className="v2story__finale-eyebrow">LIMEX</p>
+                    <h3 className="v2story__finale-title">
+                      Built from limestone.<br />
+                      Engineered for industry.
+                    </h3>
+                    <p className="v2story__finale-lead">
+                      Material intelligence for the real world.
+                    </p>
+                  </div>
                 </div>
               )}
             </article>
