@@ -41,7 +41,8 @@ const motorFanBladeModel = `${basePath}/case-study/model/product-18-impeller.glb
 const cupContainerModel = `${basePath}/case-study/model/product-19-cup-container.glb`;
 const toothBrushModel = `${basePath}/case-study/model/product-20-toothbrush-collection.glb`;
 const petrolPipeModel = `${basePath}/case-study/model/product-21-petrol-pipe.glb`;
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe';
+const proteinContainerModel = `${basePath}/case-study/model/unbranded-tall-round-container.glb`;
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
@@ -176,6 +177,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 21', green: true },
   ],
+  proteinContainer: [
+    { value: '22', label: 'Protein Container' },
+    { value: '3D', label: 'Photo-Matched' },
+    { value: 'Pending', label: 'Verified Specs' },
+    { value: 'Live', label: 'Product 22', green: true },
+  ],
 };
 
 export default function CaseStudyPage() {
@@ -241,7 +248,7 @@ export default function CaseStudyPage() {
         dairyContainerModel, lunchboxModel, dairySweetContainerModel,
         dairyRoundContainerModel, rectangleContainerModel, hook20mmModel,
         roundPipeModel, applianceTrayModel, motorFanBladeModel, cupContainerModel,
-        toothBrushModel, petrolPipeModel,
+        toothBrushModel, petrolPipeModel, proteinContainerModel,
       ]),
       50,
     );
@@ -322,7 +329,7 @@ export default function CaseStudyPage() {
         if (!glow) return;
         c.addEventListener('mouseenter', () => {
           const product = c.dataset.product as ProductKey | undefined;
-          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan' || product === 'dairyContainer' || product === 'lunchBox' || product === 'dairySweetContainer' || product === 'dairyRoundContainer' || product === 'rectangleContainer' || product === 'hook20mm' || product === 'roundPipe' || product === 'applianceTray' || product === 'motorFanBlade' || product === 'cupContainer' || product === 'petrolPipe') setActiveProductKey(product);
+          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan' || product === 'dairyContainer' || product === 'lunchBox' || product === 'dairySweetContainer' || product === 'dairyRoundContainer' || product === 'rectangleContainer' || product === 'hook20mm' || product === 'roundPipe' || product === 'applianceTray' || product === 'motorFanBlade' || product === 'cupContainer' || product === 'petrolPipe' || product === 'proteinContainer') setActiveProductKey(product);
         });
         c.addEventListener('mousemove', (e: MouseEvent) => {
           const r = c.getBoundingClientRect();
@@ -926,6 +933,18 @@ export default function CaseStudyPage() {
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Petrol Pipe</div><div className="csp-ptag">Automotive Component - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
+      {/* 22 Protein Container - model live, verified composition pending */}
+      <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=protein-container`} data-product="proteinContainer">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">22</span>
+          {isMobileViewport ? <div className="csp-soon-placeholder">PC</div> : (
+            // @ts-ignore custom element
+            <model-viewer data-model-src={proteinContainerModel} alt="Unbranded tall round protein-container 3D model" loading="eager" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="22deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Protein Container</div><div className="csp-ptag">Nutrition Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
     </>
