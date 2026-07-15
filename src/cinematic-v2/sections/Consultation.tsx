@@ -14,7 +14,7 @@ const FORM_TABS = [
   { key: 'calculator', label: 'Savings Calculator', blurb: 'Estimate plastic, carbon, and cost impact of switching to LIMEX.' },
 ] as const;
 type FormKey = (typeof FORM_TABS)[number]['key'];
-const consultationVideoSrc = `${import.meta.env.BASE_URL}assets/videos/consultation-products-aea153bd.mp4`;
+const consultationVideoSrc = `${import.meta.env.BASE_URL}assets/videos/consultation-products-aea153bd-v2.mp4`;
 
 function requestedLeadForm(): FormKey | null {
   const searchParams = new URLSearchParams(window.location.search);
