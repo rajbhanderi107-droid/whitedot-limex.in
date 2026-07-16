@@ -18,7 +18,7 @@
   background:
     radial-gradient(ellipse 55% 45% at 78% 12%, rgba(79,154,53,0.04) 0%, transparent 60%),
     radial-gradient(ellipse 60% 50% at 18% 88%, rgba(79,154,53,0.04) 0%, transparent 62%),
-    radial-gradient(ellipse 120% 90% at 50% 30%, #f3f0e5 0%, #ece8db 52%, #e3e0d2 100%);
+    radial-gradient(ellipse 120% 90% at 50% 30%, #fbf9f2 0%, #f4f1e5 52%, #e9e4d2 100%);
   background-attachment: fixed;
   color: var(--cs-text);
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -50,7 +50,7 @@
   width: 160px;
   max-width: 1060px;
   border-radius: 28px;
-  background: linear-gradient(135deg, rgba(239,233,217,0.75) 0%, rgba(233,228,209,0.58) 50%, rgba(239,233,217,0.70) 100%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.78) 0%, rgba(250,248,241,0.6) 50%, rgba(255,255,255,0.72) 100%);
   border: 1px solid rgba(255,255,255,0.6);
   outline: 1px solid rgba(0,0,0,0.06);
   backdrop-filter: blur(28px) saturate(1.25);
@@ -221,7 +221,7 @@
 /* Product card */
 .csp-pcard {
   position: relative; border-radius: 24px; overflow: hidden;
-  background: linear-gradient(135deg, rgba(239,233,217,0.90) 0%, rgba(233,228,209,0.70) 50%, rgba(239,233,217,0.82) 100%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(250,248,241,0.74) 50%, rgba(255,255,255,0.85) 100%);
   border: 1.5px solid rgba(255,255,255,0.75); outline: 1px solid rgba(0,0,0,0.09);
   backdrop-filter: blur(24px) saturate(1.3); -webkit-backdrop-filter: blur(24px) saturate(1.3);
   box-shadow: 0 16px 40px rgba(0,0,0,0.08), 0 3px 12px rgba(0,0,0,0.05), inset 0 1.5px 0 rgba(255,255,255,0.92);
@@ -236,7 +236,7 @@
 .csp-pcard.live:hover {
   box-shadow: 0 32px 72px rgba(0,0,0,0.16), 0 8px 24px rgba(0,0,0,0.07), inset 0 1.5px 0 rgba(255,255,255,0.92);
   border-color: rgba(79,154,53,0.55); outline-color: rgba(79,154,53,0.2);
-  background: linear-gradient(135deg, rgba(239,233,217,0.95) 0%, rgba(233,228,209,0.75) 50%, rgba(239,233,217,0.88) 100%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.97) 0%, rgba(250,248,241,0.82) 50%, rgba(255,255,255,0.92) 100%);
 }
 .csp-pcard.soon { cursor: default; }
 .csp-pcard.soon .csp-pmedia { filter: saturate(0.3) opacity(0.75); }
@@ -276,6 +276,13 @@
   position: relative; flex: 1; display: flex; align-items: center; justify-content: center;
   padding: 20px; min-height: 250px;
 }
+/* Stage plinth behind the model — neutral warm-gray so white/light products
+   read with real contrast instead of dissolving into the card's glass. */
+.csp-pmedia::before {
+  content: ""; position: absolute; inset: 14px; z-index: 0; border-radius: 18px;
+  background: radial-gradient(circle at 50% 42%, #d6d0bc 0%, #c5bfa9 55%, rgba(197,191,169,0.25) 80%, transparent 92%);
+}
+.csp-pmedia > * { position: relative; z-index: 1; }
 .csp-pmedia model-viewer { width:100%; height:100%; background:transparent; --poster-color:transparent; outline:none; pointer-events:none; }
 .csp-pmedia model-viewer, .csp-pmedia img { max-width:85%; max-height:90%; object-fit:contain; transition:transform 0.6s var(--cs-ease); }
 .csp-pcard.live:hover .csp-pmedia model-viewer,
@@ -370,7 +377,7 @@
   background:
     radial-gradient(ellipse 55% 45% at 78% 12%, rgba(79,154,53,0.04) 0%, transparent 60%),
     radial-gradient(ellipse 60% 50% at 18% 88%, rgba(79,154,53,0.04) 0%, transparent 62%),
-    radial-gradient(ellipse 120% 90% at 50% 30%, #f3f0e5 0%, #ece8db 52%, #e3e0d2 100%);
+    radial-gradient(ellipse 120% 90% at 50% 30%, #fbf9f2 0%, #f4f1e5 52%, #e9e4d2 100%);
   position: relative;
 }
 
@@ -412,7 +419,7 @@
   display: flex; align-items: center; justify-content: center;
   font-size: 30px; font-weight: 900; letter-spacing: -0.03em;
   color: rgba(79,154,53,0.30);
-  background: radial-gradient(circle at 40% 32%, rgba(239,233,217,0.95), rgba(233,228,209,0.55) 60%, rgba(79,154,53,0.05) 100%);
+  background: radial-gradient(circle at 40% 32%, rgba(214,208,188,0.95), rgba(197,191,169,0.58) 60%, rgba(79,154,53,0.05) 100%);
   border: 1px solid rgba(79,154,53,0.14);
   box-shadow: 0 14px 34px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9);
   animation: cspSoonBreath 5.5s ease-in-out infinite alternate;
@@ -452,7 +459,7 @@
   .csp-pcard {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    background: linear-gradient(135deg, #efe9d9 0%, #e9e5d4 50%, #efe9d9 100%) !important;
+    background: linear-gradient(135deg, #fdfdfb 0%, #f7f5ee 50%, #fbfaf6 100%) !important;
     will-change: auto !important;
   }
   .csp-hero-card {
