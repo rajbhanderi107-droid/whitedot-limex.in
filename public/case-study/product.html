@@ -958,6 +958,25 @@
         </model-viewer>
       </div>`;
     mv = document.getElementById('productModel');
+
+    const MATERIAL_COLOR_OVERRIDE = {
+      lightWeightDish: [0.02, 0.02, 0.02, 1],
+    };
+    const colorOverride = MATERIAL_COLOR_OVERRIDE[entry.id];
+    if (colorOverride) {
+      const applyColorOverride = () => {
+        (mv.model?.materials || []).forEach((m) => {
+          m.pbrMetallicRoughness.setBaseColorFactor(colorOverride);
+        });
+      };
+      mv.addEventListener('load', applyColorOverride);
+      const pollId = setInterval(() => {
+        if (mv.model?.materials?.length) {
+          applyColorOverride();
+          clearInterval(pollId);
+        }
+      }, 150);
+    }
   } else {
     const mono = entry.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
     stageContent.innerHTML = `
