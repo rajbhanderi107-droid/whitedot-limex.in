@@ -46,7 +46,7 @@ const rectangleBoxModel = `${basePath}/case-study/model/product-23-rectangle-box
 const smallRoundBottleModel = `${basePath}/case-study/model/product-24-small-round-bottle.glb?v=bright-white-20260716`;
 const saltBottleModel = `${basePath}/case-study/model/product-25-salt-bottle.glb`;
 const lightWeightContainerModel = `${basePath}/case-study/model/unbranded-thin-wall-tray-photo-match.glb`;
-const foodTrayDishModel = `${basePath}/case-study/model/product-27-food-tray-dish.glb`;
+const foodTrayDishModel = `${basePath}/case-study/model/product-27-food-tray-dish-photo-match.glb`;
 type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {

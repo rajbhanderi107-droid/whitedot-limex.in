@@ -8,7 +8,7 @@
 
 ## Files
 - Data: `public/case-study/data/products/food-tray-dish.json`
-- 3D model: `public/case-study/model/product-27-food-tray-dish.glb` (procedural, unbranded — built via `scripts/blender/build_food_tray_dish_product27.py`; no reference photo existed, dimensions are typical thermoformed 3-compartment meal tray 227x178x32 mm — rebuild once caliper data arrives)
+- 3D model: `public/case-study/model/product-27-food-tray-dish-photo-match.glb` (photo-matched model supplied 2026-07-16; supersedes the earlier procedural build from `scripts/blender/build_food_tray_dish_product27.py`, which is kept for history but no longer wired in)
 - HTML page: `product.html?p=food-tray-dish  (generic template, no dedicated file)`
 - Reference photos: `photos[]` empty in products.json — none supplied yet
 

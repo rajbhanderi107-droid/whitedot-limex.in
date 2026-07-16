@@ -5,7 +5,7 @@
   "name": "Food Tray Dish",
   "category": "Food Packaging",
   "status": "live",
-  "modelFile": "model/product-27-food-tray-dish.glb",
+  "modelFile": "model/product-27-food-tray-dish-photo-match.glb",
   "htmlPage": "product.html?p=food-tray-dish  (generic template, no dedicated file)",
   "composition": null,
   "specs": null,
