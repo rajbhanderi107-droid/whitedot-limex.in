@@ -43,7 +43,7 @@ const toothBrushModel = `${basePath}/case-study/model/product-20-toothbrush-coll
 const petrolPipeModel = `${basePath}/case-study/model/product-21-petrol-pipe.glb`;
 const proteinContainerModel = `${basePath}/case-study/model/unbranded-tall-round-container.glb`;
 const rectangleBoxModel = `${basePath}/case-study/model/product-23-rectangle-box.glb`;
-const smallRoundBottleModel = `${basePath}/case-study/model/product-24-small-round-bottle.glb`;
+const smallRoundBottleModel = `${basePath}/case-study/model/product-24-small-round-bottle.glb?v=bright-white-20260716`;
 const saltBottleModel = `${basePath}/case-study/model/product-25-salt-bottle.glb`;
 type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle';
 
