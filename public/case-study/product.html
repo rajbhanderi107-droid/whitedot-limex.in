@@ -947,7 +947,7 @@
           interaction-prompt="none"
           shadow-intensity="${['foodOilCan', 'dairyRoundContainer', 'smallRoundBottle'].includes(entry.id) ? '0.9' : '0'}"
           shadow-softness="${['foodOilCan', 'dairyRoundContainer', 'smallRoundBottle'].includes(entry.id) ? '0.8' : '1'}"
-          exposure="${entry.id === 'foodOilCan' ? '1.0' : entry.id === 'dairyRoundContainer' ? '1.08' : entry.id === 'smallRoundBottle' ? '1.25' : '1.15'}"
+          exposure="${entry.id === 'foodOilCan' ? '1.0' : entry.id === 'dairyRoundContainer' ? '1.08' : entry.id === 'smallRoundBottle' ? '1.25' : entry.id === 'foodTrayDish' ? '0.55' : '1.15'}"
           tone-mapping="neutral"
           environment-image="${entry.id === 'smallRoundBottle' ? 'legacy' : 'neutral'}"
           camera-orbit="${CAMERA_ORBIT[entry.id] || '0deg 76deg 105%'}"
