@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { warmPublicBackend } from "../cinematic/publicApi";
+import { warmPublicBackend } from "../shared/publicApi";
 
 /**
  * LIMEX Assistant — floating chat widget for the public site.

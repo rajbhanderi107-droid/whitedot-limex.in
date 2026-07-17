@@ -312,6 +312,27 @@ export default function CaseStudyFeature() {
     grid.addEventListener('mouseleave', () => { paused = false; });
 
     const cardEls = [...grid.querySelectorAll<HTMLElement>('.csp-pcard')];
+    cardEls.forEach((c, i) => c.style.setProperty('--ci', String(Math.min(i, 8))));
+
+    // Scroll-triggered staggered entrance for the card grid (mirrors the
+    // static case-study page) — one-shot, disconnects after first reveal.
+    const gridSection = section.querySelector<HTMLElement>('.csp-grid-section');
+    if (gridSection) {
+      if ('IntersectionObserver' in window) {
+        const revealIO = new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting) {
+              gridSection.classList.add('csp-inview');
+              revealIO.disconnect();
+            }
+          },
+          { threshold: 0.1 },
+        );
+        revealIO.observe(gridSection);
+      } else {
+        gridSection.classList.add('csp-inview');
+      }
+    }
 
     function applyCardTransforms() {
       const sRect   = section!.getBoundingClientRect();

@@ -1,7 +1,7 @@
 import './foundation.css';
 
 import { Suspense, lazy, useEffect, useState, type ReactNode } from 'react';
-import { warmPublicBackend } from '../cinematic/publicApi';
+import { warmPublicBackend } from '../shared/publicApi';
 import Nav from './sections/Nav';
 import Hero from './sections/Hero';
 import Footer from './sections/Footer';
@@ -21,7 +21,7 @@ const ContinuityShell = lazy(() =>
 /* X-WD-END continuity */
 
 /* X-WD-BEGIN scroll-progress */
-import { ScrollProgress } from '../cinematic/ScrollProgress';
+import { ScrollProgress } from '../shared/ScrollProgress';
 /* X-WD-END scroll-progress */
 
 /* X-WD-BEGIN assistant */

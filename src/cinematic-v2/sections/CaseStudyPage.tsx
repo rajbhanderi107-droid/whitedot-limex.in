@@ -305,6 +305,23 @@ export default function CaseStudyPage() {
     grid.addEventListener('mouseleave', () => { paused = false; });
 
     const cardEls = [...grid.querySelectorAll<HTMLElement>('.csp-pcard')];
+    cardEls.forEach((c, i) => c.style.setProperty('--ci', String(Math.min(i, 8))));
+
+    // Scroll-triggered staggered entrance for the card grid — one-shot.
+    if ('IntersectionObserver' in window) {
+      const revealIO = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            section!.classList.add('csp-inview');
+            revealIO.disconnect();
+          }
+        },
+        { threshold: 0.1 },
+      );
+      revealIO.observe(section);
+    } else {
+      section.classList.add('csp-inview');
+    }
 
     function applyCardTransforms() {
       const sRect   = section!.getBoundingClientRect();

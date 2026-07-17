@@ -138,6 +138,8 @@ html, body {
   --v2-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --v2-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --v2-ease-in: cubic-bezier(0.5, 0, 0.75, 0);
+  --v2-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --v2-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
   /* z ladder */
   --v2-z-grain: 1;
@@ -628,7 +630,7 @@ html, body {
 @media (min-width: 768px) {
   [data-premium='on'] .v2-reveal {
     opacity: 0;
-    transform: translate3d(0, 18px, 0);
+    transform: translate3d(0, 24px, 0);
     transition:
       opacity var(--v2-dur-slow) var(--v2-ease-out),
       transform var(--v2-dur-slow) var(--v2-ease-out);
@@ -641,11 +643,11 @@ html, body {
 
   [data-premium='on'] .v2-reveal-group > * {
     opacity: 0;
-    transform: translate3d(0, 14px, 0);
+    transform: translate3d(0, 18px, 0);
     transition:
       opacity var(--v2-dur-base) var(--v2-ease-out),
       transform var(--v2-dur-base) var(--v2-ease-out);
-    transition-delay: calc(var(--v2-stagger-i, 0) * 70ms);
+    transition-delay: calc(var(--v2-stagger-i, 0) * 80ms);
     will-change: opacity, transform;
   }
   [data-premium='on'] .v2-reveal-group.is-in > * {

@@ -353,7 +353,7 @@
 
   /* Triggered: chars animate in with 28 ms per-character stagger */
   [data-premium='on'] .v2h-headline.is-in .v2h-char {
-    animation: v2h-char-rise 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: v2h-char-rise 0.72s var(--v2-ease-out) both;
     animation-delay: calc(var(--ci, 0) * 0.028s + 0.04s);
   }
 }
@@ -788,7 +788,7 @@
   [data-premium='on'] .v2h-headline.is-in .v2h-char {
     animation-name: v2h-char-rise;
     animation-duration: 0.72s !important;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-timing-function: var(--v2-ease-out);
     animation-delay: calc(var(--ci, 0) * 0.028s + 0.04s);
     animation-fill-mode: both;
     animation-iteration-count: 1 !important;

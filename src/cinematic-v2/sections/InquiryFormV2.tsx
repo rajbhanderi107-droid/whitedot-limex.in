@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { submitPublic, withAttribution } from '../../cinematic/publicApi';
-import type { SubmitStatus } from '../../cinematic/publicApi';
+import { submitPublic, withAttribution } from '../../shared/publicApi';
+import type { SubmitStatus } from '../../shared/publicApi';
 import './InquiryFormV2.css';
 
 export function InquiryFormV2() {

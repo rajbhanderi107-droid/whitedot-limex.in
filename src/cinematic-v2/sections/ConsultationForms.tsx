@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { appendAttributionNote, getLeadAttribution, submitPublic } from '../../cinematic/publicApi';
-import type { SubmitStatus } from '../../cinematic/publicApi';
+import { appendAttributionNote, getLeadAttribution, submitPublic } from '../../shared/publicApi';
+import type { SubmitStatus } from '../../shared/publicApi';
 import './InquiryFormV2.css';
 
 /* V1 Quote / Sample / Calculator forms, ported into the v2 (.v2iq-*) styling.

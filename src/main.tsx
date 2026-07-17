@@ -176,35 +176,14 @@ function renderComingSoon() {
 }
 
 function renderPublicSite() {
-  const useV1 = new URLSearchParams(window.location.search).get("v1") === "1";
-
-  if (!useV1) {
-    Promise.all([
-      import("./cinematic-v2/CinematicAppV2"),
-      import("./premium-wd"),
-    ]).then(([{ default: CinematicAppV2 }, { PremiumProvider }]) => {
-      createRoot(document.getElementById("root")!).render(
-        <StrictMode>
-          <PremiumProvider>
-            <CinematicAppV2 />
-          </PremiumProvider>
-        </StrictMode>,
-      );
-    });
-    return;
-  }
-
-  import("./cinematic/cinematic.css");
-  import("./premium-wd/premium-wd.css");
-
   Promise.all([
-    import("./cinematic/CinematicApp"),
+    import("./cinematic-v2/CinematicAppV2"),
     import("./premium-wd"),
-  ]).then(([{ default: CinematicApp }, { PremiumProvider }]) => {
+  ]).then(([{ default: CinematicAppV2 }, { PremiumProvider }]) => {
     createRoot(document.getElementById("root")!).render(
       <StrictMode>
         <PremiumProvider>
-          <CinematicApp />
+          <CinematicAppV2 />
         </PremiumProvider>
       </StrictMode>,
     );

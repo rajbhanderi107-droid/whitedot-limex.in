@@ -94,8 +94,13 @@
     .reveal-left  { opacity: 0; animation: revealLeft 1s cubic-bezier(0.22,1,0.36,1) 0.1s both; }
     .reveal-right { opacity: 0; animation: revealRight 1s cubic-bezier(0.22,1,0.36,1) 0.26s both; }
     .reveal-3 { animation-delay: 0.4s; }
-    /* Calm cadence: gallery section settles last */
-    .photo-gallery-section.reveal { animation-delay: 0.34s; }
+    /* Calm cadence: gallery section settles last — and scroll-triggered since
+       it usually sits below the fold, instead of animating in unseen on load. */
+    .photo-gallery-section.reveal { animation-delay: 0.34s; animation-play-state: paused; }
+    .photo-gallery-section.reveal.revealed { animation-play-state: running; }
+    @media (prefers-reduced-motion: reduce) {
+      .photo-gallery-section.reveal { animation-play-state: running; }
+    }
     /* Hero-left inner stagger — kicker → subtitle → tabs land in sequence
        (back-link excluded: a persistent fill-mode transform would block its hover slide) */
     .hero-left .case-kicker,
@@ -292,6 +297,8 @@
       content: ""; position: absolute; inset: -22% -18% -10%;
       background: radial-gradient(circle at 50% 38%, #d6d0bc 0%, rgba(214,208,188,0.85) 28%, rgba(214,208,188,0.4) 55%, transparent 72%);
       border-radius: 50%; filter: blur(20px); z-index: 0; pointer-events: none;
+      transform: translate3d(var(--stage-plx, 0px), var(--stage-ply, 0px), 0);
+      will-change: transform;
     }
     .product-stage::after {
       content: ""; position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%);
@@ -1262,8 +1269,61 @@
       }, 500);
     }
     setTimeout(() => {
-      document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach((el) => el.classList.add('revealed'));
+      document.querySelectorAll('.reveal:not(.photo-gallery-section), .reveal-left, .reveal-right').forEach((el) => el.classList.add('revealed'));
     }, 120);
+
+    // Restrained cursor parallax on the stage plinth — desktop, fine pointer,
+    // motion-allowed only. Max ~9px drift, opposite the cursor, rAF-lerped.
+    const stageEl = document.querySelector('.product-stage');
+    const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (stageEl && !coarsePointer && !reduceMotion) {
+      let targetX = 0, targetY = 0, curX = 0, curY = 0, rafId = null;
+      const MAX_DRIFT = 9;
+      const lerp = (a, b, t) => a + (b - a) * t;
+      const tick = () => {
+        curX = lerp(curX, targetX, 0.08);
+        curY = lerp(curY, targetY, 0.08);
+        stageEl.style.setProperty('--stage-plx', curX.toFixed(2) + 'px');
+        stageEl.style.setProperty('--stage-ply', curY.toFixed(2) + 'px');
+        if (Math.abs(curX - targetX) > 0.05 || Math.abs(curY - targetY) > 0.05) {
+          rafId = requestAnimationFrame(tick);
+        } else {
+          rafId = null;
+        }
+      };
+      stageEl.addEventListener('pointermove', (e) => {
+        const rect = stageEl.getBoundingClientRect();
+        const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+        targetX = -nx * MAX_DRIFT;
+        targetY = -ny * MAX_DRIFT;
+        if (!rafId) rafId = requestAnimationFrame(tick);
+      }, { passive: true });
+      stageEl.addEventListener('pointerleave', () => {
+        targetX = 0; targetY = 0;
+        if (!rafId) rafId = requestAnimationFrame(tick);
+      }, { passive: true });
+    }
+
+    // Photo gallery sits below the fold on most viewports — reveal it as it
+    // scrolls into view instead of animating in unseen at page load.
+    const gallerySection = document.querySelector('.photo-gallery-section.reveal');
+    if (gallerySection) {
+      if ('IntersectionObserver' in window) {
+        const galleryIO = new IntersectionObserver((entries) => {
+          entries.forEach((en) => {
+            if (en.isIntersecting) {
+              en.target.classList.add('revealed');
+              galleryIO.unobserve(en.target);
+            }
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+        galleryIO.observe(gallerySection);
+      } else {
+        gallerySection.classList.add('revealed');
+      }
+    }
   });
 
   function track(event, detail) { (window.dataLayer = window.dataLayer || []).push(Object.assign({ event }, detail || {})); }

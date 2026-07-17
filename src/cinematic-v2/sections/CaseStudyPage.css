@@ -228,7 +228,7 @@
   text-decoration: none; color: inherit;
   display: flex; flex-direction: column;
   height: 430px; width: 320px; flex-shrink: 0;
-  transition: box-shadow 0.5s ease, border-color 0.5s ease, background 0.5s ease;
+  transition: box-shadow 0.5s var(--cs-ease), border-color 0.5s var(--cs-ease), background 0.5s var(--cs-ease);
   will-change: transform, opacity;
 }
 .csp-pcard.featured { width: 440px; }
@@ -240,6 +240,25 @@
 }
 .csp-pcard.soon { cursor: default; }
 .csp-pcard.soon .csp-pmedia { filter: saturate(0.3) opacity(0.75); }
+
+/* Scroll-triggered staggered reveal — mirrors public/case-study/index.html's
+   cardContentIn pattern. Grid section gets .csp-inview via IntersectionObserver;
+   each card's --ci (set in JS) staggers its media/info entrance. */
+@keyframes cspCardIn { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: translateY(0); } }
+.csp-grid-section:not(.csp-inview) .csp-pmedia,
+.csp-grid-section:not(.csp-inview) .csp-pinfo { opacity: 0; }
+.csp-grid-section.csp-inview .csp-pmedia {
+  animation: cspCardIn 0.85s var(--cs-ease) both;
+  animation-delay: calc(var(--ci, 0) * 75ms);
+}
+.csp-grid-section.csp-inview .csp-pinfo {
+  animation: cspCardIn 0.85s var(--cs-ease) both;
+  animation-delay: calc(var(--ci, 0) * 75ms + 90ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .csp-grid-section .csp-pmedia,
+  .csp-grid-section .csp-pinfo { opacity: 1 !important; animation: none !important; }
+}
 .csp-pcard.soon .csp-pname  { color: var(--cs-faint); }
 
 /* Border beam */
