@@ -50,12 +50,13 @@ const saltBottleModel = `${basePath}/case-study/model/product-25-salt-bottle.glb
 const lightWeightContainerModel = `${basePath}/case-study/model/unbranded-thin-wall-tray-photo-match.glb`;
 const foodTrayDishModel = `${basePath}/case-study/model/product-27-food-tray-dish-photo-match.glb`;
 const lightWeightDishModel = `${basePath}/case-study/model/product-28-thin-wall-circle-dish.glb`;
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish';
-const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer', 'lunchBox', 'dairySweetContainer', 'dairyRoundContainer', 'rectangleContainer', 'hook20mm', 'roundPipe', 'applianceTray', 'motorFanBlade', 'cupContainer', 'toothBrush', 'petrolPipe', 'proteinContainer', 'rectangleBox', 'smallRoundBottle', 'saltBottle', 'lightWeightContainer', 'foodTrayDish', 'lightWeightDish']);
+const dermicoolPowderBottleHref = `${basePath}/case-study/product.html?p=dermicool-powder-bottle`;
+const dermicoolPowderBottleModel = `${basePath}/case-study/model/product-29-dermicool-powder-bottle.glb`;
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle';
+const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer', 'lunchBox', 'dairySweetContainer', 'dairyRoundContainer', 'rectangleContainer', 'hook20mm', 'roundPipe', 'applianceTray', 'motorFanBlade', 'cupContainer', 'toothBrush', 'petrolPipe', 'proteinContainer', 'rectangleBox', 'smallRoundBottle', 'saltBottle', 'lightWeightContainer', 'foodTrayDish', 'lightWeightDish', 'dermicoolPowderBottle']);
 
 // Pending products — same card as live ones; 3D model + spec details land later.
 const pendingProducts: { idx: string; slug: string; name: string; tag: string }[] = [
-  { idx: '29', slug: 'dermicool-powder-bottle', name: 'Dermicool Powder Bottle', tag: 'Personal Care Packaging' },
   { idx: '30', slug: 'woven-thread', name: 'Woven Thread', tag: 'Textile Material' },
   { idx: '31', slug: 'child-bottle', name: 'Child Bottle', tag: 'Personal Care Packaging' },
   { idx: '32', slug: 'water-tub', name: 'Water Tub', tag: 'Household Storage' },
@@ -245,6 +246,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 28', green: true },
+  ],
+  dermicoolPowderBottle: [
+    { value: '29', label: 'Powder Bottle' },
+    { value: '3D', label: 'Interactive Model' },
+    { value: 'Pending', label: 'Verified Specs' },
+    { value: 'Live', label: 'Product 29', green: true },
   ],
 };
 
@@ -1143,6 +1150,18 @@ export default function CaseStudyFeature() {
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Thin Wall Circle Dish</div><div className="csp-ptag">Kitchenware - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
+      {/* 29 Dermicool Powder Bottle - model live, verified composition pending */}
+      <a className="csp-pcard featured live" href={dermicoolPowderBottleHref} data-product="dermicoolPowderBottle">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">29</span>
+          {isMobileViewport ? <div className="csp-soon-placeholder">DP</div> : (
+            // @ts-ignore custom element
+            <model-viewer data-model-src={dermicoolPowderBottleModel} alt="Powder Bottle personal-care 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 74deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Powder Bottle</div><div className="csp-ptag">Personal Care Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {pendingProducts.map(p => (

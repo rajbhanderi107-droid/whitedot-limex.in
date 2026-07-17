@@ -48,7 +48,9 @@ const saltBottleModel = `${basePath}/case-study/model/product-25-salt-bottle.glb
 const lightWeightContainerModel = `${basePath}/case-study/model/unbranded-thin-wall-tray-photo-match.glb`;
 const foodTrayDishModel = `${basePath}/case-study/model/product-27-food-tray-dish-photo-match.glb`;
 const lightWeightDishModel = `${basePath}/case-study/model/product-28-thin-wall-circle-dish.glb`;
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish';
+const dermicoolPowderBottleHref = `${basePath}/case-study/product.html?p=dermicool-powder-bottle`;
+const dermicoolPowderBottleModel = `${basePath}/case-study/model/product-29-dermicool-powder-bottle.glb`;
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
@@ -225,6 +227,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 28', green: true },
   ],
+  dermicoolPowderBottle: [
+    { value: '29', label: 'Powder Bottle' },
+    { value: '3D', label: 'Interactive Model' },
+    { value: 'Pending', label: 'Verified Specs' },
+    { value: 'Live', label: 'Product 29', green: true },
+  ],
 };
 
 export default function CaseStudyPage() {
@@ -390,7 +398,7 @@ export default function CaseStudyPage() {
         if (!glow) return;
         c.addEventListener('mouseenter', () => {
           const product = c.dataset.product as ProductKey | undefined;
-          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan' || product === 'dairyContainer' || product === 'lunchBox' || product === 'dairySweetContainer' || product === 'dairyRoundContainer' || product === 'rectangleContainer' || product === 'hook20mm' || product === 'roundPipe' || product === 'applianceTray' || product === 'motorFanBlade' || product === 'cupContainer' || product === 'petrolPipe' || product === 'proteinContainer' || product === 'rectangleBox' || product === 'smallRoundBottle' || product === 'saltBottle' || product === 'lightWeightContainer' || product === 'foodTrayDish' || product === 'lightWeightDish') setActiveProductKey(product);
+          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan' || product === 'dairyContainer' || product === 'lunchBox' || product === 'dairySweetContainer' || product === 'dairyRoundContainer' || product === 'rectangleContainer' || product === 'hook20mm' || product === 'roundPipe' || product === 'applianceTray' || product === 'motorFanBlade' || product === 'cupContainer' || product === 'petrolPipe' || product === 'proteinContainer' || product === 'rectangleBox' || product === 'smallRoundBottle' || product === 'saltBottle' || product === 'lightWeightContainer' || product === 'foodTrayDish' || product === 'lightWeightDish' || product === 'dermicoolPowderBottle') setActiveProductKey(product);
         });
         c.addEventListener('mousemove', (e: MouseEvent) => {
           const r = c.getBoundingClientRect();
@@ -1084,6 +1092,18 @@ export default function CaseStudyPage() {
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Thin Wall Circle Dish</div><div className="csp-ptag">Kitchenware - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
+      {/* 29 Dermicool Powder Bottle - model live, verified composition pending */}
+      <a className="csp-pcard featured live" href={dermicoolPowderBottleHref} data-product="dermicoolPowderBottle">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">29</span>
+          {isMobileViewport ? <div className="csp-soon-placeholder">DP</div> : (
+            // @ts-ignore custom element
+            <model-viewer data-model-src={dermicoolPowderBottleModel} alt="Powder Bottle personal-care 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 74deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Powder Bottle</div><div className="csp-ptag">Personal Care Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
     </>
