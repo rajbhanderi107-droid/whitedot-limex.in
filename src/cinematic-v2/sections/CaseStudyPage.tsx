@@ -1120,7 +1120,7 @@ export default function CaseStudyPage() {
         <div className="csp-pmedia"><span className="csp-pidx">30</span>
           {isMobileViewport ? <div className="csp-soon-placeholder">WT</div> : (
             // @ts-ignore custom element
-            <model-viewer data-model-src={wovenThreadModel} alt="Woven Thread textile material 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 70deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={wovenThreadModel} alt="Woven Thread textile material 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="30deg 75deg 105%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Woven Thread</div><div className="csp-ptag">Textile Material - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>

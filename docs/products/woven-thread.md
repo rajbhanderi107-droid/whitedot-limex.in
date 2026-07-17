@@ -8,7 +8,8 @@
 
 ## Files
 - Data: `public/case-study/data/products/woven-thread.json`
-- 3D model: `public/case-study/model/product-30-woven-thread.glb` (procedural, built via `scripts/blender/build_woven_thread_product30.py`)
+- 3D model: `public/case-study/model/product-30-woven-thread.glb` — reuses the photo-matched wound-thread spool asset (same source as Product 1 Bobbin)
+- Editable source: `scripts/blender/product-30-woven-thread-source.blend`
 - HTML page: `product.html?p=woven-thread  (generic template, no dedicated file)`
 - Reference photos: `photos[]` empty in products.json — none supplied yet
 
