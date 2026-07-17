@@ -8,7 +8,7 @@
 
 ## Files
 - Data: `public/case-study/data/products/woven-thread.json`
-- 3D model: `public/case-study/model/product-30-woven-thread.glb` — reuses the photo-matched wound-thread spool asset (same source as Product 1 Bobbin)
+- 3D model: `public/case-study/model/product-30-woven-thread.glb` — a photo-matched wound-thread spool asset supplied for this product. Note: this is NOT the model Product 1 (Bobbin) currently serves live (`bobbin.glb`, 588 KB placeholder) — it is a separate, higher-fidelity 250mm spool model (14.9 MB) built from real product photography.
 - Editable source: `scripts/blender/product-30-woven-thread-source.blend`
 - HTML page: `product.html?p=woven-thread  (generic template, no dedicated file)`
 - Reference photos: `photos[]` empty in products.json — none supplied yet
