@@ -96,7 +96,49 @@ export default function Applications() {
     );
 
     cardElements.forEach((card) => observer.observe(card));
-    return () => observer.disconnect();
+
+    // Pointer 3D tilt + specular sheen — premium desktop only. One delegated
+    // listener on the grid; per-card CSS vars drive the transform (no re-render).
+    const canTilt =
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let tiltRaf = 0;
+    const onTiltMove = (e: PointerEvent) => {
+      if (document.documentElement.dataset.premium !== 'on') return;
+      const card = (e.target as HTMLElement).closest<HTMLElement>('.v2ap-card');
+      if (!card || tiltRaf) return;
+      tiltRaf = requestAnimationFrame(() => {
+        tiltRaf = 0;
+        const rect = card.getBoundingClientRect();
+        const nx = (e.clientX - rect.left) / rect.width - 0.5;
+        const ny = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.setProperty('--wd-ry', `${(nx * 7).toFixed(2)}deg`);
+        card.style.setProperty('--wd-rx', `${(-ny * 7).toFixed(2)}deg`);
+        card.style.setProperty('--wd-mx', `${((nx + 0.5) * 100).toFixed(1)}%`);
+        card.style.setProperty('--wd-my', `${((ny + 0.5) * 100).toFixed(1)}%`);
+      });
+    };
+    const onTiltOut = (e: PointerEvent) => {
+      const card = (e.target as HTMLElement).closest<HTMLElement>('.v2ap-card');
+      if (!card) return;
+      card.style.setProperty('--wd-rx', '0deg');
+      card.style.setProperty('--wd-ry', '0deg');
+    };
+    if (canTilt) {
+      grid.addEventListener('pointermove', onTiltMove, { passive: true });
+      grid.addEventListener('pointerout', onTiltOut, { passive: true });
+    }
+
+    return () => {
+      observer.disconnect();
+      if (canTilt) {
+        grid.removeEventListener('pointermove', onTiltMove);
+        grid.removeEventListener('pointerout', onTiltOut);
+        if (tiltRaf) cancelAnimationFrame(tiltRaf);
+      }
+    };
   }, [cards.ref]);
 
   return (

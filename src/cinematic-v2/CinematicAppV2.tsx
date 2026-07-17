@@ -32,6 +32,7 @@ const AssistantShell = lazy(() =>
 
 const MaterialStory = lazy(() => import('./sections/MaterialStory'));
 const Showcase = lazy(() => import('./sections/Showcase'));
+const PelletGalaxy = lazy(() => import('./sections/PelletGalaxy'));
 const LimexDetail = lazy(() => import('./sections/LimexDetail'));
 const Comparison = lazy(() => import('./sections/Comparison'));
 const Applications = lazy(() => import('./sections/Applications'));
@@ -114,6 +115,11 @@ export default function CinematicAppV2() {
           <LazySection>
             <MaterialStory />
           </LazySection>
+          {/* X-WD-BEGIN pellet-galaxy */}
+          <LazySection>
+            <PelletGalaxy />
+          </LazySection>
+          {/* X-WD-END pellet-galaxy */}
           <LazySection>
             <Showcase />
           </LazySection>
