@@ -48,7 +48,7 @@
       background:
         radial-gradient(ellipse 55% 45% at 78% 12%, rgba(79,154,53,0.04) 0%, transparent 60%),
         radial-gradient(ellipse 60% 50% at 18% 88%, rgba(79,154,53,0.04) 0%, transparent 62%),
-        radial-gradient(ellipse 120% 90% at 50% 30%, #ffffff 0%, #f4f5f2 52%, #eceee9 100%);
+        radial-gradient(ellipse 120% 90% at 50% 30%, #fbf9f2 0%, #f4f1e5 52%, #e9e4d2 100%);
       background-attachment: fixed;
       color: var(--wd-text);
       font-family: var(--wd-font-sans);
@@ -313,7 +313,7 @@
       position: relative;
       border-radius: 24px;
       overflow: hidden;
-      background: linear-gradient(135deg, rgba(255,255,255,0.88) 0%, rgba(246,247,244,0.65) 50%, rgba(255,255,255,0.78) 100%);
+      background: linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(250,248,241,0.74) 50%, rgba(255,255,255,0.85) 100%);
       border: 1.5px solid rgba(255,255,255,0.75);
       outline: 1px solid rgba(0,0,0,0.09);
       backdrop-filter: blur(24px) saturate(1.3);
@@ -383,6 +383,17 @@
       padding: 20px;
       min-height: 250px;
     }
+    /* Stage plinth behind the model — a soft studio-sweep backdrop (bright
+       highlight overhead, deepening toward the base) so white/light products
+       get real silhouette contrast without the flat, muddy look of a single
+       flat tone. */
+    .p-card-media::before {
+      content: ""; position: absolute; inset: 14px; z-index: 0; border-radius: 18px;
+      background:
+        radial-gradient(circle at 50% 30%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 42%),
+        linear-gradient(165deg, #f7f5ee 0%, #e7e2d2 45%, #cfc8b2 78%, #bdb49a 100%);
+    }
+    .p-card-media > * { position: relative; z-index: 1; }
 
     .p-card-media img, .p-card-media model-viewer {
       max-width: 85%; max-height: 90%;
@@ -450,7 +461,7 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 30px; font-weight: 900; letter-spacing: -0.03em;
       color: rgba(79,154,53,0.30);
-      background: radial-gradient(circle at 40% 32%, rgba(255,255,255,0.95), rgba(246,247,244,0.55) 60%, rgba(79,154,53,0.05) 100%);
+      background: radial-gradient(circle at 38% 30%, #f7f5ee 0%, rgba(231,226,210,0.92) 30%, rgba(207,200,178,0.58) 62%, rgba(79,154,53,0.05) 100%);
       border: 1px solid rgba(79,154,53,0.14);
       box-shadow: 0 14px 34px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9);
       animation: soonBreath 5.5s ease-in-out infinite alternate;
@@ -667,6 +678,38 @@
     .hs-label {
       font-size: 9px;
     }
+
+    /* ── Apple-style scroll-in: card contents fade + rise in a stagger ──
+       The marquee JS owns each .p-card's inline transform/opacity every frame,
+       so the entrance animates the card's CHILDREN (media + info) instead —
+       zero conflict with the coverflow, transform/opacity only. */
+    @keyframes cardContentIn {
+      from { opacity: 0; transform: translateY(26px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .product-grid-section:not(.in-view) .p-card-media,
+    .product-grid-section:not(.in-view) .p-card-info { opacity: 0; }
+    .product-grid-section.in-view .p-card-media {
+      animation: cardContentIn 0.85s var(--ease) both;
+      animation-delay: calc(var(--ci, 0) * 75ms);
+    }
+    .product-grid-section.in-view .p-card-info {
+      animation: cardContentIn 0.85s var(--ease) both;
+      animation-delay: calc(var(--ci, 0) * 75ms + 90ms);
+    }
+
+    /* ── Generic scroll reveal (IntersectionObserver adds .in-view) ── */
+    .wd-reveal {
+      opacity: 0; transform: translateY(22px);
+      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+    }
+    .wd-reveal.in-view { opacity: 1; transform: translateY(0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .product-grid-section .p-card-media,
+      .product-grid-section .p-card-info { animation: none !important; opacity: 1 !important; transform: none !important; }
+      .wd-reveal { transition: none !important; opacity: 1 !important; transform: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -727,7 +770,7 @@
     </div>
 
     <!-- Bottom bar -->
-    <div class="card-footer">
+    <div class="card-footer wd-reveal">
       <div class="footer-left">
         <div class="avatar-stack">
           <span class="av">W</span>
@@ -769,6 +812,15 @@
     rectangleContainer: './model/rectangle-container-d250.glb',
     hook20mm: './model/product-15-g1-clip.glb',
     roundPipe: './model/round-pipe-procedural.glb',
+    cupContainer: './model/product-19-cup-container.glb',
+    proteinContainer: './model/unbranded-tall-round-container.glb',
+    rectangleBox: './model/product-23-rectangle-box.glb',
+    smallRoundBottle: './model/product-24-small-round-bottle.glb?v=bright-white-20260716',
+    lightWeightContainer: './model/unbranded-thin-wall-tray-photo-match.glb',
+    foodTrayDish: './model/product-27-food-tray-dish-photo-match.glb',
+    lightWeightDish: './model/product-28-thin-wall-circle-dish.glb',
+    wovenThread: './model/product-30-woven-thread.glb',
+    childBottle: './model/product-31-sippy-cup.glb',
   };
   const CAMERA_ORBIT = {
     bobbin: '30deg 75deg 105%',
@@ -783,6 +835,15 @@
     rectangleContainer: '18deg 68deg 112%',
     hook20mm: '42deg 68deg 105%',
     roundPipe: '80deg 76deg 92%',
+    cupContainer: '20deg 78deg 112%',
+    proteinContainer: '22deg 76deg 112%',
+    rectangleBox: '18deg 70deg 112%',
+    smallRoundBottle: '20deg 76deg 112%',
+    lightWeightContainer: '24deg 74deg 110%',
+    foodTrayDish: '26deg 60deg 108%',
+    lightWeightDish: '24deg 66deg 110%',
+    wovenThread: '30deg 75deg 105%',
+    childBottle: '22deg 76deg 112%',
   };
   const CARD_BADGE = {
     bobbin: 'Featured',
@@ -797,6 +858,15 @@
     rectangleContainer: 'New Model',
     hook20mm: 'New Model',
     roundPipe: 'New Model',
+    cupContainer: 'New Model',
+    proteinContainer: 'New Model',
+    rectangleBox: 'New Model',
+    smallRoundBottle: 'New Model',
+    lightWeightContainer: 'New Model',
+    foodTrayDish: 'New Model',
+    lightWeightDish: 'New Model',
+    wovenThread: 'New Model',
+    childBottle: 'New Model',
   };
 
   function monogram(name) {
@@ -858,11 +928,11 @@
             alt="${entry.name} — LIMEX 3D model"
             loading="lazy"
             interaction-prompt="none"
-            shadow-intensity="${entry.id === 'foodOilCan' ? '0.9' : '0'}"
-            shadow-softness="${entry.id === 'foodOilCan' ? '0.8' : '1'}"
-            exposure="${entry.id === 'foodOilCan' ? '1.0' : '1.15'}"
+            shadow-intensity="${['foodOilCan', 'smallRoundBottle'].includes(entry.id) ? '0.9' : '0'}"
+            shadow-softness="${['foodOilCan', 'smallRoundBottle'].includes(entry.id) ? '0.8' : '1'}"
+            exposure="${entry.id === 'foodOilCan' ? '1.0' : entry.id === 'smallRoundBottle' ? '1.25' : '1.15'}"
             tone-mapping="neutral"
-            environment-image="neutral"
+            environment-image="${entry.id === 'smallRoundBottle' ? 'legacy' : 'neutral'}"
             camera-orbit="${CAMERA_ORBIT[entry.id] || '30deg 75deg 105%'}">
             ${entry.id === 'soapStand' ? '<div class="mv-loader" slot="progress-bar"></div>' : ''}
           </model-viewer>
@@ -1158,6 +1228,27 @@
       glow.style.setProperty('--gy', y);
     });
   });
+
+  // ── Scroll-in reveals (IntersectionObserver — no scroll listeners) ──
+  (function scrollReveals() {
+    const gridSection = document.querySelector('.product-grid-section');
+    // Per-card stagger index for the entrance wave (capped — the duplicated
+    // marquee set starts offscreen, so anything past 8 lands together)
+    grid.querySelectorAll('.p-card').forEach((c, i) => c.style.setProperty('--ci', String(Math.min(i, 8))));
+    const revealTargets = [gridSection, ...document.querySelectorAll('.wd-reveal')].filter(Boolean);
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      revealTargets.forEach(el => el.classList.add('in-view'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('in-view');
+        io.unobserve(en.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    revealTargets.forEach(el => io.observe(el));
+  })();
 
   // Analytics
   function track(ev, d) { (window.dataLayer = window.dataLayer || []).push(Object.assign({ event: ev }, d || {})); }

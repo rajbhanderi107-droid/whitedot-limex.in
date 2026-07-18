@@ -71,7 +71,7 @@
       background:
         radial-gradient(ellipse 70% 60% at 50% 0%, rgba(79,154,53,0.04) 0%, transparent 60%),
         radial-gradient(ellipse 40% 30% at 80% 60%, rgba(79,154,53,0.03) 0%, transparent 50%),
-        radial-gradient(ellipse 120% 90% at 50% 36%, #ffffff 0%, #f4f5f2 50%, #e9ebe6 100%);
+        radial-gradient(ellipse 120% 90% at 50% 36%, #fbf9f2 0%, #f4f1e5 50%, #e9e4d2 100%);
       background-attachment: fixed;
       color: var(--wd-text);
       font-family: var(--wd-font-sans);
@@ -94,8 +94,13 @@
     .reveal-left  { opacity: 0; animation: revealLeft 1s cubic-bezier(0.22,1,0.36,1) 0.1s both; }
     .reveal-right { opacity: 0; animation: revealRight 1s cubic-bezier(0.22,1,0.36,1) 0.26s both; }
     .reveal-3 { animation-delay: 0.4s; }
-    /* Calm cadence: gallery section settles last */
-    .photo-gallery-section.reveal { animation-delay: 0.34s; }
+    /* Calm cadence: gallery section settles last — and scroll-triggered since
+       it usually sits below the fold, instead of animating in unseen on load. */
+    .photo-gallery-section.reveal { animation-delay: 0.34s; animation-play-state: paused; }
+    .photo-gallery-section.reveal.revealed { animation-play-state: running; }
+    @media (prefers-reduced-motion: reduce) {
+      .photo-gallery-section.reveal { animation-play-state: running; }
+    }
     /* Hero-left inner stagger — kicker → subtitle → tabs land in sequence
        (back-link excluded: a persistent fill-mode transform would block its hover slide) */
     .hero-left .case-kicker,
@@ -290,8 +295,10 @@
     .product-stage.intro { animation: stageIn 1s var(--ease) both; }
     .product-stage::before {
       content: ""; position: absolute; inset: -22% -18% -10%;
-      background: radial-gradient(circle at 50% 38%, #ffffff 0%, rgba(255,255,255,0.85) 28%, rgba(255,255,255,0.4) 55%, transparent 72%);
+      background: radial-gradient(circle at 50% 36%, #f7f5ee 0%, rgba(231,226,210,0.92) 26%, rgba(207,200,178,0.55) 52%, transparent 74%);
       border-radius: 50%; filter: blur(20px); z-index: 0; pointer-events: none;
+      transform: translate3d(var(--stage-plx, 0px), var(--stage-ply, 0px), 0);
+      will-change: transform;
     }
     .product-stage::after {
       content: ""; position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%);
@@ -321,7 +328,7 @@
     }
     .stage-placeholder-circle {
       width: 62%; height: 62%; border-radius: 50%;
-      background: radial-gradient(circle at 40% 32%, rgba(255,255,255,0.95), rgba(246,247,244,0.6) 60%, rgba(79,154,53,0.06) 100%);
+      background: radial-gradient(circle at 38% 30%, #f7f5ee 0%, rgba(231,226,210,0.92) 30%, rgba(207,200,178,0.6) 62%, rgba(79,154,53,0.06) 100%);
       border: 1px solid rgba(79,154,53,0.16);
       display: flex; align-items: center; justify-content: center;
       box-shadow: 0 20px 60px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9);
@@ -831,6 +838,19 @@
     roundPipe: './model/round-pipe-procedural.glb',
     applianceTray: './model/product-17-appliance-tray.glb',
     motorFanBlade: './model/product-18-impeller.glb',
+    cupContainer: './model/product-19-cup-container.glb',
+    toothBrush: './model/product-20-toothbrush-collection.glb',
+    petrolPipe: './model/product-21-petrol-pipe.glb',
+    proteinContainer: './model/unbranded-tall-round-container.glb',
+    rectangleBox: './model/product-23-rectangle-box.glb',
+    smallRoundBottle: './model/product-24-small-round-bottle.glb?v=bright-white-20260716',
+    saltBottle: './model/product-25-salt-bottle.glb',
+    lightWeightContainer: './model/unbranded-thin-wall-tray-photo-match.glb',
+    foodTrayDish: './model/product-27-food-tray-dish-photo-match.glb',
+    lightWeightDish: './model/product-28-thin-wall-circle-dish.glb',
+    dermicoolPowderBottle: './model/product-29-dermicool-powder-bottle.glb',
+    wovenThread: './model/product-30-woven-thread.glb',
+    childBottle: './model/product-31-sippy-cup.glb',
   };
   const CAMERA_ORBIT = {
     bobbin: '0deg 76deg 105%',
@@ -851,6 +871,19 @@
     roundPipe: '80deg 76deg 92%',
     applianceTray: '28deg 74deg 108%',
     motorFanBlade: '28deg 62deg 108%',
+    cupContainer: '0deg 78deg 112%',
+    toothBrush: '20deg 78deg 112%',
+    petrolPipe: '20deg 78deg 112%',
+    proteinContainer: '22deg 76deg 112%',
+    rectangleBox: '18deg 70deg 112%',
+    smallRoundBottle: '20deg 76deg 112%',
+    saltBottle: '20deg 76deg 112%',
+    lightWeightContainer: '24deg 74deg 110%',
+    foodTrayDish: '26deg 60deg 108%',
+    lightWeightDish: '24deg 66deg 110%',
+    dermicoolPowderBottle: '20deg 74deg 112%',
+    wovenThread: '30deg 75deg 105%',
+    childBottle: '22deg 76deg 112%',
   };
   // Products whose GLB carries a baked animation to autoplay on the stage.
   const MODEL_ANIMATION = {
@@ -925,11 +958,11 @@
           rotation-per-second="22deg"
           interpolation-decay="100"
           interaction-prompt="none"
-          shadow-intensity="${['foodOilCan', 'dairyRoundContainer'].includes(entry.id) ? '0.9' : '0'}"
-          shadow-softness="${['foodOilCan', 'dairyRoundContainer'].includes(entry.id) ? '0.8' : '1'}"
-          exposure="${entry.id === 'foodOilCan' ? '1.0' : entry.id === 'dairyRoundContainer' ? '1.08' : '1.15'}"
+          shadow-intensity="${['foodOilCan', 'dairyRoundContainer', 'smallRoundBottle'].includes(entry.id) ? '0.9' : '0'}"
+          shadow-softness="${['foodOilCan', 'dairyRoundContainer', 'smallRoundBottle'].includes(entry.id) ? '0.8' : '1'}"
+          exposure="${entry.id === 'foodOilCan' ? '1.0' : entry.id === 'dairyRoundContainer' ? '1.08' : entry.id === 'smallRoundBottle' ? '1.25' : entry.id === 'foodTrayDish' ? '0.55' : '1.15'}"
           tone-mapping="neutral"
-          environment-image="neutral"
+          environment-image="${entry.id === 'smallRoundBottle' ? 'legacy' : 'neutral'}"
           camera-orbit="${CAMERA_ORBIT[entry.id] || '0deg 76deg 105%'}"
           min-camera-orbit="auto auto 70%"
           max-camera-orbit="auto auto 160%"
@@ -938,6 +971,25 @@
         </model-viewer>
       </div>`;
     mv = document.getElementById('productModel');
+
+    const MATERIAL_COLOR_OVERRIDE = {
+      foodTrayDish: [0.02, 0.02, 0.02, 1],
+    };
+    const colorOverride = MATERIAL_COLOR_OVERRIDE[entry.id];
+    if (colorOverride) {
+      const applyColorOverride = () => {
+        (mv.model?.materials || []).forEach((m) => {
+          m.pbrMetallicRoughness.setBaseColorFactor(colorOverride);
+        });
+      };
+      mv.addEventListener('load', applyColorOverride);
+      const pollId = setInterval(() => {
+        if (mv.model?.materials?.length) {
+          applyColorOverride();
+          clearInterval(pollId);
+        }
+      }, 150);
+    }
   } else {
     const mono = entry.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
     stageContent.innerHTML = `
@@ -1223,8 +1275,61 @@
       }, 500);
     }
     setTimeout(() => {
-      document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach((el) => el.classList.add('revealed'));
+      document.querySelectorAll('.reveal:not(.photo-gallery-section), .reveal-left, .reveal-right').forEach((el) => el.classList.add('revealed'));
     }, 120);
+
+    // Restrained cursor parallax on the stage plinth — desktop, fine pointer,
+    // motion-allowed only. Max ~9px drift, opposite the cursor, rAF-lerped.
+    const stageEl = document.querySelector('.product-stage');
+    const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (stageEl && !coarsePointer && !reduceMotion) {
+      let targetX = 0, targetY = 0, curX = 0, curY = 0, rafId = null;
+      const MAX_DRIFT = 9;
+      const lerp = (a, b, t) => a + (b - a) * t;
+      const tick = () => {
+        curX = lerp(curX, targetX, 0.08);
+        curY = lerp(curY, targetY, 0.08);
+        stageEl.style.setProperty('--stage-plx', curX.toFixed(2) + 'px');
+        stageEl.style.setProperty('--stage-ply', curY.toFixed(2) + 'px');
+        if (Math.abs(curX - targetX) > 0.05 || Math.abs(curY - targetY) > 0.05) {
+          rafId = requestAnimationFrame(tick);
+        } else {
+          rafId = null;
+        }
+      };
+      stageEl.addEventListener('pointermove', (e) => {
+        const rect = stageEl.getBoundingClientRect();
+        const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+        targetX = -nx * MAX_DRIFT;
+        targetY = -ny * MAX_DRIFT;
+        if (!rafId) rafId = requestAnimationFrame(tick);
+      }, { passive: true });
+      stageEl.addEventListener('pointerleave', () => {
+        targetX = 0; targetY = 0;
+        if (!rafId) rafId = requestAnimationFrame(tick);
+      }, { passive: true });
+    }
+
+    // Photo gallery sits below the fold on most viewports — reveal it as it
+    // scrolls into view instead of animating in unseen at page load.
+    const gallerySection = document.querySelector('.photo-gallery-section.reveal');
+    if (gallerySection) {
+      if ('IntersectionObserver' in window) {
+        const galleryIO = new IntersectionObserver((entries) => {
+          entries.forEach((en) => {
+            if (en.isIntersecting) {
+              en.target.classList.add('revealed');
+              galleryIO.unobserve(en.target);
+            }
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+        galleryIO.observe(gallerySection);
+      } else {
+        gallerySection.classList.add('revealed');
+      }
+    }
   });
 
   function track(event, detail) { (window.dataLayer = window.dataLayer || []).push(Object.assign({ event }, detail || {})); }
