@@ -147,14 +147,6 @@ export default function Consultation() {
                 Schedule a Call →
               </button>
             </div>
-
-            <div className="v2con-territory">
-              <p className="v2-eyebrow">Territory</p>
-              <p>
-                Gujarat &nbsp;·&nbsp; Rajasthan &nbsp;·&nbsp;
-                Daman &amp; Diu &nbsp;·&nbsp; Silvassa
-              </p>
-            </div>
           </aside>
         </div>
       </div>

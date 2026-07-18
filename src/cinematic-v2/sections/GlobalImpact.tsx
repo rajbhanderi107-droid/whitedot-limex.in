@@ -26,7 +26,7 @@ export default function GlobalImpact() {
         </h2>
         <p className="v2gi-copy v2-reveal">
           LIMEX travels from TBM in Japan, through Seven Dot, to White Dot
-          — the authorized partner for Gujarat, Rajasthan, Diu, and Daman.
+          — the authorized marketing and sales partner in western India.
           One material story, carried across a single supply line.
         </p>
         <a

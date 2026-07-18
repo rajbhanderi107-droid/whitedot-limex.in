@@ -11,7 +11,7 @@ const block1 = [
 
 const block2 = [
   { title: 'CaCO₃-based additive', body: 'A calcium-carbonate mineral technology forms the core of the material system.' },
-  { title: 'Fine mesh size — nano-particle precision', body: 'Nano-scale particle range of 2–8 microns (grade-dependent). Particles at this scale integrate within the polymer matrix, supporting even dispersion, consistent processing and a smooth surface finish.' },
+  { title: 'Fine mesh size — nano-particle precision', body: 'Nano-scale particle size of 2–8 microns (grade-dependent). Particles at this scale integrate within the polymer matrix, supporting even dispersion, consistent processing and a smooth surface finish.' },
   { title: 'Coated pellets', body: 'Coating supports processing behaviour and helps protect hopper, barrel, screw, mould and die life.' },
   { title: 'High-density grade', body: 'High-density grades can support rigidity and endurance in selected applications.' },
   { title: 'Low-density grade', body: 'Low-density options may help control weight increase where weight is a concern.' },
@@ -26,7 +26,6 @@ const block3Chips = [
   'FMCG products',
   'Industrial molded products',
   'ABS products',
-  'Biodegradable products',
 ];
 
 const block4 = [
@@ -38,6 +37,8 @@ const block4 = [
   { title: 'Industrial products', body: 'Suited to application-specific trials where rigidity, endurance, finishing and processing behaviour matter.' },
 ];
 
+const pelletMacro = `${import.meta.env.BASE_URL}assets/higgsfield/journey/limex-pellets-light.webp`;
+
 export default function LimexDetail() {
   const b1Head = useReveal<HTMLDivElement>();
   const b1Group = useStaggerGroup<HTMLDivElement>();
@@ -47,6 +48,7 @@ export default function LimexDetail() {
   const b3Group = useStaggerGroup<HTMLDivElement>();
   const b4Head = useReveal<HTMLDivElement>();
   const b4Group = useStaggerGroup<HTMLDivElement>();
+  const material = useReveal<HTMLElement>();
 
   return (
     <section className="v2ld v2-bg-light" id="limex">
@@ -82,6 +84,17 @@ export default function LimexDetail() {
             ))}
           </div>
         </div>
+
+        {/* Material close-up */}
+        <figure className="v2ld-material v2-reveal" ref={material.ref}>
+          <img
+            src={pelletMacro}
+            alt="LIMEX masterbatch pellets, a calcium carbonate compound"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption>LIMEX masterbatch pellets — calcium carbonate compound, ready for existing lines.</figcaption>
+        </figure>
 
         {/* BLOCK 3 */}
         <div className="v2ld-block v2ld-block--compat">
