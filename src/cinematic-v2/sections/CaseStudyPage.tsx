@@ -60,7 +60,9 @@ const toiletSeatHref = `${basePath}/case-study/product.html?p=toilet-seat`;
 const toiletSeatModel = `${basePath}/case-study/model/product-33-toilet-seat.glb`;
 const nonWovenBagHref = `${basePath}/case-study/product.html?p=non-woven-bag`;
 const nonWovenBagModel = `${basePath}/case-study/model/product-34-nonwoven-bag.glb`;
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'childBottle' | 'waterTub' | 'toiletSeat' | 'nonWovenBag';
+const courierBagHref = `${basePath}/case-study/product.html?p=courier-bag`;
+const courierBagModel = `${basePath}/case-study/model/product-35-courier-bag.glb`;
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'childBottle' | 'waterTub' | 'toiletSeat' | 'nonWovenBag' | 'courierBag';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
@@ -267,6 +269,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 34', green: true },
   ],
+  courierBag: [
+    { value: '35', label: 'Courier Bag' },
+    { value: '3D', label: 'Interactive Model' },
+    { value: 'Pending', label: 'Verified Specs' },
+    { value: 'Live', label: 'Product 35', green: true },
+  ],
   dermicoolPowderBottle: [
     { value: '29', label: 'Powder Bottle' },
     { value: '3D', label: 'Interactive Model' },
@@ -438,7 +446,7 @@ export default function CaseStudyPage() {
         if (!glow) return;
         c.addEventListener('mouseenter', () => {
           const product = c.dataset.product as ProductKey | undefined;
-          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan' || product === 'dairyContainer' || product === 'lunchBox' || product === 'dairySweetContainer' || product === 'dairyRoundContainer' || product === 'rectangleContainer' || product === 'hook20mm' || product === 'roundPipe' || product === 'applianceTray' || product === 'motorFanBlade' || product === 'cupContainer' || product === 'petrolPipe' || product === 'proteinContainer' || product === 'rectangleBox' || product === 'smallRoundBottle' || product === 'saltBottle' || product === 'lightWeightContainer' || product === 'foodTrayDish' || product === 'lightWeightDish' || product === 'dermicoolPowderBottle' || product === 'wovenThread' || product === 'childBottle' || product === 'waterTub' || product === 'toiletSeat' || product === 'nonWovenBag') setActiveProductKey(product);
+          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan' || product === 'dairyContainer' || product === 'lunchBox' || product === 'dairySweetContainer' || product === 'dairyRoundContainer' || product === 'rectangleContainer' || product === 'hook20mm' || product === 'roundPipe' || product === 'applianceTray' || product === 'motorFanBlade' || product === 'cupContainer' || product === 'petrolPipe' || product === 'proteinContainer' || product === 'rectangleBox' || product === 'smallRoundBottle' || product === 'saltBottle' || product === 'lightWeightContainer' || product === 'foodTrayDish' || product === 'lightWeightDish' || product === 'dermicoolPowderBottle' || product === 'wovenThread' || product === 'childBottle' || product === 'waterTub' || product === 'toiletSeat' || product === 'nonWovenBag' || product === 'courierBag') setActiveProductKey(product);
         });
         c.addEventListener('mousemove', (e: MouseEvent) => {
           const r = c.getBoundingClientRect();
@@ -1204,6 +1212,18 @@ export default function CaseStudyPage() {
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Non Woven Bag</div><div className="csp-ptag">Packaging Textile - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
+      {/* 35 Courier Bag - model live, verified composition pending */}
+      <a className="csp-pcard featured live" href={courierBagHref} data-product="courierBag">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">35</span>
+          {isMobileViewport ? <div className="csp-soon-placeholder">CB</div> : (
+            // @ts-ignore custom element
+            <model-viewer data-model-src={courierBagModel} alt="Courier Bag logistics-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 76deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Courier Bag</div><div className="csp-ptag">Logistics Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
     </>
