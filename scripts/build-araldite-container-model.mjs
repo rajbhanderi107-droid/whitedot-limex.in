@@ -1,3 +1,8 @@
+// SUPERSEDED — do not run. The live araldite-container-procedural.glb is a
+// photo-matched, Draco/WebP-compressed model built through a different
+// pipeline (see git log for that file). This script's crude procedural
+// placeholder was accidentally re-run over the real asset on 2026-07-18 and
+// had to be restored from git history — kept only for historical reference.
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import * as THREE from 'three';
