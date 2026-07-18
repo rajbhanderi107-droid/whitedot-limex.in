@@ -1,4 +1,4 @@
-"""Product 14 — HAVMOR D-250 rectangular container, Blender 5.1.
+"""Product 14 — D-250 rectangular container, Blender 5.1.
 
 Photo- and blueprint-matched editable model. The 250 x 190 mm lid drawing and
 the supplied photographs are treated as authoritative where the base sheet's
@@ -193,8 +193,7 @@ injection.data.materials.append(mark)
 injection.parent = body_root
 molded_text("PP 5     FOOD SAFE     *", "interior food safe symbols", (0, 24, 3.0), 5.2, 0.24, mark, body_root)
 molded_text("REUSABLE", "interior reusable marking", (0, 12, 3.0), 5.4, 0.24, mark, body_root)
-molded_text("HAVMOR PLAST PVT LTD", "interior manufacturer marking", (0, -12, 3.0), 4.0, 0.22, mark, body_root)
-molded_text("D-250", "interior part number", (0, -23, 3.0), 5.2, 0.24, mark, body_root)
+molded_text("D-250", "interior part number", (0, -18, 3.0), 5.2, 0.24, mark, body_root)
 # This is a one-piece container: the photographed "lid" artwork is actually
 # molded into the interior base. Add its shallow recessed panel boundary and
 # keep all branding on the floor of the container.

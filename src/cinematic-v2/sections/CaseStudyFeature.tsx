@@ -32,7 +32,7 @@ const lunchBoxModel = `${basePath}/case-study/model/lunch-box.glb`;
 const dairySweetContainerHref = `${basePath}/case-study/product.html?p=dairy-sweet-container`;
 const dairySweetContainerModel = `${basePath}/case-study/model/dairy-sweet-container-procedural.glb`;
 const dairyRoundContainerHref = `${basePath}/case-study/product.html?p=dairy-round-container`;
-const dairyRoundContainerModel = `${basePath}/case-study/model/Havmor_D500_Bowl.glb`;
+const dairyRoundContainerModel = `${basePath}/case-study/model/D500_Bowl.glb`;
 const rectangleContainerHref = `${basePath}/case-study/product.html?p=rectangle-container`;
 const rectangleContainerModel = `${basePath}/case-study/model/rectangle-container-d250.glb`;
 const roundPipeModel = `${basePath}/case-study/model/round-pipe-procedural.glb`;
@@ -54,12 +54,13 @@ const dermicoolPowderBottleHref = `${basePath}/case-study/product.html?p=dermico
 const dermicoolPowderBottleModel = `${basePath}/case-study/model/product-29-dermicool-powder-bottle.glb`;
 const wovenThreadHref = `${basePath}/case-study/product.html?p=woven-thread`;
 const wovenThreadModel = `${basePath}/case-study/model/product-30-woven-thread.glb`;
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread';
-const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer', 'lunchBox', 'dairySweetContainer', 'dairyRoundContainer', 'rectangleContainer', 'hook20mm', 'roundPipe', 'applianceTray', 'motorFanBlade', 'cupContainer', 'toothBrush', 'petrolPipe', 'proteinContainer', 'rectangleBox', 'smallRoundBottle', 'saltBottle', 'lightWeightContainer', 'foodTrayDish', 'lightWeightDish', 'dermicoolPowderBottle', 'wovenThread']);
+const childBottleHref = `${basePath}/case-study/product.html?p=child-bottle`;
+const childBottleModel = `${basePath}/case-study/model/product-31-sippy-cup.glb`;
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'childBottle';
+const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer', 'lunchBox', 'dairySweetContainer', 'dairyRoundContainer', 'rectangleContainer', 'hook20mm', 'roundPipe', 'applianceTray', 'motorFanBlade', 'cupContainer', 'toothBrush', 'petrolPipe', 'proteinContainer', 'rectangleBox', 'smallRoundBottle', 'saltBottle', 'lightWeightContainer', 'foodTrayDish', 'lightWeightDish', 'dermicoolPowderBottle', 'wovenThread', 'childBottle']);
 
 // Pending products — same card as live ones; 3D model + spec details land later.
 const pendingProducts: { idx: string; slug: string; name: string; tag: string }[] = [
-  { idx: '31', slug: 'child-bottle', name: 'Child Bottle', tag: 'Personal Care Packaging' },
   { idx: '32', slug: 'water-tub', name: 'Water Tub', tag: 'Household Storage' },
   { idx: '33', slug: 'toilet-seat', name: 'Toilet Seat', tag: 'Sanitaryware' },
   { idx: '34', slug: 'non-woven-bag', name: 'Non Woven Bag', tag: 'Packaging Textile' },
@@ -99,7 +100,7 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: <>~39<small>%</small></>, label: 'Limestone in Part', green: true },
   ],
   aralditeContainer: [
-    { value: '04', label: 'Araldite Container' },
+    { value: '04', label: 'Adhesive Dispenser Container' },
     { value: <>30<small>%</small></>, label: 'LIMEX' },
     { value: <>70<small>%</small></>, label: 'PP' },
     { value: <>~23<small>%</small></>, label: 'Limestone in Part', green: true },
@@ -153,13 +154,13 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: 'Live', label: 'Product 12', green: true },
   ],
   dairyRoundContainer: [
-    { value: '13', label: 'Havmor D500 Bowl' },
+    { value: '13', label: 'D500 Bowl' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'D500', label: 'Dairy Bowl' },
     { value: 'Live', label: 'Product 13', green: true },
   ],
   rectangleContainer: [
-    { value: '14', label: 'HAVMOR D-250 Container' },
+    { value: '14', label: 'D-250 Container' },
     { value: '250×190', label: 'mm Envelope' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 14', green: true },
@@ -253,6 +254,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 29', green: true },
+  ],
+  childBottle: [
+    { value: '31', label: 'Child Bottle' },
+    { value: '3D', label: 'Interactive Model' },
+    { value: 'Pending', label: 'Verified Specs' },
+    { value: 'Live', label: 'Product 31', green: true },
   ],
   wovenThread: [
     { value: '30', label: 'Woven Thread' },
@@ -594,7 +601,7 @@ export default function CaseStudyFeature() {
           <span className="csp-pgo">→</span>
         </div>
       </a>
-      {/* 04 Araldite Container - live */}
+      {/* 04 Adhesive Dispenser Container - live */}
       <a className="csp-pcard featured live" href={aralditeHref} data-product="aralditeContainer">
         <div className="csp-border-beam" />
         <div className="csp-pglass" />
@@ -602,13 +609,13 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia">
           <span className="csp-pidx">04</span>
           {isMobileViewport ? (
-            <div className="csp-soon-placeholder">AC</div>
+            <div className="csp-soon-placeholder">AD</div>
           ) : (
             // @ts-ignore custom element
             <model-viewer
               data-model-src={aralditeModel}
               poster={`${basePath}/case-study/img/araldite-poster.jpg`}
-              alt="Araldite Container — LIMEX adhesive dispenser bottle 3D model"
+              alt="Adhesive Dispenser Container — LIMEX adhesive dispenser bottle 3D model"
               loading="lazy"
               interaction-prompt="none"
               shadow-intensity="0.9"
@@ -626,7 +633,7 @@ export default function CaseStudyFeature() {
             <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
               <span className="csp-pfeatured">New Study</span>
             </div>
-            <div className="csp-pname">Araldite Container</div>
+            <div className="csp-pname">Adhesive Dispenser Container</div>
             <div className="csp-ptag">Adhesive Dispenser · LIMEX + PP</div>
             <div className="csp-pbar">
               <span style={{ flex:30, height:'100%', background:'var(--cs-green)', display:'block' }} />
@@ -967,28 +974,28 @@ export default function CaseStudyFeature() {
           </div>
         </a>
 
-      {/* 13 Havmor D500 Bowl - live */}
+      {/* 13 D500 Bowl - live */}
       <a className="csp-pcard featured live" href={dairyRoundContainerHref} data-product="dairyRoundContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">13</span>
           {isMobileViewport ? <div className="csp-soon-placeholder">D5</div> : (
             // @ts-ignore custom element
-            <model-viewer data-model-src={dairyRoundContainerModel} alt="Havmor D500 Bowl 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.08" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 72deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={dairyRoundContainerModel} alt="D500 Bowl 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.08" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 72deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Havmor D500 Bowl</div><div className="csp-ptag">Dairy Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">D500 Bowl</div><div className="csp-ptag">Dairy Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 14 HAVMOR D-250 Rectangle Container - live */}
+      {/* 14 D-250 Rectangle Container - live */}
       <a className="csp-pcard featured live" href={rectangleContainerHref} data-product="rectangleContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">14</span>
           {isMobileViewport ? <div className="csp-soon-placeholder">D2</div> : (
             // @ts-ignore custom element
-            <model-viewer data-model-src={rectangleContainerModel} alt="HAVMOR D-250 rectangular container 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.75" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 70deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={rectangleContainerModel} alt="D-250 rectangular container 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.75" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 70deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">HAVMOR D-250 Container</div><div className="csp-ptag">One-Piece Molded Plastic Container - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Photo-matched geometry</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">D-250 Container</div><div className="csp-ptag">One-Piece Molded Plastic Container - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Photo-matched geometry</span></div></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 15 20 mm Hook — live (newest); shown in numeric sequence after 14 */}
@@ -1181,6 +1188,18 @@ export default function CaseStudyFeature() {
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Woven Thread</div><div className="csp-ptag">Textile Material - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
+      {/* 31 Child Bottle - model live, verified composition pending */}
+      <a className="csp-pcard featured live" href={childBottleHref} data-product="childBottle">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">31</span>
+          {isMobileViewport ? <div className="csp-soon-placeholder">CB</div> : (
+            // @ts-ignore custom element
+            <model-viewer data-model-src={childBottleModel} alt="Child Bottle personal-care 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="22deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Child Bottle</div><div className="csp-ptag">Personal Care Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {pendingProducts.map(p => (

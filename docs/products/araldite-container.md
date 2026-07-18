@@ -1,4 +1,4 @@
-# Araldite Container  
+# Adhesive Dispenser Container (Product 04)
 
 - **id:** `aralditeContainer`  
 - **index:** 04  

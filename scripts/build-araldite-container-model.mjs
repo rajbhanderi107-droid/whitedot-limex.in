@@ -11,7 +11,7 @@ globalThis.FileReader = class {
 const outDir = resolve('public/case-study/model');
 mkdirSync(outDir, { recursive: true });
 const scene = new THREE.Scene();
-scene.name = 'Araldite Container LIMEX PP';
+scene.name = 'Adhesive Dispenser Container LIMEX PP';
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * REFERENCE PHOTO MEASUREMENTS  (4096 × 4096 source)
