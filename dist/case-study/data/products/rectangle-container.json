@@ -2,15 +2,15 @@
   "id": "rectangleContainer",
   "index": "14",
   "slug": "rectangle-container",
-  "name": "HAVMOR D-250 Container",
+  "name": "D-250 Container",
   "category": "General Packaging",
   "status": "live",
   "modelFile": "model/rectangle-container-d250.glb",
   "htmlPage": "product.html?p=rectangle-container  (generic template, no dedicated file)",
   "composition": null,
   "specs": null,
-  "tagline": "A photo-matched one-piece HAVMOR D-250 molded plastic container reconstructed from the supplied photographs and technical blueprints.",
-  "description": "A single-piece rectangular polypropylene-style container with a continuous molded rim, tapered walls, recessed interior base panel, ejector marks, injection point, and molded HAVMOR / REUSABLE / D-250 markings. Geometry is calibrated against the supplied 250 x 190 mm D-250 lid-envelope drawing and pixel-measured product photographs. No LIMEX formulation or supplier composition is claimed.",
+  "tagline": "A photo-matched one-piece D-250 molded plastic container reconstructed from the supplied photographs and technical blueprints.",
+  "description": "A single-piece rectangular polypropylene-style container with a continuous molded rim, tapered walls, recessed interior base panel, ejector marks, injection point, and molded REUSABLE / D-250 markings. Geometry is calibrated against the supplied 250 x 190 mm D-250 lid-envelope drawing and pixel-measured product photographs. No LIMEX formulation or supplier composition is claimed.",
   "application": "General packaging container",
   "note": "3D geometry is photo- and blueprint-matched. Material composition and verified supplier data are not published until confirmed."
 }
