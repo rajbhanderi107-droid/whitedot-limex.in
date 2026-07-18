@@ -20,6 +20,18 @@ const SOCIAL = [
 export default function Footer() {
   return (
     <footer className="v2ft">
+      <video
+        className="v2ft-bg-video"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        poster="/assets/images/footer-limex-background.png"
+        aria-hidden="true"
+      >
+        <source src="/assets/videos/sections/footer-material-flow.mp4" type="video/mp4" />
+      </video>
       <div className="v2ft-inner">
         <div className="v2ft-brand">
           <p className="v2ft-wordmark">White Dot</p>

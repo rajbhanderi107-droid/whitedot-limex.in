@@ -78,7 +78,7 @@
   flex-direction: column;
   justify-content: center;
   padding: clamp(5.5rem, 10vh, 8rem) clamp(2rem, 5.7vw, 7rem);
-  color: #202322;
+  color: #151a17;
   background: linear-gradient(
     90deg,
     #f5f2eb 0%,
@@ -91,12 +91,13 @@
 
 .v2story__opening-eyebrow {
   margin: 0 0 clamp(1.7rem, 4vh, 3.2rem);
-  color: #3f7f40;
+  color: #185c29;
   font-size: clamp(0.72rem, 1.1vw, 1.35rem);
-  font-weight: 500;
+  font-weight: 750;
   letter-spacing: 0.22em;
   line-height: 1.25;
   text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.92);
 }
 
 .v2story__opening-title {
@@ -106,6 +107,7 @@
   font-weight: 400;
   letter-spacing: -0.035em;
   line-height: 1.06;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.88);
 }
 
 .v2story__opening-lead {
@@ -115,6 +117,7 @@
   font-weight: 400;
   letter-spacing: -0.012em;
   line-height: 1.55;
+  color: #2a302c;
 }
 
 /* Scene 8 also contains obsolete CO2-origin copy baked into every video
@@ -124,7 +127,7 @@
   z-index: 4;
   inset: 0 auto 0 0;
   width: min(48vw, 58rem);
-  color: #202322;
+  color: #151a17;
   font-family: var(--v2-font-family);
   pointer-events: none;
 }
@@ -204,12 +207,13 @@
 
 .v2story__finale-eyebrow {
   margin: 0 0 clamp(1.5rem, 3.5vh, 2.8rem);
-  color: #3f7f40;
+  color: #185c29;
   font-size: clamp(0.72rem, 0.95vw, 1rem);
-  font-weight: 500;
+  font-weight: 750;
   letter-spacing: 0.22em;
   line-height: 1.25;
   text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.92);
 }
 
 .v2story__finale-title {
@@ -219,6 +223,7 @@
   font-weight: 400;
   letter-spacing: 0;
   line-height: 1.12;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.88);
 }
 
 .v2story__finale-lead {
@@ -228,6 +233,7 @@
   font-weight: 400;
   letter-spacing: 0;
   line-height: 1.55;
+  color: #2a302c;
 }
 
 /* ------------------------------------------------------------------ */

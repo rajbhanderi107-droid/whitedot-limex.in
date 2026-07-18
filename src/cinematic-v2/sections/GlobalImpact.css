@@ -17,9 +17,11 @@
   object-fit: cover;
   opacity: 0.66;
   filter: saturate(0.9);
-  transform: scale(1.03);
-  animation: v2gi-drift 24s var(--v2-ease-in-out) infinite;
+  transform: none;
 }
+
+.v2gi-bg-fallback { display: none; }
+.v2gi-bg--motion { object-position: center; }
 
 .v2gi::before {
   content: '';
@@ -69,11 +71,6 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-}
-
-@keyframes v2gi-drift {
-  0%, 100% { transform: scale(1.03) translate3d(0, 0, 0); }
-  50% { transform: scale(1.08) translate3d(-1%, -0.8%, 0); }
 }
 
 @keyframes v2gi-industrial-scan {
@@ -163,7 +160,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :root:not([data-premium='on']) .v2gi-bg,
   :root:not([data-premium='on']) .v2gi::before {
     animation: none;
   }

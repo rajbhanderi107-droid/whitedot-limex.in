@@ -7,10 +7,22 @@ export default function GlobalImpact() {
 
   return (
     <section className="v2gi" id="global-impact">
-      <picture>
+      <video
+        className="v2gi-bg v2gi-bg--motion"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        poster="/assets/storyboard/frame-13-globalimpact.webp"
+        aria-hidden="true"
+      >
+        <source src="/assets/videos/sections/global-impact-route.mp4" type="video/mp4" />
+      </video>
+      <picture className="v2gi-bg-fallback">
         <source srcSet="/assets/storyboard/frame-13-globalimpact.webp" type="image/webp" />
         <img
-          className="v2gi-bg"
+          className="v2gi-bg v2gi-bg--still"
           src="/assets/storyboard/frame-13-globalimpact.png"
           alt=""
           loading="lazy"
