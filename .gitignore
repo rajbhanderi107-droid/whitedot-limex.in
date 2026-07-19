@@ -39,3 +39,4 @@ scripts/blender/renders/
 docs/whitedot brain/
 docs/brain/
 __pycache__/
+dist/
