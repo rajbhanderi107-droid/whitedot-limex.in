@@ -40,7 +40,11 @@ const GLOW = [79, 154, 53] as const;
 const BACKDROPS = [
   `${import.meta.env.BASE_URL}assets/higgsfield/journey/limestone-birth.webp`,
   `${import.meta.env.BASE_URL}assets/higgsfield/journey/limex-pellets-pour.webp`,
-  `${import.meta.env.BASE_URL}assets/higgsfield/journey/bottle-exploded.webp`,
+  // Cache-busted: this filename is served with a 1-year immutable
+  // Cache-Control by Cloudflare, so replacing the file in place doesn't
+  // reach visitors until the query string changes (matches the ?v= pattern
+  // used elsewhere in the site for the same reason).
+  `${import.meta.env.BASE_URL}assets/higgsfield/journey/bottle-exploded.webp?v=20260720-limestone-pellet-render`,
 ] as const;
 
 /* Bottle silhouette: radius as a function of height y in [-1.15, 1.15]. */
