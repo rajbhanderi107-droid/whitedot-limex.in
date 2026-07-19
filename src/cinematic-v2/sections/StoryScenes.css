@@ -37,7 +37,9 @@
   font-size: clamp(0.72rem, 0.95vw, 0.92rem);
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #3f7a4b;
+  color: #205f32;
+  font-weight: 700;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.82);
   margin: 0 0 1.1em;
 }
 

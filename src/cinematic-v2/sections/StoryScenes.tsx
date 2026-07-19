@@ -35,18 +35,18 @@ type DishSpec = {
 };
 
 const SCIENCE_DISHES: DishSpec[] = [
-  { id: 'limestone', cls: '1', x: 170, y: 40, mcx: 352, mcy: 226, solid: 116, edge: 124 },
-  { id: 'powder', cls: '2', x: 640, y: 40, mcx: 820, mcy: 220, solid: 138, edge: 148 },
-  { id: 'binder', cls: '3', x: 1110, y: 40, mcx: 1290, mcy: 220, solid: 138, edge: 148 },
-  { id: 'additive', cls: '4', x: 1580, y: 40, mcx: 1760, mcy: 220, solid: 138, edge: 148 },
-  { id: 'limex', cls: 'result', x: 640, y: 670, mcx: 820, mcy: 850, solid: 134, edge: 152 },
+  { id: 'limestone', cls: '1', x: 40, y: 40, mcx: 220, mcy: 220, solid: 116, edge: 124 },
+  { id: 'powder', cls: '2', x: 450, y: 40, mcx: 630, mcy: 220, solid: 138, edge: 148 },
+  { id: 'binder', cls: '3', x: 860, y: 40, mcx: 1040, mcy: 220, solid: 138, edge: 148 },
+  { id: 'additive', cls: '4', x: 1270, y: 40, mcx: 1450, mcy: 220, solid: 138, edge: 148 },
+  { id: 'limex', cls: 'result', x: 656, y: 670, mcx: 836, mcy: 850, solid: 134, edge: 152 },
 ];
 
 const SCIENCE_LABELS: { x: number; lines: [string, string] }[] = [
-  { x: 352, lines: ['Limestone', 'CaCO₃'] },
-  { x: 820, lines: ['High-purity', 'Calcium carbonate'] },
-  { x: 1290, lines: ['Polymer', ''] },
-  { x: 1760, lines: ['Additive', ''] },
+  { x: 220, lines: ['Limestone', 'CaCO₃'] },
+  { x: 630, lines: ['High-purity', 'Calcium carbonate'] },
+  { x: 1040, lines: ['Polymer', 'Binder'] },
+  { x: 1450, lines: ['Additive', 'Performance modifier'] },
 ];
 
 export function SceneScience({ active }: SceneProps) {
@@ -59,14 +59,14 @@ export function SceneScience({ active }: SceneProps) {
         </h3>
         <p className="wds3-sub">
           Our proprietary process converts limestone into high-purity calcium
-          carbonate, blended with polymer to create LIMEX.
+          carbonate, blended with polymer and a performance additive to create LIMEX.
         </p>
       </div>
 
       <div className="wds3-diagram-wrap">
         <svg
           className="wds3-diagram"
-          viewBox="0 0 2142 1080"
+          viewBox="0 0 1672 1080"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -104,28 +104,28 @@ export function SceneScience({ active }: SceneProps) {
           <path
             className="wds3-arrow wds3-arrow--1"
             pathLength={1}
-            d="M500 223 H640 M620 203 L644 223 L620 243"
+            d="M368 220 H450 M430 200 L454 220 L430 240"
           />
           <path
             className="wds3-arrow wds3-arrow--2"
             pathLength={1}
-            d="M1000 220 H1100 M1080 200 L1104 220 L1080 240"
+            d="M778 220 H860 M840 200 L864 220 L840 240"
           />
           <path
             className="wds3-arrow wds3-arrow--3"
             pathLength={1}
-            d="M1470 220 H1570 M1550 200 L1574 220 L1550 240"
+            d="M1188 220 H1270 M1250 200 L1274 220 L1250 240"
           />
 
           {/* --- dashed convergence flows (marching toward LIMEX) --- */}
-          <path className="wds3-dash wds3-dash--l" d="M330 575 Q300 830 655 860" />
-          <path className="wds3-dash wds3-dash--c" d="M820 570 V 690" />
-          <path className="wds3-dash wds3-dash--r" d="M1310 570 Q1345 830 985 860" />
-          <path className="wds3-dash wds3-dash--x" d="M1780 575 Q1820 830 1150 862" />
-          <path className="wds3-dhead wds3-dhead--l" d="M636 847 L658 861 L634 871" />
-          <path className="wds3-dhead wds3-dhead--c" d="M802 674 L820 696 L838 674" />
-          <path className="wds3-dhead wds3-dhead--r" d="M1004 847 L982 861 L1006 871" />
-          <path className="wds3-dhead wds3-dhead--x" d="M1169 847 L1147 861 L1171 871" />
+          <path className="wds3-dash wds3-dash--l" d="M220 575 Q245 830 671 860" />
+          <path className="wds3-dash wds3-dash--ml" d="M630 575 Q630 735 716 788" />
+          <path className="wds3-dash wds3-dash--mr" d="M1040 575 Q1040 735 956 788" />
+          <path className="wds3-dash wds3-dash--r" d="M1450 575 Q1425 830 1001 860" />
+          <path className="wds3-dhead wds3-dhead--l" d="M652 847 L674 861 L650 871" />
+          <path className="wds3-dhead wds3-dhead--ml" d="M698 779 L720 791 L704 808" />
+          <path className="wds3-dhead wds3-dhead--mr" d="M972 779 L952 791 L968 808" />
+          <path className="wds3-dhead wds3-dhead--r" d="M1020 847 L998 861 L1022 871" />
 
           {/* --- labels --- */}
           {SCIENCE_LABELS.map((l, i) => (
@@ -134,7 +134,7 @@ export function SceneScience({ active }: SceneProps) {
               <text className="wds3-label wds3-label--dim" x={l.x} y={530}>{l.lines[1]}</text>
             </g>
           ))}
-          <text className="wds3-limex" x="820" y="1044">LIMEX</text>
+          <text className="wds3-limex" x="836" y="1044">LIMEX</text>
         </svg>
       </div>
     </div>

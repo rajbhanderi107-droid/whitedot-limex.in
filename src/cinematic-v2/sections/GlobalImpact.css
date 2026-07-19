@@ -21,6 +21,11 @@
   animation: v2gi-drift 24s var(--v2-ease-in-out) infinite;
 }
 
+@keyframes v2gi-drift {
+  0%, 100% { transform: scale(1.03) translate3d(0, 0, 0); }
+  50% { transform: scale(1.08) translate3d(-1%, -0.8%, 0); }
+}
+
 .v2gi::before {
   content: '';
   position: absolute;
@@ -69,11 +74,6 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-}
-
-@keyframes v2gi-drift {
-  0%, 100% { transform: scale(1.03) translate3d(0, 0, 0); }
-  50% { transform: scale(1.08) translate3d(-1%, -0.8%, 0); }
 }
 
 @keyframes v2gi-industrial-scan {
