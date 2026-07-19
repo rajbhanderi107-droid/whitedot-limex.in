@@ -153,7 +153,7 @@
     opacity var(--v2-dur-slow) var(--v2-ease-out),
     transform var(--v2-dur-slow) var(--v2-ease-out);
 }
-.v2gi-inner.is-in .v2-reveal { opacity: 1; transform: none; }
+.v2gi-inner.is-in .v2-reveal { opacity: 1; transform: none; filter: none; }
 .v2gi-inner.is-in .v2-reveal:nth-child(2) { transition-delay: 0.08s; }
 .v2gi-inner.is-in .v2-reveal:nth-child(3) { transition-delay: 0.16s; }
 .v2gi-inner.is-in .v2-reveal:nth-child(4) { transition-delay: 0.24s; }
