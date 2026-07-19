@@ -1,6 +1,5 @@
 import './PelletGalaxy.css';
 import { useEffect, useRef } from 'react';
-import { usePremium } from '../../premium-wd';
 import { useReveal } from '../motion';
 import AnimatedText from '../AnimatedText';
 
@@ -602,16 +601,19 @@ function PelletGalaxyStatic() {
 }
 
 export default function PelletGalaxy() {
-  const premium = usePremium();
-  // Decorative motion only (no scroll-jacking, no vestibular risk) — shown
-  // regardless of prefers-reduced-motion, matching the rest of the premium
-  // layer's policy (see premiumMode.ts). Only the premium on/off switch and
-  // the adaptive low-end-device gate control whether this section animates.
+  // This is a plain 2D canvas (no three.js, no WebGL) that already scales its
+  // own particle count down on mobile — so unlike the WebGL hero it isn't
+  // gated behind the site-wide premium/adaptive-device switch. It always
+  // renders live, except for explicit data-saver mode where loading the
+  // journey backdrop images would be wasteful.
+  const saveData =
+    typeof navigator !== 'undefined' &&
+    (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
 
   return (
     <section className="v2pg" aria-label="Material journey: limestone to product">
       {/* Screen-reader narrative lives in the static markup either way. */}
-      {premium ? <PelletGalaxyLive /> : <PelletGalaxyStatic />}
+      {saveData ? <PelletGalaxyStatic /> : <PelletGalaxyLive />}
     </section>
   );
 }
