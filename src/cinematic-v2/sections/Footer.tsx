@@ -1,9 +1,12 @@
 import './Footer.css';
 import { Instagram, Facebook, Linkedin, Twitter, Mail } from 'lucide-react';
-import { usePremium } from '../../premium-wd';
 
 const BASE = import.meta.env.BASE_URL;
-const FOOTER_VIDEO = `${BASE}assets/videos/section-bg/footer-limestone-flow.mp4`;
+// Cache-busted: this filename is served with a 1-year immutable
+// Cache-Control by Cloudflare, so replacing the file in place doesn't reach
+// visitors until the query string changes (same fix as the Material
+// Journey backdrop — see PelletGalaxy.tsx).
+const FOOTER_VIDEO = `${BASE}assets/videos/section-bg/footer-limestone-flow.mp4?v=20260720-rocks-to-line`;
 const FOOTER_VIDEO_POSTER = `${BASE}assets/images/footer-limex-background-poster.jpg`;
 const FOOTER_STATIC = `${BASE}assets/images/footer-limex-background.png`;
 
@@ -24,18 +27,17 @@ const SOCIAL = [
 ] as const;
 
 export default function Footer() {
-  const premium = usePremium();
-  const motionOverride =
-    typeof window !== 'undefined' &&
-    new URLSearchParams(window.location.search).get('wd_motion') === '1';
-  const reduce =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
-    !motionOverride;
+  // Muted, looping background video — decorative only, same policy as the
+  // Material Journey canvas (see PelletGalaxy.tsx): shown to all visitors by
+  // default, falling back to the static image only for explicit data-saver
+  // connections where loading video would be wasteful.
+  const saveData =
+    typeof navigator !== 'undefined' &&
+    (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
 
   return (
     <footer className="v2ft">
-      {premium && !reduce ? (
+      {!saveData ? (
         <video
           className="v2ft-bg"
           src={FOOTER_VIDEO}
