@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './Comparison.css';
 import { useReveal } from '../motion';
+import AnimatedText from '../AnimatedText';
 
 type Row = { category: string; limex: string; filler: string };
 
@@ -48,8 +49,7 @@ export default function Comparison() {
         <div className="v2-reveal" ref={headline.ref}>
           <p className="v2-eyebrow">LIMEX Pellets vs Local Filler</p>
           <h2 className="v2cmp-title">
-            A material system,<br />
-            not a weight additive.
+            <AnimatedText text={['A material system,', 'not a weight additive.']} />
           </h2>
           <p className="v2cmp-lead">
             Ordinary fillers are commonly used to increase weight or reduce cost.

@@ -121,7 +121,22 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(
     );
 
     io.observe(el);
-    return () => io.disconnect();
+
+    // Safety net: a hash-link jump-scroll (or any layout churn) can carry an
+    // element through the viewport in a single frame and miss the observer
+    // callback entirely, leaving content permanently hidden. Force it in
+    // after a short grace period so text can never get stuck invisible.
+    const safety = once
+      ? window.setTimeout(() => {
+          el.classList.add('is-in');
+          setInView(true);
+        }, 1800)
+      : 0;
+
+    return () => {
+      io.disconnect();
+      if (safety) window.clearTimeout(safety);
+    };
   }, [threshold, rootMargin, once]);
 
   return { ref, inView } as const;
@@ -172,7 +187,16 @@ export function useStaggerGroup<T extends HTMLElement = HTMLDivElement>(
     );
 
     io.observe(el);
-    return () => io.disconnect();
+
+    // Same safety net as useReveal — never let a stagger group stay hidden.
+    const safety = once
+      ? window.setTimeout(() => el.classList.add('is-in'), 1800)
+      : 0;
+
+    return () => {
+      io.disconnect();
+      if (safety) window.clearTimeout(safety);
+    };
   }, [threshold, rootMargin, once]);
 
   return { ref } as const;

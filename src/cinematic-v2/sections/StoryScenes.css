@@ -144,21 +144,23 @@
 .wds3.is-active .wds3-img--1 { animation: wds3-place 0.7s var(--v2-ease-out) 0.3s both; }
 .wds3.is-active .wds3-img--2 { animation: wds3-place 0.7s var(--v2-ease-out) 1.3s both; }
 .wds3.is-active .wds3-img--3 { animation: wds3-place 0.7s var(--v2-ease-out) 2.3s both; }
+.wds3.is-active .wds3-img--4 { animation: wds3-place 0.7s var(--v2-ease-out) 3.3s both; }
 .wds3.is-active .wds3-img--result {
   animation:
-    wds3-place 0.8s var(--v2-ease-out) 3.3s both,
-    wds3-breathe 6s ease-in-out 4.6s infinite alternate;
+    wds3-place 0.8s var(--v2-ease-out) 4.3s both,
+    wds3-breathe 6s ease-in-out 5.6s infinite alternate;
 }
 
 .wds3.is-active .wds3-arrow--1 { animation: wds-trace 0.55s var(--v2-ease-out) 0.95s both; }
 .wds3.is-active .wds3-arrow--2 { animation: wds-trace 0.55s var(--v2-ease-out) 1.95s both; }
+.wds3.is-active .wds3-arrow--3 { animation: wds-trace 0.55s var(--v2-ease-out) 2.95s both; }
 
 .wds3.is-active .wds3-dash {
   animation:
-    wds3-dash-in 0.8s var(--v2-ease-out) 2.95s both,
-    wds3-march 1.3s linear 3.75s infinite;
+    wds3-dash-in 0.8s var(--v2-ease-out) 3.95s both,
+    wds3-march 1.3s linear 4.75s infinite;
 }
-.wds3.is-active .wds3-dhead { animation: wds-fade 0.5s var(--v2-ease-out) 3.45s both; }
+.wds3.is-active .wds3-dhead { animation: wds-fade 0.5s var(--v2-ease-out) 4.45s both; }
 
 .wds3.is-active .wds3-labelgrp text { animation: wds-rise 0.6s var(--v2-ease-out) both; }
 .wds3.is-active .wds3-labelgrp--1 text { animation-delay: 0.55s; }
@@ -167,7 +169,9 @@
 .wds3.is-active .wds3-labelgrp--2 .wds3-label--dim { animation-delay: 1.65s; }
 .wds3.is-active .wds3-labelgrp--3 text { animation-delay: 2.55s; }
 .wds3.is-active .wds3-labelgrp--3 .wds3-label--dim { animation-delay: 2.65s; }
-.wds3.is-active .wds3-limex { animation: wds-fade 0.7s var(--v2-ease-out) 3.95s both; }
+.wds3.is-active .wds3-labelgrp--4 text { animation-delay: 3.55s; }
+.wds3.is-active .wds3-labelgrp--4 .wds3-label--dim { animation-delay: 3.65s; }
+.wds3.is-active .wds3-limex { animation: wds-fade 0.7s var(--v2-ease-out) 4.95s both; }
 
 @keyframes wds3-place {
   from { opacity: 0; transform: scale(1.12); }

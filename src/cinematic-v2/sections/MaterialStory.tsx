@@ -1,6 +1,7 @@
 import './MaterialStory.css';
 import { useEffect, useRef, useState } from 'react';
 import { SceneScience, SceneImpact } from './StoryScenes';
+import AnimatedText from '../AnimatedText';
 
 /* ---------------------------------------------------------------------------
    MaterialStory — the limestone-to-industry film (cinematic-v2).
@@ -467,8 +468,7 @@ export default function MaterialStory() {
                 <div className="v2story__opening-copy">
                   <p className="v2story__opening-eyebrow">LIMEX Material Intelligence</p>
                   <h2 className="v2story__opening-title">
-                    Rooted in limestone.<br />
-                    Built for industry.
+                    <AnimatedText text={['Rooted in limestone.', 'Built for industry.']} />
                   </h2>
                   <p className="v2story__opening-lead">
                     LIMEX is built on limestone-derived calcium carbonate

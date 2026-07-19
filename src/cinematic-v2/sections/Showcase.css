@@ -59,6 +59,8 @@
 
 /* Coming Soon placeholder */
 .v2sc-placeholder {
+  position: relative;
+  overflow: hidden;
   width: 100%;
   aspect-ratio: 16 / 9;
   display: flex;
@@ -67,6 +69,46 @@
   justify-content: center;
   gap: 0.75rem;
   background: linear-gradient(135deg, var(--v2-canvas-raised, #0d0d0d) 0%, #111 100%);
+}
+
+.v2sc-placeholder > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Cinematic still behind the coming-soon copy: limestone fracturing into a
+   pellet spiral that forms the bottle. Dimmed so the text stays primary. */
+.v2sc-placeholder-art {
+  position: absolute;
+  inset: -4%;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.62) saturate(0.95);
+}
+
+.v2sc-placeholder-art::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(8, 8, 8, 0.28) 0%, rgba(8, 8, 8, 0.66) 100%);
+}
+
+/* Premium only: an almost imperceptible drift keeps the frame alive. */
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  :root[data-premium='on'] .v2sc-placeholder-art {
+    animation: v2sc-art-drift 36s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+}
+
+@keyframes v2sc-art-drift {
+  from {
+    transform: scale(1) translateX(0);
+  }
+  to {
+    transform: scale(1.06) translateX(-1.2%);
+  }
 }
 
 .v2sc-placeholder-line {

@@ -1,6 +1,7 @@
 import './GlobalImpact.css';
 import { useReveal } from '../motion';
 import { CONSULTATION_HASH, openConsultationForm } from '../consultationNavigation';
+import AnimatedText from '../AnimatedText';
 
 export default function GlobalImpact() {
   const { ref } = useReveal<HTMLDivElement>();
@@ -22,7 +23,7 @@ export default function GlobalImpact() {
       <div className="v2gi-inner" ref={ref}>
         <p className="v2-eyebrow v2-reveal">Global Material Movement</p>
         <h2 className="v2gi-title v2-reveal">
-          From Japanese limestone innovation to western India.
+          <AnimatedText text="From Japanese limestone innovation to western India." />
         </h2>
         <p className="v2gi-copy v2-reveal">
           LIMEX travels from TBM in Japan, through Seven Dot, to White Dot

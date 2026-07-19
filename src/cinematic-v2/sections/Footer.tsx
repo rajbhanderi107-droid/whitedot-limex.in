@@ -1,5 +1,11 @@
 import './Footer.css';
 import { Instagram, Facebook, Linkedin, Twitter, Mail } from 'lucide-react';
+import { usePremium } from '../../premium-wd';
+
+const BASE = import.meta.env.BASE_URL;
+const FOOTER_VIDEO = `${BASE}assets/videos/section-bg/footer-limestone-flow.mp4`;
+const FOOTER_VIDEO_POSTER = `${BASE}assets/images/footer-limex-background-poster.jpg`;
+const FOOTER_STATIC = `${BASE}assets/images/footer-limex-background.png`;
 
 const NAV = [
   { label: 'Material', href: '#material' },
@@ -18,8 +24,31 @@ const SOCIAL = [
 ] as const;
 
 export default function Footer() {
+  const premium = usePremium();
+  const motionOverride =
+    typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).get('wd_motion') === '1';
+  const reduce =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+    !motionOverride;
+
   return (
     <footer className="v2ft">
+      {premium && !reduce ? (
+        <video
+          className="v2ft-bg"
+          src={FOOTER_VIDEO}
+          poster={FOOTER_VIDEO_POSTER}
+          autoPlay
+          muted
+          loop
+          playsInline
+          aria-hidden="true"
+        />
+      ) : (
+        <img className="v2ft-bg" src={FOOTER_STATIC} alt="" aria-hidden="true" loading="lazy" />
+      )}
       <div className="v2ft-inner">
         <div className="v2ft-brand">
           <p className="v2ft-wordmark">White Dot</p>

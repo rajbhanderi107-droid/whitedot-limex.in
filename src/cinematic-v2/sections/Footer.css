@@ -4,17 +4,29 @@
   background:
     linear-gradient(90deg, rgba(3, 5, 4, 0.62) 0%, rgba(3, 5, 4, 0.18) 42%, rgba(3, 4, 4, 0.48) 100%),
     linear-gradient(180deg, rgba(4, 6, 5, 0.3) 0%, rgba(3, 5, 4, 0.16) 42%, rgba(2, 3, 3, 0.58) 100%),
-    url('/assets/images/footer-limex-background.png') 27% center / cover no-repeat,
     #050706;
   border-top: 1px solid rgba(244, 247, 239, 0.12);
   padding: clamp(4.25rem, 6vw, 7.25rem) var(--v2-gutter) clamp(2.75rem, 4vw, 4.25rem);
   overflow: hidden;
 }
 
+/* Live background: raw limestone continuously streaming into a finished
+   sheet, looping. Same frame/crop the static image used (27% center). */
+.v2ft-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 27% center;
+  z-index: 0;
+}
+
 .v2ft::before {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 1;
   background:
     radial-gradient(circle at 20% 28%, rgba(101, 154, 71, 0.32), transparent 36%),
     radial-gradient(circle at 62% 50%, rgba(255, 255, 255, 0.18), transparent 30%);
@@ -27,6 +39,7 @@
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 2;
   background:
     linear-gradient(90deg, rgba(2, 4, 3, 0.36) 0%, transparent 48%, rgba(2, 3, 3, 0.46) 100%),
     linear-gradient(180deg, transparent 0%, rgba(1, 2, 2, 0.52) 100%);
@@ -35,7 +48,7 @@
 
 .v2ft-inner {
   position: relative;
-  z-index: 1;
+  z-index: 3;
   max-width: var(--v2-container-max);
   margin: 0 auto;
   display: grid;

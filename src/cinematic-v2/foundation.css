@@ -628,31 +628,58 @@ html, body {
 /* Lightweight reveal motion follows premium mode. Heavy parallax and grain
    remain independently gated below. */
 @media (min-width: 768px) {
+  /* Cinematic reveal: 1.5s fade + scale-up with a soft focus pull. */
   [data-premium='on'] .v2-reveal {
     opacity: 0;
-    transform: translate3d(0, 24px, 0);
+    transform: translate3d(0, 28px, 0) scale(0.965);
+    filter: blur(6px);
     transition:
-      opacity var(--v2-dur-slow) var(--v2-ease-out),
-      transform var(--v2-dur-slow) var(--v2-ease-out);
-    will-change: opacity, transform;
+      opacity 1500ms var(--v2-ease-out),
+      transform 1500ms var(--v2-ease-out),
+      filter 1100ms var(--v2-ease-out);
+    will-change: opacity, transform, filter;
   }
   [data-premium='on'] .v2-reveal.is-in {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
   }
 
   [data-premium='on'] .v2-reveal-group > * {
     opacity: 0;
-    transform: translate3d(0, 18px, 0);
+    transform: translate3d(0, 22px, 0) scale(0.97);
     transition:
-      opacity var(--v2-dur-base) var(--v2-ease-out),
-      transform var(--v2-dur-base) var(--v2-ease-out);
-    transition-delay: calc(var(--v2-stagger-i, 0) * 80ms);
+      opacity 1100ms var(--v2-ease-out),
+      transform 1100ms var(--v2-ease-out);
+    transition-delay: calc(var(--v2-stagger-i, 0) * 90ms);
     will-change: opacity, transform;
   }
   [data-premium='on'] .v2-reveal-group.is-in > * {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  /* Normalize the cinematic 1.5s reveal across sections that declare their
+     own reveal transitions (higher specificity than any section rule). */
+  :root[data-premium='on'] .v2-root main .v2-reveal {
+    transition-duration: 1500ms;
+  }
+  :root[data-premium='on'] .v2-root main .v2-reveal-group > * {
+    transition-duration: 1100ms;
+  }
+
+  /* Typography micro-interaction: headings breathe upward under the cursor.
+     Transform + shadow only — no layout shift, calm and premium. */
+  @media (hover: hover) and (pointer: fine) {
+    [data-premium='on'] .v2-root main :is(h1, h2, h3) {
+      transition:
+        transform 420ms var(--v2-ease-out),
+        text-shadow 420ms var(--v2-ease-out);
+    }
+    [data-premium='on'] .v2-root main :is(h1, h2, h3):hover {
+      transform: translateY(-2px);
+      text-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+    }
   }
 }
 

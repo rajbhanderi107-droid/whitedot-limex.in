@@ -1,5 +1,8 @@
 import './Showcase.css';
 import { useReveal } from '../motion';
+import AnimatedText from '../AnimatedText';
+
+const placeholderArt = `${import.meta.env.BASE_URL}assets/higgsfield/journey/galaxy-formation.webp`;
 
 export default function Showcase() {
   const head = useReveal<HTMLDivElement>();
@@ -12,7 +15,7 @@ export default function Showcase() {
         <div className="v2sc-head v2-reveal" ref={head.ref}>
           <p className="v2-eyebrow">Future Advertisement Showcase</p>
           <h2 id="v2sc-title" className="v2sc-title">
-            Watch the Future of Sustainable Materials
+            <AnimatedText text="Watch the Future of Sustainable Materials" />
           </h2>
           <p className="v2sc-sub">
             A cinematic look at how limestone-derived mineral technology becomes
@@ -24,6 +27,11 @@ export default function Showcase() {
           <span className="v2sc-reflection" aria-hidden="true" />
 
           <div className="v2sc-placeholder" role="img" aria-label="Whitedot LIMEX Launch Film — coming soon">
+            <span
+              className="v2sc-placeholder-art"
+              aria-hidden="true"
+              style={{ backgroundImage: `url(${placeholderArt})` }}
+            />
             <span className="v2sc-placeholder-line" aria-hidden="true" />
             <p className="v2sc-placeholder-title">Whitedot LIMEX Launch Film</p>
             <p className="v2sc-placeholder-status">Coming Soon</p>

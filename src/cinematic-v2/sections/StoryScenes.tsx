@@ -38,6 +38,7 @@ const SCIENCE_DISHES: DishSpec[] = [
   { id: 'limestone', cls: '1', x: 170, y: 40, mcx: 352, mcy: 226, solid: 116, edge: 124 },
   { id: 'powder', cls: '2', x: 640, y: 40, mcx: 820, mcy: 220, solid: 138, edge: 148 },
   { id: 'binder', cls: '3', x: 1110, y: 40, mcx: 1290, mcy: 220, solid: 138, edge: 148 },
+  { id: 'additive', cls: '4', x: 1580, y: 40, mcx: 1760, mcy: 220, solid: 138, edge: 148 },
   { id: 'limex', cls: 'result', x: 640, y: 670, mcx: 820, mcy: 850, solid: 134, edge: 152 },
 ];
 
@@ -45,6 +46,7 @@ const SCIENCE_LABELS: { x: number; lines: [string, string] }[] = [
   { x: 352, lines: ['Limestone', 'CaCO₃'] },
   { x: 820, lines: ['High-purity', 'Calcium carbonate'] },
   { x: 1290, lines: ['Polymer', ''] },
+  { x: 1760, lines: ['Additive', ''] },
 ];
 
 export function SceneScience({ active }: SceneProps) {
@@ -64,7 +66,7 @@ export function SceneScience({ active }: SceneProps) {
       <div className="wds3-diagram-wrap">
         <svg
           className="wds3-diagram"
-          viewBox="0 0 1672 1080"
+          viewBox="0 0 2142 1080"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -109,14 +111,21 @@ export function SceneScience({ active }: SceneProps) {
             pathLength={1}
             d="M1000 220 H1100 M1080 200 L1104 220 L1080 240"
           />
+          <path
+            className="wds3-arrow wds3-arrow--3"
+            pathLength={1}
+            d="M1470 220 H1570 M1550 200 L1574 220 L1550 240"
+          />
 
           {/* --- dashed convergence flows (marching toward LIMEX) --- */}
           <path className="wds3-dash wds3-dash--l" d="M330 575 Q300 830 655 860" />
           <path className="wds3-dash wds3-dash--c" d="M820 570 V 690" />
           <path className="wds3-dash wds3-dash--r" d="M1310 570 Q1345 830 985 860" />
+          <path className="wds3-dash wds3-dash--x" d="M1780 575 Q1820 830 1150 862" />
           <path className="wds3-dhead wds3-dhead--l" d="M636 847 L658 861 L634 871" />
           <path className="wds3-dhead wds3-dhead--c" d="M802 674 L820 696 L838 674" />
           <path className="wds3-dhead wds3-dhead--r" d="M1004 847 L982 861 L1006 871" />
+          <path className="wds3-dhead wds3-dhead--x" d="M1169 847 L1147 861 L1171 871" />
 
           {/* --- labels --- */}
           {SCIENCE_LABELS.map((l, i) => (

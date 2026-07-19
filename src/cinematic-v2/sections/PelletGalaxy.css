@@ -29,17 +29,35 @@
   background-size: cover;
   background-position: center;
   opacity: 0;
-  transition: opacity 950ms cubic-bezier(0.16, 1, 0.3, 1);
-  filter: brightness(0.5) saturate(0.9);
-  will-change: opacity;
+  transform: scale(1.07);
+  transition:
+    opacity 1200ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 7s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: brightness(0.36) saturate(0.82);
+  will-change: opacity, transform;
 }
 
 .v2pg-backdrop-scrim {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at center, rgba(8, 8, 8, 0.15) 0%, rgba(8, 8, 8, 0.72) 78%),
-    linear-gradient(to bottom, rgba(8, 8, 8, 0.85), transparent 22%, transparent 78%, rgba(8, 8, 8, 0.85));
+    radial-gradient(ellipse at center, rgba(4, 5, 4, 0.28) 0%, rgba(4, 5, 4, 0.9) 78%),
+    linear-gradient(to bottom, rgba(4, 5, 4, 0.96), transparent 26%, transparent 74%, rgba(4, 5, 4, 0.96));
+}
+
+/* Text legibility: the accent green must read clearly over any backdrop
+   photo (some are sage/green-toned themselves), so it gets a fixed dark
+   halo instead of relying on the photo's own contrast. */
+.v2pg-overlay .v2-eyebrow,
+.v2pg-kicker {
+  color: #a9e08f;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.9);
+}
+
+.v2pg-title,
+.v2pg-caption h3,
+.v2pg-caption p {
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.85);
 }
 
 .v2pg-canvas {
@@ -85,11 +103,29 @@
 
 .v2pg-kicker {
   display: block;
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--v2-accent);
-  margin-bottom: 0.55rem;
+  margin-bottom: 0.7rem;
+}
+
+/* Hairline centered above each caption's kicker — quiet editorial rhythm */
+.v2pg-kicker::before {
+  content: '';
+  display: block;
+  width: 2.2rem;
+  height: 1px;
+  margin: 0 auto 0.9rem;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.v2pg-caption h3 {
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.55);
+}
+
+.v2pg-caption p {
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.6);
 }
 
 .v2pg-caption h3,
@@ -109,23 +145,60 @@
   max-width: 30rem;
 }
 
-.v2pg-hint {
-  margin-top: 1.6rem;
-  font-size: 0.7rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--v2-text-faint);
-  animation: v2pg-hint-pulse 2.8s ease-in-out infinite;
+/* Stage rail — quiet numbered progress, replaces the old pulsing hint */
+.v2pg-rail {
+  margin-top: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
 }
 
-@keyframes v2pg-hint-pulse {
-  0%,
-  100% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 0.9;
-  }
+.v2pg-rail-step {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.v2pg-rail-step i {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  transition: background 600ms ease, box-shadow 600ms ease, transform 600ms ease;
+}
+
+.v2pg-rail-step em {
+  font-style: normal;
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
+  color: var(--v2-text-faint);
+  transition: color 600ms ease;
+}
+
+/* connecting hairline between steps */
+.v2pg-rail-step + .v2pg-rail-step::before {
+  content: '';
+  display: block;
+  width: 2.6rem;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.14);
+  margin-right: 0.9rem;
+}
+
+.v2pg-rail-step.is-past i,
+.v2pg-rail-step.is-now i {
+  background: var(--v2-accent);
+}
+
+.v2pg-rail-step.is-now i {
+  box-shadow: 0 0 10px rgba(79, 154, 53, 0.75);
+  transform: scale(1.35);
+}
+
+.v2pg-rail-step.is-now em {
+  color: var(--v2-text);
 }
 
 /* ── Static (premium-off / reduced-motion) path ──────────────────── */
@@ -175,6 +248,6 @@
 
 /* Premium-off neutralizer: the hint loop must not run if this CSS is ever
    reached with premium off (belt-and-braces beside the JSX gate). */
-:root[data-premium='off'] .v2pg-hint {
-  animation: none;
+:root[data-premium='off'] .v2pg-rail-step i {
+  transition: none;
 }

@@ -2,12 +2,14 @@ import './PelletGalaxy.css';
 import { useEffect, useRef } from 'react';
 import { usePremium } from '../../premium-wd';
 import { useReveal } from '../motion';
+import AnimatedText from '../AnimatedText';
 
 /**
  * PelletGalaxy — scroll-driven material journey rendered as a 3D-projected
  * particle field on a plain 2D canvas (zero new dependencies, no three.js).
- * ~1.4k pellets morph through three formations as the visitor scrolls:
- *   raw limestone mass → compounded pellet orbit → finished bottle.
+ * Pearl-finish pellets morph through three formations as the visitor scrolls:
+ *   raw limestone mass → two-arm pellet spiral galaxy → finished bottle.
+ * Motion language: slow, organic, staggered — never uniform or mechanical.
  * Premium-gated: with data-premium="off" or prefers-reduced-motion the
  * section renders the static fallback only (no canvas, no listeners).
  */
@@ -32,12 +34,13 @@ const STAGES = [
 
 const CREAM = [245, 241, 232] as const;
 const SAGE = [154, 168, 147] as const;
+const GLOW = [79, 154, 53] as const;
 
 /* Higgsfield renders (generated in-brand, dark mineral aesthetic) shown as
    dimmed backdrops behind the particle canvas, one per journey stage. */
 const BACKDROPS = [
   `${import.meta.env.BASE_URL}assets/higgsfield/journey/limestone-birth.webp`,
-  `${import.meta.env.BASE_URL}assets/higgsfield/journey/pellet-wave.webp`,
+  `${import.meta.env.BASE_URL}assets/higgsfield/journey/limex-pellets-pour.webp`,
   `${import.meta.env.BASE_URL}assets/higgsfield/journey/bottle-exploded.webp`,
 ] as const;
 
@@ -65,12 +68,13 @@ function createEngine(
   canvas: HTMLCanvasElement,
   captions: HTMLElement[],
   backdrops: HTMLElement[] = [],
+  railSteps: HTMLElement[] = [],
 ): Engine {
   const ctx = canvas.getContext('2d', { alpha: true });
   if (!ctx) return { destroy() {}, setProgress() {}, setPointer() {}, setRunning() {} };
 
   const isMobile = window.innerWidth < 768;
-  const COUNT = isMobile ? 620 : 1400;
+  const COUNT = isMobile ? 900 : 2600;
   const DPR = Math.min(window.devicePixelRatio || 1, 1.75);
 
   // Formation targets (x,y,z per particle per formation), precomputed once.
@@ -79,6 +83,8 @@ function createEngine(
   const bottle = new Float32Array(COUNT * 3);
   const pos = new Float32Array(COUNT * 3);
   const jitter = new Float32Array(COUNT); // per-particle phase for shimmer
+  const easeVar = new Float32Array(COUNT); // per-particle morph lag (organic)
+  const sizeVar = new Float32Array(COUNT); // pellet size variance
   const px = new Float32Array(COUNT); // screen-space repel offsets
   const py = new Float32Array(COUNT);
   const accent = new Uint8Array(COUNT);
@@ -103,13 +109,27 @@ function createEngine(
       stone[i3 + 2] = rr * sxy * Math.sin(th) * 1.06;
     }
 
-    // Disc: thin pellet orbit rings.
+    // Galaxy: two-arm logarithmic spiral with a soft central bulge.
     {
-      const a = rand() * Math.PI * 2;
-      const r = 0.38 + Math.sqrt(rand()) * 0.98;
-      disc[i3] = Math.cos(a) * r;
-      disc[i3 + 1] = (rand() + rand() + rand() - 1.5) * 0.08;
-      disc[i3 + 2] = Math.sin(a) * r;
+      if (rand() < 0.18) {
+        // central bulge
+        const u = rand() * 2 - 1;
+        const th = rand() * Math.PI * 2;
+        const rr = Math.cbrt(rand()) * 0.3;
+        const sxy = Math.sqrt(Math.max(0, 1 - u * u));
+        disc[i3] = rr * sxy * Math.cos(th);
+        disc[i3 + 1] = rr * u * 0.35;
+        disc[i3 + 2] = rr * sxy * Math.sin(th);
+      } else {
+        const arm = i % 2;
+        const t = Math.pow(rand(), 0.72); // denser toward core
+        const r = 0.24 + t * 1.22;
+        const a =
+          t * 3.4 + arm * Math.PI + (rand() - 0.5) * (0.5 - t * 0.3);
+        disc[i3] = Math.cos(a) * r;
+        disc[i3 + 1] = (rand() + rand() + rand() - 1.5) * 0.07 * (1 - t * 0.5);
+        disc[i3 + 2] = Math.sin(a) * r;
+      }
     }
 
     // Bottle: surface of revolution.
@@ -126,27 +146,73 @@ function createEngine(
     pos[i3 + 1] = stone[i3 + 1];
     pos[i3 + 2] = stone[i3 + 2];
     jitter[i] = rand() * Math.PI * 2;
-    accent[i] = rand() < 0.055 ? 1 : 0;
+    easeVar[i] = 0.045 + rand() * 0.06; // trailing morph, wave-like
+    sizeVar[i] = 0.7 + rand() * 0.65;
+    accent[i] = rand() < 0.05 ? 1 : 0;
   }
 
-  // Pre-rendered radial sprites (cream + sage) — one drawImage per particle
-  // instead of per-arc path fills.
-  function makeSprite(rgb: readonly [number, number, number] | typeof CREAM) {
+  // Ambient mineral dust: a sparse far shell that never morphs — pure
+  // atmosphere, giving the scene depth beyond the subject.
+  const DUST = isMobile ? 140 : 420;
+  const dust = new Float32Array(DUST * 3);
+  const dustJitter = new Float32Array(DUST);
+  for (let i = 0; i < DUST; i++) {
+    const u = rand() * 2 - 1;
+    const th = rand() * Math.PI * 2;
+    const rr = 1.5 + rand() * 1.1;
+    const sxy = Math.sqrt(Math.max(0, 1 - u * u));
+    dust[i * 3] = rr * sxy * Math.cos(th);
+    dust[i * 3 + 1] = rr * u * 0.7;
+    dust[i * 3 + 2] = rr * sxy * Math.sin(th);
+    dustJitter[i] = rand() * Math.PI * 2;
+  }
+
+  // Pre-rendered pearl sprites: off-center highlight = pearlescent finish.
+  // Sharp + soft variants give a cheap depth-of-field cue.
+  function makeSprite(
+    rgb: readonly [number, number, number] | typeof CREAM,
+    soft: boolean,
+  ) {
     const s = document.createElement('canvas');
     const R = 32;
     s.width = R * 2;
     s.height = R * 2;
     const c = s.getContext('2d')!;
-    const g = c.createRadialGradient(R, R, 0, R, R, R);
-    g.addColorStop(0, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0.95)`);
-    g.addColorStop(0.45, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0.5)`);
-    g.addColorStop(1, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`);
+    const g = c.createRadialGradient(R * 0.82, R * 0.72, R * 0.06, R, R, R);
+    if (soft) {
+      g.addColorStop(0, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0.55)`);
+      g.addColorStop(0.55, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0.22)`);
+      g.addColorStop(1, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`);
+    } else {
+      g.addColorStop(0, 'rgba(255,255,255,0.98)');
+      g.addColorStop(0.28, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0.92)`);
+      g.addColorStop(0.62, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0.4)`);
+      g.addColorStop(1, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`);
+    }
     c.fillStyle = g;
     c.fillRect(0, 0, R * 2, R * 2);
     return s;
   }
-  const spriteCream = makeSprite(CREAM);
-  const spriteSage = makeSprite(SAGE);
+  const creamSharp = makeSprite(CREAM, false);
+  const creamSoft = makeSprite(CREAM, true);
+  const sageSharp = makeSprite(SAGE, false);
+  const sageSoft = makeSprite(SAGE, true);
+
+  // Soft green finale glow, drawn once behind the finished bottle.
+  const glowSprite = (() => {
+    const s = document.createElement('canvas');
+    const R = 128;
+    s.width = R * 2;
+    s.height = R * 2;
+    const c = s.getContext('2d')!;
+    const g = c.createRadialGradient(R, R, 0, R, R, R);
+    g.addColorStop(0, `rgba(${GLOW[0]},${GLOW[1]},${GLOW[2]},0.34)`);
+    g.addColorStop(0.55, `rgba(${GLOW[0]},${GLOW[1]},${GLOW[2]},0.12)`);
+    g.addColorStop(1, `rgba(${GLOW[0]},${GLOW[1]},${GLOW[2]},0)`);
+    c.fillStyle = g;
+    c.fillRect(0, 0, R * 2, R * 2);
+    return s;
+  })();
 
   let width = 0;
   let height = 0;
@@ -162,13 +228,26 @@ function createEngine(
   window.addEventListener('resize', resize, { passive: true });
 
   let progress = 0;
+  let smoothP = 0;
   let pointerX = 0;
   let pointerY = 0;
+  let smoothPX = 0;
+  let smoothPY = 0;
   let pointerActive = false;
   let running = false;
   let raf = 0;
   let t = 0;
+  let spin = 0;
   let lastCaption = -1;
+
+  // Cinema mode: after 2.5s without scroll input the sequence runs itself —
+  // a full limestone -> galaxy -> bottle -> limestone cycle takes 35 seconds
+  // (17.5s each way, ping-pong). Any scroll instantly hands control back.
+  const CINEMA_IDLE_MS = 2500;
+  const CINEMA_HALF_CYCLE_MS = 17500;
+  let lastScrollInput = 0;
+  let cinemaDir = 1;
+  let lastFrameAt = 0;
 
   const smooth = (x: number) => x * x * (3 - 2 * x);
 
@@ -176,8 +255,27 @@ function createEngine(
     raf = 0;
     t += 0.004;
 
-    // Formation blend weights from scroll progress.
-    const p = progress;
+    const now = performance.now();
+    const dt = lastFrameAt ? Math.min(now - lastFrameAt, 100) : 16;
+    lastFrameAt = now;
+
+    if (now - lastScrollInput > CINEMA_IDLE_MS) {
+      // Autonomous 35s transformation sequence.
+      smoothP += (cinemaDir * dt) / CINEMA_HALF_CYCLE_MS;
+      if (smoothP >= 1) {
+        smoothP = 1;
+        cinemaDir = -1;
+      } else if (smoothP <= 0) {
+        smoothP = 0;
+        cinemaDir = 1;
+      }
+      progress = smoothP; // so scroll takeover starts from the current pose
+    } else {
+      // Critically-damped progress: morphs feel liquid, decoupled from the
+      // raw scroll wheel steps.
+      smoothP += (progress - smoothP) * 0.055;
+    }
+    const p = smoothP;
     let wStone = 0;
     let wDisc = 0;
     let wBottle = 0;
@@ -203,21 +301,64 @@ function createEngine(
       });
       backdrops.forEach((el, i) => {
         el.style.opacity = i === active ? '1' : '0';
+        // Slow settle-zoom on the incoming plate — cinematic, never static.
+        el.style.transform = i === active ? 'scale(1)' : 'scale(1.07)';
+      });
+      railSteps.forEach((el, i) => {
+        el.classList.toggle('is-past', i < active);
+        el.classList.toggle('is-now', i === active);
       });
     }
 
-    const rotY = t * 0.55 + (pointerActive ? pointerX * 0.35 : 0) + p * 1.9;
-    const rotX = 0.16 + (pointerActive ? pointerY * 0.22 : 0);
+    // Stage-reactive rotation: stone drifts, galaxy spins, bottle settles.
+    const spinSpeed = 0.1 * wStone + 0.55 * wDisc + 0.05 * wBottle;
+    spin += 0.004 * spinSpeed * 6;
+
+    // Pointer inertia — camera leans slowly, never snaps.
+    smoothPX += ((pointerActive ? pointerX : 0) - smoothPX) * 0.04;
+    smoothPY += ((pointerActive ? pointerY : 0) - smoothPY) * 0.04;
+
+    const rotY = spin + smoothPX * 0.38 + p * 1.4;
+    const rotX = 0.18 + smoothPY * 0.24 - wDisc * 0.28; // tip galaxy toward view
     const cosY = Math.cos(rotY);
     const sinY = Math.sin(rotY);
     const cosX = Math.cos(rotX);
     const sinX = Math.sin(rotX);
     const f = 3.1;
-    const unit = Math.min(width, height) * 0.33;
+    // Gentle camera dolly per stage + whole-system breathing float.
+    const dolly = 1 + wDisc * 0.1 - wBottle * 0.04;
+    const unit = Math.min(width, height) * 0.33 * dolly;
     const cx = width / 2;
-    const cy = height / 2;
+    const cy = height / 2 + Math.sin(t * 0.9) * height * 0.008;
 
     ctx!.clearRect(0, 0, width, height);
+
+    // Finale glow breathes in behind the completed bottle.
+    if (wBottle > 0.6) {
+      const ga = (wBottle - 0.6) / 0.4;
+      const gs = unit * (1.35 + Math.sin(t * 1.6) * 0.06);
+      ctx!.globalAlpha = ga * 0.8;
+      ctx!.drawImage(glowSprite, cx - gs, cy - gs, gs * 2, gs * 2);
+    }
+
+    // Ambient dust first — behind the subject, barely there.
+    for (let i = 0; i < DUST; i++) {
+      const i3 = i * 3;
+      const x0 = dust[i3];
+      const y0 = dust[i3 + 1] + Math.sin(t * 0.6 + dustJitter[i]) * 0.05;
+      const z0 = dust[i3 + 2];
+      const x1 = x0 * cosY - z0 * sinY;
+      const z1 = x0 * sinY + z0 * cosY;
+      const y2 = y0 * cosX - z1 * sinX;
+      const z2 = y0 * sinX + z1 * cosX;
+      const scale = f / (f + z2);
+      if (scale <= 0) continue;
+      const sx = cx + x1 * scale * unit;
+      const sy = cy - y2 * scale * unit;
+      const ds = 1.1 * scale;
+      ctx!.globalAlpha = 0.05 + 0.06 * Math.abs(Math.sin(t * 1.1 + dustJitter[i]));
+      ctx!.drawImage(creamSoft, sx - ds, sy - ds, ds * 2, ds * 2);
+    }
 
     const mx = ((pointerX + 1) / 2) * width;
     const my = ((pointerY + 1) / 2) * height;
@@ -225,18 +366,19 @@ function createEngine(
     for (let i = 0; i < COUNT; i++) {
       const i3 = i * 3;
 
-      // Blend targets and ease current position toward them.
+      // Blend targets; each pellet trails at its own pace (organic morph).
       const tx = stone[i3] * wStone + disc[i3] * wDisc + bottle[i3] * wBottle;
       const ty = stone[i3 + 1] * wStone + disc[i3 + 1] * wDisc + bottle[i3 + 1] * wBottle;
       const tz = stone[i3 + 2] * wStone + disc[i3 + 2] * wDisc + bottle[i3 + 2] * wBottle;
-      pos[i3] += (tx - pos[i3]) * 0.075;
-      pos[i3 + 1] += (ty - pos[i3 + 1]) * 0.075;
-      pos[i3 + 2] += (tz - pos[i3 + 2]) * 0.075;
+      const ev = easeVar[i];
+      pos[i3] += (tx - pos[i3]) * ev;
+      pos[i3 + 1] += (ty - pos[i3 + 1]) * ev;
+      pos[i3 + 2] += (tz - pos[i3 + 2]) * ev;
 
       // Gentle shimmer so formations breathe.
-      const sh = Math.sin(t * 2.2 + jitter[i]) * 0.014;
+      const sh = Math.sin(t * 2.2 + jitter[i]) * 0.013;
       const x0 = pos[i3] + sh;
-      const y0 = pos[i3 + 1] + Math.cos(t * 1.8 + jitter[i]) * 0.014;
+      const y0 = pos[i3 + 1] + Math.cos(t * 1.8 + jitter[i]) * 0.013;
       const z0 = pos[i3 + 2];
 
       // Rotate (Y then X) and project.
@@ -255,26 +397,34 @@ function createEngine(
         const d2 = dx * dx + dy * dy;
         if (d2 < 8100 && d2 > 1) {
           const d = Math.sqrt(d2);
-          const force = ((90 - d) / 90) * 6;
+          const force = ((90 - d) / 90) * 5;
           px[i] += (dx / d) * force;
           py[i] += (dy / d) * force;
         }
       }
-      px[i] *= 0.88;
-      py[i] *= 0.88;
+      px[i] *= 0.9;
+      py[i] *= 0.9;
       sx += px[i];
       sy += py[i];
 
       const depth = Math.min(1, Math.max(0, (scale - 0.7) / 0.7));
-      const size = (isMobile ? 2.1 : 2.5) * scale * (accent[i] ? 1.25 : 1);
-      ctx!.globalAlpha = 0.18 + depth * 0.72;
-      ctx!.drawImage(
-        accent[i] ? spriteSage : spriteCream,
-        sx - size,
-        sy - size,
-        size * 2,
-        size * 2,
-      );
+      const twinkle = 1 + Math.sin(t * 3 + jitter[i] * 2) * 0.14;
+      const size =
+        (isMobile ? 2.0 : 2.3) * scale * sizeVar[i] * (accent[i] ? 1.3 : 1);
+
+      // Depth of field: near pellets sharp pearls, far pellets soft bokeh.
+      const near = depth > 0.45;
+      const sprite = accent[i]
+        ? near
+          ? sageSharp
+          : sageSoft
+        : near
+          ? creamSharp
+          : creamSoft;
+      const drawSize = near ? size : size * 1.7;
+
+      ctx!.globalAlpha = (0.14 + depth * 0.78) * twinkle;
+      ctx!.drawImage(sprite, sx - drawSize, sy - drawSize, drawSize * 2, drawSize * 2);
     }
     ctx!.globalAlpha = 1;
 
@@ -297,7 +447,13 @@ function createEngine(
       window.removeEventListener('resize', resize);
     },
     setProgress(p) {
-      progress = Math.min(1, Math.max(0, p));
+      const next = Math.min(1, Math.max(0, p));
+      // Only real scroll movement interrupts cinema mode — the passive
+      // listener also fires for the autonomous frames' own reads.
+      if (Math.abs(next - progress) > 0.0008) {
+        lastScrollInput = performance.now();
+      }
+      progress = next;
     },
     setPointer(x, y, act) {
       pointerX = x;
@@ -321,7 +477,8 @@ function PelletGalaxyLive() {
 
     const captionEls = [...captionsRoot.querySelectorAll<HTMLElement>('.v2pg-caption')];
     const backdropEls = [...wrapper.querySelectorAll<HTMLElement>('.v2pg-backdrop')];
-    const engine = createEngine(canvas, captionEls, backdropEls);
+    const railEls = [...wrapper.querySelectorAll<HTMLElement>('.v2pg-rail-step')];
+    const engine = createEngine(canvas, captionEls, backdropEls, railEls);
 
     // Backdrop images load only once the section approaches the viewport.
     let backdropsLoaded = false;
@@ -390,7 +547,9 @@ function PelletGalaxyLive() {
         <canvas ref={canvasRef} className="v2pg-canvas" aria-hidden="true" />
         <div className="v2pg-overlay">
           <p className="v2-eyebrow">Material Journey</p>
-          <h2 className="v2pg-title">One grain becomes the product</h2>
+          <h2 className="v2pg-title">
+            <AnimatedText text="One grain becomes the product" />
+          </h2>
           <div className="v2pg-captions" ref={captionsRef}>
             {STAGES.map((stage) => (
               <div className="v2pg-caption" key={stage.kicker}>
@@ -400,9 +559,14 @@ function PelletGalaxyLive() {
               </div>
             ))}
           </div>
-          <p className="v2pg-hint" aria-hidden="true">
-            Scroll to transform
-          </p>
+          <div className="v2pg-rail" aria-hidden="true">
+            {STAGES.map((stage, i) => (
+              <span className="v2pg-rail-step" key={stage.kicker}>
+                <i />
+                <em>{`0${i + 1}`}</em>
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     </div>

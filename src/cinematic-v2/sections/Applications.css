@@ -29,20 +29,229 @@
   margin: 0 0 clamp(3rem, 5vw, 5rem);
 }
 
-.v2ap-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--v2-space-5);
+/* Cinematic auto-rotating spotlight — replaces both the old 2-col grid and
+   an earlier horizontal-scroll attempt. Everything fits in one fixed-height
+   stage with no scrollbar anywhere: sectors cross-fade + Ken-Burns automatically,
+   and the index strip below wraps in place (flex-wrap, never overflow-x). */
+.v2ap-stage {
+  position: relative;
+  height: clamp(360px, 46vw, 480px);
+  border-radius: var(--v2-radius-lg, 18px);
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  align-items: flex-end;
+  border: var(--v2-hairline);
 }
 
-.v2ap-card {
-  padding: var(--v2-space-7) var(--v2-space-7);
-  background: var(--v2-canvas-raised);
-  border: var(--v2-hairline);
-  border-radius: var(--v2-radius-md);
+.v2ap-plate {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transform: scale(1.08);
+  transition:
+    opacity 900ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 5.5s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 0;
+}
+
+.v2ap-plate[data-active] {
+  opacity: 1;
+  transform: scale(1);
+  z-index: 1;
+}
+
+.v2ap-stage-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    to top,
+    rgba(8, 8, 8, 0.92) 0%,
+    rgba(8, 8, 8, 0.55) 38%,
+    rgba(8, 8, 8, 0.05) 72%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* Light-sweep VFX: a soft diagonal highlight drifts across the stage. */
+.v2ap-stage-sweep {
+  position: absolute;
+  inset: -20%;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 42%,
+    rgba(255, 255, 255, 0.07) 50%,
+    transparent 58%
+  );
+  opacity: 0;
+}
+
+/* Film-grain VFX: cheap, static noise texture via layered radial dots. */
+.v2ap-stage-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.9) 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+
+/* .v2ap-card is reused here only so the existing icon-animation trigger
+   selectors (.v2ap-card.is-animating .ia-*) keep working; the global glass
+   "light card" treatment from premium-light.css must not apply on the photo
+   stage, so it is stripped with higher specificity. */
+.v2ap-stage .v2ap-card.v2ap-stage-content {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.v2ap-stage-content {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  padding: clamp(1.5rem, 4vw, 2.75rem);
   display: flex;
   flex-direction: column;
-  gap: var(--v2-space-5);
+  gap: var(--v2-space-4);
+  animation: v2ap-content-in 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes v2ap-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.v2ap-stage-head {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.85rem, 1.4vw, 1.2rem);
+}
+
+.v2ap-stage-sector {
+  font-family: var(--v2-font-sans);
+  font-weight: var(--v2-fw-semibold);
+  font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+  color: #f5f1e8;
+  margin: 0;
+}
+
+.v2ap-stage-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+.v2ap-stage-list li {
+  font-family: var(--v2-font-sans);
+  font-size: 0.9rem;
+  color: rgba(245, 241, 232, 0.9);
+  padding-left: var(--v2-space-4);
+  position: relative;
+}
+.v2ap-stage-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--v2-accent);
+}
+
+.v2ap-stage-note {
+  font-family: var(--v2-font-sans);
+  font-size: 0.85rem;
+  line-height: var(--v2-lh-relaxed);
+  color: rgba(245, 241, 232, 0.68);
+  margin: 0;
+  max-width: 52ch;
+}
+
+/* Index strip — wraps in place, no horizontal scroll under any width. */
+.v2ap-index {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: var(--v2-space-5);
+}
+
+.v2ap-index-item {
+  appearance: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  border: var(--v2-border-on-light);
+  border-radius: 999px;
+  background: var(--v2-canvas-raised);
+  font-family: var(--v2-font-sans);
+  font-size: 0.78rem;
+  color: var(--v2-text-on-light-muted);
+  transition: border-color 220ms ease, color 220ms ease, background 220ms ease;
+}
+
+.v2ap-index-num {
+  font-family: var(--v2-font-mono);
+  font-size: 0.68rem;
+  color: var(--v2-accent-dim);
+  opacity: 0.8;
+}
+
+.v2ap-index-item:hover { color: var(--v2-text-on-light); }
+
+.v2ap-index-item:focus-visible {
+  outline: 2px solid var(--v2-accent);
+  outline-offset: 2px;
+}
+
+.v2ap-index-item[data-active] {
+  border-color: var(--v2-accent);
+  background: var(--v2-accent-faint);
+  color: var(--v2-text-on-light);
+}
+
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  :root[data-premium='on'] .v2ap-stage-sweep {
+    animation: v2ap-sweep-drift 7s ease-in-out infinite;
+  }
+}
+
+@keyframes v2ap-sweep-drift {
+  0%, 100% { opacity: 0; transform: translateX(-6%); }
+  50% { opacity: 1; transform: translateX(6%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-premium='on']) .v2ap-plate,
+  :root:not([data-premium='on']) .v2ap-stage-content {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .v2ap-stage { height: auto; min-height: 420px; }
+  .v2ap-stage-list { gap: 0.4rem 1rem; }
 }
 
 .v2ap-card-head {
