@@ -49,7 +49,7 @@
     "react-router-dom": "^7.15.1",
     "three": "^0.181.2",
     "typescript": "^5.9.3",
-    "vite": "^7.2.7"
+    "vite": "^8.1.0"
   },
   "devDependencies": {
     "@axe-core/react": "^4.11.3",
