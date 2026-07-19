@@ -603,20 +603,15 @@ function PelletGalaxyStatic() {
 
 export default function PelletGalaxy() {
   const premium = usePremium();
-  // Honor prefers-reduced-motion, with an explicit ?wd_motion=1 opt-in that
-  // lets a user request the full animation anyway (mirrors ?premium=on).
-  const motionOverride =
-    typeof window !== 'undefined' &&
-    new URLSearchParams(window.location.search).get('wd_motion') === '1';
-  const reduce =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
-    !motionOverride;
+  // Decorative motion only (no scroll-jacking, no vestibular risk) — shown
+  // regardless of prefers-reduced-motion, matching the rest of the premium
+  // layer's policy (see premiumMode.ts). Only the premium on/off switch and
+  // the adaptive low-end-device gate control whether this section animates.
 
   return (
     <section className="v2pg" aria-label="Material journey: limestone to product">
       {/* Screen-reader narrative lives in the static markup either way. */}
-      {premium && !reduce ? <PelletGalaxyLive /> : <PelletGalaxyStatic />}
+      {premium ? <PelletGalaxyLive /> : <PelletGalaxyStatic />}
     </section>
   );
 }
