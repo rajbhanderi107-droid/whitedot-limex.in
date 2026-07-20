@@ -113,16 +113,21 @@ function runActivation({ viewer, src }: ActivationTask) {
     if (settled) return;
     settled = true;
     viewer.removeEventListener('load', done);
-    viewer.removeEventListener('error', done);
+    viewer.removeEventListener('error', onFail);
     window.clearTimeout(timer);
     activeLoads--;
     pumpActivationQueue();
   };
+  // A GLB that errors, or that never loads within the timeout (stuck
+  // decode, GPU/WebGL failure, flaky mobile network), used to just leave the
+  // card blank with no signal — mark it so CSS can fall back to a visible
+  // placeholder instead of an empty void.
+  const onFail = () => { viewer.setAttribute('data-model-failed', 'true'); done(); };
 
   // Fallback: don't let one stuck/broken model stall the whole queue.
-  const timer = window.setTimeout(done, MODEL_LOAD_TIMEOUT_MS);
+  const timer = window.setTimeout(onFail, MODEL_LOAD_TIMEOUT_MS);
   viewer.addEventListener('load', done, { once: true });
-  viewer.addEventListener('error', done, { once: true });
+  viewer.addEventListener('error', onFail, { once: true });
 
   if (viewer.getAttribute('src') !== src) {
     viewer.setAttribute('src', src);
@@ -137,6 +142,55 @@ function enqueueActivation(viewer: HTMLElement, src: string) {
   queuedViewers.add(viewer);
   activationQueue.push({ viewer, src });
   pumpActivationQueue();
+}
+
+// ── Mobile model-viewer pool (bounded, LRU) ───────────────────────────────
+// On desktop, up to ~70 <model-viewer> elements stay mounted forever once
+// activated (see observeViewportModels above) — model-viewer's shared
+// renderer makes that cheap. On real mobile Safari, a static grid of 35 live
+// products each getting its own persistently-mounted <model-viewer> proved
+// unreliable in practice (cards render blank instead of crashing — a step
+// forward from the previous marquee crash, but still not "visible"). Rather
+// than trust every device to gracefully cope with 35 simultaneous mounted
+// instances, cap how many are EVER mounted in the DOM at once on mobile: an
+// IntersectionObserver promotes a product's key into a small LRU set as its
+// card scrolls into view, evicting the oldest entry once the cap is hit.
+// React (see CaseStudyPage.tsx / CaseStudyFeature.tsx) uses that set to
+// swap the evicted card's <model-viewer> back out for a placeholder,
+// actually unmounting it so the browser can reclaim it — not just hiding it.
+export const MAX_MOBILE_ACTIVE_MODELS = 6;
+
+export function observeMobileModelPool(
+  root: HTMLElement,
+  onChange: (updater: (prev: Set<string>) => Set<string>) => void,
+) {
+  const cards = [...root.querySelectorAll<HTMLElement>('.csp-pcard[data-product]')];
+  if (!cards.length) return () => undefined;
+
+  const order: string[] = [];
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      let changed = false;
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const key = (entry.target as HTMLElement).dataset.product;
+        if (!key || order.includes(key)) return;
+        order.push(key);
+        changed = true;
+      });
+      if (!changed) return;
+      while (order.length > MAX_MOBILE_ACTIVE_MODELS) order.shift();
+      onChange(() => new Set(order));
+    },
+    { rootMargin: '200px 0px', threshold: 0.01 },
+  );
+
+  cards.forEach((card) => observer.observe(card));
+
+  return () => {
+    observer.disconnect();
+  };
 }
 
 export function observeViewportModels(root: HTMLElement) {

@@ -446,6 +446,22 @@
   animation: cspSoonBreath 5.5s ease-in-out infinite alternate;
   transition: color 0.5s var(--cs-ease), border-color 0.5s var(--cs-ease);
 }
+/* A model that errored or timed out (see productModelPreload.ts runActivation)
+   gets tagged data-model-failed — hide the dead canvas and surface the same
+   placeholder ring used for pending products, so a failure reads as "loading
+   art unavailable" rather than a blank void. */
+.csp-pmedia model-viewer[data-model-failed] { display: none !important; }
+.csp-pmedia:has(model-viewer[data-model-failed])::after {
+  content: "3D";
+  position: relative;
+  width: 112px; height: 112px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; font-weight: 900; letter-spacing: -0.03em;
+  color: rgba(79,154,53,0.30);
+  background: radial-gradient(circle at 38% 30%, #f7f5ee 0%, rgba(231,226,210,0.92) 30%, rgba(207,200,178,0.58) 62%, rgba(79,154,53,0.05) 100%);
+  border: 1px solid rgba(79,154,53,0.14);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+}
 .csp-pcard.live:hover .csp-soon-placeholder {
   color: rgba(79,154,53,0.45);
   border-color: rgba(79,154,53,0.26);
