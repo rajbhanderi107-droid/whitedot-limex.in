@@ -7,7 +7,42 @@
   "status": "live",
   "modelFile": "model/product-28-thin-wall-circle-dish.glb",
   "htmlPage": "product.html?p=light-weight-dish  (generic template, no dedicated file)",
-  "composition": null,
-  "specs": null,
-  "note": "No verified LIMEX composition/CO2/supplier data exists yet for this product. Do not fabricate percentages or specs — populate only from the official White Dot 'LIMEX Case Studies in India' PDF or verified supplier TDS, matching the pattern in specs.json (see bobbin/container/motorCover/aralditeContainer)."
+  "composition": [
+    {
+      "name": "LIMEX PP24 Y-51",
+      "pct": 30,
+      "color": "#4f9a35",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "name": "PP Homo-Polymer",
+      "pct": 70,
+      "color": "#c4c7c0",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    }
+  ],
+  "specs": [
+    {
+      "label": "Material Base",
+      "value": "LIMEX PP24 Y-51 + PP Homo-Polymer",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "label": "Mixing Ratio",
+      "value": "30% LIMEX + 70% PP",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "label": "LIMEX Grade",
+      "value": "PP24 Y-51",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    }
+  ],
+  "referenceGrade": "PP24 Y-51",
+  "mixRatio": "30% LIMEX PP24 Y-51 + 70% PP Homo-Polymer"
 }

@@ -29,6 +29,24 @@
   ],
   "specs": [
     {
+      "label": "Material Base",
+      "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "label": "Mixing Ratio",
+      "value": "30% LIMEX + 70% PP",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "label": "LIMEX Grade",
+      "value": "PE26 F-51",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
       "label": "Application",
       "value": "Covered Soap Dish with Drain Insert",
       "source": "soap-stand-photo-reference",
@@ -51,14 +69,26 @@
       "value": "Cream Lid + Base / Sage Green Insert",
       "source": "soap-stand-photo-reference",
       "verified": true
-    },
-    {
-      "label": "Material Base",
-      "value": "15% LIMEX blend - full mix verification in progress",
-      "source": "soap-stand-photo-reference",
-      "verified": false
     }
   ],
   "modelFile": "model/soap-stand-procedural.glb",
-  "htmlPage": "product.html?p=soap-stand  (generic template, no dedicated file)"
+  "htmlPage": "product.html?p=soap-stand  (generic template, no dedicated file)",
+  "referenceGrade": "PE26 F-51",
+  "mixRatio": "30% LIMEX PE26 F-51 + 70% PP Homo-Polymer",
+  "composition": [
+    {
+      "name": "LIMEX PE26 F-51",
+      "pct": 30,
+      "color": "#4f9a35",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "name": "PP Homo-Polymer",
+      "pct": 70,
+      "color": "#c4c7c0",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    }
+  ]
 }

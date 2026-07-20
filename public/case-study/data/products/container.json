@@ -6,44 +6,44 @@
   "status": "live",
   "tagline": "A paint container made from a 25% LIMEX PE78-02M + 75% PP blend, modeled from the supplied front and top reference photos.",
   "description": "A paint container reconstructed from the supplied front and top references. The model captures the tapered glossy red body, bright white snap lid, double rim, concentric lid rings, polished wire handle and molded-plastic finish. The formulation is 25% LIMEX PE78-02M and 75% PP homo-polymer.",
-  "referenceGrade": "PE78-02M",
-  "mixRatio": "25% LIMEX PE78-02M + 75% PP Homo-Polymer",
+  "referenceGrade": "PE26 F-51",
+  "mixRatio": "25% LIMEX PE26 F-51 + 75% PP Homo-Polymer",
   "moulding": "Injection Moulding",
   "application": "Paint packaging container",
   "composition": [
     {
-      "name": "LIMEX PE78-02M Compound",
+      "name": "LIMEX PE26 F-51",
       "pct": 25,
       "color": "#4f9a35",
       "verified": true,
-      "source": "photo-reference"
+      "source": "wd-pp-limex-notebook-2026-07-20"
     },
     {
       "name": "PP Homo-Polymer",
       "pct": 75,
       "color": "#c4c7c0",
       "verified": true,
-      "source": "photo-reference"
+      "source": "wd-pp-limex-notebook-2026-07-20"
     }
   ],
   "specs": [
     {
       "label": "Material Base",
-      "value": "LIMEX PE78-02M + PP Homo-Polymer",
+      "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
       "verified": true,
-      "source": "photo-reference"
-    },
-    {
-      "label": "LIMEX Grade",
-      "value": "Not Specified",
-      "verified": false,
-      "source": "photo-reference"
+      "source": "wd-pp-limex-notebook-2026-07-20"
     },
     {
       "label": "Mixing Ratio",
       "value": "25% LIMEX + 75% PP",
       "verified": true,
-      "source": "photo-reference"
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "label": "LIMEX Grade",
+      "value": "PE26 F-51",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
     },
     {
       "label": "Process",

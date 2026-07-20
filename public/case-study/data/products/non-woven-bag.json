@@ -7,7 +7,42 @@
   "status": "live",
   "modelFile": "model/product-34-nonwoven-bag.glb",
   "htmlPage": "product.html?p=non-woven-bag  (generic template, no dedicated file)",
-  "composition": null,
-  "specs": null,
-  "note": "No verified LIMEX composition/CO2/supplier data exists yet for this product. Do not fabricate percentages or specs — populate only from the official White Dot 'LIMEX Case Studies in India' PDF or verified supplier TDS, matching the pattern in specs.json (see bobbin/container/motorCover/aralditeContainer)."
+  "composition": [
+    {
+      "name": "LIMEX PE26 F-51",
+      "pct": 70,
+      "color": "#4f9a35",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "name": "PP Homo-Polymer",
+      "pct": 30,
+      "color": "#c4c7c0",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    }
+  ],
+  "specs": [
+    {
+      "label": "Material Base",
+      "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "label": "Mixing Ratio",
+      "value": "70% LIMEX + 30% PP",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "label": "LIMEX Grade",
+      "value": "PE26 F-51",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    }
+  ],
+  "referenceGrade": "PE26 F-51",
+  "mixRatio": "70% LIMEX PE26 F-51 + 30% PP Homo-Polymer"
 }

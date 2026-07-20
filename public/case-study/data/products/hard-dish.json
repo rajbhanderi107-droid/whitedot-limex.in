@@ -5,8 +5,8 @@
   "category": "Kitchenware",
   "status": "live",
   "application": "3-Compartment Serving Dish",
-  "tagline": "A rigid 3-compartment serving dish in four colorways, modeled in 3D from the supplied product photos. Verified LIMEX composition data is in progress.",
-  "description": "A moulded 3-compartment serving dish with two small pockets and one large basin, a rolled rim and a matte moulded-grain finish, produced in navy blue, off white, coral orange and mint green colorways. The interactive 3D model shows all four variants side by side and is photo-matched to the supplied reference photography, including the tapered pockets, underside support pads and feet. Verified LIMEX composition and supplier spec data for this product are in progress - no figures are published until confirmed.",
+  "tagline": "A rigid 3-compartment serving dish in four colorways, modeled in 3D from the supplied product photos.",
+  "description": "A moulded 3-compartment serving dish with two small pockets and one large basin, a rolled rim and a matte moulded-grain finish, produced in navy blue, off white, coral orange and mint green colorways. The interactive 3D model shows all four variants side by side and is photo-matched to the supplied reference photography, including the tapered pockets, underside support pads and feet.",
   "highlights": [
     {
       "num": "4",
@@ -29,6 +29,24 @@
   ],
   "specs": [
     {
+      "label": "Material Base",
+      "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "label": "Mixing Ratio",
+      "value": "50% LIMEX + 50% PP",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "label": "LIMEX Grade",
+      "value": "PE26 F-51",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
       "label": "Application",
       "value": "3-Compartment Serving Dish",
       "source": "hard-dish-photo-reference",
@@ -45,14 +63,26 @@
       "value": "2 Small Pockets + 1 Large Basin",
       "source": "hard-dish-photo-reference",
       "verified": true
-    },
-    {
-      "label": "Material Base",
-      "value": "LIMEX blend - verification in progress",
-      "source": "hard-dish-photo-reference",
-      "verified": false
     }
   ],
   "modelFile": null,
-  "htmlPage": "product.html?p=hard-dish  (generic template, no dedicated file)"
+  "htmlPage": "product.html?p=hard-dish  (generic template, no dedicated file)",
+  "referenceGrade": "PE26 F-51",
+  "mixRatio": "50% LIMEX PE26 F-51 + 50% PP Homo-Polymer",
+  "composition": [
+    {
+      "name": "LIMEX PE26 F-51",
+      "pct": 50,
+      "color": "#4f9a35",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "name": "PP Homo-Polymer",
+      "pct": 50,
+      "color": "#c4c7c0",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    }
+  ]
 }

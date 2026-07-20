@@ -30,6 +30,24 @@
   ],
   "specs": [
     {
+      "label": "Material Base",
+      "value": "LIMEX PE78-29L + PP Homo-Polymer",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "label": "Mixing Ratio",
+      "value": "30% LIMEX + 70% PP",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "label": "LIMEX Grade",
+      "value": "PE78-29L",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
       "label": "Application",
       "value": "Offset-Cap Oil Can / Jug",
       "source": "oil-bottle-photo-reference",
@@ -52,14 +70,26 @@
       "value": "Moulded slab handle with 35 mm grip width and 30 mm finger clearance",
       "source": "oil-bottle-photo-reference",
       "verified": true
-    },
-    {
-      "label": "Material Base",
-      "value": "LIMEX blend - verification in progress",
-      "source": "oil-bottle-photo-reference",
-      "verified": false
     }
   ],
   "modelFile": "model/oil-bottle-procedural-fast.glb",
-  "htmlPage": "product.html?p=food-oil-can  (generic template, no dedicated file)"
+  "htmlPage": "product.html?p=food-oil-can  (generic template, no dedicated file)",
+  "referenceGrade": "PE78-29L",
+  "mixRatio": "30% LIMEX PE78-29L + 70% PP Homo-Polymer",
+  "composition": [
+    {
+      "name": "LIMEX PE78-29L",
+      "pct": 30,
+      "color": "#4f9a35",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "name": "PP Homo-Polymer",
+      "pct": 70,
+      "color": "#c4c7c0",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    }
+  ]
 }

@@ -5,8 +5,8 @@
   "category": "Personal Care Packaging",
   "status": "live",
   "application": "Hand Wash Dispenser Bottle",
-  "tagline": "A faceted hand wash dispenser bottle in two colorways, modeled in 3D from the supplied product photos. Verified LIMEX composition data is in progress.",
-  "description": "A hand wash dispenser bottle with a distinctive elongated diamond mould pattern and a black pump head, produced in white and green colorways. The interactive 3D model shows both variants side by side and is photo-matched to the supplied reference photography, including the quilted facet geometry, matte pump finish and colors. Verified LIMEX composition and supplier spec data for this product are in progress - no figures are published until confirmed.",
+  "tagline": "A faceted hand wash dispenser bottle in two colorways, modeled in 3D from the supplied product photos.",
+  "description": "A hand wash dispenser bottle with a distinctive elongated diamond mould pattern and a black pump head, produced in white and green colorways. The interactive 3D model shows both variants side by side and is photo-matched to the supplied reference photography, including the quilted facet geometry, matte pump finish and colors.",
   "highlights": [
     {
       "num": "2",
@@ -29,6 +29,24 @@
   ],
   "specs": [
     {
+      "label": "Material Base",
+      "value": "LIMEX PE78-29L + PP Homo-Polymer",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "label": "Mixing Ratio",
+      "value": "40% LIMEX + 60% PP",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "label": "LIMEX Grade",
+      "value": "PE78-29L",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
       "label": "Application",
       "value": "Hand Wash Dispenser Bottle",
       "source": "hand-wash-photo-reference",
@@ -45,14 +63,26 @@
       "value": "Black Pump Dispenser",
       "source": "hand-wash-photo-reference",
       "verified": true
-    },
-    {
-      "label": "Material Base",
-      "value": "LIMEX blend - verification in progress",
-      "source": "hand-wash-photo-reference",
-      "verified": false
     }
   ],
   "modelFile": "model/hand-wash-bottle-duo.glb",
-  "htmlPage": "hand-wash-bottle.html"
+  "htmlPage": "hand-wash-bottle.html",
+  "referenceGrade": "PE78-29L",
+  "mixRatio": "40% LIMEX PE78-29L + 60% PP Homo-Polymer",
+  "composition": [
+    {
+      "name": "LIMEX PE78-29L",
+      "pct": 40,
+      "color": "#4f9a35",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "name": "PP Homo-Polymer",
+      "pct": 60,
+      "color": "#c4c7c0",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    }
+  ]
 }

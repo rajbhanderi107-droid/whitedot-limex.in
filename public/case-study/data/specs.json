@@ -4,7 +4,7 @@
     "note": "Single source of truth for case-study technical data. Every field carries a `verified` flag and a `source`. The page engine and the PDF TDS generator read ONLY from this file. verified:true = cited from the official White Dot 'Case Studies in India' PDF or public TBM/supplier documentation. verified:false = representative of the material class; confirm against supplier lot TDS.",
     "lastResearched": "2026-06-23",
     "researchedBy": "White Dot — data verification engine",
-    "lastUpdated": "2026-07-05"
+    "lastUpdated": "2026-07-20"
   },
   "sources": {
     "wd-casestudies-pdf": "White Dot — 'LIMEX Case Studies in India' (official document)",
@@ -153,44 +153,44 @@
       "status": "live",
       "tagline": "A paint container made from a 25% LIMEX PE78-02M + 75% PP blend, modeled from the supplied front and top reference photos.",
       "description": "A paint container reconstructed from the supplied front and top references. The model captures the tapered glossy red body, bright white snap lid, double rim, concentric lid rings, polished wire handle and molded-plastic finish. The formulation is 25% LIMEX PE78-02M and 75% PP homo-polymer.",
-      "referenceGrade": "PE78-02M",
-      "mixRatio": "25% LIMEX PE78-02M + 75% PP Homo-Polymer",
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "25% LIMEX PE26 F-51 + 75% PP Homo-Polymer",
       "moulding": "Injection Moulding",
       "application": "Paint packaging container",
       "composition": [
         {
-          "name": "LIMEX PE78-02M Compound",
+          "name": "LIMEX PE26 F-51",
           "pct": 25,
           "color": "#4f9a35",
           "verified": true,
-          "source": "photo-reference"
+          "source": "wd-pp-limex-notebook-2026-07-20"
         },
         {
           "name": "PP Homo-Polymer",
           "pct": 75,
           "color": "#c4c7c0",
           "verified": true,
-          "source": "photo-reference"
+          "source": "wd-pp-limex-notebook-2026-07-20"
         }
       ],
       "specs": [
         {
           "label": "Material Base",
-          "value": "LIMEX PE78-02M + PP Homo-Polymer",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
           "verified": true,
-          "source": "photo-reference"
-        },
-        {
-          "label": "LIMEX Grade",
-          "value": "Not Specified",
-          "verified": false,
-          "source": "photo-reference"
+          "source": "wd-pp-limex-notebook-2026-07-20"
         },
         {
           "label": "Mixing Ratio",
           "value": "25% LIMEX + 75% PP",
           "verified": true,
-          "source": "photo-reference"
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
         },
         {
           "label": "Process",
@@ -277,44 +277,44 @@
       "status": "live",
       "tagline": "A glossy black injection-moulded motor fan cover, produced from a 50% LIMEX PE78-02M + 50% PP blend.",
       "description": "A motor fan cover produced by injection moulding from an equal-blend formulation of 50% LIMEX PE78-02M and 50% PP homo-polymer. The 3D model is built from supplied reference photos capturing the glossy black cylindrical body, deep outer lip, concentric rounded ventilation slots, central mounting hole, and rear mounting collar with screw holes. At 50% LIMEX, roughly 39% of the finished part mass is limestone — displacing an equal share of petroleum-derived plastic.",
-      "referenceGrade": "PE78-02M",
-      "mixRatio": "50% LIMEX PE78-02M + 50% PP Homo-Polymer",
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "50% LIMEX PE26 F-51 + 50% PP Homo-Polymer",
       "moulding": "Injection Moulding",
       "application": "Motor Fan Cover",
       "composition": [
         {
-          "name": "LIMEX PE78-02M Compound",
+          "name": "LIMEX PE26 F-51",
           "pct": 50,
           "color": "#4f9a35",
           "verified": true,
-          "source": "wd-casestudies-pdf"
+          "source": "wd-pp-limex-notebook-2026-07-20"
         },
         {
           "name": "PP Homo-Polymer",
           "pct": 50,
           "color": "#c4c7c0",
           "verified": true,
-          "source": "wd-casestudies-pdf"
+          "source": "wd-pp-limex-notebook-2026-07-20"
         }
       ],
       "specs": [
         {
           "label": "Material Base",
-          "value": "LIMEX PE78-02M + PP Homo-Polymer",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
           "verified": true,
-          "source": "wd-casestudies-pdf"
-        },
-        {
-          "label": "LIMEX Grade",
-          "value": "Not Specified",
-          "verified": false,
-          "source": "wd-casestudies-pdf"
+          "source": "wd-pp-limex-notebook-2026-07-20"
         },
         {
           "label": "Mixing Ratio",
           "value": "50% LIMEX + 50% PP",
           "verified": true,
-          "source": "wd-casestudies-pdf"
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
         },
         {
           "label": "Process",
@@ -401,44 +401,44 @@
       "status": "live",
       "tagline": "An adhesive dispenser container, injection-moulded from a 30% LIMEX + 70% PP blend, modeled from the supplied reference photos.",
       "description": "An adhesive dispenser container, injection-moulded from a 30% LIMEX + 70% PP homo-polymer blend. The 3D model is matched to the supplied reference photos: knurled white screw cap, smooth body, fluted lower grip section and blue flip-top dispensing base. Approximately 23% of the finished part mass is limestone, replacing petroleum-derived plastic.",
-      "referenceGrade": "LIMEX Compound",
-      "mixRatio": "30% LIMEX + 70% PP Homo-Polymer",
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "30% LIMEX PE26 F-51 + 70% PP Homo-Polymer",
       "moulding": "Injection Moulding",
       "application": "Adhesive Dispenser Container",
       "composition": [
         {
-          "name": "LIMEX Compound",
+          "name": "LIMEX PE26 F-51",
           "pct": 30,
           "color": "#4f9a35",
           "verified": true,
-          "source": "araldite-photo-reference"
+          "source": "wd-pp-limex-notebook-2026-07-20"
         },
         {
           "name": "PP Homo-Polymer",
           "pct": 70,
           "color": "#c4c7c0",
           "verified": true,
-          "source": "araldite-photo-reference"
+          "source": "wd-pp-limex-notebook-2026-07-20"
         }
       ],
       "specs": [
         {
           "label": "Material Base",
-          "value": "LIMEX + PP Homo-Polymer",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
           "verified": true,
-          "source": "araldite-photo-reference"
-        },
-        {
-          "label": "LIMEX Grade",
-          "value": "LIMEX Compound",
-          "verified": true,
-          "source": "araldite-photo-reference"
+          "source": "wd-pp-limex-notebook-2026-07-20"
         },
         {
           "label": "Mixing Ratio",
           "value": "30% LIMEX + 70% PP",
           "verified": true,
-          "source": "araldite-photo-reference"
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
         },
         {
           "label": "Effective Limestone (CaCO3)",
@@ -495,8 +495,8 @@
       "category": "Personal Care Packaging",
       "status": "live",
       "application": "Hand Wash Dispenser Bottle",
-      "tagline": "A faceted hand wash dispenser bottle in two colorways, modeled in 3D from the supplied product photos. Verified LIMEX composition data is in progress.",
-      "description": "A hand wash dispenser bottle with a distinctive elongated diamond mould pattern and a black pump head, produced in white and green colorways. The interactive 3D model shows both variants side by side and is photo-matched to the supplied reference photography, including the quilted facet geometry, matte pump finish and colors. Verified LIMEX composition and supplier spec data for this product are in progress - no figures are published until confirmed.",
+      "tagline": "A faceted hand wash dispenser bottle in two colorways, modeled in 3D from the supplied product photos.",
+      "description": "A hand wash dispenser bottle with a distinctive elongated diamond mould pattern and a black pump head, produced in white and green colorways. The interactive 3D model shows both variants side by side and is photo-matched to the supplied reference photography, including the quilted facet geometry, matte pump finish and colors.",
       "highlights": [
         {
           "num": "2",
@@ -519,6 +519,24 @@
       ],
       "specs": [
         {
+          "label": "Material Base",
+          "value": "LIMEX PE78-29L + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "40% LIMEX + 60% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE78-29L",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
           "label": "Application",
           "value": "Hand Wash Dispenser Bottle",
           "source": "hand-wash-photo-reference",
@@ -535,12 +553,24 @@
           "value": "Black Pump Dispenser",
           "source": "hand-wash-photo-reference",
           "verified": true
+        }
+      ],
+      "referenceGrade": "PE78-29L",
+      "mixRatio": "40% LIMEX PE78-29L + 60% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE78-29L",
+          "pct": 40,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
         },
         {
-          "label": "Material Base",
-          "value": "LIMEX blend - verification in progress",
-          "source": "hand-wash-photo-reference",
-          "verified": false
+          "name": "PP Homo-Polymer",
+          "pct": 60,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
         }
       ]
     },
@@ -551,8 +581,8 @@
       "category": "Kitchenware",
       "status": "live",
       "application": "3-Compartment Serving Dish",
-      "tagline": "A rigid 3-compartment serving dish in four colorways, modeled in 3D from the supplied product photos. Verified LIMEX composition data is in progress.",
-      "description": "A moulded 3-compartment serving dish with two small pockets and one large basin, a rolled rim and a matte moulded-grain finish, produced in navy blue, off white, coral orange and mint green colorways. The interactive 3D model shows all four variants side by side and is photo-matched to the supplied reference photography, including the tapered pockets, underside support pads and feet. Verified LIMEX composition and supplier spec data for this product are in progress - no figures are published until confirmed.",
+      "tagline": "A rigid 3-compartment serving dish in four colorways, modeled in 3D from the supplied product photos.",
+      "description": "A moulded 3-compartment serving dish with two small pockets and one large basin, a rolled rim and a matte moulded-grain finish, produced in navy blue, off white, coral orange and mint green colorways. The interactive 3D model shows all four variants side by side and is photo-matched to the supplied reference photography, including the tapered pockets, underside support pads and feet.",
       "highlights": [
         {
           "num": "4",
@@ -575,6 +605,24 @@
       ],
       "specs": [
         {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "50% LIMEX + 50% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
           "label": "Application",
           "value": "3-Compartment Serving Dish",
           "source": "hard-dish-photo-reference",
@@ -591,12 +639,24 @@
           "value": "2 Small Pockets + 1 Large Basin",
           "source": "hard-dish-photo-reference",
           "verified": true
+        }
+      ],
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "50% LIMEX PE26 F-51 + 50% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 50,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
         },
         {
-          "label": "Material Base",
-          "value": "LIMEX blend - verification in progress",
-          "source": "hard-dish-photo-reference",
-          "verified": false
+          "name": "PP Homo-Polymer",
+          "pct": 50,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
         }
       ]
     },
@@ -607,8 +667,8 @@
       "category": "Industrial Pipe",
       "status": "live",
       "application": "Concealed Rigid Conduit Pipe",
-      "tagline": "A rigid concealed conduit pipe, modeled in 3D from the supplied reference photos. Verified LIMEX composition data is in progress.",
-      "description": "A rigid electrical conduit pipe used in concealed civil/wall wiring, with a printed blue longitudinal identification stripe and an embossed ISI-style size/batch marking ('0090 M' flanked by directional arrows) near one end. The interactive 3D model is photo-matched to the supplied reference photography, including the flat sawn cut ends that expose the pipe's wall thickness and hollow bore. Verified LIMEX composition and supplier spec data for this product are in progress - no figures are published until confirmed.",
+      "tagline": "A rigid concealed conduit pipe, modeled in 3D from the supplied reference photos.",
+      "description": "A rigid electrical conduit pipe used in concealed civil/wall wiring, with a printed blue longitudinal identification stripe and an embossed ISI-style size/batch marking ('0090 M' flanked by directional arrows) near one end. The interactive 3D model is photo-matched to the supplied reference photography, including the flat sawn cut ends that expose the pipe's wall thickness and hollow bore.",
       "highlights": [
         {
           "num": "3D",
@@ -631,6 +691,24 @@
       ],
       "specs": [
         {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "20% LIMEX + 80% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
           "label": "Application",
           "value": "Concealed Rigid Conduit Pipe",
           "source": "consile-pipe-photo-reference",
@@ -647,12 +725,24 @@
           "value": "\"0090\" + \"M\" with directional arrows (ISI-style)",
           "source": "consile-pipe-photo-reference",
           "verified": true
+        }
+      ],
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "20% LIMEX PE26 F-51 + 80% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 20,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
         },
         {
-          "label": "Material Base",
-          "value": "LIMEX blend - verification in progress",
-          "source": "consile-pipe-photo-reference",
-          "verified": false
+          "name": "PP Homo-Polymer",
+          "pct": 80,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
         }
       ]
     },
@@ -687,6 +777,24 @@
       ],
       "specs": [
         {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "30% LIMEX + 70% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
           "label": "Application",
           "value": "Covered Soap Dish with Drain Insert",
           "source": "soap-stand-photo-reference",
@@ -709,12 +817,24 @@
           "value": "Cream Lid + Base / Sage Green Insert",
           "source": "soap-stand-photo-reference",
           "verified": true
+        }
+      ],
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "30% LIMEX PE26 F-51 + 70% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 30,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
         },
         {
-          "label": "Material Base",
-          "value": "15% LIMEX blend - full mix verification in progress",
-          "source": "soap-stand-photo-reference",
-          "verified": false
+          "name": "PP Homo-Polymer",
+          "pct": 70,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
         }
       ]
     },
@@ -749,6 +869,24 @@
       ],
       "specs": [
         {
+          "label": "Material Base",
+          "value": "LIMEX PE78-29L + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "30% LIMEX + 70% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE78-29L",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
           "label": "Application",
           "value": "Offset-Cap Oil Can / Jug",
           "source": "oil-bottle-photo-reference",
@@ -771,12 +909,24 @@
           "value": "Moulded slab handle with 35 mm grip width and 30 mm finger clearance",
           "source": "oil-bottle-photo-reference",
           "verified": true
+        }
+      ],
+      "referenceGrade": "PE78-29L",
+      "mixRatio": "30% LIMEX PE78-29L + 70% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE78-29L",
+          "pct": 30,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
         },
         {
-          "label": "Material Base",
-          "value": "LIMEX blend - verification in progress",
-          "source": "oil-bottle-photo-reference",
-          "verified": false
+          "name": "PP Homo-Polymer",
+          "pct": 70,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
         }
       ]
     },
@@ -790,16 +940,92 @@
       "tagline": "A compact warm-white polypropylene sweet container with a deep cavity and snap-fit lid, smaller on every axis than Product 14.",
       "description": "A compact food-grade PP sweet container rebuilt as the smaller plastic counterpart to Product 14. The revised model has a 200 x 140 x 50 mm overall envelope, thinner moulded walls, a shallower tapered body, rounded corners, a snap-fit lid, and a warm semi-matte polypropylene finish. The older supplied dimension cards conflict, so these corrected model dimensions follow the user's direct product comparison and remain pending caliper verification.",
       "highlights": [
-        { "num": "3D", "label": "Photo + Blueprint Matched", "source": "dairy-sweet-container-reference", "verified": true },
-        { "num": "40", "label": "mm Modelled Internal Depth", "source": "user-corrected product relationship", "verified": false },
-        { "num": "500", "label": "ml Total Volume", "source": "dairy-sweet-container-spec-sheet", "verified": true }
+        {
+          "num": "3D",
+          "label": "Photo + Blueprint Matched",
+          "source": "dairy-sweet-container-reference",
+          "verified": true
+        },
+        {
+          "num": "40",
+          "label": "mm Modelled Internal Depth",
+          "source": "user-corrected product relationship",
+          "verified": false
+        },
+        {
+          "num": "500",
+          "label": "ml Total Volume",
+          "source": "dairy-sweet-container-spec-sheet",
+          "verified": true
+        }
       ],
       "specs": [
-        { "label": "Material", "value": "Food-grade PP / opaque white", "source": "dairy-sweet-container-spec-sheet", "verified": true },
-        { "label": "Modelled Envelope", "value": "200 x 140 x 50 mm (L x W x H), smaller than Product 14 on every axis", "source": "user-corrected product relationship", "verified": false },
-        { "label": "Internal Base", "value": "158 x 102 mm modelled", "source": "user-corrected product relationship", "verified": false },
-        { "label": "Internal Depth", "value": "40 mm modelled", "source": "user-corrected product relationship", "verified": false },
-        { "label": "Molded Markings", "value": "HAVMOR PLAST PVT LTD. / D-500 / REUSABLE / FOOD SAFE / PP5 / FREEZER SAFE", "source": "dairy-sweet-container-reference", "verified": true }
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "20% LIMEX + 80% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Material",
+          "value": "Food-grade PP / opaque white",
+          "source": "dairy-sweet-container-spec-sheet",
+          "verified": true
+        },
+        {
+          "label": "Modelled Envelope",
+          "value": "200 x 140 x 50 mm (L x W x H), smaller than Product 14 on every axis",
+          "source": "user-corrected product relationship",
+          "verified": false
+        },
+        {
+          "label": "Internal Base",
+          "value": "158 x 102 mm modelled",
+          "source": "user-corrected product relationship",
+          "verified": false
+        },
+        {
+          "label": "Internal Depth",
+          "value": "40 mm modelled",
+          "source": "user-corrected product relationship",
+          "verified": false
+        },
+        {
+          "label": "Molded Markings",
+          "value": "HAVMOR PLAST PVT LTD. / D-500 / REUSABLE / FOOD SAFE / PP5 / FREEZER SAFE",
+          "source": "dairy-sweet-container-reference",
+          "verified": true
+        }
+      ],
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "20% LIMEX PE26 F-51 + 80% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 20,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 80,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
       ]
     },
     "dairyProductsContainer": {
@@ -833,6 +1059,24 @@
       ],
       "specs": [
         {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "20% LIMEX + 80% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
           "label": "Application",
           "value": "Snap-Lid Dairy Tub (Curd / Dairy Cup)",
           "source": "dairy-container-photo-reference",
@@ -855,12 +1099,24 @@
           "value": "Satin white body and lid",
           "source": "dairy-container-photo-reference",
           "verified": true
+        }
+      ],
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "20% LIMEX PE26 F-51 + 80% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 20,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
         },
         {
-          "label": "Material Base",
-          "value": "LIMEX blend - verification in progress",
-          "source": "dairy-container-photo-reference",
-          "verified": false
+          "name": "PP Homo-Polymer",
+          "pct": 80,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
         }
       ]
     },
@@ -895,6 +1151,24 @@
       ],
       "specs": [
         {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "20% LIMEX + 80% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
           "label": "Application",
           "value": "Mini Bento Food Container",
           "source": "lunch-box-detail-card",
@@ -917,12 +1191,24 @@
           "value": "Red base, cream-white lid and flaps",
           "source": "lunch-box-detail-card",
           "verified": true
+        }
+      ],
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "20% LIMEX PE26 F-51 + 80% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 20,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
         },
         {
-          "label": "Material Base",
-          "value": "Food-grade PP/ABS - LIMEX blend verification in progress",
-          "source": "lunch-box-detail-card",
-          "verified": false
+          "name": "PP Homo-Polymer",
+          "pct": 80,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
         }
       ]
     },
@@ -936,15 +1222,86 @@
       "tagline": "A photo-matched one-piece D-250 molded plastic container reconstructed from supplied photographs and technical blueprints.",
       "description": "A single-piece rectangular container with a continuous molded rim, tapered walls, recessed interior base panel, ejector marks, injection point, and molded REUSABLE / D-250 markings. No LIMEX formulation or supplier composition is claimed.",
       "highlights": [
-        { "num": "3D", "label": "Photo-Matched", "source": "D-250 supplied photos and blueprints", "verified": true },
-        { "num": "250x190", "label": "mm Lid Envelope", "source": "D-250 lid blueprint", "verified": true },
-        { "num": "1", "label": "One-Piece Container", "source": "supplied product photos", "verified": true }
+        {
+          "num": "3D",
+          "label": "Photo-Matched",
+          "source": "D-250 supplied photos and blueprints",
+          "verified": true
+        },
+        {
+          "num": "250x190",
+          "label": "mm Lid Envelope",
+          "source": "D-250 lid blueprint",
+          "verified": true
+        },
+        {
+          "num": "1",
+          "label": "One-Piece Container",
+          "source": "supplied product photos",
+          "verified": true
+        }
       ],
       "specs": [
-        { "label": "Envelope", "value": "250 mm x 190 mm lid-envelope reference", "source": "D-250 lid blueprint", "verified": true },
-        { "label": "Construction", "value": "One-piece tapered container with continuous molded rim and recessed interior base", "source": "supplied product photos", "verified": true },
-        { "label": "Material Appearance", "value": "Polished opaque polypropylene-style plastic", "source": "supplied product photos and 3D reconstruction", "verified": true },
-        { "label": "Composition", "value": "Not published; supplier formulation not verified", "source": "supplied product photos", "verified": false }
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "20% LIMEX + 80% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Envelope",
+          "value": "250 mm x 190 mm lid-envelope reference",
+          "source": "D-250 lid blueprint",
+          "verified": true
+        },
+        {
+          "label": "Construction",
+          "value": "One-piece tapered container with continuous molded rim and recessed interior base",
+          "source": "supplied product photos",
+          "verified": true
+        },
+        {
+          "label": "Material Appearance",
+          "value": "Polished opaque polypropylene-style plastic",
+          "source": "supplied product photos and 3D reconstruction",
+          "verified": true
+        },
+        {
+          "label": "Composition",
+          "value": "Not published; supplier formulation not verified",
+          "source": "supplied product photos",
+          "verified": false
+        }
+      ],
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "20% LIMEX PE26 F-51 + 80% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 20,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 80,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
       ]
     },
     "hook20mm": {
@@ -957,16 +1314,92 @@
       "tagline": "A warm-white plastic 20 mm hook reconstructed in 3D from the supplied prototype photograph and dimensional reference cards.",
       "description": "A flexible W-profile retaining clip with three rounded prongs at each end, two 4 mm slots, and a warm ivory prototype-plastic finish. The interactive model follows the supplied photography and drawing references. Supplier formulation and LIMEX composition remain unpublished.",
       "highlights": [
-        { "num": "3D", "label": "Photo-Matched", "source": "product-15 supplied references", "verified": true },
-        { "num": "19", "label": "mm Overall Width", "source": "product-15 tolerance card", "verified": true },
-        { "num": "3+3", "label": "Rounded Prongs", "source": "product-15 supplied photograph", "verified": true }
+        {
+          "num": "3D",
+          "label": "Photo-Matched",
+          "source": "product-15 supplied references",
+          "verified": true
+        },
+        {
+          "num": "19",
+          "label": "mm Overall Width",
+          "source": "product-15 tolerance card",
+          "verified": true
+        },
+        {
+          "num": "3+3",
+          "label": "Rounded Prongs",
+          "source": "product-15 supplied photograph",
+          "verified": true
+        }
       ],
       "specs": [
-        { "label": "Overall Width", "value": "19 mm nominal", "source": "product-15 tolerance card", "verified": true },
-        { "label": "Slot Geometry", "value": "2 slots per end, 4 mm nominal width on 8 mm centers", "source": "product-15 tolerance card", "verified": true },
-        { "label": "Construction", "value": "One-piece formed plastic clip with W-profile bends and curled tips", "source": "product-15 supplied references", "verified": true },
-        { "label": "Material Appearance", "value": "Warm ivory semi-matte prototype plastic", "source": "product-15 supplied photograph", "verified": true },
-        { "label": "Composition", "value": "Not published; supplier formulation not verified", "source": "product-15 supplied references", "verified": false }
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "30% LIMEX + 70% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Overall Width",
+          "value": "19 mm nominal",
+          "source": "product-15 tolerance card",
+          "verified": true
+        },
+        {
+          "label": "Slot Geometry",
+          "value": "2 slots per end, 4 mm nominal width on 8 mm centers",
+          "source": "product-15 tolerance card",
+          "verified": true
+        },
+        {
+          "label": "Construction",
+          "value": "One-piece formed plastic clip with W-profile bends and curled tips",
+          "source": "product-15 supplied references",
+          "verified": true
+        },
+        {
+          "label": "Material Appearance",
+          "value": "Warm ivory semi-matte prototype plastic",
+          "source": "product-15 supplied photograph",
+          "verified": true
+        },
+        {
+          "label": "Composition",
+          "value": "Not published; supplier formulation not verified",
+          "source": "product-15 supplied references",
+          "verified": false
+        }
+      ],
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "30% LIMEX PE26 F-51 + 70% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 30,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 70,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
       ]
     },
     "roundPipe": {
@@ -979,14 +1412,80 @@
       "tagline": "A single-piece molded round pipe reconstructed as an interactive 3D visual reference. Supplier formulation and LIMEX composition remain unpublished until verified.",
       "description": "An interactive 3D visual reference for the Round Pipe case study. The model is published for product exploration; no LIMEX composition, CO2, supplier, or performance figures are claimed until supported by approved technical documentation.",
       "highlights": [
-        { "num": "3D", "label": "Interactive Model", "source": "White Dot Round Pipe visual reference", "verified": true },
-        { "num": "16", "label": "Product Index", "source": "White Dot case-study registry", "verified": true },
-        { "num": "Pending", "label": "Verified Specs", "source": "Supplier TDS / approved product sheet", "verified": false }
+        {
+          "num": "3D",
+          "label": "Interactive Model",
+          "source": "White Dot Round Pipe visual reference",
+          "verified": true
+        },
+        {
+          "num": "16",
+          "label": "Product Index",
+          "source": "White Dot case-study registry",
+          "verified": true
+        },
+        {
+          "num": "Pending",
+          "label": "Verified Specs",
+          "source": "Supplier TDS / approved product sheet",
+          "verified": false
+        }
       ],
       "specs": [
-        { "label": "Construction", "value": "Single-piece molded pipe visual reference", "source": "White Dot 3D visual reference", "verified": true },
-        { "label": "Model Asset", "value": "round-pipe-procedural.glb", "source": "White Dot case-study model asset", "verified": true },
-        { "label": "Composition", "value": "Not published; supplier formulation not verified", "source": "Pending approved LIMEX documentation", "verified": false }
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "30% LIMEX + 70% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Construction",
+          "value": "Single-piece molded pipe visual reference",
+          "source": "White Dot 3D visual reference",
+          "verified": true
+        },
+        {
+          "label": "Model Asset",
+          "value": "round-pipe-procedural.glb",
+          "source": "White Dot case-study model asset",
+          "verified": true
+        },
+        {
+          "label": "Composition",
+          "value": "Not published; supplier formulation not verified",
+          "source": "Pending approved LIMEX documentation",
+          "verified": false
+        }
+      ],
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "30% LIMEX PE26 F-51 + 70% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 30,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 70,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
       ]
     },
     "motorFanBlade": {
@@ -999,16 +1498,875 @@
       "tagline": "A blueprint-matched 12-blade industrial impeller reconstructed as an interactive 3D visual reference. Supplier formulation and LIMEX composition remain unpublished until verified.",
       "description": "An interactive 3D visual reference for the Motor Fan Blade case study — a one-piece molded 12-blade radial impeller with an 88 mm diameter baseplate, a central hub carrying a 10 mm shaft bore and set-screw provision, and 12 curved blades rising 13.2 mm off the baseplate. No LIMEX composition, CO2, supplier, or performance figures are claimed until supported by approved technical documentation.",
       "highlights": [
-        { "num": "3D", "label": "Interactive Model", "source": "White Dot Motor Fan Blade visual reference", "verified": true },
-        { "num": "12", "label": "Radial Blades", "source": "White Dot Motor Fan Blade visual reference", "verified": true },
-        { "num": "Pending", "label": "Verified Specs", "source": "Supplier TDS / approved product sheet", "verified": false }
+        {
+          "num": "3D",
+          "label": "Interactive Model",
+          "source": "White Dot Motor Fan Blade visual reference",
+          "verified": true
+        },
+        {
+          "num": "12",
+          "label": "Radial Blades",
+          "source": "White Dot Motor Fan Blade visual reference",
+          "verified": true
+        },
+        {
+          "num": "Pending",
+          "label": "Verified Specs",
+          "source": "Supplier TDS / approved product sheet",
+          "verified": false
+        }
       ],
       "specs": [
-        { "label": "Baseplate Diameter", "value": "88 mm nominal", "source": "White Dot 3D visual reference", "verified": true },
-        { "label": "Blade Crown Height", "value": "13.2 mm above baseplate", "source": "White Dot 3D visual reference", "verified": true },
-        { "label": "Overall Envelope", "value": "120.005 mm x 120.005 mm x 19.516 mm", "source": "White Dot 3D visual reference", "verified": true },
-        { "label": "Hub / Bore", "value": "Central hub with 10 mm shaft bore and set-screw provision", "source": "White Dot 3D visual reference", "verified": true },
-        { "label": "Composition", "value": "Not published; supplier formulation not verified", "source": "Pending approved LIMEX documentation", "verified": false }
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "20% LIMEX + 80% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Baseplate Diameter",
+          "value": "88 mm nominal",
+          "source": "White Dot 3D visual reference",
+          "verified": true
+        },
+        {
+          "label": "Blade Crown Height",
+          "value": "13.2 mm above baseplate",
+          "source": "White Dot 3D visual reference",
+          "verified": true
+        },
+        {
+          "label": "Overall Envelope",
+          "value": "120.005 mm x 120.005 mm x 19.516 mm",
+          "source": "White Dot 3D visual reference",
+          "verified": true
+        },
+        {
+          "label": "Hub / Bore",
+          "value": "Central hub with 10 mm shaft bore and set-screw provision",
+          "source": "White Dot 3D visual reference",
+          "verified": true
+        },
+        {
+          "label": "Composition",
+          "value": "Not published; supplier formulation not verified",
+          "source": "Pending approved LIMEX documentation",
+          "verified": false
+        }
+      ],
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "20% LIMEX PE26 F-51 + 80% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 20,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 80,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ]
+    },
+    "dairyRoundContainer": {
+      "id": "dairyRoundContainer",
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "20% LIMEX PE26 F-51 + 80% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 20,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 80,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "20% LIMEX + 80% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ]
+    },
+    "applianceTray": {
+      "id": "applianceTray",
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "20% LIMEX PE26 F-51 + 80% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 20,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 80,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "20% LIMEX + 80% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ]
+    },
+    "cupContainer": {
+      "id": "cupContainer",
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "30% LIMEX PE26 F-51 + 70% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 30,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 70,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "30% LIMEX + 70% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ]
+    },
+    "toothBrush": {
+      "id": "toothBrush",
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "10% LIMEX PE26 F-51 + 90% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 10,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 90,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "10% LIMEX + 90% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ]
+    },
+    "petrolPipe": {
+      "id": "petrolPipe",
+      "referenceGrade": "PE79-29L",
+      "mixRatio": "30% LIMEX PE79-29L + 70% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE79-29L",
+          "pct": 30,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 70,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE79-29L + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "30% LIMEX + 70% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE79-29L",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ]
+    },
+    "proteinContainer": {
+      "id": "proteinContainer",
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "50% LIMEX PE26 F-51 + 50% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 50,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 50,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "50% LIMEX + 50% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ]
+    },
+    "rectangleBox": {
+      "id": "rectangleBox",
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "20% LIMEX PE26 F-51 + 80% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 20,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 80,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "20% LIMEX + 80% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ]
+    },
+    "smallRoundBottle": {
+      "id": "smallRoundBottle",
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "20% LIMEX PE26 F-51 + 80% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 20,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 80,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "20% LIMEX + 80% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ]
+    },
+    "saltBottle": {
+      "id": "saltBottle",
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "20% LIMEX PE26 F-51 + 80% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 20,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 80,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "20% LIMEX + 80% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ]
+    },
+    "lightWeightContainer": {
+      "id": "lightWeightContainer",
+      "referenceGrade": "PE78-29L",
+      "mixRatio": "25% LIMEX PE78-29L + 75% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE78-29L",
+          "pct": 25,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 75,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE78-29L + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "25% LIMEX + 75% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE78-29L",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ]
+    },
+    "foodTrayDish": {
+      "id": "foodTrayDish",
+      "referenceGrade": "Per lot TDS",
+      "mixRatio": "30% LIMEX + 70% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX Compound",
+          "pct": 30,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 70,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX Compound + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "30% LIMEX + 70% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "Per lot TDS",
+          "verified": false,
+          "source": "wd-pp-limex-notebook-2026-07-20",
+          "note": "Grade not recorded in supplied notebook for this product."
+        }
+      ]
+    },
+    "lightWeightDish": {
+      "id": "lightWeightDish",
+      "referenceGrade": "PP24 Y-51",
+      "mixRatio": "30% LIMEX PP24 Y-51 + 70% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PP24 Y-51",
+          "pct": 30,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 70,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX PP24 Y-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "30% LIMEX + 70% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PP24 Y-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ]
+    },
+    "dermicoolPowderBottle": {
+      "id": "dermicoolPowderBottle",
+      "referenceGrade": "PP24 N-51",
+      "mixRatio": "70% LIMEX PP24 N-51 + 30% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PP24 N-51",
+          "pct": 70,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 30,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX PP24 N-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "70% LIMEX + 30% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PP24 N-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ]
+    },
+    "wovenThread": {
+      "id": "wovenThread",
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "70% LIMEX PE26 F-51 + 30% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 70,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 30,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "70% LIMEX + 30% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ]
+    },
+    "childBottle": {
+      "id": "childBottle",
+      "referenceGrade": "Per lot TDS",
+      "mixRatio": "70% LIMEX + 30% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX Compound",
+          "pct": 70,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 30,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX Compound + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "70% LIMEX + 30% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "Per lot TDS",
+          "verified": false,
+          "source": "wd-pp-limex-notebook-2026-07-20",
+          "note": "Grade not recorded in supplied notebook for this product."
+        }
+      ]
+    },
+    "waterTub": {
+      "id": "waterTub",
+      "referenceGrade": "Per lot TDS",
+      "mixRatio": "70% LIMEX + 30% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX Compound",
+          "pct": 70,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 30,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX Compound + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "70% LIMEX + 30% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "Per lot TDS",
+          "verified": false,
+          "source": "wd-pp-limex-notebook-2026-07-20",
+          "note": "Grade not recorded in supplied notebook for this product."
+        }
+      ]
+    },
+    "toiletSeat": {
+      "id": "toiletSeat",
+      "referenceGrade": "Per lot TDS",
+      "mixRatio": "70% LIMEX + 30% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX Compound",
+          "pct": 70,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 30,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX Compound + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "70% LIMEX + 30% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "Per lot TDS",
+          "verified": false,
+          "source": "wd-pp-limex-notebook-2026-07-20",
+          "note": "Grade not recorded in supplied notebook for this product."
+        }
+      ]
+    },
+    "nonWovenBag": {
+      "id": "nonWovenBag",
+      "referenceGrade": "PE26 F-51",
+      "mixRatio": "70% LIMEX PE26 F-51 + 30% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE26 F-51",
+          "pct": 70,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 30,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "70% LIMEX + 30% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26 F-51",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ]
+    },
+    "courierBag": {
+      "id": "courierBag",
+      "referenceGrade": "PE78-29L",
+      "mixRatio": "70% LIMEX PE78-29L + 30% PP Homo-Polymer",
+      "composition": [
+        {
+          "name": "LIMEX PE78-29L",
+          "pct": 70,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "name": "PP Homo-Polymer",
+          "pct": 30,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE78-29L + PP Homo-Polymer",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "70% LIMEX + 30% PP",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE78-29L",
+          "verified": true,
+          "source": "wd-pp-limex-notebook-2026-07-20"
+        }
       ]
     }
   }

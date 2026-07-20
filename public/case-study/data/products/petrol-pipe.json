@@ -7,7 +7,42 @@
   "status": "live",
   "modelFile": "model/product-21-petrol-pipe.glb",
   "htmlPage": "product.html?p=petrol-pipe  (generic template, no dedicated file)",
-  "composition": null,
-  "specs": null,
-  "note": "3D model is photo-matched (petrol pipe, fluorescent-green marking). No verified LIMEX composition/CO2/supplier data exists yet for this product. Do not fabricate percentages or specs — populate only from the official White Dot 'LIMEX Case Studies in India' PDF or verified supplier TDS, matching the pattern in specs.json (see bobbin/container/motorCover/aralditeContainer)."
+  "composition": [
+    {
+      "name": "LIMEX PE79-29L",
+      "pct": 30,
+      "color": "#4f9a35",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "name": "PP Homo-Polymer",
+      "pct": 70,
+      "color": "#c4c7c0",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    }
+  ],
+  "specs": [
+    {
+      "label": "Material Base",
+      "value": "LIMEX PE79-29L + PP Homo-Polymer",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "label": "Mixing Ratio",
+      "value": "30% LIMEX + 70% PP",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    },
+    {
+      "label": "LIMEX Grade",
+      "value": "PE79-29L",
+      "verified": true,
+      "source": "wd-pp-limex-notebook-2026-07-20"
+    }
+  ],
+  "referenceGrade": "PE79-29L",
+  "mixRatio": "30% LIMEX PE79-29L + 70% PP Homo-Polymer"
 }
