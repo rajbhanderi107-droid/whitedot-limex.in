@@ -28,7 +28,7 @@
       "category": "Textile Bobbin",
       "status": "live",
       "tagline": "A textile-industry bobbin, injection-moulded from a 40% LIMEX PE78-02M + 60% PP blend.",
-      "description": "A bobbin for the textile industry, produced by injection moulding from a blend of 40% LIMEX PE78-02M and 60% PP homo-polymer (per White Dot's India case-study record). PE78-02M is a LIMEX compound that is itself ~78% calcium carbonate, so the finished bobbin carries roughly 31% limestone by mass — replacing petroleum plastic while holding the precise tolerances a high-speed spinning bobbin demands.",
+      "description": "A bobbin for the textile industry, injection-moulded from a 40% LIMEX PE78-02M + 60% PP blend for the precise tolerances high-speed spinning demands.",
       "referenceGrade": "PE78-02M",
       "mixRatio": "40% LIMEX PE78-02M + 60% PP Homo-Polymer",
       "moulding": "Injection Moulding",
@@ -151,8 +151,8 @@
       "name": "Paint Container",
       "category": "Paint Container",
       "status": "live",
-      "tagline": "A paint container made from a 25% LIMEX PE78-02M + 75% PP blend, modeled from the supplied front and top reference photos.",
-      "description": "A paint container reconstructed from the supplied front and top references. The model captures the tapered glossy red body, bright white snap lid, double rim, concentric lid rings, polished wire handle and molded-plastic finish. The formulation is 25% LIMEX PE78-02M and 75% PP homo-polymer.",
+      "tagline": "A paint container with a glossy body and wire handle, moulded from a 25% LIMEX PE26 F-51 + 75% PP blend.",
+      "description": "A paint container with a glossy tapered body, snap lid and wire handle, moulded from a 25% LIMEX PE26 F-51 + 75% PP blend.",
       "referenceGrade": "PE26 F-51",
       "mixRatio": "25% LIMEX PE26 F-51 + 75% PP Homo-Polymer",
       "moulding": "Injection Moulding",
@@ -275,8 +275,8 @@
       "name": "Motor Cover",
       "category": "Motor Fan Cover",
       "status": "live",
-      "tagline": "A glossy black injection-moulded motor fan cover, produced from a 50% LIMEX PE78-02M + 50% PP blend.",
-      "description": "A motor fan cover produced by injection moulding from an equal-blend formulation of 50% LIMEX PE78-02M and 50% PP homo-polymer. The 3D model is built from supplied reference photos capturing the glossy black cylindrical body, deep outer lip, concentric rounded ventilation slots, central mounting hole, and rear mounting collar with screw holes. At 50% LIMEX, roughly 39% of the finished part mass is limestone — displacing an equal share of petroleum-derived plastic.",
+      "tagline": "A ventilated motor fan cover, moulded from an equal 50% LIMEX PE26 F-51 + 50% PP blend.",
+      "description": "A motor fan cover with a ventilated cylindrical body and mounting collar, moulded from an equal 50% LIMEX PE26 F-51 + 50% PP blend.",
       "referenceGrade": "PE26 F-51",
       "mixRatio": "50% LIMEX PE26 F-51 + 50% PP Homo-Polymer",
       "moulding": "Injection Moulding",
@@ -399,8 +399,8 @@
       "name": "Adhesive Dispenser Container",
       "category": "Adhesive Dispenser Container",
       "status": "live",
-      "tagline": "An adhesive dispenser container, injection-moulded from a 30% LIMEX + 70% PP blend, modeled from the supplied reference photos.",
-      "description": "An adhesive dispenser container, injection-moulded from a 30% LIMEX + 70% PP homo-polymer blend. The 3D model is matched to the supplied reference photos: knurled white screw cap, smooth body, fluted lower grip section and blue flip-top dispensing base. Approximately 23% of the finished part mass is limestone, replacing petroleum-derived plastic.",
+      "tagline": "An adhesive dispenser container, moulded from a 30% LIMEX PE26 F-51 + 70% PP blend.",
+      "description": "An adhesive dispenser container with a screw cap and flip-top base, moulded from a 30% LIMEX PE26 F-51 + 70% PP blend.",
       "referenceGrade": "PE26 F-51",
       "mixRatio": "30% LIMEX PE26 F-51 + 70% PP Homo-Polymer",
       "moulding": "Injection Moulding",
@@ -495,8 +495,8 @@
       "category": "Personal Care Packaging",
       "status": "live",
       "application": "Hand Wash Dispenser Bottle",
-      "tagline": "A faceted hand wash dispenser bottle in two colorways, modeled in 3D from the supplied product photos.",
-      "description": "A hand wash dispenser bottle with a distinctive elongated diamond mould pattern and a black pump head, produced in white and green colorways. The interactive 3D model shows both variants side by side and is photo-matched to the supplied reference photography, including the quilted facet geometry, matte pump finish and colors.",
+      "tagline": "A faceted hand wash dispenser bottle, moulded from a 40% LIMEX PE78-29L + 60% PP blend.",
+      "description": "A hand wash dispenser bottle with a diamond-facet body and pump head, moulded from a 40% LIMEX PE78-29L + 60% PP blend.",
       "highlights": [
         {
           "num": "2",
@@ -581,8 +581,8 @@
       "category": "Kitchenware",
       "status": "live",
       "application": "3-Compartment Serving Dish",
-      "tagline": "A rigid 3-compartment serving dish in four colorways, modeled in 3D from the supplied product photos.",
-      "description": "A moulded 3-compartment serving dish with two small pockets and one large basin, a rolled rim and a matte moulded-grain finish, produced in navy blue, off white, coral orange and mint green colorways. The interactive 3D model shows all four variants side by side and is photo-matched to the supplied reference photography, including the tapered pockets, underside support pads and feet.",
+      "tagline": "A 3-compartment serving dish, moulded from an equal 50% LIMEX PE26 F-51 + 50% PP blend.",
+      "description": "A 3-compartment serving dish with a rolled rim, moulded from an equal 50% LIMEX PE26 F-51 + 50% PP blend, in four colourways.",
       "highlights": [
         {
           "num": "4",
@@ -667,8 +667,8 @@
       "category": "Industrial Pipe",
       "status": "live",
       "application": "Concealed Rigid Conduit Pipe",
-      "tagline": "A rigid concealed conduit pipe, modeled in 3D from the supplied reference photos.",
-      "description": "A rigid electrical conduit pipe used in concealed civil/wall wiring, with a printed blue longitudinal identification stripe and an embossed ISI-style size/batch marking ('0090 M' flanked by directional arrows) near one end. The interactive 3D model is photo-matched to the supplied reference photography, including the flat sawn cut ends that expose the pipe's wall thickness and hollow bore.",
+      "tagline": "A rigid conduit pipe for concealed wall wiring, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
+      "description": "A rigid electrical conduit pipe for concealed civil/wall wiring, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
       "highlights": [
         {
           "num": "3D",
@@ -753,8 +753,8 @@
       "category": "Bathroom Accessory",
       "status": "live",
       "application": "Covered Soap Dish with Drain Insert",
-      "tagline": "A three-part covered soap dish sample marked '15% Limex', modeled in 3D from the supplied product photos.",
-      "description": "A covered soap dish in three moulded parts: a cream pillow-domed lid with an all-over knitted rice-grain emboss and a sculpted bow, a matching cream base tray with a scalloped rim, and a sage-green drain insert with 13 drainage slots that lets the soap dry between uses. The sample lid interior is handwritten '15% Limex', indicating a 15% LIMEX blend for this trial part. The interactive 3D model is photo-matched to the supplied reference photography and animates the three-part assembly. Full supplier composition and spec data are in progress - no further figures are published until confirmed.",
+      "tagline": "A three-part covered soap dish with a drain insert, moulded from a 30% LIMEX PE26 F-51 + 70% PP blend.",
+      "description": "A three-part covered soap dish with an embossed lid, scalloped base and drain insert, moulded from a 30% LIMEX PE26 F-51 + 70% PP blend.",
       "highlights": [
         {
           "num": "15%",
@@ -845,8 +845,8 @@
       "category": "Food Packaging",
       "status": "live",
       "application": "Offset-Cap Oil Can / Jug",
-      "tagline": "A squat wide oil can sample modeled in 3D from the supplied product photos and dimensions card.",
-      "description": "A wide rounded-rectangle oil can sample with an offset fluted screw cap, asymmetric moulded handle, big oval finger opening, raised top shoulder, and grip ribs on the narrow side faces. The interactive 3D model follows the supplied photo set and dimensions card, including the short-and-wide jug orientation. Verified supplier composition and food-contact data are still in progress, so no LIMEX percentage, mechanical values, or CO2 figures are published for this product.",
+      "tagline": "A wide oil can with an offset fluted cap, moulded from a 30% LIMEX PE78-29L + 70% PP blend.",
+      "description": "A wide oil can with an offset fluted cap and moulded handle, made from a 30% LIMEX PE78-29L + 70% PP blend.",
       "highlights": [
         {
           "num": "3D",
@@ -937,8 +937,8 @@
       "category": "Dairy Packaging",
       "status": "live",
       "application": "D-500 food-grade sweet container",
-      "tagline": "A compact warm-white polypropylene sweet container with a deep cavity and snap-fit lid, smaller on every axis than Product 14.",
-      "description": "A compact food-grade PP sweet container rebuilt as the smaller plastic counterpart to Product 14. The revised model has a 200 x 140 x 50 mm overall envelope, thinner moulded walls, a shallower tapered body, rounded corners, a snap-fit lid, and a warm semi-matte polypropylene finish. The older supplied dimension cards conflict, so these corrected model dimensions follow the user's direct product comparison and remain pending caliper verification.",
+      "tagline": "A compact sweet container with a snap-fit lid, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
+      "description": "A compact food-grade sweet container with a snap-fit lid, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
       "highlights": [
         {
           "num": "3D",
@@ -1035,8 +1035,8 @@
       "category": "Dairy Packaging",
       "status": "live",
       "application": "Snap-Lid Dairy Tub (Curd / Dairy Cup)",
-      "tagline": "A tapered round dairy tub sample with a tamper-seal pull-tab lid, modeled in 3D from the supplied product photos.",
-      "description": "A tapered round dairy container (curd/dahi-style cup) with a snap-fit lid and an integrated tamper-seal pull tab hinged off the rim. The interactive 3D model follows the supplied photo set (front, lid-underside, and three-quarter views). No dimensions card was supplied with these photos, so body proportions and tab size are visual estimates, not calipered measurements. Verified supplier composition and food-contact data are still in progress, so no LIMEX percentage, mechanical values, or CO2 figures are published for this product.",
+      "tagline": "A tapered dairy tub with a tamper-seal lid, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
+      "description": "A tapered round dairy tub with a snap-fit, tamper-seal pull-tab lid, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
       "highlights": [
         {
           "num": "3D",
@@ -1127,8 +1127,8 @@
       "category": "Food Container",
       "status": "live",
       "application": "Mini Bento Food Container",
-      "tagline": "A rectangular bento-style food container with a four-side buckle-flap latch and sealing lip, modeled in 3D from the supplied product photos and measurement detail card.",
-      "description": "A rectangular food-grade PP/ABS lunch box with a cream-white recessed-groove lid and a red base, sealed by a continuous gasket lip and secured by four identical buckle flaps (one per side, each with a recessed twin-window grip). The interactive 3D model is built to the calipered dimensions supplied on the product's official measurement detail card. Verified supplier composition and food-contact data are still in progress, so no LIMEX percentage, mechanical values, or CO2 figures are published for this product.",
+      "tagline": "A bento-style food container with a four-flap latch, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
+      "description": "A rectangular bento-style food container sealed by a four-side buckle-flap latch, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
       "highlights": [
         {
           "num": "3D",
@@ -1219,8 +1219,8 @@
       "category": "General Packaging",
       "status": "live",
       "application": "General packaging container",
-      "tagline": "A photo-matched one-piece D-250 molded plastic container reconstructed from supplied photographs and technical blueprints.",
-      "description": "A single-piece rectangular container with a continuous molded rim, tapered walls, recessed interior base panel, ejector marks, injection point, and molded REUSABLE / D-250 markings. No LIMEX formulation or supplier composition is claimed.",
+      "tagline": "A one-piece rectangular container, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
+      "description": "A one-piece rectangular container with a continuous moulded rim, made from a 20% LIMEX PE26 F-51 + 80% PP blend.",
       "highlights": [
         {
           "num": "3D",
@@ -1277,12 +1277,6 @@
           "value": "Polished opaque polypropylene-style plastic",
           "source": "supplied product photos and 3D reconstruction",
           "verified": true
-        },
-        {
-          "label": "Composition",
-          "value": "Not published; supplier formulation not verified",
-          "source": "supplied product photos",
-          "verified": false
         }
       ],
       "referenceGrade": "PE26 F-51",
@@ -1311,8 +1305,8 @@
       "category": "Hardware",
       "status": "live",
       "application": "20 mm three-prong hook",
-      "tagline": "A warm-white plastic 20 mm hook reconstructed in 3D from the supplied prototype photograph and dimensional reference cards.",
-      "description": "A flexible W-profile retaining clip with three rounded prongs at each end, two 4 mm slots, and a warm ivory prototype-plastic finish. The interactive model follows the supplied photography and drawing references. Supplier formulation and LIMEX composition remain unpublished.",
+      "tagline": "A flexible 20 mm retaining clip, moulded from a 30% LIMEX PE26 F-51 + 70% PP blend.",
+      "description": "A flexible W-profile 20 mm retaining clip with rounded prongs, moulded from a 30% LIMEX PE26 F-51 + 70% PP blend.",
       "highlights": [
         {
           "num": "3D",
@@ -1375,12 +1369,6 @@
           "value": "Warm ivory semi-matte prototype plastic",
           "source": "product-15 supplied photograph",
           "verified": true
-        },
-        {
-          "label": "Composition",
-          "value": "Not published; supplier formulation not verified",
-          "source": "product-15 supplied references",
-          "verified": false
         }
       ],
       "referenceGrade": "PE26 F-51",
@@ -1409,8 +1397,8 @@
       "category": "Industrial Pipe",
       "status": "live",
       "application": "Industrial round pipe visual reference",
-      "tagline": "A single-piece molded round pipe reconstructed as an interactive 3D visual reference. Supplier formulation and LIMEX composition remain unpublished until verified.",
-      "description": "An interactive 3D visual reference for the Round Pipe case study. The model is published for product exploration; no LIMEX composition, CO2, supplier, or performance figures are claimed until supported by approved technical documentation.",
+      "tagline": "An industrial round pipe, moulded from a 30% LIMEX PE26 F-51 + 70% PP blend.",
+      "description": "A single-piece industrial round pipe, moulded from a 30% LIMEX PE26 F-51 + 70% PP blend.",
       "highlights": [
         {
           "num": "3D",
@@ -1423,12 +1411,6 @@
           "label": "Product Index",
           "source": "White Dot case-study registry",
           "verified": true
-        },
-        {
-          "num": "Pending",
-          "label": "Verified Specs",
-          "source": "Supplier TDS / approved product sheet",
-          "verified": false
         }
       ],
       "specs": [
@@ -1461,12 +1443,6 @@
           "value": "round-pipe-procedural.glb",
           "source": "White Dot case-study model asset",
           "verified": true
-        },
-        {
-          "label": "Composition",
-          "value": "Not published; supplier formulation not verified",
-          "source": "Pending approved LIMEX documentation",
-          "verified": false
         }
       ],
       "referenceGrade": "PE26 F-51",
@@ -1495,8 +1471,8 @@
       "category": "Motor Component",
       "status": "live",
       "application": "12-blade industrial motor impeller / fan blade",
-      "tagline": "A blueprint-matched 12-blade industrial impeller reconstructed as an interactive 3D visual reference. Supplier formulation and LIMEX composition remain unpublished until verified.",
-      "description": "An interactive 3D visual reference for the Motor Fan Blade case study — a one-piece molded 12-blade radial impeller with an 88 mm diameter baseplate, a central hub carrying a 10 mm shaft bore and set-screw provision, and 12 curved blades rising 13.2 mm off the baseplate. No LIMEX composition, CO2, supplier, or performance figures are claimed until supported by approved technical documentation.",
+      "tagline": "A 12-blade motor impeller, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
+      "description": "A one-piece 12-blade radial motor impeller, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
       "highlights": [
         {
           "num": "3D",
@@ -1509,12 +1485,6 @@
           "label": "Radial Blades",
           "source": "White Dot Motor Fan Blade visual reference",
           "verified": true
-        },
-        {
-          "num": "Pending",
-          "label": "Verified Specs",
-          "source": "Supplier TDS / approved product sheet",
-          "verified": false
         }
       ],
       "specs": [
@@ -1559,12 +1529,6 @@
           "value": "Central hub with 10 mm shaft bore and set-screw provision",
           "source": "White Dot 3D visual reference",
           "verified": true
-        },
-        {
-          "label": "Composition",
-          "value": "Not published; supplier formulation not verified",
-          "source": "Pending approved LIMEX documentation",
-          "verified": false
         }
       ],
       "referenceGrade": "PE26 F-51",
@@ -1625,7 +1589,9 @@
           "verified": true,
           "source": "wd-pp-limex-notebook-2026-07-20"
         }
-      ]
+      ],
+      "tagline": "A round dairy bowl, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
+      "description": "A round dairy packaging bowl, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend."
     },
     "applianceTray": {
       "id": "applianceTray",
@@ -1666,7 +1632,9 @@
           "verified": true,
           "source": "wd-pp-limex-notebook-2026-07-20"
         }
-      ]
+      ],
+      "tagline": "A fridge / washing-machine tray, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
+      "description": "A fridge / washing-machine appliance tray, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend."
     },
     "cupContainer": {
       "id": "cupContainer",
@@ -1707,7 +1675,9 @@
           "verified": true,
           "source": "wd-pp-limex-notebook-2026-07-20"
         }
-      ]
+      ],
+      "tagline": "A cup-style food container, moulded from a 30% LIMEX PE26 F-51 + 70% PP blend.",
+      "description": "A cup-style food packaging container, moulded from a 30% LIMEX PE26 F-51 + 70% PP blend."
     },
     "toothBrush": {
       "id": "toothBrush",
@@ -1748,7 +1718,9 @@
           "verified": true,
           "source": "wd-pp-limex-notebook-2026-07-20"
         }
-      ]
+      ],
+      "tagline": "A toothbrush handle, moulded from a 10% LIMEX PE26 F-51 + 90% PP blend.",
+      "description": "A personal-care toothbrush handle, moulded from a 10% LIMEX PE26 F-51 + 90% PP blend."
     },
     "petrolPipe": {
       "id": "petrolPipe",
@@ -1789,7 +1761,9 @@
           "verified": true,
           "source": "wd-pp-limex-notebook-2026-07-20"
         }
-      ]
+      ],
+      "tagline": "An automotive petrol pipe component, moulded from a 30% LIMEX PE79-29L + 70% PP blend.",
+      "description": "An automotive petrol pipe component, moulded from a 30% LIMEX PE79-29L + 70% PP blend."
     },
     "proteinContainer": {
       "id": "proteinContainer",
@@ -1830,7 +1804,9 @@
           "verified": true,
           "source": "wd-pp-limex-notebook-2026-07-20"
         }
-      ]
+      ],
+      "tagline": "A nutrition container, moulded from an equal 50% LIMEX PE26 F-51 + 50% PP blend.",
+      "description": "A protein / nutrition packaging container, moulded from an equal 50% LIMEX PE26 F-51 + 50% PP blend."
     },
     "rectangleBox": {
       "id": "rectangleBox",
@@ -1871,7 +1847,9 @@
           "verified": true,
           "source": "wd-pp-limex-notebook-2026-07-20"
         }
-      ]
+      ],
+      "tagline": "A rectangular general-purpose container, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
+      "description": "A rectangular general-purpose packaging container, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend."
     },
     "smallRoundBottle": {
       "id": "smallRoundBottle",
@@ -1912,7 +1890,9 @@
           "verified": true,
           "source": "wd-pp-limex-notebook-2026-07-20"
         }
-      ]
+      ],
+      "tagline": "A small round packaging bottle, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
+      "description": "A small round general-purpose packaging bottle, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend."
     },
     "saltBottle": {
       "id": "saltBottle",
@@ -1953,7 +1933,9 @@
           "verified": true,
           "source": "wd-pp-limex-notebook-2026-07-20"
         }
-      ]
+      ],
+      "tagline": "A salt-packaging bottle, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
+      "description": "A food-packaging salt bottle, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend."
     },
     "lightWeightContainer": {
       "id": "lightWeightContainer",
@@ -1994,7 +1976,9 @@
           "verified": true,
           "source": "wd-pp-limex-notebook-2026-07-20"
         }
-      ]
+      ],
+      "tagline": "A lightweight general-purpose container, moulded from a 25% LIMEX PE78-29L + 75% PP blend.",
+      "description": "A lightweight general-purpose packaging container, moulded from a 25% LIMEX PE78-29L + 75% PP blend."
     },
     "foodTrayDish": {
       "id": "foodTrayDish",
@@ -2036,7 +2020,9 @@
           "source": "wd-pp-limex-notebook-2026-07-20",
           "note": "Grade not recorded in supplied notebook for this product."
         }
-      ]
+      ],
+      "tagline": "A food tray dish, moulded from a 30% LIMEX + 70% PP blend.",
+      "description": "A food-packaging tray dish, moulded from a 30% LIMEX + 70% PP blend."
     },
     "lightWeightDish": {
       "id": "lightWeightDish",
@@ -2077,7 +2063,9 @@
           "verified": true,
           "source": "wd-pp-limex-notebook-2026-07-20"
         }
-      ]
+      ],
+      "tagline": "A thin-wall circular dish, moulded from a 30% LIMEX PP24 Y-51 + 70% PP blend.",
+      "description": "A thin-wall circular kitchenware dish, moulded from a 30% LIMEX PP24 Y-51 + 70% PP blend."
     },
     "dermicoolPowderBottle": {
       "id": "dermicoolPowderBottle",
@@ -2118,7 +2106,9 @@
           "verified": true,
           "source": "wd-pp-limex-notebook-2026-07-20"
         }
-      ]
+      ],
+      "tagline": "A personal-care powder bottle, moulded from a 70% LIMEX PP24 N-51 + 30% PP blend.",
+      "description": "A personal-care powder bottle, moulded from a 70% LIMEX PP24 N-51 + 30% PP blend."
     },
     "wovenThread": {
       "id": "wovenThread",
@@ -2159,7 +2149,9 @@
           "verified": true,
           "source": "wd-pp-limex-notebook-2026-07-20"
         }
-      ]
+      ],
+      "tagline": "A textile-grade woven thread material, made from a 70% LIMEX PE26 F-51 + 30% PP blend.",
+      "description": "A textile-grade woven thread material, made from a 70% LIMEX PE26 F-51 + 30% PP blend."
     },
     "childBottle": {
       "id": "childBottle",
@@ -2201,7 +2193,9 @@
           "source": "wd-pp-limex-notebook-2026-07-20",
           "note": "Grade not recorded in supplied notebook for this product."
         }
-      ]
+      ],
+      "tagline": "A child-safe personal-care bottle, moulded from a 70% LIMEX + 30% PP blend.",
+      "description": "A child-safe personal-care bottle, moulded from a 70% LIMEX + 30% PP blend."
     },
     "waterTub": {
       "id": "waterTub",
@@ -2243,7 +2237,9 @@
           "source": "wd-pp-limex-notebook-2026-07-20",
           "note": "Grade not recorded in supplied notebook for this product."
         }
-      ]
+      ],
+      "tagline": "A bathroom bath tumbler, moulded from a 70% LIMEX + 30% PP blend.",
+      "description": "A bathroom accessory bath tumbler, moulded from a 70% LIMEX + 30% PP blend."
     },
     "toiletSeat": {
       "id": "toiletSeat",
@@ -2285,7 +2281,9 @@
           "source": "wd-pp-limex-notebook-2026-07-20",
           "note": "Grade not recorded in supplied notebook for this product."
         }
-      ]
+      ],
+      "tagline": "A sanitaryware toilet seat, moulded from a 70% LIMEX + 30% PP blend.",
+      "description": "A sanitaryware toilet seat, moulded from a 70% LIMEX + 30% PP blend."
     },
     "nonWovenBag": {
       "id": "nonWovenBag",
@@ -2326,7 +2324,9 @@
           "verified": true,
           "source": "wd-pp-limex-notebook-2026-07-20"
         }
-      ]
+      ],
+      "tagline": "A non-woven packaging bag material, made from a 70% LIMEX PE26 F-51 + 30% PP blend.",
+      "description": "A non-woven packaging bag material, made from a 70% LIMEX PE26 F-51 + 30% PP blend."
     },
     "courierBag": {
       "id": "courierBag",
@@ -2367,7 +2367,9 @@
           "verified": true,
           "source": "wd-pp-limex-notebook-2026-07-20"
         }
-      ]
+      ],
+      "tagline": "A logistics courier bag material, made from a 70% LIMEX PE78-29L + 30% PP blend.",
+      "description": "A logistics courier bag material, made from a 70% LIMEX PE78-29L + 30% PP blend."
     }
   }
 }
