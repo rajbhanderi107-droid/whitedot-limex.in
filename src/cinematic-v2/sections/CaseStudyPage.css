@@ -469,13 +469,15 @@
 }
 
 /* ── Mobile GPU-memory guard (≤1023px, matches the JS isMobileViewport gate) ──
-   The carousel renders ~70 cards (list duplicated for the infinite marquee).
-   With blur(24px) backdrop-filter + will-change on every card, iOS Safari
-   promotes each one to its own GPU layer with a live blur pass — hundreds of
-   MB of GPU memory at 3x DPR, which kills the tab ("A problem repeatedly
-   occurred") even with WebGL fully disabled. On mobile the glass reads the
-   same as a near-opaque card, so trade the blur for a solid surface and drop
-   the hover-only layers that can never fire on touch. */
+   The carousel used to render ~70 cards (list duplicated for the infinite
+   marquee) with a continuous RAF loop and blur(24px) backdrop-filter on every
+   card — iOS Safari promoted each one to its own GPU layer with a live blur
+   pass, hundreds of MB of GPU memory at 3x DPR, which killed the tab ("A
+   problem repeatedly occurred") even with WebGL fully disabled. The JS side
+   now renders the grid once, statically (--all mode, no RAF, no duplicate
+   DOM) and 3D models are back on mobile via the same lazy/concurrency-limited
+   activation the desktop marquee already relies on — these rules remove the
+   remaining decorative cost so that stays comfortably inside budget. */
 @media (max-width: 1023px) {
   .csp-pcard {
     backdrop-filter: none !important;
@@ -489,9 +491,22 @@
   }
   /* hover-only effects — dead weight on touch, each an extra composited layer */
   .csp-border-beam, .csp-pglass, .csp-pglow { display: none !important; }
-  /* ~60 placeholder monograms × 3 infinite animations each = ~180 composited
-     layers; freeze them — the static rings read identically at a glance */
+  /* any remaining "coming soon" placeholder monograms — freeze the rings */
   .csp-soon-placeholder,
   .csp-soon-placeholder::after,
   .csp-soon-placeholder::before { animation: none !important; }
+  /* full-viewport fixed blend layer + infinite blurred blobs — cheap to drop,
+     meaningful GPU/compositor headroom back on lower-end phones */
+  .csp-main::after, .csp-main--section::after { display: none !important; }
+  .csp-blob { animation: none !important; }
+  /* static grid is already the mobile default (forced via isMobileViewport in
+     JS) — the marquee/coverflow toggle buttons are redundant there */
+  .csp-grid-section--all ~ .csp-card-footer .csp-explore-link,
+  .csp-grid-section--all ~ .csp-card-footer .csp-go-btn { display: none; }
+}
+/* 2-column grid for tablet-width mobile (761–1023px); 3 columns is cramped
+   at 390px card height on a ~768px-wide screen, 1 column is set separately
+   below for phones (≤760px). */
+@media (max-width: 1023px) and (min-width: 761px) {
+  .csp-grid-section--all .csp-pgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

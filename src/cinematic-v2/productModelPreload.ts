@@ -74,7 +74,8 @@ export function warmCaseStudyModelCache(urls = liveCaseStudyModelUrls) {
 // that keeps at most MAX_CONCURRENT parses in flight and hands each one to the
 // browser during idle time, so the main thread never blocks long enough to hang.
 // Everything still loads — just spread across a few frames instead of one.
-const MAX_CONCURRENT_MODEL_LOADS = 3;
+const MAX_CONCURRENT_MODEL_LOADS =
+  typeof window !== 'undefined' && window.innerWidth < 1024 ? 2 : 3;
 const MODEL_LOAD_TIMEOUT_MS = 8000;
 
 type ActivationTask = { viewer: HTMLElement; src: string };
