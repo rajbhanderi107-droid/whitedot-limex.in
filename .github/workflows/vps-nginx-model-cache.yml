@@ -50,24 +50,31 @@ jobs:
                 src = fh.read()
             anchor = "    # Serve static assets with long cache"
             assert src.count(anchor) == 1, "expected exactly one static-asset location"
-            # ASCII-only on purpose: this string is piped over SSH into a shell
-            # that may not have a UTF-8 locale, and a mojibaked byte landing in
-            # an nginx config is not worth the typography.
-            block = r"""    # wd-model-cache - case-study 3D models. These filenames are NOT
-    # content-hashed, so they get a day of freshness plus a week of
-    # stale-while-revalidate rather than `immutable`; append ?v=<something>
-    # to force an instant bust. The inline `types` keeps the correct MIME
-    # type self-contained in this file so a rollback fully reverts it.
-    location ~* \.(glb|gltf|ktx2|hdr)$ {
-        types { model/gltf-binary glb; model/gltf+json gltf; image/ktx2 ktx2; }
-        default_type model/gltf-binary;
-        add_header Cache-Control "public, max-age=86400, stale-while-revalidate=604800";
-        add_header Access-Control-Allow-Origin "*";
-        access_log off;
-        try_files $uri =404;
-    }
-
-"""
+            # Built as a line list, not a triple-quoted literal: this whole
+            # script is a YAML block scalar, so every source line must stay
+            # indented past the block's margin. A heredoc'd literal whose
+            # continuation lines sat at 4 spaces silently broke the YAML and
+            # made GitHub drop the workflow_dispatch trigger.
+            # ASCII-only too - this is piped over SSH into a shell that may not
+            # have a UTF-8 locale, and a mojibaked byte in an nginx config is
+            # not worth the typography.
+            block = "\n".join([
+                "    # wd-model-cache - case-study 3D models. These filenames are NOT",
+                "    # content-hashed, so they get a day of freshness plus a week of",
+                "    # stale-while-revalidate rather than `immutable`; append ?v=<something>",
+                "    # to force an instant bust. The inline `types` keeps the correct MIME",
+                "    # type self-contained in this file so a rollback fully reverts it.",
+                "    location ~* \\.(glb|gltf|ktx2|hdr)$ {",
+                "        types { model/gltf-binary glb; model/gltf+json gltf; image/ktx2 ktx2; }",
+                "        default_type model/gltf-binary;",
+                '        add_header Cache-Control "public, max-age=86400, stale-while-revalidate=604800";',
+                '        add_header Access-Control-Allow-Origin "*";',
+                "        access_log off;",
+                "        try_files $uri =404;",
+                "    }",
+                "",
+                "",
+            ])
             with io.open(conf, "w", encoding="utf-8", newline="\n") as fh:
                 fh.write(src.replace(anchor, block + anchor, 1))
             print("inserted")
