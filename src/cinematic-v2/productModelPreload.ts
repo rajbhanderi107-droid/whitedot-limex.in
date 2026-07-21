@@ -206,6 +206,20 @@ export function observeMobileModelPool(
   };
 }
 
+// Activate every mounted viewer straight away, no IntersectionObserver.
+// Only for the mobile path: the LRU pool already caps how many viewers exist in
+// the DOM at MAX_MOBILE_ACTIVE_MODELS and only mounts ones at or near the
+// viewport, so the set is bounded and viewport-relevant by construction — the
+// IO gate adds nothing there except a dependency on a callback the browser
+// delays or drops entirely while the document is backgrounded. Activation still
+// goes through the shared concurrency queue, so parses stay staggered.
+export function activateMountedModels(root: HTMLElement) {
+  root.querySelectorAll<HTMLElement>('model-viewer[data-model-src]').forEach((viewer) => {
+    const src = viewer.dataset.modelSrc;
+    if (src) enqueueActivation(viewer, src);
+  });
+}
+
 export function observeViewportModels(root: HTMLElement) {
   const viewers = [...root.querySelectorAll<HTMLElement>('model-viewer[data-model-src]')];
   if (!viewers.length) return () => undefined;

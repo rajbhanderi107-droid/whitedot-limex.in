@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import Nav from './Nav';
 import Footer from './Footer';
-import { observeViewportModels, observeMobileModelPool, warmCaseStudyModelCache, initialMobileModelPool } from '../productModelPreload';
+import { observeViewportModels, observeMobileModelPool, warmCaseStudyModelCache, initialMobileModelPool, activateMountedModels } from '../productModelPreload';
 import './CaseStudyPage.css';
 
 const basePath = window.location.hostname.endsWith('github.io') ? '/whitedot-limex.in' : '';
@@ -497,7 +497,7 @@ export default function CaseStudyPage() {
     if (!isMobileViewport) return;
     const grid = gridRef.current;
     if (!grid) return;
-    return observeViewportModels(grid);
+    activateMountedModels(grid);
   }, [mobileActive]);
 
   // Product cards — rendered twice for infinite scroll (desktop only; mobile
