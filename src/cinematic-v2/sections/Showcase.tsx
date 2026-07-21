@@ -2,8 +2,6 @@ import './Showcase.css';
 import { useReveal } from '../motion';
 import AnimatedText from '../AnimatedText';
 
-const placeholderArt = `${import.meta.env.BASE_URL}assets/higgsfield/journey/galaxy-formation.webp`;
-
 export default function Showcase() {
   const head = useReveal<HTMLDivElement>();
   const frame = useReveal<HTMLDivElement>({ threshold: 0.15 });
@@ -26,30 +24,16 @@ export default function Showcase() {
         <div className="v2sc-frame v2-reveal" ref={frame.ref}>
           <span className="v2sc-reflection" aria-hidden="true" />
 
-          <div className="v2sc-placeholder" role="img" aria-label="Whitedot LIMEX Launch Film — coming soon">
-            <span
-              className="v2sc-placeholder-art"
-              aria-hidden="true"
-              style={{ backgroundImage: `url(${placeholderArt})` }}
+          <div className="v2sc-video">
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/YIXzbM03qag"
+              title="Whitedot LIMEX Launch Film"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
             />
-            <span className="v2sc-placeholder-line" aria-hidden="true" />
-            <p className="v2sc-placeholder-title">Whitedot LIMEX Launch Film</p>
-            <p className="v2sc-placeholder-status">Coming Soon</p>
-            <span className="v2sc-placeholder-line" aria-hidden="true" />
           </div>
-
-          <button
-            type="button"
-            className="v2sc-play"
-            aria-label="Launch film coming soon"
-            tabIndex={-1}
-            aria-disabled="true"
-          >
-            <span className="v2sc-play-ring" aria-hidden="true" />
-            <svg className="v2sc-play-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
-              <path d="M8.5 5.5v13l11-6.5-11-6.5z" fill="currentColor" />
-            </svg>
-          </button>
         </div>
 
         <p className="v2sc-caption v2-reveal" ref={caption.ref}>
