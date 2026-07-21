@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import Nav from './Nav';
 import Footer from './Footer';
-import { observeViewportModels, observeMobileModelPool, warmCaseStudyModelCache, initialMobileModelPool, activateMountedModels } from '../productModelPreload';
+import { observeViewportModels, observeMobileModelPool, warmCaseStudyModelCache, activateMountedModels } from '../productModelPreload';
 import './CaseStudyPage.css';
 
 const basePath = window.location.hostname.endsWith('github.io') ? '/whitedot-limex.in' : '';
@@ -291,13 +291,12 @@ export default function CaseStudyPage() {
   const activeProductRef = useRef<ProductKey>('overview');
   const allProductsOpenRef = useRef(false);
   const [activeProduct, setActiveProduct] = useState<ProductKey>('overview');
-  // Card order here is hand-written JSX, so the seed list is spelled out rather
-  // than derived; it only needs to match the first few cards in the grid.
-  const [mobileActive, setMobileActive] = useState<Set<string>>(
-    () => initialMobileModelPool([
-      'bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish',
-    ]),
-  );
+  // Starts EMPTY on purpose. Seeding this with the first few products meant a
+  // phone spun up 6 WebGL contexts and parsed 6 GLBs during initial page load —
+  // exactly the eager-WebGL pattern that has crashed mobile Safari on this page
+  // before. observeMobileModelPool promotes products as their cards actually
+  // approach the viewport.
+  const [mobileActive, setMobileActive] = useState<Set<string>>(() => new Set());
   const [allProductsOpen, setAllProductsOpen] = useState(false);
   const setActiveProductKey = useCallback((key: ProductKey) => {
     if (activeProductRef.current === key) return;

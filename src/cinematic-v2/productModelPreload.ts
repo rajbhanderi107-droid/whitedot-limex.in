@@ -163,15 +163,12 @@ function enqueueActivation(viewer: HTMLElement, src: string) {
 // actually unmounting it so the browser can reclaim it — not just hiding it.
 export const MAX_MOBILE_ACTIVE_MODELS = 6;
 
-// Seed the pool with the first few products instead of starting empty.
-// Starting empty means the grid's opening screen is all placeholders until an
-// IntersectionObserver callback lands, and IO delivery is tied to the browser's
-// rendering steps — it is delayed or suppressed entirely whenever the document
-// is backgrounded. Pre-filling the top of the grid means the first cards a
-// visitor sees render in 3D immediately and never depend on that callback.
-export function initialMobileModelPool(orderedKeys: readonly string[]) {
-  return new Set(orderedKeys.slice(0, MAX_MOBILE_ACTIVE_MODELS));
-}
+// NOTE: there was briefly an initialMobileModelPool() here that pre-seeded this
+// set so the grid's first cards rendered without waiting for an
+// IntersectionObserver callback. It was removed: the "IO never fires" symptom it
+// chased was an artifact of testing in a backgrounded window, and on a real
+// phone the seed made the page eagerly build 6 WebGL contexts during initial
+// load for a grid that is far below the fold. Let the pool fill on scroll.
 
 export function observeMobileModelPool(
   root: HTMLElement,

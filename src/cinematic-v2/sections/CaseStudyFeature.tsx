@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { observeViewportModels, observeMobileModelPool, warmCaseStudyModelCache, initialMobileModelPool, activateMountedModels } from '../productModelPreload';
+import { observeViewportModels, observeMobileModelPool, warmCaseStudyModelCache, activateMountedModels } from '../productModelPreload';
 import './CaseStudyPage.css';
 
 const basePath = window.location.hostname.endsWith('github.io') ? '/whitedot-limex.in' : '';
@@ -304,9 +304,12 @@ export default function CaseStudyFeature() {
   const activeProductRef = useRef<ProductKey>('overview');
   const allProductsOpenRef = useRef(false);
   const [activeProduct, setActiveProduct] = useState<ProductKey>('overview');
-  const [mobileActive, setMobileActive] = useState<Set<string>>(
-    () => initialMobileModelPool([...liveProductKeys]),
-  );
+  // Starts EMPTY on purpose. Seeding this with the first few products meant a
+  // phone spun up 6 WebGL contexts and parsed 6 GLBs during initial page load,
+  // for a grid that sits far below the fold — exactly the eager-WebGL pattern
+  // that has crashed mobile Safari on this page before. observeMobileModelPool
+  // promotes products as their cards actually approach the viewport.
+  const [mobileActive, setMobileActive] = useState<Set<string>>(() => new Set());
   const [allProductsOpen, setAllProductsOpen] = useState(false);
   const setActiveProductKey = useCallback((key: ProductKey) => {
     if (activeProductRef.current === key) return;
