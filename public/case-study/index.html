@@ -1097,6 +1097,10 @@
       viewer.addEventListener('load', done, { once: true });
       viewer.addEventListener('error', done, { once: true });
       if (viewer.getAttribute('src') !== src) {
+        // Must be eager: model-viewer's default gate would re-decide whether to
+        // fetch, on top of the observer that already promoted this card, and a
+        // card evicted before that second gate opened stayed blank forever.
+        viewer.setAttribute('loading', 'eager');
         viewer.setAttribute('src', src);
         liveViewers.push(viewer);
         evictOldestIfNeeded();

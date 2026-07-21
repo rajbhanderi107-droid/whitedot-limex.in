@@ -65,8 +65,12 @@ export function warmCaseStudyModelCache(urls = liveCaseStudyModelUrls) {
 // that keeps at most MAX_CONCURRENT parses in flight and hands each one to the
 // browser during idle time, so the main thread never blocks long enough to hang.
 // Everything still loads — just spread across a few frames instead of one.
+// Raised from 2/3: these limits were set when a single GLB could be 15-49MB and
+// parsing one blocked the main thread long enough to hang the tab. Post-shrink
+// the median model is ~250KB, and the old ceiling was throttling mobile so hard
+// that cards were evicted before their turn in the queue came up.
 const MAX_CONCURRENT_MODEL_LOADS =
-  typeof window !== 'undefined' && window.innerWidth < 1024 ? 2 : 3;
+  typeof window !== 'undefined' && window.innerWidth < 1024 ? 4 : 6;
 // How long one model may hold a concurrency slot before the queue moves on.
 // This is a *scheduling* deadline, not a failure verdict: the model keeps
 // loading in the background and pops in whenever it finishes.
@@ -133,6 +137,16 @@ function runActivation({ viewer, src }: ActivationTask) {
   viewer.addEventListener('error', onFail, { once: true });
 
   if (viewer.getAttribute('src') !== src) {
+    // model-viewer applies its OWN viewport gate unless loading is "eager"
+    // (the default "auto" behaves lazily). That is a second gate on top of the
+    // LRU pool, and it is the one that never opened: the pool would mount and
+    // set src on a card scrolling into view, model-viewer would decline to
+    // fetch because it judged the element not close enough yet, and the card
+    // was evicted before it ever changed its mind — so it stayed a blank
+    // placeholder forever. Verified directly: flipping a pending viewer to
+    // eager made it fetch and load from 3300px off-screen. The pool already
+    // decides what deserves to load, so let it be the only gate.
+    viewer.setAttribute('loading', 'eager');
     viewer.setAttribute('src', src);
   } else {
     releaseSlot();
@@ -167,7 +181,13 @@ function enqueueActivation(viewer: HTMLElement, src: string) {
 // Cards are duplicated for the marquee loop, so N keys means up to 2N mounted
 // viewers. Keep the desktop cap comfortably above the number of cards visible
 // at once so scrolling doesn't visibly pop.
-export const MAX_MOBILE_ACTIVE_MODELS = 6;
+// 6 was chosen back when each GLB was megabytes of 4K-textured, 100k+ triangle
+// geometry. After the 138MB -> 9MB / 3.3M -> 1.5M triangle pass a mounted model
+// costs a fraction of what it did, and a cap that tight evicted cards before
+// they finished loading. 10 still keeps mobile far below the level that crashes
+// Safari (the failure was ~70 live scenes) while leaving a card loaded long
+// enough to be seen.
+export const MAX_MOBILE_ACTIVE_MODELS = 10;
 export const MAX_DESKTOP_ACTIVE_MODELS = 12;
 
 export function maxActiveModels() {
@@ -214,7 +234,13 @@ export function observeMobileModelPool(
       while (order.length > cap) order.shift();
       onChange(() => new Set(order));
     },
-    { rootMargin: '200px 0px', threshold: 0.01 },
+    // Generous lead time on purpose. At 200px a card (~380px tall on a phone)
+    // was promoted barely before it hit the screen, so with only 2 concurrent
+    // loads the model was still downloading when scrolling evicted it again —
+    // measured on a real mobile viewport, a full scroll of 35 products fired
+    // just 9 GLB requests and left most cards as permanent placeholders.
+    // Promoting ~2 cards ahead gives each model time to actually finish.
+    { rootMargin: '800px 0px', threshold: 0.01 },
   );
 
   cards.forEach((card) => observer.observe(card));
