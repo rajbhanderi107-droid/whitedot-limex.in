@@ -1591,7 +1591,36 @@
         }
       ],
       "tagline": "A round dairy bowl, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
-      "description": "A round dairy packaging bowl, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend."
+      "description": "A round dairy packaging bowl, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
+      "index": "19",
+      "name": "Dairy Round Container",
+      "category": "Dairy Packaging",
+      "application": "Dairy Product Packaging",
+      "moulding": "Injection Moulding",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "20%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     },
     "applianceTray": {
       "id": "applianceTray",
@@ -1634,7 +1663,36 @@
         }
       ],
       "tagline": "A fridge / washing-machine tray, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
-      "description": "A fridge / washing-machine appliance tray, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend."
+      "description": "A fridge / washing-machine appliance tray, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
+      "index": "20",
+      "name": "Appliance Tray",
+      "category": "Appliance Component",
+      "application": "Fridge / Washing-Machine Tray",
+      "moulding": "Injection Moulding",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "20%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     },
     "cupContainer": {
       "id": "cupContainer",
@@ -1677,7 +1735,36 @@
         }
       ],
       "tagline": "A cup-style food container, moulded from a 30% LIMEX PE26 F-51 + 70% PP blend.",
-      "description": "A cup-style food packaging container, moulded from a 30% LIMEX PE26 F-51 + 70% PP blend."
+      "description": "A cup-style food packaging container, moulded from a 30% LIMEX PE26 F-51 + 70% PP blend.",
+      "index": "21",
+      "name": "Cup Container",
+      "category": "Food Packaging",
+      "application": "Food Service Container",
+      "moulding": "Injection Moulding",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "30%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     },
     "toothBrush": {
       "id": "toothBrush",
@@ -1720,7 +1807,36 @@
         }
       ],
       "tagline": "A toothbrush handle, moulded from a 10% LIMEX PE26 F-51 + 90% PP blend.",
-      "description": "A personal-care toothbrush handle, moulded from a 10% LIMEX PE26 F-51 + 90% PP blend."
+      "description": "A personal-care toothbrush handle, moulded from a 10% LIMEX PE26 F-51 + 90% PP blend.",
+      "index": "22",
+      "name": "Toothbrush Handle",
+      "category": "Personal Care",
+      "application": "Toothbrush Handle",
+      "moulding": "Injection Moulding",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "10%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     },
     "petrolPipe": {
       "id": "petrolPipe",
@@ -1763,7 +1879,36 @@
         }
       ],
       "tagline": "An automotive petrol pipe component, moulded from a 30% LIMEX PE79-29L + 70% PP blend.",
-      "description": "An automotive petrol pipe component, moulded from a 30% LIMEX PE79-29L + 70% PP blend."
+      "description": "An automotive petrol pipe component, moulded from a 30% LIMEX PE79-29L + 70% PP blend.",
+      "index": "23",
+      "name": "Petrol Pipe",
+      "category": "Automotive Component",
+      "application": "Automotive Fuel Line",
+      "moulding": "Extrusion",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "30%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     },
     "proteinContainer": {
       "id": "proteinContainer",
@@ -1806,7 +1951,36 @@
         }
       ],
       "tagline": "A nutrition container, moulded from an equal 50% LIMEX PE26 F-51 + 50% PP blend.",
-      "description": "A protein / nutrition packaging container, moulded from an equal 50% LIMEX PE26 F-51 + 50% PP blend."
+      "description": "A protein / nutrition packaging container, moulded from an equal 50% LIMEX PE26 F-51 + 50% PP blend.",
+      "index": "24",
+      "name": "Protein Container",
+      "category": "Food Packaging",
+      "application": "Nutrition / Protein Packaging",
+      "moulding": "Injection Moulding",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "50%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     },
     "rectangleBox": {
       "id": "rectangleBox",
@@ -1849,7 +2023,36 @@
         }
       ],
       "tagline": "A rectangular general-purpose container, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
-      "description": "A rectangular general-purpose packaging container, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend."
+      "description": "A rectangular general-purpose packaging container, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
+      "index": "25",
+      "name": "Rectangle Box",
+      "category": "General Packaging",
+      "application": "General Purpose Storage",
+      "moulding": "Injection Moulding",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "20%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     },
     "smallRoundBottle": {
       "id": "smallRoundBottle",
@@ -1892,7 +2095,36 @@
         }
       ],
       "tagline": "A small round packaging bottle, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
-      "description": "A small round general-purpose packaging bottle, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend."
+      "description": "A small round general-purpose packaging bottle, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
+      "index": "26",
+      "name": "Small Round Bottle",
+      "category": "Packaging",
+      "application": "Small Packaging Bottle",
+      "moulding": "Blow Moulding",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "20%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     },
     "saltBottle": {
       "id": "saltBottle",
@@ -1935,7 +2167,36 @@
         }
       ],
       "tagline": "A salt-packaging bottle, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
-      "description": "A food-packaging salt bottle, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend."
+      "description": "A food-packaging salt bottle, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
+      "index": "27",
+      "name": "Salt Bottle",
+      "category": "Food Packaging",
+      "application": "Salt Packaging",
+      "moulding": "Blow Moulding",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "20%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     },
     "lightWeightContainer": {
       "id": "lightWeightContainer",
@@ -1978,7 +2239,36 @@
         }
       ],
       "tagline": "A lightweight general-purpose container, moulded from a 25% LIMEX PE78-29L + 75% PP blend.",
-      "description": "A lightweight general-purpose packaging container, moulded from a 25% LIMEX PE78-29L + 75% PP blend."
+      "description": "A lightweight general-purpose packaging container, moulded from a 25% LIMEX PE78-29L + 75% PP blend.",
+      "index": "28",
+      "name": "Lightweight Container",
+      "category": "General Packaging",
+      "application": "Lightweight General Storage",
+      "moulding": "Injection Moulding",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "25%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     },
     "foodTrayDish": {
       "id": "foodTrayDish",
@@ -2022,7 +2312,36 @@
         }
       ],
       "tagline": "A food tray dish, moulded from a 30% LIMEX + 70% PP blend.",
-      "description": "A food-packaging tray dish, moulded from a 30% LIMEX + 70% PP blend."
+      "description": "A food-packaging tray dish, moulded from a 30% LIMEX + 70% PP blend.",
+      "index": "29",
+      "name": "Food Tray Dish",
+      "category": "Food Packaging",
+      "application": "Food Serving Tray",
+      "moulding": "Injection Moulding",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "30%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     },
     "lightWeightDish": {
       "id": "lightWeightDish",
@@ -2065,7 +2384,36 @@
         }
       ],
       "tagline": "A thin-wall circular dish, moulded from a 30% LIMEX PP24 Y-51 + 70% PP blend.",
-      "description": "A thin-wall circular kitchenware dish, moulded from a 30% LIMEX PP24 Y-51 + 70% PP blend."
+      "description": "A thin-wall circular kitchenware dish, moulded from a 30% LIMEX PP24 Y-51 + 70% PP blend.",
+      "index": "30",
+      "name": "Lightweight Dish",
+      "category": "Food Packaging",
+      "application": "Thin-Wall Circular Dish",
+      "moulding": "Thin-Wall Injection Moulding",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "30%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     },
     "dermicoolPowderBottle": {
       "id": "dermicoolPowderBottle",
@@ -2108,7 +2456,36 @@
         }
       ],
       "tagline": "A personal-care powder bottle, moulded from a 70% LIMEX PP24 N-51 + 30% PP blend.",
-      "description": "A personal-care powder bottle, moulded from a 70% LIMEX PP24 N-51 + 30% PP blend."
+      "description": "A personal-care powder bottle, moulded from a 70% LIMEX PP24 N-51 + 30% PP blend.",
+      "index": "31",
+      "name": "Powder Bottle",
+      "category": "Personal Care",
+      "application": "Talcum / Powder Packaging",
+      "moulding": "Blow Moulding",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "70%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     },
     "wovenThread": {
       "id": "wovenThread",
@@ -2151,7 +2528,36 @@
         }
       ],
       "tagline": "A textile-grade woven thread material, made from a 70% LIMEX PE26 F-51 + 30% PP blend.",
-      "description": "A textile-grade woven thread material, made from a 70% LIMEX PE26 F-51 + 30% PP blend."
+      "description": "A textile-grade woven thread material, made from a 70% LIMEX PE26 F-51 + 30% PP blend.",
+      "index": "32",
+      "name": "Woven Thread",
+      "category": "Textile Material",
+      "application": "Textile-Grade Woven Thread",
+      "moulding": "Extrusion / Weaving",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "70%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     },
     "childBottle": {
       "id": "childBottle",
@@ -2195,7 +2601,36 @@
         }
       ],
       "tagline": "A child-safe personal-care bottle, moulded from a 70% LIMEX + 30% PP blend.",
-      "description": "A child-safe personal-care bottle, moulded from a 70% LIMEX + 30% PP blend."
+      "description": "A child-safe personal-care bottle, moulded from a 70% LIMEX + 30% PP blend.",
+      "index": "33",
+      "name": "Child-Safe Bottle",
+      "category": "Personal Care",
+      "application": "Child-Safe Personal Care Bottle",
+      "moulding": "Blow Moulding",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "70%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     },
     "waterTub": {
       "id": "waterTub",
@@ -2239,7 +2674,36 @@
         }
       ],
       "tagline": "A bathroom bath tumbler, moulded from a 70% LIMEX + 30% PP blend.",
-      "description": "A bathroom accessory bath tumbler, moulded from a 70% LIMEX + 30% PP blend."
+      "description": "A bathroom accessory bath tumbler, moulded from a 70% LIMEX + 30% PP blend.",
+      "index": "34",
+      "name": "Bath Tumbler",
+      "category": "Bathroom Accessory",
+      "application": "Bathroom Water Tumbler",
+      "moulding": "Injection Moulding",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "70%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     },
     "toiletSeat": {
       "id": "toiletSeat",
@@ -2283,7 +2747,36 @@
         }
       ],
       "tagline": "A sanitaryware toilet seat, moulded from a 70% LIMEX + 30% PP blend.",
-      "description": "A sanitaryware toilet seat, moulded from a 70% LIMEX + 30% PP blend."
+      "description": "A sanitaryware toilet seat, moulded from a 70% LIMEX + 30% PP blend.",
+      "index": "35",
+      "name": "Toilet Seat",
+      "category": "Sanitaryware",
+      "application": "Toilet Seat",
+      "moulding": "Injection Moulding",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "70%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     },
     "nonWovenBag": {
       "id": "nonWovenBag",
@@ -2326,7 +2819,36 @@
         }
       ],
       "tagline": "A non-woven packaging bag material, made from a 70% LIMEX PE26 F-51 + 30% PP blend.",
-      "description": "A non-woven packaging bag material, made from a 70% LIMEX PE26 F-51 + 30% PP blend."
+      "description": "A non-woven packaging bag material, made from a 70% LIMEX PE26 F-51 + 30% PP blend.",
+      "index": "36",
+      "name": "Non-Woven Bag",
+      "category": "Packaging",
+      "application": "Non-Woven Packaging Bag",
+      "moulding": "Non-Woven Extrusion",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "70%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     },
     "courierBag": {
       "id": "courierBag",
@@ -2369,7 +2891,36 @@
         }
       ],
       "tagline": "A logistics courier bag material, made from a 70% LIMEX PE78-29L + 30% PP blend.",
-      "description": "A logistics courier bag material, made from a 70% LIMEX PE78-29L + 30% PP blend."
+      "description": "A logistics courier bag material, made from a 70% LIMEX PE78-29L + 30% PP blend.",
+      "index": "37",
+      "name": "Courier Bag",
+      "category": "Logistics Packaging",
+      "application": "Courier / Logistics Bag",
+      "moulding": "Blown Film Extrusion",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "70%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     }
   }
 }

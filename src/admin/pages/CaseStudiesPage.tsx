@@ -181,7 +181,7 @@ export function CaseStudiesPage() {
           ? <div style={{ padding: 20, color: "var(--adm-muted, #6b7280)", fontSize: 12 }}>Loading…</div>
           : Object.keys(products).length === 0
           ? <div style={{ padding: 20, color: "var(--adm-muted, #6b7280)", fontSize: 12 }}>No products yet.<br />Click + to add one.</div>
-          : Object.values(products).map(p => (
+          : Object.values(products).sort((a, b) => (parseInt(a.index, 10) || 0) - (parseInt(b.index, 10) || 0)).map(p => (
             <div key={p.id}
               onClick={() => setSelectedId(p.id)}
               style={{
