@@ -26,7 +26,7 @@ export default function Showcase() {
 
           <div className="v2sc-video">
             <iframe
-              src="https://www.youtube-nocookie.com/embed/YIXzbM03qag"
+              src="https://www.youtube.com/embed/YIXzbM03qag"
               title="Whitedot LIMEX Launch Film"
               loading="lazy"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
