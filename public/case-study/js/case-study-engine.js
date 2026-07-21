@@ -20,28 +20,29 @@
   const productId = document.body.dataset.product;
   if (!productId) return;
 
-  /* Try live API first (portal-editable), fall back to bundled specs.json */
+  /* Bundled specs.json is always the baseline (has every product that ships
+   * with the site). The live portal API is layered on top so edits made in
+   * the portal show up immediately — but a product missing from the DB
+   * (e.g. newly added straight to specs.json) still renders correctly
+   * instead of vanishing because the API "won" and didn't know about it. */
+  let products = {};
+  try {
+    const res = await fetch('./data/specs.json');
+    ({ products } = await res.json());
+  } catch (e) {
+    console.warn('[WD Engine] Could not load specs.json', e);
+  }
+
   const API = 'https://api.whitedotindia.in/api/public/case-studies';
-  let products;
   try {
     const apiRes = await fetch(API, { signal: AbortSignal.timeout(4000) });
     if (apiRes.ok) {
       const json = await apiRes.json();
       if (json.success && json.data?.products) {
-        products = json.data.products;
+        products = { ...products, ...json.data.products };
       }
     }
-  } catch { /* network error or timeout — fall through to local */ }
-
-  if (!products) {
-    try {
-      const res = await fetch('./data/specs.json');
-      ({ products } = await res.json());
-    } catch (e) {
-      console.warn('[WD Engine] Could not load specs.json', e);
-      return;
-    }
-  }
+  } catch { /* network error or timeout — bundled specs.json still stands */ }
 
   const p = products[productId];
   if (!p) {

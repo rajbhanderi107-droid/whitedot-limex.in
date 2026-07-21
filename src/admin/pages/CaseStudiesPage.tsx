@@ -94,21 +94,26 @@ export function CaseStudiesPage() {
         ? await api.getFresh<{ products: Products | null }>("/api/case-studies")
         : await api.get<{ products: Products | null }>("/api/case-studies");
 
-      let p: Products = res.data.products ?? {};
+      const dbProducts: Products = res.data.products ?? {};
 
-      // DB is empty — seed from bundled specs.json so admin sees existing products
-      if (!res.data.products || Object.keys(p).length === 0) {
-        try {
-          const fb = await fetch("/case-study/data/specs.json");
-          if (fb.ok) {
-            const json = await fb.json();
-            if (json.products && Object.keys(json.products).length > 0) {
-              p = json.products as Products;
+      // Bundled specs.json is always the baseline — every product that ships
+      // with the site — so DB edits merge on top instead of hiding products
+      // that were never saved through the portal (e.g. added straight to
+      // specs.json). This is what keeps the sidebar list complete.
+      let p: Products = dbProducts;
+      try {
+        const fb = await fetch("/case-study/data/specs.json");
+        if (fb.ok) {
+          const json = await fb.json();
+          const bundled = (json.products ?? {}) as Products;
+          if (Object.keys(bundled).length > 0) {
+            p = { ...bundled, ...dbProducts };
+            if (Object.keys(dbProducts).length < Object.keys(bundled).length) {
               setSeededFromLocal(true);
             }
           }
-        } catch { /* stay empty if fetch fails */ }
-      }
+        }
+      } catch { /* DB products still stand if bundled fetch fails */ }
 
       setProducts(p);
       if (!selectedId && Object.keys(p).length) setSelectedId(Object.keys(p)[0]);

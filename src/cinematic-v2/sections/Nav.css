@@ -73,7 +73,9 @@
 .v2nav-brand-text {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   line-height: 1.1;
+  max-width: max-content;
 }
 
 .v2nav-wordmark {
@@ -82,6 +84,7 @@
   font-weight: var(--v2-fw-light);
   color: var(--v2-text);
   letter-spacing: 0.01em;
+  white-space: nowrap;
 }
 
 .v2nav-tagline {
@@ -90,6 +93,11 @@
   font-weight: var(--v2-fw-regular);
   color: var(--v2-text-muted);
   letter-spacing: 0.01em;
+  white-space: nowrap;
+  text-align: left;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  max-width: 100%;
 }
 
 @media (max-width: 600px) {
