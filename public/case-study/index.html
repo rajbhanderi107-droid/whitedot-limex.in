@@ -1039,9 +1039,35 @@
   (function lazyActivateModels(root) {
     const MAX_CONCURRENT = 2;
     const LOAD_TIMEOUT_MS = 8000;
+    // Hard cap on how many <model-viewer> scenes stay alive at once. This grid
+    // holds ~70 viewers (35 products x2 for the marquee loop); letting them all
+    // go live meant ~5.3M resident triangles, which froze the renderer outright
+    // on desktop and crashed it on phones. Activation alone is not enough of a
+    // bound because nothing ever tore a viewer back down, so the live count only
+    // ever grew as the user scrolled. Mirrors the LRU pool the React grid uses
+    // (src/cinematic-v2/productModelPreload.ts).
+    const MAX_LIVE_MODELS = window.innerWidth < 1024 ? 6 : 12;
+    const liveViewers = [];
     const queue = [];
     const queued = new WeakSet();
     let active = 0;
+
+    // model-viewer only releases its three.js scene when the element goes away,
+    // so evicting means replacing the element with a fresh clone that has no
+    // src. The clone keeps data-model-src, so the observer below can bring it
+    // back if the card scrolls into view again.
+    function evictOldestIfNeeded() {
+      while (liveViewers.length > MAX_LIVE_MODELS) {
+        const old = liveViewers.shift();
+        if (!old || !old.isConnected) continue;
+        const fresh = document.createElement('model-viewer');
+        for (const { name, value } of [...old.attributes]) {
+          if (name !== 'src') fresh.setAttribute(name, value);
+        }
+        old.replaceWith(fresh);
+        observer.observe(fresh);
+      }
+    }
 
     const scheduleIdle = 'requestIdleCallback' in window
       ? (cb) => window.requestIdleCallback(cb, { timeout: 300 })
@@ -1072,6 +1098,8 @@
       viewer.addEventListener('error', done, { once: true });
       if (viewer.getAttribute('src') !== src) {
         viewer.setAttribute('src', src);
+        liveViewers.push(viewer);
+        evictOldestIfNeeded();
       } else {
         done();
       }
