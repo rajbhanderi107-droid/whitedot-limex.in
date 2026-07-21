@@ -147,21 +147,34 @@ function enqueueActivation(viewer: HTMLElement, src: string) {
   pumpActivationQueue();
 }
 
-// ── Mobile model-viewer pool (bounded, LRU) ───────────────────────────────
-// On desktop, up to ~70 <model-viewer> elements stay mounted forever once
-// activated (see observeViewportModels above) — model-viewer's shared
-// renderer makes that cheap. On real mobile Safari, a static grid of 35 live
-// products each getting its own persistently-mounted <model-viewer> proved
-// unreliable in practice (cards render blank instead of crashing — a step
-// forward from the previous marquee crash, but still not "visible"). Rather
-// than trust every device to gracefully cope with 35 simultaneous mounted
-// instances, cap how many are EVER mounted in the DOM at once on mobile: an
-// IntersectionObserver promotes a product's key into a small LRU set as its
-// card scrolls into view, evicting the oldest entry once the cap is hit.
-// React (see CaseStudyPage.tsx / CaseStudyFeature.tsx) uses that set to
-// swap the evicted card's <model-viewer> back out for a placeholder,
-// actually unmounting it so the browser can reclaim it — not just hiding it.
+// ── model-viewer pool (bounded, LRU) — ALL viewports ──────────────────────
+// An IntersectionObserver promotes a product's key into a small LRU set as its
+// card scrolls into view, evicting the oldest once the cap is hit. React (see
+// CaseStudyPage.tsx / CaseStudyFeature.tsx) uses that set to swap an evicted
+// card's <model-viewer> back out for a placeholder, actually unmounting it so
+// the browser can reclaim it — not just hiding it.
+//
+// This used to be mobile-only, on the assumption that ~70 mounted viewers were
+// cheap on desktop because model-viewer shares one WebGL context. That
+// assumption was wrong, and it was masked for a long time by a bug: the models
+// were so oversized that most of them hit an 8s load timeout, got tagged
+// data-model-failed and were hidden by CSS, so only a handful were ever really
+// live. Once the GLBs were shrunk 138MB -> 13MB they all started loading
+// successfully — 70 live scenes holding ~5.3M triangles — and that reliably
+// froze the renderer on desktop as well as mobile. The pool is the actual fix;
+// nothing should depend on models failing to load.
+//
+// Cards are duplicated for the marquee loop, so N keys means up to 2N mounted
+// viewers. Keep the desktop cap comfortably above the number of cards visible
+// at once so scrolling doesn't visibly pop.
 export const MAX_MOBILE_ACTIVE_MODELS = 6;
+export const MAX_DESKTOP_ACTIVE_MODELS = 12;
+
+export function maxActiveModels() {
+  return typeof window !== 'undefined' && window.innerWidth < 1024
+    ? MAX_MOBILE_ACTIVE_MODELS
+    : MAX_DESKTOP_ACTIVE_MODELS;
+}
 
 // NOTE: there was briefly an initialMobileModelPool() here that pre-seeded this
 // set so the grid's first cards rendered without waiting for an
@@ -177,6 +190,7 @@ export function observeMobileModelPool(
   const cards = [...root.querySelectorAll<HTMLElement>('.csp-pcard[data-product]')];
   if (!cards.length) return () => undefined;
 
+  const cap = maxActiveModels();
   const order: string[] = [];
 
   const observer = new IntersectionObserver(
@@ -185,12 +199,19 @@ export function observeMobileModelPool(
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
         const key = (entry.target as HTMLElement).dataset.product;
-        if (!key || order.includes(key)) return;
+        if (!key) return;
+        // Re-entering a card refreshes its recency so the marquee's looping
+        // cards don't evict the ones currently on screen.
+        const at = order.indexOf(key);
+        if (at !== -1) {
+          if (at === order.length - 1) return;
+          order.splice(at, 1);
+        }
         order.push(key);
         changed = true;
       });
       if (!changed) return;
-      while (order.length > MAX_MOBILE_ACTIVE_MODELS) order.shift();
+      while (order.length > cap) order.shift();
       onChange(() => new Set(order));
     },
     { rootMargin: '200px 0px', threshold: 0.01 },

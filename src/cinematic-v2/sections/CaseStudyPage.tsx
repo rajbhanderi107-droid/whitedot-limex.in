@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import Nav from './Nav';
 import Footer from './Footer';
-import { observeViewportModels, observeMobileModelPool, warmCaseStudyModelCache, activateMountedModels } from '../productModelPreload';
+import { observeMobileModelPool, warmCaseStudyModelCache, activateMountedModels } from '../productModelPreload';
 import './CaseStudyPage.css';
 
 const basePath = window.location.hostname.endsWith('github.io') ? '/whitedot-limex.in' : '';
@@ -291,12 +291,12 @@ export default function CaseStudyPage() {
   const activeProductRef = useRef<ProductKey>('overview');
   const allProductsOpenRef = useRef(false);
   const [activeProduct, setActiveProduct] = useState<ProductKey>('overview');
-  // Starts EMPTY on purpose. Seeding this with the first few products meant a
-  // phone spun up 6 WebGL contexts and parsed 6 GLBs during initial page load —
-  // exactly the eager-WebGL pattern that has crashed mobile Safari on this page
-  // before. observeMobileModelPool promotes products as their cards actually
-  // approach the viewport.
-  const [mobileActive, setMobileActive] = useState<Set<string>>(() => new Set());
+  // Which products currently get a live <model-viewer>, on EVERY viewport (the
+  // pool used to be mobile-only; 70 mounted viewers froze desktop too). Starts
+  // EMPTY on purpose — pre-seeding it made the page build WebGL contexts during
+  // initial load. observeMobileModelPool promotes products as their cards
+  // actually approach the viewport.
+  const [activeModels, setActiveModels] = useState<Set<string>>(() => new Set());
   const [allProductsOpen, setAllProductsOpen] = useState(false);
   const setActiveProductKey = useCallback((key: ProductKey) => {
     if (activeProductRef.current === key) return;
@@ -326,7 +326,7 @@ export default function CaseStudyPage() {
     window.scrollTo(0, 0);
 
     // ── Inject model-viewer everywhere — model-viewer 4.x shares one WebGL
-    // context across instances and observeViewportModels() below staggers GLB
+    // context across instances and the LRU pool below staggers GLB
     // activation through a concurrency-limited queue, so this is safe on mobile
     // too as long as the marquee's continuous per-frame layout/animation work
     // (the actual mobile-crash cause, see below) stays off. ──
@@ -348,14 +348,13 @@ export default function CaseStudyPage() {
     const grid    = gridRef.current;
     const section = sectionRef.current;
     if (!grid || !section) return;
-    const stopViewportModels = observeViewportModels(grid);
-    const stopMobilePool = isMobileViewport ? observeMobileModelPool(grid, setMobileActive) : undefined;
+    const stopMobilePool = observeMobileModelPool(grid, setActiveModels);
     // Only warm the handful of cards visible above the fold on load — the
     // full page has 27 models (one is 15MB) and firing warmCaseStudyModelCache
     // with all of them fetched every GLB's raw bytes at once via priority:'high'
     // fetch(), 50ms after mount, regardless of scroll position. That flooded
     // the network with ~50MB of concurrent high-priority requests and froze
-    // the tab on load. observeViewportModels' IntersectionObserver + its
+    // the tab on load. The LRU pool's IntersectionObserver + its
     // concurrency-limited activation queue already handles the rest as the
     // user scrolls the marquee — same pattern as the homepage embed
     // (CaseStudyFeature.tsx).
@@ -477,7 +476,6 @@ export default function CaseStudyPage() {
     }
 
     return () => {
-      stopViewportModels();
       stopMobilePool?.();
       window.clearTimeout(product13Warmup);
       cancelAnimationFrame(rafRef.current);
@@ -485,19 +483,17 @@ export default function CaseStudyPage() {
     };
   }, [setActiveProductKey]);
 
-  // The effect above observes the <model-viewer> elements that exist at mount.
-  // On mobile that set is EMPTY — mobileActive starts as an empty Set, so every
-  // card renders a placeholder and the real viewers only mount later, as the LRU
-  // pool promotes them. Nothing was observing those late arrivals, so their `src`
-  // was never set and no product ever rendered in 3D on a phone. Re-observe after
-  // each pool change to pick up the newly mounted viewers (already-activated ones
-  // are skipped by enqueueActivation's src check).
+  // Every <model-viewer> in this grid is mounted by the LRU pool, after the
+  // effect above has already run — so nothing else is watching for them. The
+  // pool's own IntersectionObserver has by then decided the card is near the
+  // viewport, which is the only thing an activation observer would re-check, so
+  // set `src` directly here. Runs on all viewports now that the pool does.
+  // Already-activated viewers are skipped by enqueueActivation's src check.
   useEffect(() => {
-    if (!isMobileViewport) return;
     const grid = gridRef.current;
     if (!grid) return;
     activateMountedModels(grid);
-  }, [mobileActive]);
+  }, [activeModels]);
 
   // Product cards — rendered twice for infinite scroll (desktop only; mobile
   // renders the list once, see the isMobileViewport-gated duplication below).
@@ -518,7 +514,7 @@ export default function CaseStudyPage() {
         <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">01</span>
-          {(!isMobileViewport || mobileActive.has('bobbin')) ? (
+          {(activeModels.has('bobbin')) ? (
             // @ts-ignore custom element
             <model-viewer
               data-model-src={bobbinModel}
@@ -564,7 +560,7 @@ export default function CaseStudyPage() {
         <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">02</span>
-          {(!isMobileViewport || mobileActive.has('container')) ? (
+          {(activeModels.has('container')) ? (
             // @ts-ignore custom element
             <model-viewer
               data-model-src={containerModel}
@@ -609,7 +605,7 @@ export default function CaseStudyPage() {
         <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">03</span>
-          {(!isMobileViewport || mobileActive.has('motorCover')) ? (
+          {(activeModels.has('motorCover')) ? (
             // @ts-ignore custom element
             <model-viewer
               data-model-src={motorCoverModel}
@@ -652,7 +648,7 @@ export default function CaseStudyPage() {
         <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">04</span>
-          {(!isMobileViewport || mobileActive.has('aralditeContainer')) ? (
+          {(activeModels.has('aralditeContainer')) ? (
             // @ts-ignore custom element
             <model-viewer
               data-model-src={aralditeModel}
@@ -698,7 +694,7 @@ export default function CaseStudyPage() {
         <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">05</span>
-          {(!isMobileViewport || mobileActive.has('handWashBottle')) ? (
+          {(activeModels.has('handWashBottle')) ? (
             // @ts-ignore custom element
             <model-viewer
               data-model-src={handWashModel}
@@ -745,7 +741,7 @@ export default function CaseStudyPage() {
         <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">06</span>
-          {(!isMobileViewport || mobileActive.has('hardDish')) ? (
+          {(activeModels.has('hardDish')) ? (
             // @ts-ignore custom element
             <model-viewer
               data-model-src={hardDishModel}
@@ -794,7 +790,7 @@ export default function CaseStudyPage() {
         <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">07</span>
-          {(!isMobileViewport || mobileActive.has('consilePipe')) ? (
+          {(activeModels.has('consilePipe')) ? (
             // @ts-ignore custom element
             <model-viewer
               data-model-src={consilePipeModel}
@@ -837,7 +833,7 @@ export default function CaseStudyPage() {
         <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">08</span>
-          {(!isMobileViewport || mobileActive.has('soapStand')) ? (
+          {(activeModels.has('soapStand')) ? (
             // @ts-ignore custom element
             <model-viewer
               data-model-src={soapStandModel}
@@ -883,7 +879,7 @@ export default function CaseStudyPage() {
         <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">09</span>
-          {(!isMobileViewport || mobileActive.has('foodOilCan')) ? (
+          {(activeModels.has('foodOilCan')) ? (
             // @ts-ignore custom element
             <model-viewer
               data-model-src={foodOilCanModel}
@@ -927,7 +923,7 @@ export default function CaseStudyPage() {
         <div className="csp-pglow" />
         <div className="csp-pmedia">
           <span className="csp-pidx">10</span>
-          {(!isMobileViewport || mobileActive.has('dairyContainer')) ? (
+          {(activeModels.has('dairyContainer')) ? (
             // @ts-ignore custom element
             <model-viewer
               data-model-src={dairyContainerModel}
@@ -968,7 +964,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=lunch-box`} data-product="lunchBox">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">11</span>
-          {(!isMobileViewport || mobileActive.has('lunchBox')) ? (
+          {(activeModels.has('lunchBox')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={lunchboxModel} alt="Lunch Box mini bento container 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="38deg 68deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -982,7 +978,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=dairy-sweet-container`} data-product="dairySweetContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">12</span>
-          {(!isMobileViewport || mobileActive.has('dairySweetContainer')) ? (
+          {(activeModels.has('dairySweetContainer')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={dairySweetContainerModel} alt="Dairy Sweet Container D-500 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.75" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="legacy" camera-orbit="18deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -996,7 +992,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=dairy-round-container`} data-product="dairyRoundContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">13</span>
-          {(!isMobileViewport || mobileActive.has('dairyRoundContainer')) ? (
+          {(activeModels.has('dairyRoundContainer')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={dairyRoundContainerModel} alt="D500 Bowl 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.08" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 72deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1010,7 +1006,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=rectangle-container`} data-product="rectangleContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">14</span>
-          {(!isMobileViewport || mobileActive.has('rectangleContainer')) ? (
+          {(activeModels.has('rectangleContainer')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={rectangleContainerModel} alt="D-250 rectangular container 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.75" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 70deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1024,7 +1020,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=20mm-hook`} data-product="hook20mm">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">15</span>
-          {(!isMobileViewport || mobileActive.has('hook20mm')) ? (
+          {(activeModels.has('hook20mm')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={hook20mmModel} alt="20 mm hook plastic 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="0.85" tone-mapping="neutral" environment-image="neutral" camera-orbit="42deg 68deg 105%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1038,7 +1034,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={`${basePath}/case-study/round-pipe.html`} data-product="roundPipe">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">16</span>
-          {(!isMobileViewport || mobileActive.has('roundPipe')) ? (
+          {(activeModels.has('roundPipe')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={roundPipeModel} alt="Round Pipe molded plastic 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="80deg 76deg 92%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1052,7 +1048,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=appliance-tray`} data-product="applianceTray">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">17</span>
-          {(!isMobileViewport || mobileActive.has('applianceTray')) ? (
+          {(activeModels.has('applianceTray')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={applianceTrayModel} alt="Fridge / Washing Machine Tray molded plastic 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="28deg 74deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1066,7 +1062,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=motor-fan-blade`} data-product="motorFanBlade">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">18</span>
-          {(!isMobileViewport || mobileActive.has('motorFanBlade')) ? (
+          {(activeModels.has('motorFanBlade')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={motorFanBladeModel} alt="12-blade industrial motor fan blade impeller 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="28deg 62deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1080,7 +1076,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=cup-container`} data-product="cupContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">19</span>
-          {(!isMobileViewport || mobileActive.has('cupContainer')) ? (
+          {(activeModels.has('cupContainer')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={cupContainerModel} alt="Cup Container food-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 78deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1094,7 +1090,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=tooth-brush`} data-product="toothBrush">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">20</span>
-          {(!isMobileViewport || mobileActive.has('toothBrush')) ? (
+          {(activeModels.has('toothBrush')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={toothBrushModel} alt="Tooth Brush Collection personal-care 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 78deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1108,7 +1104,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=petrol-pipe`} data-product="petrolPipe">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">21</span>
-          {(!isMobileViewport || mobileActive.has('petrolPipe')) ? (
+          {(activeModels.has('petrolPipe')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={petrolPipeModel} alt="Petrol Pipe automotive 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 78deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1122,7 +1118,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=protein-container`} data-product="proteinContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">22</span>
-          {(!isMobileViewport || mobileActive.has('proteinContainer')) ? (
+          {(activeModels.has('proteinContainer')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={proteinContainerModel} alt="Unbranded tall round protein-container 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="22deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1136,7 +1132,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=rectangle-box`} data-product="rectangleBox">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">23</span>
-          {(!isMobileViewport || mobileActive.has('rectangleBox')) ? (
+          {(activeModels.has('rectangleBox')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={rectangleBoxModel} alt="Rectangle Container general-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 70deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1150,7 +1146,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=small-round-bottle`} data-product="smallRoundBottle">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">24</span>
-          {(!isMobileViewport || mobileActive.has('smallRoundBottle')) ? (
+          {(activeModels.has('smallRoundBottle')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={smallRoundBottleModel} alt="Small round bottle general-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.25" tone-mapping="neutral" environment-image="legacy" camera-orbit="20deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1164,7 +1160,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=salt-bottle`} data-product="saltBottle">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">25</span>
-          {(!isMobileViewport || mobileActive.has('saltBottle')) ? (
+          {(activeModels.has('saltBottle')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={saltBottleModel} alt="Salt Bottle food-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1178,7 +1174,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=light-weight-container`} data-product="lightWeightContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">26</span>
-          {(!isMobileViewport || mobileActive.has('lightWeightContainer')) ? (
+          {(activeModels.has('lightWeightContainer')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={lightWeightContainerModel} alt="Light Weight Container general-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 74deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1192,7 +1188,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=food-tray-dish`} data-product="foodTrayDish">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">27</span>
-          {(!isMobileViewport || mobileActive.has('foodTrayDish')) ? (
+          {(activeModels.has('foodTrayDish')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={foodTrayDishModel} alt="Food Tray Dish food-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="26deg 60deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1206,7 +1202,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=light-weight-dish`} data-product="lightWeightDish">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">28</span>
-          {(!isMobileViewport || mobileActive.has('lightWeightDish')) ? (
+          {(activeModels.has('lightWeightDish')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={lightWeightDishModel} alt="Thin Wall Circle Dish kitchenware 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 66deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1220,7 +1216,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={dermicoolPowderBottleHref} data-product="dermicoolPowderBottle">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">29</span>
-          {(!isMobileViewport || mobileActive.has('dermicoolPowderBottle')) ? (
+          {(activeModels.has('dermicoolPowderBottle')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={dermicoolPowderBottleModel} alt="Powder Bottle personal-care 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 74deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1234,7 +1230,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={wovenThreadHref} data-product="wovenThread">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">30</span>
-          {(!isMobileViewport || mobileActive.has('wovenThread')) ? (
+          {(activeModels.has('wovenThread')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={wovenThreadModel} alt="Woven Thread textile material 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="30deg 75deg 105%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1248,7 +1244,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={childBottleHref} data-product="childBottle">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">31</span>
-          {(!isMobileViewport || mobileActive.has('childBottle')) ? (
+          {(activeModels.has('childBottle')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={childBottleModel} alt="Child Bottle personal-care 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="22deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1262,7 +1258,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={waterTubHref} data-product="waterTub">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">32</span>
-          {(!isMobileViewport || mobileActive.has('waterTub')) ? (
+          {(activeModels.has('waterTub')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={waterTubModel} alt="Bath Tumbler bathroom-accessory 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 74deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1276,7 +1272,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={toiletSeatHref} data-product="toiletSeat">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">33</span>
-          {(!isMobileViewport || mobileActive.has('toiletSeat')) ? (
+          {(activeModels.has('toiletSeat')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={toiletSeatModel} alt="Toilet Seat sanitaryware 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="22deg 72deg 115%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1290,7 +1286,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={nonWovenBagHref} data-product="nonWovenBag">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">34</span>
-          {(!isMobileViewport || mobileActive.has('nonWovenBag')) ? (
+          {(activeModels.has('nonWovenBag')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={nonWovenBagModel} alt="Non Woven Bag packaging-textile 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 76deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1304,7 +1300,7 @@ export default function CaseStudyPage() {
       <a className="csp-pcard featured live" href={courierBagHref} data-product="courierBag">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">35</span>
-          {(!isMobileViewport || mobileActive.has('courierBag')) ? (
+          {(activeModels.has('courierBag')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={courierBagModel} alt="Courier Bag logistics-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 76deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
@@ -1315,7 +1311,7 @@ export default function CaseStudyPage() {
       </a>
 
     </>
-  ), [mobileActive]);
+  ), [activeModels]);
 
   return (
     <div className="v2-root">
