@@ -1,0 +1,104 @@
+name: Install nginx cache headers for 3D models
+
+# The whitedotindia.in server block caches js/css/fonts/images for 1y but its
+# extension regex never included .glb, so every case-study 3D model fell through
+# to the `location /` SPA fallback and was served with NO Cache-Control at all.
+# Cloudflare then reported cf-cache-status: DYNAMIC and re-fetched every model
+# from the origin on every visit.
+#
+# Idempotent: inserts one dedicated `location` block for 3D model assets,
+# verifies with `nginx -t`, and restores the backup if anything fails.
+# Everything it touches lives in the single file it backs up. Safe to re-run.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-nginx-model-cache
+  cancel-in-progress: false
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Patch nginx config
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: root
+          key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 5m
+          script: |
+            set -e
+            CONF=/etc/nginx/sites-available/whitedotindia.in
+            MARKER='wd-model-cache'
+
+            if grep -q "$MARKER" "$CONF"; then
+              echo "Already installed — nothing to do."
+              grep -n -A12 "$MARKER" "$CONF"
+              exit 0
+            fi
+
+            BACKUP="$CONF.bak.$(date +%s)"
+            cp "$CONF" "$BACKUP"
+            echo "Backed up to $BACKUP"
+
+            python3 - "$CONF" <<'PY'
+            import io, sys
+            conf = sys.argv[1]
+            with io.open(conf, encoding="utf-8") as fh:
+                src = fh.read()
+            anchor = "    # Serve static assets with long cache"
+            assert src.count(anchor) == 1, "expected exactly one static-asset location"
+            # ASCII-only on purpose: this string is piped over SSH into a shell
+            # that may not have a UTF-8 locale, and a mojibaked byte landing in
+            # an nginx config is not worth the typography.
+            block = r"""    # wd-model-cache - case-study 3D models. These filenames are NOT
+    # content-hashed, so they get a day of freshness plus a week of
+    # stale-while-revalidate rather than `immutable`; append ?v=<something>
+    # to force an instant bust. The inline `types` keeps the correct MIME
+    # type self-contained in this file so a rollback fully reverts it.
+    location ~* \.(glb|gltf|ktx2|hdr)$ {
+        types { model/gltf-binary glb; model/gltf+json gltf; image/ktx2 ktx2; }
+        default_type model/gltf-binary;
+        add_header Cache-Control "public, max-age=86400, stale-while-revalidate=604800";
+        add_header Access-Control-Allow-Origin "*";
+        access_log off;
+        try_files $uri =404;
+    }
+
+"""
+            with io.open(conf, "w", encoding="utf-8", newline="\n") as fh:
+                fh.write(src.replace(anchor, block + anchor, 1))
+            print("inserted")
+            PY
+
+            echo "=== resulting block ==="
+            grep -n -B2 -A12 "$MARKER" "$CONF"
+
+            if ! nginx -t; then
+              echo "nginx -t FAILED — restoring backup"
+              cp "$BACKUP" "$CONF"
+              nginx -t
+              exit 1
+            fi
+
+            systemctl reload nginx
+
+            echo "=== local probe (must be 200 + Cache-Control + gltf-binary) ==="
+            curl -sS -o /dev/null -D - -H 'Host: whitedotindia.in' \
+              http://127.0.0.1/case-study/model/D500_Bowl.glb \
+              | grep -iE '^HTTP|cache-control|content-type|content-length'
+
+            echo "=== SPA fallback must still work ==="
+            curl -sS -o /dev/null -w 'index: %{http_code}\n' -H 'Host: whitedotindia.in' http://127.0.0.1/
+            curl -sS -o /dev/null -w 'deep route: %{http_code}\n' -H 'Host: whitedotindia.in' http://127.0.0.1/some/spa/route
+
+      - name: Verify through Cloudflare
+        run: |
+          sleep 5
+          echo "--- glb ---"
+          curl -sS -o /dev/null -D - "https://whitedotindia.in/case-study/model/D500_Bowl.glb?cb=$RANDOM" \
+            | grep -iE '^HTTP|cache-control|content-type|cf-cache-status'
+          echo "--- site still up ---"
+          curl -sS -o /dev/null -w 'homepage: %{http_code}\n' https://whitedotindia.in/
