@@ -871,27 +871,38 @@
     margin-top: 1rem;
     max-width: 100%;
   }
-  .v2h .v2sf { display: none; }
+  /* The authorized-dealer chain (TBM -> Seven Dot -> White Dot) is core
+     credibility content, so it stays visible on phones instead of being
+     hidden. The hero is min-height:100svh, so it grows to fit rather than
+     clipping. Sizing below is compacted so the chain reads as a credential
+     strip rather than three full-height cards. */
+  .v2h .v2sf {
+    margin-top: var(--v2-space-4);
+  }
   .v2h .v2sf-inner {
     display: flex;
     flex-direction: column;
-    gap: 0.55rem;
-    padding: 0.85rem 0;
+    gap: 0.4rem;
+    padding: 0.5rem 0 0;
   }
   .v2h .v2sf-step {
     display: flex;
     flex-direction: column;
-    gap: 0.45rem;
+    gap: 0.4rem;
     width: 100%;
   }
+  .v2h .v2sf-node {
+    padding: 0.55rem 0.7rem;
+    gap: 2px;
+  }
+  .v2h .v2sf-num { font-size: 0.6rem; }
+  .v2h .v2sf-name { font-size: 0.88rem; line-height: 1.2; }
+  .v2h .v2sf-role { font-size: 0.7rem; line-height: 1.3; }
   .v2h .v2sf-link {
     display: flex;
     width: 100%;
-    min-height: 36px;
-  }
-  .v2h .v2sf-spiral {
-    min-height: 30px;
-    height: 30px;
+    min-height: 22px;
+    height: 22px;
   }
   .v2h-cta {
     flex-direction: column;

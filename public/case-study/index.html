@@ -562,8 +562,35 @@
     /* ─── MOBILE ─── */
     @media (max-width: 760px) {
       .page { padding: 24px 14px; }
-      .product-grid { grid-template-columns: 1fr; }
-      .p-card.featured { grid-row: auto; }
+      /* The marquee lays cards out in a 32,000px-wide flex row of 440px cards,
+         which on a phone shows one card clipped off both edges. `grid-template-
+         columns` was already here but did nothing, because the container is
+         display:flex. Switch it to a real stacked grid (the marquee RAF loop is
+         skipped on mobile in JS, so no inline transform fights this). */
+      .product-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        width: 100%;
+        gap: 16px;
+        padding: 10px 0;
+        transform: none;
+      }
+      .p-card, .p-card.featured { width: 100%; height: 380px; }
+      /* Coverflow perspective and the edge fade only make sense on the marquee. */
+      .lens-curve-wrapper { perspective: none; transform-style: flat; padding: 12px 0; }
+      .product-grid-section { mask-image: none; -webkit-mask-image: none; }
+      /* Four stat cells at min-width:128px need ~512px, so nowrap + overflow
+         hidden clipped the first and last stat. Wrap into a 2x2 grid. */
+      .hero-stats-strip {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px 8px;
+        padding: 14px 16px;
+      }
+      .hs-cell { min-width: 0; justify-content: center; }
+      .hs-item { padding: 0; width: 100%; }
+      .hs-label { white-space: normal; text-align: center; }
+      .hs-divider { display: none; }
       .card-nav-links { display: none; }
       .card-hero { padding: 28px 20px 8px; }
       .product-grid-section { padding: 18px 16px 4px; }
@@ -799,6 +826,11 @@
   const card = document.getElementById('heroCard');
   card.classList.add('expanded');
 
+  // Phones get a stacked static grid instead of the coverflow marquee (see the
+  // max-width:760px block above). Matches CaseStudyFeature.tsx's isMobileViewport
+  // behaviour: no duplicated card set, and no per-frame transform loop.
+  const isMobileViewport = window.innerWidth <= 760;
+
   const MODEL_SRC = {
     bobbin: './model/bobbin.glb',
     container: './model/paint-container-procedural-red-white.glb',
@@ -989,8 +1021,10 @@
       return;
     }
     const cardsHTML = entries.map(entry => buildCardHTML(entry, specs[entry.id])).join('');
-    // Duplicate the set for a seamless infinite-scroll loop.
-    gridEl.innerHTML = cardsHTML + cardsHTML;
+    // Duplicate the set for a seamless infinite-scroll loop — but only where the
+    // marquee actually runs. On phones the grid is static, so a second copy would
+    // just be 35 duplicate products and 35 more WebGL contexts.
+    gridEl.innerHTML = isMobileViewport ? cardsHTML : cardsHTML + cardsHTML;
   }
   await renderProductGrid();
 
@@ -1231,8 +1265,12 @@
     rafId = requestAnimationFrame(tick);
   }
 
-  // Start immediately
-  setTimeout(() => { rafId = requestAnimationFrame(tick); }, 100);
+  // Start immediately — desktop only. On phones the grid is a static stacked
+  // list, so the per-frame transform loop would fight the CSS (and burn battery
+  // writing inline transforms to 35 cards every frame).
+  if (!isMobileViewport) {
+    setTimeout(() => { rafId = requestAnimationFrame(tick); }, 100);
+  }
 
   // ─── 21st.dev Mouse-Tracking Glow per Card ───
   document.querySelectorAll('.p-card.live').forEach(card => {

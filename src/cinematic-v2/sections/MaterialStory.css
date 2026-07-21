@@ -250,17 +250,37 @@
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: var(--v2-space-3);
+  /* Was --v2-space-3 when the dots were 6px tall. The buttons are now 34px
+     tap targets, so the gap shrinks to hold the same 39px pitch. */
+  gap: 5px;
   list-style: none;
   padding: 0;
   margin: 0;
   pointer-events: none;
 }
+/* The 6px visual dot is far below a usable touch target, so the button is
+   sized to 34px and the dot itself moved to ::before. The gap is tightened to
+   match, keeping the rail's 39px pitch (and overall height) identical to
+   before. Scaling the ::before rather than the button also keeps the active
+   dot's scale(1.6) from inflating its hit area into its neighbours. */
 .v2story__dot {
   appearance: none;
   border: 0;
   padding: 0;
   cursor: pointer;
+  /* The parent list sets pointer-events:none so it never blocks the scene
+     beneath it; the buttons must opt back in or they cannot be clicked. */
+  pointer-events: auto;
+  background: transparent;
+  inline-size: 34px;
+  block-size: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+.v2story__dot::before {
+  content: '';
   inline-size: 6px;
   block-size: 6px;
   border-radius: 50%;
@@ -271,7 +291,7 @@
     background-color var(--v2-dur-base) var(--v2-ease-out),
     transform var(--v2-dur-base) var(--v2-ease-out);
 }
-.v2story__dot.is-active {
+.v2story__dot.is-active::before {
   background: var(--v2-sky);
   transform: scale(1.6);
   animation: v2story-dot-timer 15s linear 1 forwards;
