@@ -10,7 +10,7 @@ type Tab = (typeof TABS)[number];
 
 const DATA: Record<Tab, Row[]> = {
   Purpose: [
-    { category: 'Material intent', limex: 'Developed to reduce plastic consumption while supporting selected technical properties.', filler: 'Typically added mainly to increase weight or lower per-kg cost.' },
+    { category: 'Material intent', limex: 'Developed to reduce plastic consumption while supporting selected technical properties, with no change in cost.', filler: 'Typically added mainly to increase weight or lower per-kg cost.' },
     { category: 'Positioning', limex: 'A performance-oriented, limestone-derived material system.', filler: 'A basic filler with limited technical purpose.' },
   ],
   Processing: [
