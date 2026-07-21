@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import Nav from './Nav';
 import Footer from './Footer';
-import { observeViewportModels, observeMobileModelPool, warmCaseStudyModelCache } from '../productModelPreload';
+import { observeViewportModels, observeMobileModelPool, warmCaseStudyModelCache, initialMobileModelPool } from '../productModelPreload';
 import './CaseStudyPage.css';
 
 const basePath = window.location.hostname.endsWith('github.io') ? '/whitedot-limex.in' : '';
@@ -291,7 +291,13 @@ export default function CaseStudyPage() {
   const activeProductRef = useRef<ProductKey>('overview');
   const allProductsOpenRef = useRef(false);
   const [activeProduct, setActiveProduct] = useState<ProductKey>('overview');
-  const [mobileActive, setMobileActive] = useState<Set<string>>(() => new Set());
+  // Card order here is hand-written JSX, so the seed list is spelled out rather
+  // than derived; it only needs to match the first few cards in the grid.
+  const [mobileActive, setMobileActive] = useState<Set<string>>(
+    () => initialMobileModelPool([
+      'bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish',
+    ]),
+  );
   const [allProductsOpen, setAllProductsOpen] = useState(false);
   const setActiveProductKey = useCallback((key: ProductKey) => {
     if (activeProductRef.current === key) return;

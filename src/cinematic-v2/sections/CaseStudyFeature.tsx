@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { observeViewportModels, observeMobileModelPool, warmCaseStudyModelCache } from '../productModelPreload';
+import { observeViewportModels, observeMobileModelPool, warmCaseStudyModelCache, initialMobileModelPool } from '../productModelPreload';
 import './CaseStudyPage.css';
 
 const basePath = window.location.hostname.endsWith('github.io') ? '/whitedot-limex.in' : '';
@@ -304,7 +304,9 @@ export default function CaseStudyFeature() {
   const activeProductRef = useRef<ProductKey>('overview');
   const allProductsOpenRef = useRef(false);
   const [activeProduct, setActiveProduct] = useState<ProductKey>('overview');
-  const [mobileActive, setMobileActive] = useState<Set<string>>(() => new Set());
+  const [mobileActive, setMobileActive] = useState<Set<string>>(
+    () => initialMobileModelPool([...liveProductKeys]),
+  );
   const [allProductsOpen, setAllProductsOpen] = useState(false);
   const setActiveProductKey = useCallback((key: ProductKey) => {
     if (activeProductRef.current === key) return;
