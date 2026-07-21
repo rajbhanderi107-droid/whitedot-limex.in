@@ -446,6 +446,10 @@
 .wd-ok-badge.bad { color: var(--adm-danger); border-color: rgba(214,88,88,.4); }
 .wd-utm-out { display: flex; align-items: center; gap: .5rem; padding: .55rem .7rem; background: var(--adm-bg); border: 1px solid var(--adm-border); border-radius: 7px; font-size: .74rem; flex-wrap: wrap; }
 .wd-utm-out code { color: var(--adm-accent); word-break: break-all; flex: 1; min-width: 200px; }
+.wd-utm-matrix { display: flex; flex-direction: column; gap: .5rem; margin-top: .6rem; }
+.wd-utm-matrix-cell { display: flex; flex-direction: column; min-width: 0; flex: 1; gap: .1rem; }
+.wd-utm-matrix-label { font-size: .7rem; font-weight: 700; color: var(--adm-text); }
+.wd-utm-matrix-cell code { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .wd-preset-row { display: flex; flex-wrap: wrap; gap: .35rem; margin: .7rem 0; }
 .wd-growth-stack { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--wd-gap); }
 .wd-growth-card { background: var(--adm-surface); border: 1px solid var(--adm-border); border-radius: var(--adm-radius); padding: .85rem .95rem; display: flex; flex-direction: column; gap: .45rem; }

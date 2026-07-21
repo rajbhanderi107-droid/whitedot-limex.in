@@ -136,9 +136,17 @@ function sourceLabel(sourcePage?: string | null, fallback?: string | null): stri
   return campaign ? `${source} / ${campaign}` : `${source} / ${medium}`;
 }
 
+const monthTag = () => {
+  const d = new Date();
+  return `${d.toLocaleString("en-US", { month: "short" }).toLowerCase()}${d.getFullYear()}`;
+};
+
 export function LeadGenPage() {
   const [leads, setLeads] = useState<LeadLite[]>([]);
   const [loading, setLoading] = useState(true);
+  const [destUrl, setDestUrl] = useState("https://whitedotindia.in/");
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [customOpen, setCustomOpen] = useState(false);
   const [utm, setUtm] = useState({ url: "https://whitedotindia.in/", source: "linkedin", medium: "social", campaign: "" });
   const [copied, setCopied] = useState(false);
 
@@ -197,6 +205,33 @@ export function LeadGenPage() {
     } catch { /* clipboard unavailable */ }
   };
 
+  /* Auto-generated matrix — one tracked link per channel, built the moment the
+   * destination URL is valid. Campaign name auto-tags with the current
+   * month/year so links stay unique run to run without anyone typing UTM
+   * params by hand. */
+  const autoMatrix = useMemo(() => {
+    const tag = monthTag();
+    return UTM_PRESETS.map((preset) => {
+      try {
+        const u = new URL(destUrl);
+        u.searchParams.set("utm_source", preset.source);
+        u.searchParams.set("utm_medium", preset.medium);
+        u.searchParams.set("utm_campaign", `${preset.campaign}-${tag}`);
+        return { ...preset, url: u.toString(), valid: true };
+      } catch {
+        return { ...preset, url: "", valid: false };
+      }
+    });
+  }, [destUrl]);
+
+  const copyRow = async (key: string, link: string) => {
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopiedKey(key);
+      setTimeout(() => setCopiedKey(null), 1500);
+    } catch { /* clipboard unavailable */ }
+  };
+
   return (
     <div className="wd-page">
       <div className="wd-page-head">
@@ -223,31 +258,44 @@ export function LeadGenPage() {
         </Card>
 
         <Card>
-          <SectionHeader title="UTM campaign link builder" sub="Build tracked links for ads, posts & WhatsApp." />
-          <label className="wd-field"><span>Destination URL</span><input value={utm.url} onChange={(e) => setUtm((s) => ({ ...s, url: e.target.value }))} /></label>
-          <div className="wd-rp-grid">
-            <label className="wd-field"><span>utm_source</span><input value={utm.source} onChange={(e) => setUtm((s) => ({ ...s, source: e.target.value }))} placeholder="linkedin" /></label>
-            <label className="wd-field"><span>utm_medium</span><input value={utm.medium} onChange={(e) => setUtm((s) => ({ ...s, medium: e.target.value }))} placeholder="social / cpc / email" /></label>
-            <label className="wd-field"><span>utm_campaign</span><input value={utm.campaign} onChange={(e) => setUtm((s) => ({ ...s, campaign: e.target.value }))} placeholder="fmcg-bottles-jun" /></label>
-          </div>
-          <div className="wd-preset-row">
-            {UTM_PRESETS.map((preset) => (
-              <button
-                key={preset.label}
-                type="button"
-                className="wd-action-chip wd-chip-btn"
-                onClick={() => setUtm((s) => ({ ...s, source: preset.source, medium: preset.medium, campaign: preset.campaign }))}
-              >
-                {preset.label}
-              </button>
-            ))}
-          </div>
-          {utmUrl ? (
-            <div className="wd-utm-out">
-              <Link2 size={13} /><code>{utmUrl}</code>
-              <button className="wd-ghost-btn" onClick={copy}><Copy size={12} /> {copied ? "Copied!" : "Copy"}</button>
+          <SectionHeader title="Auto campaign links" sub="Every channel's tracked link, generated automatically — nothing to type per campaign." />
+          <label className="wd-field"><span>Destination URL</span><input value={destUrl} onChange={(e) => setDestUrl(e.target.value)} /></label>
+          {autoMatrix[0]?.valid ? (
+            <div className="wd-utm-matrix">
+              {autoMatrix.map((row) => (
+                <div key={row.label} className="wd-utm-out">
+                  <Link2 size={13} />
+                  <div className="wd-utm-matrix-cell">
+                    <span className="wd-utm-matrix-label">{row.label}</span>
+                    <code>{row.url}</code>
+                  </div>
+                  <button className="wd-ghost-btn" onClick={() => copyRow(row.label, row.url)}>
+                    <Copy size={12} /> {copiedKey === row.label ? "Copied!" : "Copy"}
+                  </button>
+                </div>
+              ))}
             </div>
-          ) : <p className="wd-muted">Enter a valid URL to build the link.</p>}
+          ) : <p className="wd-muted">Enter a valid URL to auto-generate all channel links.</p>}
+
+          <button type="button" className="wd-ghost-btn" style={{ marginTop: 10 }} onClick={() => setCustomOpen((o) => !o)}>
+            {customOpen ? "Hide" : "Need a custom / one-off link instead?"}
+          </button>
+          {customOpen && (
+            <div style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid var(--adm-border, #e5e7eb)" }}>
+              <label className="wd-field"><span>Destination URL</span><input value={utm.url} onChange={(e) => setUtm((s) => ({ ...s, url: e.target.value }))} /></label>
+              <div className="wd-rp-grid">
+                <label className="wd-field"><span>utm_source</span><input value={utm.source} onChange={(e) => setUtm((s) => ({ ...s, source: e.target.value }))} placeholder="linkedin" /></label>
+                <label className="wd-field"><span>utm_medium</span><input value={utm.medium} onChange={(e) => setUtm((s) => ({ ...s, medium: e.target.value }))} placeholder="social / cpc / email" /></label>
+                <label className="wd-field"><span>utm_campaign</span><input value={utm.campaign} onChange={(e) => setUtm((s) => ({ ...s, campaign: e.target.value }))} placeholder="fmcg-bottles-jun" /></label>
+              </div>
+              {utmUrl ? (
+                <div className="wd-utm-out">
+                  <Link2 size={13} /><code>{utmUrl}</code>
+                  <button className="wd-ghost-btn" onClick={copy}><Copy size={12} /> {copied ? "Copied!" : "Copy"}</button>
+                </div>
+              ) : <p className="wd-muted">Enter a valid URL to build the link.</p>}
+            </div>
+          )}
         </Card>
       </div>
 
