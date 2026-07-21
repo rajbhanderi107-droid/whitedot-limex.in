@@ -480,6 +480,20 @@ export default function CaseStudyPage() {
     };
   }, [setActiveProductKey]);
 
+  // The effect above observes the <model-viewer> elements that exist at mount.
+  // On mobile that set is EMPTY — mobileActive starts as an empty Set, so every
+  // card renders a placeholder and the real viewers only mount later, as the LRU
+  // pool promotes them. Nothing was observing those late arrivals, so their `src`
+  // was never set and no product ever rendered in 3D on a phone. Re-observe after
+  // each pool change to pick up the newly mounted viewers (already-activated ones
+  // are skipped by enqueueActivation's src check).
+  useEffect(() => {
+    if (!isMobileViewport) return;
+    const grid = gridRef.current;
+    if (!grid) return;
+    return observeViewportModels(grid);
+  }, [mobileActive]);
+
   // Product cards — rendered twice for infinite scroll (desktop only; mobile
   // renders the list once, see the isMobileViewport-gated duplication below).
   // Static markup with zero dependency on activeProduct/allProductsOpen — memoized

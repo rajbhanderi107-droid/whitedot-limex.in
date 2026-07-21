@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "@axe-core/react": "^4.11.3",
+    "@gltf-transform/cli": "^4.4.1",
     "@playwright/test": "^1.60.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",

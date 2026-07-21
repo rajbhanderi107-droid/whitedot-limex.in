@@ -40,3 +40,6 @@ docs/whitedot brain/
 docs/brain/
 __pycache__/
 dist/
+
+# Blender autosave backups
+*.blend1

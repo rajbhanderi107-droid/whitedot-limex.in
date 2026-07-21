@@ -14,19 +14,10 @@ const LIVE_CASE_STUDY_MODELS = [
 const cache = window.__WD_CASE_STUDY_MODEL_PRELOADS__ || new Map();
 window.__WD_CASE_STUDY_MODEL_PRELOADS__ = cache;
 
-function addPreloadHint(url) {
-  if (document.head.querySelector(`link[data-wd-model-preload][href="${url}"]`)) return;
-
-  const link = document.createElement('link');
-  link.rel = 'preload';
-  link.as = 'fetch';
-  link.href = url;
-  link.type = 'model/gltf-binary';
-  link.crossOrigin = 'anonymous';
-  link.setAttribute('data-wd-model-preload', 'true');
-  document.head.appendChild(link);
-}
-
+// No <link rel="preload" as="fetch" crossorigin> hint: it fetches with
+// credentials omitted, which is a different HTTP cache key from the plain
+// fetch below (and from model-viewer's own load), so every warmed GLB was
+// downloaded twice. The fetch alone warms the entry model-viewer will reuse.
 async function preloadModel(url) {
   const response = await fetch(url, {
     cache: 'force-cache',
@@ -43,7 +34,6 @@ async function preloadModel(url) {
 
 export function warmCaseStudyModels(urls = LIVE_CASE_STUDY_MODELS) {
   [...new Set(urls.filter(Boolean))].forEach((url) => {
-    addPreloadHint(url);
     if (cache.has(url)) return;
     cache.set(
       url,

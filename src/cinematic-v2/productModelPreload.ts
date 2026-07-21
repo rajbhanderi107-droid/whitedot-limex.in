@@ -21,20 +21,12 @@ export const liveCaseStudyModelUrls = [
   '/case-study/model/product-18-impeller.glb',
 ];
 
-function addPreloadHint(url: string) {
-  if (typeof document === 'undefined') return;
-  if (document.head.querySelector(`link[data-wd-model-preload][href="${url}"]`)) return;
-
-  const link = document.createElement('link');
-  link.rel = 'preload';
-  link.as = 'fetch';
-  link.href = url;
-  link.type = 'model/gltf-binary';
-  link.crossOrigin = 'anonymous';
-  link.setAttribute('data-wd-model-preload', 'true');
-  document.head.appendChild(link);
-}
-
+// NOTE: deliberately no <link rel="preload" as="fetch" crossorigin> hint here.
+// That hint issues a *credentials-omit* CORS request, while model-viewer (and
+// preloadOne below) fetch with the default same-origin credentials mode — the
+// two use different HTTP cache keys, so the hint made every warmed GLB download
+// twice instead of once. The plain fetch below warms the same cache entry
+// model-viewer will hit, which is what we actually want.
 async function preloadOne(url: string) {
   const response = await fetch(url, {
     cache: 'force-cache',
@@ -53,7 +45,6 @@ export function warmCaseStudyModelCache(urls = liveCaseStudyModelUrls) {
   if (typeof window === 'undefined') return;
 
   const uniqueUrls = [...new Set(urls.filter(Boolean))];
-  uniqueUrls.forEach(addPreloadHint);
 
   uniqueUrls.forEach((url) => {
     if (modelPreloadCache.has(url)) return;
@@ -76,7 +67,10 @@ export function warmCaseStudyModelCache(urls = liveCaseStudyModelUrls) {
 // Everything still loads — just spread across a few frames instead of one.
 const MAX_CONCURRENT_MODEL_LOADS =
   typeof window !== 'undefined' && window.innerWidth < 1024 ? 2 : 3;
-const MODEL_LOAD_TIMEOUT_MS = 8000;
+// How long one model may hold a concurrency slot before the queue moves on.
+// This is a *scheduling* deadline, not a failure verdict: the model keeps
+// loading in the background and pops in whenever it finishes.
+const MODEL_SLOT_TIMEOUT_MS = 6000;
 
 type ActivationTask = { viewer: HTMLElement; src: string };
 
@@ -108,31 +102,40 @@ function runActivation({ viewer, src }: ActivationTask) {
     return;
   }
 
-  let settled = false;
-  const done = () => {
-    if (settled) return;
-    settled = true;
-    viewer.removeEventListener('load', done);
-    viewer.removeEventListener('error', onFail);
+  // Releasing the concurrency slot and declaring the model dead are two
+  // different things. Previously a single 8s timer did both: on a slow phone
+  // connection a perfectly good GLB that simply hadn't arrived yet got tagged
+  // data-model-failed, and the CSS then hid it *permanently* — the card stayed
+  // a "3D" placeholder even after the model finished downloading. That is the
+  // "models don't show" symptom. Now the timer only frees the queue slot.
+  let slotReleased = false;
+  const releaseSlot = () => {
+    if (slotReleased) return;
+    slotReleased = true;
     window.clearTimeout(timer);
     activeLoads--;
     pumpActivationQueue();
   };
-  // A GLB that errors, or that never loads within the timeout (stuck
-  // decode, GPU/WebGL failure, flaky mobile network), used to just leave the
-  // card blank with no signal — mark it so CSS can fall back to a visible
-  // placeholder instead of an empty void.
-  const onFail = () => { viewer.setAttribute('data-model-failed', 'true'); done(); };
 
-  // Fallback: don't let one stuck/broken model stall the whole queue.
-  const timer = window.setTimeout(onFail, MODEL_LOAD_TIMEOUT_MS);
-  viewer.addEventListener('load', done, { once: true });
+  const onLoad = () => {
+    viewer.removeAttribute('data-model-failed');
+    releaseSlot();
+  };
+  // Only a real load error marks the card as failed, so CSS can surface the
+  // placeholder ring instead of an empty void.
+  const onFail = () => {
+    viewer.setAttribute('data-model-failed', 'true');
+    releaseSlot();
+  };
+
+  const timer = window.setTimeout(releaseSlot, MODEL_SLOT_TIMEOUT_MS);
+  viewer.addEventListener('load', onLoad, { once: true });
   viewer.addEventListener('error', onFail, { once: true });
 
   if (viewer.getAttribute('src') !== src) {
     viewer.setAttribute('src', src);
   } else {
-    done();
+    releaseSlot();
   }
 }
 
