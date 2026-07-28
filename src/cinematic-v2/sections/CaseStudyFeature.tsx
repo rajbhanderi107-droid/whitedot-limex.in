@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { observeMobileModelPool, warmCaseStudyModelCache, activateMountedModels } from '../productModelPreload';
 import './CaseStudyPage.css';
+import { Composition } from '../caseStudyComposition';
 
 const basePath = window.location.hostname.endsWith('github.io') ? '/whitedot-limex.in' : '';
 
@@ -847,12 +848,7 @@ export default function CaseStudyFeature() {
             </div>
             <div className="csp-pname">Concealed Pipe</div>
             <div className="csp-ptag">Rigid Conduit Pipe - Visual Reference</div>
-            <div className="csp-pbar">
-              <span style={{ flex:100, height:'100%', background:'var(--cs-green)', display:'block' }} />
-            </div>
-            <div className="csp-pbarlabels">
-              <span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span>
-            </div>
+            <Composition k="consilePipe">Material spec pending</Composition>
           </div>
           <span className="csp-pgo">-&gt;</span>
         </div>
@@ -937,12 +933,7 @@ export default function CaseStudyFeature() {
             </div>
             <div className="csp-pname">Food Oil Can</div>
             <div className="csp-ptag">Offset-Cap Oil Can - Visual Reference</div>
-            <div className="csp-pbar">
-              <span style={{ flex:100, height:'100%', background:'var(--cs-green)', display:'block' }} />
-            </div>
-            <div className="csp-pbarlabels">
-              <span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span>
-            </div>
+            <Composition k="foodOilCan">Material spec pending</Composition>
           </div>
           <span className="csp-pgo">-&gt;</span>
         </div>
@@ -981,12 +972,7 @@ export default function CaseStudyFeature() {
             </div>
             <div className="csp-pname">Dairy Products Container</div>
             <div className="csp-ptag">Snap-Lid Dairy Tub - Visual Reference</div>
-            <div className="csp-pbar">
-              <span style={{ flex:100, height:'100%', background:'var(--cs-green)', display:'block' }} />
-            </div>
-            <div className="csp-pbarlabels">
-              <span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span>
-            </div>
+            <Composition k="dairyProductsContainer">Material spec pending</Composition>
           </div>
           <span className="csp-pgo">-&gt;</span>
         </div>
@@ -1003,7 +989,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Lunch Box</div><div className="csp-ptag">Mini Bento Container - Visual Reference</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Lunch Box</div><div className="csp-ptag">Mini Bento Container - Visual Reference</div><Composition k="lunchBox">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 12 Dairy Sweet Container - live */}
@@ -1059,7 +1045,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">D500 Bowl</div><div className="csp-ptag">Dairy Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">D500 Bowl</div><div className="csp-ptag">Dairy Packaging - Interactive 3D Model</div><Composition k="dairyRoundContainer">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 14 D-250 Rectangle Container - live */}
@@ -1073,7 +1059,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">D-250 Container</div><div className="csp-ptag">One-Piece Molded Plastic Container - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Photo-matched geometry</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">D-250 Container</div><div className="csp-ptag">One-Piece Molded Plastic Container - Interactive 3D Model</div><Composition k="rectangleContainer">Photo-matched geometry</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 15 20 mm Hook — live (newest); shown in numeric sequence after 14 */}
@@ -1087,7 +1073,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">20 mm Hook</div><div className="csp-ptag">Hardware - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Photo-matched geometry</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">20 mm Hook</div><div className="csp-ptag">Hardware - Interactive 3D Model</div><Composition k="hook20mm">Photo-matched geometry</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 16 Round Pipe - live model, verified composition pending */}
@@ -1101,7 +1087,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Round Pipe</div><div className="csp-ptag">Industrial Pipe - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Round Pipe</div><div className="csp-ptag">Industrial Pipe - Interactive 3D Model</div><Composition k="roundPipe">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 17 Fridge / Washing Machine Tray - live model, verified composition pending */}
@@ -1115,7 +1101,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Fridge / Washing Machine Tray</div><div className="csp-ptag">Appliance Component - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Fridge / Washing Machine Tray</div><div className="csp-ptag">Appliance Component - Interactive 3D Model</div><Composition k="applianceTray">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 18 Motor Fan Blade - live model, verified composition pending */}
@@ -1129,7 +1115,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Motor Fan Blade</div><div className="csp-ptag">Motor Component - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Motor Fan Blade</div><div className="csp-ptag">Motor Component - Interactive 3D Model</div><Composition k="motorFanBlade">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 19 Cup Container - live model, verified composition pending */}
@@ -1143,7 +1129,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Cup Container</div><div className="csp-ptag">Food Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Cup Container</div><div className="csp-ptag">Food Packaging - Interactive 3D Model</div><Composition k="cupContainer">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 20 Tooth Brush Collection - live model, verified composition pending */}
@@ -1157,7 +1143,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Tooth Brush Collection</div><div className="csp-ptag">Personal Care - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Tooth Brush Collection</div><div className="csp-ptag">Personal Care - Interactive 3D Model</div><Composition k="toothBrush">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 21 Petrol Pipe - model live, verified composition pending */}
@@ -1171,7 +1157,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Petrol Pipe</div><div className="csp-ptag">Automotive Component - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Petrol Pipe</div><div className="csp-ptag">Automotive Component - Interactive 3D Model</div><Composition k="petrolPipe">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 22 Protein Container - model live, verified composition pending */}
@@ -1185,7 +1171,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Protein Container</div><div className="csp-ptag">Nutrition Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Protein Container</div><div className="csp-ptag">Nutrition Packaging - Interactive 3D Model</div><Composition k="proteinContainer">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 23 Rectangle Container - model live, verified composition pending */}
@@ -1199,7 +1185,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Rectangle Container</div><div className="csp-ptag">General Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Rectangle Container</div><div className="csp-ptag">General Packaging - Interactive 3D Model</div><Composition k="rectangleBox">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 24 Small Round Bottle - model live, verified composition pending */}
@@ -1213,7 +1199,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Small Round Bottle</div><div className="csp-ptag">General Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Small Round Bottle</div><div className="csp-ptag">General Packaging - Interactive 3D Model</div><Composition k="smallRoundBottle">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 25 Salt Bottle - model live, verified composition pending */}
@@ -1227,7 +1213,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Salt Bottle</div><div className="csp-ptag">Food Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Salt Bottle</div><div className="csp-ptag">Food Packaging - Interactive 3D Model</div><Composition k="saltBottle">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 26 Light Weight Container - model live, verified composition pending */}
@@ -1241,7 +1227,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Light Weight Container</div><div className="csp-ptag">General Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Light Weight Container</div><div className="csp-ptag">General Packaging - Interactive 3D Model</div><Composition k="lightWeightContainer">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 27 Food Tray Dish - model live, verified composition pending */}
@@ -1255,7 +1241,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Food Tray Dish</div><div className="csp-ptag">Food Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Food Tray Dish</div><div className="csp-ptag">Food Packaging - Interactive 3D Model</div><Composition k="foodTrayDish">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 28 Thin Wall Circle Dish - model live, verified composition pending */}
@@ -1269,7 +1255,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Thin Wall Circle Dish</div><div className="csp-ptag">Kitchenware - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Thin Wall Circle Dish</div><div className="csp-ptag">Kitchenware - Interactive 3D Model</div><Composition k="lightWeightDish">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 29 Dermicool Powder Bottle - model live, verified composition pending */}
@@ -1283,7 +1269,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Powder Bottle</div><div className="csp-ptag">Personal Care Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Powder Bottle</div><div className="csp-ptag">Personal Care Packaging - Interactive 3D Model</div><Composition k="dermicoolPowderBottle">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 30 Woven Thread - model live, verified composition pending */}
@@ -1297,7 +1283,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Woven Thread</div><div className="csp-ptag">Textile Material - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Woven Thread</div><div className="csp-ptag">Textile Material - Interactive 3D Model</div><Composition k="wovenThread">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 31 Child Bottle - model live, verified composition pending */}
@@ -1311,7 +1297,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Child Bottle</div><div className="csp-ptag">Personal Care Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Child Bottle</div><div className="csp-ptag">Personal Care Packaging - Interactive 3D Model</div><Composition k="childBottle">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 32 Bath Tumbler - model live, verified composition pending */}
@@ -1325,7 +1311,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Bath Tumbler</div><div className="csp-ptag">Bathroom Accessory - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Bath Tumbler</div><div className="csp-ptag">Bathroom Accessory - Interactive 3D Model</div><Composition k="waterTub">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 33 Toilet Seat - model live, verified composition pending */}
@@ -1339,7 +1325,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Toilet Seat</div><div className="csp-ptag">Sanitaryware - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Toilet Seat</div><div className="csp-ptag">Sanitaryware - Interactive 3D Model</div><Composition k="toiletSeat">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 34 Non Woven Bag - model live, verified composition pending */}
@@ -1353,7 +1339,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Non Woven Bag</div><div className="csp-ptag">Packaging Textile - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Non Woven Bag</div><div className="csp-ptag">Packaging Textile - Interactive 3D Model</div><Composition k="nonWovenBag">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 35 Courier Bag - model live, verified composition pending */}
@@ -1367,7 +1353,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Courier Bag</div><div className="csp-ptag">Logistics Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Courier Bag</div><div className="csp-ptag">Logistics Packaging - Interactive 3D Model</div><Composition k="courierBag">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 36 Strip Tape - model live, verified composition pending */}
@@ -1381,7 +1367,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">ST</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Strip Tape</div><div className="csp-ptag">Industrial Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Strip Tape</div><div className="csp-ptag">Industrial Packaging - Interactive 3D Model</div><Composition k="stripTape">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 37 Dark Plastic Talpatri - model live, verified composition pending */}
@@ -1395,7 +1381,7 @@ export default function CaseStudyFeature() {
             <div className="csp-soon-placeholder" aria-hidden="true">DT</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Dark Plastic Talpatri</div><div className="csp-ptag">Industrial Sheeting - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Dark Plastic Talpatri</div><div className="csp-ptag">Industrial Sheeting - Interactive 3D Model</div><Composition k="darkTalpatri">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {pendingProducts.map(p => (
