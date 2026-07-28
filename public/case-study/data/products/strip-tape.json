@@ -1,0 +1,34 @@
+{
+  "id": "stripTape",
+  "index": "36",
+  "slug": "strip-tape",
+  "name": "Strip Tape",
+  "category": "Industrial Packaging",
+  "status": "live",
+  "modelFile": "model/product-36-strip-tape.glb",
+  "htmlPage": "product.html?p=strip-tape  (generic template, no dedicated file)",
+  "composition": [],
+  "specs": [
+    {
+      "label": "Material Base",
+      "value": "Per lot TDS",
+      "verified": false,
+      "source": "pending",
+      "note": "Composition not yet confirmed for this product."
+    },
+    {
+      "label": "Mixing Ratio",
+      "value": "Per lot TDS",
+      "verified": false,
+      "source": "pending"
+    },
+    {
+      "label": "LIMEX Grade",
+      "value": "Per lot TDS",
+      "verified": false,
+      "source": "pending"
+    }
+  ],
+  "referenceGrade": "Per lot TDS",
+  "mixRatio": "Per lot TDS"
+}

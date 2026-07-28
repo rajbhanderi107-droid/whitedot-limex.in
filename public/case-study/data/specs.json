@@ -2921,6 +2921,64 @@
         "basis": "",
         "verified": false
       }
+    },
+    "stripTape": {
+      "id": "stripTape",
+      "referenceGrade": "Per lot TDS",
+      "mixRatio": "Per lot TDS",
+      "composition": [],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "Per lot TDS",
+          "verified": false,
+          "source": "pending",
+          "note": "Composition not yet confirmed for this product."
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "Per lot TDS",
+          "verified": false,
+          "source": "pending"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "Per lot TDS",
+          "verified": false,
+          "source": "pending"
+        }
+      ],
+      "tagline": "A reinforced industrial strip / packing tape roll on a laminated kraft core.",
+      "description": "A reinforced industrial strip / packing tape roll on a laminated kraft core. Material composition pending verification.",
+      "index": "36",
+      "name": "Strip Tape",
+      "category": "Industrial Packaging",
+      "application": "Industrial Strip / Packing Tape",
+      "moulding": "Extrusion / Film Lamination",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "",
+          "label": "LIMEX Ratio",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     }
   }
 }

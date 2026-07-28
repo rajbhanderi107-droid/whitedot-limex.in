@@ -64,8 +64,10 @@ const nonWovenBagHref = `${basePath}/case-study/product.html?p=non-woven-bag`;
 const nonWovenBagModel = `${basePath}/case-study/model/product-34-nonwoven-bag.glb`;
 const courierBagHref = `${basePath}/case-study/product.html?p=courier-bag`;
 const courierBagModel = `${basePath}/case-study/model/product-35-courier-bag.glb`;
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'childBottle' | 'waterTub' | 'toiletSeat' | 'nonWovenBag' | 'courierBag';
-const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer', 'lunchBox', 'dairySweetContainer', 'dairyRoundContainer', 'rectangleContainer', 'hook20mm', 'roundPipe', 'applianceTray', 'motorFanBlade', 'cupContainer', 'toothBrush', 'petrolPipe', 'proteinContainer', 'rectangleBox', 'smallRoundBottle', 'saltBottle', 'lightWeightContainer', 'foodTrayDish', 'lightWeightDish', 'dermicoolPowderBottle', 'wovenThread', 'childBottle', 'waterTub', 'toiletSeat', 'nonWovenBag', 'courierBag']);
+const stripTapeHref = `${basePath}/case-study/product.html?p=strip-tape`;
+const stripTapeModel = `${basePath}/case-study/model/product-36-strip-tape.glb`;
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'childBottle' | 'waterTub' | 'toiletSeat' | 'nonWovenBag' | 'courierBag' | 'stripTape';
+const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'aralditeContainer', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer', 'lunchBox', 'dairySweetContainer', 'dairyRoundContainer', 'rectangleContainer', 'hook20mm', 'roundPipe', 'applianceTray', 'motorFanBlade', 'cupContainer', 'toothBrush', 'petrolPipe', 'proteinContainer', 'rectangleBox', 'smallRoundBottle', 'saltBottle', 'lightWeightContainer', 'foodTrayDish', 'lightWeightDish', 'dermicoolPowderBottle', 'wovenThread', 'childBottle', 'waterTub', 'toiletSeat', 'nonWovenBag', 'courierBag', 'stripTape']);
 
 // Pending products — same card as live ones; 3D model + spec details land later.
 const pendingProducts: { idx: string; slug: string; name: string; tag: string }[] = [];
@@ -287,6 +289,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 35', green: true },
+  ],
+  stripTape: [
+    { value: '36', label: 'Strip Tape' },
+    { value: '3D', label: 'Interactive Model' },
+    { value: 'Pending', label: 'Verified Specs' },
+    { value: 'Live', label: 'Product 36', green: true },
   ],
   wovenThread: [
     { value: '30', label: 'Woven Thread' },
@@ -1352,6 +1360,20 @@ export default function CaseStudyFeature() {
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Courier Bag</div><div className="csp-ptag">Logistics Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
+      {/* 36 Strip Tape - model live, verified composition pending */}
+      <a className="csp-pcard featured live" href={stripTapeHref} data-product="stripTape">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">36</span>
+          {(activeModels.has('stripTape')) ? (
+            // @ts-ignore custom element
+            <model-viewer data-model-src={stripTapeModel} alt="Strip Tape industrial-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 68deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          ) : (
+            <div className="csp-soon-placeholder" aria-hidden="true">ST</div>
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Strip Tape</div><div className="csp-ptag">Industrial Packaging - Interactive 3D Model</div><div className="csp-pbar"><span style={{flex:100,height:'100%',background:'var(--cs-green)',display:'block'}} /></div><div className="csp-pbarlabels"><span className="csp-pdot pp" /><span className="csp-pblabel">Material spec pending</span></div></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {pendingProducts.map(p => (
