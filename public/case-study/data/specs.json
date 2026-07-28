@@ -18,7 +18,8 @@
     "hand-wash-photo-reference": "Supplied hand wash bottle photos: white and green faceted pump bottles, duo front views and facet close-ups (IMG_2595/2596/2800/2801)",
     "consile-pipe-photo-reference": "Supplied concealed pipe photos: two angles of the same black rigid conduit pipe segment showing the blue stripe and embossed '0090 M' end marking",
     "soap-stand-photo-reference": "Supplied soap stand photos: closed front view, knit-embossed lid top view with bow, and open view showing the slotted drain insert and '15% Limex' handwritten on the lid interior (IMG_2604/2605/2606)",
-    "oil-bottle-photo-reference": "Supplied oil can / lubricant jug photos and dimensions card: wide rounded-rectangle body, offset fluted cap, moulded handle, side grip ribs, and measured 145 mm width / 96 mm depth / 208 mm height references"
+    "oil-bottle-photo-reference": "Supplied oil can / lubricant jug photos and dimensions card: wide rounded-rectangle body, offset fluted cap, moulded handle, side grip ribs, and measured 145 mm width / 96 mm depth / 208 mm height references",
+    "wd-owner-2026-07-28": "White Dot owner-supplied product data (2026-07-28): grade PE26-F51, 30% LIMEX + 70% PP"
   },
   "products": {
     "bobbin": {
@@ -2924,39 +2925,70 @@
     },
     "stripTape": {
       "id": "stripTape",
-      "referenceGrade": "Per lot TDS",
-      "mixRatio": "",
-      "composition": [],
+      "referenceGrade": "PE26-F51",
+      "mixRatio": "30% LIMEX PE26-F51 + 70% PP",
+      "composition": [
+        {
+          "name": "LIMEX PE26-F51",
+          "pct": 30,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-owner-2026-07-28"
+        },
+        {
+          "name": "PP",
+          "pct": 70,
+          "color": "#c4c7c0",
+          "verified": true,
+          "source": "wd-owner-2026-07-28"
+        }
+      ],
       "specs": [
         {
           "label": "Material Base",
-          "value": "Per lot TDS",
-          "verified": false,
-          "source": "pending",
-          "note": "Composition not yet confirmed for this product."
+          "value": "LIMEX PE26-F51 + PP",
+          "verified": true,
+          "source": "wd-owner-2026-07-28"
         },
         {
           "label": "Mixing Ratio",
-          "value": "Per lot TDS",
-          "verified": false,
-          "source": "pending"
+          "value": "30% LIMEX + 70% PP",
+          "verified": true,
+          "source": "wd-owner-2026-07-28"
         },
         {
           "label": "LIMEX Grade",
-          "value": "Per lot TDS",
-          "verified": false,
-          "source": "pending"
+          "value": "PE26-F51",
+          "verified": true,
+          "source": "wd-owner-2026-07-28"
         }
       ],
-      "tagline": "A reinforced industrial strip / packing tape roll on a laminated kraft core.",
-      "description": "A reinforced industrial strip / packing tape roll on a laminated kraft core. Material composition pending verification.",
+      "tagline": "A reinforced industrial strip / packing tape roll on a laminated kraft core, made from a 30% LIMEX PE26-F51 + 70% PP blend.",
+      "description": "A reinforced industrial strip / packing tape roll on a laminated kraft core, made from a 30% LIMEX PE26-F51 + 70% PP blend.",
       "index": "36",
       "name": "Strip Tape",
       "category": "Industrial Packaging",
       "application": "Industrial Strip / Packing Tape",
       "moulding": "Extrusion / Film Lamination",
       "status": "live",
-      "highlights": [],
+      "highlights": [
+        {
+          "num": "30%",
+          "label": "LIMEX Ratio",
+          "verified": true
+        },
+        {
+          "num": "",
+          "label": "Limestone in Part",
+          "verified": false
+        },
+        {
+          "num": "",
+          "label": "PE GHG",
+          "unit": "kg-CO2e/kg",
+          "verified": false
+        }
+      ],
       "co2": {
         "value": "",
         "basis": "",
