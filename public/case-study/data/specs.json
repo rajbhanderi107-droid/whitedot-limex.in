@@ -2925,7 +2925,7 @@
     "stripTape": {
       "id": "stripTape",
       "referenceGrade": "Per lot TDS",
-      "mixRatio": "Per lot TDS",
+      "mixRatio": "",
       "composition": [],
       "specs": [
         {
@@ -2956,24 +2956,7 @@
       "application": "Industrial Strip / Packing Tape",
       "moulding": "Extrusion / Film Lamination",
       "status": "live",
-      "highlights": [
-        {
-          "num": "",
-          "label": "LIMEX Ratio",
-          "verified": false
-        },
-        {
-          "num": "",
-          "label": "Limestone in Part",
-          "verified": false
-        },
-        {
-          "num": "",
-          "label": "PE GHG",
-          "unit": "kg-CO2e/kg",
-          "verified": false
-        }
-      ],
+      "highlights": [],
       "co2": {
         "value": "",
         "basis": "",
