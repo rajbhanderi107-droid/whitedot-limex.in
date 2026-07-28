@@ -5,7 +5,7 @@
   "name": "Circle Container",
   "category": "General Packaging",
   "status": "live",
-  "modelFile": "model/product-38-circle-container.glb",
+  "modelFile": "model/product-38-circle-container.glb?v=white-20260728",
   "htmlPage": "product.html?p=circle-container  (generic template, no dedicated file)",
   "composition": [],
   "specs": [
