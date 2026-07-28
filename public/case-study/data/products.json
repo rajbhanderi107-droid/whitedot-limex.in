@@ -44,6 +44,7 @@
     { "id": "toiletSeat",         "index": "33", "slug": "toilet-seat",          "name": "Toilet Seat",                     "category": "Sanitaryware",                   "status": "live", "modelFile": "model/product-33-toilet-seat.glb", "photos": [] },
     { "id": "nonWovenBag",        "index": "34", "slug": "non-woven-bag",        "name": "Non Woven Bag",                   "category": "Packaging Textile",              "status": "live", "modelFile": "model/product-34-nonwoven-bag.glb", "photos": [] },
     { "id": "courierBag",         "index": "35", "slug": "courier-bag",          "name": "Courier Bag",                     "category": "Logistics Packaging",            "status": "live", "modelFile": "model/product-35-courier-bag.glb", "photos": [] },
-    { "id": "stripTape",          "index": "36", "slug": "strip-tape",           "name": "Strip Tape",                      "category": "Industrial Packaging",           "status": "live", "modelFile": "model/product-36-strip-tape.glb", "photos": [] }
+    { "id": "stripTape",          "index": "36", "slug": "strip-tape",           "name": "Strip Tape",                      "category": "Industrial Packaging",           "status": "live", "modelFile": "model/product-36-strip-tape.glb", "photos": [] },
+    { "id": "darkTalpatri",      "index": "37", "slug": "dark-plastic-talpatri", "name": "Dark Plastic Talpatri",           "category": "Industrial Sheeting",            "status": "live", "modelFile": "model/product-37-dark-plastic-talpatri.glb", "photos": [] }
   ]
 }

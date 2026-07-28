@@ -3051,6 +3051,135 @@
         "basis": "",
         "verified": false
       }
+    },
+    "darkTalpatri": {
+      "id": "darkTalpatri",
+      "referenceGrade": "PE26-F51",
+      "mixRatio": "60% LIMEX PE26-F51 + 40% balance",
+      "composition": [
+        {
+          "name": "LIMEX PE26-F51",
+          "pct": 60,
+          "color": "#4f9a35",
+          "verified": true,
+          "source": "wd-owner-2026-07-28"
+        },
+        {
+          "name": "Balance Polymer",
+          "pct": 40,
+          "color": "#c4c7c0",
+          "verified": false,
+          "source": "wd-owner-2026-07-28",
+          "note": "Balance resin not specified by the owner; confirm against the production recipe."
+        }
+      ],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "LIMEX PE26-F51 + balance polymer",
+          "verified": true,
+          "source": "wd-owner-2026-07-28"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "PE26-F51",
+          "verified": true,
+          "source": "wd-owner-2026-07-28"
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "60% LIMEX + 40% balance",
+          "verified": true,
+          "source": "wd-owner-2026-07-28"
+        },
+        {
+          "label": "Application",
+          "value": "Tarpaulin / Protective Covering Sheet",
+          "verified": true,
+          "source": "wd-owner-2026-07-28"
+        },
+        {
+          "label": "Process",
+          "value": "Sheet Extrusion",
+          "verified": false,
+          "source": "wd-owner-2026-07-28",
+          "note": "Inferred from the product form. Confirm against the production route."
+        },
+        {
+          "label": "Balance Polymer",
+          "value": "Per lot TDS",
+          "verified": false,
+          "source": "wd-owner-2026-07-28",
+          "note": "Not specified by the owner."
+        },
+        {
+          "label": "PE26-F51 CaCO3 Content",
+          "value": "26",
+          "unit": "%",
+          "verified": false,
+          "source": "limex-grade-nomenclature",
+          "note": "Read from the grade nomenclature, not from a published PE26-F51 datasheet."
+        },
+        {
+          "label": "Effective Limestone (CaCO3)",
+          "value": "~16",
+          "unit": "% by mass",
+          "verified": false,
+          "source": "limex-grade-nomenclature",
+          "note": "60% LIMEX compound x 26% CaCO3 in PE26-F51. Derived, not measured."
+        },
+        {
+          "label": "PE26-F51 Density",
+          "value": "Per lot TDS",
+          "verified": false,
+          "source": "wd-owner-2026-07-28"
+        },
+        {
+          "label": "PE26-F51 MFR",
+          "value": "Per lot TDS",
+          "verified": false,
+          "source": "wd-owner-2026-07-28"
+        },
+        {
+          "label": "PE26-F51 GHG",
+          "value": "Per lot TDS",
+          "verified": false,
+          "source": "wd-owner-2026-07-28"
+        }
+      ],
+      "tagline": "A dark glossy plastic talpatri (tarpaulin) sheet, made from a 60% LIMEX PE26-F51 blend.",
+      "description": "A dark glossy plastic talpatri (tarpaulin) sheet, made from a 60% LIMEX PE26-F51 blend. Grade-level physical properties for PE26-F51 are not published and remain subject to the supplier lot TDS.",
+      "index": "37",
+      "name": "Dark Plastic Talpatri",
+      "category": "Industrial Sheeting",
+      "application": "Tarpaulin / Protective Covering Sheet",
+      "moulding": "Sheet Extrusion",
+      "status": "live",
+      "highlights": [
+        {
+          "num": "60%",
+          "label": "LIMEX PE26-F51",
+          "verified": true,
+          "source": "wd-owner-2026-07-28"
+        },
+        {
+          "num": "~16%",
+          "label": "Limestone in Part",
+          "verified": false,
+          "source": "limex-grade-nomenclature"
+        },
+        {
+          "num": "26%",
+          "label": "CaCO3 in Grade",
+          "verified": false,
+          "source": "limex-grade-nomenclature"
+        }
+      ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
     }
   }
 }
