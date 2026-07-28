@@ -1,0 +1,144 @@
+name: nginx no-cache headers for unhashed entry points
+
+# Deploys were landing on the VPS correctly but visitors kept seeing the
+# previous build: index.html, the /case-study/*.html pages and the
+# /case-study/data/*.json product data all fall through to the SPA fallback
+# and are served with NO Cache-Control at all. With no directive a browser
+# applies *heuristic* freshness (roughly 10% of the Last-Modified age) and
+# will reuse a stale index.html without revalidating - and a stale index.html
+# points at the previous build's hashed asset chunks, so the whole app is old.
+#
+# Hashed /assets/* files keep their 1y immutable cache; only the unhashed
+# entry points get `no-cache` (revalidate every time, cheap 304 via ETag).
+#
+# mode=inspect prints the live config and changes nothing.
+# mode=apply is idempotent: backup, patch, `nginx -t`, restore on any failure.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'inspect (read-only) or apply'
+        required: true
+        default: inspect
+        type: choice
+        options: [inspect, apply]
+
+concurrency:
+  group: vps-nginx-html-nocache
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect / patch nginx config
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: root
+          key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 5m
+          envs: MODE
+          script: |
+            set -e
+            CONF=/etc/nginx/sites-available/whitedotindia.in
+            MARKER='wd-html-nocache'
+
+            echo "=== current config ==="
+            cat -n "$CONF"
+
+            if [ "$MODE" != "apply" ]; then
+              echo "inspect mode - no changes made."
+              exit 0
+            fi
+
+            if grep -q "$MARKER" "$CONF"; then
+              echo "Already installed - nothing to do."
+              grep -n -A14 "$MARKER" "$CONF"
+              exit 0
+            fi
+
+            BACKUP="$CONF.bak.$(date +%s)"
+            cp "$CONF" "$BACKUP"
+            echo "Backed up to $BACKUP"
+
+            python3 - "$CONF" <<'PY'
+            import io, sys
+            conf = sys.argv[1]
+            with io.open(conf, encoding="utf-8") as fh:
+                src = fh.read()
+            anchor = "    # Serve static assets with long cache"
+            assert src.count(anchor) == 1, "expected exactly one static-asset location"
+            # Line list, not a triple-quoted literal: this is a YAML block
+            # scalar, so every source line must stay indented past the margin.
+            # ASCII only - it is piped over SSH into a possibly non-UTF-8 shell.
+            block = "\n".join([
+                "    # wd-html-nocache - unhashed entry points. index.html names the",
+                "    # hashed asset chunks, so a browser that heuristically caches it",
+                "    # keeps loading the PREVIOUS build. no-cache still allows a 304,",
+                "    # it just forbids reuse without revalidating.",
+                "    location = / {",
+                '        add_header Cache-Control "no-cache";',
+                "        try_files /index.html =404;",
+                "    }",
+                "",
+                "    location ~* \\.html$ {",
+                '        add_header Cache-Control "no-cache";',
+                "        try_files $uri $uri/ /index.html;",
+                "    }",
+                "",
+                "    # Case-study product data is read at runtime by the microsite and",
+                "    # by the React grid; it changes whenever a product is added.",
+                "    location ~* ^/case-study/data/.*\\.json$ {",
+                '        add_header Cache-Control "no-cache";',
+                "        try_files $uri =404;",
+                "    }",
+                "",
+                "",
+            ])
+            with io.open(conf, "w", encoding="utf-8", newline="\n") as fh:
+                fh.write(src.replace(anchor, block + anchor, 1))
+            print("inserted")
+            PY
+
+            echo "=== resulting block ==="
+            grep -n -B2 -A22 "$MARKER" "$CONF"
+
+            if ! nginx -t; then
+              echo "nginx -t FAILED - restoring backup"
+              cp "$BACKUP" "$CONF"
+              nginx -t
+              exit 1
+            fi
+
+            systemctl reload nginx
+
+            echo "=== local probes ==="
+            for U in / /case-study/index.html /case-study/product.html /case-study/data/products.json; do
+              echo "--- $U"
+              curl -sS -o /dev/null -D - -H 'Host: whitedotindia.in' "http://127.0.0.1$U" \
+                | grep -iE '^HTTP|cache-control|content-type'
+            done
+
+            echo "=== hashed assets must STILL be immutable 1y ==="
+            A=$(ls /var/www/whitedot-frontend/assets/index-*.js | head -1)
+            curl -sS -o /dev/null -D - -H 'Host: whitedotindia.in' \
+              "http://127.0.0.1/assets/$(basename "$A")" \
+              | grep -iE '^HTTP|cache-control'
+
+            echo "=== SPA deep route must still serve the app ==="
+            curl -sS -o /dev/null -w 'deep route: %{http_code}\n' -H 'Host: whitedotindia.in' http://127.0.0.1/some/spa/route
+            curl -sS -o /dev/null -w 'missing glb: %{http_code}\n' -H 'Host: whitedotindia.in' http://127.0.0.1/case-study/model/nope.glb
+        env:
+          MODE: ${{ inputs.mode }}
+
+      - name: Verify through Cloudflare
+        if: ${{ inputs.mode == 'apply' }}
+        run: |
+          sleep 5
+          for U in / /case-study/index.html /case-study/data/products.json; do
+            echo "--- $U"
+            curl -sS -o /dev/null -D - "https://whitedotindia.in$U" \
+              | grep -iE '^HTTP|cache-control|cf-cache-status'
+          done
