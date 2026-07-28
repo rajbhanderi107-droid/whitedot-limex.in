@@ -21,7 +21,8 @@
     "oil-bottle-photo-reference": "Supplied oil can / lubricant jug photos and dimensions card: wide rounded-rectangle body, offset fluted cap, moulded handle, side grip ribs, and measured 145 mm width / 96 mm depth / 208 mm height references",
     "wd-owner-2026-07-28": "White Dot owner-supplied product data (2026-07-28): grade PE26-F51, 30% LIMEX + 70% PP",
     "limex-grade-nomenclature": "LIMEX grade nomenclature - the numeric prefix is the ash / CaCO3 content, confirmed across published grades PE78-02M (78%), PP80-24L (80%) and PP60-19M (60%) on Green Sourcing Hub. PE26-F51 has no published datasheet; 26% is read from the grade name, not cited.",
-    "strip-tape-model-reference": "Strip Tape 3D model reference: 138 mm outer diameter, 76.5 mm core, 20 mm web"
+    "strip-tape-model-reference": "Strip Tape 3D model reference: 138 mm outer diameter, 76.5 mm core, 20 mm web",
+    "circle-container-model-reference": "Circle Container 3D model reference: photo-matched 3 L bucket with bail handle"
   },
   "products": {
     "bobbin": {
@@ -3175,6 +3176,53 @@
           "source": "limex-grade-nomenclature"
         }
       ],
+      "co2": {
+        "value": "",
+        "basis": "",
+        "verified": false
+      }
+    },
+    "circleContainer": {
+      "id": "circleContainer",
+      "referenceGrade": "Per lot TDS",
+      "mixRatio": "",
+      "composition": [],
+      "specs": [
+        {
+          "label": "Material Base",
+          "value": "Per lot TDS",
+          "verified": false,
+          "source": "pending",
+          "note": "Composition not yet confirmed for this product."
+        },
+        {
+          "label": "Mixing Ratio",
+          "value": "Per lot TDS",
+          "verified": false,
+          "source": "pending"
+        },
+        {
+          "label": "LIMEX Grade",
+          "value": "Per lot TDS",
+          "verified": false,
+          "source": "pending"
+        },
+        {
+          "label": "Application",
+          "value": "3 L Bucket / Circular Container",
+          "verified": true,
+          "source": "circle-container-model-reference"
+        }
+      ],
+      "tagline": "A 3 litre circular bucket-style container with a wire bail handle.",
+      "description": "A 3 litre circular bucket-style container with a wire bail handle. Material composition pending verification.",
+      "index": "38",
+      "name": "Circle Container",
+      "category": "General Packaging",
+      "application": "3 L Bucket / Circular Container",
+      "moulding": "Injection Moulding",
+      "status": "live",
+      "highlights": [],
       "co2": {
         "value": "",
         "basis": "",

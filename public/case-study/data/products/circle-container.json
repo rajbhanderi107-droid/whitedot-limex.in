@@ -1,0 +1,40 @@
+{
+  "id": "circleContainer",
+  "index": "38",
+  "slug": "circle-container",
+  "name": "Circle Container",
+  "category": "General Packaging",
+  "status": "live",
+  "modelFile": "model/product-38-circle-container.glb",
+  "htmlPage": "product.html?p=circle-container  (generic template, no dedicated file)",
+  "composition": [],
+  "specs": [
+    {
+      "label": "Material Base",
+      "value": "Per lot TDS",
+      "verified": false,
+      "source": "pending",
+      "note": "Composition not yet confirmed for this product."
+    },
+    {
+      "label": "Mixing Ratio",
+      "value": "Per lot TDS",
+      "verified": false,
+      "source": "pending"
+    },
+    {
+      "label": "LIMEX Grade",
+      "value": "Per lot TDS",
+      "verified": false,
+      "source": "pending"
+    },
+    {
+      "label": "Application",
+      "value": "3 L Bucket / Circular Container",
+      "verified": true,
+      "source": "circle-container-model-reference"
+    }
+  ],
+  "referenceGrade": "Per lot TDS",
+  "mixRatio": ""
+}
