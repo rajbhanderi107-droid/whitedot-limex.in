@@ -37,10 +37,12 @@
   function markVerified(p) {
     const host = document.querySelector("[data-tds-verified-slot]");
     if (host) {
-      const verifiedCount = p.specs.filter((s) => s.verified).length;
+      const specs = p.specs || [];
+      if (!specs.length) return;
+      const verifiedCount = specs.filter((s) => s.verified).length;
       host.innerHTML =
         '<span class="tds-verified-dot"></span>' +
-        verifiedCount + " of " + p.specs.length +
+        verifiedCount + " of " + specs.length +
         " fields verified from photo references or published supplier data";
     }
   }
@@ -117,13 +119,13 @@
     y += 22;
     doc.setFontSize(9.5);
     doc.setTextColor(...MUTE);
-    const desc = doc.splitTextToSize(p.description, W - M * 2);
+    const desc = doc.splitTextToSize(p.description || p.tagline || "", W - M * 2);
     doc.text(desc, M, y);
     y += desc.length * 12.5 + 14;
 
     // Composition section
     y = sectionTitle(doc, "MATERIAL COMPOSITION", M, y, W);
-    p.composition.forEach((c) => {
+    (p.composition || []).forEach((c) => {
       doc.setFont("helvetica", "bold");
       doc.setFontSize(10);
       doc.setTextColor(...INK);
@@ -158,7 +160,7 @@
     // Specs table
     y = sectionTitle(doc, "SPECIFICATIONS", M, y, W);
     doc.setFontSize(9.5);
-    p.specs.forEach((s) => {
+    (p.specs || []).forEach((s) => {
       if (y > 740) { doc.addPage(); y = 60; }
       doc.setFont("helvetica", "normal");
       doc.setTextColor(...FAINT);
@@ -177,8 +179,9 @@
       y += 20;
     });
 
-    // CO2 callout
-    if (p.co2) {
+    // CO2 callout — skipped when the figure is unknown, otherwise a
+    // spec-pending product prints an empty highlight box.
+    if (p.co2 && p.co2.value) {
       y += 8;
       if (y > 700) { doc.addPage(); y = 60; }
       doc.setFillColor(248, 243, 234);
@@ -201,7 +204,7 @@
     doc.setFontSize(7.5);
     doc.setTextColor(...FAINT);
     const usedKeys = new Set();
-    p.specs.concat(p.composition, p.highlights || [], [p.co2 || {}]).forEach((x) => x && x.source && usedKeys.add(x.source));
+    (p.specs || []).concat(p.composition || [], p.highlights || [], [p.co2 || {}]).forEach((x) => x && x.source && usedKeys.add(x.source));
     const srcLines = [];
     usedKeys.forEach((k) => { if (db.sources[k]) srcLines.push("• " + db.sources[k]); });
     srcLines.push("• Prepared " + (db._meta.lastResearched || "") + ". Photo-reference fields are derived from supplied product images. User-supplied formulation fields are marked unverified until confirmed against final supplier lot TDS.");

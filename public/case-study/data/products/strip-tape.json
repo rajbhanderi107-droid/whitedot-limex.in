@@ -31,15 +31,68 @@
       "source": "wd-owner-2026-07-28"
     },
     {
+      "label": "LIMEX Grade",
+      "value": "PE26-F51",
+      "verified": true,
+      "source": "wd-owner-2026-07-28"
+    },
+    {
       "label": "Mixing Ratio",
       "value": "30% LIMEX + 70% PP",
       "verified": true,
       "source": "wd-owner-2026-07-28"
     },
     {
-      "label": "LIMEX Grade",
-      "value": "PE26-F51",
+      "label": "Application",
+      "value": "Industrial Strip / Packing Tape",
       "verified": true,
+      "source": "wd-owner-2026-07-28"
+    },
+    {
+      "label": "Process",
+      "value": "Film Extrusion",
+      "verified": false,
+      "source": "wd-owner-2026-07-28",
+      "note": "Inferred from the film-grade pellet and the product form. Confirm against the production route."
+    },
+    {
+      "label": "Roll Geometry",
+      "value": "138 mm OD x 76.5 mm core x 20 mm web",
+      "verified": true,
+      "source": "strip-tape-model-reference"
+    },
+    {
+      "label": "PE26-F51 CaCO3 Content",
+      "value": "26",
+      "unit": "%",
+      "verified": false,
+      "source": "limex-grade-nomenclature",
+      "note": "Read from the grade nomenclature, not from a published PE26-F51 datasheet."
+    },
+    {
+      "label": "Effective Limestone (CaCO3)",
+      "value": "~8",
+      "unit": "% by mass",
+      "verified": false,
+      "source": "limex-grade-nomenclature",
+      "note": "30% LIMEX compound x 26% CaCO3 in PE26-F51. Derived, not measured."
+    },
+    {
+      "label": "PE26-F51 Density",
+      "value": "Per lot TDS",
+      "verified": false,
+      "source": "wd-owner-2026-07-28"
+    },
+    {
+      "label": "PE26-F51 MFR",
+      "value": "Per lot TDS",
+      "verified": false,
+      "source": "wd-owner-2026-07-28"
+    },
+    {
+      "label": "PE26-F51 GHG",
+      "value": "Per lot TDS",
+      "verified": false,
       "source": "wd-owner-2026-07-28"
     }
   ],

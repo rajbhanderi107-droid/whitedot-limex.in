@@ -489,6 +489,20 @@
     .spec-val { font-size: 12px; font-weight: 700; color: var(--wd-text); }
     .spec-val.highlight { color: var(--orange); }
 
+    /* TDS engine slots — the engine fills these; they stay empty if it never loads. */
+    .tds-verified { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 9px; line-height: 1.5; color: var(--wd-faint); }
+    .tds-verified:empty { display: none; }
+    .tds-verified-dot { flex: none; width: 5px; height: 5px; border-radius: 50%; background: var(--orange); }
+    .tds-download {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+      margin-top: 10px; padding: 11px 16px; border-radius: 100px; text-decoration: none;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--orange); background: var(--orange-soft); border: 1px solid rgba(79, 154, 53, 0.28);
+      transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+    }
+    .tds-download:hover { background: rgba(79, 154, 53, 0.14); border-color: rgba(79, 154, 53, 0.45); }
+    .tds-download:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+
     .glass-cta-stacked { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
     .cta-btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 13px 20px;
@@ -733,6 +747,10 @@
             <span class="chev">⌄</span>
           </summary>
           <div class="spec-grid" id="specGrid"></div>
+          <div class="tds-verified" data-tds-verified-slot></div>
+          <a class="tds-download" href="#" data-download-tds>
+            <span>Download Technical Data Sheet (PDF)</span>
+          </a>
         </details>
 
         <div class="glass-cta-stacked">
@@ -1071,6 +1089,17 @@
       return `<div class="spec-item"><span class="spec-label">${s.label}</span><span class="${cls}">${val}</span></div>`;
     }).join('');
     document.getElementById('materialReference').style.display = '';
+
+    // TDS engine reads document.body.dataset.product at load time, so it can only
+    // be injected AFTER the render above has set it — a plain <script> tag in the
+    // head would always fall back to the "bobbin" default.
+    if (!document.querySelector('script[data-tds-engine]')) {
+      const tds = document.createElement('script');
+      tds.src = './js/tds-engine.js';
+      tds.defer = true;
+      tds.dataset.tdsEngine = '1';
+      document.body.appendChild(tds);
+    }
   }
 
   // ── Real Product Photography gallery (branches on photos.length, like the 3D stage) ──
