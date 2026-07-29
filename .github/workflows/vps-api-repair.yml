@@ -16,7 +16,7 @@ jobs:
   api:
     runs-on: ubuntu-latest
     steps:
-      - name: Inspect VPS API stack
+      - name: Inspect / repair VPS API stack
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -25,14 +25,10 @@ jobs:
           command_timeout: 10m
           script: |
             set -e
-            echo "MODE=${{ github.event.inputs.mode }}"
-
-            echo "=== nginx sites ==="
-            ls -la /etc/nginx/sites-enabled/ /etc/nginx/sites-available/ 2>/dev/null || true
-            ls -la /etc/nginx/conf.d/ 2>/dev/null || true
+            MODE="${{ github.event.inputs.mode }}"
+            echo "MODE=$MODE"
 
             echo "=== configs mentioning api.whitedotindia.in ==="
-            grep -rl "api.whitedotindia.in" /etc/nginx/ 2>/dev/null || echo "none found"
             for f in $(grep -rl "api.whitedotindia.in" /etc/nginx/ 2>/dev/null); do
               echo "----- $f -----"
               cat "$f"
@@ -40,15 +36,75 @@ jobs:
 
             echo "=== docker containers ==="
             docker ps -a
-            echo "=== compose dir ==="
-            ls -la /opt/whitedot-backend 2>/dev/null || true
-            cat /opt/whitedot-backend/docker-compose.yml 2>/dev/null || true
 
             echo "=== local API probe ==="
             curl -fsS -m 8 http://127.0.0.1:4000/api/health || echo "PORT 4000 PROBE FAILED"
             echo ""
-            echo "=== probe via nginx :80 with Host header ==="
-            curl -sS -m 8 -i -H 'Host: api.whitedotindia.in' http://127.0.0.1/api/health | head -20 || true
 
-            echo "=== recent api container logs ==="
-            cd /opt/whitedot-backend 2>/dev/null && docker compose logs --tail 40 api 2>/dev/null || true
+            if [ "$MODE" = "repair" ]; then
+              echo "=== repair: make nginx :80 proxy the API instead of redirecting ==="
+              APICONF=$(grep -rl "api.whitedotindia.in" /etc/nginx/sites-available/ 2>/dev/null | head -1)
+              if [ -z "$APICONF" ]; then
+                APICONF=$(grep -rl "api.whitedotindia.in" /etc/nginx/conf.d/ 2>/dev/null | head -1)
+              fi
+              echo "config file: $APICONF"
+              cp "$APICONF" "$APICONF.bak.$(date +%s)"
+              python3 - "$APICONF" <<'PYEOF'
+            import re, sys
+            path = sys.argv[1]
+            src = open(path).read()
+            proxy80 = """server {
+                listen 80;
+                listen [::]:80;
+                server_name api.whitedotindia.in;
+
+                location / {
+                    proxy_pass http://127.0.0.1:4000;
+                    proxy_http_version 1.1;
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_set_header X-Forwarded-Proto $scheme;
+                    proxy_set_header Upgrade $http_upgrade;
+                    proxy_set_header Connection "upgrade";
+                }
+            }
+            """
+            # Replace any :80 server block for the api host that 301-redirects
+            blocks = []
+            depth = 0
+            start = None
+            for i, ch in enumerate(src):
+                if src.startswith("server", i) and depth == 0 and (i == 0 or src[i-1] in "\n \t"):
+                    start = i
+                if ch == "{":
+                    depth += 1
+                elif ch == "}":
+                    depth -= 1
+                    if depth == 0 and start is not None:
+                        blocks.append((start, i + 1))
+                        start = None
+            out = src
+            for s, e in reversed(blocks):
+                b = src[s:e]
+                if "api.whitedotindia.in" in b and re.search(r"listen\s+(\[::\]:)?80", b) and "return 301" in b:
+                    out = out[:s] + proxy80 + out[e:]
+            if out == src:
+                print("NO REDIRECTING :80 BLOCK FOUND — no change made")
+            else:
+                open(path, "w").write(out)
+                print("patched :80 block to proxy")
+            PYEOF
+              nginx -t && systemctl reload nginx
+
+              echo "=== lock services to survive reboots/crashes ==="
+              systemctl enable nginx docker >/dev/null 2>&1 || true
+              cd /opt/whitedot-backend
+              docker compose up -d
+              for c in $(docker compose ps -q); do
+                docker update --restart unless-stopped "$c"
+              done
+            fi
+
+            echo "=== probe via nginx :80 with Host header ==="
+            curl -sS -m 8 -i -H 'Host: api.whitedotindia.in' http://127.0.0.1/api/health | head -12 || true
