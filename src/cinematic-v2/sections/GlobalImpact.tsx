@@ -23,10 +23,10 @@ export default function GlobalImpact() {
       <div className="v2gi-inner" ref={ref}>
         <p className="v2-eyebrow v2-reveal">Global Material Movement</p>
         <h2 className="v2gi-title v2-reveal">
-          <AnimatedText text="From Japanese limestone innovation to western India." />
+          <AnimatedText text="From limestone innovation to western India." />
         </h2>
         <p className="v2gi-copy v2-reveal">
-          LIMEX travels from TBM in Japan, through Seven Dot, to White Dot
+          LIMEX travels from TBM, through Seven Dot, to White Dot
           — the authorized marketing and sales partner in western India.
           One material story, carried across a single supply line.
         </p>

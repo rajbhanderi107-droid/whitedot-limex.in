@@ -169,7 +169,7 @@ This is the brand statement. Permanent, confident, unhurried.
 ### VISUAL STATE
 - Stone still visible right — background, not competing
 - Left column: headline text in large serif, light weight
-- Eyebrow above: `WhiteDot LLP — Authorized Marketing Partner` in mono caps
+- Eyebrow above: `WhiteDot — Authorized Marketing Partner` in mono caps
 - H1: `From / Stone / to Sustainable / Possibility`
 - `Stone` word: `class="v2h-headline-accent"` — color: var(--v2-accent), font-style: italic
 - Sub paragraph below headline
@@ -190,7 +190,7 @@ T = 420ms     CTA buttons reveal begins (delay: 220ms after headline).
 ### SCRIPT (EXACT)
 ```
 Eyebrow:
-  WhiteDot LLP — Authorized Marketing Partner
+  WhiteDot — Authorized Marketing Partner
 
 H1:
   From
@@ -967,7 +967,7 @@ Point 3:
 Point 4:
   Label: TBM Japan origin
   Body: LIMEX is developed and manufactured by TBM Co., Ltd. (Japan) —
-        the originating technology company. WhiteDot LLP is the
+        the originating technology company. WhiteDot is the
         authorized marketing partner for western India.
 
 Footer:
@@ -1044,7 +1044,7 @@ H2:
   ("LIMEX" in accent italic)
 
 Lead:
-  WhiteDot LLP serves Gujarat, Rajasthan, Daman, Diu, and Silvassa.
+  WhiteDot serves Gujarat, Rajasthan, Daman, Diu, and Silvassa.
   Share your requirements and we will follow up with technical
   specifications and commercial terms within two business days.
 
@@ -1109,7 +1109,7 @@ This is not a footer. It is a signature.
   - Center: nav links (6 links)
   - Right: legal paragraph + copyright
 - White dot (`.v2ft-dot`): small circle, accent or white fill
-- Copyright: `© {year} WhiteDot LLP. All rights reserved.`
+- Copyright: `© {year} WhiteDot. All rights reserved.`
 
 ### ANIMATION WORKFLOW
 ```
@@ -1137,11 +1137,11 @@ Nav links:
 
 Legal paragraph:
   LIMEX is a registered trademark of TBM Co., Ltd. (Japan).
-  WhiteDot LLP is authorized to market LIMEX in Gujarat,
+  WhiteDot is authorized to market LIMEX in Gujarat,
   Rajasthan, Daman, Diu, and Silvassa.
 
 Copyright:
-  © {currentYear} WhiteDot LLP. All rights reserved.
+  © {currentYear} WhiteDot. All rights reserved.
 ```
 
 ### HIGGSFIELD PROMPT — STORYBOARD STILL 15

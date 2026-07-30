@@ -40,7 +40,7 @@
 
 # FRAME 01 — BOOT / BRAND DOT
 
-**V1 CONTENT (exact):** *(no copy — brand mark only)* `White Dot LLP`
+**V1 CONTENT (exact):** *(no copy — brand mark only)* `White Dot`
 
 **GREEN-THEME ANIMATION**
 - Sage canvas `#1a2016`. Single white grain dot fades in centre (opacity 0→0.9, 400ms).
@@ -62,7 +62,7 @@ Model: Nano Banana 2 (img) · Aspect 16:9
 **V1 CONTENT (exact, verbatim):**
 - Eyebrow: `Next-Gen Limestone Technology`
 - Headline (3-line cadence): `Sustainable` / `Material` / `to Replace Plastic`
-- Sub: `Invented by TBM in Japan, LIMEX is a limestone-based material that can reduce petroleum-derived plastic while fitting practical industrial trials. Seven Dot distributes it as the authorized dealer, and White Dot LLP guides applications, samples, and commercial adoption.`
+- Sub: `Invented by TBM in Japan, LIMEX is a limestone-based material that can reduce petroleum-derived plastic while fitting practical industrial trials. Seven Dot distributes it as the authorized dealer, and White Dot guides applications, samples, and commercial adoption.`
 - Actions: `Explore LIMEX` (primary) · `Request Material Consultation` (ghost, WhatsApp)
 - Eco signals: `50%+ calcium carbonate, less plastic` · `Lower carbon footprint` · `Runs on existing production lines`
 - Proof panel kicker `Material brief`: `50%+` calcium carbonate content · `14d` trial sample target window · `4` authorized regions served
@@ -91,8 +91,8 @@ Model: Higgsfield video model · 16:9 · seamless loop
 **V1 CONTENT (exact):**
 - `01` **TBM Co., Ltd.** — `Japan · inventor & manufacturer` → link `supplies LIMEX`
 - `02` **Seven Dot** — `Authorized distributor` → link `marketed & sold by`
-- `03` **White Dot LLP** — `Marketing & sales · sister company`
-- aria: `Where LIMEX comes from: TBM manufactures it, Seven Dot distributes it, White Dot LLP markets and sells it.`
+- `03` **White Dot** — `Marketing & sales · sister company`
+- aria: `Where LIMEX comes from: TBM manufactures it, Seven Dot distributes it, White Dot markets and sells it.`
 
 **GREEN-THEME ANIMATION**
 - 3 nodes reveal staggered (0.16s, blur 6px→0, y18→0, scale .94→1).
@@ -289,7 +289,7 @@ Model: Higgsfield video model · 16:9 · **centerpiece — highest priority**
 **V1 CONTENT (exact):**
 - Kicker: `Global Material Movement`
 - H2: `From Japanese limestone innovation to western India.`
-- Copy: `LIMEX travels from TBM in Japan, through Seven Dot, to White Dot LLP — the authorized partner for Gujarat, Rajasthan, Diu, Daman, and Goa. One material story, carried across a single supply line.`
+- Copy: `LIMEX travels from TBM in Japan, through Seven Dot, to White Dot — the authorized partner for Gujarat, Rajasthan, Diu, Daman, and Goa. One material story, carried across a single supply line.`
 - CTA: `Start a Material Consultation`
 
 **GREEN-THEME ANIMATION ($9000)** — slowly breathing/rotating glowing Earth; SVG supply arcs draw in (stroke-dashoffset) Japan→western India; node dots pulse on arrival. Sage atmosphere halo.
@@ -301,12 +301,12 @@ Model: Higgsfield video model · 16:9 · **centerpiece — highest priority**
 # FRAME 14 — FOOTER  (`#footer`)
 
 **V1 CONTENT (exact):**
-- Brand: `White Dot LLP` — `Authorized LIMEX marketing & sales — the sustainable way to replace plastic.`
+- Brand: `White Dot` — `Authorized LIMEX marketing & sales — the sustainable way to replace plastic.`
 - Explore: `Material` · `Process` · `Applications` · `Consultation`
 - Contact: `WhatsApp` · phone · email
-- Supply chain: `TBM Co., Ltd. — Japan · inventor & manufacturer` · `Seven Dot — authorized distributor` · `White Dot LLP — marketing & sales`
+- Supply chain: `TBM Co., Ltd. — Japan · inventor & manufacturer` · `Seven Dot — authorized distributor` · `White Dot — marketing & sales`
 - Marks: TBM logo + LIMEX wordmark
-- Base: `© {year} White Dot LLP. All rights reserved.` · `Privacy Policy` · `Ads are created by the use of artificial intelligence.` · `LIMEX is a material developed by TBM Co., Ltd. (Japan).`
+- Base: `© {year} White Dot. All rights reserved.` · `Privacy Policy` · `Ads are created by the use of artificial intelligence.` · `LIMEX is a material developed by TBM Co., Ltd. (Japan).`
 
 **GREEN-THEME ANIMATION** — columns fade up; footer globe glow idles; brand dot bookend.
 
@@ -317,7 +317,7 @@ Model: Higgsfield video model · 16:9 · **centerpiece — highest priority**
 # FRAME 15 — NAV + CINEMATIC MENU  (persistent overlay)
 
 **V1 CONTENT (exact):**
-- Brand: `White Dot LLP`
+- Brand: `White Dot`
 - Nav links: `Material` · `Process` · `LIMEX` · `Compare` · `Applications` · `Consultation`
 - Hamburger → full-screen `CinematicMenu` overlay (golden particles)
 

@@ -1,11 +1,11 @@
-/* Supply chain flow — Japan → distributor → marketing → industry.
+/* Supply chain flow — inventor → distributor → marketing → industry.
    Replicates the cinematic .cine-flow component. */
 const SupplyFlow = () => {
   const nodes = [
-    { step: "Origin", title: "TBM Co.", role: "Japan — invents the material", material: false },
+    { step: "Origin", title: "TBM Co.", role: "invents the material", material: false },
     { step: "Material", title: "LIMEX", role: "Limestone-based replacement", material: true },
     { step: "Distribution", title: "Seven Dot", role: "Authorized distributor", material: false },
-    { step: "Sales", title: "White Dot LLP", role: "Marketing & sales, India", material: false },
+    { step: "Sales", title: "White Dot", role: "Marketing & sales, India", material: false },
   ];
   return (
     <div className="cine-flow" aria-label="LIMEX supply chain">

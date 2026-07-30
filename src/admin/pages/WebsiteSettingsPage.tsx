@@ -56,7 +56,7 @@ interface WebsiteSetting {
 // Canonical settings the portal should always expose, even if the backend DB
 // has no row yet. Keeps the Settings page complete after a fresh DB / migration.
 const DEFAULT_SETTINGS: Array<{ key: string; value: string; type: string; description: string }> = [
-  { key: "company_name", value: "White Dot LLP", type: "TEXT", description: "Company display name" },
+  { key: "company_name", value: "White Dot", type: "TEXT", description: "Company display name" },
   { key: "company_email", value: "office@whitedotindia.in", type: "EMAIL", description: "Primary contact email" },
   { key: "company_phone", value: "+918849728938", type: "TEXT", description: "Primary contact phone" },
   { key: "whatsapp_number", value: "918849728938", type: "TEXT", description: "WhatsApp number (digits only, with country code)" },

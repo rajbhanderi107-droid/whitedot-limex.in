@@ -2,7 +2,7 @@ import './SupplyFlow.css';
 import { useStaggerGroup } from '../motion';
 
 const CHAIN = [
-  { name: 'TBM Co., Ltd.', role: 'Japan · inventor & manufacturer',        icon: '⬡' },
+  { name: 'TBM Co., Ltd.', role: 'inventor & manufacturer',        icon: '⬡' },
   { name: 'Seven Dot',     role: 'Authorized distributor',                  icon: '⬡' },
   { name: 'White Dot',    role: 'Marketing & sales · sister company',      icon: '⬡' },
 ];

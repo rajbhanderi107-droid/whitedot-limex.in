@@ -1,4 +1,4 @@
-// White Dot LLP — Continuity Layer: offline detection hook.
+// White Dot — Continuity Layer: offline detection hook.
 // Combines the browser's online/offline events with a HEAD-request fallback
 // because navigator.onLine cannot be trusted alone on captive portals and
 // transparent proxies.

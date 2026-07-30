@@ -1,4 +1,4 @@
-// White Dot LLP — Continuity Layer SW registration.
+// White Dot — Continuity Layer SW registration.
 // Removable via `npm run remove:continuity:wd`.
 // Kill switch: set VITE_WD_CONTINUITY_ENABLED=false at build time.
 

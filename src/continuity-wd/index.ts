@@ -1,4 +1,4 @@
-// White Dot LLP — Continuity Layer module barrel.
+// White Dot — Continuity Layer module barrel.
 // Removable via `npm run remove:continuity:wd`.
 
 export { ContinuityShell } from "./ContinuityShell";

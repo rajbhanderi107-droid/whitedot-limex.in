@@ -17,10 +17,10 @@ const Hero = ({ onCTA }) => {
         </h1>
 
         <p className="cine-hero-sub reveal is-in">
-          Invented by TBM in Japan, LIMEX is a limestone-based material that
+          Invented by TBM, LIMEX is a limestone-based material that
           replaces plastic and lowers carbon — running on your existing
           machines. Seven Dot distributes it as the authorized dealer, and
-          White Dot LLP markets and sells it to industry.
+          White Dot markets and sells it to industry.
         </p>
 
         <window.SupplyFlow/>

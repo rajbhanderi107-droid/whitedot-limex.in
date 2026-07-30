@@ -7,7 +7,7 @@ touching `case-study` product data or the deploy pipeline.
 
 ## What this project is
 
-WhiteDot LLP's marketing site for LIMEX (a limestone-based plastic/paper
+WhiteDot's marketing site for LIMEX (a limestone-based plastic/paper
 replacement material, invented by TBM Co., Japan). React + Vite + TypeScript,
 cinematic/premium design. Full mission and design rules: `CLAUDE.md` (repo root).
 

@@ -36,7 +36,6 @@
 
   <!-- Company name -->
   <text x="148" y="108" font-family="Georgia, serif" font-size="28" font-weight="400" fill="#f5f1e8" opacity="0.9" letter-spacing="1">White Dot</text>
-  <text x="148" y="136" font-family="Georgia, serif" font-size="16" font-weight="400" fill="#9aa893" letter-spacing="3">LLP</text>
 
   <!-- Main headline -->
   <text x="116" y="270" font-family="Georgia, serif" font-size="58" font-weight="400" fill="#f5f1e8" letter-spacing="-1">Authorized LIMEX</text>
@@ -53,7 +52,7 @@
   <text x="270" y="472" font-family="Arial, sans-serif" font-size="15" fill="#6b7a68">→</text>
   <text x="296" y="472" font-family="Arial, sans-serif" font-size="15" fill="#6b7a68" letter-spacing="0.5">Seven Dot</text>
   <text x="396" y="472" font-family="Arial, sans-serif" font-size="15" fill="#6b7a68">→</text>
-  <text x="420" y="472" font-family="Arial, sans-serif" font-size="15" fill="#9aa893" letter-spacing="0.5">White Dot LLP</text>
+  <text x="420" y="472" font-family="Arial, sans-serif" font-size="15" fill="#9aa893" letter-spacing="0.5">White Dot</text>
 
   <!-- Territory -->
   <text x="116" y="510" font-family="Arial, sans-serif" font-size="15" fill="#6b7a68" letter-spacing="0.5">Gujarat · Rajasthan · Daman · Diu · Silvassa</text>

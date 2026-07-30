@@ -18,7 +18,7 @@ served via CDN.
 A "Swiss-style modernist sans serif" with "elegant rounded shapes and sharp
 angular details." Inspired by **Modernism and the Industrial Era** — a precise
 match for the limestone / raw-material brand metaphor. Indian Type Foundry is
-based in Ahmedabad, which aligns Satoshi's *origin* with White Dot LLP's
+based in Ahmedabad, which aligns Satoshi's *origin* with White Dot's
 Gujarat headquarters. Two variable axes, 10 statics from Light → Black.
 Distinct character (double-storey `a`/`g` defaults, sharp `t` terminal,
 tabular figures) without being precious.

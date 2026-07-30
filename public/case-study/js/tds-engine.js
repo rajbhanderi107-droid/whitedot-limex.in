@@ -96,7 +96,7 @@
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     doc.setTextColor(200, 200, 196);
-    doc.text("White Dot LLP  -  Authorized Marketing & Sales - TBM LIMEX", M, 62);
+    doc.text("White Dot  -  Authorized Marketing & Sales - TBM LIMEX", M, 62);
     doc.setTextColor(...ORANGE.map((c) => Math.min(255, c + 40)));
     doc.setFontSize(8);
     doc.text("CASE STUDY " + (p.index || "") + "  -  " + (p.mixRatio || p.referenceGrade || ""), M, 78);
@@ -218,7 +218,7 @@
     doc.line(M, H - 50, W - M, H - 50);
     doc.setFontSize(7.5);
     doc.setTextColor(...FAINT);
-    doc.text("(c) 2026 White Dot LLP - LIMEX is a registered trademark of TBM Co., Ltd., Japan", M, H - 34);
+    doc.text("(c) 2026 White Dot - LIMEX is a registered trademark of TBM Co., Ltd., Japan", M, H - 34);
     doc.text("Generated " + new Date().toISOString().slice(0, 10) + " - whitedotindia.in", M, H - 22);
 
     doc.save("White-Dot-TDS-" + safeFileName(p.name) + "-" + safeFileName(p.mixRatio || p.referenceGrade || "LIMEX") + ".pdf");

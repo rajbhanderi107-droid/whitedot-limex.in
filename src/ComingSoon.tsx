@@ -69,9 +69,9 @@ export default function ComingSoon() {
 
       <div className="cs-inner">
         <div className="cs-logo-wrap cs-fade-up cs-d1">
-          <img src={logoSrc} alt="White Dot LLP" className="cs-logo" width={44} height={44} />
+          <img src={logoSrc} alt="White Dot" className="cs-logo" width={44} height={44} />
           <span className="cs-brand">
-            White Dot <small>LLP</small>
+            White Dot
           </span>
         </div>
 
@@ -93,9 +93,9 @@ export default function ComingSoon() {
         </div>
 
         <p className="cs-tagline cs-fade-up cs-d7">
-          LIMEX — Japan's limestone-based material for a plastic-reduced world.
+          LIMEX — a limestone-based material for a plastic-reduced world.
           <br />
-          White Dot LLP is preparing something premium for you.
+          White Dot is preparing something premium for you.
         </p>
       </div>
     </div>

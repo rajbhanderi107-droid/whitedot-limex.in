@@ -10,7 +10,7 @@ const Consultation = ({ onSubmit }) => {
   return (
     <section className="cine-section" id="consult" data-screen-label="Consultation">
       <span className="cine-kicker">Start a formal inquiry</span>
-      <h2>Start a LIMEX material consultation with White Dot LLP.</h2>
+      <h2>Start a LIMEX material consultation with White Dot.</h2>
       <p className="lead">
         Share your application, size, thickness, current material, annual
         quantity, target unit price, and procurement objective. Our team
@@ -21,7 +21,7 @@ const Consultation = ({ onSubmit }) => {
       <div className="cine-consult-actions">
         <a className="cine-btn cine-btn-primary" href="#contact" onClick={(e) => { e.preventDefault(); onSubmit?.(); }}>
           <window.Icon name="message-circle" size={18}/>
-          WhatsApp White Dot LLP
+          WhatsApp White Dot
         </a>
         <a className="cine-btn cine-btn-ghost" href="#contact" onClick={(e) => { e.preventDefault(); onSubmit?.(); }}>
           Download LIMEX spec sheet

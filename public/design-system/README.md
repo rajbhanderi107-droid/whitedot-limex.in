@@ -1,6 +1,6 @@
 # White Dot Design System
 
-A design system for **White Dot LLP** — an authorized LIMEX marketing & sales
+A design system for **White Dot** — an authorized LIMEX marketing & sales
 firm based in India. The brand mark is a single white dot — one grain of
 limestone, the raw material itself. Visual identity is mineral, industrial,
 and procurement-grade.
@@ -14,10 +14,10 @@ and procurement-grade.
 
 | Field            | Value |
 |------------------|-------|
-| Legal entity     | White Dot LLP (India) |
+| Legal entity     | White Dot (India) |
 | Role             | Authorized marketing & sales firm for LIMEX material |
 | Material         | LIMEX — limestone-based (50%+ CaCO₃) replacement for plastic & paper, made by TBM Co. Japan |
-| Authorization chain | TBM Japan → Seven Dot Company (sole distributor) → White Dot LLP (sales) → Industries |
+| Authorization chain | TBM Japan → Seven Dot Company (sole distributor) → White Dot (sales) → Industries |
 | Audience         | Indian + global procurement, packaging, FMCG, sustainability, municipal/industrial buyers |
 | Territory        | Gujarat, Rajasthan, Diu, Daman |
 | Stack            | Vite + React 19 + TypeScript + Three.js (single-page site, GitHub Pages) |
@@ -98,14 +98,14 @@ material facts do the persuading.
 
 | Rule                | Choice |
 |---------------------|--------|
-| Person              | Third person ("White Dot LLP", "our team") and second person ("you / your buyer") — never first-person plural ("we love …") |
+| Person              | Third person ("White Dot", "our team") and second person ("you / your buyer") — never first-person plural ("we love …") |
 | Case                | Sentence case for headlines, eyebrows in ALL CAPS with `letter-spacing: 0.22em` |
 | Emoji               | **Never.** Reserved for off-brand. |
 | Exclamation marks   | **Never** in product copy. |
 | Numbers             | Approximate values flagged ("approximately 53% plastic reduction"). Always cited to the source PDF / LCA conditions. |
 | Tense               | Present indicative. Avoid future-tense marketing speak ("we will revolutionize…"). |
 | Filler              | None. No "discover", "unlock", "transform". |
-| Section kickers     | Function labels: "Authorized supply. Clear material guidance." / "About White Dot LLP" / "LIMEX material" / "Product possibilities" |
+| Section kickers     | Function labels: "Authorized supply. Clear material guidance." / "About White Dot" / "LIMEX material" / "Product possibilities" |
 | Address / contact   | Plain dl-style key/value, never bullets. |
 
 ### Microcopy library (real strings from the codebase, treat as canon)
@@ -117,7 +117,7 @@ material facts do the persuading.
 - **Secondary CTA:** `Explore LIMEX` · `View authorization`
 - **Continuity / offline:** `Reconnecting…` → `Holding your place` → `Almost back`
 - **Adoption steps:** `Understand product requirement` → `Check LIMEX suitability` → `Sample / trial development` → `Product testing` → `Commercial adoption` → `Future circular pathway`
-- **WhatsApp boilerplate:** `Hello White Dot LLP, I'd like a LIMEX material optimization consultation.`
+- **WhatsApp boilerplate:** `Hello White Dot, I'd like a LIMEX material optimization consultation.`
 
 ---
 

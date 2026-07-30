@@ -92,7 +92,7 @@ export function LimexComparison() {
         <p>
           Local CaCO₃ fillers add weight. <span className="wd-limex">LIMEX</span> is engineered to replace plastic while keeping
           the way the polymer processes and performs. The differences below are drawn from
-          White Dot LLP&rsquo;s technical comparison and should be confirmed per grade and trial.
+          White Dot&rsquo;s technical comparison and should be confirmed per grade and trial.
         </p>
       </div>
 

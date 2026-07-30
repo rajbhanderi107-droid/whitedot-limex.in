@@ -1,4 +1,4 @@
-// White Dot LLP — Mineral Sound System: procedural Web Audio API synthesizer.
+// White Dot — Mineral Sound System: procedural Web Audio API synthesizer.
 // Synthesizes high-end industrial/organic sounds completely in code:
 //   - stone-tap: short, sharp bandpass-filtered mineral transient.
 //   - settle: low, warm, deep dual-oscillator resonant background hum.

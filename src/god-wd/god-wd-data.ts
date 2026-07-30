@@ -1,5 +1,5 @@
 // GOD-WD data — legal briefs + LIMEX vs local filler comparison.
-// Source for comparison: White Dot LLP supplied "TBM vs Local filler mfg" matrix.
+// Source for comparison: White Dot supplied "TBM vs Local filler mfg" matrix.
 // All values are framed for procurement review, not as universal guarantees.
 
 export type BriefCard = {
@@ -10,17 +10,17 @@ export type BriefCard = {
 
 export const legalBriefs: BriefCard[] = [
   {
-    name: "TBM Co., Ltd., Japan",
+    name: "TBM Co., Ltd.",
     role: "Inventor, manufacturer and global licensor",
-    text: "Developer and manufacturer of LIMEX material, produced in Japan and Vietnam at approximately 10,000 tonnes per month, with half-yearly and yearly certification of material data.",
+    text: "Developer and manufacturer of LIMEX material, produced at approximately 10,000 tonnes per month, with half-yearly and yearly certification of material data.",
   },
   {
     name: "Seven Dot Company",
     role: "Sole authorized distributor",
-    text: "Appointed directly by TBM Co., Ltd., Japan to distribute LIMEX raw material through the defined and authorized market channel.",
+    text: "Appointed directly by TBM Co., Ltd. to distribute LIMEX raw material through the defined and authorized market channel.",
   },
   {
-    name: "White Dot LLP",
+    name: "White Dot",
     role: "Authorized marketing and sales firm",
     text: "Formed to market, distribute, and sell LIMEX raw material across the designated authorized states of Gujarat, Rajasthan, Diu, Daman, and Goa.",
   },
@@ -63,7 +63,7 @@ export const verdict = {
   points: [
     "Increases strength and lets you thin walls — material savings on top of plastic reduction.",
     "Supports Extended Producer Responsibility (EPR) claims with TBM-authorized data.",
-    "Consistent, high-capacity supply from Japan and Vietnam — not lot-to-lot guesswork.",
+    "Consistent, high-capacity supply — not lot-to-lot guesswork.",
   ],
   note: "Local CaCO₃ filler at ₹28–30 looks cheaper on paper, but limited loading, machine wear, and unproven data make the real cost questionable.",
 };
@@ -111,7 +111,7 @@ export const keyDifferences: {
     metric: "Assured capacity",
     limex: "~10,000 T/M",
     local: "varies",
-    note: "Consistent monthly supply from TBM Japan and Vietnam plants.",
+    note: "Consistent monthly supply from TBM plants.",
   },
   {
     metric: "Ash signature",
@@ -127,7 +127,7 @@ export const comparisonRows: ComparisonRow[] = [
     category: "Material Science",
     label: "Material origin",
     icon: "Globe2",
-    limex: "Sustainable material engineered in Japan as an alternate to plastic.",
+    limex: "Sustainable material engineered as an alternate to plastic.",
     local: "No engineered alternative — filler only.",
   },
   {
@@ -227,7 +227,7 @@ export const comparisonRows: ComparisonRow[] = [
     category: "Quality & Compliance",
     label: "Manufacturing",
     icon: "Factory",
-    limex: "Manufactured in Japan and Vietnam.",
+    limex: "Manufactured by TBM.",
     local: "Local manufacturing exists but quality is not consistent.",
   },
   {
@@ -248,7 +248,7 @@ export const comparisonRows: ComparisonRow[] = [
     category: "Quality & Compliance",
     label: "Authorization",
     icon: "BadgeCheck",
-    limex: "TBM Japan authorizes data half-yearly or yearly — data validation is proven.",
+    limex: "TBM authorizes data half-yearly or yearly — data validation is proven.",
     local: "Consultant-led yearly checks with data validation concerns.",
   },
   {

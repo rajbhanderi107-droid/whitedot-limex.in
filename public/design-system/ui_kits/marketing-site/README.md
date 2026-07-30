@@ -19,7 +19,7 @@ into modular React components that can be plugged into any prototype.
 | `Icon.jsx`              | Inline Lucide-equivalent SVG icon set (outline / stroke 2). |
 | `Nav.jsx`               | Fixed top nav with brand mark, section links, sage primary CTA. |
 | `Hero.jsx`              | Headline ("Replace Plastic" gradient), sub-paragraph, supply-chain flow, dual CTA, eco-signal strip. |
-| `SupplyFlow.jsx`        | TBM → Seven Dot → White Dot LLP horizontal flow with pulsing connectors. |
+| `SupplyFlow.jsx`        | TBM → Seven Dot → White Dot horizontal flow with pulsing connectors. |
 | `MaterialIntelligence.jsx` | Left + right labels around a 3D-orb proxy with dashed orbital rings. |
 | `IndustryApplications.jsx` | 4×2 grid of application cards with sage tile icons and hover halo. |
 | `LimexComparison.jsx`   | Interactive tabbed comparison (vs Plastic / Paper / Fillers). |

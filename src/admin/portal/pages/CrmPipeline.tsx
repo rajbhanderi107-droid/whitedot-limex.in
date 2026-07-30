@@ -43,7 +43,7 @@ function cleanPhone(phone?: string): string {
 }
 
 function leadWhatsappHref(lead: Lead): string {
-  const message = `Hello ${lead.name}, this is White Dot LLP. We received your LIMEX inquiry${lead.companyName ? ` for ${lead.companyName}` : ""}. Can we confirm your application, current material, monthly volume, and quote/sample requirement?`;
+  const message = `Hello ${lead.name}, this is White Dot. We received your LIMEX inquiry${lead.companyName ? ` for ${lead.companyName}` : ""}. Can we confirm your application, current material, monthly volume, and quote/sample requirement?`;
   return `https://wa.me/${cleanPhone(lead.phone)}?text=${encodeURIComponent(message)}`;
 }
 

@@ -87,12 +87,12 @@ export default function Footer() {
 
         <div className="v2ft-legal">
           <p className="v2ft-supply">
-            TBM Co., Ltd. — Japan · inventor &amp; manufacturer<br />
+            TBM Co., Ltd. — inventor &amp; manufacturer<br />
             Seven Dot — authorized distributor<br />
             White Dot — marketing &amp; sales
           </p>
           <p>
-            LIMEX is a material developed by TBM Co., Ltd. (Japan).
+            LIMEX is a material developed by TBM Co., Ltd.
             Ads are created by the use of artificial intelligence.
           </p>
           <p className="v2ft-copy">

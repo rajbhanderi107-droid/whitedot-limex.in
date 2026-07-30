@@ -1,4 +1,4 @@
-// White Dot LLP — Continuity Layer: presentational overlay.
+// White Dot — Continuity Layer: presentational overlay.
 // Pure props in, JSX out. State management lives in ContinuityShell.
 // Removable via `npm run remove:continuity:wd`.
 

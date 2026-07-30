@@ -1,4 +1,4 @@
-// White Dot LLP — Continuity Layer: form-state persistence.
+// White Dot — Continuity Layer: form-state persistence.
 // Saves quote-form fields to localStorage when offline, restores on reconnect,
 // and opens WhatsApp with the user's application + volume prefilled.
 // Removable via `npm run remove:continuity:wd`.

@@ -117,7 +117,7 @@ PrivacyPolicyModal        (opens on #privacy hash)
 ```
 
 **Nav quick-links:** Material · Process · LIMEX · Compare · Applications · Consultation
-**Brand lockup:** logo (40px) + `White Dot` `<small>LLP</small>`
+**Brand lockup:** logo (40px) + `White Dot` ``
 **Hamburger:** always visible right; opens full-screen `CinematicMenu` overlay.
 
 ---
@@ -130,7 +130,7 @@ PrivacyPolicyModal        (opens on #privacy hash)
   - Stagger `0.095s` per word, duration `0.9–0.95s`, ease `[0.22,1,0.36,1]`
 - **Headline (simple/reduced-motion):** single fade, `Sustainable Material to Replace Plastic`
 - **Sub:** TBM-invented LIMEX, limestone-based, reduces petroleum plastic;
-  Seven Dot = authorized dealer; White Dot LLP guides applications/samples/adoption.
+  Seven Dot = authorized dealer; White Dot guides applications/samples/adoption.
 - **SupplyFlow** node strip (TBM Japan → Seven Dot → White Dot).
 - **Actions:** primary `Explore LIMEX` (#material) · ghost `Request Material Consultation` (WhatsApp).
 - **Eco signals:** `50%+ calcium carbonate, less plastic` · `Lower carbon footprint` · `Runs on existing production lines`.
@@ -185,7 +185,7 @@ PrivacyPolicyModal        (opens on #privacy hash)
 ## 9. CONTENT VOICE & LEGAL RULES (permanent)
 
 - Professional, client-ready, technically credible, never exaggerated.
-- Supply chain framing: **TBM Co. (Japan)** invents → **Seven Dot** authorized dealer → **White Dot LLP** marketing/applications, western India.
+- Supply chain framing: **TBM Co. (Japan)** invents → **Seven Dot** authorized dealer → **White Dot** marketing/applications, western India.
 - Use **"authorized"** — never "certified".
 - Avoid "exclusive/exclusively" unless legally required.
 - NEVER invent CO₂ numbers, recyclability %, or certifications.
@@ -247,4 +247,4 @@ JSX `{/* NAME-WD-BEGIN */} … {/* NAME-WD-END */}` markers.
 ---
 
 *End of V1_DESIGN_SPEC.md — canonical WhiteDot website design reference.*
-*Live source: `src/cinematic/` · reachable at `?v1=1` · WhiteDot LLP / LIMEX.*
+*Live source: `src/cinematic/` · reachable at `?v1=1` · WhiteDot / LIMEX.*

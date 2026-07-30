@@ -1,4 +1,4 @@
-// White Dot LLP — service worker retirement stub.
+// White Dot — service worker retirement stub.
 //
 // The app retired the Continuity precache service worker (see src/main.tsx:
 // "Retire any previously-registered service worker ... so it cannot serve

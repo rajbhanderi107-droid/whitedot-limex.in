@@ -10,9 +10,9 @@ const Nav = ({ active, onNav }) => {
   ];
   return (
     <nav className="cine-nav">
-      <a className="cine-brand" onClick={(e) => { e.preventDefault(); onNav?.("top"); }} href="#top" aria-label="White Dot LLP">
+      <a className="cine-brand" onClick={(e) => { e.preventDefault(); onNav?.("top"); }} href="#top" aria-label="White Dot">
         <img src="../../assets/whitedot-logo-enhanced.svg" alt="" width="30" height="30"/>
-        <span>White Dot <small>LLP</small></span>
+        <span>White Dot</span>
       </a>
       <div className="cine-nav-links">
         {links.map((l) => (

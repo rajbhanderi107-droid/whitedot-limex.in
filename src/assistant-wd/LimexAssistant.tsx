@@ -129,7 +129,7 @@ export function LimexAssistant() {
             <span className="wd-assistant-dot" aria-hidden="true" />
             <div>
               <strong>LIMEX Assistant</strong>
-              <small>White Dot LLP · Authorized supply</small>
+              <small>White Dot · Authorized supply</small>
             </div>
           </header>
 

@@ -7,7 +7,7 @@ test.describe("WhiteDot Smoothness and Performance Verification", () => {
   });
 
   test("should load the main page successfully and have correct brand name", async ({ page }) => {
-    await expect(page).toHaveTitle(/White Dot LLP/i);
+    await expect(page).toHaveTitle(/White Dot/i);
     const brand = page.locator(".cine-brand").first();
     await expect(brand).toBeVisible();
     await expect(brand).toContainText("White Dot");

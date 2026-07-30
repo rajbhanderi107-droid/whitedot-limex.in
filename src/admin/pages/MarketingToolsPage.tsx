@@ -15,7 +15,7 @@ const googleTools: Tool[] = [
   { name: "Google Analytics 4", desc: "Visitor traffic, sources, and conversion tracking.", href: "https://analytics.google.com/", icon: BarChart3 },
   { name: "Google Search Console", desc: "Search rankings, indexing, and keyword performance.", href: "https://search.google.com/search-console", icon: Search },
   { name: "Google Ads", desc: "Run search and display campaigns for LIMEX keywords.", href: "https://ads.google.com/", icon: Megaphone },
-  { name: "Google Business Profile", desc: "Local presence for White Dot LLP in Gujarat.", href: "https://business.google.com/", icon: Building2 },
+  { name: "Google Business Profile", desc: "Local presence for White Dot in Gujarat.", href: "https://business.google.com/", icon: Building2 },
   { name: "Google Tag Manager", desc: "Manage tracking tags without code changes.", href: "https://tagmanager.google.com/", icon: Tag },
 ];
 

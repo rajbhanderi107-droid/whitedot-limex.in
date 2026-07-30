@@ -34,13 +34,13 @@ import "./mobile.css";
 
 const whatsappNumber = "918849728938";
 const whatsappMessage =
-  "Hello White Dot LLP, I want to discuss LIMEX material supply, samples, and pricing for my business.";
+  "Hello White Dot, I want to discuss LIMEX material supply, samples, and pricing for my business.";
 const whatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path}`.replace(/\/{2,}/g, "/");
 
 const authorizationChain = [
   {
-    title: "TBM Co., Ltd., Japan",
+    title: "TBM Co., Ltd.",
     role: "Manufacturer and Global Licensor",
     text: "Original developer, manufacturer, and global licensor of LIMEX material technology.",
     action: "Grants Distributor Dealership",
@@ -48,11 +48,11 @@ const authorizationChain = [
   {
     title: "Seven Dot Company",
     role: "Sole Authorized Distributor",
-    text: "Authorized directly by TBM Co., Ltd., Japan to distribute LIMEX material through the defined market channel.",
+    text: "Authorized directly by TBM Co., Ltd. to distribute LIMEX material through the defined market channel.",
     action: "Supply Agreement",
   },
   {
-    title: "White Dot LLP",
+    title: "White Dot",
     role: "Authorized Marketing and Sales Firm",
     text: "Formed to market, distribute, and sell LIMEX raw material across designated states.",
     action: "Sells to",
@@ -290,11 +290,10 @@ function App() {
       <AggregationLoader />
       {/* AGGREGATION-WD-END loader */}
       <nav className="site-nav" aria-label="Primary navigation">
-        <a className="brand" href="#home" aria-label="White Dot LLP home" onClick={closeMenu}>
+        <a className="brand" href="#home" aria-label="White Dot home" onClick={closeMenu}>
           <img className="brand-symbol" src={assetPath("assets/whitedot-logo-enhanced.svg")} alt="" />
           <span className="brand-wordmark">
             <span className="brand-name">White Dot</span>
-            <small>LLP</small>
           </span>
         </a>
         <div className="nav-links">
@@ -361,8 +360,8 @@ function App() {
           <p className="eyebrow">Authorized supply. Clear material guidance.</p>
           <h1>Sustainable Material to Replace Plastic.</h1>
           <p className="hero-text">
-            Sevendot connects businesses with authorized access to LIMEX material technology by TBM
-            Japan, helping manufacturers evaluate mineral-based material routes for smarter,
+            Sevendot connects businesses with authorized access to LIMEX material technology by TBM,
+            helping manufacturers evaluate mineral-based material routes for smarter,
             high-performance industrial and commercial applications.
           </p>
           <div className="hero-actions">
@@ -376,7 +375,7 @@ function App() {
             </a>
           </div>
         </div>
-        <div className="territory-panel" aria-label="White Dot LLP authorized territory">
+        <div className="territory-panel" aria-label="White Dot authorized territory">
           <div className="territory-head">
             <MapPin size={22} />
             <div>
@@ -412,7 +411,7 @@ function App() {
       <section className="section about" id="about">
         <div className="section-kicker">
           <Building2 size={18} />
-          About White Dot LLP
+          About White Dot
         </div>
         <div className="section-grid">
           <div>
@@ -420,7 +419,7 @@ function App() {
           </div>
           <div className="section-copy">
             <p>
-              White Dot LLP helps industries evaluate LIMEX material for plastic replacement
+              White Dot helps industries evaluate LIMEX material for plastic replacement
               and selected sustainable product applications. The company focuses on material
               guidance, product-fit discussions, sampling coordination, and authorized sales support.
             </p>
@@ -437,11 +436,11 @@ function App() {
           <h2>An authorized distribution and marketing chain for industries.</h2>
           <p>
             The market structure is defined by a formal authorization chain from the LIMEX technology
-            provider in Japan to the authorized distributor and then to our company for
+            provider to the authorized distributor and then to our company for
             marketing and sales in designated states.
           </p>
         </div>
-        <div className="authorization-chain" aria-label="TBM Japan to White Dot LLP authorization chain">
+        <div className="authorization-chain" aria-label="TBM to White Dot authorization chain">
           {authorizationChain.map((item) => (
             <article className="authorization-card" key={item.title}>
               <span className="chain-step">{item.action}</span>
@@ -460,11 +459,11 @@ function App() {
         </div>
         <div className="section-grid">
           <div>
-            <h2>A globally recognized sustainable raw material developed in Japan.</h2>
+            <h2>A globally recognized sustainable raw material.</h2>
           </div>
           <div className="section-copy">
             <p>
-              Developed by TBM Co., Ltd., Japan, LIMEX can be adapted for resin-based and
+              Developed by TBM Co., Ltd., LIMEX can be adapted for resin-based and
               paper-substrate applications, offering businesses a versatile material platform for
               packaging, printing, industrial products, and commercial use cases.
             </p>
@@ -560,7 +559,7 @@ function App() {
           ))}
         </div>
         <p className="data-note">
-          White Dot LLP should collect each buyer's resin, thickness, gsm, machine, annual quantity, and target price,
+          White Dot should collect each buyer's resin, thickness, gsm, machine, annual quantity, and target price,
           then present trial-specific impact estimates before making public environmental claims.
         </p>
       </section>
@@ -636,7 +635,7 @@ function App() {
       <section className="section why" id="why-whitedot">
         <div className="section-kicker">
           <Recycle size={18} />
-          Why White Dot LLP
+          Why White Dot
         </div>
         <div className="audience-grid">
           {audience.map(({ icon: Icon, title, text }) => (
@@ -651,8 +650,8 @@ function App() {
 
       <section className="contact" id="contact">
         <div>
-          <p className="eyebrow">White Dot LLP | Authorized Marketing and Sales</p>
-          <h2>Start a formal LIMEX material inquiry with White Dot LLP.</h2>
+          <p className="eyebrow">White Dot | Authorized Marketing and Sales</p>
+          <h2>Start a formal LIMEX material inquiry with White Dot.</h2>
           <p>
             Share your application, size, thickness, current material, annual quantity, target unit
             price, and procurement objective. Our team will coordinate the next stage of LIMEX
@@ -663,12 +662,12 @@ function App() {
         <div className="contact-card">
           <a className="button primary wide" href={whatsappHref} target="_blank" rel="noreferrer">
             <MessageCircle size={21} />
-            WhatsApp White Dot LLP
+            WhatsApp White Dot
           </a>
           <dl>
             <div>
               <dt>Company</dt>
-              <dd>White Dot LLP</dd>
+              <dd>White Dot</dd>
             </div>
             <div>
               <dt>Nature of business</dt>
@@ -676,7 +675,7 @@ function App() {
             </div>
             <div>
               <dt>Authorized by</dt>
-              <dd>TBM Co., Ltd., Japan via Seven Dot Company</dd>
+              <dd>TBM Co., Ltd. via Seven Dot Company</dd>
             </div>
             <div>
               <dt>WhatsApp</dt>
@@ -695,7 +694,7 @@ function App() {
       </section>
 
       <footer>
-        <span>White Dot LLP</span>
+        <span>White Dot</span>
         <span>Authorized access to LIMEX material. Clear guidance for practical adoption.</span>
       </footer>
     </main>

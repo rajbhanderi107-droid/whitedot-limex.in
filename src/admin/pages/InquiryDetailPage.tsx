@@ -21,7 +21,7 @@ function whatsappHref(inquiry: InquiryDetail): string {
   const phone = cleanPhone(inquiry.phone);
   const target = phone.length >= 10 ? phone : "";
   const message = [
-    `Hello ${inquiry.name}, this is White Dot LLP.`,
+    `Hello ${inquiry.name}, this is White Dot.`,
     `We received your LIMEX inquiry${inquiry.companyName ? ` for ${inquiry.companyName}` : ""}.`,
     inquiry.inquiryType ? `Interest: ${inquiry.inquiryType}.` : "",
     "Can we confirm your application, current material, monthly volume, and sample/quote requirement?",
@@ -34,7 +34,7 @@ function emailHref(inquiry: InquiryDetail): string {
   const body = [
     `Hello ${inquiry.name},`,
     "",
-    "Thank you for contacting White Dot LLP about LIMEX.",
+    "Thank you for contacting White Dot about LIMEX.",
     "To prepare the right recommendation, please share:",
     "1. Product/application",
     "2. Current material or polymer grade",
@@ -42,7 +42,7 @@ function emailHref(inquiry: InquiryDetail): string {
     "4. Target: quote, sample, technical consultation, or bulk procurement",
     "",
     "Regards,",
-    "White Dot LLP",
+    "White Dot",
   ].join("\n");
   return `mailto:${inquiry.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }

@@ -25,7 +25,7 @@ const DATA: Record<Tab, Row[]> = {
     { category: 'FMCG & bottle applications', limex: 'Suitable for FMCG and bottle applications where LIMEX helps reduce conventional plastic usage while maintaining required product strength.', filler: 'Not suitable for bottle applications; bottles generally remain dependent on 100% conventional plastic because local fillers cannot deliver the required strength, consistency and processing reliability.' },
   ],
   Quality: [
-    { category: 'Manufacturing', limex: 'Produced in Japan / Vietnam with consistent process control and quality standards.', filler: 'Local sourcing with quality that can vary batch to batch.' },
+    { category: 'Manufacturing', limex: 'Produced with consistent process control and quality standards.', filler: 'Local sourcing with quality that can vary batch to batch.' },
     { category: 'Documentation', limex: 'Certification and EPR support available as per supplied data.', filler: 'Limited certification; technical data can be inconsistent.' },
     { category: 'Ash colour', limex: 'Lower carbon content; ash tends to remain white.', filler: 'Higher carbon content can leave grey ash.' },
   ],

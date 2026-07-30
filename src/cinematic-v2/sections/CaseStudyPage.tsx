@@ -17,8 +17,6 @@ const containerModel = `${basePath}/case-study/model/paint-container-procedural-
 const motorCoverHref   = `${basePath}/case-study/motor-cover.html`;
 const motorCoverModel  = `${basePath}/case-study/model/motor-cover-procedural-black.glb`;
 const motorCoverPoster = `${basePath}/case-study/img/motor-cover-hero.jpg`;
-const aralditeHref   = `${basePath}/case-study/araldite-container.html`;
-const aralditeModel  = `${basePath}/case-study/model/araldite-container-procedural.glb`;
 const handWashHref   = `${basePath}/case-study/hand-wash-bottle.html`;
 const handWashModel  = `${basePath}/case-study/model/hand-wash-bottle-duo.glb`;
 const hardDishHref   = `${basePath}/case-study/product.html?p=hard-dish`;
@@ -57,10 +55,6 @@ const childBottleHref = `${basePath}/case-study/product.html?p=child-bottle`;
 const childBottleModel = `${basePath}/case-study/model/product-31-sippy-cup.glb`;
 const waterTubHref = `${basePath}/case-study/product.html?p=bath-tumbler`;
 const waterTubModel = `${basePath}/case-study/model/product-32-bath-tumbler.glb`;
-const toiletSeatHref = `${basePath}/case-study/product.html?p=toilet-seat`;
-const toiletSeatModel = `${basePath}/case-study/model/product-33-toilet-seat.glb`;
-const nonWovenBagHref = `${basePath}/case-study/product.html?p=non-woven-bag`;
-const nonWovenBagModel = `${basePath}/case-study/model/product-34-nonwoven-bag.glb`;
 const courierBagHref = `${basePath}/case-study/product.html?p=courier-bag`;
 const courierBagModel = `${basePath}/case-study/model/product-35-courier-bag.glb`;
 const stripTapeHref = `${basePath}/case-study/product.html?p=strip-tape`;
@@ -69,7 +63,7 @@ const darkTalpatriHref = `${basePath}/case-study/product.html?p=dark-plastic-tal
 const darkTalpatriModel = `${basePath}/case-study/model/product-37-dark-plastic-talpatri.glb`;
 const circleContainerHref = `${basePath}/case-study/product.html?p=circle-container`;
 const circleContainerModel = `${basePath}/case-study/model/product-38-circle-container.glb?v=white-20260728`;
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'aralditeContainer' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'childBottle' | 'waterTub' | 'toiletSeat' | 'nonWovenBag' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer';
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'childBottle' | 'waterTub' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
@@ -96,215 +90,197 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: <>50<small>%</small></>, label: 'PP' },
     { value: <>~39<small>%</small></>, label: 'Limestone in Part', green: true },
   ],
-  aralditeContainer: [
-    { value: '04', label: 'Adhesive Dispenser Container' },
-    { value: <>30<small>%</small></>, label: 'LIMEX' },
-    { value: <>70<small>%</small></>, label: 'PP' },
-    { value: <>~23<small>%</small></>, label: 'Limestone in Part', green: true },
-  ],
   handWashBottle: [
-    { value: '05', label: 'Hand Wash Bottle' },
+    { value: '04', label: 'Hand Wash Bottle' },
     { value: '2', label: 'Colorways' },
     { value: '3D', label: 'Static Preview' },
-    { value: 'Live', label: 'Product 05', green: true },
+    { value: 'Live', label: 'Product 04', green: true },
   ],
   hardDish: [
-    { value: '06', label: 'Hard Dish' },
+    { value: '05', label: 'Hard Dish' },
     { value: '4', label: 'Colorways' },
+    { value: '3D', label: 'Photo-Matched' },
+    { value: 'Live', label: 'Product 05', green: true },
+  ],
+  consilePipe: [
+    { value: '06', label: 'Concealed Pipe' },
+    { value: 'ISI', label: 'Style Marking' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 06', green: true },
   ],
-  consilePipe: [
-    { value: '07', label: 'Concealed Pipe' },
-    { value: 'ISI', label: 'Style Marking' },
+  soapStand: [
+    { value: '07', label: 'Soap Stand' },
+    { value: <>15<small>%</small></>, label: 'LIMEX (Sample)' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 07', green: true },
   ],
-  soapStand: [
-    { value: '08', label: 'Soap Stand' },
-    { value: <>15<small>%</small></>, label: 'LIMEX (Sample)' },
+  foodOilCan: [
+    { value: '08', label: 'Food Oil Can' },
+    { value: '145', label: 'mm Wide Face' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 08', green: true },
   ],
-  foodOilCan: [
-    { value: '09', label: 'Food Oil Can' },
-    { value: '145', label: 'mm Wide Face' },
+  dairyContainer: [
+    { value: '09', label: 'Dairy Products Container' },
+    { value: 'Dairy', label: 'Packaging' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 09', green: true },
   ],
-  dairyContainer: [
-    { value: '10', label: 'Dairy Products Container' },
-    { value: 'Dairy', label: 'Packaging' },
-    { value: '3D', label: 'Photo-Matched' },
-    { value: 'Live', label: 'Product 10', green: true },
-  ],
   lunchBox: [
-    { value: '11', label: 'Lunchbox Study' },
+    { value: '10', label: 'Lunchbox Study' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Mini', label: 'Bento Container' },
-    { value: 'Live', label: 'Product 11', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
   ],
   dairySweetContainer: [
-    { value: '12', label: 'Dairy Sweet Container' },
+    { value: '11', label: 'Dairy Sweet Container' },
     { value: '200×140×50', label: 'mm Compact Envelope' },
     { value: 'PP', label: 'Food-Grade Material' },
-    { value: 'Live', label: 'Product 12', green: true },
+    { value: 'Live', label: 'Product 11', green: true },
   ],
   dairyRoundContainer: [
-    { value: '13', label: 'D500 Bowl' },
+    { value: '12', label: 'D500 Bowl' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'D500', label: 'Dairy Bowl' },
-    { value: 'Live', label: 'Product 13', green: true },
+    { value: 'Live', label: 'Product 12', green: true },
   ],
   rectangleContainer: [
-    { value: '14', label: 'D-250 Container' },
+    { value: '13', label: 'D-250 Container' },
     { value: '250×190', label: 'mm Lid Envelope' },
+    { value: '3D', label: 'Photo-Matched' },
+    { value: 'Live', label: 'Product 13', green: true },
+  ],
+  hook20mm: [
+    { value: '14', label: '20 mm Hook' },
+    { value: '19', label: 'mm Overall Width' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 14', green: true },
   ],
-  hook20mm: [
-    { value: '15', label: '20 mm Hook' },
-    { value: '19', label: 'mm Overall Width' },
-    { value: '3D', label: 'Photo-Matched' },
+  roundPipe: [
+    { value: '15', label: 'Round Pipe' },
+    { value: '3D', label: 'Interactive Model' },
+    { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 15', green: true },
   ],
-  roundPipe: [
-    { value: '16', label: 'Round Pipe' },
+  applianceTray: [
+    { value: '16', label: 'Fridge / Washing Machine Tray' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 16', green: true },
   ],
-  applianceTray: [
-    { value: '17', label: 'Fridge / Washing Machine Tray' },
-    { value: '3D', label: 'Interactive Model' },
+  motorFanBlade: [
+    { value: '17', label: 'Motor Fan Blade' },
+    { value: '12', label: 'Radial Blades' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 17', green: true },
   ],
-  motorFanBlade: [
-    { value: '18', label: 'Motor Fan Blade' },
-    { value: '12', label: 'Radial Blades' },
+  cupContainer: [
+    { value: '18', label: 'Cup Container' },
+    { value: '95×95×149.75', label: 'mm Envelope' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 18', green: true },
   ],
-  cupContainer: [
-    { value: '19', label: 'Cup Container' },
-    { value: '95×95×149.75', label: 'mm Envelope' },
+  toothBrush: [
+    { value: '19', label: 'Tooth Brush' },
+    { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 19', green: true },
   ],
-  toothBrush: [
-    { value: '20', label: 'Tooth Brush' },
+  petrolPipe: [
+    { value: '20', label: 'Petrol Pipe' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 20', green: true },
   ],
-  petrolPipe: [
-    { value: '21', label: 'Petrol Pipe' },
+  proteinContainer: [
+    { value: '21', label: 'Protein Container' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 21', green: true },
   ],
-  proteinContainer: [
-    { value: '22', label: 'Protein Container' },
+  rectangleBox: [
+    { value: '22', label: 'Rectangle Container' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 22', green: true },
   ],
-  rectangleBox: [
-    { value: '23', label: 'Rectangle Container' },
+  smallRoundBottle: [
+    { value: '23', label: 'Small Round Bottle' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 23', green: true },
   ],
-  smallRoundBottle: [
-    { value: '24', label: 'Small Round Bottle' },
+  saltBottle: [
+    { value: '24', label: 'Salt Bottle' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 24', green: true },
   ],
-  saltBottle: [
-    { value: '25', label: 'Salt Bottle' },
+  lightWeightContainer: [
+    { value: '25', label: 'Light Weight Container' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 25', green: true },
   ],
-  lightWeightContainer: [
-    { value: '26', label: 'Light Weight Container' },
-    { value: '3D', label: 'Photo-Matched' },
+  foodTrayDish: [
+    { value: '26', label: 'Food Tray Dish' },
+    { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 26', green: true },
   ],
-  foodTrayDish: [
-    { value: '27', label: 'Food Tray Dish' },
+  lightWeightDish: [
+    { value: '27', label: 'Thin Wall Circle Dish' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 27', green: true },
   ],
-  lightWeightDish: [
-    { value: '28', label: 'Thin Wall Circle Dish' },
+  wovenThread: [
+    { value: '29', label: 'Woven Thread' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 28', green: true },
+    { value: 'Live', label: 'Product 29', green: true },
   ],
-  wovenThread: [
-    { value: '30', label: 'Woven Thread' },
+  childBottle: [
+    { value: '30', label: 'Child Bottle' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 30', green: true },
   ],
-  childBottle: [
-    { value: '31', label: 'Child Bottle' },
+  waterTub: [
+    { value: '31', label: 'Bath Tumbler' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 31', green: true },
   ],
-  waterTub: [
-    { value: '32', label: 'Bath Tumbler' },
+  courierBag: [
+    { value: '32', label: 'Courier Bag' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 32', green: true },
   ],
-  toiletSeat: [
-    { value: '33', label: 'Toilet Seat' },
+  stripTape: [
+    { value: '33', label: 'Strip Tape' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 33', green: true },
   ],
-  nonWovenBag: [
-    { value: '34', label: 'Non Woven Bag' },
+  darkTalpatri: [
+    { value: '34', label: 'Dark Plastic Talpatri' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 34', green: true },
   ],
-  courierBag: [
-    { value: '35', label: 'Courier Bag' },
+  circleContainer: [
+    { value: '35', label: 'Circle Container' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 35', green: true },
   ],
-  stripTape: [
-    { value: '36', label: 'Strip Tape' },
-    { value: '3D', label: 'Interactive Model' },
-    { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 36', green: true },
-  ],
-  darkTalpatri: [
-    { value: '37', label: 'Dark Plastic Talpatri' },
-    { value: '3D', label: 'Interactive Model' },
-    { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 37', green: true },
-  ],
-  circleContainer: [
-    { value: '38', label: 'Circle Container' },
-    { value: '3D', label: 'Interactive Model' },
-    { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 38', green: true },
-  ],
   dermicoolPowderBottle: [
-    { value: '29', label: 'Powder Bottle' },
+    { value: '28', label: 'Powder Bottle' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 29', green: true },
+    { value: 'Live', label: 'Product 28', green: true },
   ],
 };
 
@@ -447,7 +423,7 @@ export default function CaseStudyPage() {
           c.style.zIndex    = String(Math.round((1 - absT) * 10));
         }
         const product = c.dataset.product as ProductKey | undefined;
-        if ((product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan' || product === 'dairyContainer') && absT < nearestDistance) {
+        if ((product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan' || product === 'dairyContainer') && absT < nearestDistance) {
           nearestProduct = product;
           nearestDistance = absT;
         }
@@ -490,7 +466,7 @@ export default function CaseStudyPage() {
         if (!glow) return;
         c.addEventListener('mouseenter', () => {
           const product = c.dataset.product as ProductKey | undefined;
-          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'aralditeContainer' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan' || product === 'dairyContainer' || product === 'lunchBox' || product === 'dairySweetContainer' || product === 'dairyRoundContainer' || product === 'rectangleContainer' || product === 'hook20mm' || product === 'roundPipe' || product === 'applianceTray' || product === 'motorFanBlade' || product === 'cupContainer' || product === 'petrolPipe' || product === 'proteinContainer' || product === 'rectangleBox' || product === 'smallRoundBottle' || product === 'saltBottle' || product === 'lightWeightContainer' || product === 'foodTrayDish' || product === 'lightWeightDish' || product === 'dermicoolPowderBottle' || product === 'wovenThread' || product === 'childBottle' || product === 'waterTub' || product === 'toiletSeat' || product === 'nonWovenBag' || product === 'courierBag' || product === 'stripTape' || product === 'darkTalpatri' || product === 'circleContainer') setActiveProductKey(product);
+          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan' || product === 'dairyContainer' || product === 'lunchBox' || product === 'dairySweetContainer' || product === 'dairyRoundContainer' || product === 'rectangleContainer' || product === 'hook20mm' || product === 'roundPipe' || product === 'applianceTray' || product === 'motorFanBlade' || product === 'cupContainer' || product === 'petrolPipe' || product === 'proteinContainer' || product === 'rectangleBox' || product === 'smallRoundBottle' || product === 'saltBottle' || product === 'lightWeightContainer' || product === 'foodTrayDish' || product === 'lightWeightDish' || product === 'dermicoolPowderBottle' || product === 'wovenThread' || product === 'childBottle' || product === 'waterTub' || product === 'courierBag' || product === 'stripTape' || product === 'darkTalpatri' || product === 'circleContainer') setActiveProductKey(product);
         });
         c.addEventListener('mousemove', (e: MouseEvent) => {
           const r = c.getBoundingClientRect();
@@ -662,58 +638,13 @@ export default function CaseStudyPage() {
         </div>
       </a>
       {/* 04 Adhesive Dispenser Container - live */}
-      <a className="csp-pcard featured live" href={aralditeHref} data-product="aralditeContainer">
-        <div className="csp-border-beam" />
-        <div className="csp-pglass" />
-        <div className="csp-pglow" />
-        <div className="csp-pmedia">
-          <span className="csp-pidx">04</span>
-          {(activeModels.has('aralditeContainer')) ? (
-            // @ts-ignore custom element
-            <model-viewer
-              data-model-src={aralditeModel}
-              alt="Adhesive Dispenser Container - LIMEX adhesive dispenser bottle 3D model"
-              loading="lazy"
-              interaction-prompt="none"
-              shadow-intensity="0.9"
-              shadow-softness="0.8"
-              exposure="1.22"
-              tone-mapping="neutral"
-              environment-image="legacy"
-              camera-orbit="30deg 72deg 115%"
-              style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
-            />
-          ) : (
-            <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
-          )}
-        </div>
-        <div className="csp-pinfo">
-          <div>
-            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
-              <span className="csp-pfeatured">New Study</span>
-            </div>
-            <div className="csp-pname">Adhesive Dispenser Container</div>
-            <div className="csp-ptag">Adhesive Dispenser - LIMEX + PP</div>
-            <div className="csp-pbar">
-              <span style={{ flex:30, height:'100%', background:'var(--cs-green)', display:'block' }} />
-              <span style={{ flex:70, height:'100%', background:'#c4c7c0', display:'block' }} />
-            </div>
-            <div className="csp-pbarlabels">
-              <span className="csp-pdot pp" /><span className="csp-pblabel">30% LIMEX</span>
-              <span className="csp-psep">-</span>
-              <span className="csp-pdot lx" /><span className="csp-pblabel">70% PP</span>
-            </div>
-          </div>
-          <span className="csp-pgo">-&gt;</span>
-        </div>
-      </a>
 
       <a className="csp-pcard featured live" href={handWashHref} data-product="handWashBottle">
         <div className="csp-border-beam" />
         <div className="csp-pglass" />
         <div className="csp-pglow" />
         <div className="csp-pmedia">
-          <span className="csp-pidx">05</span>
+          <span className="csp-pidx">04</span>
           {(activeModels.has('handWashBottle')) ? (
             // @ts-ignore custom element
             <model-viewer
@@ -760,7 +691,7 @@ export default function CaseStudyPage() {
         <div className="csp-pglass" />
         <div className="csp-pglow" />
         <div className="csp-pmedia">
-          <span className="csp-pidx">06</span>
+          <span className="csp-pidx">05</span>
           {(activeModels.has('hardDish')) ? (
             // @ts-ignore custom element
             <model-viewer
@@ -809,7 +740,7 @@ export default function CaseStudyPage() {
         <div className="csp-pglass" />
         <div className="csp-pglow" />
         <div className="csp-pmedia">
-          <span className="csp-pidx">07</span>
+          <span className="csp-pidx">06</span>
           {(activeModels.has('consilePipe')) ? (
             // @ts-ignore custom element
             <model-viewer
@@ -847,7 +778,7 @@ export default function CaseStudyPage() {
         <div className="csp-pglass" />
         <div className="csp-pglow" />
         <div className="csp-pmedia">
-          <span className="csp-pidx">08</span>
+          <span className="csp-pidx">07</span>
           {(activeModels.has('soapStand')) ? (
             // @ts-ignore custom element
             <model-viewer
@@ -893,7 +824,7 @@ export default function CaseStudyPage() {
         <div className="csp-pglass" />
         <div className="csp-pglow" />
         <div className="csp-pmedia">
-          <span className="csp-pidx">09</span>
+          <span className="csp-pidx">08</span>
           {(activeModels.has('foodOilCan')) ? (
             // @ts-ignore custom element
             <model-viewer
@@ -932,7 +863,7 @@ export default function CaseStudyPage() {
         <div className="csp-pglass" />
         <div className="csp-pglow" />
         <div className="csp-pmedia">
-          <span className="csp-pidx">10</span>
+          <span className="csp-pidx">09</span>
           {(activeModels.has('dairyContainer')) ? (
             // @ts-ignore custom element
             <model-viewer
@@ -968,7 +899,7 @@ export default function CaseStudyPage() {
       {/* 11 Lunch Box - live */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=lunch-box`} data-product="lunchBox">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">11</span>
+        <div className="csp-pmedia"><span className="csp-pidx">10</span>
           {(activeModels.has('lunchBox')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={lunchboxModel} alt="Lunch Box mini bento container 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="38deg 68deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -982,7 +913,7 @@ export default function CaseStudyPage() {
       {/* 12 Dairy Sweet Container - live */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=dairy-sweet-container`} data-product="dairySweetContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">12</span>
+        <div className="csp-pmedia"><span className="csp-pidx">11</span>
           {(activeModels.has('dairySweetContainer')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={dairySweetContainerModel} alt="Dairy Sweet Container D-500 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.75" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="legacy" camera-orbit="18deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -996,7 +927,7 @@ export default function CaseStudyPage() {
       {/* 13 D500 Bowl - live */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=dairy-round-container`} data-product="dairyRoundContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">13</span>
+        <div className="csp-pmedia"><span className="csp-pidx">12</span>
           {(activeModels.has('dairyRoundContainer')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={dairyRoundContainerModel} alt="D500 Bowl 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.08" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 72deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1010,7 +941,7 @@ export default function CaseStudyPage() {
       {/* 14 D-250 Rectangle Container - live */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=rectangle-container`} data-product="rectangleContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">14</span>
+        <div className="csp-pmedia"><span className="csp-pidx">13</span>
           {(activeModels.has('rectangleContainer')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={rectangleContainerModel} alt="D-250 rectangular container 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.75" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 70deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1024,7 +955,7 @@ export default function CaseStudyPage() {
       {/* 15 20 mm Hook — live (newest); shown in numeric sequence after 14 */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=20mm-hook`} data-product="hook20mm">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">15</span>
+        <div className="csp-pmedia"><span className="csp-pidx">14</span>
           {(activeModels.has('hook20mm')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={hook20mmModel} alt="20 mm hook plastic 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="0.85" tone-mapping="neutral" environment-image="neutral" camera-orbit="42deg 68deg 105%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1038,7 +969,7 @@ export default function CaseStudyPage() {
       {/* 16 Round Pipe - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/round-pipe.html`} data-product="roundPipe">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">16</span>
+        <div className="csp-pmedia"><span className="csp-pidx">15</span>
           {(activeModels.has('roundPipe')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={roundPipeModel} alt="Round Pipe molded plastic 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="80deg 76deg 92%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1052,7 +983,7 @@ export default function CaseStudyPage() {
       {/* 17 Fridge / Washing Machine Tray - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=appliance-tray`} data-product="applianceTray">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">17</span>
+        <div className="csp-pmedia"><span className="csp-pidx">16</span>
           {(activeModels.has('applianceTray')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={applianceTrayModel} alt="Fridge / Washing Machine Tray molded plastic 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="28deg 74deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1066,7 +997,7 @@ export default function CaseStudyPage() {
       {/* 18 Motor Fan Blade - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=motor-fan-blade`} data-product="motorFanBlade">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">18</span>
+        <div className="csp-pmedia"><span className="csp-pidx">17</span>
           {(activeModels.has('motorFanBlade')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={motorFanBladeModel} alt="12-blade industrial motor fan blade impeller 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="28deg 62deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1080,7 +1011,7 @@ export default function CaseStudyPage() {
       {/* 19 Cup Container - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=cup-container`} data-product="cupContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">19</span>
+        <div className="csp-pmedia"><span className="csp-pidx">18</span>
           {(activeModels.has('cupContainer')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={cupContainerModel} alt="Cup Container food-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 78deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1094,7 +1025,7 @@ export default function CaseStudyPage() {
       {/* 20 Tooth Brush Collection - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=tooth-brush`} data-product="toothBrush">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">20</span>
+        <div className="csp-pmedia"><span className="csp-pidx">19</span>
           {(activeModels.has('toothBrush')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={toothBrushModel} alt="Tooth Brush Collection personal-care 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 78deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1108,7 +1039,7 @@ export default function CaseStudyPage() {
       {/* 21 Petrol Pipe - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=petrol-pipe`} data-product="petrolPipe">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">21</span>
+        <div className="csp-pmedia"><span className="csp-pidx">20</span>
           {(activeModels.has('petrolPipe')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={petrolPipeModel} alt="Petrol Pipe automotive 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 78deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1122,7 +1053,7 @@ export default function CaseStudyPage() {
       {/* 22 Protein Container - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=protein-container`} data-product="proteinContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">22</span>
+        <div className="csp-pmedia"><span className="csp-pidx">21</span>
           {(activeModels.has('proteinContainer')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={proteinContainerModel} alt="Unbranded tall round protein-container 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="22deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1136,7 +1067,7 @@ export default function CaseStudyPage() {
       {/* 23 Rectangle Container - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=rectangle-box`} data-product="rectangleBox">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">23</span>
+        <div className="csp-pmedia"><span className="csp-pidx">22</span>
           {(activeModels.has('rectangleBox')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={rectangleBoxModel} alt="Rectangle Container general-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 70deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1150,7 +1081,7 @@ export default function CaseStudyPage() {
       {/* 24 Small Round Bottle - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=small-round-bottle`} data-product="smallRoundBottle">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">24</span>
+        <div className="csp-pmedia"><span className="csp-pidx">23</span>
           {(activeModels.has('smallRoundBottle')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={smallRoundBottleModel} alt="Small round bottle general-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.25" tone-mapping="neutral" environment-image="legacy" camera-orbit="20deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1164,7 +1095,7 @@ export default function CaseStudyPage() {
       {/* 25 Salt Bottle - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=salt-bottle`} data-product="saltBottle">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">25</span>
+        <div className="csp-pmedia"><span className="csp-pidx">24</span>
           {(activeModels.has('saltBottle')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={saltBottleModel} alt="Salt Bottle food-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1178,7 +1109,7 @@ export default function CaseStudyPage() {
       {/* 26 Light Weight Container - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=light-weight-container`} data-product="lightWeightContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">26</span>
+        <div className="csp-pmedia"><span className="csp-pidx">25</span>
           {(activeModels.has('lightWeightContainer')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={lightWeightContainerModel} alt="Light Weight Container general-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 74deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1192,7 +1123,7 @@ export default function CaseStudyPage() {
       {/* 27 Food Tray Dish - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=food-tray-dish`} data-product="foodTrayDish">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">27</span>
+        <div className="csp-pmedia"><span className="csp-pidx">26</span>
           {(activeModels.has('foodTrayDish')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={foodTrayDishModel} alt="Food Tray Dish food-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="26deg 60deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1206,7 +1137,7 @@ export default function CaseStudyPage() {
       {/* 28 Thin Wall Circle Dish - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=light-weight-dish`} data-product="lightWeightDish">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">28</span>
+        <div className="csp-pmedia"><span className="csp-pidx">27</span>
           {(activeModels.has('lightWeightDish')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={lightWeightDishModel} alt="Thin Wall Circle Dish kitchenware 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 66deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1220,7 +1151,7 @@ export default function CaseStudyPage() {
       {/* 29 Dermicool Powder Bottle - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={dermicoolPowderBottleHref} data-product="dermicoolPowderBottle">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">29</span>
+        <div className="csp-pmedia"><span className="csp-pidx">28</span>
           {(activeModels.has('dermicoolPowderBottle')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={dermicoolPowderBottleModel} alt="Powder Bottle personal-care 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 74deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1234,7 +1165,7 @@ export default function CaseStudyPage() {
       {/* 30 Woven Thread - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={wovenThreadHref} data-product="wovenThread">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">30</span>
+        <div className="csp-pmedia"><span className="csp-pidx">29</span>
           {(activeModels.has('wovenThread')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={wovenThreadModel} alt="Woven Thread textile material 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="30deg 75deg 105%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1248,7 +1179,7 @@ export default function CaseStudyPage() {
       {/* 31 Child Bottle - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={childBottleHref} data-product="childBottle">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">31</span>
+        <div className="csp-pmedia"><span className="csp-pidx">30</span>
           {(activeModels.has('childBottle')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={childBottleModel} alt="Child Bottle personal-care 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="22deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1262,7 +1193,7 @@ export default function CaseStudyPage() {
       {/* 32 Bath Tumbler - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={waterTubHref} data-product="waterTub">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">32</span>
+        <div className="csp-pmedia"><span className="csp-pidx">31</span>
           {(activeModels.has('waterTub')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={waterTubModel} alt="Bath Tumbler bathroom-accessory 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 74deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1274,37 +1205,13 @@ export default function CaseStudyPage() {
       </a>
 
       {/* 33 Toilet Seat - model live, verified composition pending */}
-      <a className="csp-pcard featured live" href={toiletSeatHref} data-product="toiletSeat">
-        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">33</span>
-          {(activeModels.has('toiletSeat')) ? (
-            // @ts-ignore custom element
-            <model-viewer data-model-src={toiletSeatModel} alt="Toilet Seat sanitaryware 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="22deg 72deg 115%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
-          ) : (
-            <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
-          )}
-        </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Toilet Seat</div><div className="csp-ptag">Sanitaryware - Interactive 3D Model</div><Composition k="toiletSeat">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
-      </a>
 
       {/* 34 Non Woven Bag - model live, verified composition pending */}
-      <a className="csp-pcard featured live" href={nonWovenBagHref} data-product="nonWovenBag">
-        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">34</span>
-          {(activeModels.has('nonWovenBag')) ? (
-            // @ts-ignore custom element
-            <model-viewer data-model-src={nonWovenBagModel} alt="Non Woven Bag packaging-textile 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 76deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
-          ) : (
-            <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
-          )}
-        </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Non Woven Bag</div><div className="csp-ptag">Packaging Textile - Interactive 3D Model</div><Composition k="nonWovenBag">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
-      </a>
 
       {/* 35 Courier Bag - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={courierBagHref} data-product="courierBag">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">35</span>
+        <div className="csp-pmedia"><span className="csp-pidx">32</span>
           {(activeModels.has('courierBag')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={courierBagModel} alt="Courier Bag logistics-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 76deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1318,7 +1225,7 @@ export default function CaseStudyPage() {
       {/* 36 Strip Tape - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={stripTapeHref} data-product="stripTape">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">36</span>
+        <div className="csp-pmedia"><span className="csp-pidx">33</span>
           {(activeModels.has('stripTape')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={stripTapeModel} alt="Strip Tape industrial-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 68deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1332,7 +1239,7 @@ export default function CaseStudyPage() {
       {/* 37 Dark Plastic Talpatri - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={darkTalpatriHref} data-product="darkTalpatri">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">37</span>
+        <div className="csp-pmedia"><span className="csp-pidx">34</span>
           {(activeModels.has('darkTalpatri')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={darkTalpatriModel} alt="Dark Plastic Talpatri industrial-sheeting 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 48deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1346,7 +1253,7 @@ export default function CaseStudyPage() {
       {/* 38 Circle Container - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={circleContainerHref} data-product="circleContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">38</span>
+        <div className="csp-pmedia"><span className="csp-pidx">35</span>
           {(activeModels.has('circleContainer')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={circleContainerModel} alt="Circle Container general-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1423,8 +1330,8 @@ export default function CaseStudyPage() {
                   <span className="csp-av csp-av--l">L</span>
                 </div>
                 <div>
-                  <div className="csp-footer-name">White Dot LLP</div>
-                  <div className="csp-footer-role">Authorized Marketing &amp; Sales · TBM LIMEX</div>
+                  <div className="csp-footer-name">White Dot</div>
+                  <div className="csp-footer-role">Authorized Marketing &amp; Sales</div>
                 </div>
               </div>
               <div className="csp-footer-right">
@@ -1443,7 +1350,7 @@ export default function CaseStudyPage() {
             </div>
           </div>
 
-          <p className="csp-page-footer">© 2026 White Dot LLP · All rights reserved · LIMEX is a trademark of TBM Co., Ltd.</p>
+          <p className="csp-page-footer">© 2026 White Dot · All rights reserved · LIMEX is a trademark of TBM Co., Ltd.</p>
         </div>
       </main>
       <Footer />

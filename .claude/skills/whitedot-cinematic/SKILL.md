@@ -14,7 +14,7 @@ description: >-
 
 # WhiteDot LIMEX — Cinematic System
 
-B2B marketing site for White Dot LLP, an authorized LIMEX distributor. LIMEX =
+B2B marketing site for White Dot, an authorized LIMEX distributor. LIMEX =
 limestone-based (50%+ CaCO₃) replacement for plastic and paper. The brand mark
 is a single white dot = one grain of limestone. Quality bar: Stripe / Linear /
 Aesop / Apple-enterprise — never a generic B2B template.

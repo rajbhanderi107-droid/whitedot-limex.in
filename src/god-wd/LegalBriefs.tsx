@@ -17,7 +17,7 @@ export function LegalBriefs() {
         Authorized supply chain
       </div>
       <div className="split-heading">
-        <h2>One authorized line from the inventor in Japan to your factory.</h2>
+        <h2>One authorized line from the inventor to your factory.</h2>
         <p>
           LIMEX material reaches Indian industries through a single, documented chain of
           authorization. Each party below holds a defined and verifiable role.
@@ -50,7 +50,7 @@ export function LegalBriefs() {
         })}
       </div>
       <p className="god-wd-brief-note">
-        White Dot LLP markets and sells LIMEX raw material only. TBM Co., Ltd. and Seven Dot
+        White Dot markets and sells LIMEX raw material only. TBM Co., Ltd. and Seven Dot
         Company names are used to describe the authorized supply chain.
       </p>
     </section>

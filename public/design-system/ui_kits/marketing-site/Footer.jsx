@@ -5,12 +5,11 @@ const Footer = () => (
       <div className="cine-footer-brand">
         <a className="cine-brand" href="#top">
           <img src="../../assets/whitedot-logo-enhanced.svg" alt="" width="30" height="30"/>
-          <span>White Dot <small>LLP</small></span>
+          <span>White Dot</span>
         </a>
         <p>
           Authorized marketing and sales firm for LIMEX material —
-          limestone-based replacement for plastic and paper, made by TBM
-          Japan.
+          limestone-based replacement for plastic and paper, made by TBM.
         </p>
       </div>
       <div className="cine-footer-col">
@@ -33,8 +32,8 @@ const Footer = () => (
       </div>
     </div>
     <div className="cine-footer-base">
-      <span>© White Dot LLP · Authorized LIMEX Marketing & Sales</span>
-      <span>TBM Japan → Seven Dot → White Dot LLP</span>
+      <span>© White Dot · Authorized LIMEX Marketing & Sales</span>
+      <span>TBM → Seven Dot → White Dot</span>
     </div>
   </footer>
 );

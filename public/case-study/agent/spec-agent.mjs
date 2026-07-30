@@ -57,7 +57,7 @@ if (FACTS && existsSync(FACTS)) FACTS = await readFile(FACTS, "utf8");
 
 const id = NAME.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
-const SYSTEM = `You are a materials-data drafting assistant for White Dot LLP, the Authorized Marketing & Sales of TBM LIMEX (a limestone / calcium-carbonate based composite). White Dot is NOT a partner of TBM — never use the word "partner" or "in partnership".
+const SYSTEM = `You are a materials-data drafting assistant for White Dot, the Authorized Marketing & Sales of TBM LIMEX (a limestone / calcium-carbonate based composite). White Dot is NOT a partner of TBM — never use the word "partner" or "in partnership".
 
 Produce ONE JSON object (no markdown fences) matching this exact schema:
 {

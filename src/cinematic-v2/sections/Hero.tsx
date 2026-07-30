@@ -85,7 +85,7 @@ export default function Hero() {
               <span className="v2h-line">{splitChars(LINE1, 0)}</span>
               <span className="v2h-line">{splitChars(LINE2, LINE1.length + 1)}</span>
               <em className="v2h-headline-accent">
-                to Replace Plastic&nbsp;&middot;&nbsp;Invented by TBM, Japan
+                to Replace Plastic&nbsp;&middot;&nbsp;Invented by TBM
               </em>
             </div>
           </div>

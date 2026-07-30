@@ -4,7 +4,7 @@ import { useReveal, useStaggerGroup } from '../motion';
 const whatsappHref =
   'https://wa.me/918849728938?text=' +
   encodeURIComponent(
-    "Hello White Dot LLP, I'd like to explore LIMEX material for my business."
+    "Hello White Dot, I'd like to explore LIMEX material for my business."
   );
 
 const LAYERS = ['Mineral layer', 'Binder layer', 'Surface layer', 'Material skin'];

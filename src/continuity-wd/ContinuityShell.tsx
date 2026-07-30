@@ -1,4 +1,4 @@
-// White Dot LLP — Continuity Layer: integration shell.
+// White Dot — Continuity Layer: integration shell.
 // Owns the kill-switch check, wires detector + form persistence to the overlay.
 // Removable via `npm run remove:continuity:wd`.
 
@@ -18,7 +18,7 @@ const CONTINUITY_ENABLED =
 
 const WA_NUMBER = "918849728938";
 const WA_BASE_MESSAGE =
-  "Hello White Dot LLP, I want to discuss LIMEX material supply, samples, and pricing for my business.";
+  "Hello White Dot, I want to discuss LIMEX material supply, samples, and pricing for my business.";
 
 export function ContinuityShell() {
   if (!CONTINUITY_ENABLED) return null;

@@ -4,7 +4,6 @@ export const liveCaseStudyModelUrls = [
   '/case-study/model/bobbin.glb',
   '/case-study/model/paint-container-procedural-red-white.glb',
   '/case-study/model/motor-cover-procedural-black.glb',
-  '/case-study/model/araldite-container-procedural.glb',
   '/case-study/model/hand-wash-bottle-duo.glb',
   '/case-study/model/lunchbox-tray-four-color-lineup.glb',
   '/case-study/model/consile-pipe-procedural.glb',
