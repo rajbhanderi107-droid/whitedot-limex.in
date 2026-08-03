@@ -51,6 +51,10 @@ const dermicoolPowderBottleHref = `${basePath}/case-study/product.html?p=dermico
 const dermicoolPowderBottleModel = `${basePath}/case-study/model/product-29-dermicool-powder-bottle.glb`;
 const wovenThreadHref = `${basePath}/case-study/product.html?p=woven-thread`;
 const wovenThreadModel = `${basePath}/case-study/model/product-30-woven-thread.glb`;
+const toiletSeatHref = `${basePath}/case-study/product.html?p=toilet-seat`;
+const toiletSeatModel = `${basePath}/case-study/model/product-33-toilet-seat.glb`;
+const nonWovenBagHref = `${basePath}/case-study/product.html?p=non-woven-bag`;
+const nonWovenBagModel = `${basePath}/case-study/model/product-34-nonwoven-bag.glb`;
 const courierBagHref = `${basePath}/case-study/product.html?p=courier-bag`;
 const courierBagModel = `${basePath}/case-study/model/product-35-courier-bag.glb`;
 const stripTapeHref = `${basePath}/case-study/product.html?p=strip-tape`;
@@ -59,7 +63,7 @@ const darkTalpatriHref = `${basePath}/case-study/product.html?p=dark-plastic-tal
 const darkTalpatriModel = `${basePath}/case-study/model/product-37-dark-plastic-talpatri.glb`;
 const circleContainerHref = `${basePath}/case-study/product.html?p=circle-container`;
 const circleContainerModel = `${basePath}/case-study/model/product-38-circle-container.glb?v=white-20260728`;
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer';
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'toiletSeat' | 'nonWovenBag' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
@@ -90,38 +94,38 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: '04', label: 'Hand Wash Bottle' },
     { value: '2', label: 'Colorways' },
     { value: '3D', label: 'Static Preview' },
-    { value: 'Live', label: 'Product 04', green: true },
+    { value: 'Live', label: 'Product 01', green: true },
 ],
   hardDish: [
     { value: '05', label: 'Hard Dish' },
     { value: '4', label: 'Colorways' },
     { value: '3D', label: 'Photo-Matched' },
-    { value: 'Live', label: 'Product 05', green: true },
+    { value: 'Live', label: 'Product 01', green: true },
 ],
   consilePipe: [
     { value: '06', label: 'Concealed Pipe' },
     { value: 'ISI', label: 'Style Marking' },
     { value: '3D', label: 'Photo-Matched' },
-    { value: 'Live', label: 'Product 06', green: true },
+    { value: 'Live', label: 'Product 01', green: true },
 ],
   soapStand: [
     { value: '07', label: 'Soap Stand' },
     { value: <>15<small>%</small></>, label: 'LIMEX (Sample)' },
     { value: '3D', label: 'Photo-Matched' },
-    { value: 'Live', label: 'Product 07', green: true },
+    { value: 'Live', label: 'Product 01', green: true },
 ],
   foodOilCan: [
     { value: '08', label: 'Food Oil Can' },
     { value: '145', label: 'mm Wide Face' },
     { value: '3D', label: 'Photo-Matched' },
-    { value: 'Live', label: 'Product 08', green: true },
+    { value: 'Live', label: 'Product 01', green: true },
 ],
   dairyContainer: [
     { value: '09', label: 'Dairy Products Container' },
     { value: 'Dairy', label: 'Packaging' },
     { value: '3D', label: 'Photo-Matched' },
-    { value: 'Live', label: 'Product 09', green: true },
-  ],
+    { value: 'Live', label: 'Product 01', green: true },
+],
   lunchBox: [
     { value: '10', label: 'Lunchbox Study' },
     { value: '3D', label: 'Interactive Model' },
@@ -132,109 +136,121 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: '11', label: 'Dairy Sweet Container' },
     { value: '200×140×50', label: 'mm Compact Envelope' },
     { value: 'PP', label: 'Food-Grade Material' },
-    { value: 'Live', label: 'Product 11', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
 ],
   dairyRoundContainer: [
     { value: '12', label: 'D500 Bowl' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'D500', label: 'Dairy Bowl' },
-    { value: 'Live', label: 'Product 12', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
 ],
   rectangleContainer: [
     { value: '13', label: 'D-250 Container' },
     { value: '250×190', label: 'mm Lid Envelope' },
     { value: '3D', label: 'Photo-Matched' },
-    { value: 'Live', label: 'Product 13', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
 ],
   hook20mm: [
     { value: '14', label: '20 mm Hook' },
     { value: '19', label: 'mm Overall Width' },
     { value: '3D', label: 'Photo-Matched' },
-    { value: 'Live', label: 'Product 14', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
 ],
   roundPipe: [
     { value: '15', label: 'Round Pipe' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 15', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
 ],
   applianceTray: [
     { value: '16', label: 'Fridge / Washing Machine Tray' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 16', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
 ],
   motorFanBlade: [
     { value: '17', label: 'Motor Fan Blade' },
     { value: '12', label: 'Radial Blades' },
     { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 17', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
 ],
   cupContainer: [
     { value: '18', label: 'Cup Container' },
     { value: '95×95×149.75', label: 'mm Envelope' },
     { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 18', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
 ],
   toothBrush: [
     { value: '19', label: 'Tooth Brush' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 19', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
 ],
   petrolPipe: [
     { value: '20', label: 'Petrol Pipe' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 20', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
 ],
   proteinContainer: [
     { value: '21', label: 'Protein Container' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 21', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
 ],
   rectangleBox: [
     { value: '22', label: 'Rectangle Container' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 22', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
 ],
   smallRoundBottle: [
     { value: '23', label: 'Small Round Bottle' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 23', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
 ],
   saltBottle: [
     { value: '24', label: 'Salt Bottle' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 24', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
 ],
   lightWeightContainer: [
     { value: '25', label: 'Light Weight Container' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 25', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
 ],
   foodTrayDish: [
     { value: '26', label: 'Food Tray Dish' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 26', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
 ],
   lightWeightDish: [
     { value: '27', label: 'Thin Wall Circle Dish' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 27', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
 ],
   wovenThread: [
     { value: '29', label: 'Woven Thread' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 29', green: true },
+    { value: 'Live', label: 'Product 10', green: true },
+],
+  toiletSeat: [
+    { value: '33', label: 'Toilet Seat' },
+    { value: '3D', label: 'Interactive Model' },
+    { value: 'Pending', label: 'Verified Specs' },
+    { value: 'Live', label: 'Product 10', green: true },
+],
+  nonWovenBag: [
+    { value: '31', label: 'Non Woven Bag' },
+    { value: '3D', label: 'Interactive Model' },
+    { value: 'Pending', label: 'Verified Specs' },
+    { value: 'Live', label: 'Product 31', green: true },
 ],
   courierBag: [
     { value: '30', label: 'Courier Bag' },
@@ -450,7 +466,7 @@ export default function CaseStudyPage() {
         if (!glow) return;
         c.addEventListener('mouseenter', () => {
           const product = c.dataset.product as ProductKey | undefined;
-          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan' || product === 'dairyContainer' || product === 'lunchBox' || product === 'dairySweetContainer' || product === 'dairyRoundContainer' || product === 'rectangleContainer' || product === 'hook20mm' || product === 'roundPipe' || product === 'applianceTray' || product === 'motorFanBlade' || product === 'cupContainer' || product === 'petrolPipe' || product === 'proteinContainer' || product === 'rectangleBox' || product === 'smallRoundBottle' || product === 'saltBottle' || product === 'lightWeightContainer' || product === 'foodTrayDish' || product === 'lightWeightDish' || product === 'dermicoolPowderBottle' || product === 'wovenThread' || product === 'courierBag' || product === 'stripTape' || product === 'darkTalpatri' || product === 'circleContainer') setActiveProductKey(product);
+          if (product === 'bobbin' || product === 'container' || product === 'motorCover' || product === 'handWashBottle' || product === 'hardDish' || product === 'consilePipe' || product === 'soapStand' || product === 'foodOilCan' || product === 'dairyContainer' || product === 'lunchBox' || product === 'dairySweetContainer' || product === 'dairyRoundContainer' || product === 'rectangleContainer' || product === 'hook20mm' || product === 'roundPipe' || product === 'applianceTray' || product === 'motorFanBlade' || product === 'cupContainer' || product === 'petrolPipe' || product === 'proteinContainer' || product === 'rectangleBox' || product === 'smallRoundBottle' || product === 'saltBottle' || product === 'lightWeightContainer' || product === 'foodTrayDish' || product === 'lightWeightDish' || product === 'dermicoolPowderBottle' || product === 'wovenThread' || product === 'toiletSeat' || product === 'nonWovenBag' || product === 'courierBag' || product === 'stripTape' || product === 'darkTalpatri' || product === 'circleContainer') setActiveProductKey(product);
         });
         c.addEventListener('mousemove', (e: MouseEvent) => {
           const r = c.getBoundingClientRect();
@@ -950,7 +966,7 @@ export default function CaseStudyPage() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">20 mm Hook</div><div className="csp-ptag">Hardware - Interactive 3D Model</div><Composition k="hook20mm">Photo-matched geometry</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 16 Round Pipe - model live, verified composition pending */}
+      {/* 01 Round Pipe - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/round-pipe.html`} data-product="roundPipe">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">15</span>
@@ -964,7 +980,7 @@ export default function CaseStudyPage() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Round Pipe</div><div className="csp-ptag">Industrial Pipe - Interactive 3D Model</div><Composition k="roundPipe">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 17 Fridge / Washing Machine Tray - model live, verified composition pending */}
+      {/* 02 Fridge / Washing Machine Tray - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=appliance-tray`} data-product="applianceTray">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">16</span>
@@ -978,7 +994,7 @@ export default function CaseStudyPage() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Fridge / Washing Machine Tray</div><div className="csp-ptag">Appliance Component - Interactive 3D Model</div><Composition k="applianceTray">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 18 Motor Fan Blade - model live, verified composition pending */}
+      {/* 03 Motor Fan Blade - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=motor-fan-blade`} data-product="motorFanBlade">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">17</span>
@@ -992,7 +1008,7 @@ export default function CaseStudyPage() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Motor Fan Blade</div><div className="csp-ptag">Motor Component - Interactive 3D Model</div><Composition k="motorFanBlade">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 19 Cup Container - model live, verified composition pending */}
+      {/* 04 Cup Container - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=cup-container`} data-product="cupContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">18</span>
@@ -1006,7 +1022,7 @@ export default function CaseStudyPage() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Cup Container</div><div className="csp-ptag">Food Packaging - Interactive 3D Model</div><Composition k="cupContainer">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 20 Tooth Brush Collection - model live, verified composition pending */}
+      {/* 05 Tooth Brush Collection - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=tooth-brush`} data-product="toothBrush">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">19</span>
@@ -1020,7 +1036,7 @@ export default function CaseStudyPage() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Tooth Brush Collection</div><div className="csp-ptag">Personal Care - Interactive 3D Model</div><Composition k="toothBrush">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 21 Petrol Pipe - model live, verified composition pending */}
+      {/* 06 Petrol Pipe - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=petrol-pipe`} data-product="petrolPipe">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">20</span>
@@ -1034,7 +1050,7 @@ export default function CaseStudyPage() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Petrol Pipe</div><div className="csp-ptag">Automotive Component - Interactive 3D Model</div><Composition k="petrolPipe">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 22 Protein Container - model live, verified composition pending */}
+      {/* 07 Protein Container - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=protein-container`} data-product="proteinContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">21</span>
@@ -1048,7 +1064,7 @@ export default function CaseStudyPage() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Protein Container</div><div className="csp-ptag">Nutrition Packaging - Interactive 3D Model</div><Composition k="proteinContainer">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 23 Rectangle Container - model live, verified composition pending */}
+      {/* 08 Rectangle Container - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=rectangle-box`} data-product="rectangleBox">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">22</span>
@@ -1062,7 +1078,7 @@ export default function CaseStudyPage() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Rectangle Container</div><div className="csp-ptag">General Packaging - Interactive 3D Model</div><Composition k="rectangleBox">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 24 Small Round Bottle - model live, verified composition pending */}
+      {/* 09 Small Round Bottle - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=small-round-bottle`} data-product="smallRoundBottle">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">23</span>
@@ -1076,7 +1092,7 @@ export default function CaseStudyPage() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Small Round Bottle</div><div className="csp-ptag">General Packaging - Interactive 3D Model</div><Composition k="smallRoundBottle">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 25 Salt Bottle - model live, verified composition pending */}
+      {/* 10 Salt Bottle - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=salt-bottle`} data-product="saltBottle">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">24</span>
@@ -1090,7 +1106,7 @@ export default function CaseStudyPage() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Salt Bottle</div><div className="csp-ptag">Food Packaging - Interactive 3D Model</div><Composition k="saltBottle">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 26 Light Weight Container - model live, verified composition pending */}
+      {/* 11 Light Weight Container - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=light-weight-container`} data-product="lightWeightContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">25</span>
@@ -1104,7 +1120,7 @@ export default function CaseStudyPage() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Light Weight Container</div><div className="csp-ptag">General Packaging - Interactive 3D Model</div><Composition k="lightWeightContainer">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 27 Food Tray Dish - model live, verified composition pending */}
+      {/* 12 Food Tray Dish - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=food-tray-dish`} data-product="foodTrayDish">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">26</span>
@@ -1118,7 +1134,7 @@ export default function CaseStudyPage() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Food Tray Dish</div><div className="csp-ptag">Food Packaging - Interactive 3D Model</div><Composition k="foodTrayDish">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 28 Thin Wall Circle Dish - model live, verified composition pending */}
+      {/* 13 Thin Wall Circle Dish - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=light-weight-dish`} data-product="lightWeightDish">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">27</span>
@@ -1132,7 +1148,7 @@ export default function CaseStudyPage() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Thin Wall Circle Dish</div><div className="csp-ptag">Kitchenware - Interactive 3D Model</div><Composition k="lightWeightDish">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 29 Dermicool Powder Bottle - model live, verified composition pending */}
+      {/* 14 Dermicool Powder Bottle - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={dermicoolPowderBottleHref} data-product="dermicoolPowderBottle">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">28</span>
@@ -1146,7 +1162,7 @@ export default function CaseStudyPage() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Powder Bottle</div><div className="csp-ptag">Personal Care Packaging - Interactive 3D Model</div><Composition k="dermicoolPowderBottle">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 30 Woven Thread - model live, verified composition pending */}
+      {/* 15 Woven Thread - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={wovenThreadHref} data-product="wovenThread">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">29</span>
@@ -1162,14 +1178,42 @@ export default function CaseStudyPage() {
 
 
 
-      {/* 33 Toilet Seat - model live, verified composition pending */}
+      {/* 16 Toilet Seat - model live, verified composition pending */}
 
-      {/* 34 Non Woven Bag - model live, verified composition pending */}
+      {/* 17 Non Woven Bag - model live, verified composition pending */}
 
-      {/* 35 Courier Bag - model live, verified composition pending */}
-      <a className="csp-pcard featured live" href={courierBagHref} data-product="courierBag">
+      {/* 18 Toilet Seat - model live, verified composition pending */}
+      <a className="csp-pcard featured live" href={toiletSeatHref} data-product="toiletSeat">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">30</span>
+          {(activeModels.has('toiletSeat')) ? (
+            // @ts-ignore custom element
+            <model-viewer data-model-src={toiletSeatModel} alt="Toilet Seat sanitaryware 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="22deg 72deg 115%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          ) : (
+            <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Toilet Seat</div><div className="csp-ptag">Sanitaryware - Interactive 3D Model</div><Composition k="toiletSeat">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
+      {/* 19 Non Woven Bag - model live, verified composition pending */}
+      <a className="csp-pcard featured live" href={nonWovenBagHref} data-product="nonWovenBag">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">31</span>
+          {(activeModels.has('nonWovenBag')) ? (
+            // @ts-ignore custom element
+            <model-viewer data-model-src={nonWovenBagModel} alt="Non Woven Bag packaging-textile 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 76deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          ) : (
+            <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Non Woven Bag</div><div className="csp-ptag">Packaging Textile - Interactive 3D Model</div><Composition k="nonWovenBag">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
+      {/* 20 Courier Bag - model live, verified composition pending */}
+      <a className="csp-pcard featured live" href={courierBagHref} data-product="courierBag">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">32</span>
           {(activeModels.has('courierBag')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={courierBagModel} alt="Courier Bag logistics-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 76deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1180,10 +1224,10 @@ export default function CaseStudyPage() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Courier Bag</div><div className="csp-ptag">Logistics Packaging - Interactive 3D Model</div><Composition k="courierBag">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 36 Strip Tape - model live, verified composition pending */}
+      {/* 21 Strip Tape - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={stripTapeHref} data-product="stripTape">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">31</span>
+        <div className="csp-pmedia"><span className="csp-pidx">33</span>
           {(activeModels.has('stripTape')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={stripTapeModel} alt="Strip Tape industrial-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 68deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1194,10 +1238,10 @@ export default function CaseStudyPage() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Strip Tape</div><div className="csp-ptag">Industrial Packaging - Interactive 3D Model</div><Composition k="stripTape">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 37 Dark Plastic Talpatri - model live, verified composition pending */}
+      {/* 22 Dark Plastic Talpatri - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={darkTalpatriHref} data-product="darkTalpatri">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">32</span>
+        <div className="csp-pmedia"><span className="csp-pidx">34</span>
           {(activeModels.has('darkTalpatri')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={darkTalpatriModel} alt="Dark Plastic Talpatri industrial-sheeting 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 48deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1208,10 +1252,10 @@ export default function CaseStudyPage() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Dark Plastic Talpatri</div><div className="csp-ptag">Industrial Sheeting - Interactive 3D Model</div><Composition k="darkTalpatri">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 38 Circle Container - model live, verified composition pending */}
+      {/* 23 Circle Container - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={circleContainerHref} data-product="circleContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">33</span>
+        <div className="csp-pmedia"><span className="csp-pidx">35</span>
           {(activeModels.has('circleContainer')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={circleContainerModel} alt="Circle Container general-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />

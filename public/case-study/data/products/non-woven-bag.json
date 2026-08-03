@@ -1,15 +1,15 @@
 {
-  "id": "courierBag",
-  "index": "32",
-  "slug": "courier-bag",
-  "name": "Courier Bag",
-  "category": "Logistics Packaging",
+  "id": "nonWovenBag",
+  "index": "31",
+  "slug": "non-woven-bag",
+  "name": "Non Woven Bag",
+  "category": "Packaging Textile",
   "status": "live",
-  "modelFile": "model/product-35-courier-bag.glb",
-  "htmlPage": "product.html?p=courier-bag  (generic template, no dedicated file)",
+  "modelFile": "model/product-34-nonwoven-bag.glb",
+  "htmlPage": "product.html?p=non-woven-bag  (generic template, no dedicated file)",
   "composition": [
     {
-      "name": "LIMEX PE78-29L",
+      "name": "LIMEX PE26 F-51",
       "pct": 70,
       "color": "#4f9a35",
       "verified": true,
@@ -26,7 +26,7 @@
   "specs": [
     {
       "label": "Material Base",
-      "value": "LIMEX PE78-29L + PP Homo-Polymer",
+      "value": "LIMEX PE26 F-51 + PP Homo-Polymer",
       "verified": true,
       "source": "wd-pp-limex-notebook-2026-07-20"
     },
@@ -38,11 +38,11 @@
     },
     {
       "label": "LIMEX Grade",
-      "value": "PE78-29L",
+      "value": "PE26 F-51",
       "verified": true,
       "source": "wd-pp-limex-notebook-2026-07-20"
     }
   ],
-  "referenceGrade": "PE78-29L",
-  "mixRatio": "70% LIMEX PE78-29L + 30% PP Homo-Polymer"
+  "referenceGrade": "PE26 F-51",
+  "mixRatio": "70% LIMEX PE26 F-51 + 30% PP Homo-Polymer"
 }

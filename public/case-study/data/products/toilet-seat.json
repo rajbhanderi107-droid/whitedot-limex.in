@@ -1,15 +1,15 @@
 {
-  "id": "courierBag",
-  "index": "32",
-  "slug": "courier-bag",
-  "name": "Courier Bag",
-  "category": "Logistics Packaging",
+  "id": "toiletSeat",
+  "index": "30",
+  "slug": "toilet-seat",
+  "name": "Toilet Seat",
+  "category": "Sanitaryware",
   "status": "live",
-  "modelFile": "model/product-35-courier-bag.glb",
-  "htmlPage": "product.html?p=courier-bag  (generic template, no dedicated file)",
+  "modelFile": "model/product-33-toilet-seat.glb",
+  "htmlPage": "product.html?p=toilet-seat  (generic template, no dedicated file)",
   "composition": [
     {
-      "name": "LIMEX PE78-29L",
+      "name": "LIMEX Compound",
       "pct": 70,
       "color": "#4f9a35",
       "verified": true,
@@ -26,7 +26,7 @@
   "specs": [
     {
       "label": "Material Base",
-      "value": "LIMEX PE78-29L + PP Homo-Polymer",
+      "value": "LIMEX Compound + PP Homo-Polymer",
       "verified": true,
       "source": "wd-pp-limex-notebook-2026-07-20"
     },
@@ -38,11 +38,12 @@
     },
     {
       "label": "LIMEX Grade",
-      "value": "PE78-29L",
-      "verified": true,
-      "source": "wd-pp-limex-notebook-2026-07-20"
+      "value": "Per lot TDS",
+      "verified": false,
+      "source": "wd-pp-limex-notebook-2026-07-20",
+      "note": "Grade not recorded in supplied notebook for this product."
     }
   ],
-  "referenceGrade": "PE78-29L",
-  "mixRatio": "70% LIMEX PE78-29L + 30% PP Homo-Polymer"
+  "referenceGrade": "Per lot TDS",
+  "mixRatio": "70% LIMEX + 30% PP Homo-Polymer"
 }

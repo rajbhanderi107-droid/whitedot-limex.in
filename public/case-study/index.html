@@ -782,14 +782,14 @@
       <p>Everyday plastic parts, rebuilt with limestone-based material. Select a product to explore it in 3D and see how its composition changes.</p>
       <!-- Stats strip -->
       <div class="hero-stats-strip" data-active-product="overview">
-        <div class="hs-cell"><div class="hs-item"><span class="hs-num">33</span><span class="hs-label">Products Mapped</span></div></div>
+        <div class="hs-cell"><div class="hs-item"><span class="hs-num">35</span><span class="hs-label">Products Mapped</span></div></div>
         <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num">08</span><span class="hs-label">Live Studies</span></div></div>
         <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num">3D</span><span class="hs-label">Interactive</span></div></div>
         <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num orange">~38<small>%</small></span><span class="hs-label">CO2e Cut (LCA)</span></div></div>
       </div>
     </div>
 
-    <!-- Product Grid — rendered client-side from data/products.json (33 products), see script at bottom -->
+    <!-- Product Grid — rendered client-side from data/products.json (35 products), see script at bottom -->
     <div class="product-grid-section">
       <div class="lens-curve-wrapper">
         <div class="product-grid" id="productGrid"></div>
@@ -860,6 +860,8 @@
     lightWeightDish: './model/product-28-thin-wall-circle-dish.glb',
     dermicoolPowderBottle: './model/product-29-dermicool-powder-bottle.glb?v=rect-narrow-neck-20260717',
     wovenThread: './model/product-30-woven-thread.glb',
+    toiletSeat: './model/product-33-toilet-seat.glb',
+    nonWovenBag: './model/product-34-nonwoven-bag.glb',
     courierBag: './model/product-35-courier-bag.glb',
     stripTape: './model/product-36-strip-tape.glb',
     darkTalpatri: './model/product-37-dark-plastic-talpatri.glb',
@@ -885,6 +887,8 @@
     foodTrayDish: '26deg 60deg 108%',
     lightWeightDish: '24deg 66deg 110%',
     wovenThread: '30deg 75deg 105%',
+    toiletSeat: '22deg 72deg 115%',
+    nonWovenBag: '24deg 76deg 110%',
     courierBag: '24deg 76deg 110%',
     stripTape: '24deg 68deg 110%',
     darkTalpatri: '20deg 48deg 108%',
@@ -910,6 +914,8 @@
     foodTrayDish: 'New Model',
     lightWeightDish: 'New Model',
     wovenThread: 'New Model',
+    toiletSeat: 'New Model',
+    nonWovenBag: 'New Model',
     courierBag: 'New Model',
     stripTape: 'New Model',
     darkTalpatri: 'New Model',
@@ -1142,7 +1148,7 @@
   const statsStrip = document.querySelector('.hero-stats-strip');
   const productStats = {
     overview: [
-      ['33', 'Products Mapped', false],
+      ['35', 'Products Mapped', false],
       ['09', 'Live Studies', false],
       ['3D', 'Interactive', false],
       ['~38<small>%</small>', 'CO2e Cut (LCA)', true],
