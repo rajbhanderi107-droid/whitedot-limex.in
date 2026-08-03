@@ -1,0 +1,103 @@
+name: Prune stale case-study rows (VPS DB)
+
+# One-off maintenance: the case_study_products blob in the portal DB still holds
+# rows for products removed from the shipped site (their entries used to win the
+# merge). The site and portal now treat specs.json as the authoritative roster,
+# so those rows are inert — this drops them for good and re-syncs the stored
+# index numbers to the shipped sequence. Every other stored field (portal edits
+# to composition, specs, tagline, description) is left untouched.
+#
+# Run with apply=false first: it prints what would change and writes nothing.
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "false = dry run (default), true = write the pruned blob"
+        required: true
+        default: "false"
+
+concurrency:
+  group: prune-case-study-db
+  cancel-in-progress: false
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prune case_study_products blob
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: root
+          key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 10m
+          script: |
+            set -e
+            cd /opt/whitedot-backend
+
+            cat > /tmp/prune-case-studies.mjs <<'MJS'
+            import { PrismaClient } from "@prisma/client";
+            import { writeFileSync } from "node:fs";
+
+            const KEY = "case_study_products";
+            const REMOVE = ["aralditeContainer", "childBottle", "waterTub"];
+            const INDEX = { "bobbin": "01", "container": "02", "motorCover": "03", "handWashBottle": "04", "hardDish": "05", "consilePipe": "06", "soapStand": "07", "foodOilCan": "08", "dairyProductsContainer": "09", "lunchBox": "10", "dairySweetContainer": "11", "dairyRoundContainer": "12", "rectangleContainer": "13", "hook20mm": "14", "roundPipe": "15", "applianceTray": "16", "motorFanBlade": "17", "cupContainer": "18", "toothBrush": "19", "petrolPipe": "20", "proteinContainer": "21", "rectangleBox": "22", "smallRoundBottle": "23", "saltBottle": "24", "lightWeightContainer": "25", "foodTrayDish": "26", "lightWeightDish": "27", "dermicoolPowderBottle": "28", "wovenThread": "29", "toiletSeat": "30", "nonWovenBag": "31", "courierBag": "32", "stripTape": "33", "darkTalpatri": "34", "circleContainer": "35" };
+            const ORDER = ["bobbin", "container", "motorCover", "handWashBottle", "hardDish", "consilePipe", "soapStand", "foodOilCan", "dairyProductsContainer", "lunchBox", "dairySweetContainer", "dairyRoundContainer", "rectangleContainer", "hook20mm", "roundPipe", "applianceTray", "motorFanBlade", "cupContainer", "toothBrush", "petrolPipe", "proteinContainer", "rectangleBox", "smallRoundBottle", "saltBottle", "lightWeightContainer", "foodTrayDish", "lightWeightDish", "dermicoolPowderBottle", "wovenThread", "toiletSeat", "nonWovenBag", "courierBag", "stripTape", "darkTalpatri", "circleContainer"];
+            const APPLY = process.env.APPLY === "true";
+
+            const prisma = new PrismaClient();
+            const row = await prisma.websiteSetting.findUnique({ where: { key: KEY } });
+            if (!row || !row.value) {
+              console.log("no stored blob — nothing to prune");
+              process.exit(0);
+            }
+
+            const parsed = JSON.parse(row.value);
+            const products = parsed.products ?? {};
+            console.log("stored products:", Object.keys(products).length);
+
+            writeFileSync("/tmp/case-study-backup.json", row.value);
+            console.log("backup written to /tmp/case-study-backup.json");
+
+            const dropped = REMOVE.filter((k) => k in products);
+            const unknown = Object.keys(products).filter((k) => !(k in INDEX) && !REMOVE.includes(k));
+            console.log("dropping:", dropped.join(", ") || "(none)");
+            if (unknown.length) console.log("NOT in shipped roster, left alone:", unknown.join(", "));
+
+            const next = {};
+            for (const k of ORDER) {
+              if (!(k in products)) continue;
+              const p = { ...products[k] };
+              if (p.index !== INDEX[k]) {
+                console.log("  reindex", k, p.index, "->", INDEX[k]);
+                p.index = INDEX[k];
+              }
+              next[k] = p;
+            }
+            for (const k of unknown) next[k] = products[k];
+
+            console.log("result:", Object.keys(next).length, "products");
+            if (!APPLY) {
+              console.log("DRY RUN — nothing written. Re-run with apply=true to commit.");
+              process.exit(0);
+            }
+
+            await prisma.websiteSetting.update({
+              where: { key: KEY },
+              data: { value: JSON.stringify({ ...parsed, products: next }) },
+            });
+            console.log("WRITTEN");
+            MJS
+
+            docker compose cp /tmp/prune-case-studies.mjs api:/tmp/prune-case-studies.mjs
+            docker compose exec -T -e APPLY=${{ github.event.inputs.apply }} api node /tmp/prune-case-studies.mjs
+
+            mkdir -p /opt/whitedot-backend/backups
+            TS=$(date +%Y%m%d-%H%M%S)
+            docker compose cp api:/tmp/case-study-backup.json "/opt/whitedot-backend/backups/case_study_products-$TS.json" || true
+            ls -la /opt/whitedot-backend/backups/ | tail -5
+
+            echo "=== public endpoint after ==="
+            curl -fsS http://127.0.0.1:4000/api/public/case-studies | head -c 200 || true
+            echo ""
