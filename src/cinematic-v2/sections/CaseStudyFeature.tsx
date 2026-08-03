@@ -53,10 +53,6 @@ const dermicoolPowderBottleHref = `${basePath}/case-study/product.html?p=dermico
 const dermicoolPowderBottleModel = `${basePath}/case-study/model/product-29-dermicool-powder-bottle.glb`;
 const wovenThreadHref = `${basePath}/case-study/product.html?p=woven-thread`;
 const wovenThreadModel = `${basePath}/case-study/model/product-30-woven-thread.glb`;
-const childBottleHref = `${basePath}/case-study/product.html?p=child-bottle`;
-const childBottleModel = `${basePath}/case-study/model/product-31-sippy-cup.glb`;
-const waterTubHref = `${basePath}/case-study/product.html?p=bath-tumbler`;
-const waterTubModel = `${basePath}/case-study/model/product-32-bath-tumbler.glb`;
 const courierBagHref = `${basePath}/case-study/product.html?p=courier-bag`;
 const courierBagModel = `${basePath}/case-study/model/product-35-courier-bag.glb`;
 const stripTapeHref = `${basePath}/case-study/product.html?p=strip-tape`;
@@ -65,8 +61,8 @@ const darkTalpatriHref = `${basePath}/case-study/product.html?p=dark-plastic-tal
 const darkTalpatriModel = `${basePath}/case-study/model/product-37-dark-plastic-talpatri.glb`;
 const circleContainerHref = `${basePath}/case-study/product.html?p=circle-container`;
 const circleContainerModel = `${basePath}/case-study/model/product-38-circle-container.glb?v=white-20260728`;
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'childBottle' | 'waterTub' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer';
-const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer', 'lunchBox', 'dairySweetContainer', 'dairyRoundContainer', 'rectangleContainer', 'hook20mm', 'roundPipe', 'applianceTray', 'motorFanBlade', 'cupContainer', 'toothBrush', 'petrolPipe', 'proteinContainer', 'rectangleBox', 'smallRoundBottle', 'saltBottle', 'lightWeightContainer', 'foodTrayDish', 'lightWeightDish', 'dermicoolPowderBottle', 'wovenThread', 'childBottle', 'waterTub', 'courierBag', 'stripTape', 'darkTalpatri', 'circleContainer']);
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer';
+const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer', 'lunchBox', 'dairySweetContainer', 'dairyRoundContainer', 'rectangleContainer', 'hook20mm', 'roundPipe', 'applianceTray', 'motorFanBlade', 'cupContainer', 'toothBrush', 'petrolPipe', 'proteinContainer', 'rectangleBox', 'smallRoundBottle', 'saltBottle', 'lightWeightContainer', 'foodTrayDish', 'lightWeightDish', 'dermicoolPowderBottle', 'wovenThread', 'courierBag', 'stripTape', 'darkTalpatri', 'circleContainer']);
 
 // Pending products — same card as live ones; 3D model + spec details land later.
 const pendingProducts: { idx: string; slug: string; name: string; tag: string }[] = [];
@@ -80,7 +76,7 @@ function monogram(name: string): string {
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
-    { value: '35', label: 'Products in LIMEX' },
+    { value: '33', label: 'Products in LIMEX' },
     { value: '3D', label: 'Interactive' },
     { value: <>100<small>%</small></>, label: 'LIMEX + Color' },
     { value: <>~38<small>%</small></>, label: 'CO2e Cut (LCA)', green: true },
@@ -90,211 +86,199 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: <>40<small>%</small></>, label: 'LIMEX' },
     { value: <>60<small>%</small></>, label: 'PP' },
     { value: <>~31<small>%</small></>, label: 'Limestone in Part', green: true },
-  ],
+],
   container: [
     { value: '02', label: 'Paint Container' },
     { value: <>25<small>%</small></>, label: 'LIMEX' },
     { value: <>75<small>%</small></>, label: 'PP' },
     { value: <>~20<small>%</small></>, label: 'Limestone in Part', green: true },
-  ],
+],
   motorCover: [
     { value: '03', label: 'Motor Cover' },
     { value: <>50<small>%</small></>, label: 'LIMEX' },
     { value: <>50<small>%</small></>, label: 'PP' },
     { value: <>~39<small>%</small></>, label: 'Limestone in Part', green: true },
-  ],
+],
   handWashBottle: [
     { value: '04', label: 'Hand Wash Bottle' },
     { value: '2', label: 'Colorways' },
     { value: '3D', label: 'Static Preview' },
     { value: 'Live', label: 'Product 04', green: true },
-  ],
+],
   hardDish: [
     { value: '05', label: 'Hard Dish' },
     { value: '4', label: 'Colorways' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 05', green: true },
-  ],
+],
   consilePipe: [
     { value: '06', label: 'Concealed Pipe' },
     { value: 'ISI', label: 'Style Marking' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 06', green: true },
-  ],
+],
   soapStand: [
     { value: '07', label: 'Soap Stand' },
     { value: <>15<small>%</small></>, label: 'LIMEX (Sample)' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 07', green: true },
-  ],
+],
   foodOilCan: [
     { value: '08', label: 'Food Oil Can' },
     { value: '145', label: 'mm Wide Face' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 08', green: true },
-  ],
+],
   dairyProductsContainer: [
     { value: '09', label: 'Dairy Container' },
     { value: '1', label: 'Snap-Fit Lid + Tab' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 09', green: true },
-  ],
+],
   lunchBox: [
     { value: '10', label: 'Lunch Box' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Mini', label: 'Bento Container' },
     { value: 'Live', label: 'Product 10', green: true },
-  ],
+],
   dairySweetContainer: [
     { value: '11', label: 'Dairy Sweet Container' },
     { value: '200×140×50', label: 'mm Compact Envelope' },
     { value: 'PP', label: 'Food-Grade Material' },
     { value: 'Live', label: 'Product 11', green: true },
-  ],
+],
   dairyRoundContainer: [
     { value: '12', label: 'D500 Bowl' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'D500', label: 'Dairy Bowl' },
     { value: 'Live', label: 'Product 12', green: true },
-  ],
+],
   rectangleContainer: [
     { value: '13', label: 'D-250 Container' },
     { value: '250×190', label: 'mm Envelope' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 13', green: true },
-  ],
+],
   hook20mm: [
     { value: '14', label: '20 mm Hook' },
     { value: '19', label: 'mm Overall Width' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Live', label: 'Product 14', green: true },
-  ],
+],
   roundPipe: [
     { value: '15', label: 'Round Pipe' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 15', green: true },
-  ],
+],
   applianceTray: [
     { value: '16', label: 'Fridge / Washing Machine Tray' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 16', green: true },
-  ],
+],
   motorFanBlade: [
     { value: '17', label: 'Motor Fan Blade' },
     { value: '12', label: 'Radial Blades' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 17', green: true },
-  ],
+],
   cupContainer: [
     { value: '18', label: 'Cup Container' },
     { value: '95×95×149.75', label: 'mm Envelope' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 18', green: true },
-  ],
+],
   toothBrush: [
     { value: '19', label: 'Tooth Brush' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 19', green: true },
-  ],
+],
   petrolPipe: [
     { value: '20', label: 'Petrol Pipe' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 20', green: true },
-  ],
+],
   proteinContainer: [
     { value: '21', label: 'Protein Container' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 21', green: true },
-  ],
+],
   rectangleBox: [
     { value: '22', label: 'Rectangle Container' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 22', green: true },
-  ],
+],
   smallRoundBottle: [
     { value: '23', label: 'Small Round Bottle' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 23', green: true },
-  ],
+],
   saltBottle: [
     { value: '24', label: 'Salt Bottle' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 24', green: true },
-  ],
+],
   lightWeightContainer: [
     { value: '25', label: 'Light Weight Container' },
     { value: '3D', label: 'Photo-Matched' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 25', green: true },
-  ],
+],
   foodTrayDish: [
     { value: '26', label: 'Food Tray Dish' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 26', green: true },
-  ],
+],
   lightWeightDish: [
     { value: '27', label: 'Thin Wall Circle Dish' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 27', green: true },
-  ],
+],
   dermicoolPowderBottle: [
     { value: '28', label: 'Powder Bottle' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 28', green: true },
-  ],
-  childBottle: [
-    { value: '30', label: 'Child Bottle' },
+],
+  courierBag: [
+    { value: '30', label: 'Courier Bag' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 30', green: true },
-  ],
-  waterTub: [
-    { value: '31', label: 'Bath Tumbler' },
+],
+  stripTape: [
+    { value: '31', label: 'Strip Tape' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 31', green: true },
-  ],
-  courierBag: [
-    { value: '32', label: 'Courier Bag' },
+],
+  darkTalpatri: [
+    { value: '32', label: 'Dark Plastic Talpatri' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 32', green: true },
-  ],
-  stripTape: [
-    { value: '33', label: 'Strip Tape' },
+],
+  circleContainer: [
+    { value: '33', label: 'Circle Container' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 33', green: true },
-  ],
-  darkTalpatri: [
-    { value: '34', label: 'Dark Plastic Talpatri' },
-    { value: '3D', label: 'Interactive Model' },
-    { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 34', green: true },
-  ],
-  circleContainer: [
-    { value: '35', label: 'Circle Container' },
-    { value: '3D', label: 'Interactive Model' },
-    { value: 'Pending', label: 'Verified Specs' },
-    { value: 'Live', label: 'Product 35', green: true },
-  ],
+],
   wovenThread: [
     { value: '29', label: 'Woven Thread' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 29', green: true },
-  ],
+],
 };
 
 export default function CaseStudyFeature() {
@@ -1224,33 +1208,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Woven Thread</div><div className="csp-ptag">Textile Material - Interactive 3D Model</div><Composition k="wovenThread">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 31 Child Bottle - model live, verified composition pending */}
-      <a className="csp-pcard featured live" href={childBottleHref} data-product="childBottle">
-        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">30</span>
-          {(activeModels.has('childBottle')) ? (
-            // @ts-ignore custom element
-            <model-viewer data-model-src={childBottleModel} alt="Child Bottle personal-care 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="22deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
-          ) : (
-            <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
-          )}
-        </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Child Bottle</div><div className="csp-ptag">Personal Care Packaging - Interactive 3D Model</div><Composition k="childBottle">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
-      </a>
 
-      {/* 32 Bath Tumbler - model live, verified composition pending */}
-      <a className="csp-pcard featured live" href={waterTubHref} data-product="waterTub">
-        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">31</span>
-          {(activeModels.has('waterTub')) ? (
-            // @ts-ignore custom element
-            <model-viewer data-model-src={waterTubModel} alt="Bath Tumbler bathroom-accessory 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 74deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
-          ) : (
-            <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
-          )}
-        </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Bath Tumbler</div><div className="csp-ptag">Bathroom Accessory - Interactive 3D Model</div><Composition k="waterTub">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
-      </a>
 
       {/* 33 Toilet Seat - model live, verified composition pending */}
 
@@ -1259,7 +1217,7 @@ export default function CaseStudyFeature() {
       {/* 35 Courier Bag - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={courierBagHref} data-product="courierBag">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">32</span>
+        <div className="csp-pmedia"><span className="csp-pidx">30</span>
           {(activeModels.has('courierBag')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={courierBagModel} alt="Courier Bag logistics-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 76deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1273,7 +1231,7 @@ export default function CaseStudyFeature() {
       {/* 36 Strip Tape - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={stripTapeHref} data-product="stripTape">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">33</span>
+        <div className="csp-pmedia"><span className="csp-pidx">31</span>
           {(activeModels.has('stripTape')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={stripTapeModel} alt="Strip Tape industrial-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 68deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1287,7 +1245,7 @@ export default function CaseStudyFeature() {
       {/* 37 Dark Plastic Talpatri - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={darkTalpatriHref} data-product="darkTalpatri">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">34</span>
+        <div className="csp-pmedia"><span className="csp-pidx">32</span>
           {(activeModels.has('darkTalpatri')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={darkTalpatriModel} alt="Dark Plastic Talpatri industrial-sheeting 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 48deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
@@ -1301,7 +1259,7 @@ export default function CaseStudyFeature() {
       {/* 38 Circle Container - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={circleContainerHref} data-product="circleContainer">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
-        <div className="csp-pmedia"><span className="csp-pidx">35</span>
+        <div className="csp-pmedia"><span className="csp-pidx">33</span>
           {(activeModels.has('circleContainer')) ? (
             // @ts-ignore custom element
             <model-viewer data-model-src={circleContainerModel} alt="Circle Container general-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />

@@ -13,10 +13,10 @@
  */
 
 /* ------------------------------------------------------------------ */
-/* COLOR — the locked palette (TBM Japan monochromatic system)         */
+/* COLOR — the locked palette (TBM monochromatic system)         */
 /* ------------------------------------------------------------------ */
 export const color = {
-  /** Canvas / background — TBM Japan pure near-black. */
+  /** Canvas / background — TBM pure near-black. */
   canvas: '#080808',
   /** Slightly raised canvas for layered sections / panels. */
   canvasRaised: '#111111',

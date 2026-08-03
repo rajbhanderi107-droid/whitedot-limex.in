@@ -50,7 +50,7 @@ export const AI_TOOLS: AiTool[] = [
     fields: [
       { name: "clientName", label: "Client / brand", type: "text", placeholder: "e.g. LIMEX bottle launch microsite", required: true },
       { name: "goal", label: "Site goal — what it must achieve", type: "textarea", placeholder: "Position LIMEX as premium plastic replacement; drive sample requests…", required: true },
-      { name: "vibe", label: "Brand vibe & references", type: "text", placeholder: "Calm, Apple-clean, Japanese material innovation" },
+      { name: "vibe", label: "Brand vibe & references", type: "text", placeholder: "Calm, Apple-clean, premium material innovation" },
       { name: "scenes", label: "Key scenes or sections wanted", type: "textarea", placeholder: "Hero with floating limestone→bottle morph, CO₂ story scroll, product gallery…" },
     ],
     cta: "Generate 3D web brief",

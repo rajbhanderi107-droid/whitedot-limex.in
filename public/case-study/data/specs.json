@@ -398,7 +398,7 @@
     },
     "handWashBottle": {
       "id": "handWashBottle",
-      "index": "05",
+      "index": "04",
       "name": "Hand Wash Bottle",
       "category": "Personal Care Packaging",
       "status": "live",
@@ -484,7 +484,7 @@
     },
     "hardDish": {
       "id": "hardDish",
-      "index": "06",
+      "index": "05",
       "name": "Hard Dish",
       "category": "Kitchenware",
       "status": "live",
@@ -570,7 +570,7 @@
     },
     "consilePipe": {
       "id": "consilePipe",
-      "index": "07",
+      "index": "06",
       "name": "Concealed Pipe",
       "category": "Industrial Pipe",
       "status": "live",
@@ -656,7 +656,7 @@
     },
     "soapStand": {
       "id": "soapStand",
-      "index": "08",
+      "index": "07",
       "name": "Soap Stand",
       "category": "Bathroom Accessory",
       "status": "live",
@@ -748,7 +748,7 @@
     },
     "foodOilCan": {
       "id": "foodOilCan",
-      "index": "09",
+      "index": "08",
       "name": "Food Oil Can",
       "category": "Food Packaging",
       "status": "live",
@@ -840,7 +840,7 @@
     },
     "dairySweetContainer": {
       "id": "dairySweetContainer",
-      "index": "12",
+      "index": "11",
       "name": "Dairy Sweet Container",
       "category": "Dairy Packaging",
       "status": "live",
@@ -938,7 +938,7 @@
     },
     "dairyProductsContainer": {
       "id": "dairyProductsContainer",
-      "index": "10",
+      "index": "09",
       "name": "Dairy Products Container",
       "category": "Dairy Packaging",
       "status": "live",
@@ -1030,7 +1030,7 @@
     },
     "lunchBox": {
       "id": "lunchBox",
-      "index": "11",
+      "index": "10",
       "name": "Lunch Box",
       "category": "Food Container",
       "status": "live",
@@ -1122,7 +1122,7 @@
     },
     "rectangleContainer": {
       "id": "rectangleContainer",
-      "index": "14",
+      "index": "13",
       "name": "D-250 Container",
       "category": "General Packaging",
       "status": "live",
@@ -1208,7 +1208,7 @@
     },
     "hook20mm": {
       "id": "hook20mm",
-      "index": "15",
+      "index": "14",
       "name": "20 mm Hook",
       "category": "Hardware",
       "status": "live",
@@ -1300,7 +1300,7 @@
     },
     "roundPipe": {
       "id": "roundPipe",
-      "index": "16",
+      "index": "15",
       "name": "Round Pipe",
       "category": "Industrial Pipe",
       "status": "live",
@@ -1374,7 +1374,7 @@
     },
     "motorFanBlade": {
       "id": "motorFanBlade",
-      "index": "18",
+      "index": "17",
       "name": "Motor Fan Blade",
       "category": "Motor Component",
       "status": "live",
@@ -1500,7 +1500,7 @@
       ],
       "tagline": "A round dairy bowl, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
       "description": "A round dairy packaging bowl, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
-      "index": "19",
+      "index": "12",
       "name": "Dairy Round Container",
       "category": "Dairy Packaging",
       "application": "Dairy Product Packaging",
@@ -1572,7 +1572,7 @@
       ],
       "tagline": "A fridge / washing-machine tray, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
       "description": "A fridge / washing-machine appliance tray, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
-      "index": "20",
+      "index": "16",
       "name": "Appliance Tray",
       "category": "Appliance Component",
       "application": "Fridge / Washing-Machine Tray",
@@ -1644,7 +1644,7 @@
       ],
       "tagline": "A cup-style food container, moulded from a 30% LIMEX PE26 F-51 + 70% PP blend.",
       "description": "A cup-style food packaging container, moulded from a 30% LIMEX PE26 F-51 + 70% PP blend.",
-      "index": "21",
+      "index": "18",
       "name": "Cup Container",
       "category": "Food Packaging",
       "application": "Food Service Container",
@@ -1716,7 +1716,7 @@
       ],
       "tagline": "A toothbrush handle, moulded from a 10% LIMEX PE26 F-51 + 90% PP blend.",
       "description": "A personal-care toothbrush handle, moulded from a 10% LIMEX PE26 F-51 + 90% PP blend.",
-      "index": "22",
+      "index": "19",
       "name": "Toothbrush Handle",
       "category": "Personal Care",
       "application": "Toothbrush Handle",
@@ -1788,7 +1788,7 @@
       ],
       "tagline": "An automotive petrol pipe component, moulded from a 30% LIMEX PE79-29L + 70% PP blend.",
       "description": "An automotive petrol pipe component, moulded from a 30% LIMEX PE79-29L + 70% PP blend.",
-      "index": "23",
+      "index": "20",
       "name": "Petrol Pipe",
       "category": "Automotive Component",
       "application": "Automotive Fuel Line",
@@ -1860,7 +1860,7 @@
       ],
       "tagline": "A nutrition container, moulded from an equal 50% LIMEX PE26 F-51 + 50% PP blend.",
       "description": "A protein / nutrition packaging container, moulded from an equal 50% LIMEX PE26 F-51 + 50% PP blend.",
-      "index": "24",
+      "index": "21",
       "name": "Protein Container",
       "category": "Food Packaging",
       "application": "Nutrition / Protein Packaging",
@@ -1932,7 +1932,7 @@
       ],
       "tagline": "A rectangular general-purpose container, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
       "description": "A rectangular general-purpose packaging container, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
-      "index": "25",
+      "index": "22",
       "name": "Rectangle Box",
       "category": "General Packaging",
       "application": "General Purpose Storage",
@@ -2004,7 +2004,7 @@
       ],
       "tagline": "A small round packaging bottle, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
       "description": "A small round general-purpose packaging bottle, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
-      "index": "26",
+      "index": "23",
       "name": "Small Round Bottle",
       "category": "Packaging",
       "application": "Small Packaging Bottle",
@@ -2076,7 +2076,7 @@
       ],
       "tagline": "A salt-packaging bottle, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
       "description": "A food-packaging salt bottle, moulded from a 20% LIMEX PE26 F-51 + 80% PP blend.",
-      "index": "27",
+      "index": "24",
       "name": "Salt Bottle",
       "category": "Food Packaging",
       "application": "Salt Packaging",
@@ -2148,7 +2148,7 @@
       ],
       "tagline": "A lightweight general-purpose container, moulded from a 25% LIMEX PE78-29L + 75% PP blend.",
       "description": "A lightweight general-purpose packaging container, moulded from a 25% LIMEX PE78-29L + 75% PP blend.",
-      "index": "28",
+      "index": "25",
       "name": "Lightweight Container",
       "category": "General Packaging",
       "application": "Lightweight General Storage",
@@ -2221,7 +2221,7 @@
       ],
       "tagline": "A food tray dish, moulded from a 30% LIMEX + 70% PP blend.",
       "description": "A food-packaging tray dish, moulded from a 30% LIMEX + 70% PP blend.",
-      "index": "29",
+      "index": "26",
       "name": "Food Tray Dish",
       "category": "Food Packaging",
       "application": "Food Serving Tray",
@@ -2293,7 +2293,7 @@
       ],
       "tagline": "A thin-wall circular dish, moulded from a 30% LIMEX PP24 Y-51 + 70% PP blend.",
       "description": "A thin-wall circular kitchenware dish, moulded from a 30% LIMEX PP24 Y-51 + 70% PP blend.",
-      "index": "30",
+      "index": "27",
       "name": "Lightweight Dish",
       "category": "Food Packaging",
       "application": "Thin-Wall Circular Dish",
@@ -2365,7 +2365,7 @@
       ],
       "tagline": "A personal-care powder bottle, moulded from a 70% LIMEX PP24 N-51 + 30% PP blend.",
       "description": "A personal-care powder bottle, moulded from a 70% LIMEX PP24 N-51 + 30% PP blend.",
-      "index": "31",
+      "index": "28",
       "name": "Powder Bottle",
       "category": "Personal Care",
       "application": "Talcum / Powder Packaging",
@@ -2437,157 +2437,11 @@
       ],
       "tagline": "A textile-grade woven thread material, made from a 70% LIMEX PE26 F-51 + 30% PP blend.",
       "description": "A textile-grade woven thread material, made from a 70% LIMEX PE26 F-51 + 30% PP blend.",
-      "index": "32",
+      "index": "29",
       "name": "Woven Thread",
       "category": "Textile Material",
       "application": "Textile-Grade Woven Thread",
       "moulding": "Extrusion / Weaving",
-      "status": "live",
-      "highlights": [
-        {
-          "num": "70%",
-          "label": "LIMEX Ratio",
-          "verified": true
-        },
-        {
-          "num": "",
-          "label": "Limestone in Part",
-          "verified": false
-        },
-        {
-          "num": "",
-          "label": "PE GHG",
-          "unit": "kg-CO2e/kg",
-          "verified": false
-        }
-      ],
-      "co2": {
-        "value": "",
-        "basis": "",
-        "verified": false
-      }
-    },
-    "childBottle": {
-      "id": "childBottle",
-      "referenceGrade": "Per lot TDS",
-      "mixRatio": "70% LIMEX + 30% PP Homo-Polymer",
-      "composition": [
-        {
-          "name": "LIMEX Compound",
-          "pct": 70,
-          "color": "#4f9a35",
-          "verified": true,
-          "source": "wd-pp-limex-notebook-2026-07-20"
-        },
-        {
-          "name": "PP Homo-Polymer",
-          "pct": 30,
-          "color": "#c4c7c0",
-          "verified": true,
-          "source": "wd-pp-limex-notebook-2026-07-20"
-        }
-      ],
-      "specs": [
-        {
-          "label": "Material Base",
-          "value": "LIMEX Compound + PP Homo-Polymer",
-          "verified": true,
-          "source": "wd-pp-limex-notebook-2026-07-20"
-        },
-        {
-          "label": "Mixing Ratio",
-          "value": "70% LIMEX + 30% PP",
-          "verified": true,
-          "source": "wd-pp-limex-notebook-2026-07-20"
-        },
-        {
-          "label": "LIMEX Grade",
-          "value": "Per lot TDS",
-          "verified": false,
-          "source": "wd-pp-limex-notebook-2026-07-20",
-          "note": "Grade not recorded in supplied notebook for this product."
-        }
-      ],
-      "tagline": "A child-safe personal-care bottle, moulded from a 70% LIMEX + 30% PP blend.",
-      "description": "A child-safe personal-care bottle, moulded from a 70% LIMEX + 30% PP blend.",
-      "index": "33",
-      "name": "Child-Safe Bottle",
-      "category": "Personal Care",
-      "application": "Child-Safe Personal Care Bottle",
-      "moulding": "Blow Moulding",
-      "status": "live",
-      "highlights": [
-        {
-          "num": "70%",
-          "label": "LIMEX Ratio",
-          "verified": true
-        },
-        {
-          "num": "",
-          "label": "Limestone in Part",
-          "verified": false
-        },
-        {
-          "num": "",
-          "label": "PE GHG",
-          "unit": "kg-CO2e/kg",
-          "verified": false
-        }
-      ],
-      "co2": {
-        "value": "",
-        "basis": "",
-        "verified": false
-      }
-    },
-    "waterTub": {
-      "id": "waterTub",
-      "referenceGrade": "Per lot TDS",
-      "mixRatio": "70% LIMEX + 30% PP Homo-Polymer",
-      "composition": [
-        {
-          "name": "LIMEX Compound",
-          "pct": 70,
-          "color": "#4f9a35",
-          "verified": true,
-          "source": "wd-pp-limex-notebook-2026-07-20"
-        },
-        {
-          "name": "PP Homo-Polymer",
-          "pct": 30,
-          "color": "#c4c7c0",
-          "verified": true,
-          "source": "wd-pp-limex-notebook-2026-07-20"
-        }
-      ],
-      "specs": [
-        {
-          "label": "Material Base",
-          "value": "LIMEX Compound + PP Homo-Polymer",
-          "verified": true,
-          "source": "wd-pp-limex-notebook-2026-07-20"
-        },
-        {
-          "label": "Mixing Ratio",
-          "value": "70% LIMEX + 30% PP",
-          "verified": true,
-          "source": "wd-pp-limex-notebook-2026-07-20"
-        },
-        {
-          "label": "LIMEX Grade",
-          "value": "Per lot TDS",
-          "verified": false,
-          "source": "wd-pp-limex-notebook-2026-07-20",
-          "note": "Grade not recorded in supplied notebook for this product."
-        }
-      ],
-      "tagline": "A bathroom bath tumbler, moulded from a 70% LIMEX + 30% PP blend.",
-      "description": "A bathroom accessory bath tumbler, moulded from a 70% LIMEX + 30% PP blend.",
-      "index": "34",
-      "name": "Bath Tumbler",
-      "category": "Bathroom Accessory",
-      "application": "Bathroom Water Tumbler",
-      "moulding": "Injection Moulding",
       "status": "live",
       "highlights": [
         {
@@ -2655,7 +2509,7 @@
       ],
       "tagline": "A logistics courier bag material, made from a 70% LIMEX PE78-29L + 30% PP blend.",
       "description": "A logistics courier bag material, made from a 70% LIMEX PE78-29L + 30% PP blend.",
-      "index": "37",
+      "index": "30",
       "name": "Courier Bag",
       "category": "Logistics Packaging",
       "application": "Courier / Logistics Bag",
@@ -2780,7 +2634,7 @@
       ],
       "tagline": "A reinforced industrial strip / packing tape roll on a laminated kraft core, made from a 30% LIMEX PE26-F51 + 70% PP blend.",
       "description": "A reinforced industrial strip / packing tape roll on a laminated kraft core, made from a 30% LIMEX PE26-F51 + 70% PP blend. Grade-level physical properties for PE26-F51 are not published and remain subject to the supplier lot TDS.",
-      "index": "36",
+      "index": "31",
       "name": "Strip Tape",
       "category": "Industrial Packaging",
       "application": "Industrial Strip / Packing Tape",
@@ -2909,7 +2763,7 @@
       ],
       "tagline": "A dark glossy plastic talpatri (tarpaulin) sheet, made from a 60% LIMEX PE26-F51 blend.",
       "description": "A dark glossy plastic talpatri (tarpaulin) sheet, made from a 60% LIMEX PE26-F51 blend. Grade-level physical properties for PE26-F51 are not published and remain subject to the supplier lot TDS.",
-      "index": "37",
+      "index": "32",
       "name": "Dark Plastic Talpatri",
       "category": "Industrial Sheeting",
       "application": "Tarpaulin / Protective Covering Sheet",
@@ -2975,7 +2829,7 @@
       ],
       "tagline": "A 3 litre circular bucket-style container with a wire bail handle.",
       "description": "A 3 litre circular bucket-style container with a wire bail handle. Material composition pending verification.",
-      "index": "38",
+      "index": "33",
       "name": "Circle Container",
       "category": "General Packaging",
       "application": "3 L Bucket / Circular Container",

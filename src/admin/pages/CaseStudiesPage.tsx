@@ -96,19 +96,24 @@ export function CaseStudiesPage() {
 
       const dbProducts: Products = res.data.products ?? {};
 
-      // Bundled specs.json is always the baseline — every product that ships
-      // with the site — so DB edits merge on top instead of hiding products
-      // that were never saved through the portal (e.g. added straight to
-      // specs.json). This is what keeps the sidebar list complete.
+      // Bundled specs.json is the authoritative roster — it decides which
+      // products exist — so the portal stays in sync with the shipped site on
+      // every load. DB rows merge on top as field-level overrides, but only
+      // for products still in specs.json: products added straight to
+      // specs.json stay visible, and products removed from specs.json stay
+      // gone even if a stale DB row survives.
       let p: Products = dbProducts;
       try {
-        const fb = await fetch("/case-study/data/specs.json");
+        const fb = await fetch("/case-study/data/specs.json", { cache: "no-store" });
         if (fb.ok) {
           const json = await fb.json();
           const bundled = (json.products ?? {}) as Products;
           if (Object.keys(bundled).length > 0) {
-            p = { ...bundled, ...dbProducts };
-            if (Object.keys(dbProducts).length < Object.keys(bundled).length) {
+            const overrides = Object.fromEntries(
+              Object.entries(dbProducts).filter(([k]) => k in bundled),
+            ) as Products;
+            p = { ...bundled, ...overrides };
+            if (Object.keys(overrides).length < Object.keys(bundled).length) {
               setSeededFromLocal(true);
             }
           }

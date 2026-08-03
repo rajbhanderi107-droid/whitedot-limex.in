@@ -20,7 +20,6 @@
   <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/bobbin.glb" />
   <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/paint-container-procedural-red-white.glb" />
   <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/motor-cover-procedural-black.glb" />
-  <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/araldite-container-procedural.glb" />
   <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/hand-wash-bottle-duo.glb" />
   <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/lunchbox-tray-four-color-lineup.glb" />
   <link rel="preload" as="fetch" type="model/gltf-binary" crossorigin href="./model/consile-pipe-procedural.glb" />
@@ -691,7 +690,7 @@
   </nav>
   <div class="nav-accent-bar" aria-hidden="true">
     <div class="nav-accent-fill"></div>
-    <span class="nav-accent-label" id="navAccent">Case Study — White Dot · TBM LIMEX</span>
+    <span class="nav-accent-label" id="navAccent">Case Study — White Dot · TBM</span>
   </div>
 
   <main>
@@ -764,7 +763,7 @@
           <span class="partners-title">Authorized Marketing & Sales</span>
           <div class="partners-badges">
             <span class="partner-badge">White Dot</span>
-            <span class="partner-badge">TBM LIMEX</span>
+            <span class="partner-badge">TBM</span>
           </div>
         </div>
       </div>
@@ -773,7 +772,7 @@
     <div class="hero-bar reveal reveal-3">
       <div class="bar-track"><span class="bar-fill" id="barFill"></span></div>
       <span class="bar-label" id="barLabel">Explore</span>
-      <span class="bar-credit" id="barCredit">TBM LIMEX</span>
+      <span class="bar-credit" id="barCredit">TBM</span>
     </div>
   </main>
 
@@ -841,7 +840,6 @@
     bobbin: './model/bobbin.glb',
     container: './model/paint-container-procedural-red-white.glb',
     motorCover: './model/motor-cover-procedural-black.glb',
-    aralditeContainer: './model/araldite-container-procedural.glb',
     handWashBottle: './model/hand-wash-bottle-duo.glb',
     hardDish: './model/lunchbox-tray-four-color-lineup.glb',
     consilePipe: './model/consile-pipe-procedural.glb',
@@ -868,8 +866,6 @@
     lightWeightDish: './model/product-28-thin-wall-circle-dish.glb',
     dermicoolPowderBottle: './model/product-29-dermicool-powder-bottle.glb',
     wovenThread: './model/product-30-woven-thread.glb',
-    childBottle: './model/product-31-sippy-cup.glb',
-    waterTub: './model/product-32-bath-tumbler.glb',
     toiletSeat: './model/product-33-toilet-seat.glb',
     nonWovenBag: './model/product-34-nonwoven-bag.glb',
     courierBag: './model/product-35-courier-bag.glb',
@@ -881,7 +877,6 @@
     bobbin: '0deg 76deg 105%',
     container: '0deg 76deg 108%',
     motorCover: '0deg 76deg 112%',
-    aralditeContainer: '0deg 76deg 115%',
     handWashBottle: '0deg 78deg 120%',
     hardDish: '0deg 80deg 115%',
     consilePipe: '80deg 76deg 85%',
@@ -908,8 +903,6 @@
     lightWeightDish: '24deg 66deg 110%',
     dermicoolPowderBottle: '20deg 74deg 112%',
     wovenThread: '30deg 75deg 105%',
-    childBottle: '22deg 76deg 112%',
-    waterTub: '24deg 74deg 112%',
     toiletSeat: '22deg 72deg 115%',
     nonWovenBag: '24deg 76deg 110%',
     courierBag: '24deg 76deg 110%',
@@ -937,7 +930,7 @@
 
   // ── Nav accent ──
   document.getElementById('navAccent').textContent =
-    `Case Study ${entry.index} — ${entry.name}${full.mixRatio ? ' — ' + full.mixRatio : ''} · TBM LIMEX`;
+    `Case Study ${entry.index} — ${entry.name}${full.mixRatio ? ' — ' + full.mixRatio : ''} · TBM`;
 
   // ── Hero left ──
   document.getElementById('ghostTitle').textContent = entry.name.toUpperCase();
@@ -1208,7 +1201,7 @@
 
   // ── Bottom bar ──
   document.getElementById('barLabel').textContent = isLive ? 'Explore' : 'In Progress';
-  document.getElementById('barCredit').textContent = `Product ${entry.index} · TBM LIMEX`;
+  document.getElementById('barCredit').textContent = `Product ${entry.index} · TBM`;
 
   // ── Behaviors (identical to legacy pages) ──
   if (mv) {

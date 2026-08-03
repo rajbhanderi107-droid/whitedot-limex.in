@@ -2,7 +2,6 @@ const LIVE_CASE_STUDY_MODELS = [
   '../model/bobbin.glb',
   '../model/paint-container-procedural-red-white.glb',
   '../model/motor-cover-procedural-black.glb',
-  '../model/araldite-container-procedural.glb',
   '../model/hand-wash-bottle-duo.glb',
   '../model/lunchbox-tray-four-color-lineup.glb',
   '../model/consile-pipe-procedural.glb',

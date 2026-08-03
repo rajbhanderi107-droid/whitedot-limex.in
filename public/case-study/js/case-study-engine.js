@@ -20,11 +20,11 @@
   const productId = document.body.dataset.product;
   if (!productId) return;
 
-  /* Bundled specs.json is always the baseline (has every product that ships
-   * with the site). The live portal API is layered on top so edits made in
-   * the portal show up immediately — but a product missing from the DB
-   * (e.g. newly added straight to specs.json) still renders correctly
-   * instead of vanishing because the API "won" and didn't know about it. */
+  /* Bundled specs.json is the authoritative roster — it decides which products
+   * exist. The live portal API is layered on top so field edits made in the
+   * portal show up immediately, but only for products still in specs.json:
+   * a product missing from the DB still renders, and a product removed from
+   * specs.json stays removed even if a stale DB row survives. */
   let products = {};
   try {
     const res = await fetch('./data/specs.json');
@@ -39,7 +39,11 @@
     if (apiRes.ok) {
       const json = await apiRes.json();
       if (json.success && json.data?.products) {
-        products = { ...products, ...json.data.products };
+        const live = json.data.products;
+        const overrides = Object.keys(products).length
+          ? Object.fromEntries(Object.entries(live).filter(([k]) => k in products))
+          : live;
+        products = { ...products, ...overrides };
       }
     }
   } catch { /* network error or timeout — bundled specs.json still stands */ }
@@ -135,7 +139,7 @@
   /* ── Nav accent label ────────────────────────────────────────────────────── */
   document.querySelectorAll('[data-wd-render="nav-accent"]').forEach(el => {
     el.textContent =
-      `Case Study ${p.index} — ${p.name} — ${p.mixRatio} — TBM LIMEX`;
+      `Case Study ${p.index} — ${p.name} — ${p.mixRatio} — TBM`;
   });
 
   /* ── Spec fill bar level (driven by first composition pct) ──────────────── */
