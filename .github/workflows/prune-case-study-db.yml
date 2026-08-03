@@ -90,8 +90,13 @@ jobs:
             console.log("WRITTEN");
             MJS
 
-            docker compose cp /tmp/prune-case-studies.mjs api:/tmp/prune-case-studies.mjs
-            docker compose exec -T -e APPLY=${{ github.event.inputs.apply }} api node /tmp/prune-case-studies.mjs
+            # the script has to sit in the app dir — node resolves @prisma/client
+            # relative to the script's own path, and /tmp has no node_modules
+            APPDIR=$(docker compose exec -T api sh -lc 'pwd' | tr -d '\r')
+            echo "container workdir: $APPDIR"
+            docker compose cp /tmp/prune-case-studies.mjs api:"$APPDIR/prune-case-studies.mjs"
+            docker compose exec -T -e APPLY=${{ github.event.inputs.apply }} api node "$APPDIR/prune-case-studies.mjs"
+            docker compose exec -T api rm -f "$APPDIR/prune-case-studies.mjs" || true
 
             mkdir -p /opt/whitedot-backend/backups
             TS=$(date +%Y%m%d-%H%M%S)
