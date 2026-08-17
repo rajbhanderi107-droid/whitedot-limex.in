@@ -193,6 +193,11 @@
     .nav-accent-label {
       position: absolute; left: 40px; top: 7px; font-size: 8.5px; font-weight: 700;
       letter-spacing: 0.18em; text-transform: uppercase; color: var(--wd-faint); white-space: nowrap;
+      /* The script fills this with the full study title and blend ratio, which
+         on a phone is much wider than the screen. Left-pinned + nowrap meant it
+         ran under the right edge and was clipped mid-word ("... + 60%" with the
+         rest lost). Bound it and truncate honestly instead. */
+      right: 16px; max-width: max-content; overflow: hidden; text-overflow: ellipsis;
     }
 
     main {
@@ -246,8 +251,15 @@
     .back-link {
       display: inline-flex; align-items: center; gap: 6px;
       font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--wd-faint); text-decoration: none; margin-bottom: 22px;
+      color: var(--wd-faint); text-decoration: none;
       transition: color 0.25s, transform 0.25s;
+      /* Touch target: the 11px uppercase text is only ~13px tall, far under the
+         ~44px a finger needs — and this is the only way back to the index from a
+         product page. Pad the hit area out vertically and pull the extra space
+         back with negative margins so the visual layout is unchanged (the 22px
+         gap below the link is preserved as 16px padding + 6px margin). */
+      padding: 16px 4px;
+      margin: -16px -4px 6px;
     }
     .back-link::before { content: "←"; display: inline-block; transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
     .back-link:hover { color: var(--orange); transform: translateX(-3px); }
@@ -494,7 +506,7 @@
     .tds-verified-dot { flex: none; width: 5px; height: 5px; border-radius: 50%; background: var(--orange); }
     .tds-download {
       display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
-      margin-top: 10px; padding: 11px 16px; border-radius: 100px; text-decoration: none;
+      margin-top: 10px; padding: 11px 16px; min-height: 44px; border-radius: 100px; text-decoration: none;
       font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
       color: var(--orange); background: var(--orange-soft); border: 1px solid rgba(79, 154, 53, 0.28);
       transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);

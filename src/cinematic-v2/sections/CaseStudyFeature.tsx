@@ -490,8 +490,34 @@ export default function CaseStudyFeature() {
       });
     }
 
+    // ── Touch/mobile: drive the stat panel from scroll position ──
+    // Both mechanisms that set the active product are desktop-only: the
+    // marquee RAF (its per-frame layout reads crash mobile Safari) and the
+    // mouseenter handlers above (touch devices never fire hover). That left
+    // the hero stat panel frozen on 'overview' for all 35 cards on mobile,
+    // even though the copy right above it promises the stats change as you
+    // pick a product. A scrollspy is the cheap equivalent: a thin band across
+    // the middle of the viewport, so the panel follows whichever card the
+    // user has scrolled to. IntersectionObserver only fires on band
+    // crossings — no per-frame work, so the crash constraint still holds.
+    let statSpy: IntersectionObserver | null = null;
+    if (isMobileViewport && 'IntersectionObserver' in window) {
+      statSpy = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            const product = (entry.target as HTMLElement).dataset.product as ProductKey | undefined;
+            if (product && liveProductKeys.has(product)) setActiveProductKey(product);
+          }
+        },
+        { rootMargin: '-45% 0px -45% 0px', threshold: 0 },
+      );
+      cardEls.forEach((c) => statSpy!.observe(c));
+    }
+
     return () => {
       stopMobilePool?.();
+      statSpy?.disconnect();
       window.clearTimeout(product13Warmup);
       visIO?.disconnect();
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
