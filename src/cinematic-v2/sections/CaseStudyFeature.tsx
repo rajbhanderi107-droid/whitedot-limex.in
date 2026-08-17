@@ -377,6 +377,13 @@ export default function CaseStudyFeature() {
     // static case-study page) — one-shot, disconnects after first reveal.
     const gridSection = section.querySelector<HTMLElement>('.csp-grid-section');
     if (gridSection) {
+      // threshold MUST stay 0: it is a fraction of the observed element, not of
+      // the viewport. On mobile the grid renders in --all mode (35 cards
+      // stacked in one column, ~14000px tall), so the old `threshold: 0.1`
+      // demanded ~1400px of it be visible at once — impossible in an ~850px
+      // viewport. The class was therefore never added, and because
+      // `.csp-grid-section:not(.csp-inview) .csp-pmedia/.csp-pinfo` is
+      // `opacity: 0`, every card rendered as a blank white rectangle on phones.
       if ('IntersectionObserver' in window) {
         const revealIO = new IntersectionObserver(
           ([entry]) => {
@@ -385,7 +392,7 @@ export default function CaseStudyFeature() {
               revealIO.disconnect();
             }
           },
-          { threshold: 0.1 },
+          { threshold: 0 },
         );
         revealIO.observe(gridSection);
       } else {
