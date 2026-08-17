@@ -1280,7 +1280,7 @@ export default function CaseStudyFeature() {
             // @ts-ignore custom element
             <model-viewer data-model-src={stripTapeModel} alt="Strip Tape industrial-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 68deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
-            <div className="csp-soon-placeholder" aria-hidden="true">ST</div>
+            <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Strip Tape</div><div className="csp-ptag">Industrial Packaging - Interactive 3D Model</div><Composition k="stripTape">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
@@ -1294,7 +1294,7 @@ export default function CaseStudyFeature() {
             // @ts-ignore custom element
             <model-viewer data-model-src={darkTalpatriModel} alt="Dark Plastic Talpatri industrial-sheeting 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 48deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
-            <div className="csp-soon-placeholder" aria-hidden="true">DT</div>
+            <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Dark Plastic Talpatri</div><div className="csp-ptag">Industrial Sheeting - Interactive 3D Model</div><Composition k="darkTalpatri">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
@@ -1308,7 +1308,7 @@ export default function CaseStudyFeature() {
             // @ts-ignore custom element
             <model-viewer data-model-src={circleContainerModel} alt="Circle Container general-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
-            <div className="csp-soon-placeholder" aria-hidden="true">CC</div>
+            <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Circle Container</div><div className="csp-ptag">General Packaging - Interactive 3D Model</div><Composition k="circleContainer">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
