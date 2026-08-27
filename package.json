@@ -22,6 +22,8 @@
     "remove:allplan": "node scripts/remove-allplan.mjs",
     "wire:higgsfield:loop": "node scripts/wire-higgsfield-loop.mjs",
     "guard:admin-google": "node scripts/guard-admin-google.mjs",
+    "check:email-dns": "node scripts/check-email-dns.mjs",
+    "fix:email-dns": "node scripts/fix-email-dns.mjs",
     "security:audit": "npm audit && npm --prefix server audit",
     "test:backend": "npm --prefix server run test",
     "test:frontend": "npx playwright test tests/admin.spec.ts tests/smoothness.spec.ts --project=chromium --workers=1",
