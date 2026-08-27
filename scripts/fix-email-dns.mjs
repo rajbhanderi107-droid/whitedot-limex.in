@@ -8,20 +8,21 @@
  * return PermError and mail clients demand you "set your SPF records
  * correctly" — and leaves exactly one SPF and one DMARC record behind.
  *
+ * The mailbox provider is GoDaddy (`secureserver.net`), matching the live MX.
+ * Zoho was configured on this domain at some point and is being removed
+ * entirely, so every Zoho-referencing record in the zone is purged too.
+ *
  * Usage:
  *   export CLOUDFLARE_API_TOKEN=...          # Zone.DNS:Edit on this zone
- *   node scripts/fix-email-dns.mjs                        # dry run, prints plan
- *   node scripts/fix-email-dns.mjs --apply                # execute
- *   node scripts/fix-email-dns.mjs --provider=zoho --apply
+ *   node scripts/fix-email-dns.mjs           # dry run, prints plan
+ *   node scripts/fix-email-dns.mjs --apply   # execute
  *
  * Options:
- *   --provider=godaddy|zoho   Which mailbox provider owns the domain.
- *                             Default: godaddy (matches the current MX).
- *   --domain=example.com      Default: whitedotindia.in
- *   --apply                   Actually write. Without it, nothing is changed.
+ *   --domain=example.com   Default: whitedotindia.in
+ *   --apply                Actually write. Without it, nothing is changed.
  *
- * MX records are never modified. Switching providers means changing MX, which
- * cuts over live mail delivery — do that deliberately in the Cloudflare UI.
+ * MX records are never modified. Changing them cuts over live mail delivery —
+ * do that deliberately in the Cloudflare UI.
  */
 
 const args = process.argv.slice(2);
@@ -31,25 +32,14 @@ const flag = (name, fallback) => {
 };
 
 const domain = flag("domain", "whitedotindia.in");
-const provider = flag("provider", "godaddy").toLowerCase();
 const apply = args.includes("--apply");
 const token = process.env.CLOUDFLARE_API_TOKEN;
 
-const SPF_BY_PROVIDER = {
-  godaddy: "v=spf1 include:secureserver.net -all",
-  zoho: "v=spf1 include:zohomail.in -all",
-};
+/** GoDaddy / secureserver.net is the mailbox provider, matching the live MX. */
+const SPF = "v=spf1 include:secureserver.net -all";
 
 const DMARC =
   `v=DMARC1; p=quarantine; rua=mailto:dmarc@${domain}; adkim=r; aspf=r;`;
-
-if (!SPF_BY_PROVIDER[provider]) {
-  console.error(
-    `Unknown --provider=${provider}. Expected one of: ` +
-      Object.keys(SPF_BY_PROVIDER).join(", "),
-  );
-  process.exit(2);
-}
 if (!token) {
   console.error(
     "CLOUDFLARE_API_TOKEN is not set.\n\n" +
@@ -90,7 +80,7 @@ const isNullDkim = (r) => /v=DKIM1/i.test(r.content) && /\bp=\s*"?\s*$/.test(r.c
 
 async function main() {
   console.log(
-    `\nEmail DNS fix — ${domain} (provider: ${provider})` +
+    `\nEmail DNS fix — ${domain} (provider: GoDaddy / secureserver.net)` +
       `${apply ? "" : "   [DRY RUN — nothing will be changed]"}\n` +
       "=".repeat(64) + "\n",
   );
@@ -105,15 +95,17 @@ async function main() {
   const zone = zones[0];
   console.log(`Zone: ${zone.name} (${zone.id})\n`);
 
-  const txt = await cf(`/zones/${zone.id}/dns_records?type=TXT&per_page=200`);
+  const all = await cf(`/zones/${zone.id}/dns_records?per_page=500`);
+  const txt = all.filter((r) => r.type === "TXT");
 
   const deletes = [];
   const creates = [];
   const updates = [];
+  const warnings = [];
 
   // --- SPF: collapse to exactly one record ---------------------------------
   const spf = txt.filter((r) => r.name === domain && isSpf(r));
-  const wanted = SPF_BY_PROVIDER[provider];
+  const wanted = SPF;
   const keeper = spf.find((r) => r.content.replace(/^"|"$/g, "") === wanted);
 
   if (keeper) {
@@ -124,7 +116,7 @@ async function main() {
     }
   } else if (spf.length > 0) {
     // Repurpose the first, delete the rest, so the domain is never SPF-less.
-    updates.push([spf[0], wanted, "rewrite to the provider's SPF record"]);
+    updates.push([spf[0], wanted, "rewrite to the GoDaddy SPF record"]);
     for (const r of spf.slice(1)) {
       deletes.push([r, "duplicate SPF record — RFC 7208 allows exactly one"]);
     }
@@ -163,6 +155,37 @@ async function main() {
     deletes.push([r, why]);
   }
 
+  // --- Zoho: remove every trace ------------------------------------------
+  // Zoho is being decommissioned on this domain. Sweep the whole zone rather
+  // than a guessed list of names, so nothing is left behind to confuse a
+  // future setup: verification TXT records, zb* CNAMEs, mx*.zoho MX records,
+  // an SPF include, and the zoho._domainkey selector.
+  const mentionsZoho = (r) =>
+    /(^|[.\-_])zoho([.\-_]|$)/i.test(r.name) || /zoho/i.test(r.content || "");
+
+  const alreadyQueued = new Set([
+    ...deletes.map(([r]) => r.id),
+    ...updates.map(([r]) => r.id),
+  ]);
+
+  for (const r of all) {
+    if (!mentionsZoho(r) || alreadyQueued.has(r.id)) continue;
+    if (r.type === "MX") {
+      // Deleting an MX record changes where mail is delivered. The live MX is
+      // GoDaddy's, so a Zoho MX here would be a leftover — but flag it for a
+      // human rather than silently rerouting mail.
+      warnings.push(
+        `Zoho MX record found and NOT deleted: ${r.name} → ${r.content}. ` +
+          `Remove it by hand in Cloudflare once you have confirmed mail is ` +
+          `flowing through GoDaddy.`,
+      );
+      continue;
+    }
+    deletes.push([r, "Zoho leftover — Zoho is being removed from this domain"]);
+  }
+
+  for (const w of warnings) console.log(`  WARN  ${w}\n`);
+
   if (deletes.length + creates.length + updates.length === 0) {
     console.log("Nothing to change — the zone already matches the target state.\n");
     return;
@@ -170,18 +193,18 @@ async function main() {
 
   console.log("Plan:\n");
   for (const [r, why] of deletes) {
-    console.log(`  DELETE  ${r.name}  TXT`);
+    console.log(`  DELETE  ${r.name}  ${r.type}`);
     console.log(`          ${r.content}`);
     console.log(`          reason: ${why}\n`);
   }
   for (const [r, content, why] of updates) {
-    console.log(`  UPDATE  ${r.name}  TXT`);
+    console.log(`  UPDATE  ${r.name}  ${r.type}`);
     console.log(`          from: ${r.content}`);
     console.log(`          to:   ${content}`);
     console.log(`          reason: ${why}\n`);
   }
   for (const [r, why] of creates) {
-    console.log(`  CREATE  ${r.name}  TXT`);
+    console.log(`  CREATE  ${r.name}  ${r.type}`);
     console.log(`          ${r.content}`);
     console.log(`          reason: ${why}\n`);
   }
@@ -217,7 +240,7 @@ async function main() {
       "  npm run check:email-dns\n\n" +
       "DKIM is still outstanding: enable it in the mailbox provider's admin " +
       "panel and add the selector record it gives you. With the wildcard " +
-      "removed, that key will now be honoured. See docs/EMAIL_DNS.md §3.\n",
+      "removed, that key will now be honoured. See docs/EMAIL_DNS.md §4.\n",
   );
 }
 

@@ -78,7 +78,11 @@ domain until SPF resolves cleanly.
 
 ## 3. The fix
 
-There are two paths. They produce the same result — pick one.
+**Decision: the mailbox is GoDaddy (`secureserver.net`), and Zoho is being
+removed from this domain entirely.** The scripts and tables below assume that;
+there is no longer a Zoho path to choose.
+
+Two ways to apply it — they produce the same result, so pick one.
 
 ### Path A — one command (recommended)
 
@@ -92,29 +96,29 @@ npm run fix:email-dns                  # dry run — prints the plan, changes no
 npm run fix:email-dns -- --apply       # execute
 ```
 
-The script collapses SPF to exactly one record, collapses DMARC to exactly
-one record with a `p=quarantine` policy, and deletes every revoked DKIM key
-including the wildcard. It never touches MX records, the
-`google-site-verification` record, or anything web-related. Add
-`--provider=zoho` if the mailbox is Zoho rather than GoDaddy.
+The script:
 
-DKIM still needs one manual step afterwards — see Step 3 below — because only
-your mailbox provider can issue the key.
+- collapses SPF to exactly one record, `v=spf1 include:secureserver.net -all`
+- collapses DMARC to exactly one record with a `p=quarantine` policy
+- deletes every revoked DKIM key, the wildcard `*._domainkey` included
+- **purges every Zoho record in the zone** — it sweeps all record types for
+  anything referencing Zoho (verification TXT records, `zb*` CNAMEs, the
+  `zoho._domainkey` selector) rather than a guessed list of names, so nothing
+  is left to confuse a future setup
+
+It never touches MX records, the `google-site-verification` record, or
+anything web-related. If it finds a Zoho **MX** record it warns rather than
+deleting: removing an MX changes where mail is delivered, so that one stays a
+deliberate human action.
+
+DKIM still needs one manual step afterwards — see §4 — because only GoDaddy
+can issue the key.
 
 ### Path B — by hand in the Cloudflare dashboard
 
+#### Step 1 — Delete the lockdown records
 
-#### Step 1 — Decide who hosts the mailbox
-
-The live MX records point to **GoDaddy (`secureserver.net`)**. Note that the
-domain also carries a `zoho._domainkey` name, suggesting Zoho Mail was set up
-at some point. **Only one provider can hold the MX records.** Confirm which
-mailbox you actually log in to, then follow the GoDaddy or the Zoho table below.
-Do not publish both sets.
-
-#### Step 2 — Delete the lockdown records
-
-Do this first, regardless of provider. In Cloudflare DNS, **delete**:
+In Cloudflare DNS, **delete**:
 
 - the TXT record on the root whose value is exactly `v=spf1 -all`
 - the TXT record on `_dmarc` whose value is `v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s;`
@@ -123,43 +127,31 @@ Do this first, regardless of provider. In Cloudflare DNS, **delete**:
 Leave the `google-site-verification=...` TXT record alone — it is unrelated to
 mail and Search Console depends on it.
 
-#### Step 3 — Publish one correct set
+#### Step 2 — Delete every Zoho record
 
-##### If the mailbox is GoDaddy / `secureserver.net`
+Search the zone for `zoho` and delete what it finds. Expect some or all of:
 
-This matches the current MX records, so only the TXT side needs work. After
-Step 2 you already have the right SPF and DMARC records; verify that these,
-and only these, remain:
+| Name | Type | Looks like |
+| --- | --- | --- |
+| `zoho._domainkey` | TXT | `v=DKIM1; p=` |
+| `@` | TXT | `zoho-verification=zb…zmverify.zoho.in` |
+| `zb…` | CNAME | `zmverify.zoho.in` |
+
+If any **MX** record points at `mx*.zoho.in` or `mx*.zoho.com`, remove it only
+once you have confirmed mail is flowing through GoDaddy — an MX change takes
+effect on live delivery immediately.
+
+#### Step 3 — Confirm the GoDaddy records
+
+After Steps 1 and 2 the correct records should already be in place. Verify
+that these, and only these, remain:
 
 | Name | Type | Value | TTL |
 | --- | --- | --- | --- |
+| `@` | MX | `smtp.secureserver.net` (priority 0) | Auto |
+| `@` | MX | `mailstore1.secureserver.net` (priority 10) | Auto |
 | `@` | TXT | `v=spf1 include:secureserver.net -all` | Auto |
 | `_dmarc` | TXT | `v=DMARC1; p=quarantine; rua=mailto:dmarc@whitedotindia.in; adkim=r; aspf=r;` | Auto |
-
-Then enable DKIM in the GoDaddy / Microsoft 365 admin panel and add the CNAME
-or TXT selector records it gives you. With the wildcard gone, they will work.
-
-##### If the mailbox is Zoho Mail
-
-Replace the MX records as well. Zoho's own control panel is authoritative for
-these values — copy them from **Zoho Mail Admin → Domains → DNS Mapping**
-rather than from here, since Zoho assigns a per-domain DKIM key and regional
-MX hosts. The shape is:
-
-| Name | Type | Value | Priority |
-| --- | --- | --- | --- |
-| `@` | MX | `mx.zoho.in` | 10 |
-| `@` | MX | `mx2.zoho.in` | 20 |
-| `@` | MX | `mx3.zoho.in` | 50 |
-| `@` | TXT | `v=spf1 include:zohomail.in -all` | — |
-| `zoho._domainkey` | TXT | *(the long `v=DKIM1; k=rsa; p=MIGf...` key from Zoho)* | — |
-| `_dmarc` | TXT | `v=DMARC1; p=quarantine; rua=mailto:dmarc@whitedotindia.in; adkim=r; aspf=r;` | — |
-
-Use `zoho.com` hosts (`mx.zoho.com`, `include:zoho.com`) if the account is on
-the US datacentre rather than the Indian one — the Zoho panel states which.
-
-The existing `zoho._domainkey` record with `p=` must be **overwritten with the
-real key**, not left in place.
 
 > **Do not proxy mail records.** In Cloudflare, MX records have no proxy
 > toggle, but any `mail.` or `smtp.` A/CNAME record must be set to **DNS only**
@@ -168,6 +160,9 @@ real key**, not left in place.
 ## 4. DKIM, and mail sent by the app itself
 
 This applies to both paths above.
+
+Enable DKIM in the **GoDaddy / Microsoft 365** admin panel and add the CNAME or
+TXT selector records it gives you. With the wildcard gone, they will work.
 
 The backend sends password-reset mail through SMTP (`server/src/services/
 mailer.service.ts`, configured by `SMTP_HOST` / `SMTP_USER` / `SMTP_PASS` /
