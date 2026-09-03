@@ -16,7 +16,7 @@ import {
   Leaf, BarChart3, Database, Plug, BadgeCheck, Layers, Rocket, Receipt,
   Server, Siren, Megaphone as Ad, Share2, LayoutTemplate, Search, ShoppingCart,
   UserCog, Network, CalendarCheck, LayoutDashboard,
-  Gauge, Clapperboard, Scale, Hourglass, type LucideIcon,
+  Gauge, Clapperboard, Scale, Hourglass, Route, type LucideIcon,
 } from "lucide-react";
 
 export type ModuleStatus = "live" | "beta" | "soon";
@@ -64,6 +64,9 @@ export const MODULE_GROUPS: ModuleGroup[] = [
       { key: "crm", label: "CRM & Pipeline", icon: Layers, path: "/admin/crm", status: "live",
         blurb: "Kanban sales pipeline over live inquiry data.",
         features: ["Pipeline Kanban", "Lead timeline & notes", "AI next-action (planned)", "Conversion forecast (planned)"] },
+      { key: "route-book", label: "LIMEX Route Book", icon: Route, path: "/admin/route-book", status: "live",
+        blurb: "Field-sales book: 1,438 Gujarat plastics makers in drivable legs, shared by the team.",
+        features: ["Legs, families & Google Maps routing", "Tick · star · outcome · note · contact", "Day-by-day journal kept for good", "Call queue, clusters, duplicates", "One-tap hand-off to Companies & Follow-Ups"] },
       { key: "inquiries", label: "Inquiries", icon: MessageSquare, path: "/admin/inquiries", status: "live",
         blurb: "All inbound product inquiries." },
       { key: "quotes", label: "Quote Requests", icon: ClipboardList, path: "/admin/quote-requests", status: "live",
