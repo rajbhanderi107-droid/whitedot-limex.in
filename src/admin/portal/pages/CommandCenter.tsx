@@ -13,6 +13,9 @@ import {
 import { api } from "../../lib/api.js";
 import { usePortal } from "../PortalContext.js";
 import { KpiCard, SectionHeader, Card, Sparkline, RiskBadge } from "../ui.js";
+import { Route as RouteIcon } from "lucide-react";
+import { rbApi } from "../../routebook/api.js";
+import type { RbSummary } from "../../routebook/types.js";
 
 interface DashboardData {
   totalInquiries: number;
@@ -33,6 +36,8 @@ export function CommandCenter() {
   const [loading, setLoading] = useState(true);
   const { automationMode, lockdown } = usePortal();
 
+  const [rb, setRb] = useState<RbSummary | null>(null);
+  useEffect(() => { rbApi.summary().then((r) => setRb(r.data)).catch(() => setRb(null)); }, []);
   useEffect(() => {
     api.get<DashboardData>("/api/dashboard")
       .then((r) => setData(r.data))
@@ -68,6 +73,8 @@ export function CommandCenter() {
           <KpiCard label="Pending follow-ups" value={data?.pendingFollowUps ?? 0} icon={Bell} to="/admin/follow-ups" />
           <KpiCard label="Won" value={won} icon={BadgeCheck} foot={`${lost} lost`} to="/admin/crm" />
           <KpiCard label="Conversion" value={`${conversion}%`} icon={TrendingUp} foot="won / closed" to="/admin/crm" />
+          <KpiCard label="Route Book" value={rb ? rb.sellable.toLocaleString() : "—"} icon={RouteIcon}
+            foot={rb ? `${rb.ticked} ticked · ${rb.tickedWeek} this week · ${rb.interested} interested` : "loading the book"} to="/admin/route-book" />
         </div>
       )}
 

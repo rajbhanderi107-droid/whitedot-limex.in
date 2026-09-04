@@ -16,7 +16,14 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: {
+        ...devices["Desktop Chrome"],
+        // Lets a sandbox/CI image with a pre-installed Chromium point at it
+        // instead of downloading one. Unset locally and in normal CI.
+        ...(process.env.PW_CHROMIUM_PATH
+          ? { launchOptions: { executablePath: process.env.PW_CHROMIUM_PATH } }
+          : {}),
+      },
     },
     {
       name: "firefox",
