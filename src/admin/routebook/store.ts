@@ -11,6 +11,7 @@ import { rbApi } from "./api.js";
 import { ApiError } from "../lib/api.js";
 import type {
   RbBootstrap, RbFamily, RbLeg, RbStop, RbMark, RbLegMark, RbView, RbPrefs, MarkPatch, NewStop, ViewFilters,
+  RbSettings, RbSample, NewSample,
 } from "./types.js";
 import { today } from "./logic.js";
 
@@ -38,6 +39,7 @@ export interface RbState {
   legMarks: Record<string, RbLegMark>;
   views: RbView[];
   prefs: RbPrefs;
+  settings: RbSettings | null;
   me: { id: string; name: string; role: string } | null;
   userLeg: string;
   index: Index;
@@ -53,7 +55,7 @@ const emptyIndex = (): Index => ({ legById: {}, famById: {}, stopById: {}, stops
 
 let state: RbState = {
   status: "idle", error: null, fromCache: false,
-  fams: [], legs: [], stops: [], marks: {}, legMarks: {}, views: [], prefs: {},
+  fams: [], legs: [], stops: [], marks: {}, legMarks: {}, views: [], prefs: {}, settings: null,
   me: null, userLeg: "M1", index: emptyIndex(),
   sync: "saved", pending: 0, lastSavedAt: null, version: 0,
 };
@@ -97,7 +99,7 @@ function toMap<T extends { stopId?: string; legId?: string }>(rows: T[], key: "s
 interface CacheShape {
   at: number; fams: RbFamily[]; legs: RbLeg[]; stops: RbStop[]; marks: Record<string, RbMark>;
   legMarks: Record<string, RbLegMark>; views: RbView[]; prefs: RbPrefs;
-  me: RbState["me"]; userLeg: string;
+  me: RbState["me"]; userLeg: string; settings: RbSettings | null;
 }
 function readCache(): CacheShape | null {
   try { const raw = localStorage.getItem(CACHE_KEY); return raw ? (JSON.parse(raw) as CacheShape) : null; }
@@ -111,6 +113,7 @@ function writeCacheSoon() {
       const c: CacheShape = {
         at: Date.now(), fams: state.fams, legs: state.legs, stops: state.stops, marks: state.marks,
         legMarks: state.legMarks, views: state.views, prefs: state.prefs, me: state.me, userLeg: state.userLeg,
+        settings: state.settings,
       };
       localStorage.setItem(CACHE_KEY, JSON.stringify(c));
     } catch { /* quota or private mode — the server copy is authoritative anyway */ }
@@ -226,6 +229,7 @@ function adopt(b: Omit<RbBootstrap, "serverDay"> & { serverDay?: string }, fromC
     status: "ready", error: null, fromCache,
     fams: b.fams, legs: b.legs, stops: b.stops, marks,
     legMarks: toMap(b.legMarks, "legId"), views: b.views, prefs: b.prefs ?? {},
+    settings: b.settings ?? null,
     me: b.me, userLeg: b.userLeg, index: buildIndex(b.fams, b.legs, b.stops),
     pending: outbox.length, sync: outbox.length ? (navigator.onLine ? "saving" : "offline") : "saved",
   });
@@ -240,7 +244,7 @@ export function load(force = false): Promise<void> {
       if (c) {
         adopt({ fams: c.fams, legs: c.legs, stops: c.stops, marks: Object.values(c.marks),
           legMarks: Object.values(c.legMarks), views: c.views, prefs: c.prefs, me: c.me ?? { id: "", name: "", role: "" },
-          userLeg: c.userLeg }, true);
+          userLeg: c.userLeg, settings: c.settings ?? null }, true);
       } else set({ status: "loading" });
     }
     try {
@@ -266,6 +270,8 @@ export function blankMark(stopId: string): RbMark {
     stopId, ticked: false, tickedOn: null, starred: false, note: null, outcome: null, dueOn: null,
     contactName: null, contactPhone: null, addrOverride: null, addrPrecise: null, dnc: false, removed: false,
     dupOf: null, snoozedOn: null, companyId: null, followUpId: null,
+    polymers: null, processes: null, monthlyTonnes: null, machines: null,
+    fillerPct: null, resinRate: null, thinWall: null, profiledOn: null, samples: [],
     updatedAt: new Date().toISOString(), updatedById: null, updatedBy: null,
   };
 }
@@ -276,6 +282,7 @@ export function patchMark(stopId: string, patch: MarkPatch, day = today()): RbMa
   const prev = state.marks[stopId] ?? blankMark(stopId);
   const next: RbMark = {
     ...prev, ...patch,
+    samples: prev.samples ?? [],
     updatedAt: new Date().toISOString(),
     updatedById: state.me?.id ?? null,
     updatedBy: state.me ? { id: state.me.id, name: state.me.name } : null,
@@ -355,6 +362,53 @@ export async function restoreStop(id: string): Promise<RbStop> {
   const r = await rbApi.restoreStop(id);
   withStops([...state.stops, r.data]);
   return r.data;
+}
+
+/* ─── samples ─── */
+
+/** Samples live on the server only: they are records of a physical handover,
+ *  so they are never queued optimistically the way a tick is. */
+export async function addSample(stopId: string, body: NewSample): Promise<RbSample> {
+  const r = await rbApi.createSample(stopId, body);
+  const prev = state.marks[stopId] ?? blankMark(stopId);
+  set({
+    marks: {
+      ...state.marks,
+      [stopId]: {
+        ...prev,
+        samples: [r.data, ...(prev.samples ?? [])],
+        ticked: true, tickedOn: prev.tickedOn ?? r.data.givenOn, outcome: prev.outcome ?? "smp",
+      },
+    },
+  });
+  writeCacheSoon();
+  return r.data;
+}
+
+export async function setSampleResult(stopId: string, id: string, body: Partial<NewSample>): Promise<RbSample> {
+  const r = await rbApi.updateSample(id, body);
+  const prev = state.marks[stopId];
+  if (prev) {
+    set({ marks: { ...state.marks, [stopId]: { ...prev, samples: (prev.samples ?? []).map((x) => (x.id === id ? r.data : x)) } } });
+    writeCacheSoon();
+  }
+  return r.data;
+}
+
+export async function removeSample(stopId: string, id: string): Promise<void> {
+  await rbApi.deleteSample(id);
+  const prev = state.marks[stopId];
+  if (prev) {
+    set({ marks: { ...state.marks, [stopId]: { ...prev, samples: (prev.samples ?? []).filter((x) => x.id !== id) } } });
+    writeCacheSoon();
+  }
+}
+
+/** Commercial assumptions. ADMIN+ only server-side; the UI hides it otherwise. */
+export async function saveSettings(patch: Partial<Omit<RbSettings, "id">>): Promise<void> {
+  const r = await rbApi.putSettings(patch);
+  set({ settings: r.data });
+  writeCacheSoon();
 }
 
 /* ─── views & prefs ─── */

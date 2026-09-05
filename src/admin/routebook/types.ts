@@ -47,12 +47,75 @@ export interface RbMark {
   snoozedOn: string | null;
   companyId: string | null;
   followUpId: string | null;
+
+  /* Fit profile. LIMEX is >50% calcium carbonate in a polyolefin carrier and
+     runs on the plant's existing machines, so these are the facts that decide
+     whether it suits them. Prisma serialises Decimal as a string, hence the
+     `string | number` — read them through `num()` in logic.ts, never raw. */
+  polymers: string | null;          // csv of Polymer
+  processes: string | null;         // csv of Process
+  monthlyTonnes: string | number | null;
+  machines: number | null;
+  fillerPct: number | null;         // filler they already run, %
+  resinRate: string | number | null; // ₹/kg they pay today
+  thinWall: boolean | null;
+  profiledOn: string | null;
+
+  samples?: RbSample[];
   updatedAt: string;
   updatedById: string | null;
   updatedBy: { id: string; name: string } | null;
 }
 
-export type MarkPatch = Partial<Omit<RbMark, "stopId" | "updatedAt" | "updatedById" | "updatedBy">>;
+export const POLYMERS = ["PP", "HDPE", "LDPE", "LLDPE", "PS", "PVC", "PET", "ABS", "OTHER"] as const;
+export type Polymer = (typeof POLYMERS)[number];
+
+export const PROCESSES = ["INJECTION", "BLOW", "EXTRUSION", "THERMOFORM", "FILM", "SHEET"] as const;
+export type Process = (typeof PROCESSES)[number];
+
+export const SAMPLE_RESULTS = ["PENDING", "PASS", "PARTIAL", "FAIL"] as const;
+export type SampleResult = (typeof SAMPLE_RESULTS)[number];
+
+export interface RbSample {
+  id: string;
+  stopId: string;
+  grade: string;
+  kg: string | number;
+  givenOn: string;
+  contactName: string | null;
+  trialDueOn: string | null;
+  result: SampleResult;
+  resultOn: string | null;
+  resultNote: string | null;
+  createdAt: string;
+  createdById: string | null;
+  createdBy: { id: string; name: string } | null;
+  /** Present only on /samples/open, which joins back to the stop. */
+  mark?: {
+    stopId: string;
+    contactName: string | null;
+    contactPhone: string | null;
+    stop: { name: string; legId: string };
+  };
+}
+
+export type NewSample = {
+  grade: string; kg: number; givenOn?: string; contactName?: string | null;
+  trialDueOn?: string | null; result?: SampleResult; resultOn?: string | null; resultNote?: string | null;
+};
+
+/** Commercial assumptions. Every rupee figure derives from these — the app
+ *  never invents a price. `limexRate` null means sizing stays in tonnes. */
+export interface RbSettings {
+  id: string;
+  limexRate: string | number | null;
+  substitutionPct: number;
+  currency: string;
+  updatedAt?: string;
+  updatedById?: string | null;
+}
+
+export type MarkPatch = Partial<Omit<RbMark, "stopId" | "updatedAt" | "updatedById" | "updatedBy" | "samples">>;
 
 export interface RbLegMark {
   legId: string;
@@ -115,6 +178,7 @@ export interface RbBootstrap {
   legMarks: RbLegMark[];
   views: RbView[];
   prefs: RbPrefs;
+  settings: RbSettings | null;
   me: { id: string; name: string; role: string };
   serverDay: string;
   userLeg: string;
