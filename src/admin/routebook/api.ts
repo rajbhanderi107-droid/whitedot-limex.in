@@ -3,7 +3,7 @@
 import { api } from "../lib/api.js";
 import type {
   RbBootstrap, RbSummary, RbEvent, RbMark, RbLegMark, RbStop, RbView, RbPrefs,
-  MarkPatch, NewStop, ViewFilters,
+  MarkPatch, NewStop, ViewFilters, RbSample, NewSample, RbSettings,
 } from "./types.js";
 
 const B = "/api/portal/route-book";
@@ -39,6 +39,18 @@ export const rbApi = {
   deleteView: (id: string) => api.delete<null>(`${B}/views/${enc(id)}`),
   getPrefs: () => api.getFresh<RbPrefs>(`${B}/prefs`),
   putPrefs: (data: RbPrefs) => api.patch<RbPrefs>(`${B}/prefs`, { data }),
+
+  // Samples: the trial cycle that actually closes a materials sale.
+  openSamples: () => api.getFresh<RbSample[]>(`${B}/samples/open`),
+  createSample: (stopId: string, body: NewSample) =>
+    api.post<RbSample>(`${B}/stops/${enc(stopId)}/samples`, body),
+  updateSample: (id: string, body: Partial<NewSample>) =>
+    api.patch<RbSample>(`${B}/samples/${enc(id)}`, body),
+  deleteSample: (id: string) => api.delete<{ id: string }>(`${B}/samples/${enc(id)}`),
+
+  // Commercial assumptions behind every rupee figure.
+  getSettings: () => api.get<RbSettings>(`${B}/settings`),
+  putSettings: (body: Partial<Omit<RbSettings, "id">>) => api.patch<RbSettings>(`${B}/settings`, body),
 
   reseed: () => api.post<{ fams: number; legs: number; stops: number; version: number }>(`${B}/reseed`, {}),
 };

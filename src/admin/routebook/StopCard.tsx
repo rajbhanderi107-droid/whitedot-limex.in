@@ -6,7 +6,7 @@ import { memo, useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import {
   Check, Star, MapPin, Phone, MessageCircle, Copy, Link2, StickyNote, Ban, Trash2, RotateCcw,
-  Building2, CalendarClock, ExternalLink, Contact, Pencil,
+  Building2, CalendarClock, ExternalLink, Contact, Pencil, Factory, FlaskConical,
 } from "lucide-react";
 import type { RbStop, RbMark, Outcome, MarkPatch } from "./types.js";
 import {
@@ -16,6 +16,8 @@ import {
 } from "./logic.js";
 import { patchMark, revertMark, deleteStop, restoreStop, updateStop, getRb } from "./store.js";
 import { useUI, toast } from "./ctx.js";
+import { FitProfile, FitSummary, SamplePanel } from "./FitPanel.js";
+import { samplesOf, openSamplesOf, sampleStalled, gradeFit, hasProfile } from "./logic.js";
 import { api } from "../lib/api.js";
 
 interface Props { s: RbStop; m?: RbMark; withLeg?: boolean; compact?: boolean }
@@ -35,6 +37,7 @@ function applyWithUndo(stopId: string, patch: MarkPatch, msg: string): void {
 export const StopCard = memo(function StopCard({ s, m, withLeg, compact }: Props) {
   const ui = useUI();
   const editing = ui.editing === s.id;
+  const [panel, setPanel] = useState<null | "fit" | "sample">(null);
   const ticked = isTicked(m), star = isStar(m), dnc = isDNC(m), removed = isRemoved(m), merged = isMerged(m);
   const addr = addrOf(s, m), precise = preciseOf(s, m), phone = phoneOf(s, m), con = conOf(m);
   const note = noteOf(m), out = outOf(m), due = dueOf(m);
@@ -98,7 +101,7 @@ export const StopCard = memo(function StopCard({ s, m, withLeg, compact }: Props
         <p className="rb-addr">{addr || "Address to confirm"}</p>
 
         <div className="rb-pills">
-          <i className={`rb-pill rb-fit-${s.fit}`} title={s.why ?? ""}>{FITLABEL[s.fit]}</i>
+          {!hasProfile(m) && <i className={`rb-pill rb-fit-${s.fit}`} title={s.why ?? ""}>{FITLABEL[s.fit]}</i>}
           <i className={`rb-pill ${precise ? "rb-pill-ok" : "rb-pill-warn"}`}>{precise ? "precise" : "plot needed"}</i>
           {tags.slice(0, compact ? 2 : 5).map((t) => <i key={t.t} className={`rb-pill${t.c === "big" ? " rb-pill-big" : t.c === "warn" ? " rb-pill-warn" : ""}`}>{t.t}</i>)}
           {s.userAdded && <i className="rb-pill rb-pill-big">Yours{s.addedBy ? ` · ${s.addedBy.name.split(" ")[0]}` : ""}</i>}
@@ -109,6 +112,7 @@ export const StopCard = memo(function StopCard({ s, m, withLeg, compact }: Props
         {!compact && s.makes && <p className="rb-makes">{s.makes}</p>}
 
         {(con.n || con.p) && <p className="rb-con"><Contact size={12} /> {[con.n, con.p].filter(Boolean).join(" · ")}</p>}
+        <FitSummary s={s} m={m} />
         {note && !editing && <p className="rb-note">{note}</p>}
         {due && <p className={`rb-due${isDue(m) ? " now" : ""}`}><CalendarClock size={12} /> {isDue(m) ? "Follow up due " : "Follow up "}{fmtDate(due)}</p>}
         {ticked && (
@@ -127,6 +131,12 @@ export const StopCard = memo(function StopCard({ s, m, withLeg, compact }: Props
           <button type="button" onClick={copy} title="Copy name, address and number"><Copy size={12} /></button>
           <button type="button" onClick={copyLink} title="Copy a link straight to this stop"><Link2 size={12} /></button>
           <button type="button" className={editing ? "on" : ""} onClick={() => ui.setEditing(editing ? null : s.id)} data-testid="rb-note-btn"><StickyNote size={12} /> Note</button>
+          <button type="button" className={panel === "fit" ? "on" : ""} onClick={() => setPanel(panel === "fit" ? null : "fit")} title="What they run — decides whether LIMEX fits" data-testid="rb-fit-btn">
+            <Factory size={12} /> {hasProfile(m) ? "Profile" : "Qualify"}
+          </button>
+          <button type="button" className={`rb-samplebtn${panel === "sample" ? " on" : ""}${openSamplesOf(m).some((x) => sampleStalled(x)) ? " is-stalled" : ""}`} onClick={() => setPanel(panel === "sample" ? null : "sample")} title="Samples handed over and what came back" data-testid="rb-sample-btn">
+            <FlaskConical size={12} /> Samples{samplesOf(m).length ? ` ${samplesOf(m).length}` : ""}
+          </button>
           <button type="button" className={`rb-dnc${dnc ? " on" : ""}`} onClick={toggleDNC} data-testid="rb-dnc">
             <Ban size={12} /> {dnc ? "Restore" : "Not interested"}
           </button>
@@ -145,6 +155,8 @@ export const StopCard = memo(function StopCard({ s, m, withLeg, compact }: Props
         </div>
 
         {editing && <NoteEditor s={s} m={m} onClose={() => ui.setEditing(null)} />}
+        {panel === "fit" && <FitProfile s={s} m={m} onClose={() => setPanel(null)} />}
+        {panel === "sample" && <SamplePanel s={s} m={m} onClose={() => setPanel(null)} />}
 
         {!compact && s.src && <p className="rb-src">{s.src}</p>}
       </div>

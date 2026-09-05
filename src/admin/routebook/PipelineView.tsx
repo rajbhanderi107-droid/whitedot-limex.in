@@ -2,12 +2,13 @@
  * (duplicates, follow-ups). Single-series charts, one hue each. */
 
 import { useMemo, useState } from "react";
-import { Navigation, MapPin, Merge, CalendarClock, Sparkles } from "lucide-react";
+import { Navigation, MapPin, Merge, CalendarClock, Sparkles, FlaskConical, IndianRupee, Factory } from "lucide-react";
 import type { RbLeg } from "./types.js";
 import type { Row } from "./logic.js";
 import {
   PARKED, isTicked, isRemoved, isDNC, isMerged, outOf, dueOf, isDue, needsFollowUp, daysSince, relDays, fmtDate,
   legSuggestions, clusters, duplicates, mergePlan, stopScore, lastDays, today, routeURL, mapOf, addrOf, conOf, noteOf, OUTMAP, addDays,
+  opportunity, inr, tonnesText, hasProfile, samplesOf, sampleStalled, sampleAge, num, tonnesOf,
 } from "./logic.js";
 import { useRb, patchMany, patchMark, revertMark } from "./store.js";
 import { useUI, toast } from "./ctx.js";
@@ -42,6 +43,26 @@ export function PipelineView({ rows, rowsByLeg, legs }: Props) {
     .sort((a, b) => b.n - a.n).slice(0, 10), [pool]);
   const cl = useMemo(() => clusters(pool), [pool]);
   const dups = useMemo(() => duplicates(rows), [rows]);
+  const profiled = useMemo(() => pool.filter((r) => hasProfile(r.m)), [pool]);
+  const unprofiled = useMemo(() => pool.filter((r) => isTicked(r.m) && !hasProfile(r.m)), [pool]);
+  const sized = useMemo(
+    () => profiled.map((r) => ({ r, o: opportunity(r.m, st.settings) })).filter((x) => x.o.known),
+    [profiled, st.settings],
+  );
+  const totalTonnes = sized.reduce((n, x) => n + (x.o.tonnes ?? 0), 0) || null;
+  const totalValue = st.settings?.limexRate == null ? null : sized.reduce((n, x) => n + (x.o.value ?? 0), 0);
+  const wonValue = st.settings?.limexRate == null ? null
+    : sized.filter((x) => ["int", "smp"].includes(outOf(x.r.m))).reduce((n, x) => n + (x.o.value ?? 0), 0);
+  const byValue = useMemo(
+    () => sized.slice().sort((a, b) => (b.o.value ?? b.o.tonnes ?? 0) - (a.o.value ?? a.o.tonnes ?? 0)).slice(0, 10),
+    [sized],
+  );
+  const openSamples = useMemo(
+    () => pool.flatMap((r) => samplesOf(r.m).filter((x) => x.result === "PENDING").map((x) => ({ r, x })))
+      .sort((a, b) => a.x.givenOn.localeCompare(b.x.givenOn)),
+    [pool],
+  );
+  const stalledSamples = openSamples.filter(({ x }) => sampleStalled(x));
   const due = pool.filter((r) => dueOf(r.m)).sort((a, b) => dueOf(a.m).localeCompare(dueOf(b.m)));
   const overdue = due.filter((r) => isDue(r.m));
   const auto = pool.filter((r) => needsFollowUp(r.m)).sort((a, b) => daysSince(b.m?.tickedOn) - daysSince(a.m?.tickedOn));
@@ -110,6 +131,76 @@ export function PipelineView({ rows, rowsByLeg, legs }: Props) {
           <button type="button" className="wd-ghost-btn" onClick={() => { patchMany(best.map((b) => ({ stopId: b.r.s.id, starred: true }))); toast("Ten starred for the run"); }}>Star them for today</button>
         </section>
       )}
+
+      {/* What the book is worth, not how many rows it has. */}
+      <section className="rb-dsec" data-testid="rb-money">
+        <div className="rb-dhead">
+          <h3><IndianRupee size={14} /> What the book is worth</h3>
+          <span className="rb-dcount">
+            {profiled.length} of {pool.length} plants profiled
+            {st.settings?.limexRate == null && " · set your LIMEX rate to see rupees"}
+          </span>
+        </div>
+        <div className="rb-heroes">
+          <div className="rb-hero"><b>{tonnesText(totalTonnes)}</b><span>LIMEX at {st.settings?.substitutionPct ?? 30}%</span></div>
+          <div className="rb-hero"><b>{inr(totalValue)}</b><span>a month, all profiled</span></div>
+          <div className="rb-hero"><b>{inr(wonValue)}</b><span>a month, interested + sampled</span></div>
+          <div className="rb-hero"><b>{openSamples.length}</b><span>samples awaiting a trial</span></div>
+          <div className="rb-hero"><b>{stalledSamples.length}</b><span>trials gone quiet</span></div>
+        </div>
+        {byValue.length > 0 && (
+          <>
+            <p className="rb-dsub">Biggest opportunities</p>
+            <div className="rb-dlist">
+              {byValue.map(({ r, o }) => (
+                <div key={r.s.id} className="rb-drow">
+                  <span className="rb-dtime">{tonnesText(o.tonnes)}</span>
+                  <span className="rb-dmain">
+                    <b><button type="button" className="rb-linkish" onClick={() => ui.jumpTo(r.s.id)}>{r.s.name}</button></b>
+                    <em>{r.s.legId} · {tonnesOf(r.m)} t/mo total{r.m?.fillerPct ? ` · ${r.m.fillerPct}% filler today` : ""}</em>
+                  </span>
+                  <span className="rb-dtags">{o.value !== null && <i className="rb-pill rb-pill-ok">{inr(o.value)}/mo</i>}</span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+        {unprofiled.length > 0 && (
+          <>
+            <p className="rb-dsub">Worked but never qualified — you visited and still cannot size them</p>
+            <div className="rb-dlist">
+              {unprofiled.slice(0, 12).map((r) => (
+                <div key={r.s.id} className="rb-drow">
+                  <span className="rb-dtime"><Factory size={13} /></span>
+                  <span className="rb-dmain"><b><button type="button" className="rb-linkish" onClick={() => ui.jumpTo(r.s.id)}>{r.s.name}</button></b><em>{r.s.legId} · {addrOf(r.s, r.m)}</em></span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </section>
+
+      {/* The sample cycle is where a materials deal is actually won or lost. */}
+      <section className="rb-dsec" data-testid="rb-samples">
+        <div className="rb-dhead">
+          <h3><FlaskConical size={14} /> Samples out</h3>
+          <span className="rb-dcount">{openSamples.length ? `${stalledSamples.length} with no result yet` : "none outstanding"}</span>
+        </div>
+        {openSamples.length ? (
+          <div className="rb-dlist">
+            {openSamples.slice(0, 30).map(({ r, x }) => (
+              <div key={x.id} className={`rb-drow${sampleStalled(x) ? " is-stalled" : ""}`}>
+                <span className={`rb-dtime${sampleStalled(x) ? " now" : ""}`}>{sampleAge(x)}d</span>
+                <span className="rb-dmain">
+                  <b><button type="button" className="rb-linkish" onClick={() => ui.jumpTo(r.s.id)}>{r.s.name}</button></b>
+                  <em>{num(x.kg)} kg {x.grade}{x.contactName ? ` · ${x.contactName}` : ""}{x.trialDueOn ? ` · trial by ${fmtDate(x.trialDueOn)}` : ""}</em>
+                </span>
+                <span className="rb-dtags">{sampleStalled(x) && <i className="rb-pill rb-pill-warn">chase</i>}</span>
+              </div>
+            ))}
+          </div>
+        ) : <p className="rb-empty">Log a sample from any stop and it shows here until the trial result comes back.</p>}
+      </section>
 
       <section className="rb-dsec">
         <div className="rb-dhead"><h3>The funnel</h3><span className="rb-dcount">companies, not calls</span></div>

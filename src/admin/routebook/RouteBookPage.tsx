@@ -7,14 +7,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   Search, Plus, Phone, Download, Upload, Save, Printer, RefreshCw, Sparkles, SlidersHorizontal, X, Route as RouteIcon,
-  History, CloudOff, Cloud, CloudUpload, AlertTriangle, MapPin, Trash2,
+  History, CloudOff, Cloud, CloudUpload, AlertTriangle, MapPin, Trash2, IndianRupee,
 } from "lucide-react";
 import type { Fit, RbView } from "./types.js";
 import {
   type Filters, type Row, type SortMode, emptyFilters, filtersActive, matchStop, tradeTags, FITLABEL, OUTS,
   toViewFilters, fromViewFilters, buildCSV, downloadText, today, vcardFor, phoneOf, PARKED, isRemoved, isTicked, DEFAULT_HOME,
+  num, hasProfile, samplesOf, sampleStalled,
 } from "./logic.js";
-import { useRb, load, setPrefs, saveView, deleteView, reseed, restoreMarks, getRb } from "./store.js";
+import { useRb, load, setPrefs, saveView, deleteView, reseed, restoreMarks, getRb, saveSettings } from "./store.js";
 import { UICtx, type UIApi, toast } from "./ctx.js";
 import { RouteView } from "./RouteView.js";
 import { StopsView } from "./StopsView.js";
@@ -222,6 +223,8 @@ export function RouteBookPage() {
               <div className="rb-chips">
                 {([["state", "precise", "Precise pins"], ["state", "plot", "Plot needed"], ["state", "phone", "Has a number"], ["state", "nophone", "Needs a number"],
                   ["state", "mine", "Added by us"], ["state", "due", "Follow-up due"], ["state", "stale", "Needs a nudge"], ["state", "promoted", "In the CRM"],
+                  ["state", "profiled", "Qualified"], ["state", "unprofiled", "Not qualified"],
+                  ["state", "sampled", "Has samples"], ["state", "stalled", "Trial gone quiet"],
                   ["state", "dnc", "Not interested"], ["state", "merged", "Merged away"], ["state", "removed", "Removed"],
                   ["status", "done", "Ticked"], ["status", "none", "Not ticked"], ["status", "pin", "Starred"]] as const).map(([g, k, l]) => (
                   <button key={k} type="button" className="rb-chip" aria-pressed={has(g, k)} onClick={() => toggleChip(g, k)} data-testid={`rb-chip-${k}`}>{l}</button>
@@ -244,6 +247,10 @@ export function RouteBookPage() {
               {st.views.length ? st.views.map((v) => (
                 <div key={v.id} className="rb-view"><button type="button" onClick={() => applyView(v)}>{v.name}<small>{v.createdBy?.name?.split(" ")[0]}</small></button><button type="button" className="rb-mini" onClick={() => deleteView(v.id).then(() => toast("View deleted")).catch(() => toast("Only the creator or an admin can delete this view", undefined, "err"))} aria-label="Delete view"><Trash2 size={11} /></button></div>
               )) : <p className="rb-rail-note">Filter the book, then save it here so the whole team can reuse it.</p>}
+            </div>
+            <div className="rb-rail-sec">
+              <h5>Commercial</h5>
+              <RateBox />
             </div>
             <div className="rb-rail-sec">
               <h5>Start point</h5>
@@ -277,6 +284,50 @@ export function RouteBookPage() {
         <Toasts />
       </div>
     </UICtx.Provider>
+  );
+}
+
+/** Your rate and target share. Every rupee figure in the book derives from
+ *  these two numbers, so they are entered here rather than assumed anywhere. */
+function RateBox() {
+  const st = useRb();
+  const admin = !!st.me && ["SUPER_ADMIN", "ADMIN"].includes(st.me.role);
+  const [rate, setRate] = useState(num(st.settings?.limexRate)?.toString() ?? "");
+  const [pct, setPct] = useState((st.settings?.substitutionPct ?? 30).toString());
+  const [busy, setBusy] = useState(false);
+  const dirty = rate !== (num(st.settings?.limexRate)?.toString() ?? "") || pct !== (st.settings?.substitutionPct ?? 30).toString();
+
+  const save = async () => {
+    setBusy(true);
+    try {
+      await saveSettings({ limexRate: rate === "" ? null : Number(rate), substitutionPct: Number(pct) });
+      toast("Sizing updated across the book");
+    } catch (e) { toast(e instanceof Error ? e.message : "Could not save", undefined, "err"); }
+    finally { setBusy(false); }
+  };
+
+  if (!admin) {
+    return (
+      <p className="rb-rail-note">
+        {st.settings?.limexRate == null
+          ? "No LIMEX rate set yet, so opportunities show in tonnes. An admin can set it."
+          : `Sizing at ₹${num(st.settings.limexRate)}/kg, ${st.settings.substitutionPct}% substitution.`}
+      </p>
+    );
+  }
+  return (
+    <div className="rb-ratebox" data-testid="rb-ratebox">
+      <label>LIMEX rate <small>₹ / kg</small>
+        <input type="number" min="0" step="0.5" inputMode="decimal" value={rate}
+          onChange={(e) => setRate(e.target.value)} placeholder="not set" data-testid="rb-rate" />
+      </label>
+      <label>Substitution <small>% of their volume</small>
+        <input type="number" min="0" max="100" step="5" inputMode="numeric" value={pct}
+          onChange={(e) => setPct(e.target.value)} data-testid="rb-pct" />
+      </label>
+      {dirty && <button type="button" className="wd-primary-btn" onClick={save} disabled={busy} data-testid="rb-rate-save">{busy ? "Saving…" : "Apply"}</button>}
+      <p className="rb-rail-note"><IndianRupee size={10} /> Every rupee figure in the book comes from these.</p>
+    </div>
   );
 }
 

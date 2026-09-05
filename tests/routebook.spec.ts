@@ -13,7 +13,9 @@ const bootstrap = {
   fams: [{ id: "N", name: "Near Shela", blurb: "Nearest first.", sortOrder: 0 }, { id: "M", name: "Added on the road", blurb: "", sortOrder: 1 }],
   legs: [{ id: "N1", familyId: "N", name: "Doorstep ring", belt: "0-10 km", nav: "", sortOrder: 0 }, { id: "M1", familyId: "M", name: "Your own additions", belt: "", nav: "", sortOrder: 1 }],
   stops: [stop("N1-alpha", "N1", "Alpha Polymers", "prime"), stop("N1-beta", "N1", "Beta Plast"), stop("N1-beta2", "N1", "Beta Plast Pvt Ltd"), stop("N1-gamma", "N1", "Gamma Containers", "weak")],
-  marks: [] as Record<string, unknown>[], legMarks: [], views: [], prefs: {}, me: { id: me.id, name: me.name, role: me.role }, serverDay: "2026-09-03", userLeg: "M1",
+  marks: [] as Record<string, unknown>[], legMarks: [], views: [], prefs: {},
+  settings: { id: "singleton", limexRate: 70, substitutionPct: 40, currency: "INR" },
+  me: { id: me.id, name: me.name, role: me.role }, serverDay: "2026-09-03", userLeg: "M1",
 };
 const ok = (data: unknown) => ({ status: 200, contentType: "application/json", body: JSON.stringify({ success: true, data }) });
 
@@ -34,7 +36,7 @@ async function mockPortal(page: Page) {
   await page.route("**/api/portal/route-book/marks/bulk", async (r) => {
     const body = r.request().postDataJSON() as { day: string; items: { stopId: string; [k: string]: unknown }[] };
     const outRows = body.items.map(({ stopId, ...patch }) => {
-      const prev = marks.get(stopId) ?? { stopId, ticked: false, tickedOn: null, starred: false, note: null, outcome: null, dueOn: null, contactName: null, contactPhone: null, addrOverride: null, addrPrecise: null, dnc: false, removed: false, dupOf: null, snoozedOn: null, companyId: null, followUpId: null };
+      const prev = marks.get(stopId) ?? { stopId, ticked: false, tickedOn: null, starred: false, note: null, outcome: null, dueOn: null, contactName: null, contactPhone: null, addrOverride: null, addrPrecise: null, dnc: false, removed: false, dupOf: null, snoozedOn: null, companyId: null, followUpId: null, polymers: null, processes: null, monthlyTonnes: null, machines: null, fillerPct: null, resinRate: null, thinWall: null, profiledOn: null, samples: [] };
       const next = { ...prev, ...patch, updatedAt: new Date().toISOString(), updatedById: me.id, updatedBy: { id: me.id, name: me.name } };
       if (patch.ticked === true && prev.ticked !== true) { events.push({ id: String(events.length), kind: "tick", value: body.day, day: body.day, at: new Date().toISOString(), stopId, legId: null, userId: me.id, user: { id: me.id, name: me.name }, stop: { name: bootstrap.stops.find((s) => s.id === stopId)?.name, legId: "N1" } }); }
       marks.set(stopId, next);
@@ -48,8 +50,35 @@ async function mockPortal(page: Page) {
     const body = r.request().postDataJSON() as { name: string; addr?: string };
     await r.fulfill({ ...ok(stop("own-1", "M1", body.name, "good", { addr: body.addr ?? "", userAdded: true, addedById: me.id, addedBy: { name: me.name } })), status: 201 });
   });
+  const samples: Record<string, unknown>[] = [];
+  let settings = { ...bootstrap.settings };
+  await page.route("**/api/portal/route-book/samples/open", (r) => r.fulfill(ok(samples.filter((x) => x.result === "PENDING"))));
+  await page.route("**/api/portal/route-book/stops/*/samples", async (r) => {
+    const stopId = decodeURIComponent(new URL(r.request().url()).pathname.split("/").slice(-2)[0]);
+    const body = r.request().postDataJSON() as Record<string, unknown>;
+    const row = { id: `s${samples.length}`, stopId, result: "PENDING", resultOn: null, resultNote: null,
+      contactName: null, trialDueOn: null, createdAt: "", createdById: me.id, createdBy: { id: me.id, name: me.name },
+      givenOn: "2026-09-03", ...body };
+    samples.push(row);
+    const prev = marks.get(stopId) ?? { stopId };
+    marks.set(stopId, { ...prev, ticked: true, tickedOn: "2026-09-03", outcome: "smp", samples: samples.filter((x) => x.stopId === stopId) });
+    await r.fulfill({ ...ok(row), status: 201 });
+  });
+  await page.route("**/api/portal/route-book/samples/*", async (r) => {
+    const id = r.request().url().split("/").pop() as string;
+    const i = samples.findIndex((x) => x.id === id);
+    if (r.request().method() === "DELETE") { samples.splice(i, 1); return r.fulfill(ok({ id })); }
+    samples[i] = { ...samples[i], ...(r.request().postDataJSON() as object) };
+    const stopId = samples[i].stopId as string;
+    marks.set(stopId, { ...(marks.get(stopId) ?? { stopId }), samples: samples.filter((x) => x.stopId === stopId) });
+    await r.fulfill(ok(samples[i]));
+  });
+  await page.route("**/api/portal/route-book/settings", async (r) => {
+    if (r.request().method() === "PATCH") settings = { ...settings, ...(r.request().postDataJSON() as object) };
+    await r.fulfill(ok(settings));
+  });
   await page.route("**/api/notifications**", (r) => r.fulfill(ok([])));
-  return { marks, events };
+  return { marks, events, samples, getSettings: () => settings };
 }
 
 test.describe("LIMEX Route Book", () => {
@@ -147,6 +176,59 @@ test.describe("LIMEX Route Book", () => {
     await page.getByText("Add to the book").click();
     await expect(page.locator("[data-testid='rb-stop']:has-text('Roadside Plast')")).toBeVisible();
     await expect(page.locator("[data-testid='rb-stop']:has-text('Roadside Plast') .rb-pill-big")).toContainText("Yours");
+  });
+
+  test("qualifying a plant sizes the opportunity in tonnes and rupees", async ({ page }) => {
+    const mock = await mockPortal(page);
+    await page.goto("/#/admin/route-book");
+    await page.getByTestId("rb-leg").first().locator(".rb-leg-toggle").click();
+    const card = page.getByTestId("rb-stop").first();
+
+    await card.getByTestId("rb-fit-btn").click();
+    await card.locator(".rb-chip", { hasText: /^PP$/ }).click();
+    await card.getByTestId("rb-tonnes").fill("60");
+    // 60 t/mo x 40% = 24 t of LIMEX; at the mocked 70/kg that is 16.8 lakh,
+    // which inr() rounds to whole lakhs once past 10.
+    await expect(card.getByTestId("rb-sizing")).toContainText("24.0 t/mo");
+    await expect(card.getByTestId("rb-sizing")).toContainText("₹17 L");
+    await card.getByTestId("rb-fit-save").click();
+
+    await expect(card.getByTestId("rb-fitsum")).toContainText("24.0 t/mo");
+    await expect.poll(() => mock.marks.get("N1-alpha")?.monthlyTonnes, { timeout: 5000 }).toBe(60);
+    await expect.poll(() => mock.marks.get("N1-alpha")?.polymers).toBe("PP");
+  });
+
+  test("a sample ticks the stop, then its trial result closes it out", async ({ page }) => {
+    const mock = await mockPortal(page);
+    await page.goto("/#/admin/route-book");
+    await page.getByTestId("rb-leg").first().locator(".rb-leg-toggle").click();
+    const card = page.getByTestId("rb-stop").first();
+
+    await card.getByTestId("rb-sample-btn").click();
+    await card.getByTestId("rb-sample-grade").fill("LIMEX PP-50");
+    await card.getByTestId("rb-sample-kg").fill("8");
+    await card.getByTestId("rb-sample-add").click();
+
+    await expect(card.getByTestId("rb-samplerow")).toContainText("8 kg · LIMEX PP-50");
+    await expect(card).toHaveClass(/is-ticked/); // handing a sample over IS the visit
+    await expect.poll(() => mock.samples.length, { timeout: 5000 }).toBe(1);
+
+    await card.getByTestId("rb-sample-result").click();
+    await card.locator(".rb-sampleresult input").fill("Ran 40% clean");
+    await card.getByTestId("rb-res-PASS").click();
+    await expect(card.getByTestId("rb-samplerow")).toContainText("Passed");
+    await expect.poll(() => mock.samples[0]?.result, { timeout: 5000 }).toBe("PASS");
+  });
+
+  test("the rate box drives every rupee figure and persists", async ({ page }) => {
+    const mock = await mockPortal(page);
+    await page.goto("/#/admin/route-book");
+    await expect(page.getByTestId("rb-ratebox")).toBeVisible();
+    await page.getByTestId("rb-rate").fill("100");
+    await page.getByTestId("rb-pct").fill("50");
+    await page.getByTestId("rb-rate-save").click();
+    await expect.poll(() => mock.getSettings().limexRate, { timeout: 5000 }).toBe(100);
+    await expect.poll(() => mock.getSettings().substitutionPct).toBe(50);
   });
 
   test("works on a phone: nothing overflows, filters behind a button", async ({ page }) => {

@@ -2,7 +2,10 @@
  * takes a stop plus its (optional) mark and answers a question about it, so
  * the same rules drive the cards, the filters, the exports and the tests. */
 
-import type { Fit, Outcome, RbStop, RbMark, RbLeg, RbFamily, ViewFilters, MarkPatch } from "./types.js";
+import type {
+  Fit, Outcome, RbStop, RbMark, RbLeg, RbFamily, ViewFilters, MarkPatch,
+  RbSample, RbSettings, Polymer, Process, SampleResult,
+} from "./types.js";
 
 export const PARKED = (s: RbStop) => s.fit === "no" || s.fit === "clear";
 export const FITLABEL: Record<Fit, string> = {
@@ -197,6 +200,10 @@ export function matchStop(s: RbStop, m: RbMark | undefined, f: Filters, leg?: Rb
       if (k === "due" && isDue(m)) ok = true;
       if (k === "stale" && needsFollowUp(m)) ok = true;
       if (k === "promoted" && m?.companyId) ok = true;
+      if (k === "profiled" && hasProfile(m)) ok = true;
+      if (k === "unprofiled" && !hasProfile(m)) ok = true;
+      if (k === "sampled" && samplesOf(m).length) ok = true;
+      if (k === "stalled" && samplesOf(m).some((x) => sampleStalled(x))) ok = true;
     }
     if (!ok) return false;
   }
@@ -312,6 +319,114 @@ export function stopScore(s: RbStop, m: RbMark | undefined, ref = today()): numb
   if (isDNC(m) || isRemoved(m) || isMerged(m)) n = 0;
   return Math.max(0, Math.min(100, Math.round(n)));
 }
+
+/* ─── fit profile, opportunity sizing and the sample cycle ───────────────
+   LIMEX is >50% calcium carbonate carried in a polyolefin and runs on the
+   plant's existing machines. So polyolefin processors are the real market,
+   and how much they consume is what a prospect is worth. Every rupee below
+   comes from settings the user enters — nothing here invents a price. */
+
+/** Prisma serialises Decimal as a string; read every numeric field through this. */
+export function num(v: string | number | null | undefined): number | null {
+  if (v === null || v === undefined || v === "") return null;
+  const n = typeof v === "number" ? v : Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+
+export const POLYMER_LABEL: Record<string, string> = {
+  PP: "Polypropylene", HDPE: "HDPE", LDPE: "LDPE", LLDPE: "LLDPE",
+  PS: "Polystyrene", PVC: "PVC", PET: "PET", ABS: "ABS", OTHER: "Other",
+};
+export const PROCESS_LABEL: Record<string, string> = {
+  INJECTION: "Injection", BLOW: "Blow", EXTRUSION: "Extrusion",
+  THERMOFORM: "Thermoform", FILM: "Film", SHEET: "Sheet",
+};
+/** Polyolefins carry calcium carbonate happily; the rest are a stretch. */
+const POLYOLEFINS = new Set(["PP", "HDPE", "LDPE", "LLDPE"]);
+
+export const csv = (v: string | null | undefined): string[] =>
+  (v ?? "").split(",").map((x) => x.trim()).filter(Boolean);
+
+export const polymersOf = (m?: RbMark) => csv(m?.polymers) as Polymer[];
+export const processesOf = (m?: RbMark) => csv(m?.processes) as Process[];
+export const tonnesOf = (m?: RbMark) => num(m?.monthlyTonnes);
+export const resinRateOf = (m?: RbMark) => num(m?.resinRate);
+export const hasProfile = (m?: RbMark) =>
+  !!(m?.polymers || m?.processes || tonnesOf(m) !== null || m?.machines != null || m?.resinRate != null);
+
+export interface Opportunity {
+  tonnes: number | null;   // LIMEX tonnes/month at the target substitution
+  value: number | null;    // ₹/month at your rate
+  saving: number | null;   // ₹/month vs what they pay for resin today
+  known: boolean;          // false when we simply have not asked yet
+}
+
+/** What this plant is worth per month, from their volume and your settings. */
+export function opportunity(m: RbMark | undefined, set: RbSettings | null): Opportunity {
+  const t = tonnesOf(m);
+  const pct = set?.substitutionPct ?? 30;
+  const rate = num(set?.limexRate);
+  if (t === null) return { tonnes: null, value: null, saving: null, known: false };
+  const tonnes = (t * pct) / 100;
+  const value = rate === null ? null : tonnes * 1000 * rate;
+  const resin = resinRateOf(m);
+  const saving = rate === null || resin === null ? null : tonnes * 1000 * (resin - rate);
+  return { tonnes, value, saving, known: true };
+}
+
+/** Short money, the way an Indian business reads it: ₹1.2 Cr, ₹8.4 L, ₹42,000. */
+export function inr(v: number | null | undefined): string {
+  if (v === null || v === undefined || !Number.isFinite(v)) return "—";
+  const a = Math.abs(v), sign = v < 0 ? "-" : "";
+  if (a >= 1e7) return `${sign}₹${(a / 1e7).toFixed(a / 1e7 >= 10 ? 0 : 2)} Cr`;
+  if (a >= 1e5) return `${sign}₹${(a / 1e5).toFixed(a / 1e5 >= 10 ? 0 : 2)} L`;
+  if (a >= 1000) return `${sign}₹${Math.round(a).toLocaleString("en-IN")}`;
+  return `${sign}₹${a.toFixed(0)}`;
+}
+export const tonnesText = (t: number | null) =>
+  t === null ? "—" : t >= 100 ? `${Math.round(t)} t/mo` : `${t.toFixed(1)} t/mo`;
+
+/** Fit graded from what was actually captured, falling back to the register
+ *  guess while a plant is still unprofiled. Returned with its reasons so the
+ *  card can explain itself instead of showing an oracle number. */
+export function gradeFit(s: RbStop, m: RbMark | undefined): { fit: Fit; why: string[]; profiled: boolean } {
+  if (!hasProfile(m)) return { fit: s.fit, why: [s.why ?? "From the register"], profiled: false };
+  const why: string[] = [];
+  const polys = polymersOf(m);
+  const olefin = polys.filter((p) => POLYOLEFINS.has(p));
+  let score = 0;
+  if (olefin.length) { score += 3; why.push(`Runs ${olefin.join(", ")} — takes calcium carbonate well`); }
+  else if (polys.length) { why.push(`Runs ${polys.join(", ")} — not a polyolefin, harder for LIMEX`); score -= 1; }
+  const t = tonnesOf(m);
+  if (t !== null) {
+    if (t >= 50) { score += 3; why.push(`${t} t/month is serious volume`); }
+    else if (t >= 10) { score += 2; why.push(`${t} t/month`); }
+    else { score += 1; why.push(`${t} t/month is small`); }
+  }
+  const filler = m?.fillerPct ?? null;
+  if (filler !== null && filler > 0) { score += 2; why.push(`Already runs ${filler}% filler — displacement, not persuasion`); }
+  else if (filler === 0) { why.push("No filler today — needs the case made from scratch"); }
+  if (m?.thinWall) { score -= 2; why.push("Thin wall work caps how much filler they can take"); }
+  const proc = processesOf(m);
+  if (proc.length) why.push(proc.map((x) => PROCESS_LABEL[x] ?? x).join(", "));
+  const fit: Fit = score >= 6 ? "prime" : score >= 4 ? "good" : score >= 2 ? "weak" : "clear";
+  return { fit, why, profiled: true };
+}
+
+/* ─── samples ─── */
+
+export const samplesOf = (m?: RbMark): RbSample[] => m?.samples ?? [];
+export const openSamplesOf = (m?: RbMark) => samplesOf(m).filter((x) => x.result === "PENDING");
+export const RESULT_LABEL: Record<SampleResult, string> = {
+  PENDING: "Awaiting trial", PASS: "Passed", PARTIAL: "Partial", FAIL: "Failed",
+};
+/** A sample is stalling once the trial date has passed, or after 21 days. */
+export function sampleStalled(x: RbSample, ref = today()): boolean {
+  if (x.result !== "PENDING") return false;
+  if (x.trialDueOn) return x.trialDueOn < ref;
+  return daysSince(x.givenOn, ref) >= 21;
+}
+export const sampleAge = (x: RbSample, ref = today()) => daysSince(x.givenOn, ref);
 
 /* ─── exports ─── */
 
