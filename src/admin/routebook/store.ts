@@ -11,7 +11,7 @@ import { rbApi } from "./api.js";
 import { ApiError } from "../lib/api.js";
 import type {
   RbBootstrap, RbFamily, RbLeg, RbStop, RbMark, RbLegMark, RbView, RbPrefs, MarkPatch, NewStop, ViewFilters,
-  RbSettings, RbSample, NewSample, RbOrder, NewOrder, Stage,
+  RbSettings, RbSample, NewSample, RbOrder, NewOrder, Stage, RbImport, RbImportResult,
 } from "./types.js";
 import { today } from "./logic.js";
 
@@ -542,6 +542,15 @@ export function setPrefs(patch: RbPrefs): void {
   writeCacheSoon();
   window.clearTimeout(prefTimer);
   prefTimer = window.setTimeout(() => { rbApi.putPrefs(prefs).catch(() => { /* prefs are a convenience */ }); }, 900);
+}
+
+/** Bring a whole book in from the standalone app — marks and the day journal
+ *  together — then reload, because the server has written history this tab
+ *  has never seen. */
+export async function importBook(body: RbImport): Promise<RbImportResult> {
+  const r = await rbApi.importBook(body);
+  await load(true);
+  return r.data;
 }
 
 export async function reseed(): Promise<{ stops: number }> {

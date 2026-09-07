@@ -410,3 +410,28 @@
   .rb-bacts { width: 100%; }
   .rb-bfoot .wd-primary-btn, .rb-bfoot .wd-ghost-btn { flex: 1; justify-content: center; }
 }
+
+/* Clearing one line from the day record — the same control the standalone
+   app has. Small and quiet, because it is rarely the right thing to press. */
+.rb-drowx {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--adm-muted);
+  cursor: pointer;
+  opacity: .55;
+}
+.rb-drow:hover .rb-drowx { opacity: 1; }
+.rb-drowx:hover { color: var(--rb-danger); border-color: var(--rb-danger); background: var(--rb-danger-soft); }
+.rb-drowx:focus-visible { opacity: 1; outline: 2px solid var(--rb-danger); outline-offset: 1px; }
+
+/* On a phone every target is a thumb target, and hover does not exist. */
+@media (max-width: 720px) {
+  .rb-drowx { width: 40px; height: 40px; opacity: .8; }
+}

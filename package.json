@@ -29,13 +29,9 @@
     "launch:check": "npm run security:audit && npm run build && npm run backend:build"
   },
   "dependencies": {
-    "@react-spring/web": "^10.0.3",
     "@vitejs/plugin-react": "^5.1.1",
-    "animejs": "^3.2.2",
-    "clsx": "^2.1.1",
     "framer-motion": "^12.39.0",
     "gsap": "^3.15.0",
-    "lottie-web": "^5.13.0",
     "lucide-react": "^0.562.0",
     "polished": "^4.3.1",
     "react": "^19.2.3",

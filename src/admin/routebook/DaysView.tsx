@@ -2,7 +2,7 @@
  * of every day anyone worked the book — kept in the portal DB for good. */
 
 import { useEffect, useMemo, useState } from "react";
-import { ArrowUp, ArrowDown, Navigation, Copy, MessageCircle, Printer, Star, MapPin, History } from "lucide-react";
+import { ArrowUp, ArrowDown, Navigation, Copy, MessageCircle, Printer, Star, MapPin, History, X } from "lucide-react";
 import type { RbEvent } from "./types.js";
 import type { Row } from "./logic.js";
 import { isStar, addrOf, mapsLinks, routeURL, dayLabel, fmtDate, rollDay, OUTMAP, mapOf, today } from "./logic.js";
@@ -37,8 +37,9 @@ export function DaysView({ rows }: { rows: Row[] }) {
 
   const dayList = useMemo(() => Object.keys(days ?? {}).sort().reverse(), [days]);
   useEffect(() => {
-    // Open the three most recent days automatically.
-    if (dayList.length && openDays.size === 0) setOpenDays(new Set(dayList.slice(0, 3)));
+    // The record reads as one continuous log, so every day is open — the same
+    // as the standalone app. The heading still collapses a day you scroll past.
+    if (dayList.length && openDays.size === 0) setOpenDays(new Set(dayList));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dayList]);
   useEffect(() => {
@@ -48,6 +49,20 @@ export function DaysView({ rows }: { rows: Row[] }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openDays]);
+
+  /** Take one company's lines out of one day. The mark and every other day
+   *  stay — this fixes a line logged against the wrong company, nothing more. */
+  const clearRow = async (day: string, stopId: string, name: string) => {
+    const before = events[day];
+    setEvents((e) => ({ ...e, [day]: (e[day] ?? []).filter((x) => x.stopId !== stopId) }));
+    try {
+      await rbApi.clearDayRow(day, stopId);
+      toast(`${name} cleared from ${dayLabel(day).toLowerCase()}`);
+    } catch (e) {
+      setEvents((prev) => ({ ...prev, [day]: before ?? [] }));
+      toast(e instanceof Error ? e.message : "Could not clear that line", undefined, "err");
+    }
+  };
 
   const move = (id: string, dir: -1 | 1) => {
     const cur = plan.map((r) => r.s.id);
@@ -138,7 +153,11 @@ ol{padding-left:22px}li{margin:0 0 12px;page-break-inside:avoid}li b{display:blo
                       <span className="rb-dtime">{new Date(r.t).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}</span>
                       <span className="rb-dmain">
                         <b><button type="button" className="rb-linkish" onClick={() => ui.jumpTo(r.stopId)}>{r.name}</button></b>
-                        <em>{r.legId}{r.by ? ` · ${r.by}` : ""}</em>
+                        <em>
+                          {[st.index.legById[r.legId]?.name ?? r.legId, addrOf(st.index.stopById[r.stopId] ?? ({ addr: "" } as never), st.marks[r.stopId])]
+                            .filter(Boolean).join(" · ")}
+                          {r.by ? ` · ${r.by}` : ""}
+                        </em>
                         {r.note && <span className="rb-dnote">{r.note}</span>}
                       </span>
                       <span className="rb-dtags">
@@ -149,6 +168,11 @@ ol{padding-left:22px}li{margin:0 0 12px;page-break-inside:avoid}li b{display:blo
                         {r.extra.map((x, i) => <i key={i} className="rb-pill">{x}</i>)}
                       </span>
                       {st.index.stopById[r.stopId] && <a className="rb-dmap" href={mapOf(st.index.stopById[r.stopId], st.marks[r.stopId])} target="_blank" rel="noopener noreferrer" aria-label="Map"><MapPin size={14} /></a>}
+                      <button type="button" className="rb-drowx" title="Clear this line from the record"
+                        aria-label={`Clear ${r.name} from ${dayLabel(d)}`}
+                        onClick={() => void clearRow(d, r.stopId, r.name)} data-testid="rb-drowx">
+                        <X size={13} />
+                      </button>
                     </div>
                   ))}
                   {!roll.length && <p className="rb-empty">Only leg-level changes that day.</p>}

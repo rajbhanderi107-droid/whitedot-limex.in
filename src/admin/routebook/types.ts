@@ -267,6 +267,22 @@ export interface RbSummary {
   orderedValue: number | null;
 }
 
+/** A whole book arriving from the standalone app: the marks, and the day
+ *  journal that produced them. Journal lines keep their own day and instant,
+ *  so importing never re-dates someone's round to today. */
+export interface RbImport {
+  marks: (MarkPatch & { stopId: string })[];
+  events: { stopId: string; kind: string; value?: string | null; day: string; at: string }[];
+}
+
+export interface RbImportResult {
+  marks: number;
+  events: number;
+  duplicateEvents: number;
+  days: string[];
+  skippedStops: string[];
+}
+
 /** What moved since the caller last looked — how every open device agrees. */
 export interface RbChanges {
   marks: RbMark[];

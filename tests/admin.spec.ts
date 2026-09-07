@@ -1,5 +1,13 @@
 import { test, expect } from "@playwright/test";
 
+/* Navigations here wait for `domcontentloaded`, not the default `load`.
+ * `load` also waits on the Google Fonts and analytics requests in the page
+ * head, so a slow or blocked font CDN — a proxy, a firewall, a bad day —
+ * failed these tests for reasons that have nothing to do with the site. The
+ * page still loads its fonts exactly as a visitor's would; the assertions
+ * below simply do not block on a third party, and Playwright's own
+ * auto-waiting covers everything they actually check. */
+
 test.describe("Admin Portal End-to-End and Google Sync Dashboard Verification", () => {
   test.beforeEach(async ({ page }) => {
     // Intercept Google Config
@@ -22,7 +30,7 @@ test.describe("Admin Portal End-to-End and Google Sync Dashboard Verification", 
   });
 
   test("should render admin login page and handle credentials input validation", async ({ page }) => {
-    await page.goto("/#/admin/login");
+    await page.goto("/#/admin/login", { waitUntil: "domcontentloaded" });
 
     // Check header
     await expect(page.locator("h1")).toContainText("White Dot Admin");
@@ -92,7 +100,7 @@ test.describe("Admin Portal End-to-End and Google Sync Dashboard Verification", 
       });
     });
 
-    await page.goto("/#/admin/login");
+    await page.goto("/#/admin/login", { waitUntil: "domcontentloaded" });
 
     // Fill credentials
     await page.locator("input[type='email']").fill("admin@whitedot.in");
@@ -200,12 +208,12 @@ test.describe("Admin Portal End-to-End and Google Sync Dashboard Verification", 
       });
     });
 
-    await page.goto("/#/admin/login");
+    await page.goto("/#/admin/login", { waitUntil: "domcontentloaded" });
     await page.evaluate(() => {
       localStorage.setItem("wd_admin_token", "mock-jwt-token-value");
     });
-    await page.reload();
-    await page.goto("/#/admin/google");
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await page.goto("/#/admin/google", { waitUntil: "domcontentloaded" });
     // Verify Title & Subtitle
     await expect(page.locator("h1")).toContainText("Google");
     await expect(page.locator(".adm-header p")).toContainText("Last 28 days");
@@ -304,12 +312,12 @@ test.describe("Admin Portal End-to-End and Google Sync Dashboard Verification", 
       });
     });
 
-    await page.goto("/#/admin/login");
+    await page.goto("/#/admin/login", { waitUntil: "domcontentloaded" });
     await page.evaluate(() => {
       localStorage.setItem("wd_admin_token", "mock-jwt-token-value");
     });
-    await page.reload();
-    await page.goto("/#/admin/google");
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await page.goto("/#/admin/google", { waitUntil: "domcontentloaded" });
 
     // Timeline should not be visible initially
     await expect(page.locator(".adm-google-sync-history")).not.toBeVisible();

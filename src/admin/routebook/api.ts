@@ -4,7 +4,7 @@ import { api } from "../lib/api.js";
 import type {
   RbBootstrap, RbSummary, RbEvent, RbMark, RbLegMark, RbStop, RbView, RbPrefs,
   MarkPatch, NewStop, ViewFilters, RbSample, NewSample, RbSettings,
-  RbOrder, NewOrder, RbChanges,
+  RbOrder, NewOrder, RbChanges, RbImport, RbImportResult,
 } from "./types.js";
 
 const B = "/api/portal/route-book";
@@ -61,6 +61,13 @@ export const rbApi = {
   // Commercial assumptions behind every rupee figure.
   getSettings: () => api.get<RbSettings>(`${B}/settings`),
   putSettings: (body: Partial<Omit<RbSettings, "id">>) => api.patch<RbSettings>(`${B}/settings`, body),
+
+  // The day record: one company's lines, on one day.
+  clearDayRow: (day: string, stopId: string) =>
+    api.delete<{ day: string; stopId: string; removed: number }>(`${B}/days/${enc(day)}/stops/${enc(stopId)}`),
+
+  /** Bring a book kept in the standalone app into the portal, journal and all. */
+  importBook: (body: RbImport) => api.post<RbImportResult>(`${B}/import`, body),
 
   reseed: () => api.post<{ fams: number; legs: number; stops: number; version: number }>(`${B}/reseed`, {}),
 };

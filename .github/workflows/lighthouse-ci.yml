@@ -36,3 +36,14 @@ jobs:
           lhci assert
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      # Keep the report even when the assertions fail — that is exactly when
+      # someone needs to see which audit dropped the score.
+      - name: Upload the Lighthouse report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: .lighthouseci/
+          retention-days: 14
+          if-no-files-found: warn
