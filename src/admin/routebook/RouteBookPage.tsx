@@ -15,7 +15,7 @@ import {
   toViewFilters, fromViewFilters, buildCSV, downloadText, today, vcardFor, phoneOf, PARKED, isRemoved, isTicked, DEFAULT_HOME,
   num, hasProfile, samplesOf, sampleStalled,
 } from "./logic.js";
-import { useRb, load, setPrefs, saveView, deleteView, reseed, restoreMarks, getRb, saveSettings, startLiveSync } from "./store.js";
+import { useRb, load, setPrefs, saveView, deleteView, reseed, restoreMarks, getRb, saveSettings, startLiveSync, importBook } from "./store.js";
 import { UICtx, type UIApi, toast } from "./ctx.js";
 import { OpenAsApp } from "./BookBits.js";
 import { RouteView } from "./RouteView.js";
@@ -110,14 +110,30 @@ export function RouteBookPage() {
     downloadText(`limex-route-book-backup-${today()}.json`, JSON.stringify(data), "application/json");
     toast("Backup saved");
   };
+  /** One file input, two jobs. A plain backup carries marks only and replays
+   *  through the outbox. A file that also carries `events` is a whole book
+   *  from the standalone app: that goes to the import endpoint, which keeps
+   *  every journal line on the day it actually happened instead of stamping
+   *  the lot with today's date. */
   const restore = async (file: File) => {
     try {
-      const j = JSON.parse(await file.text()) as { marks?: Record<string, unknown>[] };
+      const j = JSON.parse(await file.text()) as {
+        marks?: Record<string, unknown>[];
+        events?: { stopId: string; kind: string; value?: string | null; day: string; at: string }[];
+      };
       if (!Array.isArray(j.marks)) throw new Error("That file is not a Route Book backup");
       const items = j.marks.filter((m): m is Record<string, unknown> & { stopId: string } => typeof m.stopId === "string").map((m) => {
         const { stopId, updatedAt, updatedById, updatedBy, ...patch } = m; void updatedAt; void updatedById; void updatedBy;
         return { stopId, ...(patch as object) };
       });
+
+      if (Array.isArray(j.events) && j.events.length) {
+        const r = await importBook({ marks: items as never, events: j.events });
+        const skipped = r.skippedStops.length ? ` · ${r.skippedStops.length} not in this book` : "";
+        toast(`${r.marks} companies and ${r.events} journal lines imported across ${r.days.length} day${r.days.length === 1 ? "" : "s"}${skipped}`);
+        return;
+      }
+
       const n = restoreMarks(items);
       toast(`${n} stops restored — saving in the background`);
     } catch (e) { toast(e instanceof Error ? e.message : "Could not read that file", undefined, "err"); }
@@ -146,7 +162,7 @@ export function RouteBookPage() {
     { l: "Export CSV of this view", run: () => { downloadText(`limex-view-${today()}.csv`, "﻿" + buildCSV(visible, st.index.legById), "text/csv"); } },
     { l: "Export all contacts (.vcf)", run: exportVcf },
     { l: "Back up everything (.json)", run: backup },
-    { l: "Restore from a backup", run: () => fileRef.current?.click() },
+    { l: "Restore, or import the standalone app’s book", run: () => fileRef.current?.click() },
     { l: "Save this view for the team", run: doSaveView },
     { l: "Toggle compact density", run: () => setPrefs({ density: density === "compact" ? "cozy" : "compact" }) },
     { l: "Go to Route", run: () => changeView("route") }, { l: "Go to Stops", run: () => changeView("all") },

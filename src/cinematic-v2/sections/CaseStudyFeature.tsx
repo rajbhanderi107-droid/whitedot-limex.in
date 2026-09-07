@@ -337,30 +337,58 @@ export default function CaseStudyFeature() {
   }, [setActiveProductKey]);
 
   useEffect(() => {
-    // ── Inject model-viewer everywhere — model-viewer 4.x shares one WebGL
-    // context across instances and the LRU pool below staggers GLB
-    // activation through a concurrency-limited queue, so this is safe on mobile
-    // too as long as the marquee's continuous per-frame layout/animation work
-    // (the actual mobile-crash cause, see below) stays off. ──
-    if (!customElements.get('model-viewer')) {
-      const s = document.createElement('script');
-      s.type = 'module';
-      s.src = `${basePath}/case-study/js/model-viewer.min.js`;
-      document.head.appendChild(s);
-    }
-
     // ── 3D Coverflow marquee ──
     const grid    = gridRef.current;
     const section = sectionRef.current;
     if (!grid || !section) return;
-    // Homepage embed — competes with the hero video/images for bandwidth on
-    // first paint, so only warm the couple of cards visible without scrolling.
-    // The rest lean on the LRU pool's IntersectionObserver instead.
+
+    // ── Inject model-viewer, but not before the section is worth it ──
+    // This block sits far down the page, yet its <LazySection> wrapper is only
+    // a Suspense boundary: the component mounts at page load, so the viewer
+    // (a 244 kB module) and three GLBs used to download and decode while the
+    // hero was still painting. That alone held the load event ~10 s past the
+    // last request and dominated LCP.
+    //
+    // Now it starts one viewport-and-a-half early, which on any real scroll is
+    // still well before the cards are seen, and the LRU pool below keeps
+    // staggering per-card activation exactly as before. model-viewer 4.x
+    // shares one WebGL context across instances, so this stays safe on mobile
+    // as long as the marquee's continuous per-frame work (the actual
+    // mobile-crash cause, see below) stays off.
+    let product13Warmup = 0;
+    const loadViewer = () => {
+      if (!customElements.get('model-viewer') && !document.querySelector('script[data-model-viewer]')) {
+        const s = document.createElement('script');
+        s.type = 'module';
+        s.src = `${basePath}/case-study/js/model-viewer.min.js`;
+        s.dataset.modelViewer = 'true';
+        document.head.appendChild(s);
+      }
+      // Warm only the couple of cards visible without scrolling the marquee;
+      // the rest lean on the LRU pool's own IntersectionObserver.
+      product13Warmup = window.setTimeout(
+        () => warmCaseStudyModelCache([bobbinModel, containerModel, motorCoverModel]),
+        300,
+      );
+    };
+
+    let viewerObserver: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver === 'undefined') {
+      loadViewer();
+    } else {
+      viewerObserver = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((e) => e.isIntersecting)) return;
+          viewerObserver?.disconnect();
+          viewerObserver = null;
+          loadViewer();
+        },
+        { rootMargin: '150% 0px' },
+      );
+      viewerObserver.observe(section);
+    }
+
     const stopMobilePool = observeMobileModelPool(grid, setActiveModels);
-    const product13Warmup = window.setTimeout(
-      () => warmCaseStudyModelCache([bobbinModel, containerModel, motorCoverModel]),
-      900,
-    );
 
     let scrollX  = 0;
     const speed  = 0.65;
@@ -525,6 +553,7 @@ export default function CaseStudyFeature() {
     return () => {
       stopMobilePool?.();
       statSpy?.disconnect();
+      viewerObserver?.disconnect();
       window.clearTimeout(product13Warmup);
       visIO?.disconnect();
       if (rafRef.current) cancelAnimationFrame(rafRef.current);

@@ -1,29 +1,44 @@
 import { test, expect } from "@playwright/test";
 
+/* Navigations here wait for `domcontentloaded`, not the default `load`.
+ * `load` also waits on the Google Fonts and analytics requests in the page
+ * head, so a slow or blocked font CDN — a proxy, a firewall, a bad day —
+ * failed these tests for reasons that have nothing to do with the site. The
+ * page still loads its fonts exactly as a visitor's would; the assertions
+ * below simply do not block on a third party, and Playwright's own
+ * auto-waiting covers everything they actually check. */
+
+/* Selectors track the live cinematic-v2 markup (v2nav-*, v2h-*). They used to
+ * name the first cinematic build's classes (cine-*), which the site stopped
+ * rendering when it moved to v2 — so these checks were passing judgement on
+ * markup that no longer existed. */
+
 test.describe("WhiteDot Smoothness and Performance Verification", () => {
   test.beforeEach(async ({ page }) => {
     // Open the local dev server URL with relative path
-    await page.goto("/?v1=1");
+    await page.goto("/?v1=1", { waitUntil: "domcontentloaded" });
   });
 
   test("should load the main page successfully and have correct brand name", async ({ page }) => {
     await expect(page).toHaveTitle(/White Dot/i);
-    const brand = page.locator(".cine-brand").first();
+    const brand = page.locator(".v2nav-brand").first();
     await expect(brand).toBeVisible();
-    await expect(brand).toContainText("White Dot");
+    // The nav wordmark is set as "WhiteDot"; the title and footer write it
+    // "White Dot". Both are the brand as shipped, so accept either.
+    await expect(brand).toContainText(/White\s?Dot/i);
   });
 
   test("should check viewport layout and avoid header/copy overlap on mobile", async ({ page }) => {
     // Set typical mobile viewport (iPhone 14 width)
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.reload();
+    await page.reload({ waitUntil: "domcontentloaded" });
 
-    const eyebrow = page.locator(".cine-eyebrow");
+    const eyebrow = page.locator(".v2h-eyebrow");
     await expect(eyebrow).toBeVisible();
     await expect(eyebrow).toContainText(/Next-Gen Limestone Technology/i);
 
     // Verify nav is fixed at the top
-    const nav = page.locator(".cine-nav");
+    const nav = page.locator(".v2nav");
     await expect(nav).toBeVisible();
     const navBox = await nav.boundingBox();
     const eyebrowBox = await eyebrow.boundingBox();
@@ -74,7 +89,7 @@ test.describe("WhiteDot Smoothness and Performance Verification", () => {
   test("should respect prefers-reduced-motion media query fallback settings", async ({ page }) => {
     // Emulate reduced motion user settings
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.reload();
+    await page.reload({ waitUntil: "domcontentloaded" });
 
     // Verify that the video elements are omitted / not rendered
     const video = page.locator("video.cine-svideo-el");

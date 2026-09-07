@@ -1,17 +1,16 @@
-/* White Dot brand font loader.
-   Mirrors the design-system handoff for the live app type stack:
-   Satoshi, Boska, and JetBrains Mono. The full self-hosted Noto Sans CJK JP
-   files remain available in public/design-system/fonts for the design pages. */
+/* White Dot brand font loader — rules only.
+   The stylesheets themselves are <link>ed from every entry HTML instead of
+   @import-ed here. An @import inside a CSS file that is itself imported by
+   the JS bundle is only discovered after HTML → JS → CSS have all been
+   fetched and parsed, so five font stylesheets used to load one after
+   another, each blocking first paint. As links they are discovered in the
+   HTML head and fetched in parallel.
 
-@import url("https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&f[]=satoshi-italic@400,500,700&f[]=boska@400,500,700,900&f[]=boska-italic@400,500,700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap");
-
-/* Brand wordmark face — Cinzel: a free Trajan-style Roman serif caps that
-   closely matches the LIMEX wordmark in the TBM/LIMEX logo (logo raj.pdf).
-   Applied ONLY to the LIMEX/TBM brand words via .wd-limex / .wd-tbm,
-   never to body copy. Body stays on Satoshi/Boska. */
-@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap");
+   Faces in use: Satoshi + Boska (Fontshare), Inter, JetBrains Mono,
+   IBM Plex Mono, Zen Kaku Gothic New and Cinzel (Google Fonts). Cinzel is
+   the brand wordmark face — see .wd-limex / .wd-tbm below. The self-hosted
+   Noto Sans CJK JP files remain in public/design-system/fonts for the
+   design pages. */
 
 :root {
   --wd-font-wordmark: "Cinzel", "Boska", ui-serif, Georgia, serif;

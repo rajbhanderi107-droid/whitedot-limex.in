@@ -1,5 +1,11 @@
 node_modules
-# dist is committed — CI skips build and rsyncs pre-built files directly
+
+# Build and report output. The deploy workflow builds from source on CI
+# (see .github/workflows/deploy.yml), so none of this belongs in git.
+dist
+playwright-report
+test-results
+.lighthouseci
 .tools
 .DS_Store
 *.local
