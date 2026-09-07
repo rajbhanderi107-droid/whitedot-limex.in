@@ -37,6 +37,12 @@ jobs:
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
+      # A category score on its own ("best-practices 0.93") says nothing about
+      # what to fix. This names the audits, in the log, next to the failure.
+      - name: Explain the scores
+        if: always()
+        run: node scripts/lighthouse-summary.mjs
+
       # Keep the report even when the assertions fail — that is exactly when
       # someone needs to see which audit dropped the score.
       - name: Upload the Lighthouse report
@@ -47,3 +53,7 @@ jobs:
           path: .lighthouseci/
           retention-days: 14
           if-no-files-found: warn
+          # .lighthouseci starts with a dot, and upload-artifact skips hidden
+          # files by default — which is why every report so far uploaded
+          # nothing at all.
+          include-hidden-files: true
