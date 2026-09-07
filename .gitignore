@@ -6,6 +6,10 @@ dist
 playwright-report
 test-results
 .lighthouseci
+
+# Scratch data pulled out of the standalone app for a one-off import. It is
+# live customer contact detail — it belongs in the portal's database, not here.
+tmp-import
 .tools
 .DS_Store
 *.local
