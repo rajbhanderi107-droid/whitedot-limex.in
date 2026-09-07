@@ -28,22 +28,22 @@ const monthOf = (d: string) => d.slice(0, 7);
 export function CustomerBookPage() {
   const st = useBook();
   const rb = useRb();
+  const [focus, setFocus] = useState("all");
   const [q, setQ] = useState("");
   const [ordering, setOrdering] = useState<Row | null>(null);
 
   const rows: Row[] = useMemo(() => st.stops.map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
   const customers = useMemo(
-    () => rows.filter((r) => isCustomer(r.m))
+    () => rows.filter((r) => isCustomer(r.m) && !r.m?.removed)
       .sort((a, b) => (b.m?.customerOn ?? "").localeCompare(a.m?.customerOn ?? "")),
     [rows],
   );
   const shown = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    if (!needle) return customers;
     return customers.filter(({ s, m }) =>
-      `${s.name} ${addrOf(s, m)} ${m?.gstNumber ?? ""} ${ordersOf(m).map((o) => o.orderNo + o.grade).join(" ")}`
-        .toLowerCase().includes(needle));
-  }, [customers, q]);
+      `${s.name} ${addrOf(s, m)} ${conOf(m).n ?? ""} ${phoneOf(s, m) ?? ""} ${m?.gstNumber ?? ""} ${ordersOf(m).map((o) => `${o.orderNo} ${o.grade}`).join(" ")}`
+        .toLowerCase().includes(needle) && (focus === "all" || liveOrders(m).some((o) => o.status === focus)));
+  }, [customers, q, focus]);
 
   const allOrders = customers.flatMap((r) => liveOrders(r.m));
   const totalMt = customers.reduce((a, r) => a + customerTotals(r.m).mt, 0);
@@ -104,9 +104,12 @@ export function CustomerBookPage() {
         <div className="rb-toolbar">
           <div className="rb-find">
             <Search size={14} />
-            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search customers, GST, order numbers…" data-testid="cb-search" />
+            <input value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search the Customer Book" placeholder="Search company, contact, GST, order…" data-testid="cb-search" />
             {q && <button type="button" onClick={() => setQ("")} aria-label="Clear search"><X size={13} /></button>}
           </div>
+          <select className="rb-book-filter" aria-label="Filter customer orders" value={focus} onChange={(e) => setFocus(e.target.value)}>
+            <option value="all">All customers</option><option value="CONFIRMED">Awaiting dispatch</option><option value="DISPATCHED">Dispatched</option><option value="DELIVERED">Delivered</option><option value="PAID">Paid</option>
+          </select>
           <span className="rb-showing">{shown.length} of {customers.length}</span>
         </div>
       )}
@@ -118,6 +121,7 @@ export function CustomerBookPage() {
         />
       )}
 
+      {customers.length > 0 && !shown.length && <Empty title="No matching customers" hint="Try another name, phone or order number, or choose All customers." />}
       {shown.map((r) => {
         const t = customerTotals(r.m);
         const c = conOf(r.m);
@@ -174,18 +178,18 @@ export function CustomerBookPage() {
                   <tbody>
                     {orders.map((o) => (
                       <tr key={o.id} className={o.status === "CANCELLED" ? "is-void" : ""}>
-                        <td className="mono">{o.orderNo}{o.poRef ? <em> · PO {o.poRef}</em> : null}</td>
-                        <td>{fmtDate(o.orderedOn)}</td>
-                        <td>{o.grade}</td>
-                        <td className="num">{num(o.quantityMt)}</td>
-                        <td className="num">{num(o.rate) ?? "—"}</td>
-                        <td className="num">{o.amount == null ? "—" : inrFull(num(o.amount))}</td>
-                        <td>
+                        <td data-label="Order" className="mono">{o.orderNo}{o.poRef ? <em> · PO {o.poRef}</em> : null}</td>
+                        <td data-label="Date">{fmtDate(o.orderedOn)}</td>
+                        <td data-label="Grade">{o.grade}</td>
+                        <td data-label="MT" className="num">{num(o.quantityMt)}</td>
+                        <td data-label="₹/kg" className="num">{num(o.rate) ?? "—"}</td>
+                        <td data-label="Amount" className="num">{o.amount == null ? "—" : inrFull(num(o.amount))}</td>
+                        <td data-label="Status">
                           <select value={o.status} onChange={(e) => setStatus(r, o, e.target.value as RbOrder["status"])} aria-label={`Status of ${o.orderNo}`}>
                             {ORDER_STATUSES.map((s) => <option key={s} value={s}>{ORDER_STATUS_LABEL[s]}</option>)}
                           </select>
                         </td>
-                        <td>
+                        <td data-label="Actions">
                           <button type="button" className="wd-ghost-btn" onClick={() => drop(r, o)} aria-label={`Delete ${o.orderNo}`}>
                             <Trash2 size={13} />
                           </button>

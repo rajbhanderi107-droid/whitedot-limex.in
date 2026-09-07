@@ -260,3 +260,48 @@ test.describe("LIMEX Route Book", () => {
     await expect(page.locator(".rb-rail")).toBeVisible();
   });
 });
+
+test('visit import requires a date and preserves existing notes', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  const { marks } = await mockPortal(page);
+  marks.set('N1-alpha', { stopId: 'N1-alpha', note: 'Earlier visit', starred: false });
+  let imported: { marks: Record<string, unknown>[]; events: Record<string, unknown>[] } | undefined;
+  await page.route('**/api/portal/route-book/import', async r => {
+    imported = r.request().postDataJSON();
+    await r.fulfill(ok({ marks: 1, events: 3, skippedStops: [] }));
+  });
+  await page.goto('/#/admin/route-book');
+  await page.getByTestId('rb-tab-plan').click();
+  await page.getByRole('button', { name: 'Import records', exact: true }).click();
+  await page.getByLabel('Visit file (.json)').setInputFiles({
+    name: 'visits.json', mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify({ records: [{ stopId: 'N1-alpha', name: 'Alpha Polymers', time: '13:40', ticked: true, starred: true, note: 'Follow up next week' }] })),
+  });
+  await expect(page.getByRole('button', { name: 'Import 1 visits' })).toBeDisabled();
+  await page.getByLabel('Actual visit date').fill('2026-09-03');
+  await page.getByRole('button', { name: 'Import 1 visits' }).click();
+  await expect(page.getByRole('dialog', { name: 'Import visit records' })).toHaveCount(0);
+  expect(imported?.marks[0].note).toBe('Earlier visit\n\nFollow up next week');
+  expect(imported?.events).toHaveLength(3);
+  expect(imported?.events[0].at).toBe('2026-09-03T13:40:00+05:30');
+});
+
+test('deleting a day row leaves its company in the register', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  const { events } = await mockPortal(page);
+  events.push({ id: 'visit-1', kind: 'tick', value: '1', day: '2026-09-03', at: '2026-09-03T08:10:00Z', stopId: 'N1-alpha', stop: { name: 'Alpha Polymers', legId: 'N1' }, user: me });
+  let deleted = false;
+  await page.route('**/api/portal/route-book/days/2026-09-03/stops/N1-alpha', async r => {
+    expect(r.request().method()).toBe('DELETE');
+    deleted = true; events.splice(0);
+    await r.fulfill(ok({ deleted: 1 }));
+  });
+  await page.goto('/#/admin/route-book');
+  await page.getByTestId('rb-tab-plan').click();
+  page.once('dialog', d => d.accept());
+  await page.getByRole('button', { name: 'Delete day record for Alpha Polymers', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Delete day record for Alpha Polymers', exact: true })).toHaveCount(0);
+  expect(deleted).toBe(true);
+  await page.getByTestId('rb-tab-all').click();
+  await expect(page.locator("[data-testid='rb-stop'][data-id='N1-alpha']")).toBeVisible();
+});

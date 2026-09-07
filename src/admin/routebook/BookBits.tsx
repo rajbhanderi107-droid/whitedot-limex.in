@@ -7,6 +7,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Cloud, CloudOff, CloudUpload, AlertTriangle, Smartphone } from "lucide-react";
 import { load, startLiveSync, useRb, type RbState } from "./store.js";
+import { Toasts } from "./Overlays.js";
 import "./routebook.css";
 
 /** True inside one of the standalone book apps (/route/, /leads/,
@@ -80,6 +81,7 @@ export function BookShell({ st, icon, title, sub, actions, testId, children }: S
       </div>
       {st.error && st.sync === "error" && <div className="wd-inline-err">{st.error}</div>}
       {children}
+      <Toasts />
     </div>
   );
 }
@@ -101,15 +103,21 @@ interface FieldProps {
 export function Field({ label, value, onSave, type = "text", placeholder, step, wide }: FieldProps) {
   const [draft, setDraft] = useState(value === null || value === undefined ? "" : String(value));
   const committed = useRef(draft);
+  const input = useRef<HTMLInputElement>(null);
   useEffect(() => {
     const next = value === null || value === undefined ? "" : String(value);
     // Only adopt a change that came from elsewhere — never fight the typist.
-    if (next !== committed.current && document.activeElement?.getAttribute("data-field") !== label) {
+    if (next !== committed.current && document.activeElement !== input.current) {
       committed.current = next; setDraft(next);
     }
   }, [value, label]);
   const commit = () => {
-    if (draft === committed.current) return;
+    if (!input.current?.checkValidity()) { input.current?.reportValidity(); return; }
+    if (draft === committed.current) {
+      const latest = value == null ? "" : String(value);
+      committed.current = latest; setDraft(latest);
+      return;
+    }
     committed.current = draft;
     onSave(draft.trim());
   };
@@ -117,7 +125,10 @@ export function Field({ label, value, onSave, type = "text", placeholder, step, 
     <label className={`rb-bfield${wide ? " is-wide" : ""}`}>
       <span>{label}</span>
       <input
+        ref={input}
         data-field={label}
+        min={type === "number" ? 0 : undefined}
+        inputMode={type === "number" ? "decimal" : undefined}
         type={type} step={step} placeholder={placeholder} value={draft}
         onChange={(e) => setDraft(e.target.value)}
         onBlur={commit}

@@ -114,3 +114,18 @@ test.describe("Standalone book apps", () => {
     expect(box!.height).toBeGreaterThanOrEqual(40);
   });
 });
+
+test('standalone sign-in returns to the chosen book and password recovery opens', async ({ page }) => {
+  await mockApi(page);
+  await page.route('**/api/auth/login', r => r.fulfill(ok({ user: me, token: 'mock-jwt' })));
+  await page.goto('/customers/');
+  await page.getByText('Forgot password?').click();
+  await expect(page.locator('input[type=email]')).toBeVisible();
+  await expect(page).toHaveURL(/forgot-password/);
+  await page.goto('/customers/');
+  await page.locator('input[type=email]').fill('admin@whitedot.in');
+  await page.locator('input[type=password]').fill('mock-password');
+  await page.getByRole('button', { name: 'Sign in with email', exact: true }).click();
+  await expect(page.getByTestId('customer-book')).toBeVisible();
+  await expect(page).toHaveURL(/customers\/.*customer-book/);
+});

@@ -202,6 +202,10 @@ async function settle(stopId: string): Promise<void> {
     await flush();
     if (outbox.length === before) break;   // not draining — stop rather than spin
   }
+  if (outbox.some((o) => o.stopId === stopId)) {
+    scheduleFlush();
+    throw new Error("Your company changes are still saving. Wait for Saved, then try again. If you are offline, reconnect first.");
+  }
 }
 
 async function flushIndividually(batch: MarkOp[], reason: string) {

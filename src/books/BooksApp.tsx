@@ -9,6 +9,9 @@
  * Everything portal-only (the CRM, Companies, Follow-ups) hands off to the
  * full portal rather than being half-rebuilt here. */
 
+import { useEffect } from "react";
+import { ForgotPasswordPage } from "../admin/pages/ForgotPasswordPage.js";
+import { ResetPasswordPage } from "../admin/pages/ResetPasswordPage.js";
 import { Navigate, NavLink, Route, Routes, useLocation } from "react-router-dom";
 import { Route as RouteIcon, Handshake, BadgeCheck, LayoutGrid, LogOut } from "lucide-react";
 import { useAuth } from "../admin/hooks/useAuth.js";
@@ -43,7 +46,7 @@ const PORTAL_ORIGIN = window.location.origin;
 /** Anything this app deliberately does not carry opens in the full portal. */
 function ToPortal() {
   const { pathname, search } = useLocation();
-  window.location.href = `${PORTAL_ORIGIN}/#${pathname}${search}`;
+  useEffect(() => { window.location.assign(`${PORTAL_ORIGIN}/#${pathname}${search}`); }, [pathname, search]);
   return (
     <div className="bk-handoff">
       <p>Opening this in the full portal…</p>
@@ -57,14 +60,14 @@ function Chrome({ user, onLogout }: { user: { name: string; role: string }; onLo
     <nav className="bk-bar" aria-label="Books">
       <div className="bk-tabs">
         {BOOKS.map((b) => (
-          <NavLink key={b.key} to={b.path} className={({ isActive }) => `bk-tab${isActive ? " is-on" : ""}`} data-testid={`bk-tab-${b.key}`}>
+          <NavLink key={b.key} to={b.path} className={({ isActive }) => `bk-tab${isActive ? " is-on" : ""}`} data-testid={`bk-tab-${b.key}`} aria-label={b.label}>
             <b.icon size={16} />
             <span>{b.short}</span>
           </NavLink>
         ))}
       </div>
       <div className="bk-bar-end">
-        <a className="bk-icon" href={`${PORTAL_ORIGIN}/#/admin/dashboard`} title={`Full portal · signed in as ${user.name}`}>
+        <a className="bk-icon" href={`${PORTAL_ORIGIN}/#/admin/dashboard`} aria-label="Open full portal" title={`Full portal · signed in as ${user.name}`}>
           <LayoutGrid size={16} />
         </a>
         <button type="button" className="bk-icon" onClick={() => void onLogout()} title="Sign out" aria-label="Sign out">
@@ -92,7 +95,11 @@ export default function BooksApp() {
   if (!isAuthenticated || !user) {
     return (
       <Routes>
-        <Route path="*" element={<LoginPage onLogin={login} onGoogleLogin={googleLogin} />} />
+        <Route path="/admin/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/admin/reset-password" element={<ResetPasswordPage />} />
+        <Route path="*" element={<LoginPage onLogin={login} onGoogleLogin={googleLogin}
+          redirectTo={homePath()} title={`LIMEX ${BOOKS.find((b) => b.key === defaultBook())!.label}`}
+          description="Sign in with your WhiteDot account to open your book." />} />
       </Routes>
     );
   }

@@ -20,6 +20,9 @@ export const rbApi = {
   summary: () => api.get<RbSummary>(`${B}/summary`),
   events: (params: { day?: string; from?: string; to?: string; stopId?: string }) =>
     api.getFresh<RbEvent[]>(`${B}/events${qs(params)}`),
+  clearDayRow: (day: string, stopId: string) => api.delete<{ removed: number }>(`${B}/days/${enc(day)}/stops/${enc(stopId)}`),
+  importBook: (body: { marks: Record<string, unknown>[]; events: Record<string, unknown>[] }) =>
+    api.post<{ marks: number; events: number; skippedStops: string[] }>(`${B}/import`, body),
   days: () => api.getFresh<Record<string, Record<string, number>>>(`${B}/days`),
   /** Only what moved since `since` — how every open device stays in step. */
   changes: (since: string) => api.getFresh<RbChanges>(`${B}/changes?since=${enc(since)}`),
