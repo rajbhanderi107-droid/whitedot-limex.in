@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import {
   Check, Star, MapPin, Phone, MessageCircle, Copy, Link2, StickyNote, Ban, Trash2, RotateCcw,
   Building2, CalendarClock, ExternalLink, Contact, Pencil, Factory, FlaskConical,
+  Handshake, BadgeCheck,
 } from "lucide-react";
 import type { RbStop, RbMark, Outcome, MarkPatch } from "./types.js";
 import {
@@ -17,7 +18,7 @@ import {
 import { patchMark, revertMark, deleteStop, restoreStop, updateStop, getRb } from "./store.js";
 import { useUI, toast } from "./ctx.js";
 import { FitProfile, FitSummary, SamplePanel } from "./FitPanel.js";
-import { samplesOf, openSamplesOf, sampleStalled, gradeFit, hasProfile } from "./logic.js";
+import { samplesOf, openSamplesOf, sampleStalled, gradeFit, hasProfile, stageOf, isCustomer, isLead, customerTotals, mt } from "./logic.js";
 import { api } from "../lib/api.js";
 
 interface Props { s: RbStop; m?: RbMark; withLeg?: boolean; compact?: boolean }
@@ -106,6 +107,9 @@ export const StopCard = memo(function StopCard({ s, m, withLeg, compact }: Props
           {tags.slice(0, compact ? 2 : 5).map((t) => <i key={t.t} className={`rb-pill${t.c === "big" ? " rb-pill-big" : t.c === "warn" ? " rb-pill-warn" : ""}`}>{t.t}</i>)}
           {s.userAdded && <i className="rb-pill rb-pill-big">Yours{s.addedBy ? ` · ${s.addedBy.name.split(" ")[0]}` : ""}</i>}
           {m?.companyId && <Link className="rb-pill rb-pill-crm" to="/admin/companies" title="Promoted to the CRM"><Building2 size={11} /> In CRM</Link>}
+          {isLead(m) && <Link className="rb-pill rb-pill-crm" to="/admin/lead-book" title="In the Lead Book"><Handshake size={11} /> Lead</Link>}
+          {isCustomer(m) && <Link className="rb-pill rb-pill-crm" to="/admin/customer-book" title="In the Customer Book"><BadgeCheck size={11} /> Customer · {mt(customerTotals(m).mt)}</Link>}
+          {stageOf(m) === "LOST" && <i className="rb-pill rb-pill-warn" title={m?.lostReason ?? ""}>lost</i>}
           {merged && <i className="rb-pill rb-pill-warn">merged into {mergedInto}</i>}
         </div>
 
@@ -145,6 +149,12 @@ export const StopCard = memo(function StopCard({ s, m, withLeg, compact }: Props
           </button>
           {merged && <button type="button" onClick={unmerge}><RotateCcw size={12} /> Un-merge</button>}
           {!m?.companyId && !dnc && !removed && <PromoteButton s={s} m={m} />}
+          {stageOf(m) === "PROSPECT" && !dnc && !removed && (
+            <button type="button" onClick={() => applyWithUndo(s.id, { stage: "LEAD" }, `${s.name} is a live lead`)}
+              title="Move this company into the Lead Book" data-testid="rb-makelead">
+              <Handshake size={12} /> Make a lead
+            </button>
+          )}
         </div>
 
         <div className="rb-outs" role="group" aria-label="Outcome">
