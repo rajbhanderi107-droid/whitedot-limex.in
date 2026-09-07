@@ -32,7 +32,13 @@ jobs:
       - name: Run Lighthouse CI
         run: |
           npm install -g @lhci/cli@0.14.x
-          lhci collect
+          # Lighthouse serves the production build from localhost, so the
+          # site's call to the real API is cross-origin and can only fail
+          # CORS — a console error about this runner, not about the page.
+          # Blocking it at the network layer measures the site instead of the
+          # origin mismatch, and the page is built to survive the API being
+          # unreachable, which is exactly what a blocked request exercises.
+          lhci collect --collect.settings.blockedUrlPatterns="https://api.whitedotindia.in/*"
           lhci assert
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}

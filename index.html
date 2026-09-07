@@ -78,7 +78,17 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-0S4VPW9RGE');
+      /* Google Signals sends a cross-device advertising ping to
+         stats.g.doubleclick.net, which this site's own CSP forbids. Every
+         visitor got a blocked request and a console error, and nothing was
+         gained by it: WhiteDot runs no remarketing. Switching it off at the
+         source stops the request, rather than widening the CSP to allow ad
+         tracking the site does not use. Page and event analytics are
+         unaffected. */
+      gtag('config', 'G-0S4VPW9RGE', {
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false,
+      });
     </script>
 
     <!-- Structured Data (JSON-LD) for Search Engines -->
