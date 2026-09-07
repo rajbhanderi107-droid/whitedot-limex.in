@@ -27,3 +27,17 @@
 .bd-actions a { min-height:44px; }
 .bd-empty { padding:36px 12px; text-align:center; color:var(--adm-muted); }
 @media(max-width:760px) { .bd-books { grid-template-columns:1fr; gap:12px; } .bd-book { padding:18px; } .bd-book p { min-height:0; } .bd-work { padding:16px; } .bd-row { align-items:flex-start; flex-direction:column; } .wd-tools-panel { right:-42px; } }
+
+/* Push a follow-up forward without opening the company — the commonest
+   thing to do from a desk row, so it lives on the row. */
+.bd-snooze { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:10px; }
+.bd-snooze > span { color:var(--adm-muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; }
+.bd-snooze button { min-height:32px; padding:4px 10px; border:1px solid var(--adm-border); border-radius:16px; background:transparent; color:var(--adm-muted); font:inherit; font-size:.75rem; cursor:pointer; }
+.bd-snooze button:hover { color:var(--adm-text); border-color:var(--adm-accent); }
+.bd-snooze button:focus-visible { outline:2px solid var(--adm-accent); outline-offset:2px; }
+.bd-actions .wd-ghost-btn, .bd-actions .wd-primary-btn { display:inline-flex; align-items:center; gap:6px; }
+@media(max-width:760px) {
+  .bd-snooze button { min-height:40px; }
+  .bd-actions { width:100%; }
+  .bd-actions a { flex:1; justify-content:center; }
+}

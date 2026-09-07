@@ -39,6 +39,18 @@ export function relDays(iso: string | null | undefined, ref = today()): string {
   if (n === 1) return "yesterday";
   return `${n} days ago`;
 }
+/** A follow-up date said the way you would say it out loud, so a desk row
+ *  reads "Overdue by 4 days" rather than a bare 2026-09-04. */
+export function dueLabel(iso: string | null | undefined, ref = today()): string {
+  if (!iso) return "No follow-up date";
+  const n = daysSince(iso, ref);        // positive once the date has passed
+  if (n === 0) return "Due today";
+  if (n === 1) return "Overdue by a day";
+  if (n > 1) return `Overdue by ${n} days`;
+  if (n === -1) return "Due tomorrow";
+  return `Due ${fmtDateLong(iso)}`;
+}
+
 export function fmtDate(iso: string | null | undefined): string {
   if (!iso) return "";
   try { return new Date(iso + "T00:00:00").toLocaleDateString(undefined, { day: "numeric", month: "short" }); }
@@ -519,6 +531,19 @@ export function customerTotals(m?: RbMark): { mt: number; value: number | null; 
     last: live.length ? live.map((o) => o.orderedOn).sort().at(-1)! : null,
   };
 }
+
+/** A customer nobody has taken an order from in a while. Reorder cycles for
+ *  a filler masterbatch run in weeks, so silence past `days` is a prompt to
+ *  call — not a judgement that anything is wrong. */
+export const REORDER_DAYS = 45;
+export function dueReorder(m?: RbMark, days = REORDER_DAYS, ref = today()): boolean {
+  const { last, count } = customerTotals(m);
+  return count > 0 && !!last && daysSince(last, ref) >= days;
+}
+
+/** A lead with nothing written in Next step is a lead nobody has decided
+ *  what to do with. It is the queue that quietly loses orders. */
+export const noNextStep = (m?: RbMark) => !(m?.nextStep ?? "").trim();
 
 /** Tonnes read the way a plant talks: 6.25 MT, 120 MT. */
 export const mt = (v: number | null | undefined) =>
