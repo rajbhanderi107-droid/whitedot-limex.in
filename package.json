@@ -20,7 +20,6 @@
     "remove:god:wd": "node scripts/remove-god-wd.mjs",
     "remove:assistant:wd": "node scripts/remove-assistant-wd.mjs",
     "remove:allplan": "node scripts/remove-allplan.mjs",
-    "wire:higgsfield:loop": "node scripts/wire-higgsfield-loop.mjs",
     "guard:admin-google": "node scripts/guard-admin-google.mjs",
     "security:audit": "npm audit && npm --prefix server audit",
     "test:backend": "npm --prefix server run test",
