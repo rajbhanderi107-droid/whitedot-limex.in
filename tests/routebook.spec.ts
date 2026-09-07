@@ -331,3 +331,29 @@ test('clean desk filters real tasks, hides removed companies, and links to the c
   await page.getByRole('link', { name: 'Open company' }).click();
   await expect(page.getByTestId('rb-page')).toBeVisible();
 });
+
+test('the desk snoozes a follow-up, offers WhatsApp, and keeps its queue in the URL', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  const mock = await mockPortal(page);
+  mock.marks.set('N1-alpha', { stopId: 'N1-alpha', dueOn: '2020-01-01', nextStep: 'Discuss the trial result', contactPhone: '9876543210' });
+
+  await page.goto('/#/admin/dashboard');
+  await expect(page.getByTestId('book-desk')).toBeVisible();
+
+  // The overdue date is spoken, not printed as a bare ISO string.
+  await expect(page.locator('.bd-row').first()).toContainText('Overdue by');
+  await expect(page.getByRole('link', { name: 'WhatsApp Alpha Polymers' }))
+    .toHaveAttribute('href', /wa\.me\/919876543210/);
+
+  // The book works in the rep's own day, not UTC — so does this expectation.
+  const d = new Date(Date.now() + 7 * 86_400_000);
+  const inAWeek = new Date(d.getTime() - d.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
+  await page.getByRole('button', { name: 'Follow up with Alpha Polymers next week' }).click();
+  await expect.poll(() => mock.marks.get('N1-alpha')?.dueOn, { timeout: 5000 }).toBe(inAWeek);
+
+  // The chosen queue survives a reload.
+  await page.getByRole('button', { name: 'No next step' }).click();
+  await expect(page).toHaveURL(/q=nostep/);
+  await page.reload();
+  await expect(page.getByRole('button', { name: 'No next step' })).toHaveAttribute('aria-pressed', 'true');
+});

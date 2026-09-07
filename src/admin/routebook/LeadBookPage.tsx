@@ -13,7 +13,7 @@ import {
 import type { Row } from "./logic.js";
 import {
   addrOf, conOf, expectedMtOf, fmtDate, inr, isDue, isLead, looksPositive, mt, num, openSamplesOf,
-  phoneOf, quotedRateOf, relDays, sampleStalled, samplesOf, telHref, tonnesOf, today, waHref,
+  noNextStep, phoneOf, quotedRateOf, relDays, sampleStalled, samplesOf, telHref, tonnesOf, today, waHref,
 } from "./logic.js";
 import { patchMark, setStage, useRb } from "./store.js";
 import { toast } from "./ctx.js";
@@ -39,7 +39,11 @@ export function LeadBookPage() {
     const needle = q.trim().toLowerCase();
     return leads.filter(({ s, m }) => {
       const matches = `${s.name} ${addrOf(s, m)} ${conOf(m).n ?? ""} ${phoneOf(s, m) ?? ""} ${m?.nextStep ?? ""} ${m?.note ?? ""}`.toLowerCase().includes(needle);
-      return matches && (focus === "all" || (focus === "due" ? isDue(m) : openSamplesOf(m).length > 0));
+      if (!matches) return false;
+      if (focus === "due") return isDue(m);
+      if (focus === "trials") return openSamplesOf(m).length > 0;
+      if (focus === "nostep") return noNextStep(m);
+      return true;
     });
   }, [leads, q, focus]);
 
@@ -125,7 +129,7 @@ export function LeadBookPage() {
             {q && <button type="button" onClick={() => setQ("")} aria-label="Clear search"><X size={13} /></button>}
           </div>
           <select className="rb-book-filter" aria-label="Filter leads" value={focus} onChange={(e) => setFocus(e.target.value)}>
-            <option value="all">All leads</option><option value="due">Follow-ups due</option><option value="trials">Open trials</option>
+            <option value="all">All leads</option><option value="due">Follow-ups due</option><option value="trials">Open trials</option><option value="nostep">No next step</option>
           </select>
           <span className="rb-showing">{shown.length} of {leads.length}</span>
         </div>

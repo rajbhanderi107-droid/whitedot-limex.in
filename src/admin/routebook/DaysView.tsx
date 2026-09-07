@@ -1,7 +1,7 @@
 /* Days: today's run (starred stops in your order) and the permanent record
  * of every day anyone worked the book — kept in the portal DB for good. */
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUp, ArrowDown, Navigation, Copy, MessageCircle, Printer, Star, MapPin, History, RefreshCw, Trash2, X } from "lucide-react";
 import type { RbEvent } from "./types.js";
 import type { Row } from "./logic.js";
@@ -38,6 +38,7 @@ export function DaysView({ rows }: { rows: Row[] }) {
   const [importing, setImporting] = useState(false);
   const [openDays, setOpenDays] = useState<Set<string>>(new Set());
   const [events, setEvents] = useState<Record<string, RbEvent[]>>({});
+  const asked = useRef<Set<string>>(new Set());   // days already requested
 
   const dayList = useMemo(() => Object.keys(days ?? {}).sort().reverse(), [days]);
   useEffect(() => {
@@ -45,7 +46,7 @@ export function DaysView({ rows }: { rows: Row[] }) {
     if (dayList.length && openDays.size === 0) setOpenDays(new Set(dayList));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dayList]);
-  const refresh = () => { setEvents({}); setEventErrors({}); void reload(); };
+  const refresh = () => { asked.current.clear(); setEvents({}); setEventErrors({}); void reload(); };
   const clearRow = async (day: string, stopId: string, name: string) => {
     if (!window.confirm(`Delete ${name}'s record for ${day}? The company, its orders and other days will be kept.`)) return;
     setBusy(`${day}/${stopId}`);
@@ -59,15 +60,14 @@ export function DaysView({ rows }: { rows: Row[] }) {
     toast(`${name} removed from the books`, () => patchMark(stopId, { removed: prev.removed }));
   };
   useEffect(() => {
-    let cancelled = false;
     for (const d of openDays) {
-      if (events[d] || eventErrors[d]) continue;
-      rbApi.events({ day: d }).then((r) => { if (!cancelled) setEvents((e) => ({ ...e, [d]: r.data })); })
-        .catch((e) => { if (!cancelled) setEventErrors((prev) => ({ ...prev, [d]: e instanceof Error ? e.message : "Could not load this day" })); });
+      if (asked.current.has(d)) continue;   // in flight, loaded or already failed
+      asked.current.add(d);
+      rbApi.events({ day: d })
+        .then((r) => setEvents((e) => ({ ...e, [d]: r.data })))
+        .catch((e) => setEventErrors((prev) => ({ ...prev, [d]: e instanceof Error ? e.message : "Could not load this day" })));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    return () => { cancelled = true; };
-  }, [openDays, events, eventErrors]);
+  }, [openDays]);
 
   const move = (id: string, dir: -1 | 1) => {
     const cur = plan.map((r) => r.s.id);
@@ -164,7 +164,7 @@ ol{padding-left:22px}li{margin:0 0 12px;page-break-inside:avoid}li b{display:blo
                       <span className="rb-dtime">{new Date(r.t).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" })}</span>
                       <span className="rb-dmain">
                         <b><button type="button" className="rb-linkish" onClick={() => ui.jumpTo(r.stopId)}>{r.name}</button></b>
-                        <em>{r.legId} · {st.index.stopById[r.stopId] ? addrOf(st.index.stopById[r.stopId], st.marks[r.stopId]) : "Company no longer in the book"}{r.by ? ` · ${r.by}` : ""}</em>
+                        <em>{st.index.legById[r.legId]?.name ?? r.legId} · {st.index.stopById[r.stopId] ? addrOf(st.index.stopById[r.stopId], st.marks[r.stopId]) : "Company no longer in the book"}{r.by ? ` · ${r.by}` : ""}</em>
                         {r.note && <span className="rb-dnote">{r.note}</span>}
                       </span>
                       <span className="rb-dtags">

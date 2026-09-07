@@ -111,7 +111,7 @@ test.describe("Admin Portal End-to-End and Google Sync Dashboard Verification", 
 
     // Should redirect to dashboard page
     await expect(page).toHaveURL(/.*\/admin\/dashboard/);
-    await expect(page.locator("h1")).toContainText("Command Center");
+    await expect(page.locator("h1")).toContainText("Your day, in focus");
   });
 
   test("should render Google Sync page dashboard components correctly", async ({ page }) => {

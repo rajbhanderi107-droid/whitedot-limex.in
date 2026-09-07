@@ -14,7 +14,7 @@ import type { RbOrder } from "./types.js";
 import { ORDER_STATUSES, ORDER_STATUS_LABEL } from "./types.js";
 import type { Row } from "./logic.js";
 import {
-  addrOf, conOf, customerTotals, fmtDate, inr, inrFull, isCustomer, liveOrders, mt, num,
+  addrOf, conOf, customerTotals, dueReorder, fmtDate, inr, inrFull, isCustomer, liveOrders, mt, num,
   ordersOf, phoneOf, telHref, today,
 } from "./logic.js";
 import { editOrder, patchMark, removeOrder, useRb } from "./store.js";
@@ -42,7 +42,8 @@ export function CustomerBookPage() {
     const needle = q.trim().toLowerCase();
     return customers.filter(({ s, m }) =>
       `${s.name} ${addrOf(s, m)} ${conOf(m).n ?? ""} ${phoneOf(s, m) ?? ""} ${m?.gstNumber ?? ""} ${ordersOf(m).map((o) => `${o.orderNo} ${o.grade}`).join(" ")}`
-        .toLowerCase().includes(needle) && (focus === "all" || liveOrders(m).some((o) => o.status === focus)));
+        .toLowerCase().includes(needle)
+      && (focus === "all" || (focus === "reorder" ? dueReorder(m) : liveOrders(m).some((o) => o.status === focus))));
   }, [customers, q, focus]);
 
   const allOrders = customers.flatMap((r) => liveOrders(r.m));
@@ -131,7 +132,7 @@ export function CustomerBookPage() {
             {q && <button type="button" onClick={() => setQ("")} aria-label="Clear search"><X size={13} /></button>}
           </div>
           <select className="rb-book-filter" aria-label="Filter customer orders" value={focus} onChange={(e) => setFocus(e.target.value)}>
-            <option value="all">All customers</option><option value="CONFIRMED">Awaiting dispatch</option><option value="DISPATCHED">Dispatched</option><option value="DELIVERED">Delivered</option><option value="PAID">Paid</option>
+            <option value="all">All customers</option><option value="CONFIRMED">Awaiting dispatch</option><option value="DISPATCHED">Dispatched</option><option value="DELIVERED">Delivered</option><option value="PAID">Paid</option><option value="reorder">Due a reorder</option>
           </select>
           <span className="rb-showing">{shown.length} of {customers.length}</span>
         </div>
