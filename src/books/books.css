@@ -1,0 +1,78 @@
+/* The standalone book apps.
+ *
+ * Phone first and installed-app first: one bar at the top, the book filling
+ * everything under it, and the safe areas respected so nothing hides behind
+ * an iPhone notch or a home indicator. */
+
+.bk-app {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--adm-bg);
+  color: var(--adm-text);
+  display: flex;
+  flex-direction: column;
+}
+
+.bk-bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: calc(.5rem + env(safe-area-inset-top)) calc(.7rem + env(safe-area-inset-right)) .5rem calc(.7rem + env(safe-area-inset-left));
+  background: color-mix(in srgb, var(--adm-bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--adm-border);
+}
+
+.bk-tabs { display: flex; gap: 2px; background: var(--adm-surface-2); border-radius: 10px; padding: 3px; flex: 1; min-width: 0; }
+
+.bk-tab {
+  flex: 1;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  min-height: 40px;
+  padding: .4rem .6rem;
+  border-radius: 8px;
+  color: var(--adm-muted);
+  text-decoration: none;
+  font-size: .82rem;
+  white-space: nowrap;
+}
+.bk-tab.is-on { background: var(--adm-surface); color: var(--adm-text); box-shadow: 0 1px 2px rgba(0, 0, 0, .4); }
+.bk-tab:focus-visible { outline: 2px solid var(--adm-accent); outline-offset: 2px; }
+
+.bk-bar-end { display: flex; align-items: center; gap: .3rem; }
+.bk-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--adm-border);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--adm-muted);
+  cursor: pointer;
+}
+.bk-icon:hover { color: var(--adm-text); border-color: var(--adm-accent); }
+
+.bk-main { flex: 1; min-width: 0; padding-bottom: env(safe-area-inset-bottom); }
+/* The book pages carry their own padding; only trim it for the small screen. */
+.bk-main .wd-page { padding: 1.1rem 1.1rem 2.4rem; }
+
+.bk-handoff { display: grid; gap: .8rem; justify-items: center; padding: 3rem 1rem; color: var(--adm-muted); font-size: .9rem; }
+
+@media (max-width: 480px) {
+  .bk-tab span { font-size: .78rem; }
+  .bk-main .wd-page { padding: .8rem .8rem 2.4rem; }
+}
+
+/* Very narrow phones: the icons alone carry the tabs. */
+@media (max-width: 360px) {
+  .bk-tab span { display: none; }
+}

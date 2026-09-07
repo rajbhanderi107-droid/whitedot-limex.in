@@ -17,6 +17,7 @@ import {
 } from "./logic.js";
 import { useRb, load, setPrefs, saveView, deleteView, reseed, restoreMarks, getRb, saveSettings, startLiveSync } from "./store.js";
 import { UICtx, type UIApi, toast } from "./ctx.js";
+import { OpenAsApp } from "./BookBits.js";
 import { RouteView } from "./RouteView.js";
 import { StopsView } from "./StopsView.js";
 import { DaysView } from "./DaysView.js";
@@ -180,6 +181,7 @@ export function RouteBookPage() {
           </div>
           <div className="rb-head-right">
             {syncBadge}
+            <OpenAsApp dir="route" label="Route Book" />
             <button type="button" className="wd-ghost-btn" onClick={() => setHistoryOpen((o) => !o)} title="Undo history"><History size={13} /></button>
             <button type="button" className="wd-ghost-btn" onClick={() => setPalette(true)} title="Actions (.)"><Sparkles size={13} /> Actions</button>
             <button type="button" className="wd-primary-btn" onClick={() => setAdding(true)} data-testid="rb-addbtn"><Plus size={14} /> Add company</button>
