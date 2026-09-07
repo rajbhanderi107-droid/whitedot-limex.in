@@ -89,6 +89,16 @@ async function mockPortal(page: Page) {
     const mark = apply(stopId, { stage: "CUSTOMER", orders: orders.filter((o) => o.stopId === stopId) });
     await r.fulfill({ ...ok({ order, mark }), status: 201 });
   });
+  await page.route("**/api/portal/route-book/orders/*", async (r) => {
+    const id = r.request().url().split("/").pop() as string;
+    const i = orders.findIndex((o) => o.id === id);
+    if (i >= 0) {
+      const stopId = orders[i].stopId as string;
+      orders.splice(i, 1);
+      apply(stopId, { orders: orders.filter((o) => o.stopId === stopId) });
+    }
+    await r.fulfill(ok({ id }));
+  });
   await page.route("**/api/portal/route-book/prefs", (r) => r.fulfill(ok({})));
   await page.route("**/api/notifications**", (r) => r.fulfill(ok([])));
   return { marks, orders };
@@ -147,6 +157,37 @@ test.describe("Lead Book & Customer Book", () => {
     await expect(cust.locator(".rb-otable tbody tr")).toHaveCount(1);
     await expect(cust.locator(".rb-otable tbody tr")).toContainText("WD-2026-0001");
     await expect(cust.locator(".rb-otable tbody tr")).toContainText("₹4,90,625.00");
+  });
+
+  test("a company recorded as a customer by mistake can be taken back out", async ({ page }) => {
+    const mock = await mockPortal(page);
+    page.on("dialog", (d) => void d.accept());
+
+    // Get one company into the Customer Book the normal way.
+    await page.goto("/#/admin/route-book");
+    await page.getByTestId("rb-leg").first().locator(".rb-leg-toggle").click();
+    await page.locator("[data-testid='rb-stop'][data-id='N1-alpha']").getByTestId("rb-makelead").click();
+    await page.goto("/#/admin/lead-book");
+    await page.getByTestId("lb-won").first().click();
+    await page.getByTestId("order-grade").fill("Trial");
+    await page.getByTestId("order-qty").fill("1");
+    await page.getByTestId("order-save").click();
+    await expect(page.getByTestId("order-dialog")).toHaveCount(0);
+
+    await page.goto("/#/admin/customer-book");
+    await expect(page.getByTestId("cb-card")).toHaveCount(1);
+    await expect(page.locator(".rb-otable tbody tr")).toHaveCount(1);
+
+    // Take it back out: the order goes, the company returns to the Lead Book.
+    await page.getByTestId("cb-remove").click();
+    await expect.poll(() => mock.marks.get("N1-alpha")?.stage, { timeout: 5000 }).toBe("LEAD");
+    await expect.poll(() => mock.orders.length, { timeout: 5000 }).toBe(0);
+    await expect(page.getByTestId("cb-card")).toHaveCount(0);
+
+    // And it is waiting in the Lead Book, not lost.
+    await page.goto("/#/admin/lead-book");
+    await expect(page.getByTestId("lb-card")).toHaveCount(1);
+    await expect(page.getByTestId("lb-card").first()).toContainText("Alpha Polymers");
   });
 
   test("the Customer Book exports a real Excel workbook and Word document", async ({ page }) => {

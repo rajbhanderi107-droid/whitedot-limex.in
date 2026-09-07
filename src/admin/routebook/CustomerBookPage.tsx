@@ -8,7 +8,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   BadgeCheck, FileSpreadsheet, FileText, Phone, MapPin, Plus, Trash2, Search, X,
-  Handshake, PackageCheck, Truck,
+  Handshake, PackageCheck, Truck, Undo2,
 } from "lucide-react";
 import type { RbOrder } from "./types.js";
 import { ORDER_STATUSES, ORDER_STATUS_LABEL } from "./types.js";
@@ -55,6 +55,29 @@ export function CustomerBookPage() {
     void editOrder(r.s.id, o.id, { status }).catch((e: unknown) =>
       toast(e instanceof Error ? e.message : "Could not update the order", undefined, "err"));
   };
+  /** Take a company back out of this book — the way out of a trial entry, or
+   *  of a customer recorded by mistake. Their orders are the whole reason
+   *  they are here, so those go too, and the confirm says so plainly. Nothing
+   *  else is touched: the visit, the notes and the day record all stay, and
+   *  the company lands back in the Lead Book. */
+  const unmakeCustomer = (r: Row) => {
+    const orders = ordersOf(r.m);
+    const t = customerTotals(r.m);
+    const warning = orders.length
+      ? `This deletes ${orders.length} order${orders.length === 1 ? "" : "s"} (${mt(t.mt)}) and cannot be undone.`
+      : "It has no orders recorded.";
+    if (!window.confirm(`Take ${r.s.name} out of the Customer Book?\n\n${warning}\n\nThey go back to the Lead Book. Their visit, notes and day record are untouched.`)) return;
+    void (async () => {
+      try {
+        for (const o of orders) await removeOrder(r.s.id, o.id);
+        patchMark(r.s.id, { stage: "LEAD", customerOn: null });
+        toast(`${r.s.name} moved back to the Lead Book`);
+      } catch (e) {
+        toast(e instanceof Error ? e.message : "Could not remove that customer", undefined, "err");
+      }
+    })();
+  };
+
   const drop = (r: Row, o: RbOrder) => {
     if (!window.confirm(`Delete order ${o.orderNo} (${mt(num(o.quantityMt))} of ${o.grade})? This cannot be undone.`)) return;
     void removeOrder(r.s.id, o.id)
@@ -145,6 +168,10 @@ export function CustomerBookPage() {
                 </button>
                 <button type="button" className="wd-primary-btn" onClick={() => setOrdering(r)} data-testid="cb-addorder">
                   <Plus size={13} /> Order
+                </button>
+                <button type="button" className="wd-ghost-btn rb-rm" onClick={() => unmakeCustomer(r)}
+                  title="Take this company out of the Customer Book" data-testid="cb-remove">
+                  <Undo2 size={13} /> Not a customer
                 </button>
               </div>
             </div>
