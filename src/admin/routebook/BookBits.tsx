@@ -5,9 +5,23 @@
  * the data. */
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Cloud, CloudOff, CloudUpload, AlertTriangle } from "lucide-react";
+import { Cloud, CloudOff, CloudUpload, AlertTriangle, Smartphone } from "lucide-react";
 import { load, startLiveSync, useRb, type RbState } from "./store.js";
 import "./routebook.css";
+
+/** True inside one of the standalone book apps (/route/, /leads/,
+ *  /customers/), which set data-book on <html>. The portal does not. */
+export const inBookApp = () => !!document.documentElement.dataset.book;
+
+/** The standalone app for one book — the version that installs on a phone. */
+export function OpenAsApp({ dir, label }: { dir: "route" | "leads" | "customers"; label: string }) {
+  if (inBookApp()) return null;
+  return (
+    <a className="wd-ghost-btn" href={`/${dir}/`} title={`Open the ${label} as its own app — add it to your home screen from there`}>
+      <Smartphone size={13} /> App
+    </a>
+  );
+}
 
 /** Load the book once, then keep this tab in step with everyone else's. */
 export function useBook(): RbState {

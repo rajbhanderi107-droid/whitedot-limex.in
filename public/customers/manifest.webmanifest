@@ -1,0 +1,36 @@
+{
+  "id": "/customers/",
+  "name": "LIMEX Customer Book — WhiteDot",
+  "short_name": "Customer Book",
+  "description": "WhiteDot customers and their LIMEX orders in metric tonnes, with Excel and Word exports.",
+  "start_url": "/customers/",
+  "scope": "/customers/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#080808",
+  "theme_color": "#2f9fc0",
+  "categories": [
+    "business",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "/assets/icons/customers-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/customers-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/customers-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

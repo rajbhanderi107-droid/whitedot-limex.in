@@ -17,7 +17,7 @@ import {
 } from "./logic.js";
 import { patchMark, setStage, useRb } from "./store.js";
 import { toast } from "./ctx.js";
-import { BookShell, Empty, Field, useBook } from "./BookBits.js";
+import { BookShell, Empty, Field, OpenAsApp, useBook } from "./BookBits.js";
 import { exportLeadBook, leadMonthlyValue } from "./exports.js";
 import { OrderDialog } from "./OrderDialog.js";
 
@@ -73,6 +73,7 @@ export function LeadBookPage() {
       actions={
         <>
           <Link className="wd-ghost-btn" to="/admin/route-book"><RouteIcon size={13} /> Route Book</Link>
+          <OpenAsApp dir="leads" label="Lead Book" />
           <button type="button" className="wd-ghost-btn" disabled={!leads.length}
             onClick={() => exportLeadBook(leads, st.index.legById)}>
             <FileSpreadsheet size={13} /> Excel
