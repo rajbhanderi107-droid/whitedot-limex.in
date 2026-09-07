@@ -1,12 +1,16 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Route, Handshake, BadgeCheck, ArrowUpRight, CalendarCheck, Search } from "lucide-react";
+import { Route, Handshake, BadgeCheck, ArrowUpRight, CalendarCheck, Search, RefreshCw } from "lucide-react";
+import { load } from "./store.js";
 import { BookShell, useBook } from "./BookBits.js";
 import { isLead, isCustomer, isDue, openSamplesOf, liveOrders, phoneOf, telHref } from "./logic.js";
 
 /** A small daily desk over the same live records used by all three books. */
 export function BookDesk() {
   const st = useBook();
+  const [refreshing, setRefreshing] = useState(false);
+  const refresh = async () => { setRefreshing(true); try { await load(true); } finally { setRefreshing(false); } };
+  const dateLabel = new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", weekday: "long", day: "numeric", month: "long" }).format(new Date());
   const [filter, setFilter] = useState("due");
   const [q, setQ] = useState("");
   const rows = useMemo(() => st.stops.filter(s => !st.marks[s.id]?.removed).map(s => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
@@ -23,7 +27,7 @@ export function BookDesk() {
   ];
   const current = queues.find(f => f.key === filter)!;
   const shown = rows.filter(current.match).filter(r => `${r.s.name} ${phoneOf(r.s, r.m) ?? ""}`.toLowerCase().includes(q.toLowerCase().trim())).sort((a,b) => (a.m?.dueOn ?? "9999").localeCompare(b.m?.dueOn ?? "9999") || a.s.name.localeCompare(b.s.name));
-  return <BookShell st={st} icon={<CalendarCheck size={22} />} title="Your day, in focus" sub="Visits. Conversations. Orders. Everything in one place." testId="book-desk">
+  return <BookShell st={st} icon={<CalendarCheck size={22} />} title="Your day, in focus" sub={`${dateLabel} · Visits. Conversations. Orders.`} testId="book-desk" actions={<button type="button" className="wd-ghost-btn" disabled={refreshing} onClick={() => void refresh()}><RefreshCw size={14} />{refreshing ? "Refreshing…" : "Refresh"}</button>}>
     <div className="bd-books">{books.map(b => <Link className="bd-book" to={`/admin/${b.path}`} key={b.path}><b.icon size={24} /><h2>{b.title}</h2><p>{b.text}</p><div><strong>{b.count}</strong> {b.unit}<ArrowUpRight size={18} /></div></Link>)}</div>
     <section className="bd-work"><div className="rb-dhead"><h3>Needs attention</h3><span className="rb-dcount">From your saved records</span></div>
       <div className="bd-tabs" role="group" aria-label="Task filters">{queues.map(f => <button type="button" key={f.key} aria-pressed={filter === f.key} onClick={() => setFilter(f.key)}>{f.label}<span>{rows.filter(f.match).length}</span></button>)}</div>

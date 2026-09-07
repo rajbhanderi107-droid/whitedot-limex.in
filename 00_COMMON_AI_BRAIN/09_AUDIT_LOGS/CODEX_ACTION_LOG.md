@@ -12,3 +12,7 @@ Validation: TypeScript and production Vite build passed. Browser checks recorded
 ## 2026-09-07 — Clean LIMEX workspace
 
 User requested removal of sidebar clutter and practical improvements centred on the three books. Reconciled origin/main dfdd315 with earlier reviewed book improvements, preserving customer-to-lead navigation and current backend API types. Replaced the crowded home dashboard with a live book desk: follow-ups due, open trials, confirmed orders to dispatch, and delivered orders to check for payment. Added search, phone links and direct company navigation. Sidebar now contains Today and the three LIMEX books; settings and automation controls are in a compact Tools menu. Other page routes remain available. No deployment settings or production data changed. Validation is recorded in the PR.
+
+## 2026-09-07 — Approved production release
+
+User explicitly requested making the improved portal live. Added an India-date heading and manual live refresh to the daily desk. Releasing PR #96 through the existing Hostinger deployment workflow after validation. No private visit records are included in this frontend release.
