@@ -411,27 +411,33 @@
   .rb-bfoot .wd-primary-btn, .rb-bfoot .wd-ghost-btn { flex: 1; justify-content: center; }
 }
 
-/* Clearing one line from the day record — the same control the standalone
-   app has. Small and quiet, because it is rarely the right thing to press. */
-.rb-drowx {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--adm-muted);
-  cursor: pointer;
-  opacity: .55;
-}
-.rb-drow:hover .rb-drowx { opacity: 1; }
-.rb-drowx:hover { color: var(--rb-danger); border-color: var(--rb-danger); background: var(--rb-danger-soft); }
-.rb-drowx:focus-visible { opacity: 1; outline: 2px solid var(--rb-danger); outline-offset: 1px; }
-
-/* On a phone every target is a thumb target, and hover does not exist. */
-@media (max-width: 720px) {
-  .rb-drowx { width: 40px; height: 40px; opacity: .8; }
+/* Book usability: readable fields, explicit filters and a phone order layout. */
+.rb-book-filter { min-height:44px; max-width:100%; padding:.5rem .7rem; color:var(--adm-text); background:var(--adm-surface); border:1px solid var(--rb-line); border-radius:8px; font:inherit; }
+.rb-bcard, .rb-bcard-head > div, .rb-dmain { min-width:0; overflow-wrap:anywhere; }
+.rb-order-fields { border:0; padding:0; margin-inline:0; min-width:0; }
+.rb-bfield input:focus-visible, .rb-book-filter:focus-visible { outline:2px solid var(--adm-accent); outline-offset:2px; }
+.rb-bfield input:invalid:not(:placeholder-shown) { border-color:#d28c74; }
+.rb-day-actions { display:flex; align-items:center; gap:.25rem; }
+.rb-day-actions .rb-mini { width:36px; height:36px; flex-shrink:0; }
+.rb-dnote { display:block; padding:.7rem; margin-top:.4rem; background:var(--adm-bg); border-radius:8px; white-space:pre-wrap; }
+.rb-import-row { display:grid; gap:.3rem; padding:.8rem 0; border-bottom:1px solid var(--rb-line); overflow-wrap:anywhere; }
+.rb-import-row span { color:var(--adm-muted); font-size:.8rem; }
+.rb-import-row p { margin:0; white-space:pre-wrap; font-size:.85rem; }
+@media(max-width:600px) {
+  .rb-bgrid { grid-template-columns:minmax(0,1fr); }
+  .rb-bfield input, .rb-bfield select, .rb-find input { font-size:16px; min-height:44px; }
+  .rb-bcard .wd-ghost-btn, .rb-bcard .wd-primary-btn { min-height:44px; }
+  .rb-otable { min-width:0; display:block; }
+  .rb-otable thead { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+  .rb-otable tbody { display:grid; gap:.8rem; }
+  .rb-otable tr { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); padding:.5rem; border:1px solid var(--rb-line); border-radius:10px; }
+  .rb-otable td, .rb-otable td.num { display:flex; flex-direction:column; align-items:flex-start; text-align:left; border:0; min-width:0; overflow-wrap:anywhere; }
+  .rb-otable td::before { content:attr(data-label); font:500 .65rem/1.5 var(--rb-mono); color:var(--adm-muted); margin-bottom:.2rem; }
+  .rb-otable select { min-height:44px; max-width:100%; font-size:16px; }
+  .rb-drow { display:flex; flex-wrap:wrap; gap:.6rem; align-items:flex-start; }
+  .rb-dtime { width:48px; flex-shrink:0; }
+  .rb-dmain { flex:1; min-width:150px; }
+  .rb-dtags { flex-wrap:wrap; }
+  .rb-toasts { bottom:calc(1rem + env(safe-area-inset-bottom)); }
+  .rb-modal { padding:calc(.6rem + env(safe-area-inset-top)) .6rem calc(.6rem + env(safe-area-inset-bottom)); }
 }

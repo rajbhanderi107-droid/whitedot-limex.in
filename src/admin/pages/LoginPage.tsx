@@ -34,6 +34,9 @@ interface GoogleConfig {
 }
 
 interface Props {
+  redirectTo?: string;
+  title?: string;
+  description?: string;
   onLogin: (email: string, password: string) => Promise<unknown>;
   onGoogleLogin: (accessToken: string) => Promise<unknown>;
 }
@@ -59,7 +62,7 @@ function loadGSIScript(): Promise<void> {
   return gsiLoadPromise;
 }
 
-export function LoginPage({ onLogin, onGoogleLogin }: Props) {
+export function LoginPage({ onLogin, onGoogleLogin, redirectTo = "/admin/dashboard", title = "White Dot Admin", description = "Sign in to manage leads, quotes, and operations." }: Props) {
   const brandLogo = useBrandLogo();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -88,7 +91,7 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
     setLoading(true);
     try {
       await onLogin(email, password);
-      navigate("/admin/dashboard");
+      navigate(redirectTo, { replace: true });
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
@@ -137,7 +140,7 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
 
         try {
           await onGoogleLogin(response.access_token);
-          navigate("/admin/dashboard");
+          navigate(redirectTo, { replace: true });
         } catch (err: unknown) {
           setError(err instanceof Error ? err.message : "Google login failed");
         } finally {
@@ -147,7 +150,7 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
     });
 
     client.requestAccessToken({ prompt: "select_account" });
-  }, [googleConfig, onGoogleLogin, navigate]);
+  }, [googleConfig, onGoogleLogin, navigate, redirectTo]);
 
 
   const anyLoading = loading || googleLoading;
@@ -158,8 +161,8 @@ export function LoginPage({ onLogin, onGoogleLogin }: Props) {
         <div style={{ textAlign: "center", marginBottom: "1rem" }}>
           <img src={brandLogo} alt="" width={48} height={48} />
         </div>
-        <h1>White Dot Admin</h1>
-        <p>Sign in to manage leads, quotes, and operations.</p>
+        <h1>{title}</h1>
+        <p>{description}</p>
 
         {error && <div className="adm-login-error">{error}</div>}
 

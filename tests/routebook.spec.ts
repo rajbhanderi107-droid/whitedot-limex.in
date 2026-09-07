@@ -86,10 +86,10 @@ test.describe("LIMEX Route Book", () => {
     await page.addInitScript(() => { localStorage.setItem("wd_admin_token", "mock-jwt"); localStorage.removeItem("wd_rb_cache_v2"); localStorage.removeItem("wd_rb_outbox_v2"); });
   });
 
-  test("appears in the sidebar and on the Command Center, and loads the book", async ({ page }) => {
+  test("appears in the clean workspace and loads the book", async ({ page }) => {
     await mockPortal(page);
     await page.goto("/#/admin/dashboard");
-    await expect(page.locator(".wd-kpi:has-text('Route Book')")).toBeVisible();
+    await expect(page.locator(".bd-book:has-text('LIMEX Route Book')")).toBeVisible();
     await page.locator(".wd-nav a:has-text('LIMEX Route Book')").first().click();
     await expect(page.getByTestId("rb-page")).toBeVisible();
     await expect(page.locator(".rb-head p")).toContainText("4 sellable companies");
@@ -259,4 +259,75 @@ test.describe("LIMEX Route Book", () => {
     await page.locator(".rb-railbtn").click();
     await expect(page.locator(".rb-rail")).toBeVisible();
   });
+});
+
+test('visit import requires a date and preserves existing notes', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  const { marks } = await mockPortal(page);
+  marks.set('N1-alpha', { stopId: 'N1-alpha', note: 'Earlier visit', starred: false });
+  let imported: { marks: Record<string, unknown>[]; events: Record<string, unknown>[] } | undefined;
+  await page.route('**/api/portal/route-book/import', async r => {
+    imported = r.request().postDataJSON();
+    await r.fulfill(ok({ marks: 1, events: 3, skippedStops: [] }));
+  });
+  await page.goto('/#/admin/route-book');
+  await page.getByTestId('rb-tab-plan').click();
+  await page.getByRole('button', { name: 'Import records', exact: true }).click();
+  await page.getByLabel('Visit file (.json)').setInputFiles({
+    name: 'visits.json', mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify({ records: [{ stopId: 'N1-alpha', name: 'Alpha Polymers', time: '13:40', ticked: true, starred: true, note: 'Follow up next week' }] })),
+  });
+  await expect(page.getByRole('button', { name: 'Import 1 visits' })).toBeDisabled();
+  await page.getByLabel('Actual visit date').fill('2026-09-03');
+  await page.getByRole('button', { name: 'Import 1 visits' }).click();
+  await expect(page.getByRole('dialog', { name: 'Import visit records' })).toHaveCount(0);
+  expect(imported?.marks[0].note).toBe('Earlier visit\n\nFollow up next week');
+  expect(imported?.events).toHaveLength(3);
+  expect(imported?.events[0].at).toBe('2026-09-03T13:40:00+05:30');
+});
+
+test('deleting a day row leaves its company in the register', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  const { events } = await mockPortal(page);
+  events.push({ id: 'visit-1', kind: 'tick', value: '1', day: '2026-09-03', at: '2026-09-03T08:10:00Z', stopId: 'N1-alpha', stop: { name: 'Alpha Polymers', legId: 'N1' }, user: me });
+  let deleted = false;
+  await page.route('**/api/portal/route-book/days/2026-09-03/stops/N1-alpha', async r => {
+    expect(r.request().method()).toBe('DELETE');
+    deleted = true; events.splice(0);
+    await r.fulfill(ok({ deleted: 1 }));
+  });
+  await page.goto('/#/admin/route-book');
+  await page.getByTestId('rb-tab-plan').click();
+  page.once('dialog', d => d.accept());
+  await page.getByRole('button', { name: 'Delete day record for Alpha Polymers', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Delete day record for Alpha Polymers', exact: true })).toHaveCount(0);
+  expect(deleted).toBe(true);
+  await page.getByTestId('rb-tab-all').click();
+  await expect(page.locator("[data-testid='rb-stop'][data-id='N1-alpha']")).toBeVisible();
+});
+
+test('clean desk filters real tasks, hides removed companies, and links to the company', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  const { marks } = await mockPortal(page);
+  marks.set('N1-alpha', { stopId: 'N1-alpha', dueOn: '2020-01-01', nextStep: 'Discuss the trial result' });
+  marks.set('N1-beta', { stopId: 'N1-beta', dueOn: '2020-01-01', removed: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/#/admin/dashboard');
+  await expect(page.getByTestId('book-desk')).toBeVisible();
+  await expect(page.locator('.bd-row')).toHaveCount(1);
+  await expect(page.locator('.bd-row')).toContainText('Alpha Polymers');
+  await page.getByLabel('Search daily tasks').fill('missing');
+  await expect(page.locator('.bd-empty')).toContainText('No companies match');
+  await page.getByLabel('Search daily tasks').fill('');
+  await page.getByRole('button', { name: 'Payment check' }).click();
+  await expect(page.locator('.bd-empty')).toContainText('No payment check');
+  await page.getByRole('button', { name: 'Open menu', exact: true }).click();
+  await expect(page.locator('.adm-drawer .wd-nav a')).toHaveCount(4);
+  await expect(page.locator('.adm-drawer .wd-nav')).not.toContainText('AI Brain');
+  await page.getByRole('button', { name: 'Close menu', exact: true }).click();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
+  await page.getByRole('button', { name: 'Follow-ups due' }).click();
+  await page.screenshot({ path: '/tmp/clean-book-desk-mobile.png', fullPage: true });
+  await page.getByRole('link', { name: 'Open company' }).click();
+  await expect(page.getByTestId('rb-page')).toBeVisible();
 });
