@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { PortalProvider } from "./portal/PortalContext.js";
 import { PortalShell } from "./portal/PortalShell.js";
-import { CommandCenter } from "./portal/pages/CommandCenter.js";
+import { BookDesk } from "./routebook/BookDesk.js";
 import { CrmPipeline } from "./portal/pages/CrmPipeline.js";
 import { HyperAutomation } from "./portal/pages/HyperAutomation.js";
 import { WorkflowBuilder } from "./portal/pages/WorkflowBuilder.js";
@@ -120,7 +120,7 @@ export default function AdminApp() {
           <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
 
           {/* ── Command Center ── */}
-          <Route path="/admin/dashboard" element={<CommandCenter />} />
+          <Route path="/admin/dashboard" element={<BookDesk />} />
 
           {/* ── Live modules (real backend data) ── */}
           <Route path="/admin/inquiries" element={<InquiriesPage />} />

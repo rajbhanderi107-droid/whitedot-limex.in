@@ -1,20 +1,21 @@
 /* Days: today's run (starred stops in your order) and the permanent record
  * of every day anyone worked the book — kept in the portal DB for good. */
 
-import { useEffect, useMemo, useState } from "react";
-import { ArrowUp, ArrowDown, Navigation, Copy, MessageCircle, Printer, Star, MapPin, History, X } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ArrowUp, ArrowDown, Navigation, Copy, MessageCircle, Printer, Star, MapPin, History, RefreshCw, Trash2, X } from "lucide-react";
 import type { RbEvent } from "./types.js";
 import type { Row } from "./logic.js";
 import { isStar, addrOf, mapsLinks, routeURL, dayLabel, fmtDate, rollDay, OUTMAP, mapOf, today } from "./logic.js";
-import { useRb, patchMany, setPrefs } from "./store.js";
+import { useRb, patchMany, patchMark, setPrefs } from "./store.js";
 import { rbApi } from "./api.js";
 import { useUI, toast } from "./ctx.js";
+import { ImportBook } from "./ImportBook.js";
 import { StopCard } from "./StopCard.js";
 
 export function useDays() {
   const [days, setDays] = useState<Record<string, Record<string, number>> | null>(null);
   const [err, setErr] = useState<string | null>(null);
-  const reload = () => rbApi.days().then((r) => setDays(r.data)).catch((e) => setErr(e instanceof Error ? e.message : "Could not load the record"));
+  const reload = useCallback(() => rbApi.days().then((r) => { setDays(r.data); setErr(null); }).catch((e) => setErr(e instanceof Error ? e.message : "Could not load the record")), []);
   useEffect(() => { void reload(); }, []);
   return { days, err, reload };
 }
@@ -31,38 +32,42 @@ export function DaysView({ rows }: { rows: Row[] }) {
   const st = useRb();
   const plan = useMemo(() => orderedPlan(rows, st.prefs.order), [rows, st.prefs.order]);
   const links = plan.length ? mapsLinks(plan, ui.home) : [];
-  const { days, err } = useDays();
+  const { days, err, reload } = useDays();
+  const [eventErrors, setEventErrors] = useState<Record<string, string>>({});
+  const [busy, setBusy] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
   const [openDays, setOpenDays] = useState<Set<string>>(new Set());
   const [events, setEvents] = useState<Record<string, RbEvent[]>>({});
 
   const dayList = useMemo(() => Object.keys(days ?? {}).sort().reverse(), [days]);
   useEffect(() => {
-    // The record reads as one continuous log, so every day is open — the same
-    // as the standalone app. The heading still collapses a day you scroll past.
+    // Open the full day record automatically.
     if (dayList.length && openDays.size === 0) setOpenDays(new Set(dayList));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dayList]);
+  const refresh = () => { setEvents({}); setEventErrors({}); void reload(); };
+  const clearRow = async (day: string, stopId: string, name: string) => {
+    if (!window.confirm(`Delete ${name}'s record for ${day}? The company, its orders and other days will be kept.`)) return;
+    setBusy(`${day}/${stopId}`);
+    try { await rbApi.clearDayRow(day, stopId); refresh(); toast("Day record deleted"); }
+    catch (e) { toast(e instanceof Error ? e.message : "Could not delete the record", undefined, "err"); }
+    finally { setBusy(null); }
+  };
+  const removeCompany = (stopId: string, name: string) => {
+    if (!window.confirm(`Remove ${name} from the books? Its day records and orders are kept. You can restore it using the Removed filter.`)) return;
+    const prev = patchMark(stopId, { removed: true });
+    toast(`${name} removed from the books`, () => patchMark(stopId, { removed: prev.removed }));
+  };
   useEffect(() => {
+    let cancelled = false;
     for (const d of openDays) {
-      if (events[d]) continue;
-      rbApi.events({ day: d }).then((r) => setEvents((e) => ({ ...e, [d]: r.data }))).catch(() => { /* shown as empty */ });
+      if (events[d] || eventErrors[d]) continue;
+      rbApi.events({ day: d }).then((r) => { if (!cancelled) setEvents((e) => ({ ...e, [d]: r.data })); })
+        .catch((e) => { if (!cancelled) setEventErrors((prev) => ({ ...prev, [d]: e instanceof Error ? e.message : "Could not load this day" })); });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openDays]);
-
-  /** Take one company's lines out of one day. The mark and every other day
-   *  stay — this fixes a line logged against the wrong company, nothing more. */
-  const clearRow = async (day: string, stopId: string, name: string) => {
-    const before = events[day];
-    setEvents((e) => ({ ...e, [day]: (e[day] ?? []).filter((x) => x.stopId !== stopId) }));
-    try {
-      await rbApi.clearDayRow(day, stopId);
-      toast(`${name} cleared from ${dayLabel(day).toLowerCase()}`);
-    } catch (e) {
-      setEvents((prev) => ({ ...prev, [day]: before ?? [] }));
-      toast(e instanceof Error ? e.message : "Could not clear that line", undefined, "err");
-    }
-  };
+    return () => { cancelled = true; };
+  }, [openDays, events, eventErrors]);
 
   const move = (id: string, dir: -1 | 1) => {
     const cur = plan.map((r) => r.s.id);
@@ -128,6 +133,12 @@ ol{padding-left:22px}li{margin:0 0 12px;page-break-inside:avoid}li b{display:blo
       </section>
 
       <div className="rb-dhr"><span><History size={13} /> The record</span></div>
+      <div className="rb-tools">
+        <button type="button" className="wd-ghost-btn" onClick={refresh}><RefreshCw size={13} /> Refresh record</button>
+        {st.me && ["ADMIN", "SUPER_ADMIN"].includes(st.me.role) && <button type="button" className="wd-ghost-btn" onClick={() => setImporting(true)}>Import records</button>}
+      </div>
+      {importing && <ImportBook onClose={() => setImporting(false)} onDone={() => { setImporting(false); refresh(); }} />}
+      {!days && !err && <p className="rb-empty" role="status">Loading day records…</p>}
       {err && <div className="wd-inline-err">{err}</div>}
       {days && !dayList.length && <p className="rb-empty">Once anyone starts ticking, every day’s round is kept here for good — what was ticked, starred and written, by whom, with the date.</p>}
       {dayList.map((d) => {
@@ -139,25 +150,21 @@ ol{padding-left:22px}li{margin:0 0 12px;page-break-inside:avoid}li b{display:blo
         return (
           <section key={d} className="rb-dsec" data-day={d}>
             <div className="rb-dhead">
-              <button type="button" className="rb-dtoggle" onClick={() => setOpenDays((o) => { const n = new Set(o); if (n.has(d)) n.delete(d); else n.add(d); return n; })}>
+              <button type="button" className="rb-dtoggle" aria-expanded={open} onClick={() => setOpenDays((o) => { const n = new Set(o); if (n.has(d)) n.delete(d); else n.add(d); return n; })}>
                 <h3>{dayLabel(d)}</h3>
               </button>
               <span className="rb-dcount">{kinds.tick ?? 0} ticked · {kinds.star ?? 0} starred · {kinds.note ?? 0} {kinds.note === 1 ? "note" : "notes"}{kinds.out ? ` · ${kinds.out} outcomes` : ""}</span>
               {open && retrace.length > 0 && <a className="wd-ghost-btn" href={routeURL(retrace, ui.home)} target="_blank" rel="noopener noreferrer"><Navigation size={12} /> Retrace</a>}
             </div>
             {open && (
-              !evs ? <p className="rb-empty">Loading…</p> : (
+              eventErrors[d] ? <p role="alert" className="wd-inline-err">{eventErrors[d]} <button type="button" className="wd-ghost-btn" onClick={refresh}>Retry</button></p> : !evs ? <p className="rb-empty">Loading…</p> : (
                 <div className="rb-dlist">
                   {roll.map((r) => (
                     <div key={r.stopId} className="rb-drow">
-                      <span className="rb-dtime">{new Date(r.t).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}</span>
+                      <span className="rb-dtime">{new Date(r.t).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" })}</span>
                       <span className="rb-dmain">
                         <b><button type="button" className="rb-linkish" onClick={() => ui.jumpTo(r.stopId)}>{r.name}</button></b>
-                        <em>
-                          {[st.index.legById[r.legId]?.name ?? r.legId, addrOf(st.index.stopById[r.stopId] ?? ({ addr: "" } as never), st.marks[r.stopId])]
-                            .filter(Boolean).join(" · ")}
-                          {r.by ? ` · ${r.by}` : ""}
-                        </em>
+                        <em>{r.legId} · {st.index.stopById[r.stopId] ? addrOf(st.index.stopById[r.stopId], st.marks[r.stopId]) : "Company no longer in the book"}{r.by ? ` · ${r.by}` : ""}</em>
                         {r.note && <span className="rb-dnote">{r.note}</span>}
                       </span>
                       <span className="rb-dtags">
@@ -167,12 +174,11 @@ ol{padding-left:22px}li{margin:0 0 12px;page-break-inside:avoid}li b{display:blo
                         {r.out && <i className="rb-pill">{OUTMAP[r.out] ?? r.out}</i>}
                         {r.extra.map((x, i) => <i key={i} className="rb-pill">{x}</i>)}
                       </span>
+                      <span className="rb-day-actions">
+                        <button type="button" className="rb-mini" disabled={busy !== null} aria-label={`Delete day record for ${r.name}`} title="Delete this day record" onClick={() => void clearRow(d, r.stopId, r.name)}><X size={15} /></button>
+                        {st.index.stopById[r.stopId] && !st.marks[r.stopId]?.removed && <button type="button" className="rb-mini" aria-label={`Remove company ${r.name}`} title="Remove company from the books" onClick={() => removeCompany(r.stopId, r.name)}><Trash2 size={14} /></button>}
+                      </span>
                       {st.index.stopById[r.stopId] && <a className="rb-dmap" href={mapOf(st.index.stopById[r.stopId], st.marks[r.stopId])} target="_blank" rel="noopener noreferrer" aria-label="Map"><MapPin size={14} /></a>}
-                      <button type="button" className="rb-drowx" title="Clear this line from the record"
-                        aria-label={`Clear ${r.name} from ${dayLabel(d)}`}
-                        onClick={() => void clearRow(d, r.stopId, r.name)} data-testid="rb-drowx">
-                        <X size={13} />
-                      </button>
                     </div>
                   ))}
                   {!roll.length && <p className="rb-empty">Only leg-level changes that day.</p>}

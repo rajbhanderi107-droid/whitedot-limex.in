@@ -1,4 +1,4 @@
-/* PortalShell — the WhiteDot Infinity Growth OS layout.
+/* PortalShell — the WhiteDot LIMEX workspace layout.
  *
  * Replaces the old flat AdminLayout sidebar with grouped, collapsible
  * module sections plus an executive topbar (global search, health rings,
@@ -13,12 +13,12 @@ import {
 import { useBrandLogo } from "../../useBrandLogo";
 import { NotificationBell } from "../components/NotificationBell";
 import { KeyboardShortcuts } from "../components/KeyboardShortcuts";
-import { PunchClock } from "../components/PunchClock";
-import { MODULE_GROUPS, type PortalModule } from "./modules.js";
+import { MODULE_GROUPS } from "./modules.js";
 import { CommandPalette } from "./CommandPalette.js";
 import { usePortal, AUTOMATION_MODES, type AutomationMode } from "./PortalContext.js";
-import { HealthRing, StatusBadge } from "./ui.js";
+import { StatusBadge } from "./ui.js";
 import "./portal.css";
+import "./book-workspace.css";
 
 interface Props {
   user: { name: string; email: string; role: string };
@@ -26,30 +26,19 @@ interface Props {
 }
 
 function NavGroups({ onNav, isSuperAdmin }: { onNav?: () => void; isSuperAdmin: boolean }) {
-  return (
-    <nav className="wd-nav">
-      {MODULE_GROUPS.map((group) => {
-        const modules = group.modules.filter((m) => !m.superAdminOnly || isSuperAdmin);
-        if (!modules.length) return null;
-        return (
-          <div key={group.title} className="wd-nav-group">
-            <div className="wd-nav-group-title">{group.title}</div>
-            {modules.map((m: PortalModule) => {
-              const Icon = m.icon;
-              return (
-                <NavLink key={m.key} to={m.path} onClick={onNav} title={m.blurb}
-                  className={({ isActive }) => (isActive ? "wd-nav-link active" : "wd-nav-link")} end>
-                  <Icon size={16} />
-                  <span className="wd-nav-label">{m.label}</span>
-                  {m.status !== "live" && <span className={`wd-nav-dot wd-nav-dot-${m.status}`} />}
-                </NavLink>
-              );
-            })}
-          </div>
-        );
-      })}
-    </nav>
-  );
+  const paths = ["/admin/dashboard", "/admin/route-book", "/admin/lead-book", "/admin/customer-book"];
+  const modules = MODULE_GROUPS.flatMap(g => g.modules);
+  return <nav className="wd-nav" aria-label="LIMEX workspace">
+    <div className="wd-nav-group-title">Your workspace</div>
+    {paths.map(path => {
+      const m = modules.find(item => item.path === path);
+      if (!m || (m.superAdminOnly && !isSuperAdmin)) return null;
+      const Icon = m.icon;
+      return <NavLink key={path} to={path} onClick={onNav} end className={({ isActive }) => `wd-nav-link${isActive ? " active" : ""}`}>
+        <Icon size={18} /><span className="wd-nav-label">{path.endsWith("dashboard") ? "Today" : m.label}</span>
+      </NavLink>;
+    })}
+  </nav>;
 }
 
 export function PortalShell({ user, onLogout }: Props) {
@@ -57,7 +46,7 @@ export function PortalShell({ user, onLogout }: Props) {
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const isSuperAdmin = user.role === "SUPER_ADMIN";
-  const { automationMode, setAutomationMode, lockdown, emergencyStop, triggerEmergencyStop, clearEmergencyStop, health } = usePortal();
+  const { automationMode, setAutomationMode, lockdown, emergencyStop, triggerEmergencyStop, clearEmergencyStop } = usePortal();
 
   const handleLogout = async () => {
     await onLogout();
@@ -82,7 +71,7 @@ export function PortalShell({ user, onLogout }: Props) {
         <img src={brandLogo} alt="" width={28} height={28} />
         <div className="wd-brand-text">
           <strong>WhiteDot</strong>
-          <small>Infinity Growth OS</small>
+          <small>LIMEX workspace</small>
         </div>
       </div>
       <NavGroups onNav={onNav} isSuperAdmin={isSuperAdmin} />
@@ -125,18 +114,14 @@ export function PortalShell({ user, onLogout }: Props) {
             aria-label="Open command palette"
           >
             <Search size={15} />
-            <span className="wd-search-hint">Search leads, modules…</span>
+            <span className="wd-search-hint">Search workspace…</span>
             <kbd className="wd-search-kbd">Ctrl K</kbd>
           </button>
 
           <div className="wd-topbar-right">
-            <PunchClock variant="compact" />
-            <div className="wd-rings">
-              <HealthRing label="Biz" value={health.business} />
-              <HealthRing label="Sec" value={health.security} />
-              <HealthRing label="Auto" value={health.automation} />
-            </div>
-
+            <details className="wd-tools-menu"><summary>Tools</summary><div className="wd-tools-panel">
+              <NavLink to="/admin/settings">Website settings</NavLink>
+              {isSuperAdmin && <NavLink to="/admin/users">Manage users</NavLink>}
             <label className={`wd-mode wd-mode-${automationMode.toLowerCase()}`} title="Default automation mode">
               <Sparkles size={14} />
               <select value={automationMode} onChange={(e) => setAutomationMode(e.target.value as AutomationMode)} aria-label="Automation mode">
@@ -153,6 +138,7 @@ export function PortalShell({ user, onLogout }: Props) {
               <span className="wd-estop-text">{emergencyStop ? "Locked" : "Stop"}</span>
             </button>
 
+            </div></details>
             <NotificationBell />
           </div>
         </header>

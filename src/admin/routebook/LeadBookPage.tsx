@@ -24,22 +24,24 @@ import { OrderDialog } from "./OrderDialog.js";
 export function LeadBookPage() {
   const st = useBook();
   const rb = useRb();
+  const [focus, setFocus] = useState("all");
   const [q, setQ] = useState("");
   const [winning, setWinning] = useState<Row | null>(null);
 
   const rows: Row[] = useMemo(() => st.stops.map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
   const leads = useMemo(
-    () => rows.filter((r) => isLead(r.m))
+    () => rows.filter((r) => isLead(r.m) && !r.m?.removed)
       .sort((a, b) => (b.m?.leadOn ?? "").localeCompare(a.m?.leadOn ?? "")),
     [rows],
   );
   const ready = useMemo(() => rows.filter((r) => looksPositive(r.m)), [rows]);
   const shown = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    if (!needle) return leads;
-    return leads.filter(({ s, m }) =>
-      `${s.name} ${addrOf(s, m)} ${m?.nextStep ?? ""} ${m?.note ?? ""}`.toLowerCase().includes(needle));
-  }, [leads, q]);
+    return leads.filter(({ s, m }) => {
+      const matches = `${s.name} ${addrOf(s, m)} ${conOf(m).n ?? ""} ${phoneOf(s, m) ?? ""} ${m?.nextStep ?? ""} ${m?.note ?? ""}`.toLowerCase().includes(needle);
+      return matches && (focus === "all" || (focus === "due" ? isDue(m) : openSamplesOf(m).length > 0));
+    });
+  }, [leads, q, focus]);
 
   const expected = leads.reduce((a, r) => a + (expectedMtOf(r.m) ?? 0), 0);
   const monthly = leads.map((r) => leadMonthlyValue(r.m)).filter((v): v is number => v !== null);
@@ -119,9 +121,12 @@ export function LeadBookPage() {
         <div className="rb-toolbar">
           <div className="rb-find">
             <Search size={14} />
-            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search the Lead Book…" data-testid="lb-search" />
+            <input value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search the Lead Book" placeholder="Search company, contact, phone…" data-testid="lb-search" />
             {q && <button type="button" onClick={() => setQ("")} aria-label="Clear search"><X size={13} /></button>}
           </div>
+          <select className="rb-book-filter" aria-label="Filter leads" value={focus} onChange={(e) => setFocus(e.target.value)}>
+            <option value="all">All leads</option><option value="due">Follow-ups due</option><option value="trials">Open trials</option>
+          </select>
           <span className="rb-showing">{shown.length} of {leads.length}</span>
         </div>
       )}
@@ -133,6 +138,7 @@ export function LeadBookPage() {
         />
       )}
 
+      {leads.length > 0 && !shown.length && <Empty title="No matching leads" hint="Try another company or contact, or change the filter to All leads." />}
       {shown.map((r) => {
         const c = conOf(r.m);
         const phone = phoneOf(r.s, r.m);

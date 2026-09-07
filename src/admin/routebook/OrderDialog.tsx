@@ -3,7 +3,7 @@
  * never wait on paperwork nobody has yet. The rupee total is worked out by
  * the server from MT x 1000 x rate/kg; this only previews it. */
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X, PackageCheck } from "lucide-react";
 import type { RbOrder, RbSettings } from "./types.js";
 import { ORDER_STATUSES, ORDER_STATUS_LABEL } from "./types.js";
@@ -18,6 +18,7 @@ interface Props {
 }
 
 export function OrderDialog({ row, settings, onClose, onDone }: Props) {
+  const dialog = useRef<HTMLDivElement>(null);
   const suggested = quotedRateOf(row.m) ?? num(settings?.limexRate);
   const [grade, setGrade] = useState("");
   const [qty, setQty] = useState("");
@@ -31,7 +32,14 @@ export function OrderDialog({ row, settings, onClose, onDone }: Props) {
 
   const qtyNum = Number(qty);
   const rateNum = rate === "" ? null : Number(rate);
-  const valid = grade.trim().length > 0 && Number.isFinite(qtyNum) && qtyNum > 0;
+  const rateValid = rate === "" || (Number.isFinite(rateNum) && rateNum! >= 0);
+  const valid = grade.trim().length > 0 && Number.isFinite(qtyNum) && qtyNum > 0 && rateValid && /^\d{4}-\d{2}-\d{2}$/.test(orderedOn);
+  useEffect(() => {
+    const previous = document.activeElement as HTMLElement | null;
+    const oldOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = oldOverflow; previous?.focus(); };
+  }, []);
   const preview = valid && rateNum !== null && Number.isFinite(rateNum) ? qtyNum * 1000 * rateNum : null;
 
   const submit = async () => {
@@ -55,14 +63,22 @@ export function OrderDialog({ row, settings, onClose, onDone }: Props) {
   };
 
   return (
-    <div className="rb-modal" role="dialog" aria-modal="true" aria-label={`Record an order for ${row.s.name}`}>
+    <div ref={dialog} className="rb-modal" onKeyDown={(e) => {
+      if (e.key === "Escape" && !busy) { e.stopPropagation(); onClose(); }
+      if (e.key !== "Tab") return;
+      const items = dialog.current?.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled), select:not(:disabled), [tabindex="0"]');
+      if (!items?.length) return;
+      const first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }} role="dialog" aria-modal="true" aria-label={`Record an order for ${row.s.name}`}>
       <div className="rb-modal-card" data-testid="order-dialog">
         <div className="rb-modal-head">
           <h3><PackageCheck size={16} /> Order — {row.s.name}</h3>
-          <button type="button" className="wd-ghost-btn" onClick={onClose} aria-label="Close"><X size={14} /></button>
+          <button type="button" className="wd-ghost-btn" onClick={onClose} disabled={busy} aria-label="Close"><X size={14} /></button>
         </div>
 
-        <div className="rb-bgrid">
+        <fieldset className="rb-bgrid rb-order-fields" disabled={busy}>
           <label className="rb-bfield is-wide">
             <span>Grade</span>
             <input value={grade} onChange={(e) => setGrade(e.target.value)} placeholder="LIMEX PP-50" data-testid="order-grade" autoFocus />
@@ -93,7 +109,7 @@ export function OrderDialog({ row, settings, onClose, onDone }: Props) {
             <span>Note</span>
             <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Delivery, packing, anything agreed" />
           </label>
-        </div>
+        </fieldset>
 
         <p className="rb-modal-sum">
           {valid
@@ -102,10 +118,11 @@ export function OrderDialog({ row, settings, onClose, onDone }: Props) {
               : `${qtyNum} MT × 1,000 kg × ₹${rateNum} = ${inrFull(preview)}`
             : "Grade and a quantity in MT are all that is required."}
         </p>
-        {err && <div className="wd-inline-err">{err}</div>}
+        {!rateValid && <p role="alert" className="wd-inline-err">Enter a rate of zero or more, or leave it blank.</p>}
+        {err && <div role="alert" className="wd-inline-err">{err}</div>}
 
         <div className="rb-modal-foot">
-          <button type="button" className="wd-ghost-btn" onClick={onClose}>Cancel</button>
+          <button type="button" className="wd-ghost-btn" onClick={onClose} disabled={busy}>Cancel</button>
           <button type="button" className="wd-primary-btn" disabled={!valid || busy} onClick={() => void submit()} data-testid="order-save">
             {busy ? "Saving…" : "Record the order"}
           </button>
