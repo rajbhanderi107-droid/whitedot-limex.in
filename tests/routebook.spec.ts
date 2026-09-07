@@ -357,3 +357,34 @@ test('the desk snoozes a follow-up, offers WhatsApp, and keeps its queue in the 
   await page.reload();
   await expect(page.getByRole('button', { name: 'No next step' })).toHaveAttribute('aria-pressed', 'true');
 });
+
+test('the record still loads after Refresh, and asks for each day once', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  const { events } = await mockPortal(page);
+  const days = ['2026-09-02', '2026-09-05', '2026-09-07'];
+  for (const [i, day] of days.entries()) {
+    events.push({ id: `e${i}`, kind: 'tick', value: '1', day, at: `${day}T08:1${i}:00Z`,
+      stopId: 'N1-alpha', stop: { name: 'Alpha Polymers', legId: 'N1' }, user: me });
+  }
+  await page.route('**/api/portal/route-book/days', r =>
+    r.fulfill(ok(Object.fromEntries(days.map(d => [d, { tick: 1 }])))));
+
+  const asked: string[] = [];
+  await page.route('**/api/portal/route-book/events**', async r => {
+    const day = new URL(r.request().url()).searchParams.get('day');
+    if (day) asked.push(day);
+    await r.fulfill(ok(events.filter(e => e.day === day)));
+  });
+
+  await page.goto('/#/admin/route-book');
+  await page.getByTestId('rb-tab-plan').click();
+  for (const d of days) await expect(page.locator(`.rb-dsec[data-day="${d}"]`)).toContainText('Alpha Polymers');
+  await expect(page.getByText('Loading…')).toHaveCount(0);
+  // one request per open day, not one per day per resolution
+  expect(asked.length).toBe(days.length);
+
+  await page.getByRole('button', { name: 'Refresh record' }).click();
+  for (const d of days) await expect(page.locator(`.rb-dsec[data-day="${d}"]`)).toContainText('Alpha Polymers');
+  await expect(page.getByText('Loading…')).toHaveCount(0);
+  expect(asked.length).toBe(days.length * 2);
+});

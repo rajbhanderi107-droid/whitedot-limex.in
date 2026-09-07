@@ -39,6 +39,7 @@ export function DaysView({ rows }: { rows: Row[] }) {
   const [openDays, setOpenDays] = useState<Set<string>>(new Set());
   const [events, setEvents] = useState<Record<string, RbEvent[]>>({});
   const asked = useRef<Set<string>>(new Set());   // days already requested
+  const [reloads, setReloads] = useState(0);      // bumped so Refresh re-asks
 
   const dayList = useMemo(() => Object.keys(days ?? {}).sort().reverse(), [days]);
   useEffect(() => {
@@ -46,7 +47,14 @@ export function DaysView({ rows }: { rows: Row[] }) {
     if (dayList.length && openDays.size === 0) setOpenDays(new Set(dayList));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dayList]);
-  const refresh = () => { asked.current.clear(); setEvents({}); setEventErrors({}); void reload(); };
+  // Refresh has to make the effect below run again. Clearing `events` is not
+  // enough on its own: `openDays` keeps its identity across a refresh, so
+  // without this counter the effect never re-fires and every day would sit on
+  // "Loading..." for good.
+  const refresh = () => {
+    asked.current.clear(); setEvents({}); setEventErrors({});
+    setReloads((n) => n + 1); void reload();
+  };
   const clearRow = async (day: string, stopId: string, name: string) => {
     if (!window.confirm(`Delete ${name}'s record for ${day}? The company, its orders and other days will be kept.`)) return;
     setBusy(`${day}/${stopId}`);
@@ -67,7 +75,7 @@ export function DaysView({ rows }: { rows: Row[] }) {
         .then((r) => setEvents((e) => ({ ...e, [d]: r.data })))
         .catch((e) => setEventErrors((prev) => ({ ...prev, [d]: e instanceof Error ? e.message : "Could not load this day" })));
     }
-  }, [openDays]);
+  }, [openDays, reloads]);
 
   const move = (id: string, dir: -1 | 1) => {
     const cur = plan.map((r) => r.s.id);
