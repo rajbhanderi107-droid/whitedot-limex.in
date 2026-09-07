@@ -78,7 +78,22 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-0S4VPW9RGE');
+      /* WhiteDot runs no advertising, so no visitor should be measured for
+         it. Denying the ad grants by default is what actually stops gtag
+         reaching stats.g.doubleclick.net — a host this site's CSP forbids,
+         so every visitor was getting a blocked request and a console error
+         for a beacon the business has no use for. Analytics storage stays
+         granted: page and event measurement are unaffected. */
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'granted',
+      });
+      gtag('config', 'G-0S4VPW9RGE', {
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false,
+      });
     </script>
 
     <!-- Structured Data (JSON-LD) for Search Engines -->

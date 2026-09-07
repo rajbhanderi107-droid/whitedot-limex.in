@@ -122,7 +122,6 @@
 
 .v2ld-note,
 .v2cmp-tab,
-.v2cmp-card.is-filler .v2cmp-tag,
 .v2ft-copy {
   color: var(--v2-light-muted);
 }
@@ -131,11 +130,19 @@
 .v2cmp-tab.is-on,
 .v2con-form-tab:hover,
 .v2con-form-tab.is-on,
-.v2cmp-card.is-limex .v2cmp-tag,
 .v2con-card-action,
 .v2iq-reset {
   color: var(--v2-light-accent);
 }
+
+/* The comparison cards' labels sit on a white card, and Comparison.css sets
+   their colour for the dark build. That file ships as its own lazily loaded
+   chunk, so it is injected after this one and wins on equal specificity —
+   which left "TYPICAL LOCAL FILLER" at rgba(0,0,0,.38) on white, a contrast
+   ratio of 2.67:1. Scoping these two to .v2-root settles the cascade by
+   specificity instead of load order. */
+.v2-root .v2cmp-card.is-filler .v2cmp-tag { color: var(--v2-light-muted); }
+.v2-root .v2cmp-card.is-limex .v2cmp-tag { color: var(--v2-light-accent); }
 
 .v2cmp-tab.is-on::after,
 .v2ap-card-list li::before,
