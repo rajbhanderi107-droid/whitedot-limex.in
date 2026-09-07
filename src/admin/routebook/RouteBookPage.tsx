@@ -15,7 +15,7 @@ import {
   toViewFilters, fromViewFilters, buildCSV, downloadText, today, vcardFor, phoneOf, PARKED, isRemoved, isTicked, DEFAULT_HOME,
   num, hasProfile, samplesOf, sampleStalled,
 } from "./logic.js";
-import { useRb, load, setPrefs, saveView, deleteView, reseed, restoreMarks, getRb, saveSettings } from "./store.js";
+import { useRb, load, setPrefs, saveView, deleteView, reseed, restoreMarks, getRb, saveSettings, startLiveSync } from "./store.js";
 import { UICtx, type UIApi, toast } from "./ctx.js";
 import { RouteView } from "./RouteView.js";
 import { StopsView } from "./StopsView.js";
@@ -47,7 +47,8 @@ export function RouteBookPage() {
   const searchRef = useRef<HTMLInputElement>(null);
   const density = st.prefs.density ?? "cozy";
 
-  useEffect(() => { void load(); }, []);
+  // Load once, then keep this tab in step with every other open device.
+  useEffect(() => { void load(); return startLiveSync(); }, []);
   useEffect(() => { if (st.status === "ready" && !params.get("view") && st.prefs.view && st.prefs.view !== view) setView(st.prefs.view); }, [st.status]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { const p = new URLSearchParams(params); p.set("view", view); if (filters.q) p.set("q", filters.q); else p.delete("q"); setParams(p, { replace: true }); }, [view, filters.q]); // eslint-disable-line react-hooks/exhaustive-deps
   const changeView = (v: View) => { setView(v); setPrefs({ view: v }); };
@@ -225,6 +226,7 @@ export function RouteBookPage() {
                   ["state", "mine", "Added by us"], ["state", "due", "Follow-up due"], ["state", "stale", "Needs a nudge"], ["state", "promoted", "In the CRM"],
                   ["state", "profiled", "Qualified"], ["state", "unprofiled", "Not qualified"],
                   ["state", "sampled", "Has samples"], ["state", "stalled", "Trial gone quiet"],
+                  ["state", "lead", "In the Lead Book"], ["state", "customer", "Customers"], ["state", "lost", "Lost"],
                   ["state", "dnc", "Not interested"], ["state", "merged", "Merged away"], ["state", "removed", "Removed"],
                   ["status", "done", "Ticked"], ["status", "none", "Not ticked"], ["status", "pin", "Starred"]] as const).map(([g, k, l]) => (
                   <button key={k} type="button" className="rb-chip" aria-pressed={has(g, k)} onClick={() => toggleChip(g, k)} data-testid={`rb-chip-${k}`}>{l}</button>

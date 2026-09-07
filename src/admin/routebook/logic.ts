@@ -4,7 +4,7 @@
 
 import type {
   Fit, Outcome, RbStop, RbMark, RbLeg, RbFamily, ViewFilters, MarkPatch,
-  RbSample, RbSettings, Polymer, Process, SampleResult,
+  RbSample, RbSettings, Polymer, Process, SampleResult, RbOrder, Stage,
 } from "./types.js";
 
 export const PARKED = (s: RbStop) => s.fit === "no" || s.fit === "clear";
@@ -42,6 +42,12 @@ export function relDays(iso: string | null | undefined, ref = today()): string {
 export function fmtDate(iso: string | null | undefined): string {
   if (!iso) return "";
   try { return new Date(iso + "T00:00:00").toLocaleDateString(undefined, { day: "numeric", month: "short" }); }
+  catch { return iso; }
+}
+/** With the year — for anything printed, where "Sep 7" is not enough. */
+export function fmtDateLong(iso: string | null | undefined): string {
+  if (!iso) return "";
+  try { return new Date(iso + "T00:00:00").toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }); }
   catch { return iso; }
 }
 export function dayLabel(d: string, ref = today()): string {
@@ -204,6 +210,9 @@ export function matchStop(s: RbStop, m: RbMark | undefined, f: Filters, leg?: Rb
       if (k === "unprofiled" && !hasProfile(m)) ok = true;
       if (k === "sampled" && samplesOf(m).length) ok = true;
       if (k === "stalled" && samplesOf(m).some((x) => sampleStalled(x))) ok = true;
+      if (k === "lead" && stageOf(m) === "LEAD") ok = true;
+      if (k === "customer" && stageOf(m) === "CUSTOMER") ok = true;
+      if (k === "lost" && stageOf(m) === "LOST") ok = true;
     }
     if (!ok) return false;
   }
@@ -469,6 +478,57 @@ export function downloadText(name: string, data: string, mime = "text/plain"): v
   setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
 }
 export const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
+
+/* ─── The three books ──────────────────────────────────────────────────────
+   Route Book, Lead Book and Customer Book are three views of one row, not
+   three lists. `stage` is the only thing that decides which one shows a
+   company, so nothing can be in two books at once or drift out of step. */
+
+export const stageOf = (m?: RbMark): Stage => m?.stage ?? "PROSPECT";
+export const isLead = (m?: RbMark) => stageOf(m) === "LEAD";
+export const isCustomer = (m?: RbMark) => stageOf(m) === "CUSTOMER";
+export const isLost = (m?: RbMark) => stageOf(m) === "LOST";
+export const expectedMtOf = (m?: RbMark) => num(m?.expectedMt);
+export const quotedRateOf = (m?: RbMark) => num(m?.quotedRate);
+
+/** Companies that answered well but have not been promoted yet. This is a
+ *  suggestion, never an automatic move: calling someone a live deal is the
+ *  salesperson's judgement, not a rule in a file. */
+export function looksPositive(m?: RbMark): boolean {
+  if (!m || m.dnc || m.removed || stageOf(m) !== "PROSPECT") return false;
+  if (m.outcome === "int" || m.outcome === "smp") return true;
+  return samplesOf(m).some((x) => x.result === "PASS" || x.result === "PARTIAL");
+}
+
+/* ─── orders, in metric tonnes ─── */
+
+export const ordersOf = (m?: RbMark): RbOrder[] => m?.orders ?? [];
+export const liveOrders = (m?: RbMark) => ordersOf(m).filter((o) => o.status !== "CANCELLED");
+export const orderMt = (o: RbOrder) => num(o.quantityMt) ?? 0;
+export const orderValue = (o: RbOrder) => num(o.amount);
+
+/** Everything a customer has committed to, in MT and rupees. */
+export function customerTotals(m?: RbMark): { mt: number; value: number | null; count: number; last: string | null } {
+  const live = liveOrders(m);
+  const mt = live.reduce((a, o) => a + orderMt(o), 0);
+  const priced = live.map(orderValue).filter((v): v is number => v !== null);
+  return {
+    mt,
+    value: priced.length ? priced.reduce((a, b) => a + b, 0) : null,
+    count: live.length,
+    last: live.length ? live.map((o) => o.orderedOn).sort().at(-1)! : null,
+  };
+}
+
+/** Tonnes read the way a plant talks: 6.25 MT, 120 MT. */
+export const mt = (v: number | null | undefined) =>
+  v === null || v === undefined || !Number.isFinite(v) ? "—" : `${v >= 100 ? Math.round(v) : Number(v.toFixed(3))} MT`;
+
+/** Rupees in full, for documents where a rounded ₹1.2 Cr will not do. */
+export function inrFull(v: number | null | undefined): string {
+  if (v === null || v === undefined || !Number.isFinite(v)) return "—";
+  return `₹${v.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
 
 /* ─── day journal roll-up ─── */
 

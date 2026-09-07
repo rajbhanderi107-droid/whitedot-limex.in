@@ -4,6 +4,7 @@ import { api } from "../lib/api.js";
 import type {
   RbBootstrap, RbSummary, RbEvent, RbMark, RbLegMark, RbStop, RbView, RbPrefs,
   MarkPatch, NewStop, ViewFilters, RbSample, NewSample, RbSettings,
+  RbOrder, NewOrder, RbChanges,
 } from "./types.js";
 
 const B = "/api/portal/route-book";
@@ -20,6 +21,8 @@ export const rbApi = {
   events: (params: { day?: string; from?: string; to?: string; stopId?: string }) =>
     api.getFresh<RbEvent[]>(`${B}/events${qs(params)}`),
   days: () => api.getFresh<Record<string, Record<string, number>>>(`${B}/days`),
+  /** Only what moved since `since` — how every open device stays in step. */
+  changes: (since: string) => api.getFresh<RbChanges>(`${B}/changes?since=${enc(since)}`),
 
   patchMark: (stopId: string, body: MarkPatch & { day?: string }) =>
     api.patch<RbMark>(`${B}/marks/${enc(stopId)}`, body),
@@ -47,6 +50,13 @@ export const rbApi = {
   updateSample: (id: string, body: Partial<NewSample>) =>
     api.patch<RbSample>(`${B}/samples/${enc(id)}`, body),
   deleteSample: (id: string) => api.delete<{ id: string }>(`${B}/samples/${enc(id)}`),
+
+  // Orders, in metric tonnes.
+  listOrders: () => api.getFresh<RbOrder[]>(`${B}/orders`),
+  createOrder: (stopId: string, body: NewOrder) =>
+    api.post<{ order: RbOrder; mark: RbMark }>(`${B}/stops/${enc(stopId)}/orders`, body),
+  updateOrder: (id: string, body: Partial<NewOrder>) => api.patch<RbOrder>(`${B}/orders/${enc(id)}`, body),
+  deleteOrder: (id: string) => api.delete<{ id: string }>(`${B}/orders/${enc(id)}`),
 
   // Commercial assumptions behind every rupee figure.
   getSettings: () => api.get<RbSettings>(`${B}/settings`),

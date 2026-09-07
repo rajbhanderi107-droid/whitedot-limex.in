@@ -11,7 +11,7 @@ import { rbApi } from "./api.js";
 import { ApiError } from "../lib/api.js";
 import type {
   RbBootstrap, RbFamily, RbLeg, RbStop, RbMark, RbLegMark, RbView, RbPrefs, MarkPatch, NewStop, ViewFilters,
-  RbSettings, RbSample, NewSample,
+  RbSettings, RbSample, NewSample, RbOrder, NewOrder, Stage,
 } from "./types.js";
 import { today } from "./logic.js";
 
@@ -46,6 +46,8 @@ export interface RbState {
   sync: SyncState;
   pending: number;
   lastSavedAt: number | null;
+  /** Server clock at the last successful read — the cursor for /changes. */
+  syncedAt: string | null;
   version: number;
 }
 
@@ -57,7 +59,7 @@ let state: RbState = {
   status: "idle", error: null, fromCache: false,
   fams: [], legs: [], stops: [], marks: {}, legMarks: {}, views: [], prefs: {}, settings: null,
   me: null, userLeg: "M1", index: emptyIndex(),
-  sync: "saved", pending: 0, lastSavedAt: null, version: 0,
+  sync: "saved", pending: 0, lastSavedAt: null, syncedAt: null, version: 0,
 };
 
 const listeners = new Set<() => void>();
@@ -189,6 +191,19 @@ export async function flush(): Promise<void> {
   }
 }
 
+/** Send anything still queued for one stop before writing to the server
+ *  directly. Without this a patch that is still sitting in the outbox (a
+ *  "make this a lead", say) can replay after the server has already moved the
+ *  company on, and quietly drag it back a stage. */
+async function settle(stopId: string): Promise<void> {
+  window.clearTimeout(flushTimer);
+  for (let i = 0; i < 6 && outbox.some((o) => o.stopId === stopId); i++) {
+    const before = outbox.length;
+    await flush();
+    if (outbox.length === before) break;   // not draining — stop rather than spin
+  }
+}
+
 async function flushIndividually(batch: MarkOp[], reason: string) {
   const served: RbMark[] = [];
   let dropped = 0;
@@ -232,7 +247,58 @@ function adopt(b: Omit<RbBootstrap, "serverDay"> & { serverDay?: string }, fromC
     settings: b.settings ?? null,
     me: b.me, userLeg: b.userLeg, index: buildIndex(b.fams, b.legs, b.stops),
     pending: outbox.length, sync: outbox.length ? (navigator.onLine ? "saving" : "offline") : "saved",
+    syncedAt: fromCache ? state.syncedAt : new Date().toISOString(),
   });
+}
+
+/* ─── Live sync ─────────────────────────────────────────────────────────────
+ * Two phones open on the same book have to agree. Every few seconds the tab
+ * asks the server what moved since it last looked — almost always nothing —
+ * and merges it in. Anything still queued in the outbox wins, so a poll can
+ * never overwrite a tick that has not been sent yet. Polling stops while the
+ * tab is hidden and restarts the moment it comes back. */
+
+const POLL_MS = 12_000;
+let pollTimer: number | undefined;
+let polling = false;
+
+export async function pullChanges(): Promise<void> {
+  if (polling || state.status !== "ready" || !state.syncedAt || !navigator.onLine) return;
+  polling = true;
+  try {
+    const { data } = await rbApi.changes(state.syncedAt);
+    const hasStops = data.stops.length > 0 || data.removedStopIds.length > 0;
+    if (data.marks.length) applyServerMarks(data.marks);
+    if (hasStops) {
+      const byId = new Map(state.stops.map((x) => [x.id, x]));
+      for (const st of data.stops) byId.set(st.id, st);
+      for (const id of data.removedStopIds) byId.delete(id);
+      const stops = [...byId.values()].sort((a, b) => a.sortOrder - b.sortOrder);
+      set({ stops, index: buildIndex(state.fams, state.legs, stops) });
+    }
+    set({ syncedAt: data.at, ...(state.sync === "error" && !outbox.length ? { sync: "saved" as const, error: null } : {}) });
+    if (data.marks.length || hasStops) writeCacheSoon();
+  } catch {
+    // A failed poll is not worth showing: the next one is seconds away and
+    // the outbox already reports anything that failed to save.
+  } finally { polling = false; }
+}
+
+function pollNow() { void pullChanges(); }
+
+export function startLiveSync(): () => void {
+  const tick = () => { if (document.visibilityState === "visible") pollNow(); };
+  pollTimer = window.setInterval(tick, POLL_MS);
+  const onVisible = () => { if (document.visibilityState === "visible") pollNow(); };
+  document.addEventListener("visibilitychange", onVisible);
+  window.addEventListener("focus", onVisible);
+  window.addEventListener("online", onVisible);
+  return () => {
+    window.clearInterval(pollTimer);
+    document.removeEventListener("visibilitychange", onVisible);
+    window.removeEventListener("focus", onVisible);
+    window.removeEventListener("online", onVisible);
+  };
 }
 
 let loading: Promise<void> | null = null;
@@ -270,6 +336,9 @@ export function blankMark(stopId: string): RbMark {
     stopId, ticked: false, tickedOn: null, starred: false, note: null, outcome: null, dueOn: null,
     contactName: null, contactPhone: null, addrOverride: null, addrPrecise: null, dnc: false, removed: false,
     dupOf: null, snoozedOn: null, companyId: null, followUpId: null,
+    stage: "PROSPECT", leadOn: null, customerOn: null, lostOn: null, lostReason: null,
+    nextStep: null, expectedMt: null, quotedRate: null,
+    gstNumber: null, billTo: null, shipTo: null, paymentTerms: null, inquiryId: null, orders: [],
     polymers: null, processes: null, monthlyTonnes: null, machines: null,
     fillerPct: null, resinRate: null, thinWall: null, profiledOn: null, samples: [],
     updatedAt: new Date().toISOString(), updatedById: null, updatedBy: null,
@@ -283,6 +352,7 @@ export function patchMark(stopId: string, patch: MarkPatch, day = today()): RbMa
   const next: RbMark = {
     ...prev, ...patch,
     samples: prev.samples ?? [],
+    orders: prev.orders ?? [],
     updatedAt: new Date().toISOString(),
     updatedById: state.me?.id ?? null,
     updatedBy: state.me ? { id: state.me.id, name: state.me.name } : null,
@@ -369,6 +439,7 @@ export async function restoreStop(id: string): Promise<RbStop> {
 /** Samples live on the server only: they are records of a physical handover,
  *  so they are never queued optimistically the way a tick is. */
 export async function addSample(stopId: string, body: NewSample): Promise<RbSample> {
+  await settle(stopId);
   const r = await rbApi.createSample(stopId, body);
   const prev = state.marks[stopId] ?? blankMark(stopId);
   set({
@@ -402,6 +473,44 @@ export async function removeSample(stopId: string, id: string): Promise<void> {
     set({ marks: { ...state.marks, [stopId]: { ...prev, samples: (prev.samples ?? []).filter((x) => x.id !== id) } } });
     writeCacheSoon();
   }
+}
+
+/* ─── orders ─── */
+
+/** Orders are records of a commitment, so like samples they go straight to
+ *  the server rather than through the optimistic outbox. Recording one turns
+ *  the company into a customer, which the server does and returns. */
+export async function addOrder(stopId: string, body: NewOrder): Promise<RbOrder> {
+  await settle(stopId);
+  const r = await rbApi.createOrder(stopId, body);
+  set({ marks: { ...state.marks, [stopId]: r.data.mark } });
+  writeCacheSoon();
+  return r.data.order;
+}
+
+export async function editOrder(stopId: string, id: string, body: Partial<NewOrder>): Promise<RbOrder> {
+  const r = await rbApi.updateOrder(id, body);
+  const prev = state.marks[stopId];
+  if (prev) {
+    set({ marks: { ...state.marks, [stopId]: { ...prev, orders: (prev.orders ?? []).map((o) => (o.id === id ? r.data : o)) } } });
+    writeCacheSoon();
+  }
+  return r.data;
+}
+
+export async function removeOrder(stopId: string, id: string): Promise<void> {
+  await rbApi.deleteOrder(id);
+  const prev = state.marks[stopId];
+  if (prev) {
+    set({ marks: { ...state.marks, [stopId]: { ...prev, orders: (prev.orders ?? []).filter((o) => o.id !== id) } } });
+    writeCacheSoon();
+  }
+}
+
+/** Move a company between the three books. The server stamps the date and
+ *  brings the CRM pipeline along, so this is a single ordinary mark patch. */
+export function setStage(stopId: string, stage: Stage, extra: MarkPatch = {}): RbMark {
+  return patchMark(stopId, { stage, ...extra });
 }
 
 /** Commercial assumptions. ADMIN+ only server-side; the UI hides it otherwise. */

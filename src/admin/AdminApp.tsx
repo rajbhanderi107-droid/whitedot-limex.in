@@ -37,6 +37,8 @@ import { CaseStudiesPage } from "./pages/CaseStudiesPage.js";
 import { GoogleDashboardPage } from "./pages/GoogleDashboardPage.js";
 import { MarketingToolsPage } from "./pages/MarketingToolsPage.js";
 import { RouteBookPage } from "./routebook/RouteBookPage.js";
+import { LeadBookPage } from "./routebook/LeadBookPage.js";
+import { CustomerBookPage } from "./routebook/CustomerBookPage.js";
 import { warmUpBackend } from "./lib/api.js";
 import "./admin.css";
 
@@ -123,6 +125,8 @@ export default function AdminApp() {
           {/* ── Live modules (real backend data) ── */}
           <Route path="/admin/inquiries" element={<InquiriesPage />} />
           <Route path="/admin/route-book" element={<RouteBookPage />} />
+          <Route path="/admin/lead-book" element={<LeadBookPage />} />
+          <Route path="/admin/customer-book" element={<CustomerBookPage />} />
           <Route path="/admin/inquiries/:id" element={<InquiryDetailPage />} />
 
           <Route

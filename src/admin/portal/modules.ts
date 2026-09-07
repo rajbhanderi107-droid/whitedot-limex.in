@@ -16,7 +16,7 @@ import {
   Leaf, BarChart3, Database, Plug, BadgeCheck, Layers, Rocket, Receipt,
   Server, Siren, Megaphone as Ad, Share2, LayoutTemplate, Search, ShoppingCart,
   UserCog, Network, CalendarCheck, LayoutDashboard,
-  Gauge, Clapperboard, Scale, Hourglass, Route, type LucideIcon,
+  Gauge, Clapperboard, Scale, Hourglass, Route, Handshake, BadgeCheck as BadgeCheckIcon, type LucideIcon,
 } from "lucide-react";
 
 export type ModuleStatus = "live" | "beta" | "soon";
@@ -67,6 +67,12 @@ export const MODULE_GROUPS: ModuleGroup[] = [
       { key: "route-book", label: "LIMEX Route Book", icon: Route, path: "/admin/route-book", status: "live",
         blurb: "Field-sales book: 1,438 Gujarat plastics makers in drivable legs, shared by the team.",
         features: ["Legs, families & Google Maps routing", "Tick · star · outcome · note · contact", "Day-by-day journal kept for good", "Call queue, clusters, duplicates", "One-tap hand-off to Companies & Follow-Ups"] },
+      { key: "lead-book", label: "LIMEX Lead Book", icon: Handshake, path: "/admin/lead-book", status: "live",
+        blurb: "The Route Book companies that are actually in a deal.",
+        features: ["Promoted straight from the Route Book", "Next step, expected MT and quoted rate", "Trials out and follow-ups due", "Won → order, in one step", "Excel export"] },
+      { key: "customer-book", label: "LIMEX Customer Book", icon: BadgeCheckIcon, path: "/admin/customer-book", status: "live",
+        blurb: "Who buys, how many metric tonnes, and on what terms.",
+        features: ["Orders in MT with rupee value", "GST, billing and payment terms", "Per-customer statement", "Excel workbook + Word document", "Feeds the CRM pipeline as Won"] },
       { key: "inquiries", label: "Inquiries", icon: MessageSquare, path: "/admin/inquiries", status: "live",
         blurb: "All inbound product inquiries." },
       { key: "quotes", label: "Quote Requests", icon: ClipboardList, path: "/admin/quote-requests", status: "live",

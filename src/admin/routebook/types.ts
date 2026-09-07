@@ -61,7 +61,24 @@ export interface RbMark {
   thinWall: boolean | null;
   profiledOn: string | null;
 
+  /* Lifecycle. One company, three books: `stage` is the only thing that
+     decides which book shows this row, so nothing is ever duplicated. */
+  stage: Stage;
+  leadOn: string | null;
+  customerOn: string | null;
+  lostOn: string | null;
+  lostReason: string | null;
+  nextStep: string | null;
+  expectedMt: string | number | null;   // MT/month they say they would take
+  quotedRate: string | number | null;   // ₹/kg quoted to them
+  gstNumber: string | null;
+  billTo: string | null;
+  shipTo: string | null;
+  paymentTerms: string | null;
+  inquiryId: string | null;
+
   samples?: RbSample[];
+  orders?: RbOrder[];
   updatedAt: string;
   updatedById: string | null;
   updatedBy: { id: string; name: string } | null;
@@ -72,6 +89,13 @@ export type Polymer = (typeof POLYMERS)[number];
 
 export const PROCESSES = ["INJECTION", "BLOW", "EXTRUSION", "THERMOFORM", "FILM", "SHEET"] as const;
 export type Process = (typeof PROCESSES)[number];
+
+export const STAGES = ["PROSPECT", "LEAD", "CUSTOMER", "LOST"] as const;
+export type Stage = (typeof STAGES)[number];
+
+export const STAGE_LABEL: Record<Stage, string> = {
+  PROSPECT: "Prospect", LEAD: "Lead", CUSTOMER: "Customer", LOST: "Lost",
+};
 
 export const SAMPLE_RESULTS = ["PENDING", "PASS", "PARTIAL", "FAIL"] as const;
 export type SampleResult = (typeof SAMPLE_RESULTS)[number];
@@ -115,7 +139,49 @@ export interface RbSettings {
   updatedById?: string | null;
 }
 
-export type MarkPatch = Partial<Omit<RbMark, "stopId" | "updatedAt" | "updatedById" | "updatedBy" | "samples">>;
+export const ORDER_STATUSES = ["CONFIRMED", "DISPATCHED", "DELIVERED", "PAID", "CANCELLED"] as const;
+export type OrderStatus = (typeof ORDER_STATUSES)[number];
+
+export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
+  CONFIRMED: "Confirmed", DISPATCHED: "Dispatched", DELIVERED: "Delivered",
+  PAID: "Paid", CANCELLED: "Cancelled",
+};
+
+/** An order. LIMEX is sold by the metric tonne, so quantity is MT and the
+ *  rate is per kg the way converters quote resin. `amount` is worked out on
+ *  the server, never here, so an export cannot disagree with the screen. */
+export interface RbOrder {
+  id: string;
+  stopId: string;
+  orderNo: string;
+  grade: string;
+  quantityMt: string | number;
+  rate: string | number | null;
+  amount: string | number | null;
+  orderedOn: string;
+  dispatchOn: string | null;
+  status: OrderStatus;
+  poRef: string | null;
+  note: string | null;
+  createdAt: string;
+  createdById: string | null;
+  createdBy: { id: string; name: string } | null;
+  /** Present only on /orders, which joins back to the company. */
+  mark?: {
+    stopId: string;
+    gstNumber: string | null;
+    contactName: string | null;
+    contactPhone: string | null;
+    stop: { name: string; legId: string };
+  };
+}
+
+export type NewOrder = {
+  grade: string; quantityMt: number; rate?: number | null; orderedOn?: string;
+  dispatchOn?: string | null; status?: OrderStatus; poRef?: string | null; note?: string | null;
+};
+
+export type MarkPatch = Partial<Omit<RbMark, "stopId" | "updatedAt" | "updatedById" | "updatedBy" | "samples" | "orders">>;
 
 export interface RbLegMark {
   legId: string;
@@ -194,6 +260,19 @@ export interface RbSummary {
   starred: number;
   dueToday: number;
   lastEvent: { at: string; kind: string; user: { name: string } | null } | null;
+  leads: number;
+  customers: number;
+  orders: number;
+  orderedMt: number;
+  orderedValue: number | null;
+}
+
+/** What moved since the caller last looked — how every open device agrees. */
+export interface RbChanges {
+  marks: RbMark[];
+  stops: RbStop[];
+  removedStopIds: string[];
+  at: string;
 }
 
 export interface NewStop {
