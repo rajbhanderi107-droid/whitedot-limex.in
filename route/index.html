@@ -14,8 +14,10 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <meta name="theme-color" content="#080808" />
     <meta name="color-scheme" content="dark" />
+    <!-- The website's own logo on a dark tile, one per book. There is no SVG
+         variant: the mark is a raster logo file, and inlining it as a data
+         URI would cost a quarter of a megabyte per page for no gain. -->
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/route-192.png" />
-    <link rel="icon" type="image/svg+xml" href="/assets/icons/route.svg" />
 
     <!-- iOS: Add to Home Screen, then it opens without Safari's chrome. -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
