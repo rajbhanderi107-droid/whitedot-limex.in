@@ -91,23 +91,6 @@ export function HealthRing({ label, value }: { label: string; value: number }) {
   );
 }
 
-/* ─── Sparkline (dependency-free inline SVG) ───────────────── */
-
-export function Sparkline({ data, width = 240, height = 56 }: { data: number[]; width?: number; height?: number }) {
-  if (data.length < 2) return <div className="wd-spark-empty">No trend data yet</div>;
-  const max = Math.max(...data);
-  const min = Math.min(...data);
-  const span = max - min || 1;
-  const step = width / (data.length - 1);
-  const pts = data.map((v, i) => `${(i * step).toFixed(1)},${(height - ((v - min) / span) * height).toFixed(1)}`);
-  return (
-    <svg className="wd-spark" width="100%" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
-      <polyline className="wd-spark-fill" points={`0,${height} ${pts.join(" ")} ${width},${height}`} />
-      <polyline className="wd-spark-line" points={pts.join(" ")} />
-    </svg>
-  );
-}
-
 /* ─── Card shell ───────────────────────────────────────────── */
 
 export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {

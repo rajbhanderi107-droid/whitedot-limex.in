@@ -121,15 +121,6 @@
 .wd-skel { min-height: 96px; background: linear-gradient(90deg, var(--adm-surface), var(--adm-surface-2), var(--adm-surface)); background-size: 200% 100%; animation: wd-shimmer 1.3s infinite; }
 @keyframes wd-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-/* sparkline */
-.wd-spark { display: block; height: 56px; margin: .4rem 0; }
-.wd-spark-line { fill: none; stroke: var(--adm-accent); stroke-width: 2; vector-effect: non-scaling-stroke; }
-.wd-spark-fill { fill: rgba(79,154,53,.12); stroke: none; }
-.wd-spark-empty { font-size: .78rem; color: var(--adm-muted); padding: 1rem 0; }
-.wd-trend-legend { display: flex; gap: 1.2rem; font-size: .76rem; color: var(--adm-muted); margin-top: .4rem; }
-.wd-trend-legend b { color: var(--adm-text); font-family: var(--adm-font-mono); }
-.wd-trend-conv b { color: var(--adm-accent); }
-
 /* activity */
 .wd-activity { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .55rem; }
 .wd-activity li { display: flex; align-items: center; gap: .6rem; font-size: .8rem; }
