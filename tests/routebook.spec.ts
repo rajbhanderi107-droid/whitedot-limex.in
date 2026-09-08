@@ -422,3 +422,59 @@ test('the record still loads after Refresh, and asks for each day once', async (
   await expect(page.getByText('Loading…')).toHaveCount(0);
   expect(asked.length).toBe(days.length * 2);
 });
+
+/* Restoring a whole book — the path that carries `events`.
+ *
+ * A plain backup holds marks only and replays through the outbox, stamping
+ * every line with today. A book exported from a standalone app also holds the
+ * journal, and that has to go to the import endpoint instead so each line
+ * keeps the day it actually happened. This is the button a one-off migration
+ * runs through, writing straight to the live database, so it is worth proving
+ * it picks the right door. */
+test('Restore sends a book with a journal to the import endpoint, not the outbox', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  await mockPortal(page);
+
+  let imported: { marks: { stopId: string }[]; events: { day: string }[] } | null = null;
+  let bulkCalls = 0;
+  await page.route('**/api/portal/route-book/marks/bulk', async r => { bulkCalls++; await r.fulfill(ok([])); });
+  await page.route('**/api/portal/route-book/import', async r => {
+    expect(r.request().method()).toBe('POST');
+    imported = r.request().postDataJSON();
+    await r.fulfill(ok({ marks: 2, events: 3, duplicateEvents: 0, days: ['2026-09-01', '2026-09-02'], skippedStops: [] }));
+  });
+
+  await page.goto('/#/admin/route-book');
+  await expect(page.getByTestId('rb-page')).toBeVisible();
+
+  const book = JSON.stringify({
+    marks: [
+      { stopId: 'N1-alpha', ticked: true, tickedOn: '2026-09-01', starred: true },
+      { stopId: 'N1-beta', note: 'Asked for a sample' },
+    ],
+    events: [
+      { stopId: 'N1-alpha', kind: 'tick', value: '1', day: '2026-09-01', at: '2026-09-01T08:10:00.000Z' },
+      { stopId: 'N1-alpha', kind: 'star', value: '1', day: '2026-09-01', at: '2026-09-01T08:11:00.000Z' },
+      { stopId: 'N1-beta', kind: 'note', value: 'Asked for a sample', day: '2026-09-02', at: '2026-09-02T09:00:00.000Z' },
+    ],
+  });
+  await page.getByTestId('rb-restore-input').setInputFiles({ name: 'book.json', mimeType: 'application/json', buffer: Buffer.from(book) });
+
+  await expect(page.getByText('2 companies and 3 journal lines imported across 2 days')).toBeVisible();
+  expect(imported, 'the import endpoint must be the one that was called').not.toBeNull();
+  expect(imported!.events.map(e => e.day)).toEqual(['2026-09-01', '2026-09-01', '2026-09-02']);
+  expect(imported!.marks.map(m => m.stopId)).toEqual(['N1-alpha', 'N1-beta']);
+  // The outbox would have stamped all three lines with today.
+  expect(bulkCalls, 'a book with a journal must not go through the outbox').toBe(0);
+});
+
+test('Restore rejects a file that is not a Route Book backup', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  await mockPortal(page);
+  await page.goto('/#/admin/route-book');
+  await expect(page.getByTestId('rb-page')).toBeVisible();
+  await page.getByTestId('rb-restore-input').setInputFiles({
+    name: 'notabook.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify({ hello: 'world' })),
+  });
+  await expect(page.getByText('That file is not a Route Book backup')).toBeVisible();
+});
