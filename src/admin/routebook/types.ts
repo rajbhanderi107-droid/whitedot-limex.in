@@ -250,26 +250,6 @@ export interface RbBootstrap {
   userLeg: string;
 }
 
-export interface RbSummary {
-  total: number;
-  sellable: number;
-  ticked: number;
-  tickedWeek: number;
-  interested: number;
-  samples: number;
-  starred: number;
-  dueToday: number;
-  lastEvent: { at: string; kind: string; user: { name: string } | null } | null;
-  /** Optional so a frontend deployed ahead of the backend still renders the
-   *  tile rather than showing NaN. */
-  followUps?: number;
-  leads: number;
-  customers: number;
-  orders: number;
-  orderedMt: number;
-  orderedValue: number | null;
-}
-
 /** A whole book arriving from the standalone app: the marks, and the day
  *  journal that produced them. Journal lines keep their own day and instant,
  *  so importing never re-dates someone's round to today. */
