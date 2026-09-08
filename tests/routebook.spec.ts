@@ -322,7 +322,11 @@ test('clean desk filters real tasks, hides removed companies, and links to the c
   await page.getByRole('button', { name: 'Payment check' }).click();
   await expect(page.locator('.bd-empty')).toContainText('No payment check');
   await page.getByRole('button', { name: 'Open menu', exact: true }).click();
-  await expect(page.locator('.adm-drawer .wd-nav a')).toHaveCount(4);
+  // The workspace nav is the four books plus Today — named, not just counted,
+  // so adding a fifth link cannot quietly pass while the wrong one is listed.
+  await expect(page.locator('.adm-drawer .wd-nav a')).toHaveText([
+    'Today', 'LIMEX Route Book', 'LIMEX Visit Follow-ups', 'LIMEX Lead Book', 'LIMEX Customer Book',
+  ]);
   await expect(page.locator('.adm-drawer .wd-nav')).not.toContainText('AI Brain');
   await page.getByRole('button', { name: 'Close menu', exact: true }).click();
   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
@@ -337,7 +341,11 @@ test('the desk snoozes a follow-up, offers WhatsApp, and keeps its queue in the 
   const mock = await mockPortal(page);
   mock.marks.set('N1-alpha', { stopId: 'N1-alpha', dueOn: '2020-01-01', nextStep: 'Discuss the trial result', contactPhone: '9876543210' });
 
-  await page.goto('/#/admin/dashboard');
+  // This test navigates twice. `load` also waits on the Google Fonts and
+  // analytics requests in the head, which the page does not need to be
+  // usable — two of those waits do not fit the budget. Same reason, and the
+  // same fix, as admin.spec.ts.
+  await page.goto('/#/admin/dashboard', { waitUntil: 'domcontentloaded' });
   await expect(page.getByTestId('book-desk')).toBeVisible();
 
   // The overdue date is spoken, not printed as a bare ISO string.
@@ -354,8 +362,11 @@ test('the desk snoozes a follow-up, offers WhatsApp, and keeps its queue in the 
   // The chosen queue survives a reload.
   await page.getByRole('button', { name: 'No next step' }).click();
   await expect(page).toHaveURL(/q=nostep/);
-  await page.reload();
-  await expect(page.getByRole('button', { name: 'No next step' })).toHaveAttribute('aria-pressed', 'true');
+  // `load` also waits on the Google Fonts and analytics requests in the head,
+  // which the page does not need to be usable. Same reason as admin.spec.ts.
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await expect(page.getByTestId('book-desk')).toBeVisible();
+  await expect(page.getByRole('button', { name: /^No next step/ })).toHaveAttribute('aria-pressed', 'true');
 });
 
 test('the record still loads after Refresh, and asks for each day once', async ({ page }) => {

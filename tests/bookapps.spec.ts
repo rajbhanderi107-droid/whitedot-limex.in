@@ -1,8 +1,8 @@
 import { test, expect, type Page } from "@playwright/test";
 
-/* The three books as standalone installable apps.
+/* The four books as standalone installable apps.
  *
- * /route/, /leads/ and /customers/ are separate entry pages with their own
+ * /route/, /visits/, /leads/ and /customers/ are separate entry pages with their own
  * name, icon and manifest, running the same code against the same records as
  * the portal. These checks are about the doorway, not the books themselves —
  * those are covered in books.spec.ts. */
@@ -39,6 +39,7 @@ async function mockApi(page: Page) {
 
 const APPS = [
   { dir: "route", title: "LIMEX Route Book", tab: "bk-tab-route", page: "rb-page", short: "Route Book" },
+  { dir: "visits", title: "LIMEX Visit Follow-ups", tab: "bk-tab-visits", page: "followup-book", short: "Visit Follow-ups" },
   { dir: "leads", title: "LIMEX Lead Book", tab: "bk-tab-leads", page: "lead-book", short: "Lead Book" },
   { dir: "customers", title: "LIMEX Customer Book", tab: "bk-tab-customers", page: "customer-book", short: "Customer Book" },
 ] as const;
@@ -78,7 +79,7 @@ test.describe("Standalone book apps", () => {
     });
   }
 
-  test("the three books are one app you can move between, and the portal is one tap away", async ({ page }) => {
+  test("the four books are one app you can move between, and the portal is one tap away", async ({ page }) => {
     await mockApi(page);
     await page.goto("/leads/");
     await expect(page.getByTestId("lead-book")).toBeVisible();
@@ -86,6 +87,9 @@ test.describe("Standalone book apps", () => {
     await page.getByTestId("bk-tab-customers").click();
     await expect(page.getByTestId("customer-book")).toBeVisible();
     await expect(page.getByTestId("bk-tab-customers")).toHaveClass(/is-on/);
+
+    await page.getByTestId("bk-tab-visits").click();
+    await expect(page.getByTestId("followup-book")).toBeVisible();
 
     await page.getByTestId("bk-tab-route").click();
     await expect(page.getByTestId("rb-page")).toBeVisible();
@@ -102,8 +106,8 @@ test.describe("Standalone book apps", () => {
     await expect(page.getByTestId("customer-book")).toHaveCount(0);
   });
 
-  test("fits a phone without scrolling sideways", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
+  test("fits a small phone without scrolling sideways, with four tabs", async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 568 });
     await mockApi(page);
     await page.goto("/route/");
     await expect(page.getByTestId("books-app")).toBeVisible();

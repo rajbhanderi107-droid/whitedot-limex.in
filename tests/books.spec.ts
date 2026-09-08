@@ -1,7 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 
-/* Lead Book and Customer Book — one record, three views.
+/* Visit Follow-ups, Lead Book and Customer Book — one record, four views.
  *
  * Runs against a mocked /api/portal/route-book that behaves the way the real
  * one does: a stage change is an ordinary mark patch, and recording an order
@@ -104,13 +104,58 @@ async function mockPortal(page: Page) {
   return { marks, orders };
 }
 
-test.describe("Lead Book & Customer Book", () => {
+test.describe("Visit Follow-ups, Lead Book & Customer Book", () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
       localStorage.setItem("wd_admin_token", "mock-jwt");
       localStorage.removeItem("wd_rb_cache_v2");
       localStorage.removeItem("wd_rb_outbox_v2");
     });
+  });
+
+  test("ticking a company puts it in Visit Follow-ups, and promoting takes it out", async ({ page }) => {
+    const mock = await mockPortal(page);
+
+    // 1. A tick in the Route Book is the only action. Nothing else is pressed.
+    await page.goto("/#/admin/route-book");
+    await page.getByTestId("rb-leg").first().locator(".rb-leg-toggle").click();
+    await page.locator("[data-testid='rb-stop'][data-id='N1-alpha']").getByTestId("rb-tick").click();
+    await expect.poll(() => mock.marks.get("N1-alpha")?.ticked, { timeout: 5000 }).toBe(true);
+
+    // 2. It is already in the follow-up list — the book fills itself.
+    await page.goto("/#/admin/visit-followups");
+    const card = page.getByTestId("fb-card").first();
+    await expect(card).toContainText("Alpha Polymers");
+    await expect(page.getByTestId("fb-card")).toHaveCount(1);
+    // Beta was never visited, so it must not be here.
+    await expect(page.getByTestId("followup-book")).not.toContainText("Beta Plast");
+
+    // 3. It is NOT in the Lead Book: a visit is not a deal.
+    await page.goto("/#/admin/lead-book");
+    await expect(page.getByTestId("lb-card")).toHaveCount(0);
+
+    // 4. Promoting is a decision, taken here.
+    await page.goto("/#/admin/visit-followups");
+    await page.getByTestId("fb-promote").first().click();
+    await expect.poll(() => mock.marks.get("N1-alpha")?.stage, { timeout: 5000 }).toBe("LEAD");
+
+    // 5. Now it is a lead, and it has left the follow-up list — never in two
+    //    books at once.
+    await expect(page.getByTestId("fb-card")).toHaveCount(0);
+    await page.goto("/#/admin/lead-book");
+    await expect(page.getByTestId("lb-card").first()).toContainText("Alpha Polymers");
+  });
+
+  test("a starred company is a follow-up even before it is ticked", async ({ page }) => {
+    const mock = await mockPortal(page);
+    await page.goto("/#/admin/route-book");
+    await page.getByTestId("rb-leg").first().locator(".rb-leg-toggle").click();
+    await page.locator("[data-testid='rb-stop'][data-id='N1-beta']").getByTestId("rb-star").click();
+    await expect.poll(() => mock.marks.get("N1-beta")?.starred, { timeout: 5000 }).toBe(true);
+
+    await page.goto("/#/admin/visit-followups");
+    await expect(page.getByTestId("fb-card").first()).toContainText("Beta Plast");
+    await expect(page.getByTestId("fb-card").first()).toContainText("starred, not yet visited");
   });
 
   test("a Route Book company becomes a lead, then a customer with tonnage", async ({ page }) => {

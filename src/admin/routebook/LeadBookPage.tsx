@@ -75,7 +75,7 @@ export function LeadBookPage() {
       title="LIMEX Lead Book"
       sub={leads.length
         ? `${leads.length} live deal${leads.length === 1 ? "" : "s"} · ${mt(expected)}/month expected · ${openTrials} trial${openTrials === 1 ? "" : "s"} out`
-        : "Companies move here from the Route Book once they show real interest."}
+        : "Companies move here from Visit Follow-ups once a visit turns into a real deal."}
       actions={
         <>
           <Link className="wd-ghost-btn" to="/admin/route-book"><RouteIcon size={13} /> Route Book</Link>
@@ -98,25 +98,25 @@ export function LeadBookPage() {
         </div>
       </section>
 
+      {/* Deciding who becomes a lead is the Visit Follow-up Book's job now, so
+          this page shows only live deals. The pointer stays because a lead
+          usually starts as a visit that went well. */}
       {ready.length > 0 && (
         <section className="rb-dsec">
           <div className="rb-dhead">
-            <h3><TrendingUp size={14} /> Answered well — promote?</h3>
-            <span className="rb-dcount">interested, or a trial that passed, but not in the Lead Book yet</span>
+            <h3><TrendingUp size={14} /> {ready.length} visited compan{ready.length === 1 ? "y" : "ies"} answered well</h3>
+            <span className="rb-dcount">interested, or a trial that passed, and not yet a lead</span>
           </div>
           <div className="rb-blist">
-            {ready.slice(0, 12).map((r) => (
-              <div key={r.s.id} className="rb-brow">
-                <div className="rb-bmain">
-                  <b>{r.s.name}</b>
-                  <em>{r.m?.outcome === "smp" ? "Sample given" : "Said they are interested"}
-                    {r.m?.tickedOn ? ` · ${relDays(r.m.tickedOn)}` : ""}</em>
-                </div>
-                <button type="button" className="wd-primary-btn" onClick={() => promote(r)} data-testid="lb-promote">
-                  Add to Lead Book <ArrowRight size={13} />
-                </button>
+            <div className="rb-brow">
+              <div className="rb-bmain">
+                <b>Promote them from Visit Follow-ups</b>
+                <em>{ready.slice(0, 3).map((r) => r.s.name).join(", ")}{ready.length > 3 ? ` and ${ready.length - 3} more` : ""}</em>
               </div>
-            ))}
+              <Link className="wd-primary-btn" to="/admin/visit-followups" data-testid="lb-to-followups">
+                Open Visit Follow-ups <ArrowRight size={13} />
+              </Link>
+            </div>
           </div>
         </section>
       )}
@@ -138,7 +138,7 @@ export function LeadBookPage() {
       {!leads.length && (
         <Empty
           title="No live deals yet"
-          hint="Tick a company in the Route Book, mark it Interested or hand over a sample, and it will show up here ready to promote."
+          hint="Open Visit Follow-ups, find the company whose visit went well, and choose “Make it a lead”."
         />
       )}
 

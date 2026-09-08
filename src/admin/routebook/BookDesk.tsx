@@ -4,10 +4,10 @@
 
 import { useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Route, Handshake, BadgeCheck, ArrowUpRight, CalendarCheck, Search, MessageCircle, Phone } from "lucide-react";
+import { Route, Handshake, BadgeCheck, ClipboardCheck, ArrowUpRight, CalendarCheck, Search, MessageCircle, Phone } from "lucide-react";
 import { BookShell, useBook } from "./BookBits.js";
 import {
-  isLead, isCustomer, isDue, openSamplesOf, liveOrders, phoneOf, telHref, waHref,
+  isLead, isCustomer, isFollowUp, isDue, openSamplesOf, liveOrders, phoneOf, telHref, waHref,
   dueLabel, dueReorder, noNextStep, addDays, today, customerTotals, fmtDate, daysSince, type Row,
 } from "./logic.js";
 import { patchMark } from "./store.js";
@@ -89,6 +89,7 @@ export function BookDesk() {
 
   const books = [
     { path: "route-book", title: "LIMEX Route Book", icon: Route, count: rows.length, unit: "companies", text: "Plan your visits and keep the day's record." },
+    { path: "visit-followups", title: "LIMEX Visit Follow-ups", icon: ClipboardCheck, count: rows.filter((r) => isFollowUp(r.m)).length, unit: "visits open", text: "Everyone you called on, waiting on their next move." },
     { path: "lead-book", title: "LIMEX Lead Book", icon: Handshake, count: rows.filter((r) => isLead(r.m)).length, unit: "live leads", text: "Follow up, track trials and win the next order." },
     { path: "customer-book", title: "LIMEX Customer Book", icon: BadgeCheck, count: rows.filter((r) => isCustomer(r.m)).length, unit: "customers", text: "Manage orders, dispatches and customer details." },
   ];

@@ -4,9 +4,9 @@
  * committed and are real Vite build inputs — the point of generating them is
  * that three near-identical HTML heads cannot drift apart by hand.
  *
- * Each book gets its own directory, so /route/, /leads/ and /customers/ are
- * three separate installable apps with their own name, icon and start page,
- * all running the same code against the same records.
+ * Each book gets its own directory, so /route/, /visits/, /leads/ and
+ * /customers/ are four separate installable apps with their own name, icon
+ * and start page, all running the same code against the same records.
  */
 
 import { mkdirSync, writeFileSync } from "node:fs";
@@ -20,6 +20,11 @@ const BOOKS = [
     key: "route", dir: "route",
     name: "LIMEX Route Book", short: "Route Book", theme: "#4f9a35",
     description: "The WhiteDot field book: Gujarat plastics manufacturers in drivable legs, ticked and noted as you go.",
+  },
+  {
+    key: "visits", dir: "visits",
+    name: "LIMEX Visit Follow-ups", short: "Visits", theme: "#8f6fb5",
+    description: "Every company a WhiteDot visit touched, and what it is waiting on next.",
   },
   {
     key: "leads", dir: "leads",
