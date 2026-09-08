@@ -260,6 +260,9 @@ export interface RbSummary {
   starred: number;
   dueToday: number;
   lastEvent: { at: string; kind: string; user: { name: string } | null } | null;
+  /** Optional so a frontend deployed ahead of the backend still renders the
+   *  tile rather than showing NaN. */
+  followUps?: number;
   leads: number;
   customers: number;
   orders: number;

@@ -11,6 +11,7 @@ const GOTO: Record<string, { to: string; label: string }> = {
   s: { to: "/admin/sample-requests", label: "Sample Requests" },
   c: { to: "/admin/companies", label: "Companies" },
   r: { to: "/admin/route-book", label: "Route Book" },
+  v: { to: "/admin/visit-followups", label: "Visit Follow-ups" },
   k: { to: "/admin/calculator-submissions", label: "Calculator" },
   f: { to: "/admin/follow-ups", label: "Follow-Ups" },
   u: { to: "/admin/users", label: "Users" },
