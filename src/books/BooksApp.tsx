@@ -1,4 +1,4 @@
-/* The three books as standalone apps.
+/* The four books as standalone apps.
  *
  * Same login, same server, same records as the portal — this is a different
  * doorway into them, not a different copy. It exists because a salesperson
@@ -13,10 +13,11 @@ import { useEffect } from "react";
 import { ForgotPasswordPage } from "../admin/pages/ForgotPasswordPage.js";
 import { ResetPasswordPage } from "../admin/pages/ResetPasswordPage.js";
 import { Navigate, NavLink, Route, Routes, useLocation } from "react-router-dom";
-import { Route as RouteIcon, Handshake, BadgeCheck, LayoutGrid, LogOut } from "lucide-react";
+import { Route as RouteIcon, ClipboardCheck, Handshake, BadgeCheck, LayoutGrid, LogOut } from "lucide-react";
 import { useAuth } from "../admin/hooks/useAuth.js";
 import { LoginPage } from "../admin/pages/LoginPage.js";
 import { RouteBookPage } from "../admin/routebook/RouteBookPage.js";
+import { FollowUpBookPage } from "../admin/routebook/FollowUpBookPage.js";
 import { LeadBookPage } from "../admin/routebook/LeadBookPage.js";
 import { CustomerBookPage } from "../admin/routebook/CustomerBookPage.js";
 import { warmUpBackend } from "../admin/lib/api.js";
@@ -26,10 +27,11 @@ import "./books.css";
 
 warmUpBackend();
 
-export type BookKey = "route" | "leads" | "customers";
+export type BookKey = "route" | "visits" | "leads" | "customers";
 
 export const BOOKS: { key: BookKey; path: string; label: string; short: string; icon: typeof RouteIcon }[] = [
   { key: "route", path: "/admin/route-book", label: "Route Book", short: "Route", icon: RouteIcon },
+  { key: "visits", path: "/admin/visit-followups", label: "Visit Follow-ups", short: "Visits", icon: ClipboardCheck },
   { key: "leads", path: "/admin/lead-book", label: "Lead Book", short: "Leads", icon: Handshake },
   { key: "customers", path: "/admin/customer-book", label: "Customer Book", short: "Customers", icon: BadgeCheck },
 ];
@@ -110,6 +112,7 @@ export default function BooksApp() {
       <main className="bk-main">
         <Routes>
           <Route path="/admin/route-book" element={<RouteBookPage />} />
+          <Route path="/admin/visit-followups" element={<FollowUpBookPage />} />
           <Route path="/admin/lead-book" element={<LeadBookPage />} />
           <Route path="/admin/customer-book" element={<CustomerBookPage />} />
           <Route path="/admin/*" element={<ToPortal />} />

@@ -26,7 +26,7 @@ interface Props {
 }
 
 function NavGroups({ onNav, isSuperAdmin }: { onNav?: () => void; isSuperAdmin: boolean }) {
-  const paths = ["/admin/dashboard", "/admin/route-book", "/admin/lead-book", "/admin/customer-book"];
+  const paths = ["/admin/dashboard", "/admin/route-book", "/admin/visit-followups", "/admin/lead-book", "/admin/customer-book"];
   const modules = MODULE_GROUPS.flatMap(g => g.modules);
   return <nav className="wd-nav" aria-label="LIMEX workspace">
     <div className="wd-nav-group-title">Your workspace</div>

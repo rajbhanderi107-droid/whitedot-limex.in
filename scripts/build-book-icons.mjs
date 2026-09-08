@@ -1,9 +1,9 @@
-/* Home-screen icons for the three standalone book apps.
+/* Home-screen icons for the four standalone book apps.
  *
  * Run with `node scripts/build-book-icons.mjs`. The PNGs it writes are
  * committed, so a deploy never depends on sharp being installed.
  *
- * One family, three colours: a dark tile, the WhiteDot mark, and the book's
+ * One family, four colours: a dark tile, the WhiteDot mark, and the book's
  * own glyph. They have to be told apart at 40 px on a phone home screen, so
  * each glyph is a single shape in a single colour — no detail that survives
  * only at 512. Everything stays inside the middle 80% so a maskable icon is
@@ -30,6 +30,16 @@ const BOOKS = {
       <circle cx="132" cy="350" r="34" fill="COLOR"/>
       <circle cx="256" cy="236" r="34" fill="COLOR" opacity="0.75"/>
       <circle cx="380" cy="162" r="34" fill="COLOR" opacity="0.5"/>`,
+  },
+  visits: {
+    color: "#8f6fb5",
+    // A clock: this book is about when you go back. Deliberately the only
+    // curve-and-hands shape in the set, so it never reads as the road, the
+    // arrow or the shield at 40 px.
+    glyph: `
+      <circle cx="256" cy="256" r="168" fill="none" stroke="COLOR" stroke-width="30"/>
+      <path d="M256 150 L256 262 L338 306" fill="none" stroke="COLOR"
+            stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>`,
   },
   leads: {
     color: "#e0a040",

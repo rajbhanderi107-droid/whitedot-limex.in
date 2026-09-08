@@ -20,6 +20,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, "index.html"),
         route: resolve(__dirname, "route/index.html"),
+        visits: resolve(__dirname, "visits/index.html"),
         leads: resolve(__dirname, "leads/index.html"),
         customers: resolve(__dirname, "customers/index.html"),
       },

@@ -9,7 +9,7 @@ import { buildXlsx, buildDocx, saveBlob, type Sheet, type Block, type Cell } fro
 import { ORDER_STATUS_LABEL, type RbLeg, type RbMark, type RbStop, type RbSettings, type RbOrder } from "./types.js";
 import {
   addrOf, conOf, customerTotals, expectedMtOf, fmtDate, fmtDateLong, liveOrders, num, ordersOf, phoneOf,
-  polymersOf, processesOf, quotedRateOf, RESULT_LABEL, samplesOf, today, tonnesOf, type Row,
+  OUTMAP, polymersOf, processesOf, quotedRateOf, RESULT_LABEL, samplesOf, today, tonnesOf, type Row,
 } from "./logic.js";
 
 const KG_PER_MT = 1000;
@@ -51,6 +51,84 @@ export function leadBookSheet(rows: Row[], legById: Record<string, RbLeg>): Shee
 
 export function exportLeadBook(rows: Row[], legById: Record<string, RbLeg>): void {
   saveBlob(`whitedot-lead-book-${stamp()}.xlsx`, buildXlsx([leadBookSheet(rows, legById)]));
+}
+
+/* ─── Visit Follow-ups ─────────────────────────────────────────────────── */
+
+/** The common visit list: who was called on, what they said, and what is
+ *  owed them next. Ordered the way the page orders it, so the file reads in
+ *  the same sequence as the screen it came from. */
+export function followUpBookSheet(rows: Row[], legById: Record<string, RbLeg>): Sheet {
+  const head = [
+    "Company", "Leg", "Address", "Contact", "Phone", "Starred", "Visited on",
+    "Outcome", "Follow-up due", "Samples out", "Their volume (t/mo)", "Polymers", "Processes", "Note",
+  ];
+  const body: Cell[][] = rows.map(({ s, m }) => {
+    const c = conOf(m);
+    const open = samplesOf(m).filter((x) => x.result === "PENDING").length;
+    return [
+      s.name, legName(legById, s.legId), addrOf(s, m), c.n, phoneOf(s, m),
+      m?.starred ? "Yes" : "", m?.tickedOn ?? "",
+      m?.outcome ? OUTMAP[m.outcome] : "", m?.dueOn ?? "", open || "",
+      tonnesOf(m), polymersOf(m).join(", "), processesOf(m).join(", "), m?.note ?? "",
+    ];
+  });
+  return {
+    name: "Visit Follow-ups",
+    rows: [head, ...body],
+    widths: [34, 18, 40, 18, 15, 9, 12, 14, 13, 12, 18, 16, 18, 44],
+  };
+}
+
+export function exportFollowUpBookXlsx(rows: Row[], legById: Record<string, RbLeg>): void {
+  saveBlob(`whitedot-visit-followups-${stamp()}.xlsx`, buildXlsx([followUpBookSheet(rows, legById)]));
+}
+
+export function followUpBookBlocks(rows: Row[], legById: Record<string, RbLeg>): Block[] {
+  const due = rows.filter((r) => r.m?.dueOn && r.m.dueOn <= today()).length;
+  const starred = rows.filter((r) => r.m?.starred).length;
+  const open = rows.reduce((a, r) => a + samplesOf(r.m).filter((x) => x.result === "PENDING").length, 0);
+
+  const blocks: Block[] = [
+    { t: "h1", text: "WhiteDot — LIMEX Visit Follow-ups" },
+    {
+      t: "small",
+      text: `Prepared ${fmtDateLong(stamp())} · ${rows.length} visited compan${rows.length === 1 ? "y" : "ies"}`,
+    },
+    {
+      t: "kv",
+      rows: [
+        ["Visited", String(rows.length)],
+        ["Follow-ups due", String(due)],
+        ["Starred", String(starred)],
+        ["Samples awaiting a result", String(open)],
+      ],
+    },
+  ];
+
+  for (const { s, m } of rows) {
+    const c = conOf(m);
+    const openHere = samplesOf(m).filter((x) => x.result === "PENDING").length;
+    blocks.push({ t: "h2", text: s.name });
+    blocks.push({
+      t: "kv",
+      rows: [
+        ["Leg", legName(legById, s.legId)],
+        ["Address", addrOf(s, m) || "—"],
+        ["Contact", [c.n, phoneOf(s, m)].filter(Boolean).join(" · ") || "—"],
+        ["Visited", m?.tickedOn ? fmtDate(m.tickedOn) : "starred, not yet visited"],
+        ["Outcome", m?.outcome ? OUTMAP[m.outcome] : "—"],
+        ["Follow-up due", m?.dueOn ? fmtDate(m.dueOn) : "no date set"],
+        ["Samples out", openHere ? String(openHere) : "—"],
+      ],
+    });
+    if (m?.note) blocks.push({ t: "p", text: m.note });
+  }
+  return blocks;
+}
+
+export function exportFollowUpBookDocx(rows: Row[], legById: Record<string, RbLeg>): void {
+  saveBlob(`whitedot-visit-followups-${stamp()}.docx`, buildDocx(followUpBookBlocks(rows, legById)));
 }
 
 /* ─── Customer Book ────────────────────────────────────────────────────── */

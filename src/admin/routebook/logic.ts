@@ -491,15 +491,53 @@ export function downloadText(name: string, data: string, mime = "text/plain"): v
 }
 export const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
 
-/* ─── The three books ──────────────────────────────────────────────────────
-   Route Book, Lead Book and Customer Book are three views of one row, not
-   three lists. `stage` is the only thing that decides which one shows a
-   company, so nothing can be in two books at once or drift out of step. */
+/* ─── The four books ───────────────────────────────────────────────────────
+   Route Book, Visit Follow-ups, Lead Book and Customer Book are four views
+   of one row, not four lists. Nothing is stored twice, so nothing can drift
+   out of step, and a company is never in two books at once.
+
+   What decides which book shows a company:
+
+     Route Book       every company in the register
+       │ ticked or starred on a visit
+       ▼
+     Visit Follow-ups every company a visit actually touched, still open
+       │ "Make it a lead"
+       ▼
+     Lead Book        stage LEAD — a real deal being worked
+       │ "Won — record an order"
+       ▼
+     Customer Book    stage CUSTOMER — buys, in metric tonnes
+
+   Only the last two moves are decisions a person makes with a button. The
+   first happens by itself, because ticking a company on a visit already
+   says everything the follow-up list needs to know. */
 
 export const stageOf = (m?: RbMark): Stage => m?.stage ?? "PROSPECT";
 export const isLead = (m?: RbMark) => stageOf(m) === "LEAD";
 export const isCustomer = (m?: RbMark) => stageOf(m) === "CUSTOMER";
 export const isLost = (m?: RbMark) => stageOf(m) === "LOST";
+
+/** In the Visit Follow-up Book: a company a visit touched — ticked, starred
+ *  or both — that has not yet been promoted, won or lost.
+ *
+ *  Derived rather than stored. There is no "follow-up" stage to set, get out
+ *  of step, or forget to clear: tick a company in the Route Book and it is
+ *  here; promote it and it leaves, because the stage test stops matching.
+ *  Requiring PROSPECT is what keeps the books disjoint. */
+export function isFollowUp(m?: RbMark): boolean {
+  if (!m || m.removed || m.dnc) return false;
+  if (stageOf(m) !== "PROSPECT") return false;
+  return Boolean(m.ticked || m.starred);
+}
+
+/** A visit with no follow-up date on it. The list exists to stop these going
+ *  quiet, so they are worth surfacing rather than sorting to the bottom. */
+export const noFollowUpDate = (m?: RbMark) => !(m?.dueOn ?? "").trim();
+
+/** When a company was last actually touched, for ordering the visit list:
+ *  the day it was ticked, else the day it was last written to. */
+export const visitedOn = (m?: RbMark): string | null => m?.tickedOn ?? null;
 export const expectedMtOf = (m?: RbMark) => num(m?.expectedMt);
 export const quotedRateOf = (m?: RbMark) => num(m?.quotedRate);
 

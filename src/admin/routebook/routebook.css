@@ -441,3 +441,18 @@
   .rb-toasts { bottom:calc(1rem + env(safe-area-inset-bottom)); }
   .rb-modal { padding:calc(.6rem + env(safe-area-inset-top)) .6rem calc(.6rem + env(safe-area-inset-bottom)); }
 }
+
+/* Push a follow-up forward without opening the company — the commonest
+   thing to do from a desk row, so it lives on the row. */
+.bd-snooze { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:10px; }
+.bd-snooze > span { color:var(--adm-muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; }
+.bd-snooze button { min-height:32px; padding:4px 10px; border:1px solid var(--adm-border); border-radius:16px; background:transparent; color:var(--adm-muted); font:inherit; font-size:.75rem; cursor:pointer; }
+.bd-snooze button:hover { color:var(--adm-text); border-color:var(--adm-accent); }
+.bd-snooze button:focus-visible { outline:2px solid var(--adm-accent); outline-offset:2px; }
+.bd-snooze button:disabled { opacity:.5; cursor:not-allowed; }
+@media(max-width:760px) { .bd-snooze button { min-height:40px; } }
+
+/* Visit Follow-ups: the star that says "come back to this one", and a
+   follow-up date that has already passed. */
+.fb-star { color: var(--rb-star); margin-right: .3rem; vertical-align: -1px; }
+.rb-bstats .is-due { color: var(--rb-danger); }
