@@ -200,6 +200,9 @@
 .rb-dmain b { display: block; font-weight: 600; }
 .rb-dmain em { display: block; font-style: normal; font-size: .72rem; color: var(--adm-muted); }
 .rb-dnote { display: block; font-size: .74rem; color: var(--adm-text); opacity: .85; margin-top: .15rem; white-space: pre-wrap; }
+/* The day list shows the round that was walked. This says, quietly, that the
+   record holds more than the round — so a missing removal is never a mystery. */
+.rb-dother { font-size: .72rem; color: var(--adm-muted); margin: .5rem 0 0; padding-top: .5rem; border-top: 1px dashed var(--adm-border); line-height: 1.5; }
 .rb-dtags { display: flex; flex-wrap: wrap; gap: .3rem; justify-content: flex-end; align-items: center; }
 .rb-dmap { color: var(--adm-muted); display: inline-flex; padding: .3rem; }
 .rb-dmap:hover { color: var(--adm-accent); }

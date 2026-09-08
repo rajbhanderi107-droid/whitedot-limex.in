@@ -620,5 +620,15 @@ export function rollDay(events: { kind: string; value: string | null; at: string
   return [...per.values()].sort((a, b) => a.t - b.t);
 }
 
+/** A day-record row for a company actually called on that day — ticked,
+ *  starred or both.
+ *
+ *  The record keeps every change: a removal, a cleared tick, an address
+ *  correction. Those matter when you are asking "what happened to this
+ *  company", and they are still there. But the list read at the end of a day
+ *  is the round that was walked, and a company deleted from the route is not
+ *  part of the round. */
+export const wasVisited = (r: DayRow) => r.tick === 1 || r.star === 1;
+
 export function famOfLeg(leg: RbLeg | undefined): string { return leg?.familyId ?? "?"; }
 export function famName(fams: RbFamily[], id: string): string { return fams.find((f) => f.id === id)?.name ?? id; }

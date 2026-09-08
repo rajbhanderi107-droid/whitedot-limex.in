@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUp, ArrowDown, Navigation, Copy, MessageCircle, Printer, Star, MapPin, History, RefreshCw, Trash2, X } from "lucide-react";
 import type { RbEvent } from "./types.js";
 import type { Row } from "./logic.js";
-import { isStar, addrOf, mapsLinks, routeURL, dayLabel, fmtDate, rollDay, OUTMAP, mapOf, today } from "./logic.js";
+import { isStar, addrOf, mapsLinks, routeURL, dayLabel, fmtDate, rollDay, wasVisited, OUTMAP, mapOf, today } from "./logic.js";
 import { useRb, patchMany, patchMark, setPrefs } from "./store.js";
 import { rbApi } from "./api.js";
 import { useUI, toast } from "./ctx.js";
@@ -154,6 +154,11 @@ ol{padding-left:22px}li{margin:0 0 12px;page-break-inside:avoid}li b{display:blo
         const open = openDays.has(d);
         const evs = events[d];
         const roll = evs ? rollDay(evs) : [];
+        // The round that was walked. Everything else that happened that day —
+        // a company removed from the route, a tick cleared, an address fixed —
+        // stays in the record but is not part of the day's visit list.
+        const visits = roll.filter(wasVisited);
+        const otherChanges = roll.length - visits.length;
         const retrace = roll.filter((r) => r.tick === 1).map((r) => st.index.stopById[r.stopId]).filter(Boolean).map((s) => ({ s, m: st.marks[s.id] }));
         return (
           <section key={d} className="rb-dsec" data-day={d}>
@@ -167,7 +172,7 @@ ol{padding-left:22px}li{margin:0 0 12px;page-break-inside:avoid}li b{display:blo
             {open && (
               eventErrors[d] ? <p role="alert" className="wd-inline-err">{eventErrors[d]} <button type="button" className="wd-ghost-btn" onClick={refresh}>Retry</button></p> : !evs ? <p className="rb-empty">Loading…</p> : (
                 <div className="rb-dlist">
-                  {roll.map((r) => (
+                  {visits.map((r) => (
                     <div key={r.stopId} className="rb-drow">
                       <span className="rb-dtime">{new Date(r.t).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" })}</span>
                       <span className="rb-dmain">
@@ -189,7 +194,17 @@ ol{padding-left:22px}li{margin:0 0 12px;page-break-inside:avoid}li b{display:blo
                       {st.index.stopById[r.stopId] && <a className="rb-dmap" href={mapOf(st.index.stopById[r.stopId], st.marks[r.stopId])} target="_blank" rel="noopener noreferrer" aria-label="Map"><MapPin size={14} /></a>}
                     </div>
                   ))}
-                  {!roll.length && <p className="rb-empty">Only leg-level changes that day.</p>}
+                  {!visits.length && (
+                    <p className="rb-empty">
+                      {roll.length ? "Nothing was ticked or starred that day." : "Only leg-level changes that day."}
+                    </p>
+                  )}
+                  {otherChanges > 0 && (
+                    <p className="rb-dother">
+                      {otherChanges} other change{otherChanges === 1 ? "" : "s"} that day — removals, cleared ticks
+                      and edits. Kept in the record, not part of the round.
+                    </p>
+                  )}
                 </div>
               )
             )}

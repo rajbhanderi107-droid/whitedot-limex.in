@@ -285,6 +285,30 @@ test('visit import requires a date and preserves existing notes', async ({ page 
   expect(imported?.events[0].at).toBe('2026-09-03T13:40:00+05:30');
 });
 
+test('the day record lists the round walked, not every change made', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  const { events } = await mockPortal(page);
+  const ev = (id: string, kind: string, stopId: string, name: string) => ({
+    id, kind, value: '1', day: '2026-09-03', at: '2026-09-03T08:10:00Z',
+    stopId, stop: { name, legId: 'N1' }, user: me,
+  });
+  events.push(ev('v1', 'tick', 'N1-alpha', 'Alpha Polymers'));   // visited
+  events.push(ev('v2', 'star', 'N1-beta', 'Beta Plast'));        // starred, worth going back
+  events.push(ev('v3', 'removed', 'N1-gamma', 'Gamma Containers'));    // taken off the route
+
+  await page.goto('/#/admin/route-book');
+  await page.getByTestId('rb-tab-plan').click();
+
+  const record = page.locator(".rb-dsec[data-day='2026-09-03']");
+  await expect(record.locator('.rb-drow')).toHaveCount(2);
+  await expect(record).toContainText('Alpha Polymers');
+  await expect(record).toContainText('Beta Plast');
+  // A company removed from the route was not part of the round.
+  await expect(record.locator('.rb-drow').filter({ hasText: 'Gamma Containers' })).toHaveCount(0);
+  // ...but the record does not pretend nothing happened to it.
+  await expect(record.locator('.rb-dother')).toContainText('1 other change');
+});
+
 test('deleting a day row leaves its company in the register', async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
   const { events } = await mockPortal(page);
