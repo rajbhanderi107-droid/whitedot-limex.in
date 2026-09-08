@@ -9,11 +9,36 @@
  * and start page, all running the same code against the same records.
  */
 
-import { mkdirSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+
+/* The icon URLs carry a content hash.
+ *
+ * nginx serves everything under /assets/ as `max-age=31536000, immutable`,
+ * which is right for Vite's hashed chunks and wrong for these: the icon
+ * filenames never change, so a phone or a Cloudflare edge that fetched
+ * route-192.png once would keep the old picture for a year. Changing the
+ * logo would deploy cleanly and never arrive.
+ *
+ * Appending ?v=<hash of the bytes> makes the URL change whenever the picture
+ * does, which is the condition `immutable` was always promising. The two
+ * pages that reference these are themselves uncached — the entry HTML is
+ * `no-cache` and the manifest is served dynamically — so a new hash reaches a
+ * device on its next visit.
+ *
+ * tests/bookapps.spec.ts asserts each URL's hash matches the file on disk, so
+ * rebuilding the icons without rerunning this script fails the suite rather
+ * than shipping a silently unreachable change.
+ */
+const iconUrl = (key, variant) => {
+  const rel = `assets/icons/${key}-${variant}.png`;
+  const hash = createHash("sha256").update(readFileSync(resolve(ROOT, "public", rel))).digest("hex").slice(0, 8);
+  return `/${rel}?v=${hash}`;
+};
 
 const BOOKS = [
   {
@@ -73,13 +98,13 @@ const html = (b) => `<!doctype html>
     <!-- The website's own logo on a dark tile, one per book. There is no SVG
          variant: the mark is a raster logo file, and inlining it as a data
          URI would cost a quarter of a megabyte per page for no gain. -->
-    <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/${b.key}-192.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="${iconUrl(b.key, "192")}" />
 
     <!-- iOS: Add to Home Screen, then it opens without Safari's chrome. -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="${b.short}" />
-    <link rel="apple-touch-icon" href="/assets/icons/${b.key}-apple-180.png" />
+    <link rel="apple-touch-icon" href="${iconUrl(b.key, "apple-180")}" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -115,9 +140,9 @@ const manifest = (b) => JSON.stringify({
   theme_color: b.theme,
   categories: ["business", "productivity"],
   icons: [
-    { src: `/assets/icons/${b.key}-192.png`, sizes: "192x192", type: "image/png", purpose: "any" },
-    { src: `/assets/icons/${b.key}-512.png`, sizes: "512x512", type: "image/png", purpose: "any" },
-    { src: `/assets/icons/${b.key}-512.png`, sizes: "512x512", type: "image/png", purpose: "maskable" },
+    { src: iconUrl(b.key, "192"), sizes: "192x192", type: "image/png", purpose: "any" },
+    { src: iconUrl(b.key, "512"), sizes: "512x512", type: "image/png", purpose: "any" },
+    { src: iconUrl(b.key, "512"), sizes: "512x512", type: "image/png", purpose: "maskable" },
   ],
 }, null, 2) + "\n";
 

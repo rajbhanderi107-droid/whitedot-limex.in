@@ -1,4 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 
 /* The four books as standalone installable apps.
  *
@@ -37,6 +39,15 @@ async function mockApi(page: Page) {
   await page.route("**/api/portal/route-book/prefs", (r) => r.fulfill(ok({})));
 }
 
+/** The ?v= on an icon URL is the hash of the file it points at. */
+function expectHashMatchesFile(src: string) {
+  const [path, query] = src.split("?");
+  const bytes = readFileSync(`public${path}`);
+  const want = createHash("sha256").update(bytes).digest("hex").slice(0, 8);
+  expect(query, `${path} is stale in the generated manifest — rerun scripts/build-book-apps.mjs`)
+    .toBe(`v=${want}`);
+}
+
 const APPS = [
   { dir: "route", title: "LIMEX Route Book", tab: "bk-tab-route", page: "rb-page", short: "Route Book" },
   { dir: "visits", title: "LIMEX Visit Follow-ups", tab: "bk-tab-visits", page: "followup-book", short: "Visit Follow-ups" },
@@ -73,6 +84,13 @@ test.describe("Standalone book apps", () => {
       expect(manifest.icons.some((i: { sizes: string }) => i.sizes === "512x512")).toBe(true);
       for (const icon of manifest.icons) {
         expect((await page.request.get(icon.src)).status(), `${icon.src} must exist`).toBe(200);
+        // nginx serves /assets/ as `immutable` for a year, and these filenames
+        // never change — so the ?v= hash is the only thing that lets a new
+        // icon reach a phone that already has the old one. If it does not
+        // match the bytes on disk, the icons were rebuilt without rerunning
+        // scripts/build-book-apps.mjs and the change would deploy unreachable.
+        expect(icon.src, `${icon.src} must be versioned`).toMatch(/\?v=[0-9a-f]{8}$/);
+        expectHashMatchesFile(icon.src);
       }
       // The portal's own sidebar has no business in a one-book app.
       await expect(page.locator(".wd-nav")).toHaveCount(0);
