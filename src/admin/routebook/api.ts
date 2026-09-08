@@ -2,7 +2,7 @@
 
 import { api } from "../lib/api.js";
 import type {
-  RbBootstrap, RbSummary, RbEvent, RbMark, RbLegMark, RbStop, RbView, RbPrefs,
+  RbBootstrap, RbEvent, RbMark, RbLegMark, RbStop, RbView, RbPrefs,
   MarkPatch, NewStop, ViewFilters, RbSample, NewSample, RbSettings,
   RbOrder, NewOrder, RbChanges, RbImport, RbImportResult,
 } from "./types.js";
@@ -17,7 +17,6 @@ function qs(params: Record<string, string | undefined>): string {
 
 export const rbApi = {
   bootstrap: () => api.getFresh<RbBootstrap>(`${B}/bootstrap`),
-  summary: () => api.get<RbSummary>(`${B}/summary`),
   events: (params: { day?: string; from?: string; to?: string; stopId?: string }) =>
     api.getFresh<RbEvent[]>(`${B}/events${qs(params)}`),
   days: () => api.getFresh<Record<string, Record<string, number>>>(`${B}/days`),

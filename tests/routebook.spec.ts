@@ -30,7 +30,6 @@ async function mockPortal(page: Page) {
   await page.route("**/api/dashboard", (r) => r.fulfill(ok({ totalInquiries: 0, newInquiries: 0, totalQuoteRequests: 0, newQuoteRequests: 0, totalSampleRequests: 0, totalCalculatorSubmissions: 0, totalCompanies: 0, pendingFollowUps: 0, inquiriesByStatus: {}, recentInquiries: [] })));
   await page.route("**/api/portal/state", (r) => r.fulfill(ok({ id: "singleton", automationMode: "OFF", emergencyStop: false, updatedAt: "" })));
   await page.route("**/api/portal/route-book/bootstrap", (r) => r.fulfill(ok({ ...bootstrap, marks: [...marks.values()] })));
-  await page.route("**/api/portal/route-book/summary", (r) => r.fulfill(ok({ total: 4, sellable: 4, ticked: marks.size, tickedWeek: 0, interested: 0, samples: 0, starred: 0, dueToday: 0, lastEvent: null })));
   await page.route("**/api/portal/route-book/days", (r) => r.fulfill(ok({ "2026-09-03": { tick: events.filter((e) => e.kind === "tick").length } })));
   await page.route("**/api/portal/route-book/events**", (r) => r.fulfill(ok(events)));
   await page.route("**/api/portal/route-book/marks/bulk", async (r) => {
