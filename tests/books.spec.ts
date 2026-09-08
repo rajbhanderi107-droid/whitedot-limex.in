@@ -70,7 +70,7 @@ async function mockPortal(page: Page) {
     r.fulfill(ok({ marks: [...marks.values()], stops: [], removedStopIds: [], at: new Date().toISOString() })));
   await page.route("**/api/portal/route-book/summary", (r) => r.fulfill(ok({
     total: 2, sellable: 2, ticked: 0, tickedWeek: 0, interested: 0, samples: 0, starred: 0, dueToday: 0,
-    lastEvent: null, leads: 0, customers: 0, orders: 0, orderedMt: 0, orderedValue: null,
+    lastEvent: null, followUps: 0, leads: 0, customers: 0, orders: 0, orderedMt: 0, orderedValue: null,
   })));
   await page.route("**/api/portal/route-book/marks/bulk", async (r) => {
     const body = r.request().postDataJSON() as { items: { stopId: string }[] };

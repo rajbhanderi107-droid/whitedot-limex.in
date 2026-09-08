@@ -13,7 +13,7 @@ import {
 import { api } from "../../lib/api.js";
 import { usePortal } from "../PortalContext.js";
 import { KpiCard, SectionHeader, Card, Sparkline, RiskBadge } from "../ui.js";
-import { Route as RouteIcon, Handshake, PackageCheck } from "lucide-react";
+import { Route as RouteIcon, ClipboardCheck, Handshake, PackageCheck } from "lucide-react";
 import { rbApi } from "../../routebook/api.js";
 import type { RbSummary } from "../../routebook/types.js";
 
@@ -75,6 +75,8 @@ export function CommandCenter() {
           <KpiCard label="Conversion" value={`${conversion}%`} icon={TrendingUp} foot="won / closed" to="/admin/crm" />
           <KpiCard label="Route Book" value={rb ? rb.sellable.toLocaleString() : "—"} icon={RouteIcon}
             foot={rb ? `${rb.ticked} ticked · ${rb.tickedWeek} this week · ${rb.interested} interested` : "loading the book"} to="/admin/route-book" />
+          <KpiCard label="Visit Follow-ups" value={rb?.followUps ?? "—"} icon={ClipboardCheck}
+            foot={rb ? `${rb.dueToday} due · ${rb.starred} starred` : "loading the book"} to="/admin/visit-followups" />
           <KpiCard label="Lead Book" value={rb ? rb.leads : "—"} icon={Handshake}
             foot={rb ? `${rb.samples} sample${rb.samples === 1 ? "" : "s"} out` : "loading the book"} to="/admin/lead-book" />
           <KpiCard label="Ordered" value={rb ? `${rb.orderedMt} MT` : "—"} icon={PackageCheck}
