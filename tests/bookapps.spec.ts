@@ -72,6 +72,8 @@ test.describe("Standalone book apps", () => {
       await expect(page).toHaveTitle(new RegExp(app.title));
       await expect(page.getByTestId("books-app")).toBeVisible();
       await expect(page.getByTestId(app.page)).toBeVisible();
+      await expect(page.getByTestId("source-folder-GPT")).toBeVisible();
+      await expect(page.getByTestId("source-folder-CLAUDE")).toBeVisible();
       await expect(page.getByTestId(app.tab)).toHaveClass(/is-on/);
 
       // Its own installable identity, not the main site's.

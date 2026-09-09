@@ -1,3 +1,5 @@
+import { SourceFolders, useSourceFolder } from "./SourceFolders.js";
+import { sourceFolderOf } from "./sources.js";
 /* LIMEX Route Book — the field-sales book inside the portal.
  *
  * 1,438 Gujarat plastics manufacturers in drivable legs, every mark shared
@@ -31,6 +33,7 @@ const HOME_KEY = "wd_rb_home";
 
 export function RouteBookPage() {
   const st = useRb();
+  const { folder, setFolder } = useSourceFolder();
   const [params, setParams] = useSearchParams();
   const [filters, setFilters] = useState<Filters>(() => ({ ...emptyFilters(), q: params.get("q") ?? "" }));
   const [view, setView] = useState<View>(() => (params.get("view") as View) || st.prefs.view || "route");
@@ -56,7 +59,8 @@ export function RouteBookPage() {
   const changeSort = (m: SortMode) => { setSort(m); setPrefs({ sort: m }); };
 
   // Rows and indexes
-  const rows: Row[] = useMemo(() => st.stops.map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
+  const allSourceRows: Row[] = useMemo(() => st.stops.map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
+  const rows = useMemo(() => allSourceRows.filter(r => folder === "ALL" || sourceFolderOf(r.s, r.m) === folder), [allSourceRows, folder]);
   const rowsByLeg = useMemo(() => { const mp = new Map<string, Row[]>(); for (const r of rows) (mp.get(r.s.legId) ?? mp.set(r.s.legId, []).get(r.s.legId)!).push(r); return mp; }, [rows]);
   const visible = useMemo(() => rows.filter((r) => matchStop(r.s, r.m, filters, st.index.legById[r.s.legId], st.index.legById[r.s.legId]?.familyId)), [rows, filters, st.index.legById]);
   const visibleByLeg = useMemo(() => { const mp = new Map<string, Row[]>(); for (const r of visible) (mp.get(r.s.legId) ?? mp.set(r.s.legId, []).get(r.s.legId)!).push(r); return mp; }, [visible]);
@@ -71,7 +75,7 @@ export function RouteBookPage() {
   // Deep link ?s=<id>
   const jumpTo = useCallback((stopId: string) => {
     const s = getRb().index.stopById[stopId]; if (!s) return;
-    setFilters(emptyFilters()); setView("route");
+    setFolder("ALL"); setFilters(emptyFilters()); setView("route");
     setOpenLegs((o) => new Set(o).add(s.legId));
     setEditing(null);
     window.setTimeout(() => { const el = document.getElementById(`rb-${stopId}`); el?.scrollIntoView({ block: "center", behavior: "smooth" }); el?.classList.add("is-flash"); window.setTimeout(() => el?.classList.remove("is-flash"), 1600); }, 60);
@@ -205,6 +209,7 @@ export function RouteBookPage() {
         </div>
         {st.error && st.sync === "error" && <div className="wd-inline-err">{st.error}</div>}
 
+        <SourceFolders rows={allSourceRows} folder={folder} onChange={setFolder} />
         <div className="rb-toolbar">
           <div className="rb-tabs" role="tablist">
             {VIEWS.map(([v, l]) => <button key={v} type="button" role="tab" aria-selected={view === v} onClick={() => changeView(v)} data-testid={`rb-tab-${v}`}>{l}{v === "plan" && starred ? <span className="rb-tabn">{starred}</span> : null}</button>)}
@@ -311,6 +316,7 @@ export function RouteBookPage() {
  *  these two numbers, so they are entered here rather than assumed anywhere. */
 function RateBox() {
   const st = useRb();
+  const { folder, setFolder } = useSourceFolder();
   const admin = !!st.me && ["SUPER_ADMIN", "ADMIN"].includes(st.me.role);
   const [rate, setRate] = useState(num(st.settings?.limexRate)?.toString() ?? "");
   const [pct, setPct] = useState((st.settings?.substitutionPct ?? 30).toString());

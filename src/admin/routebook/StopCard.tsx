@@ -1,3 +1,5 @@
+import { SOURCE_LABEL, sourceFolderOf } from "./sources.js";
+import type { SourceFolder } from "./types.js";
 /* One company in the book. Everything a salesperson does at the gate
  * happens here: tick, star, outcome, note, contact, fixed address,
  * follow-up date, not-interested, remove, and the hand-off to the CRM. */
@@ -92,7 +94,7 @@ export const StopCard = memo(function StopCard({ s, m, withLeg, compact }: Props
       <div className="rb-stop-body">
         <div className="rb-stop-head">
           {withLeg && <span className="rb-legtag">{s.legId}</span>}
-          <h4>{s.name}</h4>
+          <h4>{s.name}</h4><span className="rb-source-label">{SOURCE_LABEL[sourceFolderOf(s,m)]}</span>
           <span className={`rb-score rb-score-${score >= 70 ? "hot" : score >= 40 ? "warm" : "cold"}`} title="Worth-a-visit score (fit, phone, precise pin, outcome, follow-ups)">{score}</span>
           <button type="button" className="rb-star" onClick={toggleStar} aria-pressed={star} title={star ? "Starred for the run" : "Star for today's run"} data-testid="rb-star">
             <Star size={15} />
@@ -204,6 +206,7 @@ function PromoteButton({ s, m }: { s: RbStop; m?: RbMark }) {
 function NoteEditor({ s, m, onClose }: { s: RbStop; m?: RbMark; onClose: () => void }) {
   const con = conOf(m);
   const [note, setNote] = useState(noteOf(m));
+  const [sourceFolder, setSourceFolder] = useState(sourceFolderOf(s,m));
   const [person, setPerson] = useState(con.n);
   const [phone, setPhone] = useState(con.p);
   const [addr, setAddr] = useState(m?.addrOverride ?? "");
@@ -215,6 +218,7 @@ function NoteEditor({ s, m, onClose }: { s: RbStop; m?: RbMark; onClose: () => v
   const save = (e?: FormEvent) => {
     e?.preventDefault();
     const patch: MarkPatch = {};
+    if (sourceFolder !== sourceFolderOf(s,m)) patch.sourceFolder = sourceFolder;
     if (note !== noteOf(m)) patch.note = note || null;
     if (person !== con.n || phone !== con.p) { patch.contactName = person || null; patch.contactPhone = phone || null; }
     if ((addr || "") !== (m?.addrOverride ?? "")) { patch.addrOverride = addr || null; patch.addrPrecise = addr ? precise : null; }
@@ -242,6 +246,7 @@ function NoteEditor({ s, m, onClose }: { s: RbStop; m?: RbMark; onClose: () => v
 
   return (
     <form className="rb-editor" onSubmit={save} data-testid="rb-editor">
+      <label className="rb-full">Lead source folder<select value={sourceFolder} onChange={e => setSourceFolder(e.target.value as SourceFolder)}>{Object.entries(SOURCE_LABEL).map(([k,v]) => <option key={k} value={k}>{v}</option>)}</select></label>
       <label className="rb-full">Note
         <textarea id={`rb-note-${s.id}`} rows={3} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Who you met, what they run, what they said…" maxLength={4000} />
       </label>

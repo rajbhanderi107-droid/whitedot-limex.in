@@ -1,3 +1,5 @@
+import { SourceFolders, useSourceFolder } from "./SourceFolders.js";
+import { sourceFolderOf } from "./sources.js";
 /* The desk you land on: the three books, and the short list of companies
  * that actually want something from you today. Everything here reads the
  * same live records the books read — nothing is stored twice. */
@@ -73,6 +75,7 @@ const SNOOZE: { label: string; days: number }[] = [
 
 export function BookDesk() {
   const st = useBook();
+  const { folder, setFolder } = useSourceFolder();
   const [params, setParams] = useSearchParams();
   const filter = QUEUES.some((f) => f.key === params.get("q")) ? params.get("q")! : "due";
   const search = params.get("find") ?? "";
@@ -82,10 +85,11 @@ export function BookDesk() {
     setParams(next, { replace: true });
   };
 
-  const rows: Row[] = useMemo(
+  const allSourceRows: Row[] = useMemo(
     () => st.stops.filter((s) => !st.marks[s.id]?.removed).map((s) => ({ s, m: st.marks[s.id] })),
     [st.stops, st.marks],
   );
+  const rows = useMemo(() => allSourceRows.filter(r => folder === "ALL" || sourceFolderOf(r.s, r.m) === folder), [allSourceRows, folder]);
 
   const books = [
     { path: "route-book", title: "LIMEX Route Book", icon: Route, count: rows.length, unit: "companies", text: "Plan your visits and keep the day's record." },
@@ -113,9 +117,10 @@ export function BookDesk() {
     <BookShell st={st} icon={<CalendarCheck size={22} />} title="Your day, in focus"
       sub="Visits. Conversations. Orders. Everything in one place." testId="book-desk">
 
+      <SourceFolders rows={allSourceRows} folder={folder} onChange={setFolder} />
       <div className="bd-books">
         {books.map((b) => (
-          <Link className="bd-book" to={`/admin/${b.path}`} key={b.path}>
+          <Link className="bd-book" to={`/admin/${b.path}${folder === "ALL" ? "" : `?folder=${folder}`}`} key={b.path}>
             <b.icon size={24} />
             <h2>{b.title}</h2>
             <p>{b.text}</p>

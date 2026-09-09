@@ -29,7 +29,10 @@ export interface RbStop {
   addedBy: { name: string } | null;
 }
 
+export type SourceFolder = "GPT" | "CLAUDE" | "TEAM" | "UNKNOWN";
+
 export interface RbMark {
+  sourceFolder?: SourceFolder | null;
   stopId: string;
   ticked: boolean;
   tickedOn: string | null;

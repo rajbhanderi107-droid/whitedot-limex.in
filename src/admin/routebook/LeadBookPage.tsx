@@ -1,3 +1,5 @@
+import { SourceFolders, useSourceFolder } from "./SourceFolders.js";
+import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
 /* LIMEX Lead Book — the companies actually in a deal.
  *
  * Not a second dataset: a lead is a Route Book company whose `stage` is
@@ -23,12 +25,14 @@ import { OrderDialog } from "./OrderDialog.js";
 
 export function LeadBookPage() {
   const st = useBook();
+  const { folder, setFolder } = useSourceFolder();
   const rb = useRb();
   const [focus, setFocus] = useState("all");
   const [q, setQ] = useState("");
   const [winning, setWinning] = useState<Row | null>(null);
 
-  const rows: Row[] = useMemo(() => st.stops.map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
+  const allSourceRows: Row[] = useMemo(() => st.stops.map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
+  const rows = useMemo(() => allSourceRows.filter(r => folder === "ALL" || sourceFolderOf(r.s, r.m) === folder), [allSourceRows, folder]);
   const leads = useMemo(
     () => rows.filter((r) => isLead(r.m) && !r.m?.removed)
       .sort((a, b) => (b.m?.leadOn ?? "").localeCompare(a.m?.leadOn ?? "")),
@@ -87,6 +91,7 @@ export function LeadBookPage() {
         </>
       }
     >
+      <SourceFolders rows={allSourceRows} folder={folder} onChange={setFolder} />
       <section className="rb-dsec">
         <div className="rb-dhead"><h3>Where the deals stand</h3><span className="rb-dcount">every figure comes from what you recorded</span></div>
         <div className="rb-heroes">
@@ -154,7 +159,7 @@ export function LeadBookPage() {
           <section key={r.s.id} className="rb-bcard" data-testid="lb-card">
             <div className="rb-bcard-head">
               <div>
-                <h3>{r.s.name}</h3>
+                <h3>{r.s.name}</h3><span className="rb-source-label">{SOURCE_LABEL[sourceFolderOf(r.s,r.m)]}</span>
                 <p>
                   {r.m?.leadOn ? `Lead since ${fmtDate(r.m.leadOn)}` : "Lead"}
                   {addrOf(r.s, r.m) ? ` · ${addrOf(r.s, r.m)}` : ""}

@@ -153,7 +153,8 @@ ol{padding-left:22px}li{margin:0 0 12px;page-break-inside:avoid}li b{display:blo
         const kinds = days![d];
         const open = openDays.has(d);
         const evs = events[d];
-        const roll = evs ? rollDay(evs) : [];
+        const allowedIds = new Set(rows.map(r => r.s.id));
+        const roll = evs ? rollDay(evs.filter(e => !e.stopId || allowedIds.has(e.stopId))) : [];
         // The round that was walked. Everything else that happened that day —
         // a company removed from the route, a tick cleared, an address fixed —
         // stays in the record but is not part of the day's visit list.

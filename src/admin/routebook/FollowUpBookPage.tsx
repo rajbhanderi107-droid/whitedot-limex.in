@@ -1,3 +1,5 @@
+import { SourceFolders, useSourceFolder } from "./SourceFolders.js";
+import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
 /* LIMEX Visit Follow-ups — every company a visit actually touched.
  *
  * The common list between the Route Book and the Lead Book. The Route Book
@@ -49,10 +51,12 @@ const FOCUS: { key: FocusKey; label: string; match: (r: Row) => boolean }[] = [
 
 export function FollowUpBookPage() {
   const st = useBook();
+  const { folder, setFolder } = useSourceFolder();
   const [focus, setFocus] = useState<FocusKey>("all");
   const [q, setQ] = useState("");
 
-  const rows: Row[] = useMemo(() => st.stops.map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
+  const allSourceRows: Row[] = useMemo(() => st.stops.map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
+  const rows = useMemo(() => allSourceRows.filter(r => folder === "ALL" || sourceFolderOf(r.s, r.m) === folder), [allSourceRows, folder]);
 
   /* Overdue first, then due soonest, then the most recent visit — the order
      someone actually works this list in. */
@@ -121,6 +125,7 @@ export function FollowUpBookPage() {
         </>
       }
     >
+      <SourceFolders rows={allSourceRows} folder={folder} onChange={setFolder} />
       <section className="rb-dsec">
         <div className="rb-dhead">
           <h3>The visit list at a glance</h3>
@@ -177,7 +182,7 @@ export function FollowUpBookPage() {
                 <h3>
                   {r.m?.starred && <Star size={13} className="fb-star" aria-label="Starred" />}
                   {r.s.name}
-                </h3>
+                </h3><span className="rb-source-label">{SOURCE_LABEL[sourceFolderOf(r.s,r.m)]}</span>
                 <p>
                   {leg}
                   {visited ? ` · visited ${relDays(visited)}` : " · starred, not yet visited"}

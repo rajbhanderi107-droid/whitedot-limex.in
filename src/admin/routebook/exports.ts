@@ -1,3 +1,4 @@
+import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
 /* Turning the books into files someone else can read.
  *
  * Raj's weekly forms go out as a spreadsheet and a document, so the Customer
@@ -29,7 +30,7 @@ export function leadBookSheet(rows: Row[], legById: Record<string, RbLeg>): Shee
   const head = [
     "Company", "Leg", "Contact", "Phone", "Lead since", "Next step",
     "Expected MT/month", "Quoted ₹/kg", "Value ₹/month",
-    "Their volume (t/mo)", "Polymers", "Processes", "Samples out", "Follow-up due", "Note",
+    "Their volume (t/mo)", "Polymers", "Processes", "Samples out", "Follow-up due", "Note", "Source folder",
   ];
   const body: Cell[][] = rows.map(({ s, m }) => {
     const c = conOf(m);
@@ -38,13 +39,13 @@ export function leadBookSheet(rows: Row[], legById: Record<string, RbLeg>): Shee
       s.name, legName(legById, s.legId), c.n, phoneOf(s, m), m?.leadOn ?? "", m?.nextStep ?? "",
       expectedMtOf(m), quotedRateOf(m), leadMonthlyValue(m),
       tonnesOf(m), polymersOf(m).join(", "), processesOf(m).join(", "),
-      open || "", m?.dueOn ?? "", m?.note ?? "",
+      open || "", m?.dueOn ?? "", m?.note ?? "", SOURCE_LABEL[sourceFolderOf(s,m)],
     ];
   });
   return {
     name: "Lead Book",
     rows: [head, ...body],
-    widths: [34, 18, 18, 15, 12, 30, 17, 12, 15, 18, 16, 18, 12, 13, 44],
+    widths: [34, 18, 18, 15, 12, 30, 17, 12, 15, 18, 16, 18, 12, 13, 44, 18],
     mt: [6, 9], money: [7, 8],
   };
 }
@@ -61,7 +62,7 @@ export function exportLeadBook(rows: Row[], legById: Record<string, RbLeg>): voi
 export function followUpBookSheet(rows: Row[], legById: Record<string, RbLeg>): Sheet {
   const head = [
     "Company", "Leg", "Address", "Contact", "Phone", "Starred", "Visited on",
-    "Outcome", "Follow-up due", "Samples out", "Their volume (t/mo)", "Polymers", "Processes", "Note",
+    "Outcome", "Follow-up due", "Samples out", "Their volume (t/mo)", "Polymers", "Processes", "Note", "Source folder",
   ];
   const body: Cell[][] = rows.map(({ s, m }) => {
     const c = conOf(m);
@@ -70,13 +71,13 @@ export function followUpBookSheet(rows: Row[], legById: Record<string, RbLeg>): 
       s.name, legName(legById, s.legId), addrOf(s, m), c.n, phoneOf(s, m),
       m?.starred ? "Yes" : "", m?.tickedOn ?? "",
       m?.outcome ? OUTMAP[m.outcome] : "", m?.dueOn ?? "", open || "",
-      tonnesOf(m), polymersOf(m).join(", "), processesOf(m).join(", "), m?.note ?? "",
+      tonnesOf(m), polymersOf(m).join(", "), processesOf(m).join(", "), m?.note ?? "", SOURCE_LABEL[sourceFolderOf(s,m)],
     ];
   });
   return {
     name: "Visit Follow-ups",
     rows: [head, ...body],
-    widths: [34, 18, 40, 18, 15, 9, 12, 14, 13, 12, 18, 16, 18, 44],
+    widths: [34, 18, 40, 18, 15, 9, 12, 14, 13, 12, 18, 16, 18, 44, 18],
   };
 }
 
@@ -113,6 +114,7 @@ export function followUpBookBlocks(rows: Row[], legById: Record<string, RbLeg>):
     blocks.push({
       t: "kv",
       rows: [
+        ["Source folder", SOURCE_LABEL[sourceFolderOf(s,m)]],
         ["Leg", legName(legById, s.legId)],
         ["Address", addrOf(s, m) || "—"],
         ["Contact", [c.n, phoneOf(s, m)].filter(Boolean).join(" · ") || "—"],
@@ -139,7 +141,7 @@ function customerRow(s: RbStop, m: RbMark | undefined, legById: Record<string, R
   return [
     s.name, legName(legById, s.legId), c.n, phoneOf(s, m), addrOf(s, m),
     m?.gstNumber ?? "", m?.paymentTerms ?? "", m?.customerOn ?? "",
-    t.count, t.mt, t.value, t.last ?? "",
+    t.count, t.mt, t.value, t.last ?? "", SOURCE_LABEL[sourceFolderOf(s,m)],
   ];
 }
 
@@ -155,10 +157,10 @@ export function customerBookSheets(rows: Row[], legById: Record<string, RbLeg>, 
     name: "Customers",
     rows: [
       ["Company", "Leg", "Contact", "Phone", "Address", "GST", "Payment terms", "Customer since",
-        "Orders", "Total MT", "Total value ₹", "Last order"],
+        "Orders", "Total MT", "Total value ₹", "Last order", "Source folder"],
       ...rows.map(({ s, m }) => customerRow(s, m, legById)),
     ],
-    widths: [34, 18, 18, 15, 44, 20, 18, 14, 8, 12, 16, 12],
+    widths: [34, 18, 18, 15, 44, 20, 18, 14, 8, 12, 16, 12, 18],
     mt: [9], money: [10],
   };
 
@@ -224,6 +226,7 @@ export function customerBookBlocks(rows: Row[], legById: Record<string, RbLeg>):
     blocks.push({
       t: "kv",
       rows: [
+        ["Source folder", SOURCE_LABEL[sourceFolderOf(s,m)]],
         ["Leg", legName(legById, s.legId)],
         ["Contact", [c.n, phoneOf(s, m)].filter(Boolean).join(" · ") || "—"],
         ["Address", addrOf(s, m) || "—"],
