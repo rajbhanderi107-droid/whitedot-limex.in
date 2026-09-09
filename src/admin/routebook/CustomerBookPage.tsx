@@ -1,3 +1,5 @@
+import { SourceFolders, useSourceFolder } from "./SourceFolders.js";
+import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
 /* LIMEX Customer Book — who buys, how much, and on what terms.
  *
  * The final page of the same record: a customer is a Route Book company
@@ -27,12 +29,14 @@ const monthOf = (d: string) => d.slice(0, 7);
 
 export function CustomerBookPage() {
   const st = useBook();
+  const { folder, setFolder } = useSourceFolder();
   const rb = useRb();
   const [focus, setFocus] = useState("all");
   const [q, setQ] = useState("");
   const [ordering, setOrdering] = useState<Row | null>(null);
 
-  const rows: Row[] = useMemo(() => st.stops.map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
+  const allSourceRows: Row[] = useMemo(() => st.stops.map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
+  const rows = useMemo(() => allSourceRows.filter(r => folder === "ALL" || sourceFolderOf(r.s, r.m) === folder), [allSourceRows, folder]);
   const customers = useMemo(
     () => rows.filter((r) => isCustomer(r.m) && !r.m?.removed)
       .sort((a, b) => (b.m?.customerOn ?? "").localeCompare(a.m?.customerOn ?? "")),
@@ -110,6 +114,7 @@ export function CustomerBookPage() {
         </>
       }
     >
+      <SourceFolders rows={allSourceRows} folder={folder} onChange={setFolder} />
       <section className="rb-dsec">
         <div className="rb-dhead">
           <h3>The book at a glance</h3>
@@ -156,7 +161,7 @@ export function CustomerBookPage() {
           <section key={r.s.id} className="rb-bcard" data-testid="cb-card">
             <div className="rb-bcard-head">
               <div>
-                <h3>{r.s.name}</h3>
+                <h3>{r.s.name}</h3><span className="rb-source-label">{SOURCE_LABEL[sourceFolderOf(r.s,r.m)]}</span>
                 <p>
                   {r.m?.customerOn ? `Customer since ${fmtDate(r.m.customerOn)}` : "Customer"}
                   {" · "}{mt(t.mt)} across {t.count} order{t.count === 1 ? "" : "s"}

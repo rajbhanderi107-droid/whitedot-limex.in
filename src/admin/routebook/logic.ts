@@ -1,3 +1,4 @@
+import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
 /* LIMEX Route Book — pure helpers. No React, no network: everything here
  * takes a stop plus its (optional) mark and answers a question about it, so
  * the same rules drive the cards, the filters, the exports and the tests. */
@@ -458,14 +459,14 @@ export function csvCell(v: unknown): string {
 export function buildCSV(rows: Row[], legById: Record<string, RbLeg>): string {
   const head = ["Leg", "Leg name", "Company", "Address", "Makes", "LIMEX fit", "Address quality",
     "Ticked", "Ticked on", "Outcome", "Follow up on", "Contact", "Phone", "Starred", "Note",
-    "Removed", "Not interested", "CRM company id", "Last touched by", "Source", "Map"];
+    "Removed", "Not interested", "CRM company id", "Last touched by", "Source", "Map", "Source folder"];
   const body = rows.map(({ s, m }) => [
     s.legId, legById[s.legId]?.name ?? "", s.name, addrOf(s, m), s.makes ?? "", FITLABEL[s.fit],
     preciseOf(s, m) ? "precise" : "plot needed",
     isTicked(m) ? "yes" : "", m?.tickedOn ?? "", OUTMAP[outOf(m)] ?? "", dueOf(m),
     conOf(m).n, phoneOf(s, m), isStar(m) ? "yes" : "", noteOf(m),
     isRemoved(m) ? "yes" : "", isDNC(m) ? "yes" : "", m?.companyId ?? "", m?.updatedBy?.name ?? "",
-    s.src ?? "", mapOf(s, m),
+    s.src ?? "", mapOf(s, m), SOURCE_LABEL[sourceFolderOf(s,m)],
   ]);
   return [head, ...body].map((r) => r.map(csvCell).join(",")).join("\r\n");
 }

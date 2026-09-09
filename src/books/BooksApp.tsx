@@ -58,18 +58,21 @@ function ToPortal() {
 }
 
 function Chrome({ user, onLogout }: { user: { name: string; role: string }; onLogout: () => void }) {
+  const { search } = useLocation();
+  const folder = new URLSearchParams(search).get("folder");
+  const folderQuery = folder ? `?folder=${encodeURIComponent(folder)}` : "";
   return (
     <nav className="bk-bar" aria-label="Books">
       <div className="bk-tabs">
         {BOOKS.map((b) => (
-          <NavLink key={b.key} to={b.path} className={({ isActive }) => `bk-tab${isActive ? " is-on" : ""}`} data-testid={`bk-tab-${b.key}`} aria-label={b.label}>
+          <NavLink key={b.key} to={`${b.path}${folderQuery}`} className={({ isActive }) => `bk-tab${isActive ? " is-on" : ""}`} data-testid={`bk-tab-${b.key}`} aria-label={b.label}>
             <b.icon size={16} />
             <span>{b.short}</span>
           </NavLink>
         ))}
       </div>
       <div className="bk-bar-end">
-        <a className="bk-icon" href={`${PORTAL_ORIGIN}/#/admin/dashboard`} aria-label="Open full portal" title={`Full portal · signed in as ${user.name}`}>
+        <a className="bk-icon" href={`${PORTAL_ORIGIN}/#/admin/dashboard${folderQuery}`} aria-label="Open full portal" title={`Full portal · signed in as ${user.name}`}>
           <LayoutGrid size={16} />
         </a>
         <button type="button" className="bk-icon" onClick={() => void onLogout()} title="Sign out" aria-label="Sign out">

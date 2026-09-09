@@ -12,7 +12,7 @@ const DAY = "2026-09-07";
 
 const stop = (id: string, name: string) => ({
   id, legId: "N1", name, addr: "Plot 42, Vatva GIDC, Ahmedabad 382445", makes: "opaque tubs",
-  src: "Source: test", tags: [], precise: true, map: "https://maps.example/x", tel: "9825000000",
+  src: "Source: test", tags: id === "N1-alpha" ? [{ t: "GPT Leads", c: "big" }] : [], precise: true, map: "https://maps.example/x", tel: "9825000000",
   telLabel: "Call", link: "", linkLabel: "", fit: "prime", why: "test", sortOrder: 0,
   userAdded: false, addedById: null, addedBy: null,
 });

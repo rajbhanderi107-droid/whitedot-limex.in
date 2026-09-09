@@ -459,3 +459,11 @@
    follow-up date that has already passed. */
 .fb-star { color: var(--rb-star); margin-right: .3rem; vertical-align: -1px; }
 .rb-bstats .is-due { color: var(--rb-danger); }
+
+/* Shared source folders in the portal and all four book apps. */
+.rb-source-folders { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 18px; }
+.rb-source-folders button { display:flex; align-items:center; gap:8px; min-height:44px; padding:10px 14px; border:1px solid var(--wd-border,#d4d8db); border-radius:8px; background:transparent; color:inherit; font:inherit; font-size:14px; cursor:pointer; }
+.rb-source-folders button[aria-pressed="true"] { background:#173f35; color:#fff; border-color:#173f35; }
+.rb-source-folders b { font-size:13px; font-variant-numeric:tabular-nums; }
+.rb-source-folders p { flex-basis:100%; margin:2px 0 0; font-size:13px; opacity:.75; }
+.rb-source-label { display:inline-block; font-size:12px; padding:2px 6px; border:1px solid currentColor; border-radius:4px; opacity:.8; }
