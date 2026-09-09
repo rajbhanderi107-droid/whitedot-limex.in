@@ -3,7 +3,7 @@
 Briefing for ChatGPT (Astra) on the WhiteDot LIMEX field system.
 Shareable version: https://claude.ai/code/artifact/65f6a1ff-8a00-46fb-8b68-2c9c00e45985
 
-As of 9 September 2026 · frontend `0a48d0b` · backend `716ec56` · Hostinger VPS `187.127.185.57`
+As of 9 September 2026 · frontend `2df45e1` · backend `73d05e2` · Hostinger VPS `187.127.185.57`
 
 ---
 
@@ -11,20 +11,24 @@ As of 9 September 2026 · frontend `0a48d0b` · backend `716ec56` · Hostinger V
 
 | | |
 |---|---|
-| Companies | 1,443 |
-| Legs | 163 |
+| Companies | 1,464 |
+| Legs | 166 |
 | Families | 15 |
-| Ahmedabad area | 331 |
-| `fit: prime` | 157 |
+| Ahmedabad area | 341 |
+| `fit: prime` | 171 |
 | Parked (`clear` + `no`) | 65 |
+
+Tagged: `Thin Wall` 59 · `Toys` 20 · `Containers` 52
 
 A *leg* is a drivable round — one estate, one sweep. A *family* groups legs by geography or
 theme. Every company carries a `fit` from `prime · good · weak · channel · clear · no` and a
 `why` in plain words. `clear` and `no` are parked: hidden from the route unless the Parked chip
 is on.
 
-**331 of 1,443 are in Ahmedabad — roughly a quarter.** Raj wants to concentrate there. That
-ratio, not the size of the book, is the live problem.
+**341 of 1,464 are in Ahmedabad — still roughly a quarter.** Raj wants to concentrate there.
+That ratio, not the size of the book, is the live problem: three sweeps in a row added real
+companies without moving it, because the state's plastics industry genuinely is spread across
+Rajkot, Morbi, Vadodara and South Gujarat.
 
 ## One row, four books
 
@@ -55,6 +59,7 @@ WON stays at WON even if the customer is un-made, and must be corrected by hand.
 | Mould makers parked (backend #13) | Three sat at `fit: prime`; a toolroom buys steel, not resin. |
 | Toys category opened (backend #13) | No toy maker in 1,438 companies, though moulded toys are opaque PP/HDPE. |
 | Four Ahmedabad converters (backend #14) | Sweep of Odhav, Naroda, Vatva, Kathwada; the rest were already in the book. |
+| Twenty-one for containers and toys (backend #15) | Finished the research ChatGPT stopped on, then eighteen toy makers from the Toy Association of India member list. `Toys` went 2 → 20; Morbi went 0 → 5. |
 
 ## Constraints any proposal must respect
 
@@ -72,18 +77,34 @@ WON stays at WON even if the customer is un-made, and must be corrected by hand.
 
 ## Open questions — where Astra's judgement is worth most
 
-1. **The Ahmedabad ratio.** 331 in Ahmedabad, 1,021 elsewhere. Keep adding Ahmedabad companies,
-   reorder the book so Ahmedabad leads, or accept the register as a state-wide asset and change
-   how the round is *chosen* rather than what it contains?
-2. **Toys is a real category with one entry.** Moulded toys are squarely the LIMEX article, but
-   Gujarat's toy cluster is Bhavnagar and Rajkot, not Ahmedabad. The two goals pull apart.
-3. **Directory research returns the wrong industry.** Searching for toy or container makers in
-   Ahmedabad returns mould makers and machine builders almost exclusively — the tooling trade
-   advertises, converters do not. Four estates yielded four genuine finds. Better source?
-   GIDC registers, association member lists, GST/MSME filings, trade-show exhibitor lists?
-4. **`fit` is doing a lot of work.** 1,108 of 1,443 sit at `good`, the "confirm on the call"
-   default; only 157 are `prime`. Round ordering leans on this. Is a coarser signal plus a real
-   qualification step better than a six-value fit assigned mostly from a register name?
+1. **The Ahmedabad ratio, still unmoved.** 341 in Ahmedabad, 1,033 elsewhere — the same quarter
+   it was three sweeps ago, because every honest sweep keeps finding that the industry is
+   genuinely spread across Rajkot, Morbi, Vadodara and South Gujarat. Adding companies is not
+   shifting it. The real question is whether the answer is more Ahmedabad companies at all, or
+   reordering the book so Ahmedabad families lead, or accepting the register as a state-wide
+   asset and changing how a *round* is chosen rather than what the book contains.
+
+2. **Answered, and it moved the map.** `Toys` went from 1 to 20, and Morbi from 0 companies to
+   5. But the answer confirmed the tension rather than resolving it: five of the toy houses are
+   at Morbi, five at Rajkot, and only five in Ahmedabad. **Gujarat's toy moulding is not in
+   Ahmedabad.** Worth a decision — pursue toys where they actually are, and accept the drive, or
+   treat toys as opportunistic and keep the round in the city?
+
+3. **Answered: use registers, not directories.** Directory search returns the tooling trade
+   because that is who advertises — it sank two sweeps and ChatGPT's own attempt, and one
+   four-estate sweep yielded four companies. The **Toy Association of India** member list, where
+   members file their own name, city, type and product range, yielded eighteen from one list.
+   The open half: **is there an equivalent register for containers and packaging?** A Gujarat
+   plastics association roll, a GIDC estate member list, MSME or GST filings by NIC code. That
+   is the highest-leverage question on this page, because it decides the cost of every future
+   company added.
+
+4. **`fit` is doing a lot of work, and the ratio is getting worse.** 1,115 of 1,464 now sit at
+   `good`, the "plastics processor, confirm on the call" default, against 171 `prime`. Round
+   ordering leans on this field. Association entries make it sharper: they arrive with a
+   declared product range, so the ones that name a material earn `prime` on evidence rather than
+   on a register name. Is a coarser signal plus a real qualification step better than a
+   six-value fit, most of which is a default?
 
 ## Known debt
 
