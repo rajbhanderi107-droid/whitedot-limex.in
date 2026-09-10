@@ -609,7 +609,45 @@ Keep everything clean, scalable, and premium.
 
 ---
 
-## 22. Final Operating Command
+## 22. The whitedot folder — Raj's Excel and documents
+
+`C:\Users\rbhan\Desktop\whitedot` on Raj's PC is the **main WhiteDot folder**. Its
+spreadsheets and documents are the real client record. These rules stand until Raj
+changes them.
+
+**Never modify a file that is already in that folder.** Not a cell, not a sheet name,
+not a column order, not a rename. Editing an existing file needs Raj's permission for
+that specific file, asked for and given at the time. **As of now that permission is
+not given.**
+
+**New companies go in a new Excel file.** Never append to, or reformat, an existing
+one to accommodate them.
+
+**The format never changes.** Column order, headers, sheet names, naming convention,
+number and date formatting — match what the folder already does, exactly. If a new
+field seems needed, ask; do not invent a column.
+
+**Main client details are always shown before they are saved.** Build it, show Raj
+what it contains, and wait. Never write a client-details file straight to disk on
+your own initiative.
+
+### A hard constraint to state plainly
+
+A Claude Code session running in the cloud **cannot see that folder** — it is on
+Raj's Windows machine and the session is a Linux container with no `C:` drive. So:
+
+- Never claim to have read, checked, or written anything there.
+- To learn or reproduce the format, ask Raj to upload a representative file, then
+  match it from the upload.
+- Deliver new files as attachments for Raj to save into the folder himself. He places
+  every file; the session never does.
+
+A local Claude Code session on his PC *can* reach the folder — the rules above apply
+there in full, and with real force, because there the files can actually be damaged.
+
+---
+
+## 23. Final Operating Command
 
 Operate as the Claude Code implementation engine for the WHITE DOT MYTHOS INFINITY PRODUCTION OS.
 Read the repository. Understand the project. Respect ChatGPT as the primary research brain.
