@@ -40,6 +40,7 @@ import { RouteBookPage } from "./routebook/RouteBookPage.js";
 import { LeadBookPage } from "./routebook/LeadBookPage.js";
 import { FollowUpBookPage } from "./routebook/FollowUpBookPage.js";
 import { CustomerBookPage } from "./routebook/CustomerBookPage.js";
+import { TrialBookPage } from "./routebook/TrialBookPage.js";
 import { warmUpBackend } from "./lib/api.js";
 import "./admin.css";
 
@@ -129,6 +130,7 @@ export default function AdminApp() {
           <Route path="/admin/visit-followups" element={<FollowUpBookPage />} />
           <Route path="/admin/lead-book" element={<LeadBookPage />} />
           <Route path="/admin/customer-book" element={<CustomerBookPage />} />
+          <Route path="/admin/trial-book" element={<TrialBookPage />} />
           <Route path="/admin/inquiries/:id" element={<InquiryDetailPage />} />
 
           <Route
