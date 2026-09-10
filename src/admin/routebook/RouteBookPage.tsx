@@ -65,7 +65,7 @@ export function RouteBookPage() {
   const visible = useMemo(() => rows.filter((r) => matchStop(r.s, r.m, filters, st.index.legById[r.s.legId], st.index.legById[r.s.legId]?.familyId)), [rows, filters, st.index.legById]);
   const visibleByLeg = useMemo(() => { const mp = new Map<string, Row[]>(); for (const r of visible) (mp.get(r.s.legId) ?? mp.set(r.s.legId, []).get(r.s.legId)!).push(r); return mp; }, [visible]);
   const famCounts = useMemo(() => { const c: Record<string, number> = {}; for (const r of visible) { const f = st.index.legById[r.s.legId]?.familyId ?? "?"; c[f] = (c[f] ?? 0) + 1; } return c; }, [visible, st.index.legById]);
-  const trades = useMemo(() => tradeTags(st.stops), [st.stops]);
+  const trades = useMemo(() => tradeTags(st.stops, filters.parked), [st.stops, filters.parked]);
   const fitCounts = useMemo(() => { const c: Partial<Record<Fit, number>> = {}; for (const s of st.stops) c[s.fit] = (c[s.fit] ?? 0) + 1; return c; }, [st.stops]);
   const outCounts = useMemo(() => { const c: Record<string, number> = { note: 0 }; for (const r of rows) { if (r.m?.outcome) c[r.m.outcome] = (c[r.m.outcome] ?? 0) + 1; if (r.m?.note) c.note++; } return c; }, [rows]);
   const sellable = useMemo(() => rows.filter((r) => !PARKED(r.s) && !isRemoved(r.m)), [rows]);

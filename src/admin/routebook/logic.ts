@@ -248,10 +248,21 @@ export function matchStop(s: RbStop, m: RbMark | undefined, f: Filters, leg?: Rb
 }
 
 /** The dozen most common product tags, for the trade filter chips. */
-export function tradeTags(stops: RbStop[]): { tag: string; n: number }[] {
+/** What the book can be sold to, by trade.
+ *
+ *  Parked companies are left out unless the Parked chip is on, so the count
+ *  matches the list underneath it. Counting them made the rail advertise
+ *  trades the book has already ruled out — "Machines 15" and "Toolroom 14"
+ *  sat there in full after every machine builder and toolroom in the book was
+ *  parked, because a mould maker buys steel, not resin. A chip that offers a
+ *  filter returning nothing is worse than no chip. */
+export function tradeTags(stops: RbStop[], withParked = false): { tag: string; n: number }[] {
   const tally = new Map<string, number>();
-  for (const s of stops) for (const t of s.tags ?? []) {
-    if (!STATE_TAGS.has(t.t)) tally.set(t.t, (tally.get(t.t) ?? 0) + 1);
+  for (const s of stops) {
+    if (!withParked && PARKED(s)) continue;
+    for (const t of s.tags ?? []) {
+      if (!STATE_TAGS.has(t.t)) tally.set(t.t, (tally.get(t.t) ?? 0) + 1);
+    }
   }
   return [...tally.entries()].filter(([, n]) => n >= 8).sort((a, b) => b[1] - a[1]).slice(0, 12)
     .map(([tag, n]) => ({ tag, n }));
