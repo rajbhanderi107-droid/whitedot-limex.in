@@ -478,3 +478,37 @@ test('Restore rejects a file that is not a Route Book backup', async ({ page }) 
   });
   await expect(page.getByText('That file is not a Route Book backup')).toBeVisible();
 });
+
+/* The "What they make" chips count what you can actually sell to.
+ *
+ * Every machine builder and toolroom in the register is parked — a mould maker
+ * buys steel, not resin — but the chips counted them anyway, so the rail went
+ * on advertising "Machines" and "Toolroom" long after the book had ruled them
+ * out. Tapping one filtered to nothing. */
+test('trade chips leave out parked companies until the Parked chip is on', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  await mockPortal(page);
+
+  // Eight is the threshold a tag must clear to earn a chip, so give each
+  // trade exactly that: eight sellable moulders, eight parked toolrooms.
+  const extra = [
+    ...Array.from({ length: 8 }, (_, i) => stop(`N1-conv${i}`, 'N1', `Converter ${i}`, 'prime',
+      { tags: [{ t: 'Thin Wall', c: '' }] })),
+    ...Array.from({ length: 8 }, (_, i) => stop(`N1-tool${i}`, 'N1', `Toolroom ${i}`, 'no',
+      { tags: [{ t: 'Toolroom', c: '' }] })),
+  ];
+  await page.route('**/api/portal/route-book/bootstrap', r =>
+    r.fulfill(ok({ ...bootstrap, stops: [...bootstrap.stops, ...extra] })));
+
+  await page.goto('/#/admin/route-book');
+  await expect(page.getByTestId('rb-page')).toBeVisible();
+
+  const chips = page.locator('.rb-chips');
+  await expect(chips.getByRole('button', { name: /Thin Wall/ })).toBeVisible();
+  await expect(chips.getByRole('button', { name: /^Toolroom/ }),
+    'a parked trade must not be offered as a filter').toHaveCount(0);
+
+  // Turn Parked on and the trade reappears, because now it is in the list too.
+  await page.getByRole('button', { name: /^Parked/ }).first().click();
+  await expect(chips.getByRole('button', { name: /^Toolroom/ })).toBeVisible();
+});
