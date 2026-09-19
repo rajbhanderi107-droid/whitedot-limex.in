@@ -59,14 +59,14 @@ export function RouteBookPage() {
   // Load once, then keep this tab in step with every other open device.
   useEffect(() => { void load(); return startLiveSync(); }, []);
   useEffect(() => { const p = new URLSearchParams(params); p.set("view", view); if (filters.q) p.set("q", filters.q); else p.delete("q"); setParams(p, { replace: true }); }, [view, filters.q]); // eslint-disable-line react-hooks/exhaustive-deps
-  const changeView = (v: View) => { setView(v); setPrefs({ view: v }); };
+  const changeView = (v: View) => { setView(v); setPrefs({ view: v }); if(v === "plan" || v === "pipe") { setReview("all"); setProduct("all"); setFilters(emptyFilters()); } };
   const changeSort = (m: SortMode) => { setSort(m); setPrefs({ sort: m }); };
 
   // Rows and indexes
   const allSourceRows: Row[] = useMemo(() => st.stops.map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
   const rows = useMemo(() => allSourceRows.filter(r => folder === "ALL" || sourceFolderOf(r.s, r.m) === folder), [allSourceRows, folder]);
   const rowsByLeg = useMemo(() => { const mp = new Map<string, Row[]>(); for (const r of rows) (mp.get(r.s.legId) ?? mp.set(r.s.legId, []).get(r.s.legId)!).push(r); return mp; }, [rows]);
-  const visible = useMemo(() => rows.filter((r) => matchesProduct(r.s, r.m, product, review) && matchStop(r.s, r.m, filters, st.index.legById[r.s.legId], st.index.legById[r.s.legId]?.familyId)), [rows, filters, product, review, st.index.legById]);
+  const visible = useMemo(() => rows.filter((r) => matchesProduct(r.s, r.m, product, review) && matchStop(r.s, r.m, review === "verified" ? {...filters, parked: true} : filters, st.index.legById[r.s.legId], st.index.legById[r.s.legId]?.familyId)), [rows, filters, product, review, st.index.legById]);
   const visibleByLeg = useMemo(() => { const mp = new Map<string, Row[]>(); for (const r of visible) (mp.get(r.s.legId) ?? mp.set(r.s.legId, []).get(r.s.legId)!).push(r); return mp; }, [visible]);
   const famCounts = useMemo(() => { const c: Record<string, number> = {}; for (const r of visible) { const f = st.index.legById[r.s.legId]?.familyId ?? "?"; c[f] = (c[f] ?? 0) + 1; } return c; }, [visible, st.index.legById]);
   const trades = useMemo(() => tradeTags(st.stops, filters.parked), [st.stops, filters.parked]);
@@ -215,7 +215,7 @@ export function RouteBookPage() {
 
         <ProductFilters rows={rows.filter(r => !r.m?.removed && !r.m?.dupOf && (review === "all" || reviewState(r.s,r.m) === review))} value={product} onChange={setProduct} />
         <div className="rb-review-tabs" role="group" aria-label="Manufacturer verification">
-          {([["verified", "Verified manufacturers"], ["review", "Needs checking"], ["excluded", "Outside target"], ["all", "All records"]] as const).map(([key,label]) => <button type="button" key={key} aria-pressed={review===key} onClick={()=>{setReview(key);setFilters(f=>({...f,parked:key==='all'||key==='excluded'}));}}>{label} <b>{rows.filter(r=>!r.m?.removed && !r.m?.dupOf && (key==='all'||reviewState(r.s,r.m)===key)).length}</b></button>)}
+          {([["verified", "Verified manufacturers"], ["review", "Needs checking"], ["excluded", "Outside target"], ["all", "All records"]] as const).map(([key,label]) => <button type="button" key={key} aria-pressed={review===key} onClick={()=>{setReview(key);setFilters(f=>({...f,parked:key!=='verified'}));}}>{label} <b>{rows.filter(r=>!r.m?.removed && !r.m?.dupOf && (key==='all'||reviewState(r.s,r.m)===key)).length}</b></button>)}
         </div>
         <p className="rb-bnote">The default list requires evidence of finished-product manufacturing and an opaque product. Unchecked and unsuitable records remain available above.</p>
         <div className="rb-toolbar">
