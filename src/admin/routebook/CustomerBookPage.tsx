@@ -1,3 +1,6 @@
+import { ProductFilters } from "./ProductFilters.js";
+import { ProductPanel } from "./ProductPanel.js";
+import { matchesProduct, type ProductFilter } from "./products.js";
 import { SourceFolders, useSourceFolder } from "./SourceFolders.js";
 import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
 /* LIMEX Customer Book — who buys, how much, and on what terms.
@@ -29,6 +32,7 @@ const monthOf = (d: string) => d.slice(0, 7);
 
 export function CustomerBookPage() {
   const st = useBook();
+  const [product, setProduct] = useState<ProductFilter>("all");
   const { folder, setFolder } = useSourceFolder();
   const rb = useRb();
   const [focus, setFocus] = useState("all");
@@ -44,11 +48,11 @@ export function CustomerBookPage() {
   );
   const shown = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    return customers.filter(({ s, m }) =>
-      `${s.name} ${addrOf(s, m)} ${conOf(m).n ?? ""} ${phoneOf(s, m) ?? ""} ${m?.gstNumber ?? ""} ${ordersOf(m).map((o) => `${o.orderNo} ${o.grade}`).join(" ")}`
+    return customers.filter(({ s, m }) => matchesProduct(s,m,product) &&
+      `${s.name} ${s.makes ?? ""} ${addrOf(s, m)} ${conOf(m).n ?? ""} ${phoneOf(s, m) ?? ""} ${m?.gstNumber ?? ""} ${ordersOf(m).map((o) => `${o.orderNo} ${o.grade}`).join(" ")}`
         .toLowerCase().includes(needle)
       && (focus === "all" || (focus === "reorder" ? dueReorder(m) : liveOrders(m).some((o) => o.status === focus))));
-  }, [customers, q, focus]);
+  }, [customers, q, focus, product]);
 
   const allOrders = customers.flatMap((r) => liveOrders(r.m));
   const totalMt = customers.reduce((a, r) => a + customerTotals(r.m).mt, 0);
@@ -114,7 +118,8 @@ export function CustomerBookPage() {
         </>
       }
     >
-      <SourceFolders rows={allSourceRows} folder={folder} onChange={setFolder} />
+      <ProductFilters rows={customers} value={product} onChange={setProduct} />
+      <details className="rb-secondary"><summary>Source folders</summary><SourceFolders rows={allSourceRows.filter(r=>isCustomer(r.m) && !r.m?.removed)} folder={folder} onChange={setFolder} /></details>
       <section className="rb-dsec">
         <div className="rb-dhead">
           <h3>The book at a glance</h3>
@@ -186,6 +191,8 @@ export function CustomerBookPage() {
               </div>
             </div>
 
+            <ProductPanel s={r.s} m={r.m} />
+            <details className="rb-secondary"><summary>Billing & delivery details</summary>
             <div className="rb-bgrid">
               <Field label="GST number" value={r.m?.gstNumber} placeholder="24XXXXX0000X1Z5"
                 onSave={(v) => set({ gstNumber: v || null })} />
@@ -197,6 +204,7 @@ export function CustomerBookPage() {
                 onSave={(v) => set({ shipTo: v || null })} />
             </div>
 
+            </details>
             {orders.length === 0 ? (
               <p className="rb-bnote">No orders recorded yet.</p>
             ) : (

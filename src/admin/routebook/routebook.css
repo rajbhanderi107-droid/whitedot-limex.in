@@ -467,3 +467,37 @@
 .rb-source-folders b { font-size:13px; font-variant-numeric:tabular-nums; }
 .rb-source-folders p { flex-basis:100%; margin:2px 0 0; font-size:13px; opacity:.75; }
 .rb-source-label { display:inline-block; font-size:12px; padding:2px 6px; border:1px solid currentColor; border-radius:4px; opacity:.8; }
+
+/* Product-first workspace: common tasks visible; specialist controls on demand. */
+.rb-products-filter { padding:18px; margin:16px 0; border:1px solid var(--rb-line); border-radius:14px; background:var(--adm-surface); }
+.rb-products-filter>div:first-child { display:flex; flex-wrap:wrap; gap:8px 18px; margin-bottom:14px; }
+.rb-products-filter strong {font-size:16px;} .rb-products-filter span {color:var(--adm-muted);font-size:13px;}
+.rb-product-chips,.rb-review-tabs {display:flex;flex-wrap:wrap;gap:8px;}
+.rb-product-chips button,.rb-review-tabs button {min-height:44px;padding:10px 14px;border:1px solid var(--rb-line);border-radius:9px;background:var(--adm-surface);color:inherit;font:inherit;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:10px;}
+.rb-product-chips button[aria-pressed=true],.rb-review-tabs button[aria-pressed=true] {background:#173f35;color:white;border-color:#173f35;}
+.rb-product-chips b,.rb-review-tabs b {font-size:12px;opacity:.8;}
+.rb-page .rb-railbtn {display:inline-flex;}
+.rb-simple-layout {grid-template-columns:minmax(0,1fr);}
+.rb-simple-layout>.rb-rail {display:none;}
+.rb-simple-layout.has-rail {grid-template-columns:260px minmax(0,1fr);}
+.rb-simple-layout.has-rail>.rb-rail {display:block;}
+.rb-secondary {margin:12px 0;border:1px solid var(--rb-line);border-radius:10px;padding:10px 14px;}
+.rb-secondary>summary {cursor:pointer;font-size:13px;min-height:28px;align-content:center;}
+.rb-product-panel {margin:12px 0;padding:14px;border:1px solid var(--rb-line);border-radius:10px;background:var(--adm-surface);}
+.rb-product-heading {display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.rb-product-heading strong {font-size:14px;}
+.rb-product-heading button {margin-left:auto;font:inherit;font-size:12px;background:none;color:var(--adm-accent);border:1px solid var(--rb-line);border-radius:6px;padding:8px;cursor:pointer;min-height:36px;}
+.rb-verification {font-size:11px;border-radius:5px;padding:4px 7px;background:#fff2d4;color:#704b00;}
+.rb-verification.is-verified {background:#e1f1e8;color:#17573d;}.rb-verification.is-excluded {background:#f4e7e7;color:#853e3e;}
+.rb-product-labels {display:flex;gap:6px;flex-wrap:wrap;margin:10px 0;}.rb-product-labels span {font-size:12px;background:var(--adm-bg);border:1px solid var(--rb-line);padding:5px 8px;border-radius:5px;}
+.rb-product-help,.rb-photo-empty {font-size:12px;line-height:1.6;color:var(--adm-muted);margin:8px 0;}
+.rb-product-gallery {display:flex;overflow-x:auto;gap:12px;padding:4px 0;}
+.rb-product-gallery figure {margin:0;width:155px;flex-shrink:0;}.rb-product-gallery img {width:155px;height:125px;object-fit:contain;background:white;border-radius:8px;border:1px solid var(--rb-line);}.rb-product-gallery figcaption {font-size:12px;line-height:1.4;}.rb-product-gallery figcaption a {display:block;}
+.rb-product-editor {display:grid;gap:14px;margin-top:15px;}.rb-product-editor fieldset {border:1px solid var(--rb-line);border-radius:8px;padding:12px;display:flex;flex-wrap:wrap;gap:10px;}.rb-product-editor fieldset label {display:flex;flex-direction:row;align-items:center;gap:6px;font-size:13px;}.rb-product-editor fieldset input {width:auto;}
+.rb-product-editor label {display:flex;flex-direction:column;gap:5px;font-size:13px;}.rb-product-editor input,.rb-product-editor select,.rb-product-editor textarea {padding:10px;border:1px solid var(--rb-line);border-radius:6px;background:var(--adm-bg);color:inherit;min-width:0;max-width:100%;font:inherit;}.rb-photo-edit {display:grid;gap:8px;padding:12px;border:1px solid var(--rb-line);border-radius:8px;}
+.rb-page button:focus-visible,.rb-page summary:focus-visible {outline:3px solid #72a98c;outline-offset:3px;}
+@media(max-width:800px){.rb-simple-layout.has-rail {grid-template-columns:minmax(0,1fr);}.rb-products-filter {padding:12px;}.rb-product-chips {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));}.rb-product-chips button {text-align:left;justify-content:space-between;font-size:12px;padding:9px;}.rb-product-heading button {margin-left:0;}.rb-product-panel {padding:10px;}.rb-review-tabs button {font-size:12px;flex:1 1 40%;}.rb-product-editor .rb-row {display:grid;grid-template-columns:1fr;}}
+.rb-research { margin: 12px 0; padding: 12px; border: 1px solid var(--wd-line, #dce2d7); border-radius: 12px; font-size: 12px; }
+.rb-research summary { cursor:pointer; font-weight:600; }
+.rb-research li { margin: 10px 0; }
+.rb-photo-empty { display:block; padding:14px; }

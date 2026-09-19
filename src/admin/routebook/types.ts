@@ -32,6 +32,7 @@ export interface RbStop {
 export type SourceFolder = "GPT" | "CLAUDE" | "TEAM" | "UNKNOWN";
 
 export interface RbMark {
+  productProfile?: string | null;
   sourceFolder?: SourceFolder | null;
   stopId: string;
   ticked: boolean;
@@ -196,6 +197,8 @@ export interface RbLegMark {
 }
 
 export interface ViewFilters {
+  product?: import("./products.js").ProductFilter;
+  review?: import("./products.js").ReviewFilter;
   q?: string;
   fam?: string | null;
   fit?: Fit[];

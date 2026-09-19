@@ -34,7 +34,7 @@ const QUEUES: Queue[] = [
     key: "trials", label: "Open trials",
     match: (r) => openSamplesOf(r.m).length > 0,
     detail: (r) => `${openSamplesOf(r.m).length} awaiting a result`,
-    note: "A trial with no result is the cheapest order you are not asking for.",
+    note: "Record the factory’s trial result and agree on the next step.",
   },
   {
     key: "dispatch", label: "To dispatch",
@@ -114,10 +114,10 @@ export function BookDesk() {
   };
 
   return (
-    <BookShell st={st} icon={<CalendarCheck size={22} />} title="Your day, in focus"
-      sub="Visits. Conversations. Orders. Everything in one place." testId="book-desk">
+    <BookShell st={st} icon={<CalendarCheck size={22} />} title="Today’s work"
+      sub="1. Find companies → 2. Record visits → 3. Follow up leads → 4. Manage orders." testId="book-desk">
 
-      <SourceFolders rows={allSourceRows} folder={folder} onChange={setFolder} />
+      <details className="rb-secondary"><summary>Source folders</summary><SourceFolders rows={allSourceRows} folder={folder} onChange={setFolder} /></details>
       <div className="bd-books">
         {books.map((b) => (
           <Link className="bd-book" to={`/admin/${b.path}${folder === "ALL" ? "" : `?folder=${folder}`}`} key={b.path}>

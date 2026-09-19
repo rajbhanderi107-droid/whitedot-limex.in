@@ -1,3 +1,6 @@
+import { ProductFilters } from "./ProductFilters.js";
+import { ProductPanel } from "./ProductPanel.js";
+import { matchesProduct, type ProductFilter } from "./products.js";
 import { SourceFolders, useSourceFolder } from "./SourceFolders.js";
 import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
 /* LIMEX Visit Follow-ups — every company a visit actually touched.
@@ -51,6 +54,7 @@ const FOCUS: { key: FocusKey; label: string; match: (r: Row) => boolean }[] = [
 
 export function FollowUpBookPage() {
   const st = useBook();
+  const [product, setProduct] = useState<ProductFilter>("all");
   const { folder, setFolder } = useSourceFolder();
   const [focus, setFocus] = useState<FocusKey>("all");
   const [q, setQ] = useState("");
@@ -71,13 +75,13 @@ export function FollowUpBookPage() {
   const shown = useMemo(() => {
     const needle = q.trim().toLowerCase();
     const test = FOCUS.find((f) => f.key === focus)!.match;
-    return visits.filter((r) => {
+    return visits.filter(r => matchesProduct(r.s,r.m,product)).filter((r) => {
       if (!test(r)) return false;
       if (!needle) return true;
-      return `${r.s.name} ${addrOf(r.s, r.m)} ${conOf(r.m).n} ${phoneOf(r.s, r.m)} ${r.m?.note ?? ""}`
+      return `${r.s.name} ${r.s.makes ?? ""} ${addrOf(r.s, r.m)} ${conOf(r.m).n} ${phoneOf(r.s, r.m)} ${r.m?.note ?? ""}`
         .toLowerCase().includes(needle);
     });
-  }, [visits, focus, q]);
+  }, [visits, focus, q, product]);
 
   const dueNow = visits.filter((r) => isDue(r.m)).length;
   const starred = visits.filter((r) => r.m?.starred).length;
@@ -125,7 +129,8 @@ export function FollowUpBookPage() {
         </>
       }
     >
-      <SourceFolders rows={allSourceRows} folder={folder} onChange={setFolder} />
+      <ProductFilters rows={visits} value={product} onChange={setProduct} />
+      <details className="rb-secondary"><summary>Source folders</summary><SourceFolders rows={allSourceRows.filter(r=>isFollowUp(r.m))} folder={folder} onChange={setFolder} /></details>
       <section className="rb-dsec">
         <div className="rb-dhead">
           <h3>The visit list at a glance</h3>
@@ -210,6 +215,7 @@ export function FollowUpBookPage() {
               </div>
             </div>
 
+            <ProductPanel s={r.s} m={r.m} />
             {r.m?.note && <p className="rb-bnote">{r.m.note}</p>}
 
             <div className="rb-bstats">

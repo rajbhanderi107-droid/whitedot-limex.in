@@ -1,3 +1,4 @@
+import { ProductPanel } from "./ProductPanel.js";
 import { SOURCE_LABEL, sourceFolderOf } from "./sources.js";
 import type { SourceFolder } from "./types.js";
 /* One company in the book. Everything a salesperson does at the gate
@@ -40,6 +41,7 @@ function applyWithUndo(stopId: string, patch: MarkPatch, msg: string): void {
 export const StopCard = memo(function StopCard({ s, m, withLeg, compact }: Props) {
   const ui = useUI();
   const editing = ui.editing === s.id;
+  const [more, setMore] = useState(false);
   const [panel, setPanel] = useState<null | "fit" | "sample">(null);
   const ticked = isTicked(m), star = isStar(m), dnc = isDNC(m), removed = isRemoved(m), merged = isMerged(m);
   const addr = addrOf(s, m), precise = preciseOf(s, m), phone = phoneOf(s, m), con = conOf(m);
@@ -87,7 +89,7 @@ export const StopCard = memo(function StopCard({ s, m, withLeg, compact }: Props
       className={`rb-stop${ticked ? " is-ticked" : ""}${star ? " is-star" : ""}${dnc ? " is-dnc" : ""}${removed ? " is-removed" : ""}${merged ? " is-merged" : ""}${stale ? " is-stale" : ""}${isDue(m) ? " is-due" : ""}${compact ? " is-compact" : ""}`}
       data-id={s.id} data-testid="rb-stop" id={`rb-${s.id}`}
     >
-      <button type="button" className="rb-tick" onClick={tick} aria-pressed={ticked} title={ticked ? "Ticked — tap to clear" : "Tick when you have visited"} data-testid="rb-tick">
+      <button type="button" className="rb-tick" onClick={tick} aria-pressed={ticked} title={ticked ? "Visited — tap to clear" : "Tick when you have visited"} data-testid="rb-tick">
         <Check size={14} />
       </button>
 
@@ -123,15 +125,19 @@ export const StopCard = memo(function StopCard({ s, m, withLeg, compact }: Props
         {due && <p className={`rb-due${isDue(m) ? " now" : ""}`}><CalendarClock size={12} /> {isDue(m) ? "Follow up due " : "Follow up "}{fmtDate(due)}</p>}
         {ticked && (
           <p className="rb-when">
-            ticked {fmtDate(m?.tickedOn)} · {relDays(m?.tickedOn)}{m?.updatedBy ? ` · ${m.updatedBy.name.split(" ")[0]}` : ""}
+            Visited {fmtDate(m?.tickedOn)} · {relDays(m?.tickedOn)}{m?.updatedBy ? ` · ${m.updatedBy.name.split(" ")[0]}` : ""}
             {stale && <span className="rb-stale"> · no outcome yet — worth a nudge</span>}
           </p>
         )}
 
+        <ProductPanel s={s} m={m} />
         <div className="rb-acts">
           <a href={mapOf(s, m)} target="_blank" rel="noopener noreferrer"><MapPin size={12} /> Map</a>
           {phone && <a href={telHref(phone)}><Phone size={12} /> {con.n ? `Call ${con.n.split(" ")[0]}` : (s.telLabel || "Call")}</a>}
           {phone && <a href={waHref(phone)} target="_blank" rel="noopener noreferrer"><MessageCircle size={12} /> WhatsApp</a>}
+          <button type="button" onClick={() => ui.setEditing(editing ? null : s.id)}><StickyNote size={12} /> Record visit / follow-up</button>
+          <button type="button" aria-expanded={more} onClick={()=>setMore(!more)}>{more ? "Fewer actions" : "More actions"}</button>
+          {more && <>
           {s.link && <a href={s.link} target="_blank" rel="noopener noreferrer"><ExternalLink size={12} /> {s.linkLabel || "Products"}</a>}
           <button type="button" onClick={vcf} title="Save this contact to your phone"><Contact size={12} /> Contact</button>
           <button type="button" onClick={copy} title="Copy name, address and number"><Copy size={12} /></button>
@@ -157,6 +163,7 @@ export const StopCard = memo(function StopCard({ s, m, withLeg, compact }: Props
               <Handshake size={12} /> Make a lead
             </button>
           )}
+          </>}
         </div>
 
         <div className="rb-outs" role="group" aria-label="Outcome">

@@ -1,3 +1,6 @@
+import { ResearchAdditions } from "./ResearchAdditions.js";
+import { ProductFilters } from "./ProductFilters.js";
+import { matchesProduct, reviewState, type ProductFilter, type ReviewFilter } from "./products.js";
 import { SourceFolders, useSourceFolder } from "./SourceFolders.js";
 import { sourceFolderOf } from "./sources.js";
 /* LIMEX Route Book — the field-sales book inside the portal.
@@ -28,7 +31,7 @@ import { CallQueue, Palette, AddCompany, HistoryPanel, Toasts, type PaletteActio
 import "./routebook.css";
 
 type View = "route" | "all" | "plan" | "pipe";
-const VIEWS: [View, string][] = [["route", "Route"], ["all", "Stops"], ["plan", "Days"], ["pipe", "Pipeline"]];
+const VIEWS: [View, string][] = [["all", "Companies"], ["route", "Plan a route"], ["plan", "Visit history"], ["pipe", "Pipeline"]];
 const HOME_KEY = "wd_rb_home";
 
 export function RouteBookPage() {
@@ -36,7 +39,9 @@ export function RouteBookPage() {
   const { folder, setFolder } = useSourceFolder();
   const [params, setParams] = useSearchParams();
   const [filters, setFilters] = useState<Filters>(() => ({ ...emptyFilters(), q: params.get("q") ?? "" }));
-  const [view, setView] = useState<View>(() => (params.get("view") as View) || st.prefs.view || "route");
+  const [view, setView] = useState<View>(() => (params.get("view") as View) || "all");
+  const [product, setProduct] = useState<ProductFilter>("all");
+  const [review, setReview] = useState<ReviewFilter>("verified");
   const [sort, setSort] = useState<SortMode>(st.prefs.sort ?? "leg");
   const [editing, setEditing] = useState<string | null>(null);
   const [openLegs, setOpenLegs] = useState<Set<string>>(new Set());
@@ -53,7 +58,6 @@ export function RouteBookPage() {
 
   // Load once, then keep this tab in step with every other open device.
   useEffect(() => { void load(); return startLiveSync(); }, []);
-  useEffect(() => { if (st.status === "ready" && !params.get("view") && st.prefs.view && st.prefs.view !== view) setView(st.prefs.view); }, [st.status]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { const p = new URLSearchParams(params); p.set("view", view); if (filters.q) p.set("q", filters.q); else p.delete("q"); setParams(p, { replace: true }); }, [view, filters.q]); // eslint-disable-line react-hooks/exhaustive-deps
   const changeView = (v: View) => { setView(v); setPrefs({ view: v }); };
   const changeSort = (m: SortMode) => { setSort(m); setPrefs({ sort: m }); };
@@ -62,7 +66,7 @@ export function RouteBookPage() {
   const allSourceRows: Row[] = useMemo(() => st.stops.map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
   const rows = useMemo(() => allSourceRows.filter(r => folder === "ALL" || sourceFolderOf(r.s, r.m) === folder), [allSourceRows, folder]);
   const rowsByLeg = useMemo(() => { const mp = new Map<string, Row[]>(); for (const r of rows) (mp.get(r.s.legId) ?? mp.set(r.s.legId, []).get(r.s.legId)!).push(r); return mp; }, [rows]);
-  const visible = useMemo(() => rows.filter((r) => matchStop(r.s, r.m, filters, st.index.legById[r.s.legId], st.index.legById[r.s.legId]?.familyId)), [rows, filters, st.index.legById]);
+  const visible = useMemo(() => rows.filter((r) => matchesProduct(r.s, r.m, product, review) && matchStop(r.s, r.m, filters, st.index.legById[r.s.legId], st.index.legById[r.s.legId]?.familyId)), [rows, filters, product, review, st.index.legById]);
   const visibleByLeg = useMemo(() => { const mp = new Map<string, Row[]>(); for (const r of visible) (mp.get(r.s.legId) ?? mp.set(r.s.legId, []).get(r.s.legId)!).push(r); return mp; }, [visible]);
   const famCounts = useMemo(() => { const c: Record<string, number> = {}; for (const r of visible) { const f = st.index.legById[r.s.legId]?.familyId ?? "?"; c[f] = (c[f] ?? 0) + 1; } return c; }, [visible, st.index.legById]);
   const trades = useMemo(() => tradeTags(st.stops, filters.parked), [st.stops, filters.parked]);
@@ -75,7 +79,7 @@ export function RouteBookPage() {
   // Deep link ?s=<id>
   const jumpTo = useCallback((stopId: string) => {
     const s = getRb().index.stopById[stopId]; if (!s) return;
-    setFolder("ALL"); setFilters(emptyFilters()); setView("route");
+    setFolder("ALL"); setProduct("all"); setReview("all"); setFilters({...emptyFilters(), parked: true}); setView("route");
     setOpenLegs((o) => new Set(o).add(s.legId));
     setEditing(null);
     window.setTimeout(() => { const el = document.getElementById(`rb-${stopId}`); el?.scrollIntoView({ block: "center", behavior: "smooth" }); el?.classList.add("is-flash"); window.setTimeout(() => el?.classList.remove("is-flash"), 1600); }, 60);
@@ -99,8 +103,8 @@ export function RouteBookPage() {
   const toggleChip = (g: "fit" | "state" | "status" | "extra" | "trade", k: string) =>
     setFilters((f) => { const set = new Set(f[g] as Set<string>); if (set.has(k)) set.delete(k); else set.add(k); return { ...f, [g]: set }; });
   const has = (g: "fit" | "state" | "status" | "extra" | "trade", k: string) => (filters[g] as Set<string>).has(k);
-  const clear = () => setFilters(emptyFilters());
-  const active = filtersActive(filters);
+  const clear = () => { setFilters(emptyFilters()); setProduct("all"); setReview("verified"); setFolder("ALL"); };
+  const active = filtersActive(filters) || product !== "all" || review !== "verified" || folder !== "ALL";
 
   const exportCSV = () => { downloadText(`limex-route-book-${today()}.csv`, "﻿" + buildCSV(rows, st.index.legById), "text/csv"); toast("Whole book exported"); };
   const exportVcf = () => {
@@ -145,10 +149,10 @@ export function RouteBookPage() {
   const doSaveView = async () => {
     const name = window.prompt("Name this view", filters.q || "My view");
     if (!name) return;
-    try { await saveView(name, toViewFilters(filters)); toast(`View “${name}” saved for the team`); }
+    try { await saveView(name, {...toViewFilters(filters), product, review}); toast(`View “${name}” saved for the team`); }
     catch (e) { toast(e instanceof Error ? e.message : "Could not save the view", undefined, "err"); }
   };
-  const applyView = (v: RbView) => { setFilters(fromViewFilters(v.filters)); if (view === "pipe" || view === "plan") changeView("route"); };
+  const applyView = (v: RbView) => { setFilters(fromViewFilters(v.filters)); setProduct(v.filters.product ?? "all"); setReview(v.filters.review ?? "verified"); if (view === "pipe" || view === "plan") changeView("route"); };
   const doReseed = async () => {
     if (!window.confirm("Refresh the register data from the shipped dataset? Every tick, note and outcome is kept.")) return;
     try { const r = await reseed(); toast(`Register refreshed — ${r.stops} companies`); } catch (e) { toast(e instanceof Error ? e.message : "Reseed failed", undefined, "err"); }
@@ -197,7 +201,7 @@ export function RouteBookPage() {
         <div className="wd-page-head rb-head">
           <div>
             <h1><RouteIcon size={20} /> LIMEX Route Book</h1>
-            <p>{sellable.length.toLocaleString()} sellable companies · {ticked} ticked · {starred} starred for the run · {st.fams.length} families, {st.legs.length} legs</p>
+            <p>Find a manufacturer, check its products, then record your visit.</p>
           </div>
           <div className="rb-head-right">
             {syncBadge}
@@ -209,7 +213,11 @@ export function RouteBookPage() {
         </div>
         {st.error && st.sync === "error" && <div className="wd-inline-err">{st.error}</div>}
 
-        <SourceFolders rows={allSourceRows} folder={folder} onChange={setFolder} />
+        <ProductFilters rows={rows.filter(r => !r.m?.removed && !r.m?.dupOf && (review === "all" || reviewState(r.s,r.m) === review))} value={product} onChange={setProduct} />
+        <div className="rb-review-tabs" role="group" aria-label="Manufacturer verification">
+          {([["verified", "Verified manufacturers"], ["review", "Needs checking"], ["excluded", "Outside target"], ["all", "All records"]] as const).map(([key,label]) => <button type="button" key={key} aria-pressed={review===key} onClick={()=>{setReview(key);setFilters(f=>({...f,parked:key==='all'||key==='excluded'}));}}>{label} <b>{rows.filter(r=>!r.m?.removed && !r.m?.dupOf && (key==='all'||reviewState(r.s,r.m)===key)).length}</b></button>)}
+        </div>
+        <p className="rb-bnote">The default list requires evidence of finished-product manufacturing and an opaque product. Unchecked and unsuitable records remain available above.</p>
         <div className="rb-toolbar">
           <div className="rb-tabs" role="tablist">
             {VIEWS.map(([v, l]) => <button key={v} type="button" role="tab" aria-selected={view === v} onClick={() => changeView(v)} data-testid={`rb-tab-${v}`}>{l}{v === "plan" && starred ? <span className="rb-tabn">{starred}</span> : null}</button>)}
@@ -219,15 +227,17 @@ export function RouteBookPage() {
             <input ref={searchRef} value={filters.q} onChange={(e) => setFilters((f) => ({ ...f, q: e.target.value }))} placeholder="Search name, estate, product, note… ( / )" data-testid="rb-search" />
             {filters.q && <button type="button" onClick={() => setFilters((f) => ({ ...f, q: "" }))} aria-label="Clear search"><X size={13} /></button>}
           </div>
-          <button type="button" className={`wd-ghost-btn rb-railbtn${active ? " on" : ""}`} onClick={() => setRailOpen((o) => !o)}><SlidersHorizontal size={13} /> Filters{active ? " ·" : ""}</button>
+          <button type="button" className={`wd-ghost-btn rb-railbtn${active ? " on" : ""}`} onClick={() => setRailOpen((o) => !o)}><SlidersHorizontal size={13} /> More filters & tools{active ? " ·" : ""}</button>
           {active && <button type="button" className="wd-ghost-btn" onClick={clear} data-testid="rb-clear">Clear filters</button>}
           <span className="rb-showing">{visible.length} of {rows.length}</span>
         </div>
 
-        <div className="rb-layout">
+        <div className={`rb-layout rb-simple-layout${railOpen ? " has-rail" : ""}`}>
           <aside className={`rb-rail${railOpen ? " is-open" : ""}`}>
+            <SourceFolders rows={allSourceRows} folder={folder} onChange={setFolder} />
+            <ResearchAdditions />
             <div className="rb-rail-sec">
-              <h5>Families</h5>
+              <h5>Area / route</h5>
               <button type="button" className={`rb-fam-btn${!filters.fam ? " is-on" : ""}`} onClick={() => setFilters((f) => ({ ...f, fam: null }))}><span className="rb-fk">∗</span><span className="rb-fl">All</span><span className="rb-fc">{visible.length}</span></button>
               {st.fams.map((f) => (
                 <button key={f.id} type="button" className={`rb-fam-btn${filters.fam === f.id ? " is-on" : ""}${!famCounts[f.id] ? " is-dim" : ""}`} onClick={() => setFilters((x) => ({ ...x, fam: x.fam === f.id ? null : f.id, ...(f.id === "X" ? { parked: true } : {}) }))} title={f.blurb ?? ""}>
@@ -296,9 +306,10 @@ export function RouteBookPage() {
 
           <main className="rb-main">
             {view === "route" && <RouteView rowsByLeg={rowsByLeg} visibleByLeg={visibleByLeg} fams={st.fams} legsByFam={st.index.legsByFam} openLegs={openLegs} toggleLeg={(id) => setOpenLegs((o) => { const n = new Set(o); if (n.has(id)) n.delete(id); else n.add(id); return n; })} shown={visible.length} />}
+            {view === "all" && !visible.length && <div className="rb-bempty"><b>No matching companies</b><span>Try another product, clear filters, or open Needs checking.</span><button type="button" className="wd-ghost-btn" onClick={clear}>Reset filters</button></div>}
             {view === "all" && <StopsView rows={visible} sort={sort} setSort={changeSort} />}
-            {view === "plan" && <DaysView rows={rows} />}
-            {view === "pipe" && <PipelineView rows={rows} rowsByLeg={rowsByLeg} legs={st.legs} />}
+            {view === "plan" && <DaysView rows={visible} />}
+            {view === "pipe" && <PipelineView rows={visible} rowsByLeg={visibleByLeg} legs={st.legs} />}
           </main>
         </div>
 

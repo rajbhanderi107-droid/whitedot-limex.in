@@ -8,7 +8,7 @@ import { useRb, patchMany } from "./store.js";
 import { useUI, toast } from "./ctx.js";
 import { StopCard } from "./StopCard.js";
 
-const PAGE = 200;
+const PAGE = 30;
 
 export function StopsView({ rows, sort, setSort }: { rows: Row[]; sort: SortMode; setSort: (m: SortMode) => void }) {
   const ui = useUI();
@@ -35,10 +35,10 @@ export function StopsView({ rows, sort, setSort }: { rows: Row[]; sort: SortMode
         <span className="rb-count">{rows.length} showing</span>
         <label className="rb-sort">Sort
           <select value={sort} onChange={(e) => setSort(e.target.value as SortMode)}>
-            <option value="leg">by leg</option>
+            <option value="leg">by area / route</option>
             <option value="az">A–Z</option>
             <option value="fit">best fit first</option>
-            <option value="open">not ticked first</option>
+            <option value="open">not visited first</option>
           </select>
         </label>
         <button type="button" className="wd-ghost-btn" onClick={starAll}><Star size={13} /> Star all showing</button>

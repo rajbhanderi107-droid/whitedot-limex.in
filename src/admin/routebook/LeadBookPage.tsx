@@ -1,3 +1,6 @@
+import { ProductFilters } from "./ProductFilters.js";
+import { ProductPanel } from "./ProductPanel.js";
+import { matchesProduct, type ProductFilter } from "./products.js";
 import { SourceFolders, useSourceFolder } from "./SourceFolders.js";
 import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
 /* LIMEX Lead Book — the companies actually in a deal.
@@ -25,6 +28,7 @@ import { OrderDialog } from "./OrderDialog.js";
 
 export function LeadBookPage() {
   const st = useBook();
+  const [product, setProduct] = useState<ProductFilter>("all");
   const { folder, setFolder } = useSourceFolder();
   const rb = useRb();
   const [focus, setFocus] = useState("all");
@@ -42,14 +46,15 @@ export function LeadBookPage() {
   const shown = useMemo(() => {
     const needle = q.trim().toLowerCase();
     return leads.filter(({ s, m }) => {
-      const matches = `${s.name} ${addrOf(s, m)} ${conOf(m).n ?? ""} ${phoneOf(s, m) ?? ""} ${m?.nextStep ?? ""} ${m?.note ?? ""}`.toLowerCase().includes(needle);
+      if (!matchesProduct(s,m,product)) return false;
+      const matches = `${s.name} ${s.makes ?? ""} ${addrOf(s, m)} ${conOf(m).n ?? ""} ${phoneOf(s, m) ?? ""} ${m?.nextStep ?? ""} ${m?.note ?? ""}`.toLowerCase().includes(needle);
       if (!matches) return false;
       if (focus === "due") return isDue(m);
       if (focus === "trials") return openSamplesOf(m).length > 0;
       if (focus === "nostep") return noNextStep(m);
       return true;
     });
-  }, [leads, q, focus]);
+  }, [leads, q, focus, product]);
 
   const expected = leads.reduce((a, r) => a + (expectedMtOf(r.m) ?? 0), 0);
   const monthly = leads.map((r) => leadMonthlyValue(r.m)).filter((v): v is number => v !== null);
@@ -91,7 +96,8 @@ export function LeadBookPage() {
         </>
       }
     >
-      <SourceFolders rows={allSourceRows} folder={folder} onChange={setFolder} />
+      <ProductFilters rows={leads} value={product} onChange={setProduct} />
+      <details className="rb-secondary"><summary>Source folders</summary><SourceFolders rows={allSourceRows.filter(r=>isLead(r.m) && !r.m?.removed)} folder={folder} onChange={setFolder} /></details>
       <section className="rb-dsec">
         <div className="rb-dhead"><h3>Where the deals stand</h3><span className="rb-dcount">every figure comes from what you recorded</span></div>
         <div className="rb-heroes">
@@ -173,6 +179,8 @@ export function LeadBookPage() {
               </div>
             </div>
 
+            <ProductPanel s={r.s} m={r.m} />
+            <details className="rb-secondary"><summary>Deal details</summary>
             <div className="rb-bgrid">
               <Field label="Next step" value={r.m?.nextStep} wide
                 placeholder="Quote 500 kg, call Thursday…"
@@ -186,6 +194,7 @@ export function LeadBookPage() {
                 onSave={(v) => set({ quotedRate: v === "" ? null : Number(v) })} />
             </div>
 
+            </details>
             <div className="rb-bstats">
               <span><IndianRupee size={12} /> {value === null ? "Quote a rate to size this deal" : `${inr(value)} a month at ${quotedRateOf(r.m)}/kg`}</span>
               {trials.length > 0 && (
