@@ -107,7 +107,7 @@ test.describe("LIMEX Route Book", () => {
     await expect(page.locator(".bd-book:has-text('LIMEX Route Book')")).toBeVisible();
     await page.locator(".wd-nav a:has-text('LIMEX Route Book')").first().click();
     await expect(page.getByTestId("rb-page")).toBeVisible();
-    await expect(page.locator(".rb-head p")).toContainText("4 sellable companies");
+    await expect(page.locator(".rb-head p")).toContainText("4 companies");
     await showWholeBook(page);
     await expect(page.getByTestId("rb-leg")).toHaveCount(1);
   });
@@ -540,6 +540,8 @@ test('product, area and source combine and reset together', async ({ page }) => 
   await expect(page.locator('.rb-showing')).toHaveText('2 of 3');
   await page.getByLabel('Area',{exact:true}).selectOption('Naroda');
   await expect(page.locator('.rb-showing')).toHaveText('1 of 3');
+  await page.getByTestId('rb-tab-route').click();
+  await expect(page.getByTestId('rb-leg')).toHaveCount(1);
   await page.getByLabel('Source',{exact:true}).selectOption('GPT');
   await expect(page.locator('.rb-showing')).toHaveText('1 of 1');
   await page.getByTestId('rb-clear').click();
