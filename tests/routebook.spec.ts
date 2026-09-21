@@ -260,7 +260,7 @@ test.describe("LIMEX Route Book", () => {
     await expect.poll(() => mock.getSettings().substitutionPct).toBe(50);
   });
 
-  test("works on a phone: nothing overflows, filters behind a button", async ({ page }) => {
+  test("works on a phone: nothing overflows, filters stay on screen", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await mockPortal(page);
     await page.goto("/#/admin/route-book");
@@ -284,9 +284,11 @@ test.describe("LIMEX Route Book", () => {
     });
     expect(overflowing).toEqual([]);
 
-    await expect(page.locator(".rb-rail")).toBeHidden();
-    await page.locator(".rb-railbtn").click();
-    await expect(page.locator(".rb-rail")).toBeVisible();
+    // The old filter rail is gone; the shared panel is always on screen.
+    await expect(page.getByTestId("company-filters")).toBeVisible();
+    await expect(page.locator(".rb-rail, .rb-railbtn")).toHaveCount(0);
+    await page.getByRole("button", { name: "Tools & settings" }).click();
+    await expect(page.getByTestId("rb-ratebox")).toBeVisible();
   });
 });
 

@@ -116,7 +116,7 @@ test.describe("Standalone book apps", () => {
     await expect(page.getByTestId("rb-page")).toBeVisible();
 
     // Still the same record: this is the portal's data, not a second copy.
-    await expect(page.locator(".rb-head p")).toContainText("1 sellable");
+    await expect(page.locator(".rb-head p")).toContainText("1 companies");
   });
 
   test("signed out, the app asks for the same portal login", async ({ page }) => {
