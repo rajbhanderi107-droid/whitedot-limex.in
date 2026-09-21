@@ -1,4 +1,5 @@
 import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
+import { tradeOf, GENERIC_TRADE } from "./trades.js";
 /* LIMEX Route Book — pure helpers. No React, no network: everything here
  * takes a stop plus its (optional) mark and answers a question about it, so
  * the same rules drive the cards, the filters, the exports and the tests. */
@@ -205,34 +206,13 @@ export function matchStop(s: RbStop, m: RbMark | undefined, f: Filters, leg?: Rb
     }
   }
   if (f.state.size) {
-    const pz = preciseOf(s, m), ph = !!phoneOf(s, m);
     let ok = false;
-    for (const k of f.state) {
-      if (k === "precise" && pz) ok = true;
-      if (k === "plot" && !pz) ok = true;
-      if (k === "phone" && ph) ok = true;
-      if (k === "nophone" && !ph) ok = true;
-      if (k === "mine" && s.userAdded) ok = true;
-      if (k === "dnc" && isDNC(m)) ok = true;
-      if (k === "merged" && isMerged(m)) ok = true;
-      if (k === "removed" && isRemoved(m)) ok = true;
-      if (k === "due" && isDue(m)) ok = true;
-      if (k === "stale" && needsFollowUp(m)) ok = true;
-      if (k === "promoted" && m?.companyId) ok = true;
-      if (k === "profiled" && hasProfile(m)) ok = true;
-      if (k === "unprofiled" && !hasProfile(m)) ok = true;
-      if (k === "sampled" && samplesOf(m).length) ok = true;
-      if (k === "stalled" && samplesOf(m).some((x) => sampleStalled(x))) ok = true;
-      if (k === "lead" && stageOf(m) === "LEAD") ok = true;
-      if (k === "customer" && stageOf(m) === "CUSTOMER") ok = true;
-      if (k === "lost" && stageOf(m) === "LOST") ok = true;
-    }
+    for (const k of f.state) if (stateHit(k, s, m)) { ok = true; break; }
     if (!ok) return false;
   }
   if (f.status.size) {
-    const st = isTicked(m) ? "done" : "none";
     let ok = false;
-    for (const k of f.status) if (k === "pin" ? isStar(m) : st === k) ok = true;
+    for (const k of f.status) if (stateHit(k, s, m)) { ok = true; break; }
     if (!ok) return false;
   }
   if (f.extra.size) {
@@ -243,11 +223,87 @@ export function matchStop(s: RbStop, m: RbMark | undefined, f: Filters, leg?: Rb
     }
     if (!ok) return false;
   }
-  if (f.trade.size && !(s.tags ?? []).some((t) => f.trade.has(t.t))) return false;
+  // The chips carry canonical trades, so the tags must be folded the same way
+  // the rail folded them — matching raw strings would match nothing.
+  if (f.trade.size && !(s.tags ?? []).some((t) => {
+    const trade = tradeOf(t.t);
+    return trade !== null && f.trade.has(trade);
+  })) return false;
   return true;
 }
 
-/** The dozen most common product tags, for the trade filter chips. */
+/* ─── state chips ─── */
+
+/** Does one State chip describe this record? One definition, used by both the
+ *  filter and the counts on the chips, so a chip can never advertise a number
+ *  the filter then disagrees with. */
+export function stateHit(k: string, s: RbStop, m?: RbMark): boolean {
+  switch (k) {
+    case "precise": return preciseOf(s, m);
+    case "plot": return !preciseOf(s, m);
+    case "phone": return !!phoneOf(s, m);
+    case "nophone": return !phoneOf(s, m);
+    case "mine": return !!s.userAdded;
+    case "dnc": return isDNC(m);
+    case "merged": return isMerged(m);
+    case "removed": return isRemoved(m);
+    case "due": return isDue(m);
+    case "stale": return needsFollowUp(m);
+    case "promoted": return !!m?.companyId;
+    case "profiled": return hasProfile(m);
+    case "unprofiled": return !hasProfile(m);
+    case "sampled": return samplesOf(m).length > 0;
+    case "stalled": return samplesOf(m).some((x) => sampleStalled(x));
+    case "lead": return stageOf(m) === "LEAD";
+    case "customer": return stageOf(m) === "CUSTOMER";
+    case "lost": return stageOf(m) === "LOST";
+    case "done": return isTicked(m);
+    case "none": return !isTicked(m);
+    case "pin": return isStar(m);
+    default: return false;
+  }
+}
+
+/** The State chips, in rail order.
+ *
+ *  `opposite` names the chip that asks the complementary question. Those pairs
+ *  are why the rail could lie: the chips inside a group are OR-ed, so turning
+ *  on both "Has a number" and "Needs a number" matches every record in the
+ *  book while the toolbar insists two filters are active. The rail treats a
+ *  pair as one control — picking one clears the other — so a narrowing filter
+ *  can never quietly widen to everything. */
+export const STATE_CHIPS: { g: "state" | "status"; k: string; label: string; opposite?: string }[] = [
+  { g: "state", k: "precise", label: "Precise pins", opposite: "plot" },
+  { g: "state", k: "plot", label: "Plot needed", opposite: "precise" },
+  { g: "state", k: "phone", label: "Has a number", opposite: "nophone" },
+  { g: "state", k: "nophone", label: "Needs a number", opposite: "phone" },
+  { g: "status", k: "done", label: "Ticked", opposite: "none" },
+  { g: "status", k: "none", label: "Not ticked", opposite: "done" },
+  { g: "state", k: "profiled", label: "Qualified", opposite: "unprofiled" },
+  { g: "state", k: "unprofiled", label: "Not qualified", opposite: "profiled" },
+  { g: "status", k: "pin", label: "Starred" },
+  { g: "state", k: "mine", label: "Added by us" },
+  { g: "state", k: "due", label: "Follow-up due" },
+  { g: "state", k: "stale", label: "Needs a nudge" },
+  { g: "state", k: "sampled", label: "Has samples" },
+  { g: "state", k: "stalled", label: "Trial gone quiet" },
+  { g: "state", k: "promoted", label: "In the CRM" },
+  { g: "state", k: "lead", label: "In the Lead Book" },
+  { g: "state", k: "customer", label: "Customers" },
+  { g: "state", k: "lost", label: "Lost" },
+  { g: "state", k: "dnc", label: "Not interested" },
+  { g: "state", k: "merged", label: "Merged away" },
+  { g: "state", k: "removed", label: "Removed" },
+];
+
+/** How many records each State chip would match. */
+export function stateCounts(rows: Row[]): Record<string, number> {
+  const c: Record<string, number> = {};
+  for (const { k } of STATE_CHIPS) c[k] = 0;
+  for (const r of rows) for (const { k } of STATE_CHIPS) if (stateHit(k, r.s, r.m)) c[k]++;
+  return c;
+}
+
 /** What the book can be sold to, by trade.
  *
  *  Parked companies are left out unless the Parked chip is on, so the count
@@ -255,16 +311,31 @@ export function matchStop(s: RbStop, m: RbMark | undefined, f: Filters, leg?: Rb
  *  trades the book has already ruled out — "Machines 15" and "Toolroom 14"
  *  sat there in full after every machine builder and toolroom in the book was
  *  parked, because a mould maker buys steel, not resin. A chip that offers a
- *  filter returning nothing is worse than no chip. */
+ *  filter returning nothing is worse than no chip.
+ *
+ *  The tags themselves are freeform research, so they are folded into the
+ *  controlled vocabulary in trades.ts first. Raw, the field held 230 distinct
+ *  strings for 1,464 companies: sixteen spellings of "opaque", a vintage, a
+ *  turnover, and a geography — the rail was offering "Canada 25" as a thing a
+ *  factory manufactures. Folded, it holds the trades and nothing else. */
 export function tradeTags(stops: RbStop[], withParked = false): { tag: string; n: number }[] {
   const tally = new Map<string, number>();
   for (const s of stops) {
     if (!withParked && PARKED(s)) continue;
+    // A company counts once per trade however many tags point at it.
+    const trades = new Set<string>();
     for (const t of s.tags ?? []) {
-      if (!STATE_TAGS.has(t.t)) tally.set(t.t, (tally.get(t.t) ?? 0) + 1);
+      if (STATE_TAGS.has(t.t)) continue;
+      const trade = tradeOf(t.t);
+      if (trade) trades.add(trade);
     }
+    for (const trade of trades) tally.set(trade, (tally.get(trade) ?? 0) + 1);
   }
-  return [...tally.entries()].filter(([, n]) => n >= 8).sort((a, b) => b[1] - a[1]).slice(0, 12)
+  // Biggest first, except the catch-all bucket, which always sorts last: it
+  // matches over half the book, so leading with it would bury every chip
+  // that actually narrows anything.
+  return [...tally.entries()]
+    .sort((a, b) => (a[0] === GENERIC_TRADE ? 1 : b[0] === GENERIC_TRADE ? -1 : b[1] - a[1]))
     .map(([tag, n]) => ({ tag, n }));
 }
 

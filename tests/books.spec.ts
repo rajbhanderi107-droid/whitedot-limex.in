@@ -100,6 +100,22 @@ async function mockPortal(page: Page) {
   return { marks, orders };
 }
 
+/** Put the Route Book on the route view. It opens on Companies, and legs only
+ *  exist on the route view. No filter needs clearing: the book opens showing
+ *  the whole register. */
+async function showWholeBook(page: Page) {
+  await expect(page.getByTestId("rb-page")).toBeVisible();
+  await page.getByTestId("rb-tab-route").click();
+}
+
+/** The stop card keeps its secondary actions — note, qualify, samples, remove,
+ *  make a lead — behind a "More actions" toggle, so open that before reaching
+ *  for any of them. */
+async function openActions(card: import("@playwright/test").Locator) {
+  const toggle = card.getByRole("button", { name: "More actions" });
+  if (await toggle.count()) await toggle.click();
+}
+
 test.describe("Visit Follow-ups, Lead Book & Customer Book", () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
@@ -114,6 +130,7 @@ test.describe("Visit Follow-ups, Lead Book & Customer Book", () => {
 
     // 1. A tick in the Route Book is the only action. Nothing else is pressed.
     await page.goto("/#/admin/route-book");
+    await showWholeBook(page);
     await page.getByTestId("rb-leg").first().locator(".rb-leg-toggle").click();
     await page.locator("[data-testid='rb-stop'][data-id='N1-alpha']").getByTestId("rb-tick").click();
     await expect.poll(() => mock.marks.get("N1-alpha")?.ticked, { timeout: 5000 }).toBe(true);
@@ -145,6 +162,7 @@ test.describe("Visit Follow-ups, Lead Book & Customer Book", () => {
   test("a starred company is a follow-up even before it is ticked", async ({ page }) => {
     const mock = await mockPortal(page);
     await page.goto("/#/admin/route-book");
+    await showWholeBook(page);
     await page.getByTestId("rb-leg").first().locator(".rb-leg-toggle").click();
     await page.locator("[data-testid='rb-stop'][data-id='N1-beta']").getByTestId("rb-star").click();
     await expect.poll(() => mock.marks.get("N1-beta")?.starred, { timeout: 5000 }).toBe(true);
@@ -159,8 +177,10 @@ test.describe("Visit Follow-ups, Lead Book & Customer Book", () => {
 
     // 1. Promote from the Route Book itself.
     await page.goto("/#/admin/route-book");
+    await showWholeBook(page);
     await page.getByTestId("rb-leg").first().locator(".rb-leg-toggle").click();
     const alpha = page.locator("[data-testid='rb-stop'][data-id='N1-alpha']");
+    await openActions(alpha);
     await alpha.getByTestId("rb-makelead").click();
     await expect.poll(() => mock.marks.get("N1-alpha")?.stage, { timeout: 5000 }).toBe("LEAD");
 
@@ -171,6 +191,8 @@ test.describe("Visit Follow-ups, Lead Book & Customer Book", () => {
     await expect(page.locator(".rb-hero").first()).toContainText("1");
 
     // 3. Fill in the deal, then win it with an order in MT.
+    // The commercial fields sit inside a "Deal details" section, closed by default.
+    await card.getByRole("group", { name: "Deal details" }).or(card.locator("details.rb-secondary > summary")).first().click();
     await card.locator("input[data-field='Expected MT / month']").fill("12.5");
     await card.locator("input[data-field='Quoted ₹ / kg']").fill("78.5");
     await card.locator("input[data-field='Next step']").fill("Send 25 kg trial");
@@ -206,8 +228,11 @@ test.describe("Visit Follow-ups, Lead Book & Customer Book", () => {
 
     // Get one company into the Customer Book the normal way.
     await page.goto("/#/admin/route-book");
+    await showWholeBook(page);
     await page.getByTestId("rb-leg").first().locator(".rb-leg-toggle").click();
-    await page.locator("[data-testid='rb-stop'][data-id='N1-alpha']").getByTestId("rb-makelead").click();
+    const leadAlpha = page.locator("[data-testid='rb-stop'][data-id='N1-alpha']");
+    await openActions(leadAlpha);
+    await leadAlpha.getByTestId("rb-makelead").click();
     await page.goto("/#/admin/lead-book");
     await page.getByTestId("lb-won").first().click();
     await page.getByTestId("order-grade").fill("Trial");
@@ -236,8 +261,11 @@ test.describe("Visit Follow-ups, Lead Book & Customer Book", () => {
     await page.goto("/#/admin/lead-book");
     // Get one customer into the book first.
     await page.goto("/#/admin/route-book");
+    await showWholeBook(page);
     await page.getByTestId("rb-leg").first().locator(".rb-leg-toggle").click();
-    await page.locator("[data-testid='rb-stop'][data-id='N1-beta']").getByTestId("rb-makelead").click();
+    const leadBeta = page.locator("[data-testid='rb-stop'][data-id='N1-beta']");
+    await openActions(leadBeta);
+    await leadBeta.getByTestId("rb-makelead").click();
     await page.goto("/#/admin/lead-book");
     await page.getByTestId("lb-won").first().click();
     await page.getByTestId("order-grade").fill("LIMEX HD-40");
@@ -267,8 +295,11 @@ test.describe("Visit Follow-ups, Lead Book & Customer Book", () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await mockPortal(page);
     await page.goto("/#/admin/route-book");
+    await showWholeBook(page);
     await page.getByTestId("rb-leg").first().locator(".rb-leg-toggle").click();
-    await page.locator("[data-testid='rb-stop'][data-id='N1-alpha']").getByTestId("rb-makelead").click();
+    const leadAlpha = page.locator("[data-testid='rb-stop'][data-id='N1-alpha']");
+    await openActions(leadAlpha);
+    await leadAlpha.getByTestId("rb-makelead").click();
 
     for (const [path, testId] of [["lead-book", "lead-book"], ["customer-book", "customer-book"]] as const) {
       await page.goto(`/#/admin/${path}`);

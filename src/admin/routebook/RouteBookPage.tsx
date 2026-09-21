@@ -17,6 +17,7 @@ import {
 import type { Fit, RbView } from "./types.js";
 import {
   type Filters, type Row, type SortMode, emptyFilters, filtersActive, matchStop, tradeTags, FITLABEL, OUTS,
+  STATE_CHIPS, stateCounts,
   toViewFilters, fromViewFilters, buildCSV, downloadText, today, vcardFor, phoneOf, PARKED, isRemoved, isTicked, DEFAULT_HOME,
   num, hasProfile, samplesOf, sampleStalled,
 } from "./logic.js";
@@ -41,7 +42,12 @@ export function RouteBookPage() {
   const [filters, setFilters] = useState<Filters>(() => ({ ...emptyFilters(), q: params.get("q") ?? "" }));
   const [view, setView] = useState<View>(() => (params.get("view") as View) || "all");
   const [product, setProduct] = useState<ProductFilter>("all");
-  const [review, setReview] = useState<ReviewFilter>("verified");
+  // Nothing is selected until you select it, and nothing selected shows the
+  // whole book. "verified" used to be the opening state, and it means a record
+  // carries a hand-entered product profile with evidence and a public source —
+  // five companies out of 1,464 — so the book opened showing five, with no
+  // filter visibly on to explain where the rest had gone.
+  const [review, setReview] = useState<ReviewFilter>("all");
   const [sort, setSort] = useState<SortMode>(st.prefs.sort ?? "leg");
   const [editing, setEditing] = useState<string | null>(null);
   const [openLegs, setOpenLegs] = useState<Set<string>>(new Set());
@@ -66,12 +72,16 @@ export function RouteBookPage() {
   const allSourceRows: Row[] = useMemo(() => st.stops.map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
   const rows = useMemo(() => allSourceRows.filter(r => folder === "ALL" || sourceFolderOf(r.s, r.m) === folder), [allSourceRows, folder]);
   const rowsByLeg = useMemo(() => { const mp = new Map<string, Row[]>(); for (const r of rows) (mp.get(r.s.legId) ?? mp.set(r.s.legId, []).get(r.s.legId)!).push(r); return mp; }, [rows]);
-  const visible = useMemo(() => rows.filter((r) => matchesProduct(r.s, r.m, product, review) && matchStop(r.s, r.m, review === "verified" ? {...filters, parked: true} : filters, st.index.legById[r.s.legId], st.index.legById[r.s.legId]?.familyId)), [rows, filters, product, review, st.index.legById]);
+  const visible = useMemo(() => rows.filter((r) => matchesProduct(r.s, r.m, product, review) && matchStop(r.s, r.m, filters, st.index.legById[r.s.legId], st.index.legById[r.s.legId]?.familyId)), [rows, filters, product, review, st.index.legById]);
   const visibleByLeg = useMemo(() => { const mp = new Map<string, Row[]>(); for (const r of visible) (mp.get(r.s.legId) ?? mp.set(r.s.legId, []).get(r.s.legId)!).push(r); return mp; }, [visible]);
   const famCounts = useMemo(() => { const c: Record<string, number> = {}; for (const r of visible) { const f = st.index.legById[r.s.legId]?.familyId ?? "?"; c[f] = (c[f] ?? 0) + 1; } return c; }, [visible, st.index.legById]);
   const trades = useMemo(() => tradeTags(st.stops, filters.parked), [st.stops, filters.parked]);
   const fitCounts = useMemo(() => { const c: Partial<Record<Fit, number>> = {}; for (const s of st.stops) c[s.fit] = (c[s.fit] ?? 0) + 1; return c; }, [st.stops]);
   const outCounts = useMemo(() => { const c: Record<string, number> = { note: 0 }; for (const r of rows) { if (r.m?.outcome) c[r.m.outcome] = (c[r.m.outcome] ?? 0) + 1; if (r.m?.note) c.note++; } return c; }, [rows]);
+  // Every chip in the rail carries its count, and a chip that would match
+  // nothing is not drawn. "Not now 0 · No answer 0 · Closed 0" sat in the
+  // Outcome row offering three filters that could only empty the book.
+  const stCounts = useMemo(() => stateCounts(rows), [rows]);
   const sellable = useMemo(() => rows.filter((r) => !PARKED(r.s) && !isRemoved(r.m)), [rows]);
   const ticked = sellable.filter((r) => isTicked(r.m)).length;
   const starred = rows.filter((r) => r.m?.starred).length;
@@ -101,10 +111,21 @@ export function RouteBookPage() {
   }, []);
 
   const toggleChip = (g: "fit" | "state" | "status" | "extra" | "trade", k: string) =>
-    setFilters((f) => { const set = new Set(f[g] as Set<string>); if (set.has(k)) set.delete(k); else set.add(k); return { ...f, [g]: set }; });
+    setFilters((f) => {
+      const set = new Set(f[g] as Set<string>);
+      if (set.has(k)) set.delete(k);
+      else {
+        set.add(k);
+        // A chip and its opposite together match everything, which is not a
+        // filter. Turning one on turns the other off.
+        const opp = STATE_CHIPS.find((c) => c.k === k)?.opposite;
+        if (opp) set.delete(opp);
+      }
+      return { ...f, [g]: set };
+    });
   const has = (g: "fit" | "state" | "status" | "extra" | "trade", k: string) => (filters[g] as Set<string>).has(k);
-  const clear = () => { setFilters(emptyFilters()); setProduct("all"); setReview("verified"); setFolder("ALL"); };
-  const active = filtersActive(filters) || product !== "all" || review !== "verified" || folder !== "ALL";
+  const clear = () => { setFilters(emptyFilters()); setProduct("all"); setReview("all"); setFolder("ALL"); };
+  const active = filtersActive(filters) || product !== "all" || review !== "all" || folder !== "ALL";
 
   const exportCSV = () => { downloadText(`limex-route-book-${today()}.csv`, "﻿" + buildCSV(rows, st.index.legById), "text/csv"); toast("Whole book exported"); };
   const exportVcf = () => {
@@ -201,7 +222,7 @@ export function RouteBookPage() {
         <div className="wd-page-head rb-head">
           <div>
             <h1><RouteIcon size={20} /> LIMEX Route Book</h1>
-            <p>Find a manufacturer, check its products, then record your visit.</p>
+            <p>{sellable.length} sellable companies{ticked ? `, ${ticked} visited` : ""} — find a manufacturer, check its products, then record your visit.</p>
           </div>
           <div className="rb-head-right">
             {syncBadge}
@@ -215,9 +236,11 @@ export function RouteBookPage() {
 
         <ProductFilters rows={rows.filter(r => !r.m?.removed && !r.m?.dupOf && (review === "all" || reviewState(r.s,r.m) === review))} value={product} onChange={setProduct} />
         <div className="rb-review-tabs" role="group" aria-label="Manufacturer verification">
-          {([["verified", "Verified manufacturers"], ["review", "Needs checking"], ["excluded", "Outside target"], ["all", "All records"]] as const).map(([key,label]) => <button type="button" key={key} aria-pressed={review===key} onClick={()=>{setReview(key);setFilters(f=>({...f,parked:key!=='verified'}));}}>{label} <b>{rows.filter(r=>!r.m?.removed && !r.m?.dupOf && (key==='all'||reviewState(r.s,r.m)===key)).length}</b></button>)}
+          {([["verified", "Verified manufacturers"], ["review", "Needs checking"], ["excluded", "Outside target"]] as const).map(([key,label]) => <button type="button" key={key} aria-pressed={review===key} data-testid={`rb-review-${key}`} onClick={()=>setReview(review===key ? "all" : key)}>{label} <b>{rows.filter(r=>!r.m?.removed && !r.m?.dupOf && reviewState(r.s,r.m)===key).length}</b></button>)}
         </div>
-        <p className="rb-bnote">The default list requires evidence of finished-product manufacturing and an opaque product. Unchecked and unsuitable records remain available above.</p>
+        <p className="rb-bnote">{review === "all"
+          ? "Showing every company in the register. Pick a tab above to narrow by how far its products have been checked — tap it again to come back here."
+          : "Narrowed to one verification state. Tap the same tab again to show every company."}</p>
         <div className="rb-toolbar">
           <div className="rb-tabs" role="tablist">
             {VIEWS.map(([v, l]) => <button key={v} type="button" role="tab" aria-selected={view === v} onClick={() => changeView(v)} data-testid={`rb-tab-${v}`}>{l}{v === "plan" && starred ? <span className="rb-tabn">{starred}</span> : null}</button>)}
@@ -255,22 +278,17 @@ export function RouteBookPage() {
             <div className="rb-rail-sec">
               <h5>State</h5>
               <div className="rb-chips">
-                {([["state", "precise", "Precise pins"], ["state", "plot", "Plot needed"], ["state", "phone", "Has a number"], ["state", "nophone", "Needs a number"],
-                  ["state", "mine", "Added by us"], ["state", "due", "Follow-up due"], ["state", "stale", "Needs a nudge"], ["state", "promoted", "In the CRM"],
-                  ["state", "profiled", "Qualified"], ["state", "unprofiled", "Not qualified"],
-                  ["state", "sampled", "Has samples"], ["state", "stalled", "Trial gone quiet"],
-                  ["state", "lead", "In the Lead Book"], ["state", "customer", "Customers"], ["state", "lost", "Lost"],
-                  ["state", "dnc", "Not interested"], ["state", "merged", "Merged away"], ["state", "removed", "Removed"],
-                  ["status", "done", "Ticked"], ["status", "none", "Not ticked"], ["status", "pin", "Starred"]] as const).map(([g, k, l]) => (
-                  <button key={k} type="button" className="rb-chip" aria-pressed={has(g, k)} onClick={() => toggleChip(g, k)} data-testid={`rb-chip-${k}`}>{l}</button>
+                {STATE_CHIPS.filter((c) => stCounts[c.k] || has(c.g, c.k)).map(({ g, k, label }) => (
+                  <button key={k} type="button" className="rb-chip" aria-pressed={has(g, k)} onClick={() => toggleChip(g, k)} data-testid={`rb-chip-${k}`}>{label} <span>{stCounts[k] ?? 0}</span></button>
                 ))}
               </div>
             </div>
             <div className="rb-rail-sec">
               <h5>Outcome</h5>
               <div className="rb-chips">
-                {OUTS.map(([k, l]) => <button key={k} type="button" className="rb-chip" aria-pressed={has("extra", k)} onClick={() => toggleChip("extra", k)}>{l} <span>{outCounts[k] ?? 0}</span></button>)}
-                <button type="button" className="rb-chip" aria-pressed={has("extra", "note")} onClick={() => toggleChip("extra", "note")}>Has a note <span>{outCounts.note}</span></button>
+                {OUTS.filter(([k]) => outCounts[k] || has("extra", k)).map(([k, l]) => <button key={k} type="button" className="rb-chip" aria-pressed={has("extra", k)} onClick={() => toggleChip("extra", k)}>{l} <span>{outCounts[k] ?? 0}</span></button>)}
+                {(outCounts.note > 0 || has("extra", "note")) && <button type="button" className="rb-chip" aria-pressed={has("extra", "note")} onClick={() => toggleChip("extra", "note")}>Has a note <span>{outCounts.note}</span></button>}
+                {!OUTS.some(([k]) => outCounts[k]) && !outCounts.note && <p className="rb-rail-note">Outcomes appear here once you record visits.</p>}
               </div>
             </div>
             <div className="rb-rail-sec">

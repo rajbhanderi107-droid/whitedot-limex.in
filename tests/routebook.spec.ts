@@ -80,6 +80,22 @@ async function mockPortal(page: Page) {
   return { marks, events, samples, getSettings: () => settings };
 }
 
+/** The stop card keeps its secondary actions — note, qualify, samples, remove,
+ *  make a lead — behind a "More actions" toggle, so open that before reaching
+ *  for any of them. */
+/** Put the Route Book on the route view. It opens on Companies, and legs only
+ *  exist on the route view. No filter needs clearing: the book opens showing
+ *  the whole register. */
+async function showWholeBook(page: Page) {
+  await expect(page.getByTestId("rb-page")).toBeVisible();
+  await page.getByTestId("rb-tab-route").click();
+}
+
+async function openActions(card: import("@playwright/test").Locator) {
+  const toggle = card.getByRole("button", { name: "More actions" });
+  if (await toggle.count()) await toggle.click();
+}
+
 test.describe("LIMEX Route Book", () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => { localStorage.setItem("wd_admin_token", "mock-jwt"); localStorage.removeItem("wd_rb_cache_v2"); localStorage.removeItem("wd_rb_outbox_v2"); });
@@ -92,12 +108,14 @@ test.describe("LIMEX Route Book", () => {
     await page.locator(".wd-nav a:has-text('LIMEX Route Book')").first().click();
     await expect(page.getByTestId("rb-page")).toBeVisible();
     await expect(page.locator(".rb-head p")).toContainText("4 sellable companies");
+    await showWholeBook(page);
     await expect(page.getByTestId("rb-leg")).toHaveCount(1);
   });
 
   test("tick, outcome, note and undo round-trip through the API", async ({ page }) => {
     const mock = await mockPortal(page);
     await page.goto("/#/admin/route-book");
+    await showWholeBook(page);
     await page.getByTestId("rb-leg").first().locator(".rb-leg-toggle").click();
     const card = page.getByTestId("rb-stop").first();
     await card.getByTestId("rb-tick").click();
@@ -109,6 +127,7 @@ test.describe("LIMEX Route Book", () => {
 
     await card.locator(".rb-ochip[data-out='int']").click();
     await expect(card).toHaveClass(/is-ticked/); // an outcome implies a visit
+    await openActions(card);
     await card.getByTestId("rb-note-btn").click();
     await card.locator("textarea").fill("Owner wants a 2 kg sample");
     await card.getByTestId("rb-save").click();
@@ -119,13 +138,17 @@ test.describe("LIMEX Route Book", () => {
   test("remove hides a company until the Removed chip reveals it, then restore", async ({ page }) => {
     const mock = await mockPortal(page);
     await page.goto("/#/admin/route-book");
+    await showWholeBook(page);
     await page.getByTestId("rb-leg").first().locator(".rb-leg-toggle").click();
     const beta = page.locator("[data-testid='rb-stop'][data-id='N1-beta']");
+    await openActions(beta);
     await beta.getByTestId("rb-remove").click();
     await expect(beta).toHaveCount(0);
     await expect.poll(() => mock.marks.get("N1-beta")?.removed, { timeout: 5000 }).toBe(true);
+    await page.getByRole("button", { name: /More filters/ }).click();
     await page.getByTestId("rb-chip-removed").click();
     await expect(beta).toHaveClass(/is-removed/);
+    await openActions(beta);
     await expect(beta.getByTestId("rb-remove")).toContainText("Restore");
     await beta.getByTestId("rb-remove").click();
     await page.getByTestId("rb-chip-removed").click();
@@ -136,10 +159,12 @@ test.describe("LIMEX Route Book", () => {
   test("search, Stops view export, Days record and Pipeline duplicates", async ({ page }) => {
     await mockPortal(page);
     await page.goto("/#/admin/route-book");
+    await showWholeBook(page);
     await page.getByTestId("rb-search").fill("gamma");
     await expect(page.locator(".rb-showing")).toHaveText("1 of 4");
+    // Clearing filters also puts the review tab back to verified-only.
     await page.getByTestId("rb-clear").click();
-
+  
     await page.getByTestId("rb-tab-all").click();
     await expect(page.locator(".rb-count")).toHaveText("4 showing");
     const dl = page.waitForEvent("download");
@@ -157,6 +182,7 @@ test.describe("LIMEX Route Book", () => {
   test("call queue steps through stops and Escape closes it", async ({ page }) => {
     await mockPortal(page);
     await page.goto("/#/admin/route-book");
+    await showWholeBook(page);
     await page.getByTestId("rb-tab-all").click();
     await page.getByText("Call queue").first().click();
     const q = page.getByTestId("rb-queue");
@@ -180,9 +206,11 @@ test.describe("LIMEX Route Book", () => {
   test("qualifying a plant sizes the opportunity in tonnes and rupees", async ({ page }) => {
     const mock = await mockPortal(page);
     await page.goto("/#/admin/route-book");
+    await showWholeBook(page);
     await page.getByTestId("rb-leg").first().locator(".rb-leg-toggle").click();
     const card = page.getByTestId("rb-stop").first();
 
+    await openActions(card);
     await card.getByTestId("rb-fit-btn").click();
     await card.locator(".rb-chip", { hasText: /^PP$/ }).click();
     await card.getByTestId("rb-tonnes").fill("60");
@@ -200,9 +228,11 @@ test.describe("LIMEX Route Book", () => {
   test("a sample ticks the stop, then its trial result closes it out", async ({ page }) => {
     const mock = await mockPortal(page);
     await page.goto("/#/admin/route-book");
+    await showWholeBook(page);
     await page.getByTestId("rb-leg").first().locator(".rb-leg-toggle").click();
     const card = page.getByTestId("rb-stop").first();
 
+    await openActions(card);
     await card.getByTestId("rb-sample-btn").click();
     await card.getByTestId("rb-sample-grade").fill("LIMEX PP-50");
     await card.getByTestId("rb-sample-kg").fill("8");
@@ -222,6 +252,7 @@ test.describe("LIMEX Route Book", () => {
   test("the rate box drives every rupee figure and persists", async ({ page }) => {
     const mock = await mockPortal(page);
     await page.goto("/#/admin/route-book");
+    await page.getByRole("button", { name: /More filters/ }).click();
     await expect(page.getByTestId("rb-ratebox")).toBeVisible();
     await page.getByTestId("rb-rate").fill("100");
     await page.getByTestId("rb-pct").fill("50");
@@ -489,26 +520,131 @@ test('trade chips leave out parked companies until the Parked chip is on', async
   await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
   await mockPortal(page);
 
-  // Eight is the threshold a tag must clear to earn a chip, so give each
-  // trade exactly that: eight sellable moulders, eight parked toolrooms.
+  // Two real trades: thin-wall moulders that are sellable, toy makers that
+  // this book has ruled out. Both fold into the controlled vocabulary, so
+  // only the parked/unparked split decides which chip the rail offers.
   const extra = [
-    ...Array.from({ length: 8 }, (_, i) => stop(`N1-conv${i}`, 'N1', `Converter ${i}`, 'prime',
+    ...Array.from({ length: 4 }, (_, i) => stop(`N1-conv${i}`, 'N1', `Converter ${i}`, 'prime',
       { tags: [{ t: 'Thin Wall', c: '' }] })),
-    ...Array.from({ length: 8 }, (_, i) => stop(`N1-tool${i}`, 'N1', `Toolroom ${i}`, 'no',
-      { tags: [{ t: 'Toolroom', c: '' }] })),
+    ...Array.from({ length: 4 }, (_, i) => stop(`N1-toy${i}`, 'N1', `Toy maker ${i}`, 'no',
+      { tags: [{ t: 'Toys', c: '' }] })),
   ];
   await page.route('**/api/portal/route-book/bootstrap', r =>
     r.fulfill(ok({ ...bootstrap, stops: [...bootstrap.stops, ...extra] })));
 
   await page.goto('/#/admin/route-book');
   await expect(page.getByTestId('rb-page')).toBeVisible();
+  await page.getByRole('button', { name: /More filters/ }).click();
 
   const chips = page.locator('.rb-chips');
-  await expect(chips.getByRole('button', { name: /Thin Wall/ })).toBeVisible();
-  await expect(chips.getByRole('button', { name: /^Toolroom/ }),
+  await expect(chips.getByRole('button', { name: /^Thin wall/ })).toBeVisible();
+  await expect(chips.getByRole('button', { name: /^Toys/ }),
     'a parked trade must not be offered as a filter').toHaveCount(0);
 
   // Turn Parked on and the trade reappears, because now it is in the list too.
   await page.getByRole('button', { name: /^Parked/ }).first().click();
-  await expect(chips.getByRole('button', { name: /^Toolroom/ })).toBeVisible();
+  await expect(chips.getByRole('button', { name: /^Toys/ })).toBeVisible();
+});
+
+test('a research tag that is not a trade never becomes a filter chip', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  await mockPortal(page);
+
+  // The register writes research into the same field as the trade: where the
+  // plant is, when it was founded, what it is worth. Only the trade is a
+  // filter — the rest stays on the record and out of the rail.
+  const extra = Array.from({ length: 4 }, (_, i) => stop(`N1-mix${i}`, 'N1', `Mixed ${i}`, 'prime',
+    { tags: [{ t: 'Opaque PP', c: '' }, { t: 'Canada', c: '' }, { t: 'Est. 1987', c: '' }, { t: 'Toolroom', c: '' }] }));
+  await page.route('**/api/portal/route-book/bootstrap', r =>
+    r.fulfill(ok({ ...bootstrap, stops: [...bootstrap.stops, ...extra] })));
+
+  await page.goto('/#/admin/route-book');
+  await expect(page.getByTestId('rb-page')).toBeVisible();
+  await page.getByRole('button', { name: /More filters/ }).click();
+
+  const chips = page.locator('.rb-chips');
+  await expect(chips.getByRole('button', { name: /^Opaque/ }),
+    'the trade the tag names is still a chip').toBeVisible();
+  for (const notATrade of [/^Canada/, /^Est\. 1987/, /^Toolroom/]) {
+    await expect(chips.getByRole('button', { name: notATrade }),
+      `${notATrade} is not something a factory makes`).toHaveCount(0);
+  }
+});
+
+test('a State chip and its opposite cannot both narrow the book at once', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  await mockPortal(page);
+
+  // Every company in the fixture has a number, so give the book one without:
+  // a chip that would match nothing is not drawn at all, and a pair needs
+  // both sides on the rail before it can clash.
+  await page.route('**/api/portal/route-book/bootstrap', r =>
+    r.fulfill(ok({ ...bootstrap, stops: [...bootstrap.stops, stop('N1-nophone', 'N1', 'Delta Moulders', 'good', { tel: '' })] })));
+
+  await page.goto('/#/admin/route-book');
+  await expect(page.getByTestId('rb-page')).toBeVisible();
+  // The default tab wants verification evidence the fixture has none of, so
+  // widen to the whole register before counting anything.
+  await expect(page.locator('.rb-showing')).toHaveText('5 of 5');
+  await page.getByRole('button', { name: /More filters/ }).click();
+
+  // Chips inside a group are OR-ed, so "Has a number" plus "Needs a number"
+  // used to match every company in the book while the toolbar claimed two
+  // filters were on — a filter that silently widens instead of narrowing.
+  const withPhone = page.getByTestId('rb-chip-phone');
+  const without = page.getByTestId('rb-chip-nophone');
+  await withPhone.click();
+  await expect(withPhone).toHaveAttribute('aria-pressed', 'true');
+  const narrowed = await page.locator('.rb-showing').textContent();
+
+  await without.click();
+  await expect(without).toHaveAttribute('aria-pressed', 'true');
+  await expect(withPhone, 'picking one side must release the other').toHaveAttribute('aria-pressed', 'false');
+
+  // And the book is still narrowed — to the other side, not to everything.
+  const flipped = await page.locator('.rb-showing').textContent();
+  expect(flipped).not.toBe(narrowed);
+});
+
+test('the book opens with nothing selected, showing every company', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  await mockPortal(page);
+  await page.goto('/#/admin/route-book');
+  await expect(page.getByTestId('rb-page')).toBeVisible();
+
+  // It used to open on "Verified manufacturers", which means a hand-entered
+  // product profile with evidence and a public source — five companies out of
+  // 1,464 in the real register. The book opened nearly empty with no filter
+  // visibly on to explain it.
+  await expect(page.locator('.rb-showing'), 'nothing selected must show the whole book').toHaveText('4 of 4');
+  for (const key of ['verified', 'review', 'excluded']) {
+    await expect(page.getByTestId(`rb-review-${key}`)).toHaveAttribute('aria-pressed', 'false');
+  }
+});
+
+test('every filter releases on a second tap and gives the whole book back', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  await mockPortal(page);
+  await page.goto('/#/admin/route-book');
+  await expect(page.getByTestId('rb-page')).toBeVisible();
+  const showing = page.locator('.rb-showing');
+
+  // A verification tab: on, then off.
+  const needsChecking = page.getByTestId('rb-review-review');
+  await needsChecking.click();
+  await expect(needsChecking).toHaveAttribute('aria-pressed', 'true');
+  await needsChecking.click();
+  await expect(needsChecking).toHaveAttribute('aria-pressed', 'false');
+  await expect(showing).toHaveText('4 of 4');
+
+  // A rail chip: on, then off. Prime target is one of the four fixtures, so
+  // this narrows for real rather than matching everything either way.
+  await page.getByRole('button', { name: /More filters/ }).click();
+  const prime = page.getByRole('button', { name: /^Prime target/ });
+  await prime.click();
+  await expect(prime).toHaveAttribute('aria-pressed', 'true');
+  await expect(showing).toHaveText('1 of 4');
+  await prime.click();
+  await expect(prime, 'a chip must release on a second tap').toHaveAttribute('aria-pressed', 'false');
+  await expect(showing).toHaveText('4 of 4');
 });
