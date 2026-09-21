@@ -17,6 +17,7 @@ import {
 import type { Fit, RbView } from "./types.js";
 import {
   type Filters, type Row, type SortMode, emptyFilters, filtersActive, matchStop, tradeTags, FITLABEL, OUTS,
+  STATE_CHIPS, stateCounts,
   toViewFilters, fromViewFilters, buildCSV, downloadText, today, vcardFor, phoneOf, PARKED, isRemoved, isTicked, DEFAULT_HOME,
   num, hasProfile, samplesOf, sampleStalled,
 } from "./logic.js";
@@ -72,6 +73,10 @@ export function RouteBookPage() {
   const trades = useMemo(() => tradeTags(st.stops, filters.parked), [st.stops, filters.parked]);
   const fitCounts = useMemo(() => { const c: Partial<Record<Fit, number>> = {}; for (const s of st.stops) c[s.fit] = (c[s.fit] ?? 0) + 1; return c; }, [st.stops]);
   const outCounts = useMemo(() => { const c: Record<string, number> = { note: 0 }; for (const r of rows) { if (r.m?.outcome) c[r.m.outcome] = (c[r.m.outcome] ?? 0) + 1; if (r.m?.note) c.note++; } return c; }, [rows]);
+  // Every chip in the rail carries its count, and a chip that would match
+  // nothing is not drawn. "Not now 0 · No answer 0 · Closed 0" sat in the
+  // Outcome row offering three filters that could only empty the book.
+  const stCounts = useMemo(() => stateCounts(rows), [rows]);
   const sellable = useMemo(() => rows.filter((r) => !PARKED(r.s) && !isRemoved(r.m)), [rows]);
   const ticked = sellable.filter((r) => isTicked(r.m)).length;
   const starred = rows.filter((r) => r.m?.starred).length;
@@ -101,7 +106,18 @@ export function RouteBookPage() {
   }, []);
 
   const toggleChip = (g: "fit" | "state" | "status" | "extra" | "trade", k: string) =>
-    setFilters((f) => { const set = new Set(f[g] as Set<string>); if (set.has(k)) set.delete(k); else set.add(k); return { ...f, [g]: set }; });
+    setFilters((f) => {
+      const set = new Set(f[g] as Set<string>);
+      if (set.has(k)) set.delete(k);
+      else {
+        set.add(k);
+        // A chip and its opposite together match everything, which is not a
+        // filter. Turning one on turns the other off.
+        const opp = STATE_CHIPS.find((c) => c.k === k)?.opposite;
+        if (opp) set.delete(opp);
+      }
+      return { ...f, [g]: set };
+    });
   const has = (g: "fit" | "state" | "status" | "extra" | "trade", k: string) => (filters[g] as Set<string>).has(k);
   const clear = () => { setFilters(emptyFilters()); setProduct("all"); setReview("verified"); setFolder("ALL"); };
   const active = filtersActive(filters) || product !== "all" || review !== "verified" || folder !== "ALL";
@@ -201,7 +217,7 @@ export function RouteBookPage() {
         <div className="wd-page-head rb-head">
           <div>
             <h1><RouteIcon size={20} /> LIMEX Route Book</h1>
-            <p>Find a manufacturer, check its products, then record your visit.</p>
+            <p>{sellable.length} sellable companies{ticked ? `, ${ticked} visited` : ""} — find a manufacturer, check its products, then record your visit.</p>
           </div>
           <div className="rb-head-right">
             {syncBadge}
@@ -255,22 +271,17 @@ export function RouteBookPage() {
             <div className="rb-rail-sec">
               <h5>State</h5>
               <div className="rb-chips">
-                {([["state", "precise", "Precise pins"], ["state", "plot", "Plot needed"], ["state", "phone", "Has a number"], ["state", "nophone", "Needs a number"],
-                  ["state", "mine", "Added by us"], ["state", "due", "Follow-up due"], ["state", "stale", "Needs a nudge"], ["state", "promoted", "In the CRM"],
-                  ["state", "profiled", "Qualified"], ["state", "unprofiled", "Not qualified"],
-                  ["state", "sampled", "Has samples"], ["state", "stalled", "Trial gone quiet"],
-                  ["state", "lead", "In the Lead Book"], ["state", "customer", "Customers"], ["state", "lost", "Lost"],
-                  ["state", "dnc", "Not interested"], ["state", "merged", "Merged away"], ["state", "removed", "Removed"],
-                  ["status", "done", "Ticked"], ["status", "none", "Not ticked"], ["status", "pin", "Starred"]] as const).map(([g, k, l]) => (
-                  <button key={k} type="button" className="rb-chip" aria-pressed={has(g, k)} onClick={() => toggleChip(g, k)} data-testid={`rb-chip-${k}`}>{l}</button>
+                {STATE_CHIPS.filter((c) => stCounts[c.k] || has(c.g, c.k)).map(({ g, k, label }) => (
+                  <button key={k} type="button" className="rb-chip" aria-pressed={has(g, k)} onClick={() => toggleChip(g, k)} data-testid={`rb-chip-${k}`}>{label} <span>{stCounts[k] ?? 0}</span></button>
                 ))}
               </div>
             </div>
             <div className="rb-rail-sec">
               <h5>Outcome</h5>
               <div className="rb-chips">
-                {OUTS.map(([k, l]) => <button key={k} type="button" className="rb-chip" aria-pressed={has("extra", k)} onClick={() => toggleChip("extra", k)}>{l} <span>{outCounts[k] ?? 0}</span></button>)}
-                <button type="button" className="rb-chip" aria-pressed={has("extra", "note")} onClick={() => toggleChip("extra", "note")}>Has a note <span>{outCounts.note}</span></button>
+                {OUTS.filter(([k]) => outCounts[k] || has("extra", k)).map(([k, l]) => <button key={k} type="button" className="rb-chip" aria-pressed={has("extra", k)} onClick={() => toggleChip("extra", k)}>{l} <span>{outCounts[k] ?? 0}</span></button>)}
+                {(outCounts.note > 0 || has("extra", "note")) && <button type="button" className="rb-chip" aria-pressed={has("extra", "note")} onClick={() => toggleChip("extra", "note")}>Has a note <span>{outCounts.note}</span></button>}
+                {!OUTS.some(([k]) => outCounts[k]) && !outCounts.note && <p className="rb-rail-note">Outcomes appear here once you record visits.</p>}
               </div>
             </div>
             <div className="rb-rail-sec">
