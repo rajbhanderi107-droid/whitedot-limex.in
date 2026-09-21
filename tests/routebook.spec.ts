@@ -83,12 +83,11 @@ async function mockPortal(page: Page) {
 /** The stop card keeps its secondary actions — note, qualify, samples, remove,
  *  make a lead — behind a "More actions" toggle, so open that before reaching
  *  for any of them. */
-/** Put the Route Book where these tests expect it: on the route view, showing
- *  the whole register. It opens on Companies, filtered to manufacturers with
- *  verification evidence the fixtures do not carry. */
+/** Put the Route Book on the route view. It opens on Companies, and legs only
+ *  exist on the route view. No filter needs clearing: the book opens showing
+ *  the whole register. */
 async function showWholeBook(page: Page) {
   await expect(page.getByTestId("rb-page")).toBeVisible();
-  await page.getByRole("button", { name: /All records/ }).click();
   await page.getByTestId("rb-tab-route").click();
 }
 
@@ -165,8 +164,7 @@ test.describe("LIMEX Route Book", () => {
     await expect(page.locator(".rb-showing")).toHaveText("1 of 4");
     // Clearing filters also puts the review tab back to verified-only.
     await page.getByTestId("rb-clear").click();
-    await page.getByRole("button", { name: /All records/ }).click();
-
+  
     await page.getByTestId("rb-tab-all").click();
     await expect(page.locator(".rb-count")).toHaveText("4 showing");
     const dl = page.waitForEvent("download");
@@ -587,7 +585,6 @@ test('a State chip and its opposite cannot both narrow the book at once', async 
   await expect(page.getByTestId('rb-page')).toBeVisible();
   // The default tab wants verification evidence the fixture has none of, so
   // widen to the whole register before counting anything.
-  await page.getByRole('button', { name: /All records/ }).click();
   await expect(page.locator('.rb-showing')).toHaveText('5 of 5');
   await page.getByRole('button', { name: /More filters/ }).click();
 
@@ -607,4 +604,47 @@ test('a State chip and its opposite cannot both narrow the book at once', async 
   // And the book is still narrowed — to the other side, not to everything.
   const flipped = await page.locator('.rb-showing').textContent();
   expect(flipped).not.toBe(narrowed);
+});
+
+test('the book opens with nothing selected, showing every company', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  await mockPortal(page);
+  await page.goto('/#/admin/route-book');
+  await expect(page.getByTestId('rb-page')).toBeVisible();
+
+  // It used to open on "Verified manufacturers", which means a hand-entered
+  // product profile with evidence and a public source — five companies out of
+  // 1,464 in the real register. The book opened nearly empty with no filter
+  // visibly on to explain it.
+  await expect(page.locator('.rb-showing'), 'nothing selected must show the whole book').toHaveText('4 of 4');
+  for (const key of ['verified', 'review', 'excluded']) {
+    await expect(page.getByTestId(`rb-review-${key}`)).toHaveAttribute('aria-pressed', 'false');
+  }
+});
+
+test('every filter releases on a second tap and gives the whole book back', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  await mockPortal(page);
+  await page.goto('/#/admin/route-book');
+  await expect(page.getByTestId('rb-page')).toBeVisible();
+  const showing = page.locator('.rb-showing');
+
+  // A verification tab: on, then off.
+  const needsChecking = page.getByTestId('rb-review-review');
+  await needsChecking.click();
+  await expect(needsChecking).toHaveAttribute('aria-pressed', 'true');
+  await needsChecking.click();
+  await expect(needsChecking).toHaveAttribute('aria-pressed', 'false');
+  await expect(showing).toHaveText('4 of 4');
+
+  // A rail chip: on, then off. Prime target is one of the four fixtures, so
+  // this narrows for real rather than matching everything either way.
+  await page.getByRole('button', { name: /More filters/ }).click();
+  const prime = page.getByRole('button', { name: /^Prime target/ });
+  await prime.click();
+  await expect(prime).toHaveAttribute('aria-pressed', 'true');
+  await expect(showing).toHaveText('1 of 4');
+  await prime.click();
+  await expect(prime, 'a chip must release on a second tap').toHaveAttribute('aria-pressed', 'false');
+  await expect(showing).toHaveText('4 of 4');
 });

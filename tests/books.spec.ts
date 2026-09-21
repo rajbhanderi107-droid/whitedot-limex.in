@@ -100,13 +100,11 @@ async function mockPortal(page: Page) {
   return { marks, orders };
 }
 
-/** Put the Route Book where these tests expect to find it: on the route view,
- *  showing the whole register. It opens on Companies, filtered to
- *  manufacturers carrying verification evidence — and the fixtures carry none,
- *  so without both steps there is not a single leg on the page to click. */
+/** Put the Route Book on the route view. It opens on Companies, and legs only
+ *  exist on the route view. No filter needs clearing: the book opens showing
+ *  the whole register. */
 async function showWholeBook(page: Page) {
   await expect(page.getByTestId("rb-page")).toBeVisible();
-  await page.getByRole("button", { name: /All records/ }).click();
   await page.getByTestId("rb-tab-route").click();
 }
 
