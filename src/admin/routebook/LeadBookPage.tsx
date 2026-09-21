@@ -1,7 +1,8 @@
-import { ProductFilters } from "./ProductFilters.js";
+import { areaOf, areaOptions } from "./areas.js";
+import { CompanyFilters } from "./CompanyFilters.js";
 import { ProductPanel } from "./ProductPanel.js";
 import { matchesProduct, type ProductFilter } from "./products.js";
-import { SourceFolders, useSourceFolder } from "./SourceFolders.js";
+import { useSourceFolder } from "./SourceFolders.js";
 import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
 /* LIMEX Lead Book — the companies actually in a deal.
  *
@@ -28,6 +29,7 @@ import { OrderDialog } from "./OrderDialog.js";
 
 export function LeadBookPage() {
   const st = useBook();
+  const [area, setArea] = useState("");
   const [product, setProduct] = useState<ProductFilter>("all");
   const { folder, setFolder } = useSourceFolder();
   const rb = useRb();
@@ -46,6 +48,7 @@ export function LeadBookPage() {
   const shown = useMemo(() => {
     const needle = q.trim().toLowerCase();
     return leads.filter(({ s, m }) => {
+      if (area && areaOf({s,m}) !== area) return false;
       if (!matchesProduct(s,m,product)) return false;
       const matches = `${s.name} ${s.makes ?? ""} ${addrOf(s, m)} ${conOf(m).n ?? ""} ${phoneOf(s, m) ?? ""} ${m?.nextStep ?? ""} ${m?.note ?? ""}`.toLowerCase().includes(needle);
       if (!matches) return false;
@@ -54,7 +57,7 @@ export function LeadBookPage() {
       if (focus === "nostep") return noNextStep(m);
       return true;
     });
-  }, [leads, q, focus, product]);
+  }, [leads, q, focus, product, area]);
 
   const expected = leads.reduce((a, r) => a + (expectedMtOf(r.m) ?? 0), 0);
   const monthly = leads.map((r) => leadMonthlyValue(r.m)).filter((v): v is number => v !== null);
@@ -96,8 +99,11 @@ export function LeadBookPage() {
         </>
       }
     >
-      <ProductFilters rows={leads} value={product} onChange={setProduct} />
-      <details className="rb-secondary"><summary>Source folders</summary><SourceFolders rows={allSourceRows.filter(r=>isLead(r.m) && !r.m?.removed)} folder={folder} onChange={setFolder} /></details>
+      <CompanyFilters rows={leads} product={product} onProduct={setProduct} q={q} onSearch={setQ}
+        searchTestId="lb-search" folder={folder} onFolder={setFolder} shown={shown.length}
+        active={!!area || !!q || product !== "all" || folder !== "ALL" || focus !== "all"}
+        onReset={() => {setArea("");setQ("");setProduct("all");setFolder("ALL");setFocus("all");}}
+        areas={areaOptions(allSourceRows)} area={area} onArea={setArea} status={focus} onStatus={setFocus} statuses={[["all","All leads"],["due","Follow-ups due"],["trials","Open trials"],["nostep","No next step"]]} />
       <section className="rb-dsec">
         <div className="rb-dhead"><h3>Where the deals stand</h3><span className="rb-dcount">every figure comes from what you recorded</span></div>
         <div className="rb-heroes">
@@ -132,19 +138,7 @@ export function LeadBookPage() {
         </section>
       )}
 
-      {leads.length > 0 && (
-        <div className="rb-toolbar">
-          <div className="rb-find">
-            <Search size={14} />
-            <input value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search the Lead Book" placeholder="Search company, contact, phone…" data-testid="lb-search" />
-            {q && <button type="button" onClick={() => setQ("")} aria-label="Clear search"><X size={13} /></button>}
-          </div>
-          <select className="rb-book-filter" aria-label="Filter leads" value={focus} onChange={(e) => setFocus(e.target.value)}>
-            <option value="all">All leads</option><option value="due">Follow-ups due</option><option value="trials">Open trials</option><option value="nostep">No next step</option>
-          </select>
-          <span className="rb-showing">{shown.length} of {leads.length}</span>
-        </div>
-      )}
+
 
       {!leads.length && (
         <Empty

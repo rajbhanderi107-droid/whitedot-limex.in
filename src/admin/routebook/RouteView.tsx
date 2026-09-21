@@ -102,7 +102,8 @@ interface Props {
 export function RouteView({ rowsByLeg, visibleByLeg, fams, legsByFam, openLegs, toggleLeg, shown }: Props) {
   const ui = useUI();
   const active = filtersActive(ui.filters);
-  const famList = useMemo(() => fams.filter((f) => !ui.filters.fam || f.id === ui.filters.fam), [fams, ui.filters.fam]);
+  // Geographic filtering already happens before grouping routes.
+  const famList = fams;
   if (!shown) return <div className="wd-empty-state"><p>No company matches these filters. Clear a chip or two.</p></div>;
   return (
     <div className="rb-route">

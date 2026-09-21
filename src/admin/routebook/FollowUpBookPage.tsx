@@ -1,7 +1,8 @@
-import { ProductFilters } from "./ProductFilters.js";
+import { areaOf, areaOptions } from "./areas.js";
+import { CompanyFilters } from "./CompanyFilters.js";
 import { ProductPanel } from "./ProductPanel.js";
 import { matchesProduct, type ProductFilter } from "./products.js";
-import { SourceFolders, useSourceFolder } from "./SourceFolders.js";
+import { useSourceFolder } from "./SourceFolders.js";
 import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
 /* LIMEX Visit Follow-ups — every company a visit actually touched.
  *
@@ -54,6 +55,7 @@ const FOCUS: { key: FocusKey; label: string; match: (r: Row) => boolean }[] = [
 
 export function FollowUpBookPage() {
   const st = useBook();
+  const [area, setArea] = useState("");
   const [product, setProduct] = useState<ProductFilter>("all");
   const { folder, setFolder } = useSourceFolder();
   const [focus, setFocus] = useState<FocusKey>("all");
@@ -75,13 +77,13 @@ export function FollowUpBookPage() {
   const shown = useMemo(() => {
     const needle = q.trim().toLowerCase();
     const test = FOCUS.find((f) => f.key === focus)!.match;
-    return visits.filter(r => matchesProduct(r.s,r.m,product)).filter((r) => {
+    return visits.filter(r => (!area || areaOf(r) === area) && matchesProduct(r.s,r.m,product)).filter((r) => {
       if (!test(r)) return false;
       if (!needle) return true;
       return `${r.s.name} ${r.s.makes ?? ""} ${addrOf(r.s, r.m)} ${conOf(r.m).n} ${phoneOf(r.s, r.m)} ${r.m?.note ?? ""}`
         .toLowerCase().includes(needle);
     });
-  }, [visits, focus, q, product]);
+  }, [visits, focus, q, product, area]);
 
   const dueNow = visits.filter((r) => isDue(r.m)).length;
   const starred = visits.filter((r) => r.m?.starred).length;
@@ -129,8 +131,11 @@ export function FollowUpBookPage() {
         </>
       }
     >
-      <ProductFilters rows={visits} value={product} onChange={setProduct} />
-      <details className="rb-secondary"><summary>Source folders</summary><SourceFolders rows={allSourceRows.filter(r=>isFollowUp(r.m))} folder={folder} onChange={setFolder} /></details>
+      <CompanyFilters rows={visits} product={product} onProduct={setProduct} q={q} onSearch={setQ}
+        searchTestId="fb-search" folder={folder} onFolder={setFolder} shown={shown.length}
+        active={!!area || !!q || product !== "all" || folder !== "ALL" || focus !== "all"}
+        onReset={() => {setArea("");setQ("");setProduct("all");setFolder("ALL");setFocus("all");}}
+        areas={areaOptions(allSourceRows)} area={area} onArea={setArea} status={focus} onStatus={v => setFocus(v as FocusKey)} statuses={FOCUS.map(f => [f.key, f.label] as const)} />
       <section className="rb-dsec">
         <div className="rb-dhead">
           <h3>The visit list at a glance</h3>
@@ -145,23 +150,7 @@ export function FollowUpBookPage() {
         </div>
       </section>
 
-      {visits.length > 0 && (
-        <div className="rb-toolbar">
-          <div className="rb-find">
-            <Search size={14} />
-            <input value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search visits"
-              placeholder="Search company, contact, phone, note…" data-testid="fb-search" />
-            {q && <button type="button" onClick={() => setQ("")} aria-label="Clear search"><X size={13} /></button>}
-          </div>
-          <select className="rb-book-filter" aria-label="Filter visits" value={focus}
-            onChange={(e) => setFocus(e.target.value as FocusKey)} data-testid="fb-filter">
-            {FOCUS.map((f) => (
-              <option key={f.key} value={f.key}>{f.label} ({visits.filter(f.match).length})</option>
-            ))}
-          </select>
-          <span className="rb-showing">{shown.length} of {visits.length}</span>
-        </div>
-      )}
+
 
       {!visits.length && (
         <Empty

@@ -1,7 +1,8 @@
-import { ProductFilters } from "./ProductFilters.js";
+import { areaOf, areaOptions } from "./areas.js";
+import { CompanyFilters } from "./CompanyFilters.js";
 import { ProductPanel } from "./ProductPanel.js";
 import { matchesProduct, type ProductFilter } from "./products.js";
-import { SourceFolders, useSourceFolder } from "./SourceFolders.js";
+import { useSourceFolder } from "./SourceFolders.js";
 import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
 /* LIMEX Customer Book — who buys, how much, and on what terms.
  *
@@ -32,6 +33,7 @@ const monthOf = (d: string) => d.slice(0, 7);
 
 export function CustomerBookPage() {
   const st = useBook();
+  const [area, setArea] = useState("");
   const [product, setProduct] = useState<ProductFilter>("all");
   const { folder, setFolder } = useSourceFolder();
   const rb = useRb();
@@ -48,11 +50,11 @@ export function CustomerBookPage() {
   );
   const shown = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    return customers.filter(({ s, m }) => matchesProduct(s,m,product) &&
+    return customers.filter(({ s, m }) => (!area || areaOf({s,m}) === area) && matchesProduct(s,m,product) &&
       `${s.name} ${s.makes ?? ""} ${addrOf(s, m)} ${conOf(m).n ?? ""} ${phoneOf(s, m) ?? ""} ${m?.gstNumber ?? ""} ${ordersOf(m).map((o) => `${o.orderNo} ${o.grade}`).join(" ")}`
         .toLowerCase().includes(needle)
       && (focus === "all" || (focus === "reorder" ? dueReorder(m) : liveOrders(m).some((o) => o.status === focus))));
-  }, [customers, q, focus, product]);
+  }, [customers, q, focus, product, area]);
 
   const allOrders = customers.flatMap((r) => liveOrders(r.m));
   const totalMt = customers.reduce((a, r) => a + customerTotals(r.m).mt, 0);
@@ -118,8 +120,11 @@ export function CustomerBookPage() {
         </>
       }
     >
-      <ProductFilters rows={customers} value={product} onChange={setProduct} />
-      <details className="rb-secondary"><summary>Source folders</summary><SourceFolders rows={allSourceRows.filter(r=>isCustomer(r.m) && !r.m?.removed)} folder={folder} onChange={setFolder} /></details>
+      <CompanyFilters rows={customers} product={product} onProduct={setProduct} q={q} onSearch={setQ}
+        searchTestId="cb-search" folder={folder} onFolder={setFolder} shown={shown.length}
+        active={!!area || !!q || product !== "all" || folder !== "ALL" || focus !== "all"}
+        onReset={() => {setArea("");setQ("");setProduct("all");setFolder("ALL");setFocus("all");}}
+        areas={areaOptions(allSourceRows)} area={area} onArea={setArea} status={focus} onStatus={setFocus} statuses={[["all","All customers"],["CONFIRMED","Awaiting dispatch"],["DISPATCHED","Dispatched"],["DELIVERED","Delivered"],["PAID","Paid"],["reorder","Due a reorder"]]} />
       <section className="rb-dsec">
         <div className="rb-dhead">
           <h3>The book at a glance</h3>
@@ -134,19 +139,7 @@ export function CustomerBookPage() {
         </div>
       </section>
 
-      {customers.length > 0 && (
-        <div className="rb-toolbar">
-          <div className="rb-find">
-            <Search size={14} />
-            <input value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search the Customer Book" placeholder="Search company, contact, GST, order…" data-testid="cb-search" />
-            {q && <button type="button" onClick={() => setQ("")} aria-label="Clear search"><X size={13} /></button>}
-          </div>
-          <select className="rb-book-filter" aria-label="Filter customer orders" value={focus} onChange={(e) => setFocus(e.target.value)}>
-            <option value="all">All customers</option><option value="CONFIRMED">Awaiting dispatch</option><option value="DISPATCHED">Dispatched</option><option value="DELIVERED">Delivered</option><option value="PAID">Paid</option><option value="reorder">Due a reorder</option>
-          </select>
-          <span className="rb-showing">{shown.length} of {customers.length}</span>
-        </div>
-      )}
+
 
       {!customers.length && (
         <Empty

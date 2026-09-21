@@ -72,12 +72,9 @@ test.describe("Standalone book apps", () => {
       await expect(page).toHaveTitle(new RegExp(app.title));
       await expect(page.getByTestId("books-app")).toBeVisible();
       await expect(page.getByTestId(app.page)).toBeVisible();
-      // The source folders moved into the rail. Only the Route Book has one,
-      // and it now starts collapsed behind its own button.
-      if (app.dir === "route") await page.getByRole("button", { name: /More filters/ }).click();
-      else await page.getByRole("group", { name: "Source folders" }).or(page.locator("details.rb-secondary > summary")).first().click();
-      await expect(page.getByTestId("source-folder-GPT")).toBeVisible();
-      await expect(page.getByTestId("source-folder-CLAUDE")).toBeVisible();
+      await expect(page.getByTestId("company-filters")).toHaveCount(1);
+      await expect(page.getByLabel("Source", {exact:true})).toBeVisible();
+      await expect(page.getByLabel("Source", {exact:true}).locator('option')).toContainText(['All sources', 'GPT Leads', 'Claude Leads', 'Team Leads', 'Unassigned']);
       await expect(page.getByTestId(app.tab)).toHaveClass(/is-on/);
 
       // Its own installable identity, not the main site's.
@@ -119,7 +116,7 @@ test.describe("Standalone book apps", () => {
     await expect(page.getByTestId("rb-page")).toBeVisible();
 
     // Still the same record: this is the portal's data, not a second copy.
-    await expect(page.locator(".rb-head p")).toContainText("1 sellable");
+    await expect(page.locator(".rb-head p")).toContainText("1 companies");
   });
 
   test("signed out, the app asks for the same portal login", async ({ page }) => {
