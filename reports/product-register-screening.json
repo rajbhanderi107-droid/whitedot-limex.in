@@ -1,0 +1,12 @@
+{
+  "scope": "Source register only. Live employee profiles and later SQL evidence migrations are not included. Screening does not verify a factory.",
+  "total": 1464,
+  "missingDescriptions": 1239,
+  "productNamedRecords": 8,
+  "duplicateRows": 2,
+  "states": {
+    "review": 1369,
+    "verified": 5,
+    "excluded": 90
+  }
+}

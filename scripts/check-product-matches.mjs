@@ -18,3 +18,7 @@ assert.deepEqual(suggestedProducts({...stop,makes:'Non-woven shopping bags'}),['
 assert.equal(reviewState({...stop,id:'K1-proton-polymer'}, {productProfile:JSON.stringify({...p,business:'trader'})}),'excluded','Employee review must override shipped research');
 assert.equal(reviewState({...stop,name:'HIFI Industries LLP'}),'review','Similar company names must not inherit evidence');
 console.log('Product qualification checks passed: evidence, exclusions, overrides, category accuracy.');
+assert.equal(reviewState({...stop,name:'12 mm BOPP Tape'}),'excluded','Product catalogue rows are not companies');
+assert.equal(reviewState({...stop,name:'LDPE Stretch Film'}),'excluded');
+assert.equal(reviewState({...stop,name:'Tape Packaging Industries'}),'review','Company names must not be excluded by broad product keywords');
+assert.equal(reviewState({...stop,name:'12 mm BOPP Tape'},m),'verified','An employee correction takes precedence over a legacy name');

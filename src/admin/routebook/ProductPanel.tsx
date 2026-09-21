@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import type { RbStop,RbMark } from './types.js';
-import { PRODUCTS, blankProductProfile, categoriesOf, productProfile, reviewState, safeProductUrl, type ProductProfile } from './products.js';
+import { PRODUCTS, blankProductProfile, categoriesOf, productProfile, reviewState, reviewReason, safeProductUrl, type ProductProfile } from './products.js';
 import { patchMark } from './store.js';
 import { toast } from './ctx.js';
 
@@ -10,7 +10,7 @@ export function ProductPanel({s,m}: {s:RbStop;m?:RbMark}) {
   return <section className="rb-product-panel" aria-label={`Products of ${s.name}`}>
     <div className="rb-product-heading"><strong>Products</strong><span className={`rb-verification is-${state}`}>{state==='verified'?'Manufacturer evidence checked':state==='excluded'?'Outside target list':'Needs verification'}</span><button type="button" onClick={()=>setEdit(!edit)}>{edit?'Close':'Edit products & photos'}</button></div>
     <div className="rb-product-labels">{categoriesOf(s,m).map(id=><span key={id}>{PRODUCTS.find(([k])=>k===id)?.[1]}</span>)}{!categoriesOf(s,m).length && <span>Product type not recorded</span>}</div>
-    {state==='review' && <p className="rb-product-help">Confirm that this company makes opaque plastic products before planning a visit.</p>}
+    {state!=='verified' && <p className="rb-product-help">{reviewReason(s,m)}</p>}
     {!!p?.photos.length ? <div className="rb-product-gallery">{p.photos.map(photo=><figure key={photo.url}><ProductPhoto url={photo.url} alt={photo.caption || `${s.name} product`} /><figcaption>{photo.caption || 'Company product'}{safeProductUrl(photo.source) && <a href={photo.source} target="_blank" rel="noopener noreferrer">Source</a>}</figcaption></figure>)}</div>:<p className="rb-photo-empty">No company product photo yet. Add a photo link from its catalogue.</p>}
     {p?.evidence && <p className="rb-product-help">{p.evidence} {safeProductUrl(p.source) && <a href={p.source} target="_blank" rel="noopener noreferrer">View evidence</a>}{p.checkedOn && ` · Checked ${p.checkedOn}`}</p>}
     {state==='verified' && <p className="rb-product-help">Product match only. Confirm the polymer, LIMEX grade and trial result with the factory.</p>}

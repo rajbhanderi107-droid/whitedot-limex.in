@@ -46,6 +46,28 @@ export function suggestedProducts(s: RbStop): Product[] {
   return categories;
 }
 export const categoriesOf = (s: RbStop, m?: RbMark) => productProfile(s,m)?.categories ?? suggestedProducts(s);
+/** Invalid directory rows are retained so their history can still be corrected. */
+export const isProductNamedRecord = (s: RbStop): boolean => /^(?:12|18|24|36|48|72|96)\s*mm\s*bopp tape$|^ldpe stretch film$/i.test(s.name.trim());
+export function reviewReason(s: RbStop, m?: RbMark): string {
+  const p=productProfile(s,m);
+  if(p) {
+    if(p.business==='trader') return 'Trader or reseller only; own finished-product manufacturing is not established.';
+    if(p.business==='raw-material') return 'Granules or raw materials only; outside the finished-product target.';
+    if(p.business==='machinery') return 'Machinery or moulds only; outside the finished-product target.';
+    if(p.opacity==='transparent') return 'Transparent products only; outside the opaque-product target.';
+    if(p.business!=='manufacturer') return 'Confirm this company manufactures the products in its own factory.';
+    if(!['opaque','milky-white'].includes(p.opacity)) return 'Manufacturing evidence recorded; confirm an opaque or milky-white product.';
+    if(!p.categories.length) return 'Select the relevant finished-product category.';
+    if(!p.evidence.trim() || !safeProductUrl(p.source)) return 'Add manufacturing evidence and a public source.';
+    return 'Manufacturing and an opaque product are supported by the recorded source.';
+  }
+  if(isProductNamedRecord(s)) return 'This entry names a product, not a company. Correct the company identity before use.';
+  if(['no','channel'].includes(s.fit)) return 'Previously marked outside the target list; review the original notes before changing it.';
+  if(reviewState(s,m)==='excluded') return 'The existing description indicates raw materials, trading or machinery. Confirm any separate finished-product manufacturing before inclusion.';
+  if(!(s.makes ?? '').trim()) return 'No product description is recorded. Identify the factory and its products first.';
+  if(!suggestedProducts(s).length) return 'No requested product category is established by the existing description.';
+  return 'Product keywords match, but own manufacturing and product opacity still need evidence.';
+}
 export function reviewState(s: RbStop, m?: RbMark): ReviewFilter {
   const p=productProfile(s,m);
   if(p) {
@@ -53,7 +75,7 @@ export function reviewState(s: RbStop, m?: RbMark): ReviewFilter {
     if(p.business==='manufacturer' && ['opaque','milky-white'].includes(p.opacity) && p.categories.length && p.evidence.trim() && safeProductUrl(p.source)) return 'verified';
     return 'review';
   }
-  if(['no','channel'].includes(s.fit)) return 'excluded';
+  if(isProductNamedRecord(s) || ['no','channel'].includes(s.fit)) return 'excluded';
   const t=`${s.makes ?? ''} ${s.src ?? ''}`.toLowerCase();
   if(/trader.wholesaler|granules? only|masterbatch|filler compound|moulds for|moulding machines|filling.*machines/.test(t) && !/also manufactur.*(bags|bottles|containers)/.test(t)) return 'excluded';
   return 'review';
