@@ -1,7 +1,8 @@
+import { areaOf, areaOptions } from "./areas.js";
 import { ResearchAdditions } from "./ResearchAdditions.js";
-import { ProductFilters } from "./ProductFilters.js";
-import { matchesProduct, reviewState, type ProductFilter, type ReviewFilter } from "./products.js";
-import { SourceFolders, useSourceFolder } from "./SourceFolders.js";
+import { CompanyFilters } from "./CompanyFilters.js";
+import { matchesProduct, type ProductFilter, type ReviewFilter } from "./products.js";
+import { useSourceFolder } from "./SourceFolders.js";
 import { sourceFolderOf } from "./sources.js";
 /* LIMEX Route Book — the field-sales book inside the portal.
  *
@@ -11,15 +12,14 @@ import { sourceFolderOf } from "./sources.js";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
-  Search, Plus, Phone, Download, Upload, Save, Printer, RefreshCw, Sparkles, SlidersHorizontal, X, Route as RouteIcon,
+  Plus, Phone, Download, Upload, Save, Printer, RefreshCw, Sparkles, Route as RouteIcon,
   History, CloudOff, Cloud, CloudUpload, AlertTriangle, MapPin, Trash2, IndianRupee,
 } from "lucide-react";
-import type { Fit, RbView } from "./types.js";
+import type { RbView } from "./types.js";
 import {
-  type Filters, type Row, type SortMode, emptyFilters, filtersActive, matchStop, tradeTags, FITLABEL, OUTS,
-  STATE_CHIPS, stateCounts,
+  type Filters, type Row, type SortMode, emptyFilters, filtersActive, matchStop,
   toViewFilters, fromViewFilters, buildCSV, downloadText, today, vcardFor, phoneOf, PARKED, isRemoved, isTicked, DEFAULT_HOME,
-  num, hasProfile, samplesOf, sampleStalled,
+  num,
 } from "./logic.js";
 import { useRb, load, setPrefs, saveView, deleteView, reseed, restoreMarks, getRb, saveSettings, startLiveSync, importBook } from "./store.js";
 import { UICtx, type UIApi, toast } from "./ctx.js";
@@ -39,7 +39,7 @@ export function RouteBookPage() {
   const st = useRb();
   const { folder, setFolder } = useSourceFolder();
   const [params, setParams] = useSearchParams();
-  const [filters, setFilters] = useState<Filters>(() => ({ ...emptyFilters(), q: params.get("q") ?? "" }));
+  const [filters, setFilters] = useState<Filters>(() => ({ ...emptyFilters(), parked: true, q: params.get("q") ?? "" }));
   const [view, setView] = useState<View>(() => (params.get("view") as View) || "all");
   const [product, setProduct] = useState<ProductFilter>("all");
   // Nothing is selected until you select it, and nothing selected shows the
@@ -55,7 +55,7 @@ export function RouteBookPage() {
   const [palette, setPalette] = useState(false);
   const [adding, setAdding] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
-  const [railOpen, setRailOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
   const [home, setHome] = useState(() => localStorage.getItem(HOME_KEY) || DEFAULT_HOME);
   const [homeEdit, setHomeEdit] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -65,23 +65,15 @@ export function RouteBookPage() {
   // Load once, then keep this tab in step with every other open device.
   useEffect(() => { void load(); return startLiveSync(); }, []);
   useEffect(() => { const p = new URLSearchParams(params); p.set("view", view); if (filters.q) p.set("q", filters.q); else p.delete("q"); setParams(p, { replace: true }); }, [view, filters.q]); // eslint-disable-line react-hooks/exhaustive-deps
-  const changeView = (v: View) => { setView(v); setPrefs({ view: v }); if(v === "plan" || v === "pipe") { setReview("all"); setProduct("all"); setFilters(emptyFilters()); } };
+  const changeView = (v: View) => { setView(v); setPrefs({ view: v }); if(v === "plan" || v === "pipe") { setReview("all"); setProduct("all"); setFilters({ ...emptyFilters(), parked: true }); } };
   const changeSort = (m: SortMode) => { setSort(m); setPrefs({ sort: m }); };
 
   // Rows and indexes
   const allSourceRows: Row[] = useMemo(() => st.stops.map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
   const rows = useMemo(() => allSourceRows.filter(r => folder === "ALL" || sourceFolderOf(r.s, r.m) === folder), [allSourceRows, folder]);
   const rowsByLeg = useMemo(() => { const mp = new Map<string, Row[]>(); for (const r of rows) (mp.get(r.s.legId) ?? mp.set(r.s.legId, []).get(r.s.legId)!).push(r); return mp; }, [rows]);
-  const visible = useMemo(() => rows.filter((r) => matchesProduct(r.s, r.m, product, review) && matchStop(r.s, r.m, filters, st.index.legById[r.s.legId], st.index.legById[r.s.legId]?.familyId)), [rows, filters, product, review, st.index.legById]);
+  const visible = useMemo(() => rows.filter((r) => matchesProduct(r.s, r.m, product, review) && matchStop(r.s, r.m, filters, st.index.legById[r.s.legId], areaOf(r))), [rows, filters, product, review, st.index.legById]);
   const visibleByLeg = useMemo(() => { const mp = new Map<string, Row[]>(); for (const r of visible) (mp.get(r.s.legId) ?? mp.set(r.s.legId, []).get(r.s.legId)!).push(r); return mp; }, [visible]);
-  const famCounts = useMemo(() => { const c: Record<string, number> = {}; for (const r of visible) { const f = st.index.legById[r.s.legId]?.familyId ?? "?"; c[f] = (c[f] ?? 0) + 1; } return c; }, [visible, st.index.legById]);
-  const trades = useMemo(() => tradeTags(st.stops, filters.parked), [st.stops, filters.parked]);
-  const fitCounts = useMemo(() => { const c: Partial<Record<Fit, number>> = {}; for (const s of st.stops) c[s.fit] = (c[s.fit] ?? 0) + 1; return c; }, [st.stops]);
-  const outCounts = useMemo(() => { const c: Record<string, number> = { note: 0 }; for (const r of rows) { if (r.m?.outcome) c[r.m.outcome] = (c[r.m.outcome] ?? 0) + 1; if (r.m?.note) c.note++; } return c; }, [rows]);
-  // Every chip in the rail carries its count, and a chip that would match
-  // nothing is not drawn. "Not now 0 · No answer 0 · Closed 0" sat in the
-  // Outcome row offering three filters that could only empty the book.
-  const stCounts = useMemo(() => stateCounts(rows), [rows]);
   const sellable = useMemo(() => rows.filter((r) => !PARKED(r.s) && !isRemoved(r.m)), [rows]);
   const ticked = sellable.filter((r) => isTicked(r.m)).length;
   const starred = rows.filter((r) => r.m?.starred).length;
@@ -110,22 +102,10 @@ export function RouteBookPage() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const toggleChip = (g: "fit" | "state" | "status" | "extra" | "trade", k: string) =>
-    setFilters((f) => {
-      const set = new Set(f[g] as Set<string>);
-      if (set.has(k)) set.delete(k);
-      else {
-        set.add(k);
-        // A chip and its opposite together match everything, which is not a
-        // filter. Turning one on turns the other off.
-        const opp = STATE_CHIPS.find((c) => c.k === k)?.opposite;
-        if (opp) set.delete(opp);
-      }
-      return { ...f, [g]: set };
-    });
-  const has = (g: "fit" | "state" | "status" | "extra" | "trade", k: string) => (filters[g] as Set<string>).has(k);
-  const clear = () => { setFilters(emptyFilters()); setProduct("all"); setReview("all"); setFolder("ALL"); };
-  const active = filtersActive(filters) || product !== "all" || review !== "all" || folder !== "ALL";
+  const statusValue = [...filters.state][0] ?? [...filters.status][0] ?? "all";
+  const setStatus = (value: string) => setFilters(f => ({ ...f, state: new Set(["done", "none", "pin"].includes(value) || value === "all" ? [] : [value]), status: new Set(["done", "none", "pin"].includes(value) ? [value] : []) }));
+  const clear = () => { setFilters({ ...emptyFilters(), parked: true }); setProduct("all"); setReview("all"); setFolder("ALL"); };
+  const active = (filtersActive(filters) || !!filters.fam) || product !== "all" || review !== "all" || folder !== "ALL";
 
   const exportCSV = () => { downloadText(`limex-route-book-${today()}.csv`, "﻿" + buildCSV(rows, st.index.legById), "text/csv"); toast("Whole book exported"); };
   const exportVcf = () => {
@@ -173,7 +153,16 @@ export function RouteBookPage() {
     try { await saveView(name, {...toViewFilters(filters), product, review}); toast(`View “${name}” saved for the team`); }
     catch (e) { toast(e instanceof Error ? e.message : "Could not save the view", undefined, "err"); }
   };
-  const applyView = (v: RbView) => { setFilters(fromViewFilters(v.filters)); setProduct(v.filters.product ?? "all"); setReview(v.filters.review ?? "verified"); if (view === "pipe" || view === "plan") changeView("route"); };
+  const applyView = (v: RbView) => {
+    const saved = fromViewFilters(v.filters);
+    const allowed = ["due", "done", "none", "pin", "removed", "dnc", "merged"];
+    const status = [...saved.state, ...saved.status].find(k => allowed.includes(k));
+    setFilters({ ...emptyFilters(), parked: true, q: saved.q, fam: areaOptions(allSourceRows).some(a => a.id === saved.fam) ? saved.fam : null,
+      state: new Set(status && !["done", "none", "pin"].includes(status) ? [status] : []),
+      status: new Set(status && ["done", "none", "pin"].includes(status) ? [status] : []) });
+    setProduct(v.filters.product ?? "all"); setReview(v.filters.review ?? "all"); setFolder("ALL");
+    if (view === "pipe" || view === "plan") setView("route");
+  };
   const doReseed = async () => {
     if (!window.confirm("Refresh the register data from the shipped dataset? Every tick, note and outcome is kept.")) return;
     try { const r = await reseed(); toast(`Register refreshed — ${r.stops} companies`); } catch (e) { toast(e instanceof Error ? e.message : "Reseed failed", undefined, "err"); }
@@ -222,7 +211,7 @@ export function RouteBookPage() {
         <div className="wd-page-head rb-head">
           <div>
             <h1><RouteIcon size={20} /> LIMEX Route Book</h1>
-            <p>{sellable.length} sellable companies{ticked ? `, ${ticked} visited` : ""} — find a manufacturer, check its products, then record your visit.</p>
+            <p>{rows.filter(r => !r.m?.removed && !r.m?.dupOf).length} companies{ticked ? `, ${ticked} visited` : ""} — find a manufacturer, check its products, then record your visit.</p>
           </div>
           <div className="rb-head-right">
             {syncBadge}
@@ -234,67 +223,22 @@ export function RouteBookPage() {
         </div>
         {st.error && st.sync === "error" && <div className="wd-inline-err">{st.error}</div>}
 
-        <ProductFilters rows={rows.filter(r => !r.m?.removed && !r.m?.dupOf && (review === "all" || reviewState(r.s,r.m) === review))} value={product} onChange={setProduct} />
-        <div className="rb-review-tabs" role="group" aria-label="Manufacturer verification">
-          {([["verified", "Verified manufacturers"], ["review", "Needs checking"], ["excluded", "Outside target"]] as const).map(([key,label]) => <button type="button" key={key} aria-pressed={review===key} data-testid={`rb-review-${key}`} onClick={()=>setReview(review===key ? "all" : key)}>{label} <b>{rows.filter(r=>!r.m?.removed && !r.m?.dupOf && reviewState(r.s,r.m)===key).length}</b></button>)}
-        </div>
-        <p className="rb-bnote">{review === "all"
-          ? "Showing every company in the register. Pick a tab above to narrow by how far its products have been checked — tap it again to come back here."
-          : "Narrowed to one verification state. Tap the same tab again to show every company."}</p>
         <div className="rb-toolbar">
           <div className="rb-tabs" role="tablist">
             {VIEWS.map(([v, l]) => <button key={v} type="button" role="tab" aria-selected={view === v} onClick={() => changeView(v)} data-testid={`rb-tab-${v}`}>{l}{v === "plan" && starred ? <span className="rb-tabn">{starred}</span> : null}</button>)}
           </div>
-          <div className="rb-find">
-            <Search size={14} />
-            <input ref={searchRef} value={filters.q} onChange={(e) => setFilters((f) => ({ ...f, q: e.target.value }))} placeholder="Search name, estate, product, note… ( / )" data-testid="rb-search" />
-            {filters.q && <button type="button" onClick={() => setFilters((f) => ({ ...f, q: "" }))} aria-label="Clear search"><X size={13} /></button>}
-          </div>
-          <button type="button" className={`wd-ghost-btn rb-railbtn${active ? " on" : ""}`} onClick={() => setRailOpen((o) => !o)}><SlidersHorizontal size={13} /> More filters & tools{active ? " ·" : ""}</button>
-          {active && <button type="button" className="wd-ghost-btn" onClick={clear} data-testid="rb-clear">Clear filters</button>}
-          <span className="rb-showing">{visible.length} of {rows.length}</span>
+          <button type="button" className="wd-ghost-btn" aria-expanded={toolsOpen} onClick={() => setToolsOpen(o => !o)}>Tools & settings</button>
         </div>
+        <CompanyFilters rows={rows} product={product} onProduct={setProduct} q={filters.q}
+          onSearch={q => setFilters(f => ({...f,q}))} searchRef={searchRef} searchTestId="rb-search"
+          folder={folder} onFolder={setFolder} onReset={clear} active={active} shown={visible.length}
+          areas={areaOptions(allSourceRows)} area={filters.fam ?? ""} onArea={fam => setFilters(f => ({...f,fam:fam || null}))}
+          review={review} onReview={setReview} status={statusValue} onStatus={setStatus}
+          statuses={[["all","Any visit status"],["due","Follow-up due"],["none","Not visited"],["done","Visited"],["pin","Starred"],["dnc","Not interested"],["removed","Removed records"],["merged","Merged records"]]} />
 
-        <div className={`rb-layout rb-simple-layout${railOpen ? " has-rail" : ""}`}>
-          <aside className={`rb-rail${railOpen ? " is-open" : ""}`}>
-            <SourceFolders rows={allSourceRows} folder={folder} onChange={setFolder} />
+        <div className="rb-simple-layout">
+          {toolsOpen && <aside className="rb-tools-panel" aria-label="Tools and settings">
             <ResearchAdditions />
-            <div className="rb-rail-sec">
-              <h5>Area / route</h5>
-              <button type="button" className={`rb-fam-btn${!filters.fam ? " is-on" : ""}`} onClick={() => setFilters((f) => ({ ...f, fam: null }))}><span className="rb-fk">∗</span><span className="rb-fl">All</span><span className="rb-fc">{visible.length}</span></button>
-              {st.fams.map((f) => (
-                <button key={f.id} type="button" className={`rb-fam-btn${filters.fam === f.id ? " is-on" : ""}${!famCounts[f.id] ? " is-dim" : ""}`} onClick={() => setFilters((x) => ({ ...x, fam: x.fam === f.id ? null : f.id, ...(f.id === "X" ? { parked: true } : {}) }))} title={f.blurb ?? ""}>
-                  <span className="rb-fk">{f.id}</span><span className="rb-fl">{f.name}</span><span className="rb-fc">{famCounts[f.id] ?? 0}</span>
-                </button>
-              ))}
-            </div>
-            <div className="rb-rail-sec">
-              <h5>LIMEX fit</h5>
-              <div className="rb-chips">
-                {(["prime", "good", "weak", "channel"] as Fit[]).map((k) => <button key={k} type="button" className={`rb-chip rb-chip-${k}`} aria-pressed={has("fit", k)} onClick={() => toggleChip("fit", k)}>{FITLABEL[k]} <span>{fitCounts[k] ?? 0}</span></button>)}
-                <button type="button" className="rb-chip" aria-pressed={filters.parked} onClick={() => setFilters((f) => ({ ...f, parked: !f.parked }))}>Parked <span>{(fitCounts.no ?? 0) + (fitCounts.clear ?? 0)}</span></button>
-              </div>
-            </div>
-            <div className="rb-rail-sec">
-              <h5>State</h5>
-              <div className="rb-chips">
-                {STATE_CHIPS.filter((c) => stCounts[c.k] || has(c.g, c.k)).map(({ g, k, label }) => (
-                  <button key={k} type="button" className="rb-chip" aria-pressed={has(g, k)} onClick={() => toggleChip(g, k)} data-testid={`rb-chip-${k}`}>{label} <span>{stCounts[k] ?? 0}</span></button>
-                ))}
-              </div>
-            </div>
-            <div className="rb-rail-sec">
-              <h5>Outcome</h5>
-              <div className="rb-chips">
-                {OUTS.filter(([k]) => outCounts[k] || has("extra", k)).map(([k, l]) => <button key={k} type="button" className="rb-chip" aria-pressed={has("extra", k)} onClick={() => toggleChip("extra", k)}>{l} <span>{outCounts[k] ?? 0}</span></button>)}
-                {(outCounts.note > 0 || has("extra", "note")) && <button type="button" className="rb-chip" aria-pressed={has("extra", "note")} onClick={() => toggleChip("extra", "note")}>Has a note <span>{outCounts.note}</span></button>}
-                {!OUTS.some(([k]) => outCounts[k]) && !outCounts.note && <p className="rb-rail-note">Outcomes appear here once you record visits.</p>}
-              </div>
-            </div>
-            <div className="rb-rail-sec">
-              <h5>What they make</h5>
-              <div className="rb-chips">{trades.map((t) => <button key={t.tag} type="button" className="rb-chip" aria-pressed={has("trade", t.tag)} onClick={() => toggleChip("trade", t.tag)}>{t.tag} <span>{t.n}</span></button>)}</div>
-            </div>
             <div className="rb-rail-sec">
               <h5>Saved views <button type="button" className="rb-mini" onClick={doSaveView} title="Save the current filters for the whole team"><Save size={11} /></button></h5>
               {st.views.length ? st.views.map((v) => (
@@ -318,19 +262,19 @@ export function RouteBookPage() {
               <button type="button" className="wd-ghost-btn" onClick={() => setPrefs({ density: density === "compact" ? "cozy" : "compact" })}>{density === "compact" ? "Cozy" : "Compact"}</button>
               <button type="button" className="wd-ghost-btn" onClick={() => load(true)} title="Reload from the server"><RefreshCw size={12} /></button>
               <button type="button" className="wd-ghost-btn" onClick={() => changeView("plan")}><Printer size={12} /> Run sheet</button>
-              <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) void restore(f); e.target.value = ""; }} data-testid="rb-restore-input" />
             </div>
-          </aside>
+          </aside>}
 
           <main className="rb-main">
             {view === "route" && <RouteView rowsByLeg={rowsByLeg} visibleByLeg={visibleByLeg} fams={st.fams} legsByFam={st.index.legsByFam} openLegs={openLegs} toggleLeg={(id) => setOpenLegs((o) => { const n = new Set(o); if (n.has(id)) n.delete(id); else n.add(id); return n; })} shown={visible.length} />}
-            {view === "all" && !visible.length && <div className="rb-bempty"><b>No matching companies</b><span>Try another product, clear filters, or open Needs checking.</span><button type="button" className="wd-ghost-btn" onClick={clear}>Reset filters</button></div>}
+            {view === "all" && !visible.length && <div className="rb-bempty"><b>No matching companies</b><span>Try another product or area, or reset the filters.</span><button type="button" className="wd-ghost-btn" onClick={clear}>Reset filters</button></div>}
             {view === "all" && <StopsView rows={visible} sort={sort} setSort={changeSort} />}
             {view === "plan" && <DaysView rows={visible} />}
             {view === "pipe" && <PipelineView rows={visible} rowsByLeg={visibleByLeg} legs={st.legs} />}
           </main>
         </div>
 
+              <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) void restore(f); e.target.value = ""; }} data-testid="rb-restore-input" />
         {queue && <CallQueue ids={queue} onClose={() => setQueue(null)} />}
         {palette && <Palette actions={actions} onClose={() => setPalette(false)} />}
         {adding && <AddCompany onClose={() => setAdding(false)} />}

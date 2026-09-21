@@ -6,9 +6,11 @@ export function useSourceFolder() {
   const [params, setParams] = useSearchParams();
   const folder = validFolder(params.get("folder"));
   const setFolder = (value: FolderFilter) => {
-    const next = new URLSearchParams(params);
-    if (value === "ALL") next.delete("folder"); else next.set("folder", value);
-    setParams(next, { replace: true });
+    setParams(current => {
+      const next = new URLSearchParams(current);
+      if (value === "ALL") next.delete("folder"); else next.set("folder", value);
+      return next;
+    }, { replace: true });
   };
   return { folder, setFolder };
 }
