@@ -566,15 +566,26 @@ test('visit statuses replace each other instead of clashing', async ({ page }) =
   await expect(page.locator('.rb-showing')).toHaveText('4 of 4');
 });
 
-test('verification is explicit and reset reveals the full active register', async ({ page }) => {
+test('one filter asks what a company makes, and reset gives the whole book back', async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
   await mockPortal(page);
   await page.goto('/#/admin/route-book');
-  await page.getByLabel('Manufacturer check').selectOption('verified');
-  await expect(page.locator('.rb-showing')).toHaveText('0 of 4');
+
+  // Product is the only control that asks what a company makes. "Manufacturer
+  // check" used to sit beside it asking a second version of the same question,
+  // and it filtered on whether a record carried a hand-entered profile with
+  // evidence and a source — 5 companies out of 2,052 in the live register, so
+  // it could only empty the book.
+  const panel = page.getByTestId('company-filters');
+  await expect(panel.getByLabel('Manufacturer check')).toHaveCount(0);
+  await expect(panel.getByLabel('Product', { exact: true })).toHaveCount(1);
+
+  await expect(page.locator('.rb-showing')).toHaveText('4 of 4');
+  await panel.getByLabel('Product', { exact: true }).selectOption('toys');
+  await expect(page.locator('.rb-showing'), 'the fixture makes tubs, not toys').toHaveText('0 of 4');
   await page.getByTestId('rb-clear').click();
   await expect(page.locator('.rb-showing')).toHaveText('4 of 4');
-  await expect(page.getByLabel('Manufacturer check')).toHaveValue('all');
+  await expect(panel.getByLabel('Product', { exact: true })).toHaveValue('all');
 });
 
 test('mobile filters fit within the screen and tools stay separate', async ({ page }) => {

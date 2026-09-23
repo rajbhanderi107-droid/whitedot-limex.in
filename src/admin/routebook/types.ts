@@ -205,7 +205,6 @@ export interface ViewFilters {
   state?: string[];
   status?: string[];
   extra?: string[];
-  trade?: string[];
   parked?: boolean;
 }
 
