@@ -1,5 +1,4 @@
 import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
-import { tradeOf, GENERIC_TRADE } from "./trades.js";
 /* LIMEX Route Book — pure helpers. No React, no network: everything here
  * takes a stop plus its (optional) mark and answers a question about it, so
  * the same rules drive the cards, the filters, the exports and the tests. */
@@ -169,24 +168,23 @@ export interface Filters {
   state: Set<string>;
   status: Set<string>;
   extra: Set<string>;
-  trade: Set<string>;
   parked: boolean;
 }
 export const emptyFilters = (): Filters => ({
-  q: "", fam: null, fit: new Set(), state: new Set(), status: new Set(), extra: new Set(), trade: new Set(), parked: false,
+  q: "", fam: null, fit: new Set(), state: new Set(), status: new Set(), extra: new Set(), parked: false,
 });
 export const filtersActive = (f: Filters) =>
-  !!(f.q || f.fit.size || f.state.size || f.status.size || f.extra.size || f.trade.size);
+  !!(f.q || f.fit.size || f.state.size || f.status.size || f.extra.size);
 export function toViewFilters(f: Filters): ViewFilters {
   return {
     q: f.q || undefined, fam: f.fam, fit: [...f.fit], state: [...f.state], status: [...f.status],
-    extra: [...f.extra], trade: [...f.trade], parked: f.parked || undefined,
+    extra: [...f.extra], parked: f.parked || undefined,
   };
 }
 export function fromViewFilters(v: ViewFilters): Filters {
   return {
     q: v.q ?? "", fam: v.fam ?? null, fit: new Set(v.fit ?? []), state: new Set(v.state ?? []),
-    status: new Set(v.status ?? []), extra: new Set(v.extra ?? []), trade: new Set(v.trade ?? []), parked: !!v.parked,
+    status: new Set(v.status ?? []), extra: new Set(v.extra ?? []), parked: !!v.parked,
   };
 }
 
@@ -223,12 +221,6 @@ export function matchStop(s: RbStop, m: RbMark | undefined, f: Filters, leg?: Rb
     }
     if (!ok) return false;
   }
-  // The chips carry canonical trades, so the tags must be folded the same way
-  // the rail folded them — matching raw strings would match nothing.
-  if (f.trade.size && !(s.tags ?? []).some((t) => {
-    const trade = tradeOf(t.t);
-    return trade !== null && f.trade.has(trade);
-  })) return false;
   return true;
 }
 
@@ -304,40 +296,6 @@ export function stateCounts(rows: Row[]): Record<string, number> {
   return c;
 }
 
-/** What the book can be sold to, by trade.
- *
- *  Parked companies are left out unless the Parked chip is on, so the count
- *  matches the list underneath it. Counting them made the rail advertise
- *  trades the book has already ruled out — "Machines 15" and "Toolroom 14"
- *  sat there in full after every machine builder and toolroom in the book was
- *  parked, because a mould maker buys steel, not resin. A chip that offers a
- *  filter returning nothing is worse than no chip.
- *
- *  The tags themselves are freeform research, so they are folded into the
- *  controlled vocabulary in trades.ts first. Raw, the field held 230 distinct
- *  strings for 1,464 companies: sixteen spellings of "opaque", a vintage, a
- *  turnover, and a geography — the rail was offering "Canada 25" as a thing a
- *  factory manufactures. Folded, it holds the trades and nothing else. */
-export function tradeTags(stops: RbStop[], withParked = false): { tag: string; n: number }[] {
-  const tally = new Map<string, number>();
-  for (const s of stops) {
-    if (!withParked && PARKED(s)) continue;
-    // A company counts once per trade however many tags point at it.
-    const trades = new Set<string>();
-    for (const t of s.tags ?? []) {
-      if (STATE_TAGS.has(t.t)) continue;
-      const trade = tradeOf(t.t);
-      if (trade) trades.add(trade);
-    }
-    for (const trade of trades) tally.set(trade, (tally.get(trade) ?? 0) + 1);
-  }
-  // Biggest first, except the catch-all bucket, which always sorts last: it
-  // matches over half the book, so leading with it would bury every chip
-  // that actually narrows anything.
-  return [...tally.entries()]
-    .sort((a, b) => (a[0] === GENERIC_TRADE ? 1 : b[0] === GENERIC_TRADE ? -1 : b[1] - a[1]))
-    .map(([tag, n]) => ({ tag, n }));
-}
 
 export type SortMode = "leg" | "az" | "fit" | "open";
 export function sortRows(rows: Row[], mode: SortMode): Row[] {

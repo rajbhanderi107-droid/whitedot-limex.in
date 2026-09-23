@@ -1,7 +1,7 @@
 import type { Ref } from 'react';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
 import type { Row } from './logic.js';
-import { PRODUCTS, type ProductFilter, type ReviewFilter } from './products.js';
+import { PRODUCTS, type ProductFilter } from './products.js';
 import { SOURCE_LABEL, type FolderFilter } from './sources.js';
 
 interface Props {
@@ -10,11 +10,18 @@ interface Props {
   folder: FolderFilter; onFolder: (v: FolderFilter) => void;
   onReset: () => void; active: boolean; shown: number;
   areas?: {id: string; name: string}[]; area?: string; onArea?: (v: string) => void;
-  review?: ReviewFilter; onReview?: (v: ReviewFilter) => void;
   status: string; onStatus: (v: string) => void; statuses: readonly (readonly [string, string])[];
 }
 
-/** One visible set of controls. Each select is mutually exclusive; reset clears every dimension. */
+/** One visible set of controls. Each select is mutually exclusive; reset clears
+ *  every dimension.
+ *
+ *  There is no "Manufacturer check" select. It filtered on whether a record
+ *  carries a hand-entered product profile with evidence and a public source,
+ *  which is true of 5 companies out of 2,052 — so as a filter it could only
+ *  empty the book, and as a default it did. Verification is still recorded per
+ *  company on the card; it is just not a way to search. Product is the one
+ *  question this panel asks about what a company makes. */
 export function CompanyFilters(p: Props) {
   return <section className="rb-company-filters" aria-label="Company filters" data-testid="company-filters">
     <div className="rb-filter-heading"><strong><SlidersHorizontal size={16} /> Find companies</strong>
@@ -35,13 +42,9 @@ export function CompanyFilters(p: Props) {
       <label>Follow-up / status<select aria-label="Follow-up status" value={p.status} onChange={e=>p.onStatus(e.target.value)}>
         {p.statuses.map(([id,label])=><option key={id} value={id}>{label}</option>)}
       </select></label>
-      {p.onReview && <label>Manufacturer check<select aria-label="Manufacturer check" value={p.review} onChange={e=>p.onReview?.(e.target.value as ReviewFilter)}>
-        <option value="all">All records</option><option value="verified">Verified manufacturers</option><option value="review">Needs checking</option><option value="excluded">Outside target</option>
-      </select></label>}
       <label>Source<select aria-label="Source" value={p.folder} onChange={e=>p.onFolder(e.target.value as FolderFilter)}>
         <option value="ALL">All sources</option>{Object.entries(SOURCE_LABEL).map(([id,label])=><option key={id} value={id}>{label}</option>)}
       </select></label>
     </div>
-    {p.review === 'all' && <p className="rb-filter-note">Includes unchecked records. Choose Verified manufacturers for sourced opaque-product matches.</p>}
   </section>;
 }
