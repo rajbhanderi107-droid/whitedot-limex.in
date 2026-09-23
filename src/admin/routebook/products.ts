@@ -34,14 +34,18 @@ export function productProfile(s: RbStop, m?: RbMark): ProductProfile | null {
 export function suggestedProducts(s: RbStop): Product[] {
   const t = `${s.makes ?? ''} ${(s.tags ?? []).map(t=>t.t).join(' ')}`.toLowerCase();
   const categories: Product[] = [];
-  if (/\b(hm|hmhdpe|hm-hdpe)\b.*\b(bag|film|liner)|\bhdpe\b.*\b(carry|garbage|liner|shopping)\b/.test(t)) categories.push('hm-bags');
+  if (/\b(hm|hmhdpe|hm-hdpe)\b.*\b(bag|film|liner)|\bhdpe\b.*\b(carry|garbage|liner|shopping)\b|\bhdpe\b[^.]*\bbags?\b/.test(t)) categories.push('hm-bags');
   if (/carry bags?|garbage bags?|courier bags?|plastic bags?|polythene bags?|t.shirt bags?|vest bags?/.test(t)) categories.push('plastic-bags');
   if (/non[ -]?woven/.test(t)) categories.push('nonwoven-bags');
   if (/(?<!non-)(?<!non )\bwoven\b.*\b(bag|sack|fibc)|\bfibc\b|jumbo bags?/.test(t.replace(/non[ -]?woven/g,''))) categories.push('woven-bags');
   if (/\btoys?\b/.test(t)) categories.push('toys');
   if (/thin[ -]?wall|takeaway containers?/.test(t)) categories.push('thinwall');
   if (/ice[ -]?cream|curd|dairy.*(tub|cup|container)|yog[hu]+rt.*(tub|cup|container)/.test(t)) categories.push('dairy');
-  if (/bottles?/.test(t) && /hdpe|blow|milky|opaque/.test(t)) categories.push('bottles');
+  // A carboy and a jerry can are large blow-moulded bottles and are opaque by
+  // construction, so they need no separate opacity word the way a plain
+  // "bottle" does — that one still has to say blow, HDPE, milky or opaque,
+  // because clear PET is out of scope.
+  if (/carboy|jerry ?cans?/.test(t) || (/bottles?/.test(t) && /hdpe|blow|milky|opaque/.test(t))) categories.push('bottles');
   if (/\bjars?\b/.test(t)) categories.push('jars');
   return categories;
 }
