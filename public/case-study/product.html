@@ -511,6 +511,7 @@
       color: var(--orange); background: var(--orange-soft); border: 1px solid rgba(79, 154, 53, 0.28);
       transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
     }
+    .tds-download[hidden] { display: none !important; }
     .tds-download:hover { background: rgba(79, 154, 53, 0.14); border-color: rgba(79, 154, 53, 0.45); }
     .tds-download:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
 
@@ -759,7 +760,7 @@
           </summary>
           <div class="spec-grid" id="specGrid"></div>
           <div class="tds-verified" data-tds-verified-slot></div>
-          <a class="tds-download" href="#" data-download-tds>
+          <a class="tds-download" href="#" data-download-tds hidden>
             <span>Download Technical Data Sheet (PDF)</span>
           </a>
         </details>
@@ -849,6 +850,7 @@
   const full = isLive ? (specData[entry.id] || {}) : {};
 
   const MODEL_SRC = {
+    carryHandleCap: './model/case-39-carry-handle-cap.glb',
     thinWallContainer: './model/case-38-thin-wall-container.glb',
     ballValve: './model/case-37-ball-valve.glb?v=smooth-20260924',
     bottleCap: './model/case-36-bottle-cap.glb',
@@ -889,6 +891,7 @@
     circleContainer: './model/product-38-circle-container.glb?v=white-20260728',
   };
   const CAMERA_ORBIT = {
+    carryHandleCap: '25deg 62deg 110%',
     thinWallContainer: '18deg 66deg 108%',
     ballValve: '-12deg 78deg 115%',
     bottleCap: '25deg 72deg 120%',
@@ -936,7 +939,7 @@
   document.body.dataset.product = entry.id;
 
   // ── Meta / SEO ──
-  const title = `${entry.name} — ${entry.category} in LIMEX | White Dot Case Study`;
+  const title = `${entry.name} — ${entry.category}${full.dataKind === 'photo-reference' ? '' : ' in LIMEX'} | White Dot Case Study`;
   document.getElementById('pageTitle').textContent = title;
   const desc = full.tagline || `${entry.name}: a ${entry.category.toLowerCase()} case study exploring LIMEX limestone-based material. ${isLive ? 'Explore it in interactive 3D.' : 'Material spec and 3D model in progress.'}`;
   document.getElementById('metaDesc').content = desc;
@@ -991,7 +994,7 @@
         <model-viewer
           id="productModel"
           src="${MODEL_SRC[entry.id] || ''}"
-          alt="${entry.name} — LIMEX 3D model"
+          alt="${entry.name} — ${full.dataKind === 'photo-reference' ? 'photo-based' : 'LIMEX'} 3D model"
           loading="eager"
           reveal="auto"
           camera-controls
@@ -1048,7 +1051,12 @@
 
   // ── Sidebar: composition ──
   const compositionSlot = document.getElementById('compositionSlot');
-  if (isLive && full.composition && full.composition.length) {
+  if (full.dataKind === 'photo-reference') {
+    const features = document.createElement('p');
+    features.className = 'pending-note';
+    features.textContent = 'Raised circular top · Pivoting carry handle · Inner sealing ring';
+    compositionSlot.replaceChildren(features);
+  } else if (isLive && full.composition && full.composition.length) {
     const [a, b] = full.composition;
     compositionSlot.innerHTML = `
       <div class="comp-bar">
@@ -1099,7 +1107,7 @@
   // ── Header ──
   document.getElementById('glassEyebrow').textContent = entry.category;
   document.getElementById('glassProductName').textContent = entry.name;
-  document.getElementById('glassTag').textContent = isLive ? 'LIMEX Composite' : 'Coming Soon';
+  document.getElementById('glassTag').textContent = full.dataKind === 'photo-reference' ? 'Packaging Design' : isLive ? 'LIMEX Composite' : 'Coming Soon';
   document.getElementById('glassIndexMark').textContent = entry.index;
 
   // ── Material Reference accordion (deep spec table) ──
@@ -1117,7 +1125,7 @@
     // head would always fall back to the "bobbin" default.
     if (!document.querySelector('script[data-tds-engine]')) {
       const tds = document.createElement('script');
-      tds.src = './js/tds-engine.js';
+      tds.src = './js/tds-engine.js?v=superadmin-20260924';
       tds.defer = true;
       tds.dataset.tdsEngine = '1';
       document.body.appendChild(tds);

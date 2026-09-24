@@ -71,8 +71,10 @@ const ballValveHref = `${basePath}/case-study/product.html?p=ball-valve`;
 const ballValveModel = `${basePath}/case-study/model/case-37-ball-valve.glb?v=smooth-20260924`;
 const thinWallContainerHref = `${basePath}/case-study/product.html?p=thin-wall-container`;
 const thinWallContainerModel = `${basePath}/case-study/model/case-38-thin-wall-container.glb`;
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'toiletSeat' | 'nonWovenBag' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer' | 'bottleCap' | 'ballValve' | 'thinWallContainer';
-const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer', 'lunchBox', 'dairySweetContainer', 'dairyRoundContainer', 'rectangleContainer', 'hook20mm', 'roundPipe', 'applianceTray', 'motorFanBlade', 'cupContainer', 'toothBrush', 'petrolPipe', 'proteinContainer', 'rectangleBox', 'smallRoundBottle', 'saltBottle', 'lightWeightContainer', 'foodTrayDish', 'lightWeightDish', 'dermicoolPowderBottle', 'wovenThread', 'toiletSeat', 'nonWovenBag', 'courierBag', 'stripTape', 'darkTalpatri', 'circleContainer', 'bottleCap', 'ballValve', 'thinWallContainer']);
+const carryHandleCapHref = `${basePath}/case-study/product.html?p=carry-handle-cap`;
+const carryHandleCapModel = `${basePath}/case-study/model/case-39-carry-handle-cap.glb`;
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'toiletSeat' | 'nonWovenBag' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer' | 'bottleCap' | 'ballValve' | 'thinWallContainer' | 'carryHandleCap';
+const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer', 'lunchBox', 'dairySweetContainer', 'dairyRoundContainer', 'rectangleContainer', 'hook20mm', 'roundPipe', 'applianceTray', 'motorFanBlade', 'cupContainer', 'toothBrush', 'petrolPipe', 'proteinContainer', 'rectangleBox', 'smallRoundBottle', 'saltBottle', 'lightWeightContainer', 'foodTrayDish', 'lightWeightDish', 'dermicoolPowderBottle', 'wovenThread', 'toiletSeat', 'nonWovenBag', 'courierBag', 'stripTape', 'darkTalpatri', 'circleContainer', 'bottleCap', 'ballValve', 'thinWallContainer', 'carryHandleCap']);
 
 // Pending products — same card as live ones; 3D model + spec details land later.
 const pendingProducts: { idx: string; slug: string; name: string; tag: string }[] = [];
@@ -86,7 +88,7 @@ function monogram(name: string): string {
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
-    { value: '38', label: 'Products in LIMEX' },
+    { value: '39', label: 'Products Mapped' },
     { value: '3D', label: 'Interactive' },
     { value: <>100<small>%</small></>, label: 'LIMEX + Color' },
     { value: <>~38<small>%</small></>, label: 'CO2e Cut (LCA)', green: true },
@@ -289,6 +291,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 34', green: true },
 ],
+  carryHandleCap: [
+    { value: '39', label: 'Carry Handle Cap' },
+    { value: 'Orange', label: 'Finish' },
+    { value: 'Folding', label: 'Carry Handle' },
+    { value: 'Smooth', label: 'Outer Skirt' },
+  ],
   thinWallContainer: [
     { value: '38', label: 'Thin Wall Container' },
     { value: '21.12 g', label: 'Original Weight' },
@@ -1440,6 +1448,20 @@ export default function CaseStudyFeature() {
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Thin Wall Container</div><div className="csp-ptag">Injection Moulding - Trial 30</div><Composition k="thinWallContainer">20% LIMEX · 80% PP</Composition></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
+      {/* 39 Carry Handle Cap */}
+      <a className="csp-pcard featured live" href={carryHandleCapHref} data-product="carryHandleCap">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">39</span>
+          {(activeModels.has('carryHandleCap')) ? (
+            // @ts-ignore custom element
+            <model-viewer data-model-src={carryHandleCapModel} alt="Carry Handle Cap orange jar closure with folding handle 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="25deg 62deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          ) : (
+            <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Carry Handle Cap</div><div className="csp-ptag">Jar Closure</div><div className="csp-ptag">Orange finish · Folding handle · Smooth skirt</div></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {pendingProducts.map(p => (

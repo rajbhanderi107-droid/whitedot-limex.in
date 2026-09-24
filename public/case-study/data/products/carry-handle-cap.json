@@ -1,0 +1,44 @@
+{
+  "id": "carryHandleCap",
+  "index": "39",
+  "slug": "carry-handle-cap",
+  "name": "Carry Handle Cap",
+  "category": "Jar Closure",
+  "status": "live",
+  "modelFile": "model/case-39-carry-handle-cap.glb",
+  "photos": [
+    {
+      "src": "img/carry-handle-cap-reference.png",
+      "alt": "Supplied orange jar cap with smooth skirt and raised folding carry handle"
+    }
+  ],
+  "lastUpdated": "2026-09-24",
+  "dataKind": "photo-reference",
+  "tdsAvailable": false,
+  "tagline": "An orange jar cap with a folding carry handle and a smooth circular skirt.",
+  "description": "A photo-based 3D study of an orange jar closure, featuring a raised circular top, a smooth outer skirt and a semicircular carry handle mounted on side pivots. The open underside includes the inner sealing ring visible in the supplied reference.",
+  "referenceGrade": "",
+  "mixRatio": "",
+  "moulding": "",
+  "application": "Jar Closure",
+  "composition": [],
+  "specs": [],
+  "highlights": [
+    {
+      "num": "Orange",
+      "unit": "",
+      "label": "Finish"
+    },
+    {
+      "num": "Folding",
+      "unit": "",
+      "label": "Carry Handle"
+    },
+    {
+      "num": "Smooth",
+      "unit": "",
+      "label": "Outer Skirt"
+    }
+  ],
+  "htmlPage": "product.html?p=carry-handle-cap"
+}
