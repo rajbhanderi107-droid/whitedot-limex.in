@@ -6,12 +6,8 @@
   "category": "Jar Closure",
   "status": "live",
   "modelFile": "model/case-39-carry-handle-cap.glb",
-  "photos": [
-    {
-      "src": "img/carry-handle-cap-reference.png",
-      "alt": "Supplied orange jar cap with smooth skirt and raised folding carry handle"
-    }
-  ],
+  "photos": [],
+      "showPhotoGallery": false,
   "lastUpdated": "2026-09-24",
   "dataKind": "photo-reference",
   "tdsAvailable": false,

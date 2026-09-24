@@ -1134,6 +1134,10 @@
 
   // ── Real Product Photography gallery (branches on photos.length, like the 3D stage) ──
   (function renderPhotoGallery() {
+    if (entry.showPhotoGallery === false) {
+      document.querySelector(".photo-gallery-section").remove();
+      return;
+    }
     const photos = Array.isArray(entry.photos) ? entry.photos.filter(p => p && p.src) : [];
     const body = document.getElementById('photoGalleryBody');
     const countEl = document.getElementById('photoGalleryCount');
