@@ -43,7 +43,7 @@
       host.innerHTML =
         '<span class="tds-verified-dot"></span>' +
         verifiedCount + " of " + specs.length +
-        (p.id === 'bottleCap'
+        (p.id === 'bottleCap' || p.dataKind === 'trial-workbook'
           ? " fields transcribed from the supplied trial workbook; not supplier-certified"
           : " fields verified from photo references or published supplier data");
     }
@@ -216,7 +216,7 @@
     (p.specs || []).concat(p.composition || [], p.highlights || [], [p.co2 || {}]).forEach((x) => x && x.source && usedKeys.add(x.source));
     const srcLines = [];
     usedKeys.forEach((k) => { if (db.sources[k]) srcLines.push("• " + db.sources[k]); });
-    srcLines.push("• Prepared " + (db._meta.lastResearched || "") + ". Photo-reference fields are derived from supplied product images. User-supplied formulation fields are marked unverified until confirmed against final supplier lot TDS.");
+    srcLines.push("• Prepared " + (p.lastUpdated || db._meta.lastResearched || "") + ". Photo-reference fields are derived from supplied product images. User-supplied formulation fields are marked unverified until confirmed against final supplier lot TDS.");
     const wrapped = doc.splitTextToSize(srcLines.join("\n"), W - M * 2);
     doc.text(wrapped, M, y);
     y += wrapped.length * 10 + 16;

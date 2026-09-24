@@ -67,8 +67,10 @@ const circleContainerHref = `${basePath}/case-study/product.html?p=circle-contai
 const circleContainerModel = `${basePath}/case-study/model/product-38-circle-container.glb?v=white-20260728`;
 const bottleCapHref = `${basePath}/case-study/product.html?p=bottle-cap`;
 const bottleCapModel = `${basePath}/case-study/model/case-36-bottle-cap.glb`;
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'toiletSeat' | 'nonWovenBag' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer' | 'bottleCap';
-const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer', 'lunchBox', 'dairySweetContainer', 'dairyRoundContainer', 'rectangleContainer', 'hook20mm', 'roundPipe', 'applianceTray', 'motorFanBlade', 'cupContainer', 'toothBrush', 'petrolPipe', 'proteinContainer', 'rectangleBox', 'smallRoundBottle', 'saltBottle', 'lightWeightContainer', 'foodTrayDish', 'lightWeightDish', 'dermicoolPowderBottle', 'wovenThread', 'toiletSeat', 'nonWovenBag', 'courierBag', 'stripTape', 'darkTalpatri', 'circleContainer', 'bottleCap']);
+const ballValveHref = `${basePath}/case-study/product.html?p=ball-valve`;
+const ballValveModel = `${basePath}/case-study/model/case-37-ball-valve.glb`;
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'toiletSeat' | 'nonWovenBag' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer' | 'bottleCap' | 'ballValve';
+const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer', 'lunchBox', 'dairySweetContainer', 'dairyRoundContainer', 'rectangleContainer', 'hook20mm', 'roundPipe', 'applianceTray', 'motorFanBlade', 'cupContainer', 'toothBrush', 'petrolPipe', 'proteinContainer', 'rectangleBox', 'smallRoundBottle', 'saltBottle', 'lightWeightContainer', 'foodTrayDish', 'lightWeightDish', 'dermicoolPowderBottle', 'wovenThread', 'toiletSeat', 'nonWovenBag', 'courierBag', 'stripTape', 'darkTalpatri', 'circleContainer', 'bottleCap', 'ballValve']);
 
 // Pending products — same card as live ones; 3D model + spec details land later.
 const pendingProducts: { idx: string; slug: string; name: string; tag: string }[] = [];
@@ -82,7 +84,7 @@ function monogram(name: string): string {
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
-    { value: '36', label: 'Products in LIMEX' },
+    { value: '37', label: 'Products in LIMEX' },
     { value: '3D', label: 'Interactive' },
     { value: <>100<small>%</small></>, label: 'LIMEX + Color' },
     { value: <>~38<small>%</small></>, label: 'CO2e Cut (LCA)', green: true },
@@ -285,6 +287,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 34', green: true },
 ],
+  ballValve: [
+    { value: '37', label: 'Ball Valve' },
+    { value: '30%', label: 'LIMEX in Trial' },
+    { value: '70%', label: 'PP in Trial' },
+    { value: '29', label: 'Trial Record', green: true },
+  ],
   bottleCap: [
     { value: '36', label: 'Bottle Cap' },
     { value: '48.4 g', label: 'Original Weight' },
@@ -1396,6 +1404,20 @@ export default function CaseStudyFeature() {
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Bottle Cap</div><div className="csp-ptag">Injection Moulding - Trial 28</div><Composition k="bottleCap">HDPE + LIMEX · Ratio under review</Composition></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
+      {/* 37 Ball Valve - photo model and anonymized trial data */}
+      <a className="csp-pcard featured live" href={ballValveHref} data-product="ballValve">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">37</span>
+          {(activeModels.has('ballValve')) ? (
+            // @ts-ignore custom element
+            <model-viewer data-model-src={ballValveModel} alt="Ball Valve ribbed pipe fitting 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="-12deg 78deg 115%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          ) : (
+            <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Ball Valve</div><div className="csp-ptag">Injection Moulding - Trial 29</div><Composition k="ballValve">30% LIMEX · 70% PP</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {pendingProducts.map(p => (
