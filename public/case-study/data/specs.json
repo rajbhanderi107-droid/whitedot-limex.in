@@ -7,6 +7,7 @@
     "lastUpdated": "2026-07-20"
   },
   "sources": {
+    "toilet-brush-handle-trial-34": "User-supplied toilet brush trial workbook 34, Trial 1 sheet. Recorded process, resin masses, colour and product weights. Customer identity omitted. Stated LIMEX use and recorded batch mass are reported separately.",
     "thin-wall-container-trial-30": "User-supplied thin wall container trial workbook 30, Trial 1 and Processing parameters sheets. Transcribed trial observations, not a certified supplier TDS. Identity details omitted. Blend percentages calculated from the recorded 1,000 g PP + 250 g LIMEX batch.",
     "thin-wall-container-photo": "Supplied unbranded open thin wall container photograph. No measured dimensions supplied.",
     "ball-valve-trial-29": "User-supplied ball valve trial workbook 29, Trial 1 and Processing parameters sheets. Transcribed trial observations, not a certified supplier TDS. Identity details omitted.",
@@ -30,6 +31,155 @@
     "circle-container-model-reference": "Circle Container 3D model reference: photo-matched 3 L bucket with bail handle"
   },
   "products": {
+    "toiletBrushHandle": {
+      "id": "toiletBrushHandle",
+      "index": "40",
+      "slug": "toilet-brush-handle",
+      "name": "Toilet Brush Handle",
+      "category": "Cleaning Accessories",
+      "status": "live",
+      "modelFile": "model/case-40-toilet-brush-handle.glb",
+      "photos": [],
+      "showPhotoGallery": false,
+      "lastUpdated": "2026-09-25",
+      "dataKind": "trial-workbook",
+      "tdsAvailable": true,
+      "tagline": "An injection-moulded toilet brush handle using PP, CP and LIMEX PE26-F51.",
+      "description": "A toilet brush handle modelled from the supplied reference photographs. Trial 34 records a PP + CP resin blend with LIMEX PE26-F51 and a sky-base colour entry. Recorded product weights are 140 g for the original part and 160 g for the trial part.",
+      "referenceGrade": "PE26-F51",
+      "mixRatio": "PP + CP + LIMEX",
+      "materialLabel": "PP + CP + LIMEX",
+      "moulding": "Injection Moulding",
+      "application": "Toilet Brush Handle",
+      "composition": [],
+      "compositionNote": "The form states 20% LIMEX use. Recorded masses are 2,500 g PP + 2,500 g CP + 500 g LIMEX in a 5,500 g batch, equivalent to 9.09% LIMEX by recorded batch mass.",
+      "specs": [
+        {
+          "label": "Source trial number",
+          "value": "34",
+          "verified": true,
+          "source": "toilet-brush-handle-trial-34",
+          "sourceCell": "Trial 1!A1"
+        },
+        {
+          "label": "Product recorded",
+          "value": "TOILET BRUSH",
+          "verified": true,
+          "source": "toilet-brush-handle-trial-34",
+          "sourceCell": "Trial 1!C10"
+        },
+        {
+          "label": "Process recorded",
+          "value": "PP INJECTION MOULD",
+          "verified": true,
+          "source": "toilet-brush-handle-trial-34",
+          "sourceCell": "Trial 1!C4"
+        },
+        {
+          "label": "LIMEX grade",
+          "value": "PE26-F51",
+          "verified": true,
+          "source": "toilet-brush-handle-trial-34",
+          "sourceCell": "Trial 1!C5"
+        },
+        {
+          "label": "Original resin",
+          "value": "PP + CP",
+          "verified": true,
+          "source": "toilet-brush-handle-trial-34",
+          "sourceCell": "Trial 1!C12"
+        },
+        {
+          "label": "Colour recorded",
+          "value": "SKY BASE",
+          "verified": true,
+          "source": "toilet-brush-handle-trial-34",
+          "sourceCell": "Trial 1!C9"
+        },
+        {
+          "label": "Trial batch",
+          "value": "5,500 g",
+          "verified": true,
+          "source": "toilet-brush-handle-trial-34",
+          "sourceCell": "Trial 1!C6"
+        },
+        {
+          "label": "PP mass recorded",
+          "value": "2,500 g",
+          "verified": true,
+          "source": "toilet-brush-handle-trial-34",
+          "sourceCell": "Trial 1!C7"
+        },
+        {
+          "label": "CP mass recorded",
+          "value": "2,500 g",
+          "verified": true,
+          "source": "toilet-brush-handle-trial-34",
+          "sourceCell": "Trial 1!C7"
+        },
+        {
+          "label": "LIMEX mass recorded",
+          "value": "500 g",
+          "verified": true,
+          "source": "toilet-brush-handle-trial-34",
+          "sourceCell": "Trial 1!C8"
+        },
+        {
+          "label": "LIMEX use stated on form",
+          "value": "20%",
+          "verified": true,
+          "source": "toilet-brush-handle-trial-34",
+          "sourceCell": "Trial 1!C8"
+        },
+        {
+          "label": "Formulation discrepancy",
+          "value": "The form states 20% LIMEX use. Recorded masses are 2,500 g PP + 2,500 g CP + 500 g LIMEX in a 5,500 g batch, equivalent to 9.09% LIMEX by recorded batch mass.",
+          "verified": false,
+          "source": "toilet-brush-handle-trial-34",
+          "sourceCell": "Trial 1!C6:C8"
+        },
+        {
+          "label": "Original product weight",
+          "value": "140 g",
+          "verified": true,
+          "source": "toilet-brush-handle-trial-34",
+          "sourceCell": "Trial 1!C14"
+        },
+        {
+          "label": "Trial product weight",
+          "value": "160 g",
+          "verified": true,
+          "source": "toilet-brush-handle-trial-34",
+          "sourceCell": "Trial 1!C15"
+        }
+      ],
+      "highlights": [
+        {
+          "num": "140",
+          "unit": "g",
+          "label": "Original Weight",
+          "verified": true,
+          "source": "toilet-brush-handle-trial-34",
+          "sourceCell": "Trial 1!C14"
+        },
+        {
+          "num": "160",
+          "unit": "g",
+          "label": "Trial Weight",
+          "verified": true,
+          "source": "toilet-brush-handle-trial-34",
+          "sourceCell": "Trial 1!C15"
+        },
+        {
+          "num": "34",
+          "unit": "",
+          "label": "Trial Record",
+          "verified": true,
+          "source": "toilet-brush-handle-trial-34",
+          "sourceCell": "Trial 1!A1"
+        }
+      ]
+    },
     "carryHandleCap": {
       "id": "carryHandleCap",
       "index": "39",

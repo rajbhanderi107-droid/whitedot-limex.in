@@ -71,11 +71,13 @@ const thinWallContainerHref = `${basePath}/case-study/product.html?p=thin-wall-c
 const thinWallContainerModel = `${basePath}/case-study/model/case-38-thin-wall-container.glb`;
 const carryHandleCapHref = `${basePath}/case-study/product.html?p=carry-handle-cap`;
 const carryHandleCapModel = `${basePath}/case-study/model/case-39-carry-handle-cap.glb`;
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'toiletSeat' | 'nonWovenBag' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer' | 'bottleCap' | 'ballValve' | 'thinWallContainer' | 'carryHandleCap';
+const toiletBrushHandleHref = `${basePath}/case-study/product.html?p=toilet-brush-handle`;
+const toiletBrushHandleModel = `${basePath}/case-study/model/case-40-toilet-brush-handle.glb`;
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'toiletSeat' | 'nonWovenBag' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer' | 'bottleCap' | 'ballValve' | 'thinWallContainer' | 'carryHandleCap' | 'toiletBrushHandle';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
-    { value: '39', label: 'Active Studies' },
+    { value: '40', label: 'Active Studies' },
     { value: '3D', label: 'Interactive' },
     { value: <>100<small>%</small></>, label: 'LIMEX + Color' },
     { value: <>~38<small>%</small></>, label: 'CO2e Cut (LCA)', green: true },
@@ -278,6 +280,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 34', green: true },
 ],
+  toiletBrushHandle: [
+    { value: '40', label: 'Toilet Brush Handle' },
+    { value: '140 g', label: 'Original Weight' },
+    { value: '160 g', label: 'Trial Weight' },
+    { value: '34', label: 'Trial Record' },
+  ],
   carryHandleCap: [
     { value: '39', label: 'Carry Handle Cap' },
     { value: 'Orange', label: 'Finish' },
@@ -1391,6 +1399,20 @@ export default function CaseStudyPage() {
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Carry Handle Cap</div><div className="csp-ptag">Jar Closure</div><div className="csp-ptag">Orange finish · Folding handle · Smooth skirt</div></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
+      {/* 40 Toilet Brush Handle */}
+      <a className="csp-pcard featured live" href={toiletBrushHandleHref} data-product="toiletBrushHandle">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">40</span>
+          {(activeModels.has('toiletBrushHandle')) ? (
+            // @ts-ignore custom element
+            <model-viewer data-model-src={toiletBrushHandleModel} alt="Toilet Brush Handle long moulded cleaning handle 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 78deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          ) : (
+            <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Toilet Brush Handle</div><div className="csp-ptag">Injection Moulding - Trial 34</div><div className="csp-ptag">PP + CP + LIMEX</div></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
     </>

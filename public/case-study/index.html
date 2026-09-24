@@ -782,7 +782,7 @@
       <p>Everyday plastic parts, rebuilt with limestone-based material. Select a product to explore it in 3D and see how its composition changes.</p>
       <!-- Stats strip -->
       <div class="hero-stats-strip" data-active-product="overview">
-        <div class="hs-cell"><div class="hs-item"><span class="hs-num">39</span><span class="hs-label">Products Mapped</span></div></div>
+        <div class="hs-cell"><div class="hs-item"><span class="hs-num">40</span><span class="hs-label">Products Mapped</span></div></div>
         <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num">08</span><span class="hs-label">Live Studies</span></div></div>
         <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num">3D</span><span class="hs-label">Interactive</span></div></div>
         <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num orange">~38<small>%</small></span><span class="hs-label">CO2e Cut (LCA)</span></div></div>
@@ -832,6 +832,7 @@
   const isMobileViewport = window.innerWidth <= 760;
 
   const MODEL_SRC = {
+    toiletBrushHandle: './model/case-40-toilet-brush-handle.glb',
     carryHandleCap: './model/case-39-carry-handle-cap.glb',
     thinWallContainer: './model/case-38-thin-wall-container.glb',
     ballValve: './model/case-37-ball-valve.glb?v=smooth-20260924',
@@ -872,6 +873,7 @@
     circleContainer: './model/product-38-circle-container.glb?v=white-20260728',
   };
   const CAMERA_ORBIT = {
+    toiletBrushHandle: '18deg 78deg 110%',
     carryHandleCap: '25deg 62deg 110%',
     thinWallContainer: '18deg 66deg 108%',
     ballValve: '-12deg 78deg 115%',
@@ -975,7 +977,7 @@
          ${b ? `<span style="margin:0 4px;color:var(--wd-line-strong);font-size:8px;">·</span>
          <span class="comp-seg-dot limex"></span>
          <span class="comp-seg-label">${b.pct}% ${(b.name || '').split(' ')[0]}</span>` : ''}`
-      : `<span class="comp-seg-dot pp"></span><span class="comp-seg-label">${full && full.dataKind === 'photo-reference' ? 'Orange finish · Folding handle' : full && full.compositionNote ? 'HDPE + LIMEX · Ratio under review' : 'Material spec pending'}</span>`;
+      : `<span class="comp-seg-dot pp"></span><span class="comp-seg-label">${full && full.dataKind === 'photo-reference' ? 'Orange finish · Folding handle' : full && full.compositionNote ? (full.materialLabel || 'HDPE + LIMEX · Ratio under review') : 'Material spec pending'}</span>`;
 
     return `
       <a class="p-card featured live" href="${entry.slug === 'round-pipe' ? './round-pipe.html' : `./product.html?p=${entry.slug}`}" data-product="${entry.id}">
@@ -1155,12 +1157,13 @@
   let activeProduct = 'overview';
   const statsStrip = document.querySelector('.hero-stats-strip');
   const productStats = {
+    toiletBrushHandle: [['40', 'Toilet Brush Handle', false], ['140 g', 'Original Weight', false], ['160 g', 'Trial Weight', false], ['34', 'Trial Record', false]],
     carryHandleCap: [['39', 'Carry Handle Cap', false], ['Orange', 'Finish', false], ['Folding', 'Carry Handle', false], ['Smooth', 'Outer Skirt', false]],
     thinWallContainer: [['38', 'Thin Wall Container', false], ['21.12 g', 'Original Weight', false], ['24.56 g', 'Trial Weight', false], ['30', 'Trial Record', true]],
     ballValve: [['37', 'Ball Valve', false], ['30%', 'LIMEX in Trial', false], ['70%', 'PP in Trial', false], ['29', 'Trial Record', true]],
     bottleCap: [['36', 'Bottle Cap', false], ['48.4 g', 'Original Weight', false], ['56.0 g', 'Trial Weight', false], ['TDS', 'Trial Record', true]],
     overview: [
-      ['39', 'Products Mapped', false],
+      ['40', 'Products Mapped', false],
       ['09', 'Live Studies', false],
       ['3D', 'Interactive', false],
       ['~38<small>%</small>', 'CO2e Cut (LCA)', true],
