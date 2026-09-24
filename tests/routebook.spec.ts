@@ -377,10 +377,11 @@ test('clean desk filters real tasks, hides removed companies, and links to the c
   await page.getByRole('button', { name: 'Payment check' }).click();
   await expect(page.locator('.bd-empty')).toContainText('No payment check');
   await page.getByRole('button', { name: 'Open menu', exact: true }).click();
-  // The workspace nav is the four books plus Today — named, not just counted,
-  // so adding a fifth link cannot quietly pass while the wrong one is listed.
+  // The workspace nav is the five books plus Today — named, not just counted,
+  // so adding a sixth link cannot quietly pass while the wrong one is listed.
   await expect(page.locator('.adm-drawer .wd-nav a')).toHaveText([
     'Today', 'LIMEX Route Book', 'LIMEX Visit Follow-ups', 'LIMEX Lead Book', 'LIMEX Customer Book',
+    'LIMEX Trial Book',
   ]);
   await expect(page.locator('.adm-drawer .wd-nav')).not.toContainText('AI Brain');
   await page.getByRole('button', { name: 'Close menu', exact: true }).click();
@@ -599,4 +600,52 @@ test('mobile filters fit within the screen and tools stay separate', async ({ pa
   await page.getByRole('button',{name:'Tools & settings'}).click();
   await expect(page.getByTestId('rb-ratebox')).toBeVisible();
   await expect(page.getByTestId('company-filters')).toHaveCount(1);
+});
+
+test('the Trial Book continues from the folder, never from 1', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  await mockPortal(page);
+  // The folder on the laptop already holds trials 1-35, so an empty Trial Book
+  // must offer 36 - never 1, which would clash with the folder's own trial 1.
+  const trials: Record<string, unknown>[] = [];
+  let posted: Record<string, unknown> | undefined;
+  await page.route('**/api/portal/trial-book', async (r) => {
+    if (r.request().method() === 'POST') {
+      posted = r.request().postDataJSON();
+      const trial = { id: 't36', trialNo: 36, ...posted, createdAt: '', updatedAt: '', syncedAt: null };
+      trials.push(trial);
+      return r.fulfill({ status: 201, contentType: 'application/json',
+        body: JSON.stringify({ success: true, data: { trial } }) });
+    }
+    return r.fulfill(ok({ trials, nextTrialNo: trials.length ? 37 : 36 }));
+  });
+
+  await page.goto('/#/admin/trial-book');
+  await expect(page.getByTestId('trial-book')).toBeVisible();
+  await expect(page.getByTestId('trial-book')).toContainText('next is 36');
+
+  await page.getByRole('button', { name: 'New trial' }).click();
+  await expect(page.getByRole('dialog', { name: 'Trial form' })).toContainText('will be 36');
+  await page.getByLabel('6. Product').fill('BOTTLE CAP');
+  await page.getByRole('dialog', { name: 'Trial form' }).getByRole('button', { name: /save|record/i }).click();
+
+  await expect.poll(() => posted?.product).toBe('BOTTLE CAP');
+  // The client never chooses the number - the server does, from the folder floor.
+  expect(posted).not.toHaveProperty('trialNo');
+  await expect(page.getByTestId('trial-book')).toContainText('next is 37');
+});
+
+test('a trial cannot be saved without its product', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  await mockPortal(page);
+  let posts = 0;
+  await page.route('**/api/portal/trial-book', async (r) => {
+    if (r.request().method() === 'POST') { posts++; return r.fulfill(ok({ trial: {} })); }
+    return r.fulfill(ok({ trials: [], nextTrialNo: 36 }));
+  });
+  await page.goto('/#/admin/trial-book');
+  await page.getByRole('button', { name: 'New trial' }).click();
+  await page.getByRole('dialog', { name: 'Trial form' }).getByRole('button', { name: /save|record/i }).click();
+  await expect(page.locator('.rb-toasts')).toContainText('needs at least the product');
+  expect(posts).toBe(0);
 });
