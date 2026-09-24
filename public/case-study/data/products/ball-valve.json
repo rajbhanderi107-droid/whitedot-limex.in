@@ -5,7 +5,7 @@
   "name": "Ball Valve",
   "category": "Pipe Fitting",
   "status": "live",
-  "modelFile": "model/case-37-ball-valve.glb",
+  "modelFile": "model/case-37-ball-valve.glb?v=smooth-20260924",
   "photos": [
     {
       "src": "img/ball-valve-reference.png",

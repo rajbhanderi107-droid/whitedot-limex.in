@@ -68,7 +68,7 @@ const circleContainerModel = `${basePath}/case-study/model/product-38-circle-con
 const bottleCapHref = `${basePath}/case-study/product.html?p=bottle-cap`;
 const bottleCapModel = `${basePath}/case-study/model/case-36-bottle-cap.glb`;
 const ballValveHref = `${basePath}/case-study/product.html?p=ball-valve`;
-const ballValveModel = `${basePath}/case-study/model/case-37-ball-valve.glb`;
+const ballValveModel = `${basePath}/case-study/model/case-37-ball-valve.glb?v=smooth-20260924`;
 type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'toiletSeat' | 'nonWovenBag' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer' | 'bottleCap' | 'ballValve';
 const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer', 'lunchBox', 'dairySweetContainer', 'dairyRoundContainer', 'rectangleContainer', 'hook20mm', 'roundPipe', 'applianceTray', 'motorFanBlade', 'cupContainer', 'toothBrush', 'petrolPipe', 'proteinContainer', 'rectangleBox', 'smallRoundBottle', 'saltBottle', 'lightWeightContainer', 'foodTrayDish', 'lightWeightDish', 'dermicoolPowderBottle', 'wovenThread', 'toiletSeat', 'nonWovenBag', 'courierBag', 'stripTape', 'darkTalpatri', 'circleContainer', 'bottleCap', 'ballValve']);
 
@@ -1412,7 +1412,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">37</span>
           {(activeModels.has('ballValve')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={ballValveModel} alt="Ball Valve ribbed pipe fitting 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="-12deg 78deg 115%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={ballValveModel} alt="Ball Valve smooth pipe fitting 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="-12deg 78deg 115%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}

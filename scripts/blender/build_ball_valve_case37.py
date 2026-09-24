@@ -227,7 +227,7 @@ housing_profile = [
     (43, 165), (37.5, 165), (37.5, 110), (38, 100),
     (40, 88), (40, 72), (37, 60), (34.5, 50), (34.5, 0),
 ]
-housing = lathe("Unbranded ribbed valve housing", housing_profile, white_pvc, bevel_mm=0.35)
+housing = lathe("Unbranded smooth valve housing", housing_profile, white_pvc, bevel_mm=0.35)
 housing["reference_authority"] = "supplied photo; unmeasured visualization"
 housing["branding"] = "none"
 
@@ -235,12 +235,7 @@ housing["branding"] = "none"
 torus("upper central molding seam", 47.7, 0.65, 85.5, white_edge)
 torus("lower central molding seam", 48.0, 0.55, 74.5, white_edge)
 
-# Eight broad ribs on each socket. The actual piece uses softened rectangular
-# fins, not a conventional knurled thread exterior.
-for idx in range(8):
-    angle = math.tau * idx / 8.0
-    rib(f"upper external grip rib {idx + 1}", angle, 137.0, 51.0, white_pvc, radius=43.0)
-    rib(f"lower external grip rib {idx + 1}", angle, 25.0, 46.0, white_pvc, radius=40.0)
+# User correction: smooth socket exteriors, with no raised vertical ribs.
 
 # Slightly rounded end lips frame the open black insert.
 torus("upper white socket lip", 40.2, 2.45, 164.0, white_edge)

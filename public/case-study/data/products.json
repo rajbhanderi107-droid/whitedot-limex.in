@@ -45,6 +45,6 @@
     { "id": "darkTalpatri",      "index": "34", "slug": "dark-plastic-talpatri", "name": "Dark Plastic Talpatri",           "category": "Industrial Sheeting",            "status": "live", "modelFile": "model/product-37-dark-plastic-talpatri.glb", "photos": [] },
     { "id": "circleContainer",    "index": "35", "slug": "circle-container",     "name": "Circle Container",                "category": "General Packaging",              "status": "live", "modelFile": "model/product-38-circle-container.glb?v=white-20260728", "photos": [] },
     {"id": "bottleCap", "index": "36", "slug": "bottle-cap", "name": "Bottle Cap", "category": "Bottle Closure", "status": "live", "modelFile": "model/case-36-bottle-cap.glb", "photos": [{"src": "img/bottle-cap-reference.png", "alt": "Supplied bottle cap photograph showing the recessed interior and fine outer grip ribs"}]},
-    {"id": "ballValve", "index": "37", "slug": "ball-valve", "name": "Ball Valve", "category": "Pipe Fitting", "status": "live", "modelFile": "model/case-37-ball-valve.glb", "photos": [{"src": "img/ball-valve-reference.png", "alt": "Supplied white ball valve photograph with broad vertical ribs and black side actuator"}]}
+    {"id": "ballValve", "index": "37", "slug": "ball-valve", "name": "Ball Valve", "category": "Pipe Fitting", "status": "live", "modelFile": "model/case-37-ball-valve.glb?v=smooth-20260924", "photos": [{"src": "img/ball-valve-reference.png", "alt": "Supplied white ball valve photograph with broad vertical ribs and black side actuator"}]}
   ]
 }
