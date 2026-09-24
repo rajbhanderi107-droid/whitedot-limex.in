@@ -74,7 +74,7 @@ const thinWallContainerModel = `${basePath}/case-study/model/case-38-thin-wall-c
 const carryHandleCapHref = `${basePath}/case-study/product.html?p=carry-handle-cap`;
 const carryHandleCapModel = `${basePath}/case-study/model/case-39-carry-handle-cap.glb`;
 const toiletBrushHandleHref = `${basePath}/case-study/product.html?p=toilet-brush-handle`;
-const toiletBrushHandleModel = `${basePath}/case-study/model/case-40-toilet-brush-handle.glb`;
+const toiletBrushHandleModel = `${basePath}/case-study/model/case-40-toilet-brush-handle.glb?v=side-opening-20260925`;
 type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'toiletSeat' | 'nonWovenBag' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer' | 'bottleCap' | 'ballValve' | 'thinWallContainer' | 'carryHandleCap' | 'toiletBrushHandle';
 const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer', 'lunchBox', 'dairySweetContainer', 'dairyRoundContainer', 'rectangleContainer', 'hook20mm', 'roundPipe', 'applianceTray', 'motorFanBlade', 'cupContainer', 'toothBrush', 'petrolPipe', 'proteinContainer', 'rectangleBox', 'smallRoundBottle', 'saltBottle', 'lightWeightContainer', 'foodTrayDish', 'lightWeightDish', 'dermicoolPowderBottle', 'wovenThread', 'toiletSeat', 'nonWovenBag', 'courierBag', 'stripTape', 'darkTalpatri', 'circleContainer', 'bottleCap', 'ballValve', 'thinWallContainer', 'carryHandleCap', 'toiletBrushHandle']);
 
@@ -1478,7 +1478,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">40</span>
           {(activeModels.has('toiletBrushHandle')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={toiletBrushHandleModel} alt="Toilet Brush Handle long moulded cleaning handle 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 78deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={toiletBrushHandleModel} alt="Toilet Brush Handle long moulded cleaning handle 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="40deg 78deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
