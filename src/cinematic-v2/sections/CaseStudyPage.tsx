@@ -72,7 +72,7 @@ const thinWallContainerModel = `${basePath}/case-study/model/case-38-thin-wall-c
 const carryHandleCapHref = `${basePath}/case-study/product.html?p=carry-handle-cap`;
 const carryHandleCapModel = `${basePath}/case-study/model/case-39-carry-handle-cap.glb`;
 const toiletBrushHandleHref = `${basePath}/case-study/product.html?p=toilet-brush-handle`;
-const toiletBrushHandleModel = `${basePath}/case-study/model/case-40-toilet-brush-handle.glb?v=side-opening-20260925`;
+const toiletBrushHandleModel = `${basePath}/case-study/model/case-40-toilet-brush-handle.glb?v=narrow-base-20260925`;
 type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'toiletSeat' | 'nonWovenBag' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer' | 'bottleCap' | 'ballValve' | 'thinWallContainer' | 'carryHandleCap' | 'toiletBrushHandle';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {

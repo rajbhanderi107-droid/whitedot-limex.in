@@ -25,7 +25,7 @@ def interp(y,pts):
 def width(y):
  if y>=388:
   return max(.12,12.0*math.sqrt(max(0,1-((y-388)/12)**2)))
- w=interp(y,[(0,27),(5,29.5),(20,29.4),(65,27.2),(116,25.4),(128,24.6),(138,21.0),(153,19.6),(225,18.0),(292,16.0),(324,14.3),(334,13),(388,12)])
+ w=interp(y,[(0,23),(5,25),(20,25),(65,23.7),(116,22.5),(128,22),(138,20.3),(153,19.6),(225,18.0),(292,16.0),(324,14.3),(334,13),(388,12)])
  if 336<y<384:w+=.38*math.sin(math.tau*(y-336)/11)
  return w
 
@@ -73,7 +73,7 @@ def swept_cutter(name,y0,y1,halfwidth,zfunc,halfheight,corner=3.5,steps=160):
  m=bpy.data.meshes.new(name);m.from_pydata(vv,[],[tuple(reversed(f)) for f in ff]);m.update();o=bpy.data.objects.new(name,m);bpy.context.collection.objects.link(o);return o
 # The side reference shows a long narrow opening beneath the curved nose lip.
 cut(swept_cutter('Long open head socket',5,56,40,lambda y:front(y)-6.3,lambda y:max(.08,3.8*math.sqrt(max(0,1-((4-min(4,y-5,56-y))/4)**2))),3.6))
-cut(swept_cutter('Large front recessed panel',65,133,19,lambda y:front(y)+3,6,4.8))
+cut(swept_cutter('Large front recessed panel',65,133,17.2,lambda y:front(y)+3,6,4.8))
 cut(swept_cutter('Small front recessed panel',139,170,13.4,lambda y:front(y)+3.2,6,3.2))
 cut(swept_cutter('Rounded reverse reinforcement channel',183,317,lambda y:width(y)-3.1,lambda y:center(y)-depth(y)-3,6.7,3.8))
 cut(swept_cutter('Reverse small rectangular pocket',147,176,12.8,lambda y:center(y)-depth(y)-3,5.0,2.2))
