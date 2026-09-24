@@ -782,7 +782,7 @@
       <p>Everyday plastic parts, rebuilt with limestone-based material. Select a product to explore it in 3D and see how its composition changes.</p>
       <!-- Stats strip -->
       <div class="hero-stats-strip" data-active-product="overview">
-        <div class="hs-cell"><div class="hs-item"><span class="hs-num">37</span><span class="hs-label">Products Mapped</span></div></div>
+        <div class="hs-cell"><div class="hs-item"><span class="hs-num">38</span><span class="hs-label">Products Mapped</span></div></div>
         <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num">08</span><span class="hs-label">Live Studies</span></div></div>
         <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num">3D</span><span class="hs-label">Interactive</span></div></div>
         <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num orange">~38<small>%</small></span><span class="hs-label">CO2e Cut (LCA)</span></div></div>
@@ -832,6 +832,7 @@
   const isMobileViewport = window.innerWidth <= 760;
 
   const MODEL_SRC = {
+    thinWallContainer: './model/case-38-thin-wall-container.glb',
     ballValve: './model/case-37-ball-valve.glb?v=smooth-20260924',
     bottleCap: './model/case-36-bottle-cap.glb',
     bobbin: './model/bobbin.glb',
@@ -870,6 +871,7 @@
     circleContainer: './model/product-38-circle-container.glb?v=white-20260728',
   };
   const CAMERA_ORBIT = {
+    thinWallContainer: '18deg 66deg 108%',
     ballValve: '-12deg 78deg 115%',
     bottleCap: '25deg 72deg 120%',
     bobbin: '30deg 75deg 105%',
@@ -1151,10 +1153,11 @@
   let activeProduct = 'overview';
   const statsStrip = document.querySelector('.hero-stats-strip');
   const productStats = {
+    thinWallContainer: [['38', 'Thin Wall Container', false], ['21.12 g', 'Original Weight', false], ['24.56 g', 'Trial Weight', false], ['30', 'Trial Record', true]],
     ballValve: [['37', 'Ball Valve', false], ['30%', 'LIMEX in Trial', false], ['70%', 'PP in Trial', false], ['29', 'Trial Record', true]],
     bottleCap: [['36', 'Bottle Cap', false], ['48.4 g', 'Original Weight', false], ['56.0 g', 'Trial Weight', false], ['TDS', 'Trial Record', true]],
     overview: [
-      ['37', 'Products Mapped', false],
+      ['38', 'Products Mapped', false],
       ['09', 'Live Studies', false],
       ['3D', 'Interactive', false],
       ['~38<small>%</small>', 'CO2e Cut (LCA)', true],

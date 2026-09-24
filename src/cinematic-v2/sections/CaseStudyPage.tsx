@@ -67,11 +67,13 @@ const bottleCapHref = `${basePath}/case-study/product.html?p=bottle-cap`;
 const bottleCapModel = `${basePath}/case-study/model/case-36-bottle-cap.glb`;
 const ballValveHref = `${basePath}/case-study/product.html?p=ball-valve`;
 const ballValveModel = `${basePath}/case-study/model/case-37-ball-valve.glb?v=smooth-20260924`;
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'toiletSeat' | 'nonWovenBag' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer' | 'bottleCap' | 'ballValve';
+const thinWallContainerHref = `${basePath}/case-study/product.html?p=thin-wall-container`;
+const thinWallContainerModel = `${basePath}/case-study/model/case-38-thin-wall-container.glb`;
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'toiletSeat' | 'nonWovenBag' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer' | 'bottleCap' | 'ballValve' | 'thinWallContainer';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
-    { value: '37', label: 'Active Studies' },
+    { value: '38', label: 'Active Studies' },
     { value: '3D', label: 'Interactive' },
     { value: <>100<small>%</small></>, label: 'LIMEX + Color' },
     { value: <>~38<small>%</small></>, label: 'CO2e Cut (LCA)', green: true },
@@ -274,6 +276,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 34', green: true },
 ],
+  thinWallContainer: [
+    { value: '38', label: 'Thin Wall Container' },
+    { value: '21.12 g', label: 'Original Weight' },
+    { value: '24.56 g', label: 'Trial Weight' },
+    { value: '30', label: 'Trial Record', green: true },
+  ],
   ballValve: [
     { value: '37', label: 'Ball Valve' },
     { value: '30%', label: 'LIMEX in Trial' },
@@ -1347,6 +1355,20 @@ export default function CaseStudyPage() {
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Ball Valve</div><div className="csp-ptag">Injection Moulding - Trial 29</div><Composition k="ballValve">30% LIMEX · 70% PP</Composition></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
+      {/* 38 Thin Wall Container - photo model and anonymized trial data */}
+      <a className="csp-pcard featured live" href={thinWallContainerHref} data-product="thinWallContainer">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">38</span>
+          {(activeModels.has('thinWallContainer')) ? (
+            // @ts-ignore custom element
+            <model-viewer data-model-src={thinWallContainerModel} alt="Thin Wall Container open tapered bowl 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 66deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          ) : (
+            <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Thin Wall Container</div><div className="csp-ptag">Injection Moulding - Trial 30</div><Composition k="thinWallContainer">20% LIMEX · 80% PP</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
     </>
