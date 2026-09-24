@@ -782,7 +782,7 @@
       <p>Everyday plastic parts, rebuilt with limestone-based material. Select a product to explore it in 3D and see how its composition changes.</p>
       <!-- Stats strip -->
       <div class="hero-stats-strip" data-active-product="overview">
-        <div class="hs-cell"><div class="hs-item"><span class="hs-num">35</span><span class="hs-label">Products Mapped</span></div></div>
+        <div class="hs-cell"><div class="hs-item"><span class="hs-num">36</span><span class="hs-label">Products Mapped</span></div></div>
         <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num">08</span><span class="hs-label">Live Studies</span></div></div>
         <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num">3D</span><span class="hs-label">Interactive</span></div></div>
         <div class="hs-cell"><div class="hs-divider"></div><div class="hs-item"><span class="hs-num orange">~38<small>%</small></span><span class="hs-label">CO2e Cut (LCA)</span></div></div>
@@ -832,6 +832,7 @@
   const isMobileViewport = window.innerWidth <= 760;
 
   const MODEL_SRC = {
+    bottleCap: './model/case-36-bottle-cap.glb',
     bobbin: './model/bobbin.glb',
     container: './model/paint-container-procedural-red-white.glb',
     motorCover: './model/motor-cover-procedural-black.glb',
@@ -868,6 +869,7 @@
     circleContainer: './model/product-38-circle-container.glb?v=white-20260728',
   };
   const CAMERA_ORBIT = {
+    bottleCap: '25deg 72deg 120%',
     bobbin: '30deg 75deg 105%',
     container: '28deg 72deg 108%',
     motorCover: '18deg 75deg 112%',
@@ -967,7 +969,7 @@
          ${b ? `<span style="margin:0 4px;color:var(--wd-line-strong);font-size:8px;">·</span>
          <span class="comp-seg-dot limex"></span>
          <span class="comp-seg-label">${b.pct}% ${(b.name || '').split(' ')[0]}</span>` : ''}`
-      : `<span class="comp-seg-dot pp"></span><span class="comp-seg-label">Material spec pending</span>`;
+      : `<span class="comp-seg-dot pp"></span><span class="comp-seg-label">${full && full.compositionNote ? 'HDPE + LIMEX · Ratio under review' : 'Material spec pending'}</span>`;
 
     return `
       <a class="p-card featured live" href="${entry.slug === 'round-pipe' ? './round-pipe.html' : `./product.html?p=${entry.slug}`}" data-product="${entry.id}">
@@ -1147,8 +1149,9 @@
   let activeProduct = 'overview';
   const statsStrip = document.querySelector('.hero-stats-strip');
   const productStats = {
+    bottleCap: [['36', 'Bottle Cap', false], ['48.4 g', 'Original Weight', false], ['56.0 g', 'Trial Weight', false], ['TDS', 'Trial Record', true]],
     overview: [
-      ['35', 'Products Mapped', false],
+      ['36', 'Products Mapped', false],
       ['09', 'Live Studies', false],
       ['3D', 'Interactive', false],
       ['~38<small>%</small>', 'CO2e Cut (LCA)', true],

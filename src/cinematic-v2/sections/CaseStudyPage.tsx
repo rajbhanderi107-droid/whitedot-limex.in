@@ -63,11 +63,13 @@ const darkTalpatriHref = `${basePath}/case-study/product.html?p=dark-plastic-tal
 const darkTalpatriModel = `${basePath}/case-study/model/product-37-dark-plastic-talpatri.glb`;
 const circleContainerHref = `${basePath}/case-study/product.html?p=circle-container`;
 const circleContainerModel = `${basePath}/case-study/model/product-38-circle-container.glb?v=white-20260728`;
-type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'toiletSeat' | 'nonWovenBag' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer';
+const bottleCapHref = `${basePath}/case-study/product.html?p=bottle-cap`;
+const bottleCapModel = `${basePath}/case-study/model/case-36-bottle-cap.glb`;
+type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'toiletSeat' | 'nonWovenBag' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer' | 'bottleCap';
 
 const productStats: Record<ProductKey, { value: ReactNode; label: string; green?: boolean }[]> = {
   overview: [
-    { value: '35', label: 'Active Studies' },
+    { value: '36', label: 'Active Studies' },
     { value: '3D', label: 'Interactive' },
     { value: <>100<small>%</small></>, label: 'LIMEX + Color' },
     { value: <>~38<small>%</small></>, label: 'CO2e Cut (LCA)', green: true },
@@ -270,6 +272,12 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 34', green: true },
 ],
+  bottleCap: [
+    { value: '36', label: 'Bottle Cap' },
+    { value: '48.4 g', label: 'Original Weight' },
+    { value: '56.0 g', label: 'Trial Weight' },
+    { value: 'TDS', label: 'Trial Record', green: true },
+  ],
   circleContainer: [
     { value: '35', label: 'Circle Container' },
     { value: '3D', label: 'Interactive Model' },
@@ -1303,6 +1311,20 @@ export default function CaseStudyPage() {
           )}
         </div>
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Circle Container</div><div className="csp-ptag">General Packaging - Interactive 3D Model</div><Composition k="circleContainer">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
+      </a>
+
+      {/* 36 Bottle Cap - photo model and anonymized trial data */}
+      <a className="csp-pcard featured live" href={bottleCapHref} data-product="bottleCap">
+        <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
+        <div className="csp-pmedia"><span className="csp-pidx">36</span>
+          {(activeModels.has('bottleCap')) ? (
+            // @ts-ignore custom element
+            <model-viewer data-model-src={bottleCapModel} alt="Bottle Cap ribbed closure 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="25deg 72deg 120%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+          ) : (
+            <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
+          )}
+        </div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Bottle Cap</div><div className="csp-ptag">Injection Moulding - Trial 28</div><Composition k="bottleCap">HDPE + LIMEX · Ratio under review</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
     </>

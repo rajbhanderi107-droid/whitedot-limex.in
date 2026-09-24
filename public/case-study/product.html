@@ -849,6 +849,7 @@
   const full = isLive ? (specData[entry.id] || {}) : {};
 
   const MODEL_SRC = {
+    bottleCap: './model/case-36-bottle-cap.glb',
     bobbin: './model/bobbin.glb',
     container: './model/paint-container-procedural-red-white.glb',
     motorCover: './model/motor-cover-procedural-black.glb',
@@ -886,6 +887,7 @@
     circleContainer: './model/product-38-circle-container.glb?v=white-20260728',
   };
   const CAMERA_ORBIT = {
+    bottleCap: '25deg 72deg 120%',
     bobbin: '0deg 76deg 105%',
     container: '0deg 76deg 108%',
     motorCover: '0deg 76deg 112%',
@@ -1065,6 +1067,13 @@
   } else {
     compositionSlot.innerHTML = `
       <div class="pending-note"><span class="dot"></span> Verified LIMEX composition data is in progress for this product — no figures are published until confirmed.</div>`;
+  }
+
+  if (full.compositionNote) {
+    const note = document.createElement('div');
+    note.className = 'pending-note';
+    note.textContent = full.compositionNote;
+    compositionSlot.replaceChildren(note);
   }
 
   // ── Sidebar: 3 highlight stats ──

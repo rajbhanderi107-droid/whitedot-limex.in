@@ -43,7 +43,9 @@
       host.innerHTML =
         '<span class="tds-verified-dot"></span>' +
         verifiedCount + " of " + specs.length +
-        " fields verified from photo references or published supplier data";
+        (p.id === 'bottleCap'
+          ? " fields transcribed from the supplied trial workbook; not supplier-certified"
+          : " fields verified from photo references or published supplier data");
     }
   }
 
@@ -154,29 +156,36 @@
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8.5);
     doc.setTextColor(...MUTE);
-    doc.text("Declared formulation for this case study. Grade-level values remain subject to final supplier lot TDS.", M + 16, y + 42);
+    doc.text(p.compositionNote ? "Conflicting source quantities and percentages: see Formulation discrepancy below." : "Declared formulation for this case study. Grade-level values remain subject to final supplier lot TDS.", M + 16, y + 42);
     y += 78;
 
     // Specs table
     y = sectionTitle(doc, "SPECIFICATIONS", M, y, W);
     doc.setFontSize(9.5);
     (p.specs || []).forEach((s) => {
-      if (y > 740) { doc.addPage(); y = 60; }
+      const val = s.value + (s.unit ? " " + s.unit : "");
+      const labelWidth = 175;
+      const valueWidth = W - M * 2 - labelWidth - 18;
+      doc.setFont("helvetica", "normal");
+      const labels = doc.splitTextToSize(s.label.toUpperCase(), labelWidth);
+      doc.setFont("helvetica", "bold");
+      const values = doc.splitTextToSize(val, valueWidth);
+      const rowHeight = Math.max(labels.length, values.length) * 12 + 12;
+      if (y + rowHeight > 750) { doc.addPage(); y = 60; }
       doc.setFont("helvetica", "normal");
       doc.setTextColor(...FAINT);
-      doc.text(s.label.toUpperCase(), M, y);
+      doc.text(labels, M, y);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(...INK);
-      const val = s.value + (s.unit ? " " + s.unit : "");
-      doc.text(val, W - M, y, { align: "right" });
+      doc.text(values, W - M, y, { align: "right" });
       // verified tick
       if (s.verified) {
         doc.setFillColor(...ORANGE);
         doc.circle(M - 10, y - 3, 1.6, "F");
       }
       doc.setDrawColor(...LINE);
-      doc.line(M, y + 6, W - M, y + 6);
-      y += 20;
+      doc.line(M, y + rowHeight - 10, W - M, y + rowHeight - 10);
+      y += rowHeight;
     });
 
     // CO2 callout — skipped when the figure is unknown, otherwise a

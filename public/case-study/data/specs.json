@@ -7,6 +7,8 @@
     "lastUpdated": "2026-07-20"
   },
   "sources": {
+    "bottle-cap-trial-28": "User-supplied bottle-cap trial workbook, trial 28; Trial 1 and Processing parameters sheets. Transcribed observations, not a certified supplier TDS. Identity details omitted.",
+    "bottle-cap-photo": "User-supplied unbranded bottle cap photograph. No measured dimensions provided.",
     "wd-casestudies-pdf": "White Dot — 'LIMEX Case Studies in India' (official document)",
     "gsh-pe78-02m": "https://greensourcinghub.com/limex-pellet-pe78-02m-361",
     "tbm-pellet": "https://tb-m.com/eng/products/products-pellet/",
@@ -24,6 +26,235 @@
     "circle-container-model-reference": "Circle Container 3D model reference: photo-matched 3 L bucket with bail handle"
   },
   "products": {
+    "bottleCap": {
+      "id": "bottleCap",
+      "index": "36",
+      "slug": "bottle-cap",
+      "name": "Bottle Cap",
+      "category": "Bottle Closure",
+      "status": "live",
+      "modelFile": "model/case-36-bottle-cap.glb",
+      "photos": [
+        {
+          "src": "img/bottle-cap-reference.png",
+          "alt": "Supplied bottle cap photograph showing the recessed interior and fine outer grip ribs"
+        }
+      ],
+      "tagline": "An ivory ribbed bottle cap, injection moulded with HDPE and LIMEX PE 26-F51.",
+      "description": "Injection-moulded bottle cap from trial report 28. The recorded product weight changed from 48.4 g to 56.0 g. Initial breakage resolved after a slight increase in processing temperature, according to the trial report. The temperature value and final formulation remain unconfirmed.",
+      "referenceGrade": "PE 26-F51",
+      "mixRatio": "Trial formulation under review",
+      "moulding": "Injection Moulding",
+      "application": "Bottle Closure",
+      "composition": [],
+      "compositionNote": "The trial sheet labels the blend as 75% HDPE / 25% LIMEX, but records 800 g HDPE + 200 g LIMEX in a 1,000 g batch (80% / 20% by recorded mass). Final formulation requires confirmation.",
+      "specs": [
+        {
+          "label": "Source trial number",
+          "value": "28",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Trial 1!A1"
+        },
+        {
+          "label": "Product",
+          "value": "Bottle cap",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Trial 1!C10"
+        },
+        {
+          "label": "Process",
+          "value": "Injection moulding",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Trial 1!C4"
+        },
+        {
+          "label": "LIMEX grade",
+          "value": "PE 26-F51",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Trial 1!C5"
+        },
+        {
+          "label": "Original resin",
+          "value": "HDPE M5018L",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Trial 1!C12"
+        },
+        {
+          "label": "Colour",
+          "value": "White",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Trial 1!C9"
+        },
+        {
+          "label": "Trial batch",
+          "value": "1,000 g (100%)",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Trial 1!C6"
+        },
+        {
+          "label": "HDPE mass recorded",
+          "value": "800 g",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Trial 1!C7"
+        },
+        {
+          "label": "LIMEX mass recorded",
+          "value": "200 g",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Trial 1!C8"
+        },
+        {
+          "label": "Percentages written",
+          "value": "75% HDPE / 25% LIMEX",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Trial 1!C7:C8"
+        },
+        {
+          "label": "Formulation discrepancy",
+          "value": "The trial sheet labels the blend as 75% HDPE / 25% LIMEX, but records 800 g HDPE + 200 g LIMEX in a 1,000 g batch (80% / 20% by recorded mass). Final formulation requires confirmation.",
+          "verified": false,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Trial 1!C6:C8"
+        },
+        {
+          "label": "Original product weight",
+          "value": "48.4 g",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Trial 1!C14"
+        },
+        {
+          "label": "Trial product weight",
+          "value": "56.0 g",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Trial 1!C15"
+        },
+        {
+          "label": "Barrel temperature",
+          "value": "Not available (NA in source)",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Trial 1!C13"
+        },
+        {
+          "label": "Trial result",
+          "value": "Initial breakage; result okay after a slight temperature increase.",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Trial 1!C16"
+        },
+        {
+          "label": "Processing observation",
+          "value": "Keep temperature close to the successful trial setting; exact setting not recorded.",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Trial 1!C17"
+        },
+        {
+          "label": "Next step",
+          "value": "Not recorded",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Trial 1!C19"
+        },
+        {
+          "label": "Barrel / die profile",
+          "value": "Not recorded",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Processing parameters!D8:F8"
+        },
+        {
+          "label": "Parison temperature",
+          "value": "Not recorded",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Processing parameters!D9:F9"
+        },
+        {
+          "label": "Blow pressure / speed",
+          "value": "Not recorded",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Processing parameters!D10:F11"
+        },
+        {
+          "label": "Mould temperature",
+          "value": "Not recorded",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Processing parameters!D12:F12"
+        },
+        {
+          "label": "Cooling time",
+          "value": "Not recorded",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Processing parameters!D13:F13"
+        },
+        {
+          "label": "Extruder / parison speed",
+          "value": "Not recorded",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Processing parameters!D14:F14"
+        },
+        {
+          "label": "Blow time / cycle time",
+          "value": "Not recorded",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Processing parameters!D15:F16"
+        },
+        {
+          "label": "Inside mould condition",
+          "value": "Not recorded",
+          "verified": true,
+          "source": "bottle-cap-trial-28",
+          "sourceCell": "Processing parameters!D17:F17"
+        },
+        {
+          "label": "3D reference",
+          "value": "Photo-based proportions; dimensions and thread fit are not measured.",
+          "verified": false,
+          "source": "bottle-cap-photo"
+        }
+      ],
+      "highlights": [
+        {
+          "num": "48.4",
+          "unit": "g",
+          "label": "Original weight",
+          "verified": true,
+          "source": "bottle-cap-trial-28"
+        },
+        {
+          "num": "56.0",
+          "unit": "g",
+          "label": "Trial weight",
+          "verified": true,
+          "source": "bottle-cap-trial-28"
+        },
+        {
+          "num": "28",
+          "unit": "",
+          "label": "Source trial",
+          "verified": true,
+          "source": "bottle-cap-trial-28"
+        }
+      ]
+    },
     "bobbin": {
       "id": "bobbin",
       "index": "01",
