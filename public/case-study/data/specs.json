@@ -47,7 +47,7 @@
       "lastUpdated": "2026-09-24",
       "dataKind": "trial-workbook",
       "tagline": "An open thin-wall container trial with PP and LIMEX PE26-F51.",
-      "description": "Trial 30 records an injection-moulded white thin-wall container, trialled at a contract manufacturing site. The 1,250 g batch contains 1,000 g PP grade 110 and 250 g LIMEX PE26-F51, equivalent to 80% PP and 20% LIMEX by recorded mass. Product weight changed from 21.12 g to 24.56 g. The trial reports weight and slight colour issues, with cost also raised as a concern.",
+      "description": "A white injection-moulded thin-wall container with an open interior, tapered sides and a rolled rim. The recorded 1,250 g batch contains 1,000 g PP grade 110 and 250 g LIMEX PE26-F51, equivalent to 80% PP and 20% LIMEX by mass. Recorded product weights are 21.12 g for the original part and 24.56 g for the trial part.",
       "referenceGrade": "PE26-F51",
       "mixRatio": "20% LIMEX PE26-F51 + 80% PP",
       "moulding": "Injection Moulding",
@@ -149,13 +149,6 @@
           "sourceCell": "Trial 1!C9"
         },
         {
-          "label": "Barrel temperature",
-          "value": "Not available (NA in source)",
-          "verified": true,
-          "source": "thin-wall-container-trial-30",
-          "sourceCell": "Trial 1!C13"
-        },
-        {
           "label": "Original product weight",
           "value": "21.12 g",
           "verified": true,
@@ -168,83 +161,6 @@
           "verified": true,
           "source": "thin-wall-container-trial-30",
           "sourceCell": "Trial 1!C15"
-        },
-        {
-          "label": "Trial result",
-          "value": "Weight issue and slight colour issue.",
-          "verified": true,
-          "source": "thin-wall-container-trial-30",
-          "sourceCell": "Trial 1!C16"
-        },
-        {
-          "label": "Reported concerns",
-          "value": "Weight, slight colour and cost issues.",
-          "verified": true,
-          "source": "thin-wall-container-trial-30",
-          "sourceCell": "Trial 1!C17"
-        },
-        {
-          "label": "Next step",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "thin-wall-container-trial-30",
-          "sourceCell": "Trial 1!C19"
-        },
-        {
-          "label": "Barrel / die profile",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "thin-wall-container-trial-30",
-          "sourceCell": "Processing parameters!D8:F8"
-        },
-        {
-          "label": "Parison temperature",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "thin-wall-container-trial-30",
-          "sourceCell": "Processing parameters!D9:F9"
-        },
-        {
-          "label": "Blow pressure / speed",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "thin-wall-container-trial-30",
-          "sourceCell": "Processing parameters!D10:F11"
-        },
-        {
-          "label": "Mould temperature",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "thin-wall-container-trial-30",
-          "sourceCell": "Processing parameters!D12:F12"
-        },
-        {
-          "label": "Cooling time",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "thin-wall-container-trial-30",
-          "sourceCell": "Processing parameters!D13:F13"
-        },
-        {
-          "label": "Extruder / parison speed",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "thin-wall-container-trial-30",
-          "sourceCell": "Processing parameters!D14:F14"
-        },
-        {
-          "label": "Blow time / cycle time",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "thin-wall-container-trial-30",
-          "sourceCell": "Processing parameters!D15:F16"
-        },
-        {
-          "label": "Inside mould condition",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "thin-wall-container-trial-30",
-          "sourceCell": "Processing parameters!D17:F17"
         },
         {
           "label": "3D reference",
@@ -294,7 +210,7 @@
       "lastUpdated": "2026-09-24",
       "dataKind": "trial-workbook",
       "tagline": "An injection-moulded ball valve trial using 70% PP and 30% LIMEX PP20-J52.",
-      "description": "Trial 29 records a white ball valve made by injection moulding with 70% PP and 30% LIMEX PP20-J52. The trial notes slightly duller colour brightness and a shine issue. The source product name is PVC ball valve; the recorded trial formulation is PP-based. Product weights, barrel temperature and original resin grade are not supplied.",
+      "description": "A white injection-moulded ball valve with smooth socket ends, a rounded central body and a black side actuator. Trial 29 records a blend of 70% PP and 30% LIMEX PP20-J52. The source product name is PVC ball valve; the recorded trial formulation is PP-based.",
       "referenceGrade": "PP20-J52",
       "mixRatio": "30% LIMEX PP20-J52 + 70% PP",
       "moulding": "Injection Moulding",
@@ -366,111 +282,6 @@
           "sourceCell": "Trial 1!C9"
         },
         {
-          "label": "Original resin grade",
-          "value": "Not given; supplier identity omitted",
-          "verified": true,
-          "source": "ball-valve-trial-29",
-          "sourceCell": "Trial 1!C12"
-        },
-        {
-          "label": "Barrel temperature",
-          "value": "Not available (NA in source)",
-          "verified": true,
-          "source": "ball-valve-trial-29",
-          "sourceCell": "Trial 1!C13"
-        },
-        {
-          "label": "Original product weight",
-          "value": "Not available (NA in source)",
-          "verified": true,
-          "source": "ball-valve-trial-29",
-          "sourceCell": "Trial 1!C14"
-        },
-        {
-          "label": "Trial product weight",
-          "value": "Not available (NA in source)",
-          "verified": true,
-          "source": "ball-valve-trial-29",
-          "sourceCell": "Trial 1!C15"
-        },
-        {
-          "label": "Trial result",
-          "value": "Colour brightness became slightly dull.",
-          "verified": true,
-          "source": "ball-valve-trial-29",
-          "sourceCell": "Trial 1!C16"
-        },
-        {
-          "label": "Reported issue",
-          "value": "Shine problem reported.",
-          "verified": true,
-          "source": "ball-valve-trial-29",
-          "sourceCell": "Trial 1!C17"
-        },
-        {
-          "label": "Next step",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "ball-valve-trial-29",
-          "sourceCell": "Trial 1!C19"
-        },
-        {
-          "label": "Barrel / die profile",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "ball-valve-trial-29",
-          "sourceCell": "Processing parameters!D8:F8"
-        },
-        {
-          "label": "Parison temperature",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "ball-valve-trial-29",
-          "sourceCell": "Processing parameters!D9:F9"
-        },
-        {
-          "label": "Blow pressure / speed",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "ball-valve-trial-29",
-          "sourceCell": "Processing parameters!D10:F11"
-        },
-        {
-          "label": "Mould temperature",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "ball-valve-trial-29",
-          "sourceCell": "Processing parameters!D12:F12"
-        },
-        {
-          "label": "Cooling time",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "ball-valve-trial-29",
-          "sourceCell": "Processing parameters!D13:F13"
-        },
-        {
-          "label": "Extruder / parison speed",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "ball-valve-trial-29",
-          "sourceCell": "Processing parameters!D14:F14"
-        },
-        {
-          "label": "Blow time / cycle time",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "ball-valve-trial-29",
-          "sourceCell": "Processing parameters!D15:F16"
-        },
-        {
-          "label": "Inside mould condition",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "ball-valve-trial-29",
-          "sourceCell": "Processing parameters!D17:F17"
-        },
-        {
           "label": "3D reference",
           "value": "Photo-based proportions. Dimensions, hidden internals and fit are illustrative, not measured.",
           "verified": false,
@@ -516,7 +327,7 @@
         }
       ],
       "tagline": "An ivory ribbed bottle cap, injection moulded with HDPE and LIMEX PE 26-F51.",
-      "description": "Injection-moulded bottle cap from trial report 28. The recorded product weight changed from 48.4 g to 56.0 g. Initial breakage resolved after a slight increase in processing temperature, according to the trial report. The temperature value and final formulation remain unconfirmed.",
+      "description": "An ivory bottle cap produced by injection moulding with HDPE M5018L and LIMEX PE 26-F51. The cap features a recessed interior, rounded rim and fine external grip ribs. Recorded product weights are 48.4 g for the original part and 56.0 g for the trial part.",
       "referenceGrade": "PE 26-F51",
       "mixRatio": "Trial formulation under review",
       "moulding": "Injection Moulding",
@@ -614,90 +425,6 @@
           "verified": true,
           "source": "bottle-cap-trial-28",
           "sourceCell": "Trial 1!C15"
-        },
-        {
-          "label": "Barrel temperature",
-          "value": "Not available (NA in source)",
-          "verified": true,
-          "source": "bottle-cap-trial-28",
-          "sourceCell": "Trial 1!C13"
-        },
-        {
-          "label": "Trial result",
-          "value": "Initial breakage; result okay after a slight temperature increase.",
-          "verified": true,
-          "source": "bottle-cap-trial-28",
-          "sourceCell": "Trial 1!C16"
-        },
-        {
-          "label": "Processing observation",
-          "value": "Keep temperature close to the successful trial setting; exact setting not recorded.",
-          "verified": true,
-          "source": "bottle-cap-trial-28",
-          "sourceCell": "Trial 1!C17"
-        },
-        {
-          "label": "Next step",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "bottle-cap-trial-28",
-          "sourceCell": "Trial 1!C19"
-        },
-        {
-          "label": "Barrel / die profile",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "bottle-cap-trial-28",
-          "sourceCell": "Processing parameters!D8:F8"
-        },
-        {
-          "label": "Parison temperature",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "bottle-cap-trial-28",
-          "sourceCell": "Processing parameters!D9:F9"
-        },
-        {
-          "label": "Blow pressure / speed",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "bottle-cap-trial-28",
-          "sourceCell": "Processing parameters!D10:F11"
-        },
-        {
-          "label": "Mould temperature",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "bottle-cap-trial-28",
-          "sourceCell": "Processing parameters!D12:F12"
-        },
-        {
-          "label": "Cooling time",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "bottle-cap-trial-28",
-          "sourceCell": "Processing parameters!D13:F13"
-        },
-        {
-          "label": "Extruder / parison speed",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "bottle-cap-trial-28",
-          "sourceCell": "Processing parameters!D14:F14"
-        },
-        {
-          "label": "Blow time / cycle time",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "bottle-cap-trial-28",
-          "sourceCell": "Processing parameters!D15:F16"
-        },
-        {
-          "label": "Inside mould condition",
-          "value": "Not recorded",
-          "verified": true,
-          "source": "bottle-cap-trial-28",
-          "sourceCell": "Processing parameters!D17:F17"
         },
         {
           "label": "3D reference",

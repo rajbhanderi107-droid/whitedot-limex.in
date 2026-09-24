@@ -13,7 +13,7 @@
     }
   ],
   "tagline": "An ivory ribbed bottle cap, injection moulded with HDPE and LIMEX PE 26-F51.",
-  "description": "Injection-moulded bottle cap from trial report 28. The recorded product weight changed from 48.4 g to 56.0 g. Initial breakage resolved after a slight increase in processing temperature, according to the trial report. The temperature value and final formulation remain unconfirmed.",
+  "description": "An ivory bottle cap produced by injection moulding with HDPE M5018L and LIMEX PE 26-F51. The cap features a recessed interior, rounded rim and fine external grip ribs. Recorded product weights are 48.4 g for the original part and 56.0 g for the trial part.",
   "referenceGrade": "PE 26-F51",
   "mixRatio": "Trial formulation under review",
   "moulding": "Injection Moulding",
@@ -111,90 +111,6 @@
       "verified": true,
       "source": "bottle-cap-trial-28",
       "sourceCell": "Trial 1!C15"
-    },
-    {
-      "label": "Barrel temperature",
-      "value": "Not available (NA in source)",
-      "verified": true,
-      "source": "bottle-cap-trial-28",
-      "sourceCell": "Trial 1!C13"
-    },
-    {
-      "label": "Trial result",
-      "value": "Initial breakage; result okay after a slight temperature increase.",
-      "verified": true,
-      "source": "bottle-cap-trial-28",
-      "sourceCell": "Trial 1!C16"
-    },
-    {
-      "label": "Processing observation",
-      "value": "Keep temperature close to the successful trial setting; exact setting not recorded.",
-      "verified": true,
-      "source": "bottle-cap-trial-28",
-      "sourceCell": "Trial 1!C17"
-    },
-    {
-      "label": "Next step",
-      "value": "Not recorded",
-      "verified": true,
-      "source": "bottle-cap-trial-28",
-      "sourceCell": "Trial 1!C19"
-    },
-    {
-      "label": "Barrel / die profile",
-      "value": "Not recorded",
-      "verified": true,
-      "source": "bottle-cap-trial-28",
-      "sourceCell": "Processing parameters!D8:F8"
-    },
-    {
-      "label": "Parison temperature",
-      "value": "Not recorded",
-      "verified": true,
-      "source": "bottle-cap-trial-28",
-      "sourceCell": "Processing parameters!D9:F9"
-    },
-    {
-      "label": "Blow pressure / speed",
-      "value": "Not recorded",
-      "verified": true,
-      "source": "bottle-cap-trial-28",
-      "sourceCell": "Processing parameters!D10:F11"
-    },
-    {
-      "label": "Mould temperature",
-      "value": "Not recorded",
-      "verified": true,
-      "source": "bottle-cap-trial-28",
-      "sourceCell": "Processing parameters!D12:F12"
-    },
-    {
-      "label": "Cooling time",
-      "value": "Not recorded",
-      "verified": true,
-      "source": "bottle-cap-trial-28",
-      "sourceCell": "Processing parameters!D13:F13"
-    },
-    {
-      "label": "Extruder / parison speed",
-      "value": "Not recorded",
-      "verified": true,
-      "source": "bottle-cap-trial-28",
-      "sourceCell": "Processing parameters!D14:F14"
-    },
-    {
-      "label": "Blow time / cycle time",
-      "value": "Not recorded",
-      "verified": true,
-      "source": "bottle-cap-trial-28",
-      "sourceCell": "Processing parameters!D15:F16"
-    },
-    {
-      "label": "Inside mould condition",
-      "value": "Not recorded",
-      "verified": true,
-      "source": "bottle-cap-trial-28",
-      "sourceCell": "Processing parameters!D17:F17"
     },
     {
       "label": "3D reference",
