@@ -11,6 +11,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { FlaskConical, Plus, Save, X, Image as ImageIcon, Check, Clock, Trash2 } from "lucide-react";
 import { toast } from "./ctx.js";
+import { Toasts } from "./Overlays.js";
 import { trialApi, TRIAL_HEADS, type Trial, type TrialFields } from "./trialBookApi.js";
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -28,9 +29,9 @@ export function TrialBookPage() {
   const load = async () => {
     setStatus("loading");
     try {
-      const d = await trialApi.list();
-      setTrials(d.trials);
-      setNextNo(d.nextTrialNo);
+      const { data } = await trialApi.list();
+      setTrials(data.trials);
+      setNextNo(data.nextTrialNo);
       setStatus("ready");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not load the Trial Book");
@@ -59,7 +60,7 @@ export function TrialBookPage() {
         await trialApi.update(editing.id, draft);
         toast(`Trial ${editing.trialNo} updated — the laptop will rewrite the workbook`);
       } else {
-        const { trial } = await trialApi.create(draft);
+        const { data: { trial } } = await trialApi.create(draft);
         toast(`Trial ${trial.trialNo} recorded`);
       }
       close();
@@ -196,6 +197,10 @@ export function TrialBookPage() {
           </div>
         </div>
       )}
+      {/* The other four books get this from BookShell. Without it every message
+          this page sends - a save refused, a trial recorded, a network error -
+          goes nowhere, and Save on an empty form looks like it does nothing. */}
+      <Toasts />
     </div>
   );
 }
