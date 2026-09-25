@@ -32,7 +32,7 @@ import {
 } from "./logic.js";
 import { patchMark, setStage } from "./store.js";
 import { toast } from "./ctx.js";
-import { BookShell, Empty, OpenAsApp, useBook } from "./BookBits.js";
+import { BookShell, Empty, MoreMenu, OpenAsApp, useBook } from "./BookBits.js";
 import { exportFollowUpBookDocx, exportFollowUpBookXlsx } from "./exports.js";
 
 /** Pushing a date forward is the commonest act on this page, so it is one tap
@@ -116,9 +116,9 @@ export function FollowUpBookPage() {
         ? `${visits.length} visited compan${visits.length === 1 ? "y" : "ies"} · ${dueNow} due now · ${trials} sample${trials === 1 ? "" : "s"} out`
         : "Tick or star a company in the Route Book and it appears here."}
       actions={
-        <>
-          <Link className="wd-ghost-btn" to="/admin/route-book"><RouteIcon size={13} /> Route Book</Link>
-          <Link className="wd-ghost-btn" to="/admin/lead-book"><Handshake size={13} /> Lead Book</Link>
+        <MoreMenu>
+          <Link className="wd-ghost-btn" to="/admin/route-book"><RouteIcon size={13} /> Companies</Link>
+          <Link className="wd-ghost-btn" to="/admin/lead-book"><Handshake size={13} /> Leads</Link>
           <OpenAsApp dir="visits" label="Visit Follow-ups" />
           <button type="button" className="wd-ghost-btn" disabled={!visits.length}
             onClick={() => exportFollowUpBookXlsx(visits, st.index.legById)} data-testid="fb-xlsx">
@@ -128,7 +128,7 @@ export function FollowUpBookPage() {
             onClick={() => exportFollowUpBookDocx(visits, st.index.legById)} data-testid="fb-docx">
             <FileText size={13} /> Document
           </button>
-        </>
+        </MoreMenu>
       }
     >
       <CompanyFilters rows={visits} product={product} onProduct={setProduct} q={q} onSearch={setQ}
@@ -137,10 +137,6 @@ export function FollowUpBookPage() {
         onReset={() => {setArea("");setQ("");setProduct("all");setFolder("ALL");setFocus("all");}}
         areas={areaOptions(allSourceRows)} area={area} onArea={setArea} status={focus} onStatus={v => setFocus(v as FocusKey)} statuses={FOCUS.map(f => [f.key, f.label] as const)} />
       <section className="rb-dsec">
-        <div className="rb-dhead">
-          <h3>The visit list at a glance</h3>
-          <span className="rb-dcount">everything ticked or starred, still open</span>
-        </div>
         <div className="rb-heroes">
           <div className="rb-hero"><b>{visits.length}</b><span>Visited</span></div>
           <div className="rb-hero"><b>{dueNow || "—"}</b><span>Due now</span></div>

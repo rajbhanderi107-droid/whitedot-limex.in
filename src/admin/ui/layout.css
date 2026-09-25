@@ -129,3 +129,42 @@
 .bd-books .bd-book > div { display: inline-flex; align-items: center; gap: .3rem; font-size: .8rem; color: var(--wd-slate); }
 .bd-books .bd-book > div strong { font-size: .95rem; color: var(--wd-graphite); }
 .bd-books .bd-book > svg:first-child { width: 17px; height: 17px; color: var(--wd-sage-ink); }
+
+/* ── Book stat line (Visits, Leads, Customers) ─────────────────── */
+.rb-page .rb-dsec:has(> .rb-heroes:only-child) { padding: 0; border: 0; background: transparent; box-shadow: none; margin: 0 0 .9rem; }
+.rb-page .rb-heroes { display: flex; flex-wrap: wrap; gap: .4rem; }
+.rb-page .rb-hero {
+  display: inline-flex; align-items: baseline; gap: .4rem; padding: .35rem .8rem;
+  background: var(--wd-milk); border: 1px solid var(--wd-linen); border-radius: 999px;
+}
+.rb-page .rb-hero b { display: inline; font-size: .98rem; font-weight: 700; color: var(--wd-graphite); }
+.rb-page .rb-hero span { font-size: .78rem; color: var(--wd-slate); }
+
+/* ── Compact book cards ─────────────────────────────────────────── */
+.rb-page .rb-bcard {
+  padding: .75rem .95rem; margin-bottom: .55rem; border-radius: 12px;
+  background: var(--wd-milk); border: 1px solid var(--wd-linen); box-shadow: none;
+}
+.rb-page .rb-bcard:hover { border-color: var(--wd-sage-line); }
+.rb-page .rb-bcard-head { margin-bottom: .2rem; gap: .6rem; }
+.rb-page .rb-bcard-head h3 { font-size: .96rem; display: inline-flex; align-items: center; gap: .35rem; }
+.rb-page .rb-bcard-head p { font-size: .76rem; color: var(--wd-slate); }
+.rb-page .rb-bacts { gap: .35rem; }
+.rb-page .rb-bacts .wd-ghost-btn, .rb-page .rb-bacts .wd-primary-btn { height: 32px; font-size: .78rem; padding: 0 .7rem; }
+.rb-page .rb-source-label {
+  font-size: .68rem; padding: 0 .4rem; margin-left: .4rem; border: 0; border-radius: 4px; opacity: 1;
+  background: var(--wd-linen-soft); color: var(--wd-slate); vertical-align: middle;
+}
+.rb-page .rb-bnote { font-size: .82rem; color: var(--wd-graphite); margin: .35rem 0 .15rem; padding-left: .6rem; border-left: 2px solid var(--wd-linen); }
+.rb-page .rb-bstats { font-size: .76rem; margin-top: .3rem; }
+.rb-page .rb-bstats .is-due { color: var(--wd-peach-ink); font-weight: 600; }
+.rb-page .bd-snooze { margin-top: .45rem; gap: .35rem; }
+.rb-page .bd-snooze button { min-height: 28px; padding: 2px 10px; font-size: .74rem; background: var(--wd-milk); }
+.rb-page .bd-snooze button:hover { background: var(--wd-sage); border-color: var(--wd-sage-line); color: var(--wd-sage-ink); }
+@media (max-width: 760px) {
+  .rb-page .rb-bacts .wd-ghost-btn, .rb-page .rb-bacts .wd-primary-btn { height: 40px; }
+  .rb-page .bd-snooze button { min-height: 38px; }
+}
+.rb-page .rb-bcard > details { border: 0; border-radius: 8px; padding: .15rem 0; margin: .3rem 0; background: transparent; }
+.rb-page .rb-bcard > details > summary { font-size: .8rem; color: var(--wd-sage-ink); cursor: pointer; padding: .2rem 0; }
+.rb-page .rb-bcard > details[open] { background: var(--wd-porcelain); padding: .4rem .7rem .7rem; border: 1px solid var(--wd-linen-soft); }
