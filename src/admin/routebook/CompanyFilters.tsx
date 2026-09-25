@@ -1,5 +1,5 @@
-import type { Ref } from 'react';
-import { Search, X, RotateCcw } from 'lucide-react';
+import { useState, type Ref } from 'react';
+import { Search, X, RotateCcw, SlidersHorizontal } from 'lucide-react';
 import type { Row } from './logic.js';
 import { PRODUCTS, type ProductFilter } from './products.js';
 import { SOURCE_LABEL, type FolderFilter } from './sources.js';
@@ -25,13 +25,20 @@ interface Props {
  *  question this bar asks about what a company makes. */
 export function CompanyFilters(p: Props) {
   const allStatus = p.statuses[0]?.[0] ?? 'all';
-  return <section className="rb-company-filters" aria-label="Company filters" data-testid="company-filters">
+  // On a phone the four selects fold behind one button, so the list starts
+  // right under the search box. On a wider screen they are always shown.
+  const [open, setOpen] = useState(false);
+  const setCount = [p.product !== 'all', !!p.area, p.status !== allStatus, p.folder !== 'ALL'].filter(Boolean).length;
+  return <section className={`rb-company-filters${open ? ' is-open' : ''}`} aria-label="Company filters" data-testid="company-filters">
     <div className="rb-find">
       <Search size={15} aria-hidden="true" />
       <input ref={p.searchRef} value={p.q} onChange={e => p.onSearch(e.target.value)} aria-label="Search companies"
         placeholder="Search company, product, address or phone" data-testid={p.searchTestId} />
       {p.q && <button type="button" aria-label="Clear search" onClick={() => p.onSearch('')}><X size={14} /></button>}
     </div>
+    <button type="button" className="rb-ftoggle" aria-expanded={open} onClick={() => setOpen(o => !o)}>
+      <SlidersHorizontal size={15} /> Filters{setCount ? <b>{setCount}</b> : null}
+    </button>
     <div className="rb-fchips">
       <select aria-label="Product" className={p.product !== 'all' ? 'is-set' : ''} value={p.product}
         onChange={e => p.onProduct(e.target.value as ProductFilter)}>

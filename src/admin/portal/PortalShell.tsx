@@ -8,7 +8,7 @@
 import { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
-  Menu, X, LogOut, Search, ShieldAlert, Settings,
+  Menu, X, LogOut, Search, ShieldAlert, Settings, Home, Route, ClipboardCheck, Handshake, MoreHorizontal,
 } from "lucide-react";
 import { useBrandLogo } from "../../useBrandLogo";
 import { NotificationBell } from "../components/NotificationBell";
@@ -130,6 +130,15 @@ export function PortalShell({ user, onLogout }: Props) {
         <main className="adm-main wd-main">
           <Outlet />
         </main>
+
+        {/* Phone: the books one thumb away; everything else under More. */}
+        <nav className="wd-tabbar" aria-label="Books">
+          {([["/admin/dashboard", "Today", Home], ["/admin/route-book", "Companies", Route],
+            ["/admin/visit-followups", "Visits", ClipboardCheck], ["/admin/lead-book", "Leads", Handshake]] as const).map(([to, label, Icon]) => (
+            <NavLink key={to} to={to} className={({ isActive }) => `wd-tab${isActive ? " is-on" : ""}`}><Icon size={19} /><span>{label}</span></NavLink>
+          ))}
+          <button type="button" className="wd-tab" onClick={() => setDrawerOpen(true)} aria-label="More books and settings"><MoreHorizontal size={19} /><span>More</span></button>
+        </nav>
       </div>
     </div>
   );

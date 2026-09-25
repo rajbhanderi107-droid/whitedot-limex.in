@@ -207,3 +207,40 @@
   .rb-toolbar-end { margin-left: 0; width: 100%; }
   .rb-views { flex: 1; height: 40px; }
 }
+
+/* ── Phone chrome (phase 4) ─────────────────────────────────────── */
+.wd-tabbar { display: none; }
+.rb-ftoggle { display: none; }
+@media (max-width: 820px) {
+  .wd-tabbar {
+    display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+    padding: .35rem .25rem calc(.35rem + env(safe-area-inset-bottom, 0px));
+    background: rgba(243, 246, 241, .96); backdrop-filter: blur(10px); border-top: 1px solid var(--wd-linen);
+  }
+  .wd-tab {
+    display: grid; justify-items: center; gap: .15rem; padding: .3rem 0; min-height: 48px; border: 0; background: none;
+    color: var(--wd-slate); font: inherit; font-size: .68rem; text-decoration: none; cursor: pointer; border-radius: 10px;
+  }
+  .wd-tab.is-on { color: var(--wd-sage-ink); font-weight: 600; }
+  .wd-tab.is-on svg { background: var(--wd-sage); border-radius: 999px; padding: 3px 12px; box-sizing: content-box; }
+  .adm .wd-main { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+  .rb-split.has-open .rb-detail { bottom: 0; z-index: 70; }
+  .rb-split.has-open .rb-detail-scrim { z-index: 69; }
+  /* Book view tabs stay on one line and scroll sideways. */
+  .rb-toolbar .rb-tabs { display: flex; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; }
+  .rb-toolbar .rb-tabs button { white-space: nowrap; flex: none; }
+}
+@media (max-width: 640px) {
+  .rb-ftoggle {
+    display: inline-flex; align-items: center; gap: .35rem; height: 40px; padding: 0 .85rem; border-radius: 999px;
+    border: 1px solid var(--wd-linen); background: var(--wd-milk); color: var(--wd-graphite); font: inherit; font-size: .84rem; cursor: pointer;
+  }
+  .rb-ftoggle b { display: inline-grid; place-items: center; min-width: 18px; height: 18px; border-radius: 999px; background: var(--wd-sage); color: var(--wd-sage-ink); font-size: .7rem; }
+  .rb-company-filters:not(.is-open) .rb-fchips { display: none; }
+  .rb-company-filters .rb-filter-end { width: auto; margin-left: auto; }
+  .adm .wd-page-head, .bk-app .wd-page-head { margin-top: 0; padding-top: .25rem; }
+}
+@media (max-width: 820px) {
+  .rb-split.has-open .rb-detail { bottom: calc(62px + env(safe-area-inset-bottom, 0px)); max-height: calc(88vh - 62px); border-radius: 16px 16px 0 0; }
+  .adm .adm-main.wd-main { padding-top: .75rem; }
+}
