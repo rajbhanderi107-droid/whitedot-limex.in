@@ -37,6 +37,7 @@ import { CaseStudiesPage } from "./pages/CaseStudiesPage.js";
 import { GoogleDashboardPage } from "./pages/GoogleDashboardPage.js";
 import { MarketingToolsPage } from "./pages/MarketingToolsPage.js";
 import { RouteBookPage } from "./routebook/RouteBookPage.js";
+import { SettingsPage } from "./routebook/SettingsPage.js";
 import { LeadBookPage } from "./routebook/LeadBookPage.js";
 import { FollowUpBookPage } from "./routebook/FollowUpBookPage.js";
 import { CustomerBookPage } from "./routebook/CustomerBookPage.js";
@@ -133,6 +134,7 @@ export default function AdminApp() {
           <Route path="/admin/lead-book" element={<LeadBookPage />} />
           <Route path="/admin/customer-book" element={<CustomerBookPage />} />
           <Route path="/admin/trial-book" element={<TrialBookPage />} />
+          <Route path="/admin/book-settings" element={<SettingsPage />} />
           <Route path="/admin/inquiries/:id" element={<InquiryDetailPage />} />
 
           <Route

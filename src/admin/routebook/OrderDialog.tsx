@@ -1,13 +1,13 @@
 /* Recording an order. LIMEX is sold by the metric tonne, so MT is the field
  * that matters and everything else is optional — a confirmed quantity should
- * never wait on paperwork nobody has yet. The rupee total is worked out by
- * the server from MT x 1000 x rate/kg; this only previews it. */
+ * never wait on paperwork nobody has yet. No rate is taken: the books carry
+ * no rupee figures. */
 
 import { useEffect, useRef, useState } from "react";
 import { X, PackageCheck } from "lucide-react";
 import type { RbOrder, RbSettings } from "./types.js";
 import { ORDER_STATUSES, ORDER_STATUS_LABEL } from "./types.js";
-import { inrFull, num, quotedRateOf, today, type Row } from "./logic.js";
+import { today, type Row } from "./logic.js";
 import { addOrder } from "./store.js";
 
 interface Props {
@@ -17,12 +17,10 @@ interface Props {
   onDone: (order: RbOrder) => void;
 }
 
-export function OrderDialog({ row, settings, onClose, onDone }: Props) {
+export function OrderDialog({ row, onClose, onDone }: Props) {
   const dialog = useRef<HTMLDivElement>(null);
-  const suggested = quotedRateOf(row.m) ?? num(settings?.limexRate);
   const [grade, setGrade] = useState("");
   const [qty, setQty] = useState("");
-  const [rate, setRate] = useState(suggested === null ? "" : String(suggested));
   const [orderedOn, setOrderedOn] = useState(today());
   const [status, setStatus] = useState<RbOrder["status"]>("CONFIRMED");
   const [poRef, setPoRef] = useState("");
@@ -31,16 +29,13 @@ export function OrderDialog({ row, settings, onClose, onDone }: Props) {
   const [err, setErr] = useState<string | null>(null);
 
   const qtyNum = Number(qty);
-  const rateNum = rate === "" ? null : Number(rate);
-  const rateValid = rate === "" || (Number.isFinite(rateNum) && rateNum! >= 0);
-  const valid = grade.trim().length > 0 && Number.isFinite(qtyNum) && qtyNum > 0 && rateValid && /^\d{4}-\d{2}-\d{2}$/.test(orderedOn);
+  const valid = grade.trim().length > 0 && Number.isFinite(qtyNum) && qtyNum > 0 && /^\d{4}-\d{2}-\d{2}$/.test(orderedOn);
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
     const oldOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = oldOverflow; previous?.focus(); };
   }, []);
-  const preview = valid && rateNum !== null && Number.isFinite(rateNum) ? qtyNum * 1000 * rateNum : null;
 
   const submit = async () => {
     if (!valid || busy) return;
@@ -49,7 +44,7 @@ export function OrderDialog({ row, settings, onClose, onDone }: Props) {
       const order = await addOrder(row.s.id, {
         grade: grade.trim(),
         quantityMt: qtyNum,
-        rate: rateNum !== null && Number.isFinite(rateNum) ? rateNum : null,
+        rate: null,
         orderedOn,
         status,
         poRef: poRef.trim() || null,
@@ -88,10 +83,6 @@ export function OrderDialog({ row, settings, onClose, onDone }: Props) {
             <input type="number" step="0.001" min="0" value={qty} onChange={(e) => setQty(e.target.value)} placeholder="6.25" data-testid="order-qty" />
           </label>
           <label className="rb-bfield">
-            <span>Rate ₹ / kg</span>
-            <input type="number" step="0.01" min="0" value={rate} onChange={(e) => setRate(e.target.value)} placeholder="optional" data-testid="order-rate" />
-          </label>
-          <label className="rb-bfield">
             <span>Ordered on</span>
             <input type="date" value={orderedOn} onChange={(e) => setOrderedOn(e.target.value)} />
           </label>
@@ -112,13 +103,8 @@ export function OrderDialog({ row, settings, onClose, onDone }: Props) {
         </fieldset>
 
         <p className="rb-modal-sum">
-          {valid
-            ? preview === null
-              ? `${qtyNum} MT — no rate entered, so this order carries no value.`
-              : `${qtyNum} MT × 1,000 kg × ₹${rateNum} = ${inrFull(preview)}`
-            : "Grade and a quantity in MT are all that is required."}
+          {valid ? `${qtyNum} MT of ${grade.trim()}` : "Grade and a quantity in MT are all that is required."}
         </p>
-        {!rateValid && <p role="alert" className="wd-inline-err">Enter a rate of zero or more, or leave it blank.</p>}
         {err && <div role="alert" className="wd-inline-err">{err}</div>}
 
         <div className="rb-modal-foot">

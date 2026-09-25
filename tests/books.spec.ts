@@ -194,18 +194,19 @@ test.describe("Visit Follow-ups, Lead Book & Customer Book", () => {
     // The commercial fields sit inside a "Deal details" section, closed by default.
     await card.getByRole("group", { name: "Deal details" }).or(card.locator("details.rb-secondary > summary")).first().click();
     await card.locator("input[data-field='Expected MT / month']").fill("12.5");
-    await card.locator("input[data-field='Quoted ₹ / kg']").fill("78.5");
     await card.locator("input[data-field='Next step']").fill("Send 25 kg trial");
     await card.locator("input[data-field='Next step']").blur();
-    await expect.poll(() => mock.marks.get("N1-alpha")?.quotedRate, { timeout: 5000 }).toBe(78.5);
-    await expect(card.locator(".rb-bstats")).toContainText("a month at 78.5/kg");
+    await expect.poll(() => mock.marks.get("N1-alpha")?.expectedMt, { timeout: 5000 }).toBe(12.5);
+    // The books carry no rupee figures: no quoted rate field, no deal value.
+    await expect(card.locator("input[data-field='Quoted ₹ / kg']")).toHaveCount(0);
+    await expect(card).not.toContainText("₹");
 
     await card.getByTestId("lb-won").click();
     const dialog = page.getByTestId("order-dialog");
-    await expect(dialog.locator("input[data-testid='order-rate']")).toHaveValue("78.5"); // carried from the quote
+    await expect(dialog.getByTestId("order-rate")).toHaveCount(0); // orders are in MT only
     await dialog.getByTestId("order-grade").fill("LIMEX PP-50");
     await dialog.getByTestId("order-qty").fill("6.25");
-    await expect(dialog.locator(".rb-modal-sum")).toContainText("₹4,90,625.00");
+    await expect(dialog.locator(".rb-modal-sum")).toContainText("6.25 MT of LIMEX PP-50");
     await dialog.getByTestId("order-save").click();
     await expect(dialog).toHaveCount(0);
     await expect.poll(() => mock.orders.length, { timeout: 5000 }).toBe(1);
@@ -219,7 +220,8 @@ test.describe("Visit Follow-ups, Lead Book & Customer Book", () => {
     await expect(cust).toContainText("6.25 MT");
     await expect(cust.locator(".rb-otable tbody tr")).toHaveCount(1);
     await expect(cust.locator(".rb-otable tbody tr")).toContainText("WD-2026-0001");
-    await expect(cust.locator(".rb-otable tbody tr")).toContainText("₹4,90,625.00");
+    await expect(cust).not.toContainText("₹");
+    expect(mock.orders[0].rate).toBeNull();
   });
 
   test("a company recorded as a customer by mistake can be taken back out", async ({ page }) => {

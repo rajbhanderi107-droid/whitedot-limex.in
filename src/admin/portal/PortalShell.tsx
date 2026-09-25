@@ -8,14 +8,14 @@
 import { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
-  Menu, X, LogOut, Search, ShieldAlert, ChevronDown, Sparkles,
+  Menu, X, LogOut, Search, ShieldAlert, Settings,
 } from "lucide-react";
 import { useBrandLogo } from "../../useBrandLogo";
 import { NotificationBell } from "../components/NotificationBell";
 import { KeyboardShortcuts } from "../components/KeyboardShortcuts";
 import { MODULE_GROUPS } from "./modules.js";
 import { CommandPalette } from "./CommandPalette.js";
-import { usePortal, AUTOMATION_MODES, type AutomationMode } from "./PortalContext.js";
+import { usePortal } from "./PortalContext.js";
 import { StatusBadge } from "./ui.js";
 import "./portal.css";
 import "./book-workspace.css";
@@ -43,6 +43,10 @@ function NavGroups({ onNav, isSuperAdmin }: { onNav?: () => void; isSuperAdmin: 
         <Icon size={18} /><span className="wd-nav-label">{label}</span>
       </NavLink>;
     })}
+    <div className="wd-nav-spacer" />
+    <NavLink to="/admin/book-settings" onClick={onNav} className={({ isActive }) => `wd-nav-link${isActive ? " active" : ""}`}>
+      <Settings size={18} /><span className="wd-nav-label">Settings</span>
+    </NavLink>
   </nav>;
 }
 
@@ -51,23 +55,11 @@ export function PortalShell({ user, onLogout }: Props) {
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const isSuperAdmin = user.role === "SUPER_ADMIN";
-  const { automationMode, setAutomationMode, lockdown, emergencyStop, triggerEmergencyStop, clearEmergencyStop } = usePortal();
+  const { lockdown } = usePortal();
 
   const handleLogout = async () => {
     await onLogout();
     navigate("/admin/login");
-  };
-
-  const onEmergency = () => {
-    if (emergencyStop) {
-      if (window.confirm("Clear emergency stop and resume normal operation (Approval mode)?")) clearEmergencyStop();
-    } else if (
-      window.confirm(
-        "EMERGENCY STOP\n\nThis pauses all automations, disables Auto mode, stops external sending and campaigns, and puts the portal into Lockdown.\n\nProceed?",
-      )
-    ) {
-      triggerEmergencyStop();
-    }
   };
 
   const sidebar = (onNav?: () => void) => (
@@ -124,26 +116,6 @@ export function PortalShell({ user, onLogout }: Props) {
           </button>
 
           <div className="wd-topbar-right">
-            <details className="wd-tools-menu"><summary>Tools</summary><div className="wd-tools-panel">
-              <NavLink to="/admin/settings">Website settings</NavLink>
-              {isSuperAdmin && <NavLink to="/admin/users">Manage users</NavLink>}
-            <label className={`wd-mode wd-mode-${automationMode.toLowerCase()}`} title="Default automation mode">
-              <Sparkles size={14} />
-              <select value={automationMode} onChange={(e) => setAutomationMode(e.target.value as AutomationMode)} aria-label="Automation mode">
-                {AUTOMATION_MODES.map((m) => (
-                  <option key={m.mode} value={m.mode}>{m.label}</option>
-                ))}
-              </select>
-              <ChevronDown size={13} />
-            </label>
-
-            <button className={`wd-estop${emergencyStop ? " active" : ""}`} onClick={onEmergency}
-              title={emergencyStop ? "Lockdown active — click to clear" : "Emergency stop"}>
-              <ShieldAlert size={15} />
-              <span className="wd-estop-text">{emergencyStop ? "Locked" : "Stop"}</span>
-            </button>
-
-            </div></details>
             <NotificationBell />
           </div>
         </header>

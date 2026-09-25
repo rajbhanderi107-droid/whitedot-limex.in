@@ -16,14 +16,14 @@ import "./routebook.css";
 export const inBookApp = () => !!document.documentElement.dataset.book;
 
 /** The standalone app for one book — the version that installs on a phone. */
-export function OpenAsApp({ dir, label }: { dir: "route" | "visits" | "leads" | "customers"; label: string }) {
+export function OpenAsApp({ dir, label, named }: { dir: "route" | "visits" | "leads" | "customers"; label: string; named?: boolean }) {
   const { search } = useLocation();
   const folder = new URLSearchParams(search).get("folder");
   const bookPath = { route: "route-book", visits: "visit-followups", leads: "lead-book", customers: "customer-book" }[dir];
   if (inBookApp()) return null;
   return (
     <a className="wd-ghost-btn" href={`/${dir}/#/admin/${bookPath}${folder ? `?folder=${encodeURIComponent(folder)}` : ""}`} title={`Open the ${label} as its own app — add it to your home screen from there`}>
-      <Smartphone size={13} /> App
+      <Smartphone size={13} /> {named ? label : "App"}
     </a>
   );
 }

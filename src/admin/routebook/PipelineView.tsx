@@ -2,13 +2,13 @@
  * (duplicates, follow-ups). Single-series charts, one hue each. */
 
 import { useMemo, useState } from "react";
-import { Navigation, MapPin, Merge, CalendarClock, Sparkles, FlaskConical, IndianRupee, Factory } from "lucide-react";
+import { Navigation, MapPin, Merge, CalendarClock, Sparkles, FlaskConical, Factory } from "lucide-react";
 import type { RbLeg } from "./types.js";
 import type { Row } from "./logic.js";
 import {
   PARKED, isTicked, isRemoved, isDNC, isMerged, outOf, dueOf, isDue, needsFollowUp, daysSince, relDays, fmtDate,
   legSuggestions, clusters, duplicates, mergePlan, stopScore, lastDays, today, routeURL, mapOf, addrOf, conOf, noteOf, OUTMAP, addDays,
-  opportunity, inr, tonnesText, hasProfile, samplesOf, sampleStalled, sampleAge, num, tonnesOf,
+  opportunity, tonnesText, hasProfile, samplesOf, sampleStalled, sampleAge, num, tonnesOf,
 } from "./logic.js";
 import { useRb, patchMany, patchMark, revertMark } from "./store.js";
 import { useUI, toast } from "./ctx.js";
@@ -50,11 +50,8 @@ export function PipelineView({ rows, rowsByLeg, legs }: Props) {
     [profiled, st.settings],
   );
   const totalTonnes = sized.reduce((n, x) => n + (x.o.tonnes ?? 0), 0) || null;
-  const totalValue = st.settings?.limexRate == null ? null : sized.reduce((n, x) => n + (x.o.value ?? 0), 0);
-  const wonValue = st.settings?.limexRate == null ? null
-    : sized.filter((x) => ["int", "smp"].includes(outOf(x.r.m))).reduce((n, x) => n + (x.o.value ?? 0), 0);
   const byValue = useMemo(
-    () => sized.slice().sort((a, b) => (b.o.value ?? b.o.tonnes ?? 0) - (a.o.value ?? a.o.tonnes ?? 0)).slice(0, 10),
+    () => sized.slice().sort((a, b) => (b.o.tonnes ?? 0) - (a.o.tonnes ?? 0)).slice(0, 10),
     [sized],
   );
   const openSamples = useMemo(
@@ -132,19 +129,14 @@ export function PipelineView({ rows, rowsByLeg, legs }: Props) {
         </section>
       )}
 
-      {/* What the book is worth, not how many rows it has. */}
+      {/* The book's potential in tonnes — the books carry no rupee figures. */}
       <section className="rb-dsec" data-testid="rb-money">
         <div className="rb-dhead">
-          <h3><IndianRupee size={14} /> What the book is worth</h3>
-          <span className="rb-dcount">
-            {profiled.length} of {pool.length} plants profiled
-            {st.settings?.limexRate == null && " · set your LIMEX rate to see rupees"}
-          </span>
+          <h3><Factory size={14} /> What the book could take</h3>
+          <span className="rb-dcount">{profiled.length} of {pool.length} plants profiled</span>
         </div>
         <div className="rb-heroes">
           <div className="rb-hero"><b>{tonnesText(totalTonnes)}</b><span>LIMEX at {st.settings?.substitutionPct ?? 30}%</span></div>
-          <div className="rb-hero"><b>{inr(totalValue)}</b><span>a month, all profiled</span></div>
-          <div className="rb-hero"><b>{inr(wonValue)}</b><span>a month, interested + sampled</span></div>
           <div className="rb-hero"><b>{openSamples.length}</b><span>samples awaiting a trial</span></div>
           <div className="rb-hero"><b>{stalledSamples.length}</b><span>trials gone quiet</span></div>
         </div>
@@ -159,7 +151,6 @@ export function PipelineView({ rows, rowsByLeg, legs }: Props) {
                     <b><button type="button" className="rb-linkish" onClick={() => ui.jumpTo(r.s.id)}>{r.s.name}</button></b>
                     <em>{r.s.legId} · {tonnesOf(r.m)} t/mo total{r.m?.fillerPct ? ` · ${r.m.fillerPct}% filler today` : ""}</em>
                   </span>
-                  <span className="rb-dtags">{o.value !== null && <i className="rb-pill rb-pill-ok">{inr(o.value)}/mo</i>}</span>
                 </div>
               ))}
             </div>

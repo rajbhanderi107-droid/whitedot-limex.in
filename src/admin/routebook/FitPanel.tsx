@@ -2,10 +2,10 @@
  * what the plant actually runs, and what happened to the samples. */
 
 import { useState, type FormEvent } from "react";
-import { FlaskConical, IndianRupee, Trash2, Factory, CheckCircle2, XCircle, CircleDashed, CircleSlash } from "lucide-react";
+import { FlaskConical, Trash2, Factory, CheckCircle2, XCircle, CircleDashed, CircleSlash } from "lucide-react";
 import { POLYMERS, PROCESSES, type MarkPatch, type RbMark, type RbStop, type RbSample, type SampleResult } from "./types.js";
 import {
-  num, polymersOf, processesOf, tonnesOf, resinRateOf, hasProfile, opportunity, inr, tonnesText,
+  num, polymersOf, processesOf, tonnesOf, hasProfile, opportunity, tonnesText,
   gradeFit, POLYMER_LABEL, PROCESS_LABEL, samplesOf, RESULT_LABEL, sampleStalled, sampleAge,
   fmtDate, today, addDays, FITLABEL,
 } from "./logic.js";
@@ -21,7 +21,6 @@ export function FitProfile({ s, m, onClose }: { s: RbStop; m?: RbMark; onClose: 
   const [tonnes, setTonnes] = useState(tonnesOf(m)?.toString() ?? "");
   const [machines, setMachines] = useState(m?.machines?.toString() ?? "");
   const [filler, setFiller] = useState(m?.fillerPct?.toString() ?? "");
-  const [rate, setRate] = useState(resinRateOf(m)?.toString() ?? "");
   const [thin, setThin] = useState(!!m?.thinWall);
 
   const toggle = (list: string[], setList: (v: string[]) => void, k: string) =>
@@ -35,7 +34,6 @@ export function FitProfile({ s, m, onClose }: { s: RbStop; m?: RbMark; onClose: 
       monthlyTonnes: tonnes === "" ? null : Number(tonnes),
       machines: machines === "" ? null : Number(machines),
       fillerPct: filler === "" ? null : Number(filler),
-      resinRate: rate === "" ? null : Number(rate),
       thinWall: thin,
       profiledOn: today(),
     };
@@ -46,7 +44,7 @@ export function FitProfile({ s, m, onClose }: { s: RbStop; m?: RbMark; onClose: 
 
   // Show the sizing live as they type, so the value of answering is obvious.
   const preview = opportunity(
-    { ...(m ?? {}), monthlyTonnes: tonnes === "" ? null : Number(tonnes), resinRate: rate === "" ? null : Number(rate) } as RbMark,
+    { ...(m ?? {}), monthlyTonnes: tonnes === "" ? null : Number(tonnes) } as RbMark,
     st.settings,
   );
 
@@ -88,10 +86,6 @@ export function FitProfile({ s, m, onClose }: { s: RbStop; m?: RbMark; onClose: 
           <input type="number" min="0" max="100" step="1" inputMode="numeric" value={filler}
             onChange={(e) => setFiller(e.target.value)} placeholder="0" />
         </label>
-        <label>Resin rate <small>₹ / kg they pay now</small>
-          <input type="number" min="0" step="0.5" inputMode="decimal" value={rate}
-            onChange={(e) => setRate(e.target.value)} placeholder="e.g. 96" />
-        </label>
       </div>
 
       <label className="rb-check">
@@ -102,10 +96,6 @@ export function FitProfile({ s, m, onClose }: { s: RbStop; m?: RbMark; onClose: 
       {preview.known && (
         <div className="rb-sizing" data-testid="rb-sizing">
           <span><b>{tonnesText(preview.tonnes)}</b> of LIMEX at {st.settings?.substitutionPct ?? 30}%</span>
-          {preview.value !== null
-            ? <span><b>{inr(preview.value)}</b> a month</span>
-            : <span className="rb-sizing-hint">Set your LIMEX rate to see this in rupees</span>}
-          {preview.saving !== null && preview.saving > 0 && <span className="rb-sizing-save">saves them {inr(preview.saving)}/mo</span>}
         </div>
       )}
 
@@ -130,7 +120,6 @@ export function FitSummary({ s, m }: { s: RbStop; m?: RbMark }) {
       {polys.length > 0 && <span className="rb-fitbit">{polys.join(" / ")}</span>}
       {procs.length > 0 && <span className="rb-fitbit">{procs.map((p) => PROCESS_LABEL[p] ?? p).join(", ")}</span>}
       {opp.known && <span className="rb-fitbit rb-fitvol">{tonnesText(opp.tonnes)}</span>}
-      {opp.value !== null && <span className="rb-fitbit rb-fitmoney"><IndianRupee size={10} />{inr(opp.value).replace("₹", "")}/mo</span>}
       {m?.fillerPct != null && m.fillerPct > 0 && <span className="rb-fitbit">{m.fillerPct}% filler now</span>}
     </div>
   );
