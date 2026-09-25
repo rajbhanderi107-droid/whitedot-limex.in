@@ -49,7 +49,8 @@
 .rb-split-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, 42%); gap: 1rem; align-items: start; }
 .rb-rows { display: grid; background: var(--wd-milk); border: 1px solid var(--wd-linen); border-radius: 12px; overflow: hidden; }
 .rb-rows > [role="listitem"] + [role="listitem"] { border-top: 1px solid var(--wd-linen-soft); }
-.rb-rows .rb-more { margin: .6rem; justify-self: center; }
+.rb-rows .rb-more { margin: .6rem; }
+.rb-rows-foot { display: grid; justify-items: center; }
 
 .rb-crow { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .75rem; padding: .55rem .9rem .55rem .7rem; }
 .rb-crow:hover { background: var(--wd-porcelain); }
@@ -269,3 +270,9 @@
   .rb-crow.no-tick { grid-template-columns: minmax(0, 1fr); }
   .rb-crow.no-tick .rb-row-tags { grid-column: 1; }
 }
+
+/* Contrast: text on pastel tints uses the tint's ink (WCAG AA). */
+.adm .rb-tabn { background: var(--wd-butter); color: var(--wd-butter-ink); }
+.adm .rb-dtime.now { color: var(--wd-rose-ink); }
+.adm .rb-leg.is-done .rb-leg-id { background: var(--wd-sage); color: var(--wd-sage-ink); }
+.adm .rb-ratebox small, .adm .rb-rail-note, .adm .st-sec label small { color: var(--wd-slate); }

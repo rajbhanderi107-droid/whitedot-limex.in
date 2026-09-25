@@ -63,11 +63,11 @@ export function StopsView({ rows, sort, setSort }: { rows: Row[]; sort: SortMode
             <div role="listitem" key={r.s.id}>
               <CompanyRow s={r.s} m={r.m} selected={openId === r.s.id} onOpen={(id) => setOpenId((cur) => (cur === id ? null : id))} />
             </div>
-          )) : <div className="wd-empty-state"><ListChecks size={26} /><p>No company matches these filters.</p></div>}
+          )) : <div role="listitem" className="rb-rows-foot"><div className="wd-empty-state"><ListChecks size={26} /><p>No company matches these filters.</p></div></div>}
           {sorted.length > limit && (
-            <button type="button" className="wd-ghost-btn rb-more" onClick={() => setLimit((l) => l + PAGE)}>
+            <div role="listitem" className="rb-rows-foot"><button type="button" className="wd-ghost-btn rb-more" onClick={() => setLimit((l) => l + PAGE)}>
               Show {Math.min(PAGE, sorted.length - limit)} more of {sorted.length - limit}
-            </button>
+            </button></div>
           )}
         </div>
 
