@@ -25,7 +25,10 @@ def interp(y,pts):
 def width(y):
  if y>=388:
   return max(.12,12.0*math.sqrt(max(0,1-((y-388)/12)**2)))
- w=interp(y,[(0,23),(5,25),(20,25),(65,23.7),(116,22.5),(128,22),(138,20.3),(153,19.6),(225,18.0),(292,16.0),(324,14.3),(334,13),(388,12)])
+ # The supplied part is approximately 30 mm across at the brush socket.
+ # Width values are half-widths, so the lower housing stays near 15 mm
+ # either side of centre before blending into the narrower shaft.
+ w=interp(y,[(0,15),(5,15),(20,15),(65,15),(108,15),(124,15.2),(138,15.5),(153,16.2),(225,16.5),(292,15.2),(324,13.8),(334,13),(388,12)])
  if 336<y<384:w+=.38*math.sin(math.tau*(y-336)/11)
  return w
 
@@ -73,8 +76,8 @@ def swept_cutter(name,y0,y1,halfwidth,zfunc,halfheight,corner=3.5,steps=160):
  m=bpy.data.meshes.new(name);m.from_pydata(vv,[],[tuple(reversed(f)) for f in ff]);m.update();o=bpy.data.objects.new(name,m);bpy.context.collection.objects.link(o);return o
 # The side reference shows a long narrow opening beneath the curved nose lip.
 cut(swept_cutter('Long open head socket',5,56,40,lambda y:front(y)-6.3,lambda y:max(.08,3.8*math.sqrt(max(0,1-((4-min(4,y-5,56-y))/4)**2))),3.6))
-cut(swept_cutter('Large front recessed panel',65,133,17.2,lambda y:front(y)+3,6,4.8))
-cut(swept_cutter('Small front recessed panel',139,170,13.4,lambda y:front(y)+3.2,6,3.2))
+cut(swept_cutter('Large front recessed panel',65,133,11.7,lambda y:front(y)+3,6,3.2))
+cut(swept_cutter('Small front recessed panel',139,170,10.8,lambda y:front(y)+3.2,6,2.8))
 cut(swept_cutter('Rounded reverse reinforcement channel',183,317,lambda y:width(y)-3.1,lambda y:center(y)-depth(y)-3,6.7,3.8))
 cut(swept_cutter('Reverse small rectangular pocket',147,176,12.8,lambda y:center(y)-depth(y)-3,5.0,2.2))
 # Smaller horizontal oval eye with a rounded crown.
@@ -96,7 +99,7 @@ m=bpy.data.meshes.new('Conforming rounded thumb grip');m.from_pydata(vv,[],[tupl
 for f in m.polygons:f.use_smooth=True
 parts.append(o)
 # Preserve the shallow blank moulded plaque without the company lettering.
-pad=swept_cutter('Blank moulded plaque',91,111,13.5,lambda y:front(y)-2.6,.55,2.0,60);pad.data.materials.append(mat);parts.append(pad)
+pad=swept_cutter('Blank moulded plaque',91,111,9.0,lambda y:front(y)-2.6,.55,1.8,60);pad.data.materials.append(mat);parts.append(pad)
 for y in [40,180,334]:
  bpy.ops.mesh.primitive_torus_add(major_radius=.0035,minor_radius=.00016,major_segments=64,minor_segments=10,location=(0,y*.001,(front(y)-.04)*.001))
  o=bpy.context.object;o.name='Subtle moulded circular impression';o.rotation_euler.x=math.atan((front(y+.1)-front(y-.1))/.2);o.data.materials.append(mat);parts.append(o)
