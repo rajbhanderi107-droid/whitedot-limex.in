@@ -10,26 +10,18 @@ import { buildXlsx, buildDocx, saveBlob, type Sheet, type Block, type Cell } fro
 import { ORDER_STATUS_LABEL, type RbLeg, type RbMark, type RbStop, type RbSettings, type RbOrder } from "./types.js";
 import {
   addrOf, conOf, customerTotals, expectedMtOf, fmtDate, fmtDateLong, liveOrders, num, ordersOf, phoneOf,
-  OUTMAP, polymersOf, processesOf, quotedRateOf, RESULT_LABEL, samplesOf, today, tonnesOf, type Row,
+  OUTMAP, polymersOf, processesOf, RESULT_LABEL, samplesOf, today, tonnesOf, type Row,
 } from "./logic.js";
 
-const KG_PER_MT = 1000;
 const stamp = () => today();
 const legName = (legById: Record<string, RbLeg>, id: string) => legById[id]?.name ?? id;
-
-/** What a lead is worth per month at the rate we quoted them. */
-export function leadMonthlyValue(m: RbMark | undefined): number | null {
-  const mt = expectedMtOf(m);
-  const rate = quotedRateOf(m);
-  return mt === null || rate === null ? null : mt * KG_PER_MT * rate;
-}
 
 /* ─── Lead Book ────────────────────────────────────────────────────────── */
 
 export function leadBookSheet(rows: Row[], legById: Record<string, RbLeg>): Sheet {
   const head = [
     "Company", "Leg", "Contact", "Phone", "Lead since", "Next step",
-    "Expected MT/month", "Quoted ₹/kg", "Value ₹/month",
+    "Expected MT/month",
     "Their volume (t/mo)", "Polymers", "Processes", "Samples out", "Follow-up due", "Note", "Source folder",
   ];
   const body: Cell[][] = rows.map(({ s, m }) => {
@@ -37,7 +29,7 @@ export function leadBookSheet(rows: Row[], legById: Record<string, RbLeg>): Shee
     const open = samplesOf(m).filter((x) => x.result === "PENDING").length;
     return [
       s.name, legName(legById, s.legId), c.n, phoneOf(s, m), m?.leadOn ?? "", m?.nextStep ?? "",
-      expectedMtOf(m), quotedRateOf(m), leadMonthlyValue(m),
+      expectedMtOf(m),
       tonnesOf(m), polymersOf(m).join(", "), processesOf(m).join(", "),
       open || "", m?.dueOn ?? "", m?.note ?? "", SOURCE_LABEL[sourceFolderOf(s,m)],
     ];
@@ -45,8 +37,8 @@ export function leadBookSheet(rows: Row[], legById: Record<string, RbLeg>): Shee
   return {
     name: "Lead Book",
     rows: [head, ...body],
-    widths: [34, 18, 18, 15, 12, 30, 17, 12, 15, 18, 16, 18, 12, 13, 44, 18],
-    mt: [6, 9], money: [7, 8],
+    widths: [34, 18, 18, 15, 12, 30, 17, 18, 16, 18, 12, 13, 44, 18],
+    mt: [6, 7],
   };
 }
 
@@ -141,13 +133,13 @@ function customerRow(s: RbStop, m: RbMark | undefined, legById: Record<string, R
   return [
     s.name, legName(legById, s.legId), c.n, phoneOf(s, m), addrOf(s, m),
     m?.gstNumber ?? "", m?.paymentTerms ?? "", m?.customerOn ?? "",
-    t.count, t.mt, t.value, t.last ?? "", SOURCE_LABEL[sourceFolderOf(s,m)],
+    t.count, t.mt, t.last ?? "", SOURCE_LABEL[sourceFolderOf(s,m)],
   ];
 }
 
 function orderRow(o: RbOrder, company: string): Cell[] {
   return [
-    o.orderNo, o.orderedOn, company, o.grade, num(o.quantityMt), num(o.rate), num(o.amount),
+    o.orderNo, o.orderedOn, company, o.grade, num(o.quantityMt),
     ORDER_STATUS_LABEL[o.status] ?? o.status, o.poRef ?? "", o.dispatchOn ?? "", o.note ?? "",
   ];
 }
@@ -157,26 +149,26 @@ export function customerBookSheets(rows: Row[], legById: Record<string, RbLeg>, 
     name: "Customers",
     rows: [
       ["Company", "Leg", "Contact", "Phone", "Address", "GST", "Payment terms", "Customer since",
-        "Orders", "Total MT", "Total value ₹", "Last order", "Source folder"],
+        "Orders", "Total MT", "Last order", "Source folder"],
       ...rows.map(({ s, m }) => customerRow(s, m, legById)),
     ],
-    widths: [34, 18, 18, 15, 44, 20, 18, 14, 8, 12, 16, 12, 18],
-    mt: [9], money: [10],
+    widths: [34, 18, 18, 15, 44, 20, 18, 14, 8, 12, 12, 18],
+    mt: [9],
   };
 
   const orderLines = rows.flatMap(({ s, m }) => ordersOf(m).map((o) => orderRow(o, s.name)));
   const orders: Sheet = {
     name: "Orders",
     rows: [
-      ["Order no", "Date", "Company", "Grade", "MT", "Rate ₹/kg", "Amount ₹", "Status", "PO ref", "Dispatched", "Note"],
+      ["Order no", "Date", "Company", "Grade", "MT", "Status", "PO ref", "Dispatched", "Note"],
       ...orderLines,
     ],
-    widths: [15, 12, 34, 22, 10, 11, 15, 13, 14, 12, 40],
-    mt: [4], money: [5, 6],
+    widths: [15, 12, 34, 22, 10, 13, 14, 12, 40],
+    mt: [4],
   };
 
   const totalMt = rows.reduce((a, r) => a + customerTotals(r.m).mt, 0);
-  const priced = rows.map((r) => customerTotals(r.m).value).filter((v): v is number => v !== null);
+  void settings; // the books carry no rupee figures, so the rate is not exported
   const summary: Sheet = {
     name: "Summary",
     rows: [
@@ -184,11 +176,9 @@ export function customerBookSheets(rows: Row[], legById: Record<string, RbLeg>, 
       ["Customers", rows.length],
       ["Orders", orderLines.length],
       ["Total ordered (MT)", totalMt],
-      ["Total value (₹)", priced.length ? priced.reduce((a, b) => a + b, 0) : ""],
-      ["Your LIMEX rate (₹/kg)", num(settings?.limexRate) ?? ""],
       ["Prepared on", stamp()],
     ],
-    widths: [30, 22], mt: [1], money: [1],
+    widths: [30, 22], mt: [1],
   };
   return [customers, orders, summary];
 }
@@ -200,10 +190,7 @@ export function exportCustomerBookXlsx(rows: Row[], legById: Record<string, RbLe
 /** The same book as a document — what gets printed, signed or emailed. */
 export function customerBookBlocks(rows: Row[], legById: Record<string, RbLeg>): Block[] {
   const totalMt = rows.reduce((a, r) => a + customerTotals(r.m).mt, 0);
-  const priced = rows.map((r) => customerTotals(r.m).value).filter((v): v is number => v !== null);
   const orderCount = rows.reduce((a, r) => a + liveOrders(r.m).length, 0);
-  const money = (v: number | null) =>
-    v === null ? "—" : `₹${v.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
 
   const blocks: Block[] = [
     { t: "h1", text: "WhiteDot — LIMEX Customer Book" },
@@ -214,7 +201,6 @@ export function customerBookBlocks(rows: Row[], legById: Record<string, RbLeg>):
         ["Customers", String(rows.length)],
         ["Orders", String(orderCount)],
         ["Total ordered", `${Number(totalMt.toFixed(3))} MT`],
-        ["Total value", priced.length ? money(priced.reduce((a, b) => a + b, 0)) : "not priced"],
       ],
     },
   ];
@@ -234,19 +220,17 @@ export function customerBookBlocks(rows: Row[], legById: Record<string, RbLeg>):
         ["Payment terms", m?.paymentTerms || "—"],
         ["Customer since", m?.customerOn ? fmtDateLong(m.customerOn) : "—"],
         ["Ordered to date", `${Number(t.mt.toFixed(3))} MT across ${t.count} order${t.count === 1 ? "" : "s"}`],
-        ["Value to date", money(t.value)],
       ],
     });
     const orders = ordersOf(m);
     if (orders.length) {
       blocks.push({
         t: "table",
-        head: ["Order no", "Date", "Grade", "MT", "Rate ₹/kg", "Amount", "Status"],
-        widths: [16, 12, 22, 10, 12, 16, 12],
+        head: ["Order no", "Date", "Grade", "MT", "Status"],
+        widths: [18, 14, 28, 12, 14],
         rows: orders.map((o) => [
           o.orderNo, fmtDateLong(o.orderedOn), o.grade,
-          String(num(o.quantityMt) ?? ""), num(o.rate) === null ? "—" : String(num(o.rate)),
-          money(num(o.amount)), ORDER_STATUS_LABEL[o.status] ?? o.status,
+          String(num(o.quantityMt) ?? ""), ORDER_STATUS_LABEL[o.status] ?? o.status,
         ]),
       });
     }

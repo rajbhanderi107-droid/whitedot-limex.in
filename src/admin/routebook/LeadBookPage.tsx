@@ -14,17 +14,17 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Handshake, Phone, MessageCircle, MapPin, FileSpreadsheet, ArrowRight, Undo2,
-  FlaskConical, CalendarClock, IndianRupee, TrendingUp, Route as RouteIcon, Search, X,
+  FlaskConical, CalendarClock, TrendingUp, Route as RouteIcon, Search, X,
 } from "lucide-react";
 import type { Row } from "./logic.js";
 import {
-  addrOf, conOf, expectedMtOf, fmtDate, inr, isDue, isLead, looksPositive, mt, num, openSamplesOf,
-  noNextStep, phoneOf, quotedRateOf, relDays, sampleStalled, samplesOf, telHref, tonnesOf, today, waHref,
+  addrOf, conOf, expectedMtOf, fmtDate, isDue, isLead, looksPositive, mt, num, openSamplesOf,
+  noNextStep, phoneOf, relDays, sampleStalled, samplesOf, telHref, tonnesOf, today, waHref,
 } from "./logic.js";
 import { patchMark, setStage, useRb } from "./store.js";
 import { toast } from "./ctx.js";
 import { BookShell, MoreMenu, Empty, Field, OpenAsApp, useBook } from "./BookBits.js";
-import { exportLeadBook, leadMonthlyValue } from "./exports.js";
+import { exportLeadBook } from "./exports.js";
 import { OrderDialog } from "./OrderDialog.js";
 
 export function LeadBookPage() {
@@ -60,7 +60,6 @@ export function LeadBookPage() {
   }, [leads, q, focus, product, area]);
 
   const expected = leads.reduce((a, r) => a + (expectedMtOf(r.m) ?? 0), 0);
-  const monthly = leads.map((r) => leadMonthlyValue(r.m)).filter((v): v is number => v !== null);
   const openTrials = leads.reduce((a, r) => a + openSamplesOf(r.m).length, 0);
   const dueNow = leads.filter((r) => isDue(r.m)).length;
 
@@ -108,7 +107,6 @@ export function LeadBookPage() {
         <div className="rb-heroes">
           <div className="rb-hero"><b>{leads.length}</b><span>Live leads</span></div>
           <div className="rb-hero"><b>{expected ? mt(expected) : "—"}</b><span>Expected / month</span></div>
-          <div className="rb-hero"><b>{monthly.length ? inr(monthly.reduce((a, b) => a + b, 0)) : "—"}</b><span>At quoted rates</span></div>
           <div className="rb-hero"><b>{openTrials}</b><span>Trials out</span></div>
           <div className="rb-hero"><b>{dueNow}</b><span>Follow-ups due</span></div>
         </div>
@@ -150,7 +148,6 @@ export function LeadBookPage() {
       {shown.map((r) => {
         const c = conOf(r.m);
         const phone = phoneOf(r.s, r.m);
-        const value = leadMonthlyValue(r.m);
         const trials = samplesOf(r.m);
         const stalled = trials.filter((x) => x.result === "PENDING" && sampleStalled(x));
         const set = (patch: Parameters<typeof patchMark>[1]) => patchMark(r.s.id, patch);
@@ -183,13 +180,10 @@ export function LeadBookPage() {
               <Field label="Expected MT / month" value={expectedMtOf(r.m) ?? ""} type="number" step="0.001"
                 placeholder={tonnesOf(r.m) !== null ? `they run ${tonnesOf(r.m)} t/mo` : ""}
                 onSave={(v) => set({ expectedMt: v === "" ? null : Number(v) })} />
-              <Field label="Quoted ₹ / kg" value={quotedRateOf(r.m) ?? ""} type="number" step="0.01"
-                onSave={(v) => set({ quotedRate: v === "" ? null : Number(v) })} />
             </div>
 
             </details>
             <div className="rb-bstats">
-              <span><IndianRupee size={12} /> {value === null ? "Quote a rate to size this deal" : `${inr(value)} a month at ${quotedRateOf(r.m)}/kg`}</span>
               {trials.length > 0 && (
                 <span className={stalled.length ? "is-warn" : ""}>
                   <FlaskConical size={12} /> {trials.length} trial{trials.length === 1 ? "" : "s"}

@@ -213,10 +213,9 @@ test.describe("LIMEX Route Book", () => {
     await card.getByTestId("rb-fit-btn").click();
     await card.locator(".rb-chip", { hasText: /^PP$/ }).click();
     await card.getByTestId("rb-tonnes").fill("60");
-    // 60 t/mo x 40% = 24 t of LIMEX; at the mocked 70/kg that is 16.8 lakh,
-    // which inr() rounds to whole lakhs once past 10.
+    // 60 t/mo x 40% = 24 t of LIMEX. Sizing is in tonnes only — no rupees.
     await expect(card.getByTestId("rb-sizing")).toContainText("24.0 t/mo");
-    await expect(card.getByTestId("rb-sizing")).toContainText("₹17 L");
+    await expect(card.getByTestId("rb-sizing")).not.toContainText("₹");
     await card.getByTestId("rb-fit-save").click();
 
     await expect(card.getByTestId("rb-fitsum")).toContainText("24.0 t/mo");
@@ -248,16 +247,17 @@ test.describe("LIMEX Route Book", () => {
     await expect.poll(() => mock.samples[0]?.result, { timeout: 5000 }).toBe("PASS");
   });
 
-  test("the rate box drives every rupee figure and persists", async ({ page }) => {
+  test("the substitution share drives the sizing and persists", async ({ page }) => {
     const mock = await mockPortal(page);
+    // The rate box lives on the Settings page, reached from Companies.
     await page.goto("/#/admin/route-book");
-    await page.getByRole("button", { name: "Tools & settings" }).click();
+    await page.getByRole("link", { name: "Settings" }).last().click();
+    await expect(page.getByTestId("book-settings")).toBeVisible();
     await expect(page.getByTestId("rb-ratebox")).toBeVisible();
-    await page.getByTestId("rb-rate").fill("100");
+    await expect(page.getByTestId("rb-rate")).toHaveCount(0); // no rupee rate in the books
     await page.getByTestId("rb-pct").fill("50");
     await page.getByTestId("rb-rate-save").click();
-    await expect.poll(() => mock.getSettings().limexRate, { timeout: 5000 }).toBe(100);
-    await expect.poll(() => mock.getSettings().substitutionPct).toBe(50);
+    await expect.poll(() => mock.getSettings().substitutionPct, { timeout: 5000 }).toBe(50);
   });
 
   test("works on a phone: nothing overflows, filters stay on screen", async ({ page }) => {
@@ -287,7 +287,7 @@ test.describe("LIMEX Route Book", () => {
     // The old filter rail is gone; the shared panel is always on screen.
     await expect(page.getByTestId("company-filters")).toBeVisible();
     await expect(page.locator(".rb-rail, .rb-railbtn")).toHaveCount(0);
-    await page.getByRole("button", { name: "Tools & settings" }).click();
+    await page.getByRole("link", { name: "Settings" }).last().click();
     await expect(page.getByTestId("rb-ratebox")).toBeVisible();
   });
 });
@@ -382,7 +382,7 @@ test('clean desk filters real tasks, hides removed companies, and links to the c
   // The workspace nav is the five books plus Today — named, not just counted,
   // so adding a sixth link cannot quietly pass while the wrong one is listed.
   await expect(page.locator('.adm-drawer .wd-nav a')).toHaveText([
-    'Today', 'Companies', 'Visits', 'Leads', 'Customers', 'Trials',
+    'Today', 'Companies', 'Visits', 'Leads', 'Customers', 'Trials', 'Settings',
   ]);
   await expect(page.locator('.adm-drawer .wd-nav')).not.toContainText('AI Brain');
   await page.getByRole('button', { name: 'Close menu', exact: true }).click();
@@ -598,9 +598,10 @@ test('mobile filters fit within the screen and tools stay separate', async ({ pa
   const panel=page.getByTestId('company-filters');
   await expect(panel).toBeVisible();
   expect(await panel.evaluate(el=>el.scrollWidth <= el.clientWidth)).toBe(true);
-  await page.getByRole('button',{name:'Tools & settings'}).click();
-  await expect(page.getByTestId('rb-ratebox')).toBeVisible();
+  // Settings is its own page; the filters stay the only panel on Companies.
   await expect(page.getByTestId('company-filters')).toHaveCount(1);
+  await page.getByRole('link',{name:'Settings'}).last().click();
+  await expect(page.getByTestId('rb-ratebox')).toBeVisible();
 });
 
 test('the Trial Book continues from the folder, never from 1', async ({ page }) => {

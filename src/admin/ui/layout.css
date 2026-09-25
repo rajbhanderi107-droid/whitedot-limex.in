@@ -168,3 +168,42 @@
 .rb-page .rb-bcard > details { border: 0; border-radius: 8px; padding: .15rem 0; margin: .3rem 0; background: transparent; }
 .rb-page .rb-bcard > details > summary { font-size: .8rem; color: var(--wd-sage-ink); cursor: pointer; padding: .2rem 0; }
 .rb-page .rb-bcard > details[open] { background: var(--wd-porcelain); padding: .4rem .7rem .7rem; border: 1px solid var(--wd-linen-soft); }
+
+/* ── Route Book toolbar end: Views + Settings ─────────────────── */
+.rb-toolbar-end { display: flex; align-items: center; gap: .45rem; margin-left: auto; }
+.rb-views { height: 32px; padding: 0 .7rem; border: 1px solid var(--wd-linen); border-radius: 8px; background: var(--wd-milk); color: var(--wd-graphite); font: inherit; font-size: .8rem; }
+.wd-nav-spacer { flex: 1; min-height: 1rem; }
+
+/* ── Settings page ──────────────────────────────────────────────── */
+.st-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1rem; align-items: start; }
+.st-sec { display: grid; gap: .8rem; padding: 1rem 1.1rem 1.1rem; background: var(--wd-milk); border: 1px solid var(--wd-linen); border-radius: 12px; }
+.st-sec h2 { display: flex; align-items: center; gap: .45rem; margin: 0; font-size: 1rem; font-weight: 600; color: var(--wd-graphite); }
+.st-sec h2 svg { color: var(--wd-sage-ink); }
+.st-badge { font-size: .66rem; font-weight: 600; padding: .1rem .45rem; border-radius: 999px; background: var(--wd-lilac); color: var(--wd-lilac-ink); }
+.st-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-top: .7rem; border-top: 1px solid var(--wd-linen-soft); }
+.st-row.st-col { display: grid; justify-content: stretch; }
+.st-row b { display: inline-flex; align-items: center; gap: .35rem; font-size: .88rem; }
+.st-row p, .st-note, .st-empty { margin: .15rem 0 0; font-size: .78rem; color: var(--wd-slate); }
+.st-row select { height: 34px; padding: 0 .6rem; border: 1px solid var(--wd-linen); border-radius: 8px; font: inherit; font-size: .82rem; }
+.st-seg { display: inline-flex; padding: 2px; gap: 2px; background: var(--wd-linen-soft); border-radius: 8px; }
+.st-seg button { border: 0; background: transparent; padding: .35rem .8rem; border-radius: 6px; font: inherit; font-size: .8rem; color: var(--wd-slate); cursor: pointer; }
+.st-seg button[aria-pressed="true"] { background: var(--wd-milk); color: var(--wd-graphite); font-weight: 600; box-shadow: 0 1px 2px rgba(46, 51, 44, .08); }
+.st-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .25rem; }
+.st-list li { display: flex; align-items: center; justify-content: space-between; padding: .35rem .5rem; border-radius: 8px; background: var(--wd-porcelain); font-size: .84rem; }
+.st-list small { margin-left: .5rem; color: var(--wd-slate); }
+.st-actions { display: flex; flex-wrap: wrap; gap: .45rem; }
+.st-inline { display: flex; gap: .4rem; min-width: 0; }
+.st-inline input { height: 34px; min-width: 0; width: 240px; padding: 0 .6rem; border: 1px solid var(--wd-linen); border-radius: 8px; font: inherit; font-size: .84rem; }
+.st-danger { color: var(--wd-rose-ink); border-color: var(--wd-rose-line); }
+.st-danger.is-on { background: var(--wd-rose); }
+.st-sec .rb-ratebox { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; }
+.st-sec .rb-ratebox label { display: grid; gap: .25rem; font-size: .8rem; }
+.st-sec .rb-ratebox input { height: 36px; padding: 0 .6rem; border: 1px solid var(--wd-linen); border-radius: 8px; font: inherit; }
+.st-sec .rb-ratebox .rb-rail-note, .st-sec .rb-ratebox button { grid-column: 1 / -1; }
+@media (max-width: 640px) {
+  .st-grid { grid-template-columns: 1fr; }
+  .st-row { flex-wrap: wrap; }
+  .st-inline, .st-inline input { width: 100%; }
+  .rb-toolbar-end { margin-left: 0; width: 100%; }
+  .rb-views { flex: 1; height: 40px; }
+}

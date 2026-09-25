@@ -20,7 +20,7 @@ import type { RbOrder } from "./types.js";
 import { ORDER_STATUSES, ORDER_STATUS_LABEL } from "./types.js";
 import type { Row } from "./logic.js";
 import {
-  addrOf, conOf, customerTotals, dueReorder, fmtDate, inr, inrFull, isCustomer, liveOrders, mt, num,
+  addrOf, conOf, customerTotals, dueReorder, fmtDate, isCustomer, liveOrders, mt, num,
   ordersOf, phoneOf, telHref, today,
 } from "./logic.js";
 import { editOrder, patchMark, removeOrder, useRb } from "./store.js";
@@ -58,7 +58,6 @@ export function CustomerBookPage() {
 
   const allOrders = customers.flatMap((r) => liveOrders(r.m));
   const totalMt = customers.reduce((a, r) => a + customerTotals(r.m).mt, 0);
-  const priced = customers.map((r) => customerTotals(r.m).value).filter((v): v is number => v !== null);
   const thisMonth = allOrders.filter((o) => monthOf(o.orderedOn) === monthOf(today()));
   const monthMt = thisMonth.reduce((a, o) => a + (num(o.quantityMt) ?? 0), 0);
 
@@ -130,7 +129,6 @@ export function CustomerBookPage() {
           <div className="rb-hero"><b>{customers.length}</b><span>Customers</span></div>
           <div className="rb-hero"><b>{allOrders.length}</b><span>Orders</span></div>
           <div className="rb-hero"><b>{totalMt ? mt(totalMt) : "—"}</b><span>Total ordered</span></div>
-          <div className="rb-hero"><b>{priced.length ? inr(priced.reduce((a, b) => a + b, 0)) : "—"}</b><span>Value to date</span></div>
           <div className="rb-hero"><b>{monthMt ? mt(monthMt) : "—"}</b><span>This month</span></div>
         </div>
       </section>
@@ -159,7 +157,6 @@ export function CustomerBookPage() {
                 <p>
                   {r.m?.customerOn ? `Customer since ${fmtDate(r.m.customerOn)}` : "Customer"}
                   {" · "}{mt(t.mt)} across {t.count} order{t.count === 1 ? "" : "s"}
-                  {t.value !== null ? ` · ${inr(t.value)}` : ""}
                   {c.n ? ` · ${c.n}` : ""}
                 </p>
               </div>
@@ -202,7 +199,7 @@ export function CustomerBookPage() {
                   <thead>
                     <tr>
                       <th>Order</th><th>Date</th><th>Grade</th><th className="num">MT</th>
-                      <th className="num">₹/kg</th><th className="num">Amount</th><th>Status</th><th />
+                      <th>Status</th><th />
                     </tr>
                   </thead>
                   <tbody>
@@ -212,8 +209,6 @@ export function CustomerBookPage() {
                         <td data-label="Date">{fmtDate(o.orderedOn)}</td>
                         <td data-label="Grade">{o.grade}</td>
                         <td data-label="MT" className="num">{num(o.quantityMt)}</td>
-                        <td data-label="₹/kg" className="num">{num(o.rate) ?? "—"}</td>
-                        <td data-label="Amount" className="num">{o.amount == null ? "—" : inrFull(num(o.amount))}</td>
                         <td data-label="Status">
                           <select value={o.status} onChange={(e) => setStatus(r, o, e.target.value as RbOrder["status"])} aria-label={`Status of ${o.orderNo}`}>
                             {ORDER_STATUSES.map((s) => <option key={s} value={s}>{ORDER_STATUS_LABEL[s]}</option>)}
