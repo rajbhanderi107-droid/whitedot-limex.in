@@ -104,8 +104,8 @@ test.describe("LIMEX Route Book", () => {
   test("appears in the clean workspace and loads the book", async ({ page }) => {
     await mockPortal(page);
     await page.goto("/#/admin/dashboard");
-    await expect(page.locator(".bd-book:has-text('LIMEX Route Book')")).toBeVisible();
-    await page.locator(".wd-nav a:has-text('LIMEX Route Book')").first().click();
+    await expect(page.locator(".bd-book:has-text('Companies')")).toBeVisible();
+    await page.locator(".wd-nav a:has-text('Companies')").first().click();
     await expect(page.getByTestId("rb-page")).toBeVisible();
     await expect(page.locator(".rb-head p")).toContainText("4 companies");
     await showWholeBook(page);
@@ -165,9 +165,9 @@ test.describe("LIMEX Route Book", () => {
     await page.getByTestId("rb-clear").click();
   
     await page.getByTestId("rb-tab-all").click();
-    await expect(page.locator(".rb-count")).toHaveText("4 showing");
+    await expect(page.getByTestId("rb-row")).toHaveCount(4);
     const dl = page.waitForEvent("download");
-    await page.getByText("Export this view").click();
+    await page.getByRole("button", { name: "Export", exact: true }).click();
     expect((await dl).suggestedFilename()).toMatch(/^limex-view-\d{4}-\d{2}-\d{2}\.csv$/);
 
     await page.getByTestId("rb-tab-pipe").click();
@@ -358,6 +358,8 @@ test('deleting a day row leaves its company in the register', async ({ page }) =
   await expect(page.getByRole('button', { name: 'Delete day record for Alpha Polymers', exact: true })).toHaveCount(0);
   expect(deleted).toBe(true);
   await page.getByTestId('rb-tab-all').click();
+  // The company list is compact rows; the full card opens beside it.
+  await page.getByRole('button', { name: 'Open Alpha Polymers' }).click();
   await expect(page.locator("[data-testid='rb-stop'][data-id='N1-alpha']")).toBeVisible();
 });
 
@@ -380,8 +382,7 @@ test('clean desk filters real tasks, hides removed companies, and links to the c
   // The workspace nav is the five books plus Today — named, not just counted,
   // so adding a sixth link cannot quietly pass while the wrong one is listed.
   await expect(page.locator('.adm-drawer .wd-nav a')).toHaveText([
-    'Today', 'LIMEX Route Book', 'LIMEX Visit Follow-ups', 'LIMEX Lead Book', 'LIMEX Customer Book',
-    'LIMEX Trial Book',
+    'Today', 'Companies', 'Visits', 'Leads', 'Customers', 'Trials',
   ]);
   await expect(page.locator('.adm-drawer .wd-nav')).not.toContainText('AI Brain');
   await page.getByRole('button', { name: 'Close menu', exact: true }).click();

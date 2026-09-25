@@ -84,7 +84,7 @@ export function LeadBookPage() {
       st={st}
       testId="lead-book"
       icon={<Handshake size={20} />}
-      title="LIMEX Lead Book"
+      title="Leads"
       sub={leads.length
         ? `${leads.length} live deal${leads.length === 1 ? "" : "s"} · ${mt(expected)}/month expected · ${openTrials} trial${openTrials === 1 ? "" : "s"} out`
         : "Companies move here from Visit Follow-ups once a visit turns into a real deal."}

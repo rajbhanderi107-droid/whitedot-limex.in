@@ -13,7 +13,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   Plus, Phone, Download, Upload, Save, Printer, RefreshCw, Sparkles, Route as RouteIcon,
-  History, CloudOff, Cloud, CloudUpload, AlertTriangle, MapPin, Trash2, IndianRupee,
+  History, CloudOff, Cloud, CloudUpload, AlertTriangle, MapPin, Trash2, IndianRupee, MoreHorizontal,
 } from "lucide-react";
 import type { RbView } from "./types.js";
 import {
@@ -193,10 +193,10 @@ export function RouteBookPage() {
   })();
 
   if (st.status === "loading" || st.status === "idle") {
-    return <div className="wd-page rb-page"><div className="wd-page-head"><h1><RouteIcon size={20} /> LIMEX Route Book</h1><p>Loading the book…</p></div><div className="wd-card wd-skel" style={{ height: 160 }} /></div>;
+    return <div className="wd-page rb-page"><div className="wd-page-head"><h1><RouteIcon size={20} /> Companies</h1><p>Loading the book…</p></div><div className="wd-card wd-skel" style={{ height: 160 }} /></div>;
   }
   if (st.status === "error") {
-    return <div className="wd-page rb-page"><div className="wd-page-head"><h1><RouteIcon size={20} /> LIMEX Route Book</h1></div><div className="wd-inline-err">{st.error} <button type="button" className="wd-ghost-btn" onClick={() => load(true)}>Try again</button></div></div>;
+    return <div className="wd-page rb-page"><div className="wd-page-head"><h1><RouteIcon size={20} /> Companies</h1></div><div className="wd-inline-err">{st.error} <button type="button" className="wd-ghost-btn" onClick={() => load(true)}>Try again</button></div></div>;
   }
 
   return (
@@ -204,15 +204,20 @@ export function RouteBookPage() {
       <div className={`wd-page rb-page${density === "compact" ? " rb-compact" : ""}`} data-testid="rb-page">
         <div className="wd-page-head rb-head">
           <div>
-            <h1><RouteIcon size={20} /> LIMEX Route Book</h1>
-            <p>{rows.filter(r => !r.m?.removed && !r.m?.dupOf).length} companies{ticked ? `, ${ticked} visited` : ""} — find a manufacturer, check its products, then record your visit.</p>
+            <h1><RouteIcon size={20} /> Companies</h1>
+            <p>Route Book · {rows.filter(r => !r.m?.removed && !r.m?.dupOf).length} companies{ticked ? `, ${ticked} visited` : ""}</p>
           </div>
           <div className="rb-head-right">
             {syncBadge}
-            <OpenAsApp dir="route" label="Route Book" />
-            <button type="button" className="wd-ghost-btn" onClick={() => setHistoryOpen((o) => !o)} title="Undo history"><History size={13} /></button>
-            <button type="button" className="wd-ghost-btn" onClick={() => setPalette(true)} title="Actions (.)"><Sparkles size={13} /> Actions</button>
             <button type="button" className="wd-primary-btn" onClick={() => setAdding(true)} data-testid="rb-addbtn"><Plus size={14} /> Add company</button>
+            <details className="rb-more-menu">
+              <summary className="wd-ghost-btn" aria-label="More actions for the book"><MoreHorizontal size={15} /></summary>
+              <div className="rb-more-panel">
+                <button type="button" className="wd-ghost-btn" onClick={() => setPalette(true)} title="Actions (.)"><Sparkles size={13} /> All actions</button>
+                <button type="button" className="wd-ghost-btn" onClick={() => setHistoryOpen((o) => !o)}><History size={13} /> Undo history</button>
+                <OpenAsApp dir="route" label="Route Book" />
+              </div>
+            </details>
           </div>
         </div>
         {st.error && st.sync === "error" && <div className="wd-inline-err">{st.error}</div>}

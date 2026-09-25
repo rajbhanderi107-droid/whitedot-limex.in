@@ -1,21 +1,33 @@
-/* Every company as one flat list — for sorting, bulk actions and export. */
+/* Every company as one compact list, with the chosen company's full card in
+ * a panel beside it (a sheet over the list on a phone). Sorting, the call
+ * queue, starring and export sit in one small toolbar above the list. */
 
-import { useState } from "react";
-import { Star, Download, Phone, ListChecks } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Star, Download, Phone, ListChecks, X, MousePointerClick } from "lucide-react";
 import type { Row, SortMode } from "./logic.js";
 import { sortRows, buildCSV, downloadText, today, isStar } from "./logic.js";
 import { useRb, patchMany } from "./store.js";
 import { useUI, toast } from "./ctx.js";
 import { StopCard } from "./StopCard.js";
+import { CompanyRow } from "./CompanyRow.js";
 
-const PAGE = 30;
+const PAGE = 60;
 
 export function StopsView({ rows, sort, setSort }: { rows: Row[]; sort: SortMode; setSort: (m: SortMode) => void }) {
   const ui = useUI();
   const st = useRb();
   const [limit, setLimit] = useState(PAGE);
+  const [openId, setOpenId] = useState<string | null>(null);
   const sorted = sortRows(rows, sort);
   const shown = sorted.slice(0, limit);
+  const open = openId ? st.index.stopById[openId] : undefined;
+
+  useEffect(() => {
+    if (!openId) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpenId(null); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [openId]);
 
   const starAll = () => {
     const todo = rows.filter((r) => !isStar(r.m));
@@ -30,9 +42,8 @@ export function StopsView({ rows, sort, setSort }: { rows: Row[]; sort: SortMode
   };
 
   return (
-    <div className="rb-flat">
+    <div className={`rb-flat rb-split${open ? " has-open" : ""}`}>
       <div className="rb-flat-tools">
-        <span className="rb-count">{rows.length} showing</span>
         <label className="rb-sort">Sort
           <select value={sort} onChange={(e) => setSort(e.target.value as SortMode)}>
             <option value="leg">by area / route</option>
@@ -41,17 +52,40 @@ export function StopsView({ rows, sort, setSort }: { rows: Row[]; sort: SortMode
             <option value="open">not visited first</option>
           </select>
         </label>
-        <button type="button" className="wd-ghost-btn" onClick={starAll}><Star size={13} /> Star all showing</button>
         <button type="button" className="wd-ghost-btn" onClick={() => ui.startQueue(sorted.map((r) => r.s.id))}><Phone size={13} /> Call queue</button>
-        <button type="button" className="wd-ghost-btn" onClick={exportView}><Download size={13} /> Export this view</button>
+        <button type="button" className="wd-ghost-btn" onClick={starAll}><Star size={13} /> Star all</button>
+        <button type="button" className="wd-ghost-btn" onClick={exportView}><Download size={13} /> Export</button>
       </div>
-      {shown.length ? shown.map((r) => <StopCard key={r.s.id} s={r.s} m={r.m} withLeg compact={ui.density === "compact"} />)
-        : <div className="wd-empty-state"><ListChecks size={26} /><p>No company matches these filters.</p></div>}
-      {sorted.length > limit && (
-        <button type="button" className="wd-ghost-btn rb-more" onClick={() => setLimit((l) => l + PAGE)}>
-          Show {Math.min(PAGE, sorted.length - limit)} more of {sorted.length - limit}
-        </button>
-      )}
+
+      <div className="rb-split-body">
+        <div className="rb-rows" role="list" aria-label="Companies">
+          {shown.length ? shown.map((r) => (
+            <div role="listitem" key={r.s.id}>
+              <CompanyRow s={r.s} m={r.m} selected={openId === r.s.id} onOpen={(id) => setOpenId((cur) => (cur === id ? null : id))} />
+            </div>
+          )) : <div className="wd-empty-state"><ListChecks size={26} /><p>No company matches these filters.</p></div>}
+          {sorted.length > limit && (
+            <button type="button" className="wd-ghost-btn rb-more" onClick={() => setLimit((l) => l + PAGE)}>
+              Show {Math.min(PAGE, sorted.length - limit)} more of {sorted.length - limit}
+            </button>
+          )}
+        </div>
+
+        <aside className="rb-detail" aria-label={open ? `${open.name} details` : "Company details"}>
+          {open ? (
+            <>
+              <div className="rb-detail-head">
+                <span>Company</span>
+                <button type="button" className="wd-icon-btn" onClick={() => setOpenId(null)} aria-label="Close company"><X size={16} /></button>
+              </div>
+              <StopCard key={open.id} s={open} m={st.marks[open.id]} withLeg />
+            </>
+          ) : (
+            <div className="rb-detail-empty"><MousePointerClick size={22} /><p>Pick a company to see its notes, contacts, follow-up, samples and deal — and act on it.</p></div>
+          )}
+        </aside>
+      </div>
+      {open && <button type="button" className="rb-detail-scrim" aria-label="Close company" onClick={() => setOpenId(null)} />}
     </div>
   );
 }
