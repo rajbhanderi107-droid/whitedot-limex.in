@@ -33,7 +33,7 @@ def width(y):
  return w
 
 def center(y):return interp(y,[(0,12),(12,10),(42,3),(90,-1),(150,0),(245,7),(310,5),(365,-3),(400,-10)])
-def depth(y):return interp(y,[(0,15),(6,17),(25,16.5),(68,11),(115,7.8),(139,5.1),(325,4.7),(388,5),(400,2.5)])
+def depth(y):return interp(y,[(0,9),(6,10),(25,10),(68,8),(115,6),(139,5.1),(325,4.7),(388,5),(400,2.5)])
 def front(y):return center(y)+depth(y)
 N=600;K=52;vs=[];fs=[]
 for i in range(N+1):
