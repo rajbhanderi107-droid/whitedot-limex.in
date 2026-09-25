@@ -31,7 +31,7 @@ import { CallQueue, Palette, AddCompany, HistoryPanel, Toasts, type PaletteActio
 import "./routebook.css";
 
 type View = "route" | "all" | "plan" | "pipe";
-const VIEWS: [View, string][] = [["all", "Companies"], ["route", "Plan a route"], ["plan", "Visit history"], ["pipe", "Pipeline"]];
+const VIEWS: [View, string][] = [["all", "Companies"], ["route", "Plan a route"], ["plan", "Run & history"], ["pipe", "Pipeline"]];
 
 export function RouteBookPage() {
   const st = useRb();

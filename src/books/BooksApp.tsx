@@ -27,6 +27,9 @@ import "../admin/portal/portal.css";
 import "./books.css";
 import "../admin/ui/theme.css";
 import "../admin/ui/layout.css";
+import { startTheme } from "../admin/ui/themeMode.js";
+
+startTheme();
 
 warmUpBackend();
 

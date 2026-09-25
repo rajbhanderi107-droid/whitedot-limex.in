@@ -116,31 +116,33 @@ export function TrialBookPage() {
       {trials.length === 0 ? (
         <div className="wd-card"><p>No trials yet. The first one will be trial 1.</p></div>
       ) : (
-        <div className="wd-card rb-trial-list">
-          {trials.map(t => (
-            <article key={t.id} className="rb-trial-row">
-              <header>
-                <strong>Trial {t.trialNo}</strong>
-                <span className="rb-trial-product">{t.product}</span>
-                {t.brandOwner ? <span className="rb-trial-owner">{t.brandOwner}</span> : null}
-                <span className="rb-trial-when">{t.trialOn ?? ""}</span>
-                {t.syncedAt
-                  ? <span className="rb-trial-ok" title={t.fileName ?? ""}><Check size={13} /> in the folder</span>
-                  : <span className="rb-trial-wait"><Clock size={13} /> not written yet</span>}
-              </header>
-              <dl>
-                {t.limexGrade ? <><dt>Grade</dt><dd>{t.limexGrade}</dd></> : null}
-                {t.mixLimex ? <><dt>Mix</dt><dd>{[t.mixBatch, t.mixResin, t.mixLimex].filter(Boolean).join(" | ")}</dd></> : null}
-                {t.originalWeight || t.trialWeight
-                  ? <><dt>Weight</dt><dd>{t.originalWeight ?? "—"} → {t.trialWeight ?? "—"}</dd></> : null}
-                {t.result ? <><dt>Result</dt><dd>{t.result}</dd></> : null}
-              </dl>
-              <footer>
-                <button type="button" className="wd-ghost-btn" onClick={() => startEdit(t)}>Edit</button>
-                <button type="button" className="wd-ghost-btn" onClick={() => void remove(t)}><Trash2 size={13} /> Remove</button>
-              </footer>
-            </article>
-          ))}
+        <div className="wd-card rb-trial-tablewrap">
+          <table className="rb-trial-table">
+            <thead>
+              <tr><th>No.</th><th>Date</th><th>Product</th><th>Brand owner</th><th>Grade</th><th>Mix</th><th>Weight</th><th>Result</th><th>Folder</th><th /></tr>
+            </thead>
+            <tbody>
+              {trials.map(t => (
+                <tr key={t.id} className="rb-trial-row">
+                  <td data-label="No." className="rb-trial-no">{t.trialNo}</td>
+                  <td data-label="Date" className="rb-trial-when">{t.trialOn ?? "—"}</td>
+                  <td data-label="Product" className="rb-trial-product">{t.product}</td>
+                  <td data-label="Brand owner" className="rb-trial-owner">{t.brandOwner || "—"}</td>
+                  <td data-label="Grade">{t.limexGrade || "—"}</td>
+                  <td data-label="Mix">{[t.mixBatch, t.mixResin, t.mixLimex].filter(Boolean).join(" | ") || "—"}</td>
+                  <td data-label="Weight">{t.originalWeight || t.trialWeight ? `${t.originalWeight ?? "—"} → ${t.trialWeight ?? "—"}` : "—"}</td>
+                  <td data-label="Result">{t.result || "—"}</td>
+                  <td data-label="Folder">{t.syncedAt
+                    ? <span className="rb-trial-ok" title={t.fileName ?? ""}><Check size={13} /> in the folder</span>
+                    : <span className="rb-trial-wait"><Clock size={13} /> not written yet</span>}</td>
+                  <td className="rb-trial-acts">
+                    <button type="button" className="wd-ghost-btn" onClick={() => startEdit(t)} aria-label={`Edit trial ${t.trialNo}`}>Edit</button>
+                    <button type="button" className="wd-icon-btn" onClick={() => void remove(t)} aria-label={`Remove trial ${t.trialNo}`}><Trash2 size={14} /></button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 

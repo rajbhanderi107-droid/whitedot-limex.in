@@ -5,15 +5,15 @@ import { sourceFolderOf } from "./sources.js";
  * same live records the books read — nothing is stored twice. */
 
 import { useMemo } from "react";
-import { Link, useSearchParams } from "react-router-dom";
-import { Route, Handshake, BadgeCheck, ClipboardCheck, ArrowUpRight, CalendarCheck, Search, MessageCircle, Phone } from "lucide-react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Route, Handshake, BadgeCheck, ClipboardCheck, ArrowUpRight, CalendarCheck, Search, MessageCircle, Phone, Navigation } from "lucide-react";
 import { BookShell, useBook } from "./BookBits.js";
 import { inRegion, useRegion } from "./region.js";
 import {
   isLead, isCustomer, isFollowUp, isDue, openSamplesOf, liveOrders, phoneOf, telHref, waHref,
   dueLabel, dueReorder, noNextStep, addDays, today, customerTotals, fmtDate, daysSince, type Row,
 } from "./logic.js";
-import { patchMark } from "./store.js";
+import { patchMark, patchMany } from "./store.js";
 import { toast } from "./ctx.js";
 
 interface Queue {
@@ -107,6 +107,21 @@ export function BookDesk() {
     .filter((r) => `${r.s.name} ${phoneOf(r.s, r.m)}`.toLowerCase().includes(needle))
     .sort((a, b) => (a.m?.dueOn ?? "9999").localeCompare(b.m?.dueOn ?? "9999") || a.s.name.localeCompare(b.s.name));
 
+  const navigate = useNavigate();
+  /** Star every company due today for the run, then open the route planner
+   *  with them — Google Maps routes 10 stops at a time from there. */
+  const planRoute = () => {
+    const due = rows.filter((r) => isDue(r.m));
+    if (!due.length) { toast("Nothing is due today — star companies in Companies to plan a run"); return; }
+    const todo = due.filter((r) => !r.m?.starred);
+    if (todo.length) {
+      patchMany(todo.map((r) => ({ stopId: r.s.id, starred: true })));
+      toast(`${todo.length} due compan${todo.length === 1 ? "y" : "ies"} starred for today's run`,
+        () => patchMany(todo.map((r) => ({ stopId: r.s.id, starred: false }))));
+    }
+    navigate("/admin/route-book?view=plan");
+  };
+
   /** Move the follow-up date without leaving the desk. Undoable, like every
    *  other write in the books. */
   const snooze = (r: Row, days: number, label: string) => {
@@ -119,6 +134,10 @@ export function BookDesk() {
     <BookShell st={st} icon={<CalendarCheck size={22} />} title="Today’s work"
       sub={new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" })} testId="book-desk">
 
+      <div className="bd-plan">
+        <button type="button" className="wd-primary-btn" onClick={planRoute} data-testid="bd-plan-route"><Navigation size={14} /> Plan today's route</button>
+        <span>Stars what is due and opens the route planner.</span>
+      </div>
       <details className="rb-secondary"><summary>Source folders</summary><SourceFolders rows={allSourceRows} folder={folder} onChange={setFolder} /></details>
       <div className="bd-books">
         {books.map((b) => (
