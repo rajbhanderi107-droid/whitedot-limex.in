@@ -1,6 +1,7 @@
 import { areaOf, areaOptions } from "./areas.js";
 import { CompanyFilters } from "./CompanyFilters.js";
 import { matchesProduct, type ProductFilter } from "./products.js";
+import { inRegion, useRegion, isCanadian, getRegion, setRegion } from "./region.js";
 import { useSourceFolder } from "./SourceFolders.js";
 import { sourceFolderOf } from "./sources.js";
 /* LIMEX Route Book — the field-sales book inside the portal.
@@ -60,7 +61,10 @@ export function RouteBookPage() {
   const changeSort = (m: SortMode) => { setSort(m); setPrefs({ sort: m }); };
 
   // Rows and indexes
-  const allSourceRows: Row[] = useMemo(() => st.stops.map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
+  const [region] = useRegion();
+  const allSourceRows: Row[] = useMemo(() => st.stops.filter((s) => inRegion(region)(s, st.marks[s.id])).map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks, region]);
+  // The product list differs by region, so a region change clears the product filter.
+  useEffect(() => { setProduct("all"); }, [region]);
   const rows = useMemo(() => allSourceRows.filter(r => folder === "ALL" || sourceFolderOf(r.s, r.m) === folder), [allSourceRows, folder]);
   const rowsByLeg = useMemo(() => { const mp = new Map<string, Row[]>(); for (const r of rows) (mp.get(r.s.legId) ?? mp.set(r.s.legId, []).get(r.s.legId)!).push(r); return mp; }, [rows]);
   const visible = useMemo(() => rows.filter((r) => matchesProduct(r.s, r.m, product) && matchStop(r.s, r.m, filters, st.index.legById[r.s.legId], areaOf(r))), [rows, filters, product, st.index.legById]);
@@ -72,6 +76,9 @@ export function RouteBookPage() {
   // Deep link ?s=<id>
   const jumpTo = useCallback((stopId: string) => {
     const s = getRb().index.stopById[stopId]; if (!s) return;
+    // A link can point at a company in the other region; switch to it.
+    const home = isCanadian(s, getRb().marks[stopId]) ? "CA" : "IN";
+    if (getRegion() !== home) setRegion(home);
     setFolder("ALL"); setProduct("all"); setFilters({...emptyFilters(), parked: true}); setView("route");
     setOpenLegs((o) => new Set(o).add(s.legId));
     setEditing(null);

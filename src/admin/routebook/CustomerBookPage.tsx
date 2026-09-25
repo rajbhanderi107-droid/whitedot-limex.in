@@ -2,6 +2,7 @@ import { areaOf, areaOptions } from "./areas.js";
 import { CompanyFilters } from "./CompanyFilters.js";
 import { ProductPanel } from "./ProductPanel.js";
 import { matchesProduct, type ProductFilter } from "./products.js";
+import { inRegion, useRegion } from "./region.js";
 import { useSourceFolder } from "./SourceFolders.js";
 import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
 /* LIMEX Customer Book — who buys, how much, and on what terms.
@@ -10,7 +11,7 @@ import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
  * whose `stage` is CUSTOMER. Orders are held in metric tonnes, and the whole
  * book exports to Excel and Word the way the weekly forms do. */
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   BadgeCheck, FileSpreadsheet, FileText, Phone, MapPin, Plus, Trash2, Search, X,
@@ -41,7 +42,10 @@ export function CustomerBookPage() {
   const [q, setQ] = useState("");
   const [ordering, setOrdering] = useState<Row | null>(null);
 
-  const allSourceRows: Row[] = useMemo(() => st.stops.map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
+  const [region] = useRegion();
+  const allSourceRows: Row[] = useMemo(() => st.stops.filter((s) => inRegion(region)(s, st.marks[s.id])).map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks, region]);
+  // The product list differs by region, so a region change clears the product filter.
+  useEffect(() => { setProduct("all"); }, [region]);
   const rows = useMemo(() => allSourceRows.filter(r => folder === "ALL" || sourceFolderOf(r.s, r.m) === folder), [allSourceRows, folder]);
   const customers = useMemo(
     () => rows.filter((r) => isCustomer(r.m) && !r.m?.removed)

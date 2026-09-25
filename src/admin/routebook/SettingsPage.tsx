@@ -14,6 +14,7 @@ import { BookShell } from "./BookBits.js";
 import { saveSettings, setPrefs, deleteView, reseed, load } from "./store.js";
 import { toast } from "./ctx.js";
 import { ResearchAdditions } from "./ResearchAdditions.js";
+import { RegionSwitch } from "./RegionSwitch.js";
 import { backupBook, exportContactsVcf, exportWholeBookCSV, getHome, restoreFromFile, setHome } from "./bookData.js";
 import { usePortal, AUTOMATION_MODES, type AutomationMode } from "../portal/PortalContext.js";
 
@@ -29,6 +30,10 @@ export function SettingsPage() {
       <div className="st-grid">
         <section className="st-sec" aria-labelledby="st-selling">
           <h2 id="st-selling"><Percent size={16} /> Selling</h2>
+          <div className="st-row">
+            <div><b>Region</b><p>India shows the Gujarat and India register; Canada shows the partner's Canadian makers and importers, with its own products.</p></div>
+            <RegionSwitch />
+          </div>
           <RateBox />
           <HomeBox />
         </section>

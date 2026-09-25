@@ -244,3 +244,11 @@
   .rb-split.has-open .rb-detail { bottom: calc(62px + env(safe-area-inset-bottom, 0px)); max-height: calc(88vh - 62px); border-radius: 16px 16px 0 0; }
   .adm .adm-main.wd-main { padding-top: .75rem; }
 }
+
+/* ── Region switch ──────────────────────────────────────────────── */
+.wd-region { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 2px; margin: .75rem .35rem 0; background: var(--wd-linen-soft); border: 1px solid var(--wd-linen); border-radius: 9px; }
+.wd-region button { border: 0; background: transparent; padding: .38rem .5rem; border-radius: 7px; font: inherit; font-size: .78rem; color: var(--wd-slate); cursor: pointer; }
+.wd-region button[aria-pressed="true"] { background: var(--wd-milk); color: var(--wd-graphite); font-weight: 600; box-shadow: 0 1px 2px rgba(46, 51, 44, .08); }
+.st-row .wd-region { margin: 0; min-width: 180px; }
+.wd-region.is-compact { margin: 0; min-width: 0; }
+.wd-region.is-compact button { padding: .3rem .45rem; font-size: .72rem; }

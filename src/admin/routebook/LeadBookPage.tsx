@@ -2,6 +2,7 @@ import { areaOf, areaOptions } from "./areas.js";
 import { CompanyFilters } from "./CompanyFilters.js";
 import { ProductPanel } from "./ProductPanel.js";
 import { matchesProduct, type ProductFilter } from "./products.js";
+import { inRegion, useRegion } from "./region.js";
 import { useSourceFolder } from "./SourceFolders.js";
 import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
 /* LIMEX Lead Book — the companies actually in a deal.
@@ -10,7 +11,7 @@ import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
  * LEAD, so promoting one here changes the same row the Route Book shows and
  * the CRM pipeline draws. Nothing to reconcile, nothing to drift. */
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Handshake, Phone, MessageCircle, MapPin, FileSpreadsheet, ArrowRight, Undo2,
@@ -37,7 +38,10 @@ export function LeadBookPage() {
   const [q, setQ] = useState("");
   const [winning, setWinning] = useState<Row | null>(null);
 
-  const allSourceRows: Row[] = useMemo(() => st.stops.map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
+  const [region] = useRegion();
+  const allSourceRows: Row[] = useMemo(() => st.stops.filter((s) => inRegion(region)(s, st.marks[s.id])).map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks, region]);
+  // The product list differs by region, so a region change clears the product filter.
+  useEffect(() => { setProduct("all"); }, [region]);
   const rows = useMemo(() => allSourceRows.filter(r => folder === "ALL" || sourceFolderOf(r.s, r.m) === folder), [allSourceRows, folder]);
   const leads = useMemo(
     () => rows.filter((r) => isLead(r.m) && !r.m?.removed)

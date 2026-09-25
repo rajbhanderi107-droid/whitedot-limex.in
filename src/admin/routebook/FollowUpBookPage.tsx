@@ -2,6 +2,7 @@ import { areaOf, areaOptions } from "./areas.js";
 import { CompanyFilters } from "./CompanyFilters.js";
 import { ProductPanel } from "./ProductPanel.js";
 import { matchesProduct, type ProductFilter } from "./products.js";
+import { inRegion, useRegion } from "./region.js";
 import { useSourceFolder } from "./SourceFolders.js";
 import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
 /* LIMEX Visit Follow-ups — every company a visit actually touched.
@@ -19,7 +20,7 @@ import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
  * The one decision this page exists to make is "does this become a lead?",
  * so that button is the loudest thing on every row. */
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight, CalendarClock, ClipboardCheck, FileSpreadsheet, FileText, FlaskConical,
@@ -61,7 +62,10 @@ export function FollowUpBookPage() {
   const [focus, setFocus] = useState<FocusKey>("all");
   const [q, setQ] = useState("");
 
-  const allSourceRows: Row[] = useMemo(() => st.stops.map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks]);
+  const [region] = useRegion();
+  const allSourceRows: Row[] = useMemo(() => st.stops.filter((s) => inRegion(region)(s, st.marks[s.id])).map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks, region]);
+  // The product list differs by region, so a region change clears the product filter.
+  useEffect(() => { setProduct("all"); }, [region]);
   const rows = useMemo(() => allSourceRows.filter(r => folder === "ALL" || sourceFolderOf(r.s, r.m) === folder), [allSourceRows, folder]);
 
   /* Overdue first, then due soonest, then the most recent visit — the order

@@ -17,6 +17,7 @@ import { MODULE_GROUPS } from "./modules.js";
 import { CommandPalette } from "./CommandPalette.js";
 import { usePortal } from "./PortalContext.js";
 import { StatusBadge } from "./ui.js";
+import { RegionSwitch } from "../routebook/RegionSwitch.js";
 import "./portal.css";
 import "./book-workspace.css";
 import "../ui/theme.css";
@@ -43,6 +44,7 @@ function NavGroups({ onNav, isSuperAdmin }: { onNav?: () => void; isSuperAdmin: 
         <Icon size={18} /><span className="wd-nav-label">{label}</span>
       </NavLink>;
     })}
+    <RegionSwitch />
     <div className="wd-nav-spacer" />
     <NavLink to="/admin/book-settings" onClick={onNav} className={({ isActive }) => `wd-nav-link${isActive ? " active" : ""}`}>
       <Settings size={18} /><span className="wd-nav-label">Settings</span>
