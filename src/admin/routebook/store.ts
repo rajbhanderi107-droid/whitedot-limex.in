@@ -129,6 +129,7 @@ let outbox: MarkOp[] = (() => {
   catch { return []; }
 })();
 let inflight: MarkOp[] = [];
+let inflightDone: Promise<void> | null = null;
 let flushTimer: number | undefined;
 let backoff = 0;
 
@@ -158,7 +159,13 @@ function applyServerMarks(marks: RbMark[]) {
   set({ marks: next });
 }
 
-export async function flush(): Promise<void> {
+export function flush(): Promise<void> {
+  if (inflightDone) return inflightDone;
+  inflightDone = flushOnce().finally(() => { inflightDone = null; });
+  return inflightDone;
+}
+
+async function flushOnce(): Promise<void> {
   if (inflight.length || !outbox.length) return;
   if (!navigator.onLine) { set({ sync: "offline", pending: outbox.length }); return; }
   const day = outbox[0].day;

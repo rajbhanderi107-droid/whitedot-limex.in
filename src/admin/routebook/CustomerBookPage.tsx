@@ -21,11 +21,11 @@ import type { RbOrder } from "./types.js";
 import { ORDER_STATUSES, ORDER_STATUS_LABEL } from "./types.js";
 import type { Row } from "./logic.js";
 import {
-  addrOf, conOf, customerTotals, dueReorder, fmtDate, isCustomer, liveOrders, mt, num,
-  ordersOf, phoneOf, telHref, today,
+  addrOf, conOf, customerTotals, dueReorder, fmtDate, isCustomer, liveOrders, mt, num, ordersOf, phoneOf, telHref, today,
 } from "./logic.js";
 import { editOrder, patchMark, removeOrder, useRb } from "./store.js";
 import { toast } from "./ctx.js";
+import { BookSplit, type RowSummary } from "./BookSplit.js";
 import { BookShell, MoreMenu, Empty, Field, OpenAsApp, useBook } from "./BookBits.js";
 import { exportCustomerBookDocx, exportCustomerBookXlsx, exportCustomerStatement } from "./exports.js";
 import { OrderDialog } from "./OrderDialog.js";
@@ -99,6 +99,16 @@ export function CustomerBookPage() {
       .catch((e: unknown) => toast(e instanceof Error ? e.message : "Could not delete the order", undefined, "err"));
   };
 
+  /** One line per customer: tonnes ordered and what needs doing. */
+  const summarise = (r: Row): RowSummary => {
+    const t = customerTotals(r.m);
+    const pills: RowSummary["pills"] = [{ cls: "customer", text: `Customer · ${mt(t.mt)}` }];
+    const toDispatch = liveOrders(r.m).filter((o) => o.status === "CONFIRMED").length;
+    if (toDispatch) pills.push({ cls: "trial", text: `${toDispatch} to dispatch` });
+    if (dueReorder(r.m)) pills.push({ cls: "due", text: "Due a reorder" });
+    return { sub: `${t.count} order${t.count === 1 ? "" : "s"}${t.last ? ` · last ${fmtDate(t.last)}` : ""}`, pills };
+  };
+
   return (
     <BookShell
       st={st}
@@ -147,7 +157,7 @@ export function CustomerBookPage() {
       )}
 
       {customers.length > 0 && !shown.length && <Empty title="No matching customers" hint="Try another name, phone or order number, or choose All customers." />}
-      {shown.map((r) => {
+      {shown.length > 0 && <BookSplit rows={shown} label="Customers" summary={summarise} detail={(r) => {
         const t = customerTotals(r.m);
         const c = conOf(r.m);
         const phone = phoneOf(r.s, r.m);
@@ -236,7 +246,7 @@ export function CustomerBookPage() {
             </div>
           </section>
         );
-      })}
+      }} />}
 
       {ordering && (
         <OrderDialog

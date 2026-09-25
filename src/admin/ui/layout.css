@@ -254,3 +254,18 @@
 .wd-region.is-compact button { padding: .3rem .45rem; font-size: .72rem; }
 .bd-plan { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin: .25rem 0 .75rem; }
 .bd-plan span { font-size: .8rem; color: var(--wd-slate); }
+
+/* ── Visits / Leads / Customers: list + panel ───────────────────── */
+.rb-crow.no-tick { grid-template-columns: minmax(0, 1fr) auto; padding-left: .95rem; }
+.rb-booksplit .rb-split-body { grid-template-columns: minmax(0, 1fr) minmax(380px, 48%); }
+.rb-page .rb-booksplit .rb-detail .rb-bcard { border: 0; border-radius: 0; margin: 0; box-shadow: none; background: transparent; padding: 1rem 1.1rem; }
+.rb-page .rb-booksplit .rb-detail .rb-bcard:hover { border: 0; }
+.rb-page .rb-booksplit .rb-detail .rb-bcard-head { flex-direction: column; align-items: stretch; }
+@media (max-width: 1100px) {
+  .rb-booksplit .rb-split-body { grid-template-columns: minmax(0, 1fr); }
+  .rb-booksplit:not(.has-open) .rb-detail { display: none; }
+}
+@media (max-width: 640px) {
+  .rb-crow.no-tick { grid-template-columns: minmax(0, 1fr); }
+  .rb-crow.no-tick .rb-row-tags { grid-column: 1; }
+}
