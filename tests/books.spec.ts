@@ -280,6 +280,8 @@ test.describe("Visit Follow-ups, Lead Book & Customer Book", () => {
     await expect(page.locator(".rb-hero").first()).toContainText("1");
     for (const [testId, ext, sig] of [["cb-xlsx", "xlsx", "xl/workbook.xml"], ["cb-docx", "docx", "word/document.xml"]] as const) {
       const wait = page.waitForEvent("download");
+      // Exports live in the book's ⋯ menu.
+      await page.locator("summary[aria-label='More actions for this book']").click();
       await page.getByTestId(testId).click();
       const dl = await wait;
       expect(dl.suggestedFilename()).toMatch(new RegExp(`\\.${ext}$`));

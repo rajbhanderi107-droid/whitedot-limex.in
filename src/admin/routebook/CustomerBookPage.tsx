@@ -25,7 +25,7 @@ import {
 } from "./logic.js";
 import { editOrder, patchMark, removeOrder, useRb } from "./store.js";
 import { toast } from "./ctx.js";
-import { BookShell, Empty, Field, OpenAsApp, useBook } from "./BookBits.js";
+import { BookShell, MoreMenu, Empty, Field, OpenAsApp, useBook } from "./BookBits.js";
 import { exportCustomerBookDocx, exportCustomerBookXlsx, exportCustomerStatement } from "./exports.js";
 import { OrderDialog } from "./OrderDialog.js";
 
@@ -106,8 +106,8 @@ export function CustomerBookPage() {
         ? `${customers.length} customer${customers.length === 1 ? "" : "s"} · ${allOrders.length} order${allOrders.length === 1 ? "" : "s"} · ${mt(totalMt)} committed`
         : "Companies arrive here from the Lead Book the moment you record an order."}
       actions={
-        <>
-          <Link className="wd-ghost-btn" to="/admin/lead-book"><Handshake size={13} /> Lead Book</Link>
+        <MoreMenu>
+          <Link className="wd-ghost-btn" to="/admin/lead-book"><Handshake size={13} /> Leads</Link>
           <OpenAsApp dir="customers" label="Customer Book" />
           <button type="button" className="wd-ghost-btn" disabled={!customers.length}
             onClick={() => exportCustomerBookXlsx(customers, st.index.legById, st.settings)} data-testid="cb-xlsx">
@@ -117,7 +117,7 @@ export function CustomerBookPage() {
             onClick={() => exportCustomerBookDocx(customers, st.index.legById)} data-testid="cb-docx">
             <FileText size={13} /> Document
           </button>
-        </>
+        </MoreMenu>
       }
     >
       <CompanyFilters rows={customers} product={product} onProduct={setProduct} q={q} onSearch={setQ}
@@ -126,10 +126,6 @@ export function CustomerBookPage() {
         onReset={() => {setArea("");setQ("");setProduct("all");setFolder("ALL");setFocus("all");}}
         areas={areaOptions(allSourceRows)} area={area} onArea={setArea} status={focus} onStatus={setFocus} statuses={[["all","All customers"],["CONFIRMED","Awaiting dispatch"],["DISPATCHED","Dispatched"],["DELIVERED","Delivered"],["PAID","Paid"],["reorder","Due a reorder"]]} />
       <section className="rb-dsec">
-        <div className="rb-dhead">
-          <h3>The book at a glance</h3>
-          <span className="rb-dcount">rupee figures appear only where a rate was agreed</span>
-        </div>
         <div className="rb-heroes">
           <div className="rb-hero"><b>{customers.length}</b><span>Customers</span></div>
           <div className="rb-hero"><b>{allOrders.length}</b><span>Orders</span></div>

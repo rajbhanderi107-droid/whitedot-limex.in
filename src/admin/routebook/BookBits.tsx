@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
  * the data. */
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Cloud, CloudOff, CloudUpload, AlertTriangle, Smartphone } from "lucide-react";
+import { Cloud, CloudOff, CloudUpload, AlertTriangle, Smartphone, MoreHorizontal } from "lucide-react";
 import { load, startLiveSync, useRb, type RbState } from "./store.js";
 import { Toasts } from "./Overlays.js";
 import "./routebook.css";
@@ -25,6 +25,17 @@ export function OpenAsApp({ dir, label }: { dir: "route" | "visits" | "leads" | 
     <a className="wd-ghost-btn" href={`/${dir}/#/admin/${bookPath}${folder ? `?folder=${encodeURIComponent(folder)}` : ""}`} title={`Open the ${label} as its own app — add it to your home screen from there`}>
       <Smartphone size={13} /> App
     </a>
+  );
+}
+
+/** Secondary page actions — exports, the app, links to other books — behind
+ *  one ⋯ button, so a book header carries at most one visible action. */
+export function MoreMenu({ children, label = "More actions for this book" }: { children: ReactNode; label?: string }) {
+  return (
+    <details className="rb-more-menu">
+      <summary className="wd-ghost-btn" aria-label={label}><MoreHorizontal size={15} /></summary>
+      <div className="rb-more-panel" onClick={(e) => (e.currentTarget.parentElement as HTMLDetailsElement).open = false}>{children}</div>
+    </details>
   );
 }
 

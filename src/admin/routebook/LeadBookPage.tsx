@@ -23,7 +23,7 @@ import {
 } from "./logic.js";
 import { patchMark, setStage, useRb } from "./store.js";
 import { toast } from "./ctx.js";
-import { BookShell, Empty, Field, OpenAsApp, useBook } from "./BookBits.js";
+import { BookShell, MoreMenu, Empty, Field, OpenAsApp, useBook } from "./BookBits.js";
 import { exportLeadBook, leadMonthlyValue } from "./exports.js";
 import { OrderDialog } from "./OrderDialog.js";
 
@@ -89,14 +89,14 @@ export function LeadBookPage() {
         ? `${leads.length} live deal${leads.length === 1 ? "" : "s"} · ${mt(expected)}/month expected · ${openTrials} trial${openTrials === 1 ? "" : "s"} out`
         : "Companies move here from Visit Follow-ups once a visit turns into a real deal."}
       actions={
-        <>
-          <Link className="wd-ghost-btn" to="/admin/route-book"><RouteIcon size={13} /> Route Book</Link>
+        <MoreMenu>
+          <Link className="wd-ghost-btn" to="/admin/route-book"><RouteIcon size={13} /> Companies</Link>
           <OpenAsApp dir="leads" label="Lead Book" />
           <button type="button" className="wd-ghost-btn" disabled={!leads.length}
             onClick={() => exportLeadBook(leads, st.index.legById)}>
             <FileSpreadsheet size={13} /> Excel
           </button>
-        </>
+        </MoreMenu>
       }
     >
       <CompanyFilters rows={leads} product={product} onProduct={setProduct} q={q} onSearch={setQ}
@@ -105,7 +105,6 @@ export function LeadBookPage() {
         onReset={() => {setArea("");setQ("");setProduct("all");setFolder("ALL");setFocus("all");}}
         areas={areaOptions(allSourceRows)} area={area} onArea={setArea} status={focus} onStatus={setFocus} statuses={[["all","All leads"],["due","Follow-ups due"],["trials","Open trials"],["nostep","No next step"]]} />
       <section className="rb-dsec">
-        <div className="rb-dhead"><h3>Where the deals stand</h3><span className="rb-dcount">every figure comes from what you recorded</span></div>
         <div className="rb-heroes">
           <div className="rb-hero"><b>{leads.length}</b><span>Live leads</span></div>
           <div className="rb-hero"><b>{expected ? mt(expected) : "—"}</b><span>Expected / month</span></div>
