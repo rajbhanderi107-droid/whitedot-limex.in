@@ -19,11 +19,11 @@ import {
 } from "lucide-react";
 import type { Row } from "./logic.js";
 import {
-  addrOf, conOf, expectedMtOf, fmtDate, isDue, isLead, looksPositive, mt, num, openSamplesOf,
-  noNextStep, phoneOf, relDays, sampleStalled, samplesOf, telHref, tonnesOf, today, waHref,
+  addrOf, conOf, expectedMtOf, fmtDate, isDue, isLead, looksPositive, mt, num, openSamplesOf, noNextStep, phoneOf, relDays, sampleStalled, samplesOf, telHref, tonnesOf, today, waHref,
 } from "./logic.js";
 import { patchMark, setStage, useRb } from "./store.js";
 import { toast } from "./ctx.js";
+import { BookSplit, type RowSummary } from "./BookSplit.js";
 import { BookShell, MoreMenu, Empty, Field, OpenAsApp, useBook } from "./BookBits.js";
 import { exportLeadBook } from "./exports.js";
 import { OrderDialog } from "./OrderDialog.js";
@@ -80,6 +80,18 @@ export function LeadBookPage() {
     if (reason === null) return;
     const prev = setStage(r.s.id, "LOST", { lostReason: reason || null });
     toast(`${r.s.name} marked lost`, () => patchMark(r.s.id, { stage: prev.stage, lostReason: prev.lostReason }));
+  };
+
+  /** One line per deal: how long, what next, how many tonnes. */
+  const summarise = (r: Row): RowSummary => {
+    const pills: RowSummary["pills"] = [];
+    const exp = expectedMtOf(r.m);
+    pills.push({ cls: "lead", text: exp ? `Lead · ${mt(exp)}/mo` : "Lead" });
+    if (isDue(r.m) && r.m?.dueOn) pills.push({ cls: "due", text: `Due ${fmtDate(r.m.dueOn)}` });
+    const n = openSamplesOf(r.m).length;
+    if (n) pills.push({ cls: "trial", text: `${n} trial${n === 1 ? "" : "s"} out` });
+    const since = r.m?.leadOn ? `Lead since ${fmtDate(r.m.leadOn)}` : "Lead";
+    return { sub: r.m?.nextStep ? `${since} · next: ${r.m.nextStep}` : `${since} · no next step`, pills };
   };
 
   return (
@@ -149,7 +161,7 @@ export function LeadBookPage() {
       )}
 
       {leads.length > 0 && !shown.length && <Empty title="No matching leads" hint="Try another company or contact, or change the filter to All leads." />}
-      {shown.map((r) => {
+      {shown.length > 0 && <BookSplit rows={shown} label="Leads" summary={summarise} detail={(r) => {
         const c = conOf(r.m);
         const phone = phoneOf(r.s, r.m);
         const trials = samplesOf(r.m);
@@ -210,7 +222,7 @@ export function LeadBookPage() {
             </div>
           </section>
         );
-      })}
+      }} />}
 
       {winning && (
         <OrderDialog

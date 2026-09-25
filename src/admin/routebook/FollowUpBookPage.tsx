@@ -28,11 +28,11 @@ import {
 } from "lucide-react";
 import type { Row } from "./logic.js";
 import {
-  addDays, addrOf, conOf, dueLabel, isDue, isFollowUp, noFollowUpDate, openSamplesOf, OUTMAP,
-  phoneOf, relDays, telHref, today, visitedOn, waHref,
+  addDays, addrOf, conOf, dueLabel, isDue, isFollowUp, noFollowUpDate, openSamplesOf, OUTMAP, phoneOf, relDays, telHref, today, visitedOn, waHref, fmtDate,
 } from "./logic.js";
 import { patchMark, setStage } from "./store.js";
 import { toast } from "./ctx.js";
+import { BookSplit, type RowSummary } from "./BookSplit.js";
 import { BookShell, Empty, MoreMenu, OpenAsApp, useBook } from "./BookBits.js";
 import { exportFollowUpBookDocx, exportFollowUpBookXlsx } from "./exports.js";
 
@@ -110,6 +110,18 @@ export function FollowUpBookPage() {
     toast(`${r.s.name} — follow up ${label.toLowerCase()}`, () => patchMark(r.s.id, { dueOn: prev.dueOn }));
   };
 
+  /** One line per visit: where and when, then what is due. */
+  const summarise = (r: Row): RowSummary => {
+    const visited = visitedOn(r.m);
+    const leg = st.index.legById[r.s.legId]?.name ?? r.s.legId;
+    const pills: RowSummary["pills"] = [];
+    if (isDue(r.m) && r.m?.dueOn) pills.push({ cls: "due", text: dueLabel(r.m.dueOn) });
+    else if (r.m?.dueOn) pills.push({ cls: "neutral", text: `Follow up ${fmtDate(r.m.dueOn)}` });
+    const n = openSamplesOf(r.m).length;
+    if (n) pills.push({ cls: "trial", text: `${n} sample${n === 1 ? "" : "s"} out` });
+    return { sub: `${leg} · ${visited ? `visited ${relDays(visited)}` : "starred, not yet visited"}`, pills };
+  };
+
   return (
     <BookShell
       st={st}
@@ -163,7 +175,7 @@ export function FollowUpBookPage() {
         <Empty title="No visits match" hint="Try another company or contact, or set the filter back to All visits." />
       )}
 
-      {shown.map((r) => {
+      {shown.length > 0 && <BookSplit rows={shown} label="Visits" summary={summarise} detail={(r) => {
         const c = conOf(r.m);
         const phone = phoneOf(r.s, r.m);
         const open = openSamplesOf(r.m);
@@ -225,7 +237,7 @@ export function FollowUpBookPage() {
             </div>
           </section>
         );
-      })}
+      }} />}
     </BookShell>
   );
 }
