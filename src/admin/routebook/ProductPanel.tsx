@@ -7,14 +7,27 @@ import { toast } from './ctx.js';
 export function ProductPanel({s,m}: {s:RbStop;m?:RbMark}) {
   const p=productProfile(s,m), state=reviewState(s,m);
   const [edit,setEdit]=useState(false);
+  const labels=categoriesOf(s,m).map(id=>PRODUCTS.find(([k])=>k===id)?.[1]).filter(Boolean) as string[];
+  const save=(next:ProductProfile)=>{const prev=patchMark(s.id,{productProfile:JSON.stringify(next)});toast('Product details queued for saving',()=>patchMark(s.id,{productProfile:prev.productProfile ?? null}));setEdit(false);};
+
+  /* Most of the register has no product profile yet. Drawing the full panel
+   * for those repeated "needs verification · no description · no photo" on
+   * every card, so an unchecked company gets one quiet line instead. */
+  if(!p && !edit){
+    return <section className="rb-product-line" aria-label={`Products of ${s.name}`}>
+      {labels.length ? labels.map(l=><span key={l} className="wd-stage wd-stage-neutral">{l}</span>)
+        : <span className="rb-product-none">Product not recorded</span>}
+      <button type="button" className="rb-linkbtn" onClick={()=>setEdit(true)}>Add product details</button>
+    </section>;
+  }
   return <section className="rb-product-panel" aria-label={`Products of ${s.name}`}>
     <div className="rb-product-heading"><strong>Products</strong><span className={`rb-verification is-${state}`}>{state==='verified'?'Manufacturer evidence checked':state==='excluded'?'Outside target list':'Needs verification'}</span><button type="button" onClick={()=>setEdit(!edit)}>{edit?'Close':'Edit products & photos'}</button></div>
-    <div className="rb-product-labels">{categoriesOf(s,m).map(id=><span key={id}>{PRODUCTS.find(([k])=>k===id)?.[1]}</span>)}{!categoriesOf(s,m).length && <span>Product type not recorded</span>}</div>
+    <div className="rb-product-labels">{labels.map(l=><span key={l}>{l}</span>)}{!labels.length && <span>Product type not recorded</span>}</div>
     {state!=='verified' && <p className="rb-product-help">{reviewReason(s,m)}</p>}
-    {!!p?.photos.length ? <div className="rb-product-gallery">{p.photos.map(photo=><figure key={photo.url}><ProductPhoto url={photo.url} alt={photo.caption || `${s.name} product`} /><figcaption>{photo.caption || 'Company product'}{safeProductUrl(photo.source) && <a href={photo.source} target="_blank" rel="noopener noreferrer">Source</a>}</figcaption></figure>)}</div>:<p className="rb-photo-empty">No company product photo yet. Add a photo link from its catalogue.</p>}
+    {!!p?.photos.length && <div className="rb-product-gallery">{p.photos.map(photo=><figure key={photo.url}><ProductPhoto url={photo.url} alt={photo.caption || `${s.name} product`} /><figcaption>{photo.caption || 'Company product'}{safeProductUrl(photo.source) && <a href={photo.source} target="_blank" rel="noopener noreferrer">Source</a>}</figcaption></figure>)}</div>}
     {p?.evidence && <p className="rb-product-help">{p.evidence} {safeProductUrl(p.source) && <a href={p.source} target="_blank" rel="noopener noreferrer">View evidence</a>}{p.checkedOn && ` · Checked ${p.checkedOn}`}</p>}
     {state==='verified' && <p className="rb-product-help">Product match only. Confirm the polymer, LIMEX grade and trial result with the factory.</p>}
-    {edit && <ProductEditor key={s.id} initial={p ?? {...blankProductProfile(),categories:categoriesOf(s,m)}} onSave={next=>{const prev=patchMark(s.id,{productProfile:JSON.stringify(next)});toast('Product details queued for saving',()=>patchMark(s.id,{productProfile:prev.productProfile ?? null}));setEdit(false);}} />}
+    {edit && <ProductEditor key={s.id} initial={p ?? {...blankProductProfile(),categories:categoriesOf(s,m)}} onSave={save} />}
   </section>;
 }
 function ProductEditor({initial,onSave}:{initial:ProductProfile;onSave:(p:ProductProfile)=>void}) {

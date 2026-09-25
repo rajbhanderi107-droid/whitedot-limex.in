@@ -92,10 +92,10 @@ export function BookDesk() {
   const rows = useMemo(() => allSourceRows.filter(r => folder === "ALL" || sourceFolderOf(r.s, r.m) === folder), [allSourceRows, folder]);
 
   const books = [
-    { path: "route-book", title: "LIMEX Route Book", icon: Route, count: rows.length, unit: "companies", text: "Plan your visits and keep the day's record." },
-    { path: "visit-followups", title: "LIMEX Visit Follow-ups", icon: ClipboardCheck, count: rows.filter((r) => isFollowUp(r.m)).length, unit: "visits open", text: "Everyone you called on, waiting on their next move." },
-    { path: "lead-book", title: "LIMEX Lead Book", icon: Handshake, count: rows.filter((r) => isLead(r.m)).length, unit: "live leads", text: "Follow up, track trials and win the next order." },
-    { path: "customer-book", title: "LIMEX Customer Book", icon: BadgeCheck, count: rows.filter((r) => isCustomer(r.m)).length, unit: "customers", text: "Manage orders, dispatches and customer details." },
+    { path: "route-book", title: "Companies", icon: Route, count: rows.length, unit: "companies", text: "Plan your visits and keep the day's record." },
+    { path: "visit-followups", title: "Visits", icon: ClipboardCheck, count: rows.filter((r) => isFollowUp(r.m)).length, unit: "visits open", text: "Everyone you called on, waiting on their next move." },
+    { path: "lead-book", title: "Leads", icon: Handshake, count: rows.filter((r) => isLead(r.m)).length, unit: "live leads", text: "Follow up, track trials and win the next order." },
+    { path: "customer-book", title: "Customers", icon: BadgeCheck, count: rows.filter((r) => isCustomer(r.m)).length, unit: "customers", text: "Manage orders, dispatches and customer details." },
   ];
 
   const current = QUEUES.find((f) => f.key === filter)!;
@@ -115,7 +115,7 @@ export function BookDesk() {
 
   return (
     <BookShell st={st} icon={<CalendarCheck size={22} />} title="Today’s work"
-      sub="1. Find companies → 2. Record visits → 3. Follow up leads → 4. Manage orders." testId="book-desk">
+      sub={new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" })} testId="book-desk">
 
       <details className="rb-secondary"><summary>Source folders</summary><SourceFolders rows={allSourceRows} folder={folder} onChange={setFolder} /></details>
       <div className="bd-books">

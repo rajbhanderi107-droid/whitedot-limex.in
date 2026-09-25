@@ -111,7 +111,7 @@ export function FollowUpBookPage() {
       st={st}
       testId="followup-book"
       icon={<ClipboardCheck size={20} />}
-      title="LIMEX Visit Follow-ups"
+      title="Visits"
       sub={visits.length
         ? `${visits.length} visited compan${visits.length === 1 ? "y" : "ies"} · ${dueNow} due now · ${trials} sample${trials === 1 ? "" : "s"} out`
         : "Tick or star a company in the Route Book and it appears here."}

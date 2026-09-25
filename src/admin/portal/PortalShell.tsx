@@ -20,6 +20,7 @@ import { StatusBadge } from "./ui.js";
 import "./portal.css";
 import "./book-workspace.css";
 import "../ui/theme.css";
+import "../ui/layout.css";
 
 interface Props {
   user: { name: string; email: string; role: string };
@@ -27,16 +28,19 @@ interface Props {
 }
 
 function NavGroups({ onNav, isSuperAdmin }: { onNav?: () => void; isSuperAdmin: boolean }) {
-  const paths = ["/admin/dashboard", "/admin/route-book", "/admin/visit-followups", "/admin/lead-book", "/admin/customer-book", "/admin/trial-book"];
+  /* Short names: the brand sits once at the top of the menu, so "LIMEX" is
+   * not repeated (and truncated) on every line. */
+  const items: [string, string][] = [["/admin/dashboard", "Today"], ["/admin/route-book", "Companies"], ["/admin/visit-followups", "Visits"],
+    ["/admin/lead-book", "Leads"], ["/admin/customer-book", "Customers"], ["/admin/trial-book", "Trials"]];
   const modules = MODULE_GROUPS.flatMap(g => g.modules);
   return <nav className="wd-nav" aria-label="LIMEX workspace">
-    <div className="wd-nav-group-title">Your workspace</div>
-    {paths.map(path => {
+    <div className="wd-nav-group-title">Sales books</div>
+    {items.map(([path, label]) => {
       const m = modules.find(item => item.path === path);
       if (!m || (m.superAdminOnly && !isSuperAdmin)) return null;
       const Icon = m.icon;
       return <NavLink key={path} to={path} onClick={onNav} end className={({ isActive }) => `wd-nav-link${isActive ? " active" : ""}`}>
-        <Icon size={18} /><span className="wd-nav-label">{path.endsWith("dashboard") ? "Today" : m.label}</span>
+        <Icon size={18} /><span className="wd-nav-label">{label}</span>
       </NavLink>;
     })}
   </nav>;

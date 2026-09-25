@@ -1,0 +1,131 @@
+/* WhiteDot LIMEX books — shared layout for the redesign (phase 1).
+ * Filter bar, compact company rows, the detail panel, and the slim product
+ * line. Colours come only from theme.css tokens. */
+
+/* ── Filter bar: one line ───────────────────────────────────────── */
+.rb-company-filters {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .6rem;
+  margin: .75rem 0 1rem; padding: .55rem .6rem;
+  background: var(--wd-milk); border: 1px solid var(--wd-linen); border-radius: 12px;
+}
+.rb-company-filters .rb-find { flex: 1 1 260px; min-width: 0; }
+.rb-company-filters .rb-find input {
+  height: 38px; padding: 0 2rem 0 2.1rem; border: 1px solid transparent; border-radius: 8px;
+  background: var(--wd-porcelain); font-size: .88rem;
+}
+.rb-company-filters .rb-find input:focus { border-color: var(--wd-sage-line); background: var(--wd-milk); }
+.rb-fchips { display: flex; flex-wrap: wrap; gap: .4rem; min-width: 0; flex: 0 1 auto; }
+.rb-fchips select {
+  height: 34px; width: auto; max-width: 168px; padding: 0 1.9rem 0 .8rem; border-radius: 999px;
+  border: 1px dashed var(--wd-linen); background-color: var(--wd-milk); color: var(--wd-slate);
+  font: inherit; font-size: .8rem; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 14px) 15px, calc(100% - 10px) 15px; background-size: 4px 4px; background-repeat: no-repeat;
+}
+.rb-fchips select:hover { border-style: solid; }
+.rb-fchips select.is-set { border: 1px solid var(--wd-sage-line); background-color: var(--wd-sage); color: var(--wd-sage-ink); font-weight: 600; }
+.rb-filter-end { display: flex; align-items: center; gap: .5rem; margin-left: auto; }
+.rb-company-filters .rb-showing { margin: 0; font-family: var(--adm-font-mono, ui-monospace, monospace); font-size: .74rem; color: var(--wd-slate); white-space: nowrap; }
+.rb-reset {
+  display: inline-flex; align-items: center; gap: .3rem; height: 30px; padding: 0 .65rem; border-radius: 999px;
+  border: 1px solid var(--wd-linen); background: var(--wd-milk); color: var(--wd-slate); font: inherit; font-size: .76rem; cursor: pointer;
+}
+.rb-reset:disabled { opacity: .45; cursor: default; }
+.rb-reset:not(:disabled):hover { background: var(--wd-linen-soft); color: var(--wd-graphite); }
+
+@media (max-width: 640px) {
+  .rb-company-filters { padding: .5rem; gap: .45rem; }
+  .rb-company-filters .rb-find { flex-basis: 100%; }
+  .rb-company-filters .rb-find input { font-size: 16px; height: 42px; }
+  .rb-fchips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
+  .rb-fchips select { max-width: none; width: 100%; height: 40px; font-size: 14px; }
+  .rb-filter-end { width: 100%; justify-content: space-between; margin-left: 0; }
+}
+
+/* ── Compact list + detail panel ─────────────────────────────────── */
+.rb-split .rb-flat-tools { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; margin-bottom: .6rem; }
+.rb-split .rb-flat-tools .wd-ghost-btn { height: 32px; font-size: .78rem; }
+.rb-split-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, 42%); gap: 1rem; align-items: start; }
+.rb-rows { display: grid; background: var(--wd-milk); border: 1px solid var(--wd-linen); border-radius: 12px; overflow: hidden; }
+.rb-rows > [role="listitem"] + [role="listitem"] { border-top: 1px solid var(--wd-linen-soft); }
+.rb-rows .rb-more { margin: .6rem; justify-self: center; }
+
+.rb-crow { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .75rem; padding: .55rem .9rem .55rem .7rem; }
+.rb-crow:hover { background: var(--wd-porcelain); }
+.rb-crow.is-selected { background: var(--wd-sage); box-shadow: inset 3px 0 0 var(--wd-sage-line); }
+.rb-row-tick {
+  width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; flex: none;
+  border: 1.5px solid var(--wd-linen); background: var(--wd-milk); color: transparent; cursor: pointer;
+}
+.rb-row-tick:hover { border-color: var(--wd-sage-line); color: var(--wd-sage-line); }
+.rb-row-tick[aria-pressed="true"] { background: var(--wd-sage); border-color: var(--wd-sage-line); color: var(--wd-sage-ink); }
+.rb-row-main { display: grid; gap: .1rem; min-width: 0; text-align: left; background: none; border: 0; padding: .2rem 0; cursor: pointer; color: inherit; font: inherit; }
+.rb-row-name { display: flex; align-items: center; gap: .35rem; font-weight: 600; font-size: .9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rb-row-star { color: var(--wd-butter-ink); fill: var(--wd-butter-line); flex: none; }
+.rb-row-sub { font-size: .76rem; color: var(--wd-slate); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rb-row-tags { display: flex; gap: .35rem; justify-content: flex-end; flex-wrap: wrap; }
+
+.rb-detail {
+  position: sticky; top: 76px; max-height: calc(100vh - 96px); overflow-y: auto;
+  background: var(--wd-milk); border: 1px solid var(--wd-linen); border-radius: 12px; box-shadow: var(--wd-shadow);
+}
+.rb-detail-head { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between;
+  padding: .5rem .8rem; background: var(--wd-milk); border-bottom: 1px solid var(--wd-linen-soft);
+  font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--wd-slate); }
+.rb-detail .rb-stop { border: 0; border-radius: 0; box-shadow: none; margin: 0; background: transparent; }
+.rb-detail .rb-stop.is-ticked { background: transparent; }
+.rb-detail-empty { display: grid; justify-items: center; gap: .6rem; padding: 3rem 1.5rem; text-align: center; color: var(--wd-slate); font-size: .86rem; }
+.rb-detail-scrim { display: none; }
+
+@media (max-width: 1100px) {
+  .rb-split-body { grid-template-columns: minmax(0, 1fr); }
+  .rb-split:not(.has-open) .rb-detail { display: none; }
+  .rb-split.has-open .rb-detail {
+    position: fixed; z-index: 60; top: auto; right: 0; bottom: 0; left: 0; max-height: 88vh;
+    border-radius: 16px 16px 0 0; padding-bottom: env(safe-area-inset-bottom, 0px);
+    box-shadow: 0 -18px 48px -24px rgba(46, 51, 44, .35);
+  }
+  .rb-split.has-open .rb-detail-scrim { display: block; position: fixed; inset: 0; z-index: 59; border: 0; background: rgba(46, 51, 44, .22); }
+}
+@media (min-width: 700px) and (max-width: 1100px) {
+  .rb-split.has-open .rb-detail { left: auto; top: 0; width: min(560px, 92vw); max-height: none; border-radius: 16px 0 0 16px; }
+}
+@media (max-width: 640px) {
+  .rb-crow { padding: .6rem .7rem; gap: .6rem; grid-template-columns: auto minmax(0, 1fr); }
+  .rb-row-tags { grid-column: 2; justify-content: flex-start; }
+  .rb-row-product { display: none; }
+  .rb-row-tick { width: 32px; height: 32px; }
+}
+
+/* ── Slim product line ──────────────────────────────────────────── */
+.rb-product-line { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin: .45rem 0; }
+.rb-product-none { font-size: .78rem; color: var(--wd-slate); }
+.rb-linkbtn { background: none; border: 0; padding: .1rem .2rem; font: inherit; font-size: .78rem; color: var(--wd-sage-ink); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.rb-linkbtn:hover { color: var(--wd-graphite); }
+
+/* ── Page header: one row, calm ─────────────────────────────────── */
+.adm .wd-page-head h1, .bk-app .wd-page-head h1 { font-size: 1.45rem; letter-spacing: -.01em; }
+.adm .wd-page-head p, .bk-app .wd-page-head p { color: var(--wd-slate); font-size: .86rem; }
+.rb-more-menu { position: relative; }
+.rb-more-menu > summary { list-style: none; cursor: pointer; }
+.rb-more-menu > summary::-webkit-details-marker { display: none; }
+.rb-more-panel {
+  position: absolute; right: 0; top: calc(100% + 6px); z-index: 30; min-width: 200px; display: grid; padding: .35rem;
+  background: var(--wd-milk); border: 1px solid var(--wd-linen); border-radius: 10px; box-shadow: var(--wd-shadow);
+}
+.rb-more-panel > * { justify-content: flex-start; border: 0 !important; background: transparent !important; width: 100%; text-align: left; }
+.rb-more-panel > *:hover { background: var(--wd-linen-soft) !important; }
+
+/* ── Today: one line of book counts ─────────────────────────────── */
+.bd-books.bd-books { display: flex; flex-wrap: wrap; gap: .5rem; margin: .5rem 0 1rem; }
+.bd-books .bd-book {
+  display: inline-flex; align-items: center; gap: .55rem; padding: .55rem .85rem; min-height: 0;
+  background: var(--wd-milk); border: 1px solid var(--wd-linen); border-radius: 999px; text-decoration: none; color: var(--wd-graphite);
+}
+.bd-books .bd-book:hover { background: var(--wd-sage); border-color: var(--wd-sage-line); }
+.bd-books .bd-book h2 { font-size: .86rem; margin: 0; font-weight: 600; }
+.bd-books .bd-book p { display: none; }
+.bd-books .bd-book > div { display: inline-flex; align-items: center; gap: .3rem; font-size: .8rem; color: var(--wd-slate); }
+.bd-books .bd-book > div strong { font-size: .95rem; color: var(--wd-graphite); }
+.bd-books .bd-book > svg:first-child { width: 17px; height: 17px; color: var(--wd-sage-ink); }

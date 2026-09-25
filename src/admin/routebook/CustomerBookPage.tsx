@@ -101,7 +101,7 @@ export function CustomerBookPage() {
       st={st}
       testId="customer-book"
       icon={<BadgeCheck size={20} />}
-      title="LIMEX Customer Book"
+      title="Customers"
       sub={customers.length
         ? `${customers.length} customer${customers.length === 1 ? "" : "s"} · ${allOrders.length} order${allOrders.length === 1 ? "" : "s"} · ${mt(totalMt)} committed`
         : "Companies arrive here from the Lead Book the moment you record an order."}

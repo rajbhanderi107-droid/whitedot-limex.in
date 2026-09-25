@@ -87,13 +87,13 @@ export function TrialBookPage() {
 
   if (status === "loading") {
     return <div className="wd-page rb-page">
-      <div className="wd-page-head"><h1><FlaskConical size={20} /> LIMEX Trial Book</h1><p>Loading…</p></div>
+      <div className="wd-page-head"><h1><FlaskConical size={20} /> Trials</h1><p>Loading…</p></div>
       <div className="wd-card wd-skel" style={{ height: 160 }} />
     </div>;
   }
   if (status === "error") {
     return <div className="wd-page rb-page">
-      <div className="wd-page-head"><h1><FlaskConical size={20} /> LIMEX Trial Book</h1></div>
+      <div className="wd-page-head"><h1><FlaskConical size={20} /> Trials</h1></div>
       <div className="wd-inline-err">{error} <button type="button" className="wd-ghost-btn" onClick={() => void load()}>Try again</button></div>
     </div>;
   }
@@ -101,7 +101,7 @@ export function TrialBookPage() {
   return (
     <div className="wd-page rb-page" data-testid="trial-book">
       <div className="wd-page-head">
-        <h1><FlaskConical size={20} /> LIMEX Trial Book</h1>
+        <h1><FlaskConical size={20} /> Trials</h1>
         <p>
           {trials.length} trial{trials.length === 1 ? "" : "s"}
           {nextNo ? ` · next is ${nextNo}` : ""}

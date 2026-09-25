@@ -25,6 +25,7 @@ import "../admin/admin.css";
 import "../admin/portal/portal.css";
 import "./books.css";
 import "../admin/ui/theme.css";
+import "../admin/ui/layout.css";
 
 warmUpBackend();
 
