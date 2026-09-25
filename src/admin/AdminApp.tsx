@@ -43,6 +43,7 @@ import { CustomerBookPage } from "./routebook/CustomerBookPage.js";
 import { TrialBookPage } from "./routebook/TrialBookPage.js";
 import { warmUpBackend } from "./lib/api.js";
 import "./admin.css";
+import "./ui/theme.css";
 
 // Fire-and-forget: start waking the backend the instant admin JS loads.
 warmUpBackend();
