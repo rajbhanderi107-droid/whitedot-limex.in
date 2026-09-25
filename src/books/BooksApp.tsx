@@ -24,6 +24,7 @@ import { warmUpBackend } from "../admin/lib/api.js";
 import "../admin/admin.css";
 import "../admin/portal/portal.css";
 import "./books.css";
+import "../admin/ui/theme.css";
 
 warmUpBackend();
 

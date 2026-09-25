@@ -19,6 +19,7 @@ import { usePortal, AUTOMATION_MODES, type AutomationMode } from "./PortalContex
 import { StatusBadge } from "./ui.js";
 import "./portal.css";
 import "./book-workspace.css";
+import "../ui/theme.css";
 
 interface Props {
   user: { name: string; email: string; role: string };

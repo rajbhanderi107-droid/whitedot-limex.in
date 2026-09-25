@@ -1,0 +1,158 @@
+/* WhiteDot LIMEX — soft pastel-white theme (redesign phase 0).
+ *
+ * One source for every colour the books use. The --wd-* tokens are the
+ * design system; the older --adm-* tokens are re-pointed at them so the pages
+ * not yet rebuilt pick the palette up too. `:root:root` outranks the older
+ * light block in admin.css regardless of import order.
+ *
+ * Stage colours are fixed across every book so a list can be read by colour:
+ * sage = visited, peach = due, butter = trial out, lilac = lead,
+ * sky = customer, rose = late or closed. Every ink passes WCAG AA on its tint. */
+
+:root:root {
+  /* surfaces */
+  --wd-porcelain: #f8f8f5;   /* page */
+  --wd-milk: #fdfdfb;        /* cards, lists, panels */
+  --wd-mist: #f3f6f1;        /* sidebar, tab bar */
+  --wd-linen: #e9e8e2;       /* borders */
+  --wd-linen-soft: #f1f1ec;  /* dividers, hovers */
+
+  /* text */
+  --wd-graphite: #2e332c;
+  --wd-slate: #626a5f;       /* secondary text, 5.5:1 on porcelain */
+  --wd-faint: #8b9187;       /* placeholders only */
+
+  /* stage tints and inks */
+  --wd-sage: #eaf4e4;   --wd-sage-ink: #3d6b2e;   --wd-sage-line: #b9d6aa;
+  --wd-peach: #f9e9df;  --wd-peach-ink: #94502a;  --wd-peach-line: #ebc6ae;
+  --wd-butter: #fbf3dc; --wd-butter-ink: #7d5c12; --wd-butter-line: #e8d59c;
+  --wd-lilac: #efeaf8;  --wd-lilac-ink: #5b4b86;  --wd-lilac-line: #cfc3ea;
+  --wd-sky: #e8f0f9;    --wd-sky-ink: #3f6690;    --wd-sky-line: #bcd0e9;
+  --wd-rose: #f9e6e8;   --wd-rose-ink: #9b4450;   --wd-rose-line: #e9bcc2;
+
+  --wd-shadow: 0 1px 2px rgba(46, 51, 44, .04), 0 8px 24px -18px rgba(46, 51, 44, .18);
+  --wd-focus: 0 0 0 3px rgba(157, 196, 140, .55);
+
+  /* the older tokens, re-pointed */
+  --adm-bg: var(--wd-porcelain);
+  --adm-surface: var(--wd-milk);
+  --adm-surface-2: var(--wd-linen-soft);
+  --adm-border: var(--wd-linen);
+  --adm-text: var(--wd-graphite);
+  --adm-muted: var(--wd-slate);
+  --adm-accent: var(--wd-sage-ink);
+  --adm-accent-dim: #2f5a22;
+  --adm-accent-soft: var(--wd-sage);
+  --adm-success: var(--wd-sage-ink);
+  --adm-warning: var(--wd-butter-ink);
+  --adm-danger: var(--wd-rose-ink);
+  color-scheme: light;
+}
+
+/* Flat porcelain instead of the cream gradients and green glow. */
+html, body, #root { background: var(--wd-porcelain); }
+.adm.adm, .bk-app { background: var(--wd-porcelain); color: var(--wd-graphite); }
+.adm.adm::before, .adm-login.adm-login::before { background: none; }
+.adm-login.adm-login { background: var(--wd-porcelain); }
+
+.adm .adm-sidebar, .adm .adm-drawer, .adm .adm-mobile-topbar, .adm .wd-sidebar {
+  background: var(--wd-mist);
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  box-shadow: none;
+  border-right: 1px solid var(--wd-linen);
+}
+.adm .wd-topbar { background: rgba(248, 248, 245, .86); border-bottom-color: var(--wd-linen); }
+.adm .wd-nav-link.active { background: var(--wd-sage); color: var(--wd-sage-ink); }
+.adm .wd-nav-link:hover { background: var(--wd-linen-soft); color: var(--wd-graphite); }
+.adm .wd-brand-text small { color: var(--wd-sage-ink); }
+
+/* Cards and panels: one quiet surface, one soft shadow. */
+.adm .adm-card, .adm .adm-panel, .adm .adm-stat, .adm .adm-table-wrap, .adm .adm-action-card,
+.adm .wd-card, .adm .adm-toast, .adm .adm-bell-panel, .bk-app .wd-card {
+  background: var(--wd-milk);
+  border-color: var(--wd-linen);
+  box-shadow: var(--wd-shadow);
+}
+
+/* Buttons: pale tints with dark lettering, not solid green. */
+.adm .wd-primary-btn, .bk-app .wd-primary-btn, .adm .adm-btn-primary {
+  background: var(--wd-sage);
+  border: 1px solid var(--wd-sage-line);
+  color: var(--wd-sage-ink);
+  font-weight: 600;
+}
+.adm .wd-primary-btn:hover, .bk-app .wd-primary-btn:hover, .adm .adm-btn-primary:hover {
+  background: #dfeed6;
+  border-color: #9dc48c;
+}
+.adm .wd-ghost-btn, .bk-app .wd-ghost-btn {
+  background: var(--wd-milk);
+  border-color: var(--wd-linen);
+  color: var(--wd-graphite);
+}
+.adm .wd-ghost-btn:hover, .bk-app .wd-ghost-btn:hover { background: var(--wd-linen-soft); }
+.adm :focus-visible, .bk-app :focus-visible { outline: none; box-shadow: var(--wd-focus); border-radius: 6px; }
+
+/* Inputs */
+.adm input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), .adm select, .adm textarea,
+.bk-app input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), .bk-app select, .bk-app textarea {
+  background-color: var(--wd-milk);
+  border-color: var(--wd-linen);
+  color: var(--wd-graphite);
+}
+.adm ::placeholder, .bk-app ::placeholder { color: var(--wd-faint); }
+
+/* Route Book states that used the old strong green. */
+.adm .rb-stop.is-ticked, .bk-app .rb-stop.is-ticked { background: var(--wd-sage); border-color: var(--wd-sage-line); }
+.adm .rb-leg.is-done, .bk-app .rb-leg.is-done { border-color: var(--wd-sage-line); }
+
+/* Stage pills — the shared vocabulary the rebuilt lists use. */
+.wd-stage { display: inline-flex; align-items: center; gap: .3rem; padding: .18rem .55rem; border-radius: 999px;
+  font-size: .72rem; font-weight: 600; line-height: 1.4; border: 1px solid transparent; white-space: nowrap; }
+.wd-stage-visited { background: var(--wd-sage); color: var(--wd-sage-ink); border-color: var(--wd-sage-line); }
+.wd-stage-due { background: var(--wd-peach); color: var(--wd-peach-ink); border-color: var(--wd-peach-line); }
+.wd-stage-trial { background: var(--wd-butter); color: var(--wd-butter-ink); border-color: var(--wd-butter-line); }
+.wd-stage-lead { background: var(--wd-lilac); color: var(--wd-lilac-ink); border-color: var(--wd-lilac-line); }
+.wd-stage-customer { background: var(--wd-sky); color: var(--wd-sky-ink); border-color: var(--wd-sky-line); }
+.wd-stage-closed { background: var(--wd-rose); color: var(--wd-rose-ink); border-color: var(--wd-rose-line); }
+.wd-stage-neutral { background: var(--wd-linen-soft); color: var(--wd-slate); border-color: var(--wd-linen); }
+
+/* Trial Book: its row and form classes never had styles, so trials ran
+ * together and the form had no backdrop. */
+.rb-trial-list { display: grid; padding: 0; overflow: hidden; }
+.rb-trial-row { display: grid; gap: .55rem; padding: .95rem 1.15rem; border-bottom: 1px solid var(--wd-linen-soft); }
+.rb-trial-row:last-child { border-bottom: none; }
+.rb-trial-row > header { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .85rem; }
+.rb-trial-row > header strong { font-size: 1rem; }
+.rb-trial-product { font-weight: 600; }
+.rb-trial-owner, .rb-trial-when { color: var(--wd-slate); font-size: .85rem; }
+.rb-trial-wait, .rb-trial-ok { display: inline-flex; align-items: center; gap: .3rem; font-size: .72rem; font-weight: 600;
+  padding: .15rem .55rem; border-radius: 999px; border: 1px solid transparent; }
+.rb-trial-wait { background: var(--wd-butter); color: var(--wd-butter-ink); border-color: var(--wd-butter-line); }
+.rb-trial-ok { background: var(--wd-sage); color: var(--wd-sage-ink); border-color: var(--wd-sage-line); }
+.rb-trial-row dl { display: grid; grid-template-columns: max-content 1fr max-content 1fr; gap: .3rem .9rem; margin: 0; align-items: baseline; }
+.rb-trial-row dt { font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; color: var(--wd-slate); }
+.rb-trial-row dd { margin: 0; font-size: .88rem; }
+.rb-trial-row > footer { display: flex; gap: .5rem; }
+@media (max-width: 640px) { .rb-trial-row dl { grid-template-columns: max-content 1fr; } }
+
+.wd-modal-backdrop { position: fixed; inset: 0; z-index: 95; background: rgba(46, 51, 44, .28); backdrop-filter: blur(2px);
+  display: flex; justify-content: center; align-items: flex-start; padding: 5vh 1rem 1rem; }
+.wd-modal-backdrop .wd-modal { box-shadow: 0 24px 60px -24px rgba(46, 51, 44, .35); }
+.wd-modal-foot { display: flex; justify-content: flex-end; gap: .5rem; padding: .85rem 1.2rem; border-top: 1px solid var(--wd-linen); background: var(--wd-porcelain); }
+.wd-icon-btn { background: none; border: none; color: var(--wd-slate); cursor: pointer; padding: .25rem; border-radius: 6px; }
+.wd-icon-btn:hover { background: var(--wd-linen-soft); color: var(--wd-graphite); }
+.wd-fieldset { border: 1px solid var(--wd-linen); border-radius: 10px; padding: .75rem .9rem; margin: .25rem 0 .75rem; display: grid; gap: .5rem; }
+.wd-fieldset legend { font-size: .74rem; font-weight: 600; color: var(--wd-slate); padding: 0 .3rem; }
+.wd-hint { font-size: .76rem; color: var(--wd-slate); margin: 0; }
+.wd-page-actions { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.rb-trial-form textarea { width: 100%; padding: .5rem .6rem; border: 1px solid var(--wd-linen); border-radius: 6px; font: inherit; font-size: .85rem; resize: vertical; }
+
+/* Today's queue tabs: the selected one was near-black. */
+.adm .bd-tabs button[aria-pressed="true"], .bk-app .bd-tabs button[aria-pressed="true"] {
+  background: var(--wd-sage); color: var(--wd-sage-ink); border-color: var(--wd-sage-line);
+}
+.adm .bd-tabs button[aria-pressed="true"] span, .bk-app .bd-tabs button[aria-pressed="true"] span { color: var(--wd-sage-ink); }
+
+/* Links styled as buttons read as buttons, not underlined text. */
+a.wd-primary-btn, a.wd-ghost-btn { text-decoration: none; }
