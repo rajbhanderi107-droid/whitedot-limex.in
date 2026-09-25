@@ -15,6 +15,7 @@ import { saveSettings, setPrefs, deleteView, reseed, load } from "./store.js";
 import { toast } from "./ctx.js";
 import { ResearchAdditions } from "./ResearchAdditions.js";
 import { RegionSwitch } from "./RegionSwitch.js";
+import { useThemePref, type ThemePref } from "../ui/themeMode.js";
 import { backupBook, exportContactsVcf, exportWholeBookCSV, getHome, restoreFromFile, setHome } from "./bookData.js";
 import { usePortal, AUTOMATION_MODES, type AutomationMode } from "../portal/PortalContext.js";
 
@@ -40,6 +41,7 @@ export function SettingsPage() {
 
         <section className="st-sec" aria-labelledby="st-lists">
           <h2 id="st-lists"><Rows3 size={16} /> Lists</h2>
+          <AppearanceRow />
           <div className="st-row">
             <div><b>Density</b><p>Compact fits more companies on a screen.</p></div>
             <div className="st-seg" role="group" aria-label="Density">
@@ -137,6 +139,19 @@ export function RateBox() {
       </label>
       {dirty && <button type="button" className="wd-primary-btn" onClick={save} disabled={busy} data-testid="rb-rate-save">{busy ? "Saving…" : "Apply"}</button>}
       <p className="rb-rail-note">Every tonne figure in the book comes from this.</p>
+    </div>
+  );
+}
+
+function AppearanceRow() {
+  const [pref, setPref] = useThemePref();
+  const opts: [ThemePref, string][] = [["light", "Light"], ["dark", "Dark"], ["system", "Device"]];
+  return (
+    <div className="st-row">
+      <div><b>Appearance</b><p>Pastel white by default; dark for night driving.</p></div>
+      <div className="st-seg" role="group" aria-label="Appearance">
+        {opts.map(([id, label]) => <button key={id} type="button" aria-pressed={pref === id} onClick={() => setPref(id)}>{label}</button>)}
+      </div>
     </div>
   );
 }

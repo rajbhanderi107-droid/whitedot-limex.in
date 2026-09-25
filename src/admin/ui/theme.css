@@ -30,6 +30,8 @@
   --wd-sky: #e8f0f9;    --wd-sky-ink: #3f6690;    --wd-sky-line: #bcd0e9;
   --wd-rose: #f9e6e8;   --wd-rose-ink: #9b4450;   --wd-rose-line: #e9bcc2;
 
+  --wd-bar: rgba(248, 248, 245, .86);   /* translucent top bar */
+  --wd-bar-solid: rgba(243, 246, 241, .96);
   --wd-shadow: 0 1px 2px rgba(46, 51, 44, .04), 0 8px 24px -18px rgba(46, 51, 44, .18);
   --wd-focus: 0 0 0 3px rgba(157, 196, 140, .55);
 
@@ -49,6 +51,25 @@
   color-scheme: light;
 }
 
+
+/* Dark mode (Settings → Appearance): the same stage tints on soft charcoal. */
+:root:root[data-wd-theme="dark"] {
+  --wd-porcelain: #181b16; --wd-milk: #20241d; --wd-mist: #1c2019; --wd-linen: #353b30; --wd-linen-soft: #292e25;
+  --wd-graphite: #e6e9df; --wd-slate: #a9b0a1; --wd-faint: #7d8477;
+  --wd-sage: #253620;   --wd-sage-ink: #b5dca2;   --wd-sage-line: #41603a;
+  --wd-peach: #3a2a1f;  --wd-peach-ink: #f0c19f;  --wd-peach-line: #624533;
+  --wd-butter: #37311f; --wd-butter-ink: #ecd592; --wd-butter-line: #5e532f;
+  --wd-lilac: #2c2740;  --wd-lilac-ink: #cfc2f1;  --wd-lilac-line: #4a4167;
+  --wd-sky: #1e2c3b;    --wd-sky-ink: #aecbeb;    --wd-sky-line: #37506a;
+  --wd-rose: #3b2226;   --wd-rose-ink: #f1b6be;   --wd-rose-line: #643a41;
+  --wd-bar: rgba(24, 27, 22, .88); --wd-bar-solid: rgba(28, 32, 25, .96);
+  --wd-shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 26px -18px rgba(0, 0, 0, .6);
+  --adm-accent-dim: #cfe8c2;
+  color-scheme: dark;
+}
+:root[data-wd-theme="dark"] .adm .adm-btn-primary:hover,
+:root[data-wd-theme="dark"] .adm .wd-primary-btn:hover, :root[data-wd-theme="dark"] .bk-app .wd-primary-btn:hover { background: #2f4528; border-color: var(--wd-sage-line); }
+
 /* Flat porcelain instead of the cream gradients and green glow. */
 html, body, #root { background: var(--wd-porcelain); }
 .adm.adm, .bk-app { background: var(--wd-porcelain); color: var(--wd-graphite); }
@@ -61,7 +82,7 @@ html, body, #root { background: var(--wd-porcelain); }
   box-shadow: none;
   border-right: 1px solid var(--wd-linen);
 }
-.adm .wd-topbar { background: rgba(248, 248, 245, .86); border-bottom-color: var(--wd-linen); }
+.adm .wd-topbar { background: var(--wd-bar); border-bottom-color: var(--wd-linen); }
 .adm .wd-nav-link.active { background: var(--wd-sage); color: var(--wd-sage-ink); }
 .adm .wd-nav-link:hover { background: var(--wd-linen-soft); color: var(--wd-graphite); }
 .adm .wd-brand-text small { color: var(--wd-sage-ink); }
@@ -119,25 +140,38 @@ html, body, #root { background: var(--wd-porcelain); }
 
 /* Trial Book: its row and form classes never had styles, so trials ran
  * together and the form had no backdrop. */
-.rb-trial-list { display: grid; padding: 0; overflow: hidden; }
-.rb-trial-row { display: grid; gap: .55rem; padding: .95rem 1.15rem; border-bottom: 1px solid var(--wd-linen-soft); }
-.rb-trial-row:last-child { border-bottom: none; }
-.rb-trial-row > header { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .85rem; }
-.rb-trial-row > header strong { font-size: 1rem; }
-.rb-trial-product { font-weight: 600; }
-.rb-trial-owner, .rb-trial-when { color: var(--wd-slate); font-size: .85rem; }
 .rb-trial-wait, .rb-trial-ok { display: inline-flex; align-items: center; gap: .3rem; font-size: .72rem; font-weight: 600;
-  padding: .15rem .55rem; border-radius: 999px; border: 1px solid transparent; }
+  padding: .15rem .55rem; border-radius: 999px; border: 1px solid transparent; white-space: nowrap; }
 .rb-trial-wait { background: var(--wd-butter); color: var(--wd-butter-ink); border-color: var(--wd-butter-line); }
 .rb-trial-ok { background: var(--wd-sage); color: var(--wd-sage-ink); border-color: var(--wd-sage-line); }
-.rb-trial-row dl { display: grid; grid-template-columns: max-content 1fr max-content 1fr; gap: .3rem .9rem; margin: 0; align-items: baseline; }
-.rb-trial-row dt { font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; color: var(--wd-slate); }
-.rb-trial-row dd { margin: 0; font-size: .88rem; }
-.rb-trial-row > footer { display: flex; gap: .5rem; }
-@media (max-width: 640px) { .rb-trial-row dl { grid-template-columns: max-content 1fr; } }
+
+/* Trial table */
+.rb-trial-tablewrap { padding: 0; overflow-x: auto; }
+.rb-trial-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.rb-trial-table th { text-align: left; font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: var(--wd-slate);
+  padding: .65rem .75rem; background: var(--wd-porcelain); border-bottom: 1px solid var(--wd-linen); white-space: nowrap; }
+.rb-trial-table td { padding: .6rem .75rem; border-bottom: 1px solid var(--wd-linen-soft); vertical-align: middle; }
+.rb-trial-table tr:last-child td { border-bottom: 0; }
+.rb-trial-table tbody tr:hover { background: var(--wd-porcelain); }
+.rb-trial-no { font-weight: 700; font-variant-numeric: tabular-nums; }
+.rb-trial-product { font-weight: 600; }
+.rb-trial-owner, .rb-trial-when { color: var(--wd-slate); white-space: nowrap; }
+.rb-trial-acts { display: flex; gap: .35rem; justify-content: flex-end; }
+.rb-trial-acts .wd-ghost-btn { height: 30px; font-size: .78rem; }
+@media (max-width: 760px) {
+  .rb-trial-table thead { display: none; }
+  .rb-trial-table, .rb-trial-table tbody, .rb-trial-table tr, .rb-trial-table td { display: block; width: 100%; }
+  .rb-trial-table tr { padding: .7rem .9rem; border-bottom: 1px solid var(--wd-linen-soft); }
+  .rb-trial-table td { display: flex; justify-content: space-between; gap: 1rem; padding: .15rem 0; border: 0; }
+  .rb-trial-table td::before { content: attr(data-label); color: var(--wd-slate); font-size: .74rem; }
+  .rb-trial-table td.rb-trial-acts::before { content: none; }
+  .rb-trial-acts { justify-content: flex-start; padding-top: .4rem !important; }
+}
 
 .wd-modal-backdrop { position: fixed; inset: 0; z-index: 95; background: rgba(46, 51, 44, .28); backdrop-filter: blur(2px);
-  display: flex; justify-content: center; align-items: flex-start; padding: 5vh 1rem 1rem; }
+  display: flex; justify-content: flex-end; align-items: stretch; padding: 0; }
+/* The trial form slides in as a panel on the right, like a company's details. */
+.wd-modal-backdrop .wd-modal.rb-trial-form { max-width: 560px; width: min(560px, 100%); max-height: none; height: 100%; border-radius: 16px 0 0 16px; border-right: 0; }
 .wd-modal-backdrop .wd-modal { box-shadow: 0 24px 60px -24px rgba(46, 51, 44, .35); }
 .wd-modal-foot { display: flex; justify-content: flex-end; gap: .5rem; padding: .85rem 1.2rem; border-top: 1px solid var(--wd-linen); background: var(--wd-porcelain); }
 .wd-icon-btn { background: none; border: none; color: var(--wd-slate); cursor: pointer; padding: .25rem; border-radius: 6px; }
@@ -156,3 +190,7 @@ html, body, #root { background: var(--wd-porcelain); }
 
 /* Links styled as buttons read as buttons, not underlined text. */
 a.wd-primary-btn, a.wd-ghost-btn { text-decoration: none; }
+
+/* Top search box and its key hint follow the theme. */
+.adm .wd-search { background: var(--wd-milk); border-color: var(--wd-linen); color: var(--wd-slate); }
+.adm .wd-search-kbd, .adm kbd { background: var(--wd-linen-soft); border-color: var(--wd-linen); color: var(--wd-slate); }

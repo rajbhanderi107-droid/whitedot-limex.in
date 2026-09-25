@@ -117,7 +117,7 @@
 .rb-pill { display: inline-flex; align-items: center; gap: .25rem; font-family: var(--rb-mono); font-size: .64rem; padding: .18rem .45rem; border-radius: 4px; background: var(--adm-surface-2); color: var(--adm-muted); font-style: normal; text-decoration: none; }
 .rb-pill-ok { background: var(--adm-accent-soft); color: var(--adm-accent); }
 .rb-pill-warn { background: rgba(224,160,64,.14); color: var(--adm-warning); }
-.rb-pill-big { background: rgba(255,255,255,.1); color: var(--adm-text); }
+.rb-pill-big { background: var(--wd-linen-soft); color: var(--adm-text); }
 .rb-pill-crm { background: rgba(100,160,255,.16); color: #9cc4ff; }
 .rb-fit-prime { background: var(--adm-accent); color: #061206; font-weight: 600; }
 .rb-fit-good { background: var(--adm-accent-soft); color: var(--adm-accent); }
@@ -463,7 +463,7 @@
 /* Shared source folders in the portal and all four book apps. */
 .rb-source-folders { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 18px; }
 .rb-source-folders button { display:flex; align-items:center; gap:8px; min-height:44px; padding:10px 14px; border:1px solid var(--wd-border,#d4d8db); border-radius:8px; background:transparent; color:inherit; font:inherit; font-size:14px; cursor:pointer; }
-.rb-source-folders button[aria-pressed="true"] { background:#173f35; color:#fff; border-color:#173f35; }
+.rb-source-folders button[aria-pressed="true"] { background:var(--wd-sage); color:var(--wd-sage-ink); border-color:var(--wd-sage-line); }
 .rb-source-folders b { font-size:13px; font-variant-numeric:tabular-nums; }
 .rb-source-folders p { flex-basis:100%; margin:2px 0 0; font-size:13px; opacity:.75; }
 .rb-source-label { display:inline-block; font-size:12px; padding:2px 6px; border:1px solid currentColor; border-radius:4px; opacity:.8; }
@@ -502,7 +502,7 @@
 .rb-research li { margin: 10px 0; }
 .rb-photo-empty { display:block; padding:14px; }
 
-.rb-tools-panel { padding:20px; margin-bottom:20px; border:1px solid #dedfd6; border-radius:12px; background:#faf9f5; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+.rb-tools-panel { padding:20px; margin-bottom:20px; border:1px solid var(--wd-linen); border-radius:12px; background:var(--wd-milk); display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
 .rb-tools-panel .rb-research, .rb-tools-panel .rb-rail-tools { grid-column:1/-1; }
 @media (max-width:640px) {
  .rb-tools-panel { grid-template-columns:1fr; }
