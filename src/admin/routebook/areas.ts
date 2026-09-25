@@ -1,4 +1,17 @@
 import { addrOf, type Row } from './logic.js';
+import { isCanadian } from './region.js';
+
+// Canada: applied only to Canadian companies (see region.ts), so these
+// names can never catch a Gujarat address.
+const CA_AREAS: [string, RegExp][] = [
+  ['Canada — Toronto area (GTA)', /toronto|mississauga|brampton|etobicoke|scarborough|north york|vaughan|concord|woodbridge|markham|richmond hill|oakville|pickering|ajax|bolton|caledon|milton|\bON\b\s+[ML]\d/i],
+  ['Canada — Ontario, other', /\bON\b|ontario|hamilton|kitchener|guelph|ottawa|barrie/i],
+  ['Canada — Quebec', /\bQC\b|qu[eé]bec|montr[eé]al|laval|longueuil|boucherville|drummondville|granby|sherbrooke/i],
+  ['Canada — British Columbia', /\bBC\b|british columbia|vancouver|burnaby|langley|abbotsford/i],
+  ['Canada — Alberta', /\bAB\b|alberta|calgary|edmonton/i],
+  ['Canada — Prairies', /\b(?:MB|SK)\b|manitoba|saskatchewan|winnipeg|regina|saskatoon/i],
+  ['Canada — Atlantic', /\b(?:NS|NB|NL|PE)\b|nova scotia|new brunswick|newfoundland|halifax|moncton/i],
+];
 
 // Address-based areas, independent of research batches or product categories.
 const AREAS: [string, RegExp][] = [
@@ -19,6 +32,7 @@ const AREAS: [string, RegExp][] = [
 ];
 export function areaOf(row: Row): string {
   const address = addrOf(row.s, row.m) ?? '';
+  if (isCanadian(row.s, row.m)) return CA_AREAS.find(([,pattern]) => pattern.test(address))?.[0] ?? 'Canada — address to confirm';
   return AREAS.find(([,pattern]) => pattern.test(address))?.[0] ?? 'Other / address needs checking';
 }
 export function areaOptions(rows: Row[]) {

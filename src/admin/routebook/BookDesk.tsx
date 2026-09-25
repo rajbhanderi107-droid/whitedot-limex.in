@@ -8,6 +8,7 @@ import { useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Route, Handshake, BadgeCheck, ClipboardCheck, ArrowUpRight, CalendarCheck, Search, MessageCircle, Phone } from "lucide-react";
 import { BookShell, useBook } from "./BookBits.js";
+import { inRegion, useRegion } from "./region.js";
 import {
   isLead, isCustomer, isFollowUp, isDue, openSamplesOf, liveOrders, phoneOf, telHref, waHref,
   dueLabel, dueReorder, noNextStep, addDays, today, customerTotals, fmtDate, daysSince, type Row,
@@ -85,9 +86,10 @@ export function BookDesk() {
     setParams(next, { replace: true });
   };
 
+  const [region] = useRegion();
   const allSourceRows: Row[] = useMemo(
-    () => st.stops.filter((s) => !st.marks[s.id]?.removed).map((s) => ({ s, m: st.marks[s.id] })),
-    [st.stops, st.marks],
+    () => st.stops.filter((s) => !st.marks[s.id]?.removed && inRegion(region)(s, st.marks[s.id])).map((s) => ({ s, m: st.marks[s.id] })),
+    [st.stops, st.marks, region],
   );
   const rows = useMemo(() => allSourceRows.filter(r => folder === "ALL" || sourceFolderOf(r.s, r.m) === folder), [allSourceRows, folder]);
 

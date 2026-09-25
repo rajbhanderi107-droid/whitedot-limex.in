@@ -21,6 +21,7 @@ import { FollowUpBookPage } from "../admin/routebook/FollowUpBookPage.js";
 import { LeadBookPage } from "../admin/routebook/LeadBookPage.js";
 import { CustomerBookPage } from "../admin/routebook/CustomerBookPage.js";
 import { warmUpBackend } from "../admin/lib/api.js";
+import { RegionSwitch } from "../admin/routebook/RegionSwitch.js";
 import "../admin/admin.css";
 import "../admin/portal/portal.css";
 import "./books.css";
@@ -74,6 +75,7 @@ function Chrome({ user, onLogout }: { user: { name: string; role: string }; onLo
         ))}
       </div>
       <div className="bk-bar-end">
+        <RegionSwitch compact />
         <a className="bk-icon" href={`${PORTAL_ORIGIN}/#/admin/dashboard${folderQuery}`} aria-label="Open full portal" title={`Full portal · signed in as ${user.name}`}>
           <LayoutGrid size={16} />
         </a>

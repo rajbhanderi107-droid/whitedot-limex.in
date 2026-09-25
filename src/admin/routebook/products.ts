@@ -1,5 +1,6 @@
 import type { RbStop, RbMark } from './types.js';
 import { VERIFIED_PRODUCTS } from './verifiedProducts.js';
+import { canadaCategories, type CanadaProduct } from './region.js';
 
 export const PRODUCTS = [
   ['hm-bags', 'HM / HDPE bags'], ['plastic-bags', 'Plastic carry & garbage bags'],
@@ -8,7 +9,7 @@ export const PRODUCTS = [
   ['dairy', 'Ice-cream & curd tubs'], ['bottles', 'Blow-moulded bottles'], ['jars', 'Plastic jars'],
 ] as const;
 export type Product = typeof PRODUCTS[number][0];
-export type ProductFilter = 'all' | Product;
+export type ProductFilter = 'all' | Product | CanadaProduct;
 export type ReviewFilter = 'verified' | 'review' | 'excluded' | 'all';
 export interface ProductProfile {
   categories: Product[];
@@ -85,5 +86,6 @@ export function reviewState(s: RbStop, m?: RbMark): ReviewFilter {
   return 'review';
 }
 export function matchesProduct(s: RbStop, m: RbMark|undefined, product: ProductFilter, review: ReviewFilter='all') {
-  return (product==='all' || categoriesOf(s,m).includes(product)) && (review==='all' || reviewState(s,m)===review);
+  const hit = product==='all' || (product.startsWith('ca-') ? canadaCategories(s).includes(product as CanadaProduct) : categoriesOf(s,m).includes(product as Product));
+  return hit && (review==='all' || reviewState(s,m)===review);
 }

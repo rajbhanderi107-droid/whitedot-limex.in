@@ -2,6 +2,7 @@ import { useState, type Ref } from 'react';
 import { Search, X, RotateCcw, SlidersHorizontal } from 'lucide-react';
 import type { Row } from './logic.js';
 import { PRODUCTS, type ProductFilter } from './products.js';
+import { CANADA_PRODUCTS, useRegion } from './region.js';
 import { SOURCE_LABEL, type FolderFilter } from './sources.js';
 
 interface Props {
@@ -25,6 +26,8 @@ interface Props {
  *  question this bar asks about what a company makes. */
 export function CompanyFilters(p: Props) {
   const allStatus = p.statuses[0]?.[0] ?? 'all';
+  const [region] = useRegion();
+  const productList: readonly (readonly [string, string])[] = region === 'CA' ? CANADA_PRODUCTS : PRODUCTS;
   // On a phone the four selects fold behind one button, so the list starts
   // right under the search box. On a wider screen they are always shown.
   const [open, setOpen] = useState(false);
@@ -42,7 +45,7 @@ export function CompanyFilters(p: Props) {
     <div className="rb-fchips">
       <select aria-label="Product" className={p.product !== 'all' ? 'is-set' : ''} value={p.product}
         onChange={e => p.onProduct(e.target.value as ProductFilter)}>
-        <option value="all">All products</option>{PRODUCTS.map(([id, label]) => <option key={id} value={id}>{label}</option>)}
+        <option value="all">All products</option>{productList.map(([id, label]) => <option key={id} value={id}>{label}</option>)}
       </select>
       {p.areas && <select aria-label="Area" className={p.area ? 'is-set' : ''} value={p.area} onChange={e => p.onArea?.(e.target.value)}>
         <option value="">All areas</option>{p.areas.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}

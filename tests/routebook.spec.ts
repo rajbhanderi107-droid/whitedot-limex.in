@@ -651,3 +651,27 @@ test('a trial cannot be saved without its product', async ({ page }) => {
   await expect(page.locator('.rb-toasts')).toContainText('needs at least the product');
   expect(posts).toBe(0);
 });
+
+test('the Canada region shows only Canadian companies with its own products', async ({ page }) => {
+  await page.addInitScript(() => { localStorage.setItem('wd_admin_token', 'mock-jwt'); localStorage.removeItem('wd_region'); });
+  await mockPortal(page);
+  await page.route('**/api/portal/route-book/bootstrap', r => r.fulfill(ok({...bootstrap, stops:[
+    stop('a','N1','Vatva Bags','good',{addr:'Plot 12, GIDC Vatva, Ahmedabad 382445',makes:'HM HDPE carry bags'}),
+    stop('b','N1','Maple Liners Inc.','good',{addr:'54 Atomic Avenue, Etobicoke, ON M8Z 5L1',makes:'Garbage bags and can liners',tags:[{t:'Canada',c:''}]}),
+    stop('c','N1','Northern Thermoform Ltd.','good',{addr:'1200 Rue Principale, Granby, QC J2G 8C8',makes:'Thermoformed clamshells and takeout containers'}),
+  ]})));
+  await page.goto('/#/admin/route-book');
+  await expect(page.locator('.rb-showing')).toHaveText('1 of 1');
+
+  await page.getByTestId('region-CA').first().click();
+  await expect(page.locator('.rb-showing')).toHaveText('2 of 2');
+  const product = page.getByLabel('Product', { exact: true });
+  await expect(product.locator('option')).toHaveText(['All products', 'Use-and-throw bags', 'Thin-wall containers', 'Food containers (thermoforming)']);
+  await product.selectOption('ca-thermo');
+  await expect(page.locator('.rb-showing')).toHaveText('1 of 2');
+  await expect(page.getByLabel('Area', { exact: true }).locator('option')).toContainText(['Canada — Quebec', 'Canada — Toronto area (GTA)']);
+
+  await page.getByTestId('region-IN').first().click();
+  await expect(page.locator('.rb-showing')).toHaveText('1 of 1');
+  await expect(page.getByLabel('Product', { exact: true })).toHaveValue('all');
+});
