@@ -1,3 +1,4 @@
+import { PhotosLink } from "./photos.js";
 import { areaOf, areaOptions } from "./areas.js";
 import { CompanyFilters } from "./CompanyFilters.js";
 import { ProductPanel } from "./ProductPanel.js";
@@ -177,6 +178,7 @@ export function CustomerBookPage() {
               <div className="rb-bacts">
                 {phone && <a className="wd-ghost-btn" href={telHref(phone)}><Phone size={13} /> Call</a>}
                 <Link className="wd-ghost-btn" to={`/admin/route-book?s=${encodeURIComponent(r.s.id)}`}><MapPin size={13} /> In the book</Link>
+                <PhotosLink className="wd-ghost-btn" s={r.s} m={r.m} />
                 <button type="button" className="wd-ghost-btn"
                   onClick={() => exportCustomerStatement(r.s, r.m, st.index.legById[r.s.legId]?.name ?? r.s.legId)}>
                   <FileText size={13} /> Statement

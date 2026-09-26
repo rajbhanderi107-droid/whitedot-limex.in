@@ -283,3 +283,8 @@
 .adm .rb-dtime.now { color: var(--wd-rose-ink); }
 .adm .rb-leg.is-done .rb-leg-id { background: var(--wd-sage); color: var(--wd-sage-ink); }
 .adm .rb-ratebox small, .adm .rb-rail-note, .adm .st-sec label small { color: var(--wd-slate); }
+
+/* ── Company photos (photos.tsx) ────────────────────────────────── */
+.rb-photo-strip { display: flex; gap: .4rem; overflow-x: auto; scrollbar-width: none; margin: .5rem 0; }
+.rb-photo-strip a { flex: none; display: block; width: 72px; height: 72px; border-radius: 8px; overflow: hidden; border: 1px solid var(--wd-linen); background: var(--wd-linen-soft); }
+.rb-photo-strip img { width: 100%; height: 100%; object-fit: cover; display: block; }
