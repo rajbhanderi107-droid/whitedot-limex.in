@@ -49,11 +49,14 @@ function expectHashMatchesFile(src: string) {
 }
 
 const APPS = [
-  { dir: "route", title: "LIMEX Route Book", tab: "bk-tab-route", page: "rb-page", short: "Route Book" },
-  { dir: "visits", title: "LIMEX Visit Follow-ups", tab: "bk-tab-visits", page: "followup-book", short: "Visit Follow-ups" },
-  { dir: "leads", title: "LIMEX Lead Book", tab: "bk-tab-leads", page: "lead-book", short: "Lead Book" },
-  { dir: "customers", title: "LIMEX Customer Book", tab: "bk-tab-customers", page: "customer-book", short: "Customer Book" },
+  { dir: "route", title: "LIMEX Route Book", nav: "Companies", page: "rb-page", short: "Route Book" },
+  { dir: "visits", title: "LIMEX Visit Follow-ups", nav: "Visits", page: "followup-book", short: "Visit Follow-ups" },
+  { dir: "leads", title: "LIMEX Lead Book", nav: "Leads", page: "lead-book", short: "Lead Book" },
+  { dir: "customers", title: "LIMEX Customer Book", nav: "Customers", page: "customer-book", short: "Customer Book" },
 ] as const;
+
+/** The portal's menu link for a book (the sidebar on a desktop viewport). */
+const navLink = (page: Page, name: string) => page.locator(".wd-sidebar.adm-sidebar .wd-nav").getByRole("link", { name, exact: true });
 
 test.describe("Standalone book apps", () => {
   test.beforeEach(async ({ page }) => {
@@ -75,7 +78,7 @@ test.describe("Standalone book apps", () => {
       await expect(page.getByTestId("company-filters")).toHaveCount(1);
       await expect(page.getByLabel("Source", {exact:true})).toBeVisible();
       await expect(page.getByLabel("Source", {exact:true}).locator('option')).toContainText(['All sources', 'GPT Leads', 'Claude Leads', 'Team Leads', 'Unassigned']);
-      await expect(page.getByTestId(app.tab)).toHaveClass(/is-on/);
+      await expect(navLink(page, app.nav)).toHaveClass(/active/);
 
       // Its own installable identity, not the main site's.
       const manifestHref = await page.locator("link[rel=manifest]").getAttribute("href");
@@ -95,8 +98,12 @@ test.describe("Standalone book apps", () => {
         expect(icon.src, `${icon.src} must be versioned`).toMatch(/\?v=[0-9a-f]{8}$/);
         expectHashMatchesFile(icon.src);
       }
-      // The portal's own sidebar has no business in a one-book app.
-      await expect(page.locator(".wd-nav")).toHaveCount(0);
+      // The installed app wears the portal's own shell, so it looks the same
+      // as whitedotindia.in. Outside that shell it lost the portal font and
+      // phones drew every book in Times.
+      await expect(page.locator(".adm.wd-portal")).toHaveCount(1);
+      const font = await page.getByTestId(app.page).evaluate((el) => getComputedStyle(el).fontFamily);
+      expect(font).toMatch(/^Inter/);
     });
   }
 
@@ -105,14 +112,14 @@ test.describe("Standalone book apps", () => {
     await page.goto("/leads/");
     await expect(page.getByTestId("lead-book")).toBeVisible();
 
-    await page.getByTestId("bk-tab-customers").click();
+    await navLink(page, "Customers").click();
     await expect(page.getByTestId("customer-book")).toBeVisible();
-    await expect(page.getByTestId("bk-tab-customers")).toHaveClass(/is-on/);
+    await expect(navLink(page, "Customers")).toHaveClass(/active/);
 
-    await page.getByTestId("bk-tab-visits").click();
+    await navLink(page, "Visits").click();
     await expect(page.getByTestId("followup-book")).toBeVisible();
 
-    await page.getByTestId("bk-tab-route").click();
+    await navLink(page, "Companies").click();
     await expect(page.getByTestId("rb-page")).toBeVisible();
 
     // Still the same record: this is the portal's data, not a second copy.
@@ -127,22 +134,40 @@ test.describe("Standalone book apps", () => {
     await expect(page.getByTestId("customer-book")).toHaveCount(0);
   });
 
-  test("fits a small phone without scrolling sideways, with four tabs", async ({ page }) => {
+  test("fits a small phone without scrolling sideways, with the portal's tab bar", async ({ page }) => {
     await page.setViewportSize({ width: 320, height: 568 });
     await mockApi(page);
     await page.goto("/route/");
     await expect(page.getByTestId("books-app")).toBeVisible();
+    await expect(page.getByTestId("rb-page")).toBeVisible();
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(0);
-    // Tab targets stay thumb-sized.
-    const box = await page.getByTestId("bk-tab-route").boundingBox();
+    // The same five tabs as the portal on a phone, thumb-sized.
+    const tabs = page.locator(".wd-tabbar .wd-tab");
+    await expect(tabs).toHaveCount(5);
+    await expect(page.locator(".wd-tabbar .wd-tab.is-on")).toHaveText("Companies");
+    const box = await tabs.first().boundingBox();
     expect(box!.height).toBeGreaterThanOrEqual(40);
+  });
+
+  test("the ⋯ menu stays on a small phone's screen and closes on a tap elsewhere", async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 568 });
+    await mockApi(page);
+    await page.goto("/visits/");
+    await expect(page.getByTestId("followup-book")).toBeVisible();
+    const menu = page.locator(".rb-more-menu").first();
+    await menu.locator("summary").click();
+    const panel = await menu.locator(".rb-more-panel").boundingBox();
+    expect(panel!.x).toBeGreaterThanOrEqual(0);
+    expect(panel!.x + panel!.width).toBeLessThanOrEqual(320);
+    await page.mouse.click(160, 520);
+    await expect(menu).not.toHaveAttribute("open", "");
   });
 });
 
 test('standalone sign-in returns to the chosen book and password recovery opens', async ({ page }) => {
   await mockApi(page);
-  await page.route('**/api/auth/login', r => r.fulfill(ok({ user: me, token: 'mock-jwt' })));
+  await page.route('**/api/auth/login', r => r.fulfill(ok({ ...me, token: 'mock-jwt' })));
   await page.goto('/customers/');
   await page.getByText('Forgot password?').click();
   await expect(page.locator('input[type=email]')).toBeVisible();

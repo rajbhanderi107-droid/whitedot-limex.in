@@ -58,7 +58,7 @@ export const CompanyRow = memo(function CompanyRow({ s, m, selected, onOpen }: P
         <Check size={13} />
       </button>
       <button type="button" className="rb-row-main" onClick={() => onOpen(s.id)} aria-expanded={selected} aria-label={`Open ${s.name}`}>
-        <span className="rb-row-name">{star && <Star size={12} className="rb-row-star" aria-label="Starred" />}{s.name}</span>
+        <span className="rb-row-name">{star && <Star size={12} className="rb-row-star" aria-label="Starred" />}<span className="rb-row-nametext">{s.name}</span></span>
         <span className="rb-row-sub">{sub}</span>
       </button>
       <span className="rb-row-tags">

@@ -3,8 +3,13 @@
  * Same login, same server, same records as the portal — this is a different
  * doorway into them, not a different copy. It exists because a salesperson
  * standing at a factory gate wants the book on their home screen, opening
- * straight into the right page, without the portal's sidebar and topbar
- * eating a phone screen.
+ * straight into the right page.
+ *
+ * It wears the portal's own shell (PortalShell: top bar, phone tab bar, the
+ * menu drawer), so the installed app looks and behaves exactly like
+ * whitedotindia.in in the browser. It used to carry a separate top bar of its
+ * own; outside the portal's `.adm` root the pages lost their font (phones fell
+ * back to Times) and their menu styles, and the two drifted apart.
  *
  * Everything portal-only (the CRM, Companies, Follow-ups) hands off to the
  * full portal rather than being half-rebuilt here. */
@@ -12,18 +17,20 @@
 import { useEffect } from "react";
 import { ForgotPasswordPage } from "../admin/pages/ForgotPasswordPage.js";
 import { ResetPasswordPage } from "../admin/pages/ResetPasswordPage.js";
-import { Navigate, NavLink, Route, Routes, useLocation } from "react-router-dom";
-import { Route as RouteIcon, ClipboardCheck, Handshake, BadgeCheck, LayoutGrid, LogOut } from "lucide-react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useAuth } from "../admin/hooks/useAuth.js";
 import { LoginPage } from "../admin/pages/LoginPage.js";
 import { RouteBookPage } from "../admin/routebook/RouteBookPage.js";
 import { FollowUpBookPage } from "../admin/routebook/FollowUpBookPage.js";
 import { LeadBookPage } from "../admin/routebook/LeadBookPage.js";
 import { CustomerBookPage } from "../admin/routebook/CustomerBookPage.js";
+import { TrialBookPage } from "../admin/routebook/TrialBookPage.js";
+import { SettingsPage } from "../admin/routebook/SettingsPage.js";
+import { BookDesk } from "../admin/routebook/BookDesk.js";
+import { PortalProvider } from "../admin/portal/PortalContext.js";
+import { PortalShell } from "../admin/portal/PortalShell.js";
 import { warmUpBackend } from "../admin/lib/api.js";
-import { RegionSwitch } from "../admin/routebook/RegionSwitch.js";
 import "../admin/admin.css";
-import "../admin/portal/portal.css";
 import "./books.css";
 import "../admin/ui/theme.css";
 import "../admin/ui/layout.css";
@@ -35,11 +42,11 @@ warmUpBackend();
 
 export type BookKey = "route" | "visits" | "leads" | "customers";
 
-export const BOOKS: { key: BookKey; path: string; label: string; short: string; icon: typeof RouteIcon }[] = [
-  { key: "route", path: "/admin/route-book", label: "Route Book", short: "Route", icon: RouteIcon },
-  { key: "visits", path: "/admin/visit-followups", label: "Visit Follow-ups", short: "Visits", icon: ClipboardCheck },
-  { key: "leads", path: "/admin/lead-book", label: "Lead Book", short: "Leads", icon: Handshake },
-  { key: "customers", path: "/admin/customer-book", label: "Customer Book", short: "Customers", icon: BadgeCheck },
+export const BOOKS: { key: BookKey; path: string; label: string }[] = [
+  { key: "route", path: "/admin/route-book", label: "Route Book" },
+  { key: "visits", path: "/admin/visit-followups", label: "Visit Follow-ups" },
+  { key: "leads", path: "/admin/lead-book", label: "Lead Book" },
+  { key: "customers", path: "/admin/customer-book", label: "Customer Book" },
 ];
 
 /** Which book this build of the page opens into, set by its own HTML. */
@@ -60,33 +67,6 @@ function ToPortal() {
       <p>Opening this in the full portal…</p>
       <a className="wd-ghost-btn" href={`${PORTAL_ORIGIN}/#${pathname}`}>Continue</a>
     </div>
-  );
-}
-
-function Chrome({ user, onLogout }: { user: { name: string; role: string }; onLogout: () => void }) {
-  const { search } = useLocation();
-  const folder = new URLSearchParams(search).get("folder");
-  const folderQuery = folder ? `?folder=${encodeURIComponent(folder)}` : "";
-  return (
-    <nav className="bk-bar" aria-label="Books">
-      <div className="bk-tabs">
-        {BOOKS.map((b) => (
-          <NavLink key={b.key} to={`${b.path}${folderQuery}`} className={({ isActive }) => `bk-tab${isActive ? " is-on" : ""}`} data-testid={`bk-tab-${b.key}`} aria-label={b.label}>
-            <b.icon size={16} />
-            <span>{b.short}</span>
-          </NavLink>
-        ))}
-      </div>
-      <div className="bk-bar-end">
-        <RegionSwitch compact />
-        <a className="bk-icon" href={`${PORTAL_ORIGIN}/#/admin/dashboard${folderQuery}`} aria-label="Open full portal" title={`Full portal · signed in as ${user.name}`}>
-          <LayoutGrid size={16} />
-        </a>
-        <button type="button" className="bk-icon" onClick={() => void onLogout()} title="Sign out" aria-label="Sign out">
-          <LogOut size={16} />
-        </button>
-      </div>
-    </nav>
   );
 }
 
@@ -118,17 +98,21 @@ export default function BooksApp() {
 
   return (
     <div className="bk-app" data-testid="books-app">
-      <Chrome user={user} onLogout={logout} />
-      <main className="bk-main">
+      <PortalProvider>
         <Routes>
-          <Route path="/admin/route-book" element={<RouteBookPage />} />
-          <Route path="/admin/visit-followups" element={<FollowUpBookPage />} />
-          <Route path="/admin/lead-book" element={<LeadBookPage />} />
-          <Route path="/admin/customer-book" element={<CustomerBookPage />} />
-          <Route path="/admin/*" element={<ToPortal />} />
+          <Route element={<PortalShell user={user} onLogout={logout} />}>
+            <Route path="/admin/dashboard" element={<BookDesk />} />
+            <Route path="/admin/route-book" element={<RouteBookPage />} />
+            <Route path="/admin/visit-followups" element={<FollowUpBookPage />} />
+            <Route path="/admin/lead-book" element={<LeadBookPage />} />
+            <Route path="/admin/customer-book" element={<CustomerBookPage />} />
+            <Route path="/admin/trial-book" element={<TrialBookPage />} />
+            <Route path="/admin/book-settings" element={<SettingsPage />} />
+            <Route path="/admin/*" element={<ToPortal />} />
+          </Route>
           <Route path="*" element={<Navigate to={homePath()} replace />} />
         </Routes>
-      </main>
+      </PortalProvider>
     </div>
   );
 }

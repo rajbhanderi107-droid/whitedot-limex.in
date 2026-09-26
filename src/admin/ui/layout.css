@@ -64,6 +64,9 @@
 .rb-row-main { display: grid; gap: .1rem; min-width: 0; text-align: left; background: none; border: 0; padding: .2rem 0; cursor: pointer; color: inherit; font: inherit; }
 .rb-row-name { display: flex; align-items: center; gap: .35rem; font-weight: 600; font-size: .9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rb-row-star { color: var(--wd-butter-ink); fill: var(--wd-butter-line); flex: none; }
+/* The name sits in its own span: an ellipsis only works on a text box, not on
+   the flex row that also holds the star. On a phone it wraps instead. */
+.rb-row-nametext { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .rb-row-sub { font-size: .76rem; color: var(--wd-slate); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rb-row-tags { display: flex; gap: .35rem; justify-content: flex-end; flex-wrap: wrap; }
 
@@ -96,6 +99,9 @@
   .rb-crow { padding: .6rem .7rem; gap: .6rem; grid-template-columns: auto minmax(0, 1fr); }
   .rb-row-tags { grid-column: 2; justify-content: flex-start; }
   .rb-row-product { display: none; }
+  .rb-row-name { white-space: normal; align-items: flex-start; }
+  .rb-row-name .rb-row-star { margin-top: .2rem; }
+  .rb-row-nametext { overflow: visible; overflow-wrap: anywhere; }
   .rb-row-tick { width: 32px; height: 32px; }
 }
 
@@ -206,7 +212,8 @@
   .st-row { flex-wrap: wrap; }
   .st-inline, .st-inline input { width: 100%; }
   .rb-toolbar-end { margin-left: 0; width: 100%; }
-  .rb-views { flex: 1; height: 40px; }
+  .rb-views { flex: 1; min-width: 0; height: 40px; }
+  .rb-toolbar-end > .wd-ghost-btn { flex: none; }
 }
 
 /* ── Phone chrome (phase 4) ─────────────────────────────────────── */
