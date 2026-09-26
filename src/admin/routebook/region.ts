@@ -53,7 +53,7 @@ export function canadaCategories(s: RbStop): CanadaProduct[] {
   const t = `${s.makes ?? ""} ${s.name} ${(s.tags ?? []).map((x) => x.t).join(" ")}`.toLowerCase();
   const out: CanadaProduct[] = [];
   if (/(carry|t-?shirt|shopping|grocery|produce|roll|garbage|trash|can[ -]?liner|refuse|courier|mailer|poly|plastic|film)\s+bags?|can[ -]?liners?|bag(s)? (?:and|&) liners?|single[- ]use bags?|use[- ]and[- ]throw/.test(t)) out.push("ca-bags");
-  if (/thin[ -]?wall|deli (?:container|cup|tub)s?|(?:yogh?urt|ice[ -]?cream|dairy|margarine|food) (?:tub|cup|container|pail)s?|injection[- ]moulded (?:food )?containers?|\btubs?\b/.test(t)) out.push("ca-thinwall");
+  if (/thin[ -]?wall|deli (?:container|cup|tub)s?|(?:yogh?urt|ice[ -]?cream|dairy|margarine|food) (?:tub|pail)s?|(?:yogh?urt|ice[ -]?cream|dairy|margarine) (?:cup|container)s?|injection[- ]moulded (?:food )?containers?|\btubs?\b/.test(t)) out.push("ca-thinwall");
   if (/thermoform|clamshells?|\btrays?\b|take[- ]?out containers?|takeaway containers?|food service containers?|foodservice packaging|disposable (?:food )?containers?/.test(t)) out.push("ca-thermo");
   return out;
 }
