@@ -1,0 +1,146 @@
+name: nginx same-origin API proxy (whitedotindia.in/api)
+
+# The portal and the book apps load from whitedotindia.in, which Cloudflare
+# fronts, but they called the API at api.whitedotindia.in, which points
+# straight at the VPS. On some networks (seen 26/09/2026 on a phone and a PC
+# on the same connection) the direct route to the VPS fails while Cloudflare
+# still works: the site loads, then sits on "Connecting to backend..." or
+# says "Could not reach our server", and the API logs show the requests
+# never arrived.
+#
+# This serves the same API at https://whitedotindia.in/api/, through
+# Cloudflare, so if the site loads the API is reachable too. nginx passes
+# /api/ to the backend on 127.0.0.1:4000 with the visitor's real address
+# (Cloudflare's CF-Connecting-IP), so per-person rate limits and login
+# lockouts keep working. api.whitedotindia.in is left exactly as it was.
+#
+# mode=inspect prints the live config and changes nothing.
+# mode=apply is idempotent: backup, patch, `nginx -t`, restore on any failure.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'inspect (read-only) or apply'
+        required: true
+        default: inspect
+        type: choice
+        options: [inspect, apply]
+
+concurrency:
+  group: vps-nginx-api-proxy
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect / patch nginx config
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: root
+          key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 5m
+          envs: MODE
+          script: |
+            set -e
+            CONF=/etc/nginx/sites-available/whitedotindia.in
+            MAP=/etc/nginx/conf.d/wd-client-ip.conf
+            MARKER='wd-api-proxy'
+
+            echo "=== current config ==="
+            cat -n "$CONF"
+            echo "=== conf.d included in http{}? ==="
+            grep -n "conf.d" /etc/nginx/nginx.conf || true
+            ls -la /etc/nginx/conf.d/ || true
+
+            if [ "$MODE" != "apply" ]; then
+              echo "inspect mode - no changes made."
+              exit 0
+            fi
+
+            if grep -q "$MARKER" "$CONF" && [ -f "$MAP" ]; then
+              echo "Already installed - nothing to do."
+              grep -n -A16 "$MARKER" "$CONF"
+            else
+              BACKUP="$CONF.bak.$(date +%s)"
+              cp "$CONF" "$BACKUP"
+              echo "Backed up to $BACKUP"
+
+              # The visitor's address: Cloudflare's header when it came through
+              # Cloudflare, otherwise the connecting address.
+              printf '%s\n' \
+                '# wd-api-proxy - real visitor address behind Cloudflare' \
+                'map $http_cf_connecting_ip $wd_client_ip {' \
+                '    ""      $remote_addr;' \
+                '    default $http_cf_connecting_ip;' \
+                '}' > "$MAP"
+
+              python3 - "$CONF" <<'PY'
+            import io, re, sys
+            conf = sys.argv[1]
+            with io.open(conf, encoding="utf-8") as fh:
+                src = fh.read()
+            if "wd-api-proxy" not in src:
+                # Put it first in the main server block (the one with the root),
+                # so it is found before the static-asset and SPA locations.
+                anchor = "    root /var/www/whitedot-frontend;"
+                assert src.count(anchor) == 1, "expected exactly one frontend root"
+                # ASCII only, and a line list: this sits in a YAML block scalar.
+                block = "\n".join([
+                    "",
+                    "    # wd-api-proxy - the API on the site's own origin, through",
+                    "    # Cloudflare. ^~ stops the static-asset regex taking /api/ paths.",
+                    "    location ^~ /api/ {",
+                    "        proxy_pass http://127.0.0.1:4000;",
+                    "        proxy_http_version 1.1;",
+                    "        proxy_set_header Connection \"\";",
+                    "        proxy_set_header Host $host;",
+                    "        proxy_set_header X-Real-IP $wd_client_ip;",
+                    "        proxy_set_header X-Forwarded-For $wd_client_ip;",
+                    "        proxy_set_header X-Forwarded-Proto https;",
+                    "        proxy_read_timeout 90s;",
+                    "        proxy_send_timeout 90s;",
+                    "        client_max_body_size 10M;",
+                    "    }",
+                    "",
+                ])
+                src = src.replace(anchor, anchor + "\n" + block, 1)
+                with io.open(conf, "w", encoding="utf-8", newline="\n") as fh:
+                    fh.write(src)
+                print("inserted")
+            PY
+
+              echo "=== resulting block ==="
+              grep -n -B2 -A16 "$MARKER" "$CONF"
+
+              if ! nginx -t; then
+                echo "nginx -t FAILED - restoring backup"
+                cp "$BACKUP" "$CONF"
+                rm -f "$MAP"
+                nginx -t
+                exit 1
+              fi
+              systemctl reload nginx
+            fi
+
+            echo "=== local probes ==="
+            curl -sS -k -m 10 -H 'Host: whitedotindia.in' https://127.0.0.1/api/health; echo
+            curl -sS -k -m 10 -o /dev/null -w 'SPA still served: %{http_code}\n' -H 'Host: whitedotindia.in' https://127.0.0.1/
+        env:
+          MODE: ${{ inputs.mode }}
+
+      - name: Verify through Cloudflare
+        if: ${{ inputs.mode == 'apply' }}
+        run: |
+          sleep 5
+          set -e
+          curl -sS -m 20 -D - https://whitedotindia.in/api/health | grep -iE '^HTTP|content-type|cf-cache-status|^\{'
+          # A wrong password must come back as the API's JSON 401, not the SPA.
+          code=$(curl -sS -m 20 -o /tmp/login.json -w '%{http_code}' -X POST https://whitedotindia.in/api/auth/login \
+            -H 'Content-Type: application/json' -H 'Origin: https://whitedotindia.in' \
+            -d '{"email":"proxy-check@example.invalid","password":"not-a-real-password"}')
+          echo "login probe: $code $(cat /tmp/login.json)"
+          test "$code" = "401"
+          curl -sS -m 20 -o /dev/null -w 'site: %{http_code}\n' https://whitedotindia.in/

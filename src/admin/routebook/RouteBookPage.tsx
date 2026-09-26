@@ -31,7 +31,10 @@ import { CallQueue, Palette, AddCompany, HistoryPanel, Toasts, type PaletteActio
 import "./routebook.css";
 
 type View = "route" | "all" | "plan" | "pipe";
-const VIEWS: [View, string][] = [["all", "Companies"], ["route", "Plan a route"], ["plan", "Run & history"], ["pipe", "Pipeline"]];
+// Labels say what each tab holds. "Plan a route" is the starred run with its
+// Navigate buttons and past days (the Today page's "Plan today's route" opens
+// it); "By area" is the book grouped by area and drivable leg.
+const VIEWS: [View, string][] = [["all", "Companies"], ["route", "By area"], ["plan", "Plan a route"], ["pipe", "Pipeline"]];
 
 export function RouteBookPage() {
   const st = useRb();
@@ -143,8 +146,8 @@ export function RouteBookPage() {
     { l: "Restore, or import the standalone app’s book", run: () => fileRef.current?.click() },
     { l: "Save this view for the team", run: doSaveView },
     { l: "Toggle compact density", run: () => setPrefs({ density: density === "compact" ? "cozy" : "compact" }) },
-    { l: "Go to Route", run: () => changeView("route") }, { l: "Go to Stops", run: () => changeView("all") },
-    { l: "Go to Days", run: () => changeView("plan") }, { l: "Go to Pipeline", run: () => changeView("pipe") },
+    { l: "Go to By area", run: () => changeView("route") }, { l: "Go to Companies", run: () => changeView("all") },
+    { l: "Go to Plan a route", run: () => changeView("plan") }, { l: "Go to Pipeline", run: () => changeView("pipe") },
     { l: "Clear all filters", run: clear },
     { l: "Undo history", run: () => setHistoryOpen(true) },
     { l: "Reload from the server", run: () => load(true) },
