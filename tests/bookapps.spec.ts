@@ -179,3 +179,35 @@ test('standalone sign-in returns to the chosen book and password recovery opens'
   await expect(page.getByTestId('customer-book')).toBeVisible();
   await expect(page).toHaveURL(/customers\/.*customer-book/);
 });
+
+test("a signed-in phone opens its book at once on a failing network, and stays signed in", async ({ page }) => {
+  await mockApi(page);
+  await page.addInitScript((u) => {
+    localStorage.setItem("wd_admin_token", "mock-jwt");
+    localStorage.setItem("wd_admin_user", JSON.stringify(u));
+  }, me);
+  // The server cannot be reached for the session check.
+  await page.route("**/api/auth/me", (r) => r.abort("connectionfailed"));
+  await page.goto("/route/");
+  // No "Connecting…" wait: the remembered user opens the book straight away.
+  await expect(page.getByTestId("rb-page")).toBeVisible({ timeout: 5000 });
+  // And the failed check did not sign them out.
+  await page.waitForTimeout(6000);
+  expect(await page.evaluate(() => localStorage.getItem("wd_admin_token"))).toBe("mock-jwt");
+  await expect(page.locator("input[type=password]")).toHaveCount(0);
+});
+
+test("a rejected session still signs the user out", async ({ page }) => {
+  await mockApi(page);
+  // Once only: the app reloads to the login page after a 401.
+  await page.addInitScript((u) => {
+    if (sessionStorage.getItem("seeded")) return;
+    sessionStorage.setItem("seeded", "1");
+    localStorage.setItem("wd_admin_token", "mock-jwt");
+    localStorage.setItem("wd_admin_user", JSON.stringify(u));
+  }, me);
+  await page.route("**/api/auth/me", (r) => r.fulfill({ status: 401, contentType: "application/json", body: JSON.stringify({ success: false, error: { code: "UNAUTHORIZED", message: "no" } }) }));
+  await page.goto("/route/");
+  await expect(page.locator("input[type=password]")).toBeVisible();
+  expect(await page.evaluate(() => localStorage.getItem("wd_admin_token"))).toBeNull();
+});
