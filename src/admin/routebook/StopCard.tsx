@@ -1,3 +1,4 @@
+import { PhotosLink, PhotoStrip } from "./photos.js";
 import { ProductPanel } from "./ProductPanel.js";
 import { SOURCE_LABEL, sourceFolderOf } from "./sources.js";
 import type { SourceFolder } from "./types.js";
@@ -130,9 +131,11 @@ export const StopCard = memo(function StopCard({ s, m, withLeg, compact }: Props
           </p>
         )}
 
+        <PhotoStrip s={s} m={m} />
         <ProductPanel s={s} m={m} />
         <div className="rb-acts">
           <a href={mapOf(s, m)} target="_blank" rel="noopener noreferrer"><MapPin size={12} /> Map</a>
+          <PhotosLink s={s} m={m} />
           {phone && <a href={telHref(phone)}><Phone size={12} /> {con.n ? `Call ${con.n.split(" ")[0]}` : (s.telLabel || "Call")}</a>}
           {phone && <a href={waHref(phone)} target="_blank" rel="noopener noreferrer"><MessageCircle size={12} /> WhatsApp</a>}
           <button type="button" onClick={() => ui.setEditing(editing ? null : s.id)}><StickyNote size={12} /> Record visit / follow-up</button>

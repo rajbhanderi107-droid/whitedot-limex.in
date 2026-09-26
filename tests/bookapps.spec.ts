@@ -211,3 +211,15 @@ test("a rejected session still signs the user out", async ({ page }) => {
   await expect(page.locator("input[type=password]")).toBeVisible();
   expect(await page.evaluate(() => localStorage.getItem("wd_admin_token"))).toBeNull();
 });
+
+test("every company has a Photos button that searches its name and town", async ({ page }) => {
+  await mockApi(page);
+  await page.addInitScript(() => localStorage.setItem("wd_admin_token", "mock-jwt"));
+  await page.goto("/route/");
+  await page.getByTestId("rb-row").first().locator(".rb-row-main").click();
+  const photos = page.getByTestId("rb-photos").first();
+  await expect(photos).toBeVisible();
+  const href = await photos.getAttribute("href");
+  expect(href).toContain("tbm=isch");
+  expect(decodeURIComponent(href!)).toContain("Alpha Polymers Ahmedabad");
+});

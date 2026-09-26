@@ -1,3 +1,4 @@
+import { PhotosLink } from "./photos.js";
 import { areaOf, areaOptions } from "./areas.js";
 import { CompanyFilters } from "./CompanyFilters.js";
 import { ProductPanel } from "./ProductPanel.js";
@@ -182,6 +183,7 @@ export function LeadBookPage() {
                 {phone && <a className="wd-ghost-btn" href={telHref(phone)}><Phone size={13} /> Call</a>}
                 {phone && <a className="wd-ghost-btn" href={waHref(phone, `Hello${c.n ? " " + c.n : ""}, WhiteDot here about the LIMEX trial.`)} target="_blank" rel="noopener noreferrer"><MessageCircle size={13} /> WhatsApp</a>}
                 <Link className="wd-ghost-btn" to={`/admin/route-book?s=${encodeURIComponent(r.s.id)}`}><MapPin size={13} /> In the book</Link>
+                <PhotosLink className="wd-ghost-btn" s={r.s} m={r.m} />
               </div>
             </div>
 

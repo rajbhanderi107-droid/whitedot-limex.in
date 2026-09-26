@@ -1,3 +1,4 @@
+import { PhotosLink } from "./photos.js";
 import { areaOf, areaOptions } from "./areas.js";
 import { CompanyFilters } from "./CompanyFilters.js";
 import { ProductPanel } from "./ProductPanel.js";
@@ -206,6 +207,7 @@ export function FollowUpBookPage() {
                 <Link className="wd-ghost-btn" to={`/admin/route-book?s=${encodeURIComponent(r.s.id)}`}>
                   <MapPin size={13} /> In the book
                 </Link>
+                <PhotosLink className="wd-ghost-btn" s={r.s} m={r.m} />
                 <button type="button" className="wd-primary-btn" onClick={() => promote(r)} data-testid="fb-promote">
                   Make it a lead <ArrowRight size={13} />
                 </button>
