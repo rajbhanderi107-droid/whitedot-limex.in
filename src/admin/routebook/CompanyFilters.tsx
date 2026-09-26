@@ -10,6 +10,9 @@ interface Props {
   q: string; onSearch: (v: string) => void; searchRef?: Ref<HTMLInputElement>; searchTestId?: string;
   folder: FolderFilter; onFolder: (v: FolderFilter) => void;
   onReset: () => void; active: boolean; shown: number;
+  /** What "of N" counts; defaults to every row. The Route Book passes its
+   *  company count so removed and merged duplicates are not in the total. */
+  total?: number;
   areas?: {id: string; name: string}[]; area?: string; onArea?: (v: string) => void;
   status: string; onStatus: (v: string) => void; statuses: readonly (readonly [string, string])[];
 }
@@ -58,7 +61,7 @@ export function CompanyFilters(p: Props) {
       </select>
     </div>
     <div className="rb-filter-end">
-      <span className="rb-showing" role="status" aria-live="polite">{p.shown} of {p.rows.length}</span>
+      <span className="rb-showing" role="status" aria-live="polite">{p.shown} of {p.total ?? p.rows.length}</span>
       <button type="button" className="rb-reset" disabled={!p.active} onClick={p.onReset} data-testid="rb-clear"
         aria-label="Reset filters" title="Reset filters"><RotateCcw size={13} /> Reset</button>
     </div>

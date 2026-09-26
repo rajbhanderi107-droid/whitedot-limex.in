@@ -29,12 +29,38 @@ export function OpenAsApp({ dir, label, named }: { dir: "route" | "visits" | "le
 }
 
 /** Secondary page actions — exports, the app, links to other books — behind
- *  one ⋯ button, so a book header carries at most one visible action. */
+ *  one ⋯ button, so a book header carries at most one visible action.
+ *
+ *  The panel hangs from the button's right edge, which on a phone (where the
+ *  header wraps and the button sits on the left) pushed it off the left of the
+ *  screen. On opening it is nudged back inside the viewport; a tap anywhere
+ *  else, or Escape, closes it. */
 export function MoreMenu({ children, label = "More actions for this book" }: { children: ReactNode; label?: string }) {
+  const ref = useRef<HTMLDetailsElement>(null);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const d = ref.current;
+    const panel = d?.querySelector<HTMLElement>(".rb-more-panel");
+    if (!d || !panel) return;
+    panel.style.transform = "";
+    if (!open) return;
+    const gap = 8, vw = document.documentElement.clientWidth, r = panel.getBoundingClientRect();
+    const shift = r.left < gap ? gap - r.left : r.right > vw - gap ? vw - gap - r.right : 0;
+    if (shift) panel.style.transform = `translateX(${Math.round(shift)}px)`;
+
+    const close = () => { d.open = false; };
+    const onDown = (e: PointerEvent) => { if (!d.contains(e.target as Node)) close(); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
+    document.addEventListener("pointerdown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => { document.removeEventListener("pointerdown", onDown); document.removeEventListener("keydown", onKey); };
+  }, [open]);
+
   return (
-    <details className="rb-more-menu">
+    <details ref={ref} className="rb-more-menu" onToggle={(e) => setOpen(e.currentTarget.open)}>
       <summary className="wd-ghost-btn" aria-label={label}><MoreHorizontal size={15} /></summary>
-      <div className="rb-more-panel" onClick={(e) => (e.currentTarget.parentElement as HTMLDetailsElement).open = false}>{children}</div>
+      <div className="rb-more-panel" onClick={() => { if (ref.current) ref.current.open = false; }}>{children}</div>
     </details>
   );
 }

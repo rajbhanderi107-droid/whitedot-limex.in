@@ -12,7 +12,7 @@ import { sourceFolderOf } from "./sources.js";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
-  Plus, Sparkles, Route as RouteIcon, History, CloudOff, Cloud, CloudUpload, AlertTriangle, MoreHorizontal, Settings,
+  Plus, Sparkles, Route as RouteIcon, History, CloudOff, Cloud, CloudUpload, AlertTriangle, Settings,
 } from "lucide-react";
 import type { RbView } from "./types.js";
 import {
@@ -22,7 +22,7 @@ import {
 import { useRb, load, setPrefs, saveView, reseed, getRb, startLiveSync } from "./store.js";
 import { backupBook, exportContactsVcf, exportWholeBookCSV, getHome, restoreFromFile } from "./bookData.js";
 import { UICtx, type UIApi, toast } from "./ctx.js";
-import { OpenAsApp } from "./BookBits.js";
+import { MoreMenu, OpenAsApp } from "./BookBits.js";
 import { RouteView } from "./RouteView.js";
 import { StopsView } from "./StopsView.js";
 import { DaysView } from "./DaysView.js";
@@ -72,6 +72,9 @@ export function RouteBookPage() {
   const sellable = useMemo(() => rows.filter((r) => !PARKED(r.s) && !isRemoved(r.m)), [rows]);
   const ticked = sellable.filter((r) => isTicked(r.m)).length;
   const starred = rows.filter((r) => r.m?.starred).length;
+  // One count everywhere — header, "of N" and the Today desk: removed
+  // companies and merged duplicates are not companies to call on.
+  const companyCount = useMemo(() => rows.filter((r) => !r.m?.removed && !r.m?.dupOf).length, [rows]);
 
   // Deep link ?s=<id>
   const jumpTo = useCallback((stopId: string) => {
@@ -168,19 +171,16 @@ export function RouteBookPage() {
         <div className="wd-page-head rb-head">
           <div>
             <h1><RouteIcon size={20} /> Companies</h1>
-            <p>Route Book · {rows.filter(r => !r.m?.removed && !r.m?.dupOf).length} companies{ticked ? `, ${ticked} visited` : ""}</p>
+            <p>Route Book · {companyCount} companies{ticked ? `, ${ticked} visited` : ""}</p>
           </div>
           <div className="rb-head-right">
             {syncBadge}
             <button type="button" className="wd-primary-btn" onClick={() => setAdding(true)} data-testid="rb-addbtn"><Plus size={14} /> Add company</button>
-            <details className="rb-more-menu">
-              <summary className="wd-ghost-btn" aria-label="More actions for the book"><MoreHorizontal size={15} /></summary>
-              <div className="rb-more-panel">
-                <button type="button" className="wd-ghost-btn" onClick={() => setPalette(true)} title="Actions (.)"><Sparkles size={13} /> All actions</button>
-                <button type="button" className="wd-ghost-btn" onClick={() => setHistoryOpen((o) => !o)}><History size={13} /> Undo history</button>
-                <OpenAsApp dir="route" label="Route Book" />
-              </div>
-            </details>
+            <MoreMenu label="More actions for the book">
+              <button type="button" className="wd-ghost-btn" onClick={() => setPalette(true)} title="Actions (.)"><Sparkles size={13} /> All actions</button>
+              <button type="button" className="wd-ghost-btn" onClick={() => setHistoryOpen((o) => !o)}><History size={13} /> Undo history</button>
+              <OpenAsApp dir="route" label="Route Book" />
+            </MoreMenu>
           </div>
         </div>
         {st.error && st.sync === "error" && <div className="wd-inline-err">{st.error}</div>}
@@ -200,7 +200,7 @@ export function RouteBookPage() {
         </div>
         <CompanyFilters rows={rows} product={product} onProduct={setProduct} q={filters.q}
           onSearch={q => setFilters(f => ({...f,q}))} searchRef={searchRef} searchTestId="rb-search"
-          folder={folder} onFolder={setFolder} onReset={clear} active={active} shown={visible.length}
+          folder={folder} onFolder={setFolder} onReset={clear} active={active} shown={visible.length} total={companyCount}
           areas={areaOptions(allSourceRows)} area={filters.fam ?? ""} onArea={fam => setFilters(f => ({...f,fam:fam || null}))}
           status={statusValue} onStatus={setStatus}
           statuses={[["all","Any visit status"],["due","Follow-up due"],["none","Not visited"],["done","Visited"],["pin","Starred"],["dnc","Not interested"],["removed","Removed records"],["merged","Merged records"]]} />

@@ -77,7 +77,7 @@ export function PortalShell({ user, onLogout }: Props) {
       <div className="wd-sidebar-footer">
         <div className="wd-user">
           <span className="wd-user-name">{user.name}</span>
-          <span className="wd-user-role">{user.role.toLowerCase().replace(/_/g, " ")}</span>
+          <span className="wd-user-role">{(user.role ?? "").toLowerCase().replace(/_/g, " ")}</span>
         </div>
         <button onClick={handleLogout}><LogOut size={14} /> Sign out</button>
       </div>

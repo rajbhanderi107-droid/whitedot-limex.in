@@ -28,7 +28,7 @@ createRoot(document.getElementById("root")!).render(
         fallback={
           <div style={{
             display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh",
-            background: "#080808", color: "#8c9488",
+            background: "#f8f8f5", color: "#626a5f",
             fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif", fontSize: ".85rem",
           }}>
             Opening your book…

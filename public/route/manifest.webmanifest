@@ -7,7 +7,7 @@
   "scope": "/route/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#080808",
+  "background_color": "#f8f8f5",
   "theme_color": "#4f9a35",
   "categories": [
     "business",
