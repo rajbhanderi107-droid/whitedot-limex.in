@@ -6,7 +6,7 @@ export const PRODUCTS = [
   ['hm-bags', 'HM / HDPE bags'], ['plastic-bags', 'Plastic carry & garbage bags'],
   ['woven-bags', 'Woven bags & sacks'], ['nonwoven-bags', 'Non-woven bags'],
   ['toys', 'Plastic toys'], ['thinwall', 'Thin-wall containers'],
-  ['dairy', 'Ice-cream & curd tubs'], ['bottles', 'Blow-moulded bottles'], ['jars', 'Plastic jars'],
+  ['dairy', 'Ice-cream & curd tubs, disposable cups'], ['bottles', 'Blow-moulded bottles'], ['jars', 'Plastic jars'],
 ] as const;
 export type Product = typeof PRODUCTS[number][0];
 export type ProductFilter = 'all' | Product | CanadaProduct;
@@ -41,7 +41,9 @@ export function suggestedProducts(s: RbStop): Product[] {
   if (/(?<!non-)(?<!non )\bwoven\b.*\b(bag|sack|fibc)|\bfibc\b|jumbo bags?/.test(t.replace(/non[ -]?woven/g,''))) categories.push('woven-bags');
   if (/\btoys?\b/.test(t)) categories.push('toys');
   if (/thin[ -]?wall|takeaway containers?/.test(t)) categories.push('thinwall');
-  if (/ice[ -]?cream|curd|dairy.*(tub|cup|container)|yog[hu]+rt.*(tub|cup|container)/.test(t)) categories.push('dairy');
+  // Disposable cup and glass makers run the same thin PP/PS cup lines as curd
+  // and ice-cream cups, so Raj files them under this product too.
+  if (/ice[ -]?cream|curd|dairy.*(tub|cup|container)|yog[hu]+rt.*(tub|cup|container)|disposable (plastic )?(cups?|glass(es)?)|plastic (disposable )?(cups?|glass(es)?)/.test(t)) categories.push('dairy');
   // A carboy and a jerry can are large blow-moulded bottles and are opaque by
   // construction, so they need no separate opacity word the way a plain
   // "bottle" does — that one still has to say blow, HDPE, milky or opaque,
