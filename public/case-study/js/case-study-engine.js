@@ -33,7 +33,7 @@
     console.warn('[WD Engine] Could not load specs.json', e);
   }
 
-  const API = 'https://api.whitedotindia.in/api/public/case-studies';
+  const API = location.origin + '/api/public/case-studies';
   try {
     const apiRes = await fetch(API, { signal: AbortSignal.timeout(4000) });
     if (apiRes.ok) {

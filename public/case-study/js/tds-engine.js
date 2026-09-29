@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   const PRODUCT = document.body.dataset.product;
-  const API = "https://api.whitedotindia.in";
+  const API = location.origin;
   const buttons = [...document.querySelectorAll("[data-download-tds]")];
   buttons.forEach(btn => { btn.hidden = true; });
   let product;
