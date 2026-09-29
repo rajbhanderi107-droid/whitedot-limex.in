@@ -60,7 +60,7 @@ const PREVIEW_STORAGE_KEY = "wd_public_preview";
 const PUBLIC_LOADING_SETTING_KEY = "public_loading_enabled";
 const API_BASE =
   import.meta.env.VITE_API_URL ||
-  (import.meta.env.DEV ? "http://localhost:4000" : "https://api.whitedotindia.in");
+  (import.meta.env.DEV ? "http://localhost:4000" : window.location.origin);
 
 if (isAdminHost && !window.location.hash.startsWith("#/admin")) {
   window.location.hash = "#/admin/login";

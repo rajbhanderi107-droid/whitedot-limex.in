@@ -11,7 +11,7 @@ import { warmPublicBackend } from "../shared/publicApi";
 
 const API_BASE =
   import.meta.env.VITE_API_URL ||
-  (import.meta.env.DEV ? "http://localhost:4000" : "https://api.whitedotindia.in");
+  (import.meta.env.DEV ? "http://localhost:4000" : window.location.origin);
 
 interface Msg {
   role: "user" | "assistant";

@@ -23,7 +23,7 @@ jobs:
 
       - name: Install & build
         env:
-          VITE_API_URL: https://api.whitedotindia.in
+          VITE_API_URL: ""
         run: |
           npm ci
           npm run build
