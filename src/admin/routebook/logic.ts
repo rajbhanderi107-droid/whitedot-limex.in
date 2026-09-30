@@ -298,10 +298,11 @@ export function stateCounts(rows: Row[]): Record<string, number> {
 
 
 export type SortMode = "leg" | "az" | "fit" | "open";
+const AZ = new Intl.Collator();
 export function sortRows(rows: Row[], mode: SortMode): Row[] {
   if (mode === "leg") return rows;
   const a = rows.slice();
-  if (mode === "az") a.sort((x, y) => x.s.name.localeCompare(y.s.name));
+  if (mode === "az") a.sort((x, y) => AZ.compare(x.s.name, y.s.name));
   if (mode === "fit") a.sort((x, y) => (FITRANK[x.s.fit] ?? 9) - (FITRANK[y.s.fit] ?? 9));
   if (mode === "open") a.sort((x, y) => (isTicked(x.m) ? 1 : 0) - (isTicked(y.m) ? 1 : 0));
   return a;

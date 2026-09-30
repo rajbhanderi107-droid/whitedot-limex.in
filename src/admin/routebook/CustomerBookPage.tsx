@@ -12,7 +12,7 @@ import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
  * whose `stage` is CUSTOMER. Orders are held in metric tonnes, and the whole
  * book exports to Excel and Word the way the weekly forms do. */
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useDeferredValue } from "react";
 import { Link } from "react-router-dom";
 import {
   BadgeCheck, FileSpreadsheet, FileText, Phone, MapPin, Plus, Trash2, Search, X,
@@ -41,6 +41,7 @@ export function CustomerBookPage() {
   const rb = useRb();
   const [focus, setFocus] = useState("all");
   const [q, setQ] = useState("");
+  const dq = useDeferredValue(q);
   const [ordering, setOrdering] = useState<Row | null>(null);
 
   const [region] = useRegion();
@@ -54,12 +55,12 @@ export function CustomerBookPage() {
     [rows],
   );
   const shown = useMemo(() => {
-    const needle = q.trim().toLowerCase();
+    const needle = dq.trim().toLowerCase();
     return customers.filter(({ s, m }) => (!area || areaOf({s,m}) === area) && matchesProduct(s,m,product) &&
       `${s.name} ${s.makes ?? ""} ${addrOf(s, m)} ${conOf(m).n ?? ""} ${phoneOf(s, m) ?? ""} ${m?.gstNumber ?? ""} ${ordersOf(m).map((o) => `${o.orderNo} ${o.grade}`).join(" ")}`
         .toLowerCase().includes(needle)
       && (focus === "all" || (focus === "reorder" ? dueReorder(m) : liveOrders(m).some((o) => o.status === focus))));
-  }, [customers, q, focus, product, area]);
+  }, [customers, dq, focus, product, area]);
 
   const allOrders = customers.flatMap((r) => liveOrders(r.m));
   const totalMt = customers.reduce((a, r) => a + customerTotals(r.m).mt, 0);

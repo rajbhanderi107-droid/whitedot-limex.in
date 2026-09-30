@@ -21,7 +21,7 @@ import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
  * The one decision this page exists to make is "does this become a lead?",
  * so that button is the loudest thing on every row. */
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useDeferredValue } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight, CalendarClock, ClipboardCheck, FileSpreadsheet, FileText, FlaskConical,
@@ -62,6 +62,7 @@ export function FollowUpBookPage() {
   const { folder, setFolder } = useSourceFolder();
   const [focus, setFocus] = useState<FocusKey>("all");
   const [q, setQ] = useState("");
+  const dq = useDeferredValue(q);
 
   const [region] = useRegion();
   const allSourceRows: Row[] = useMemo(() => st.stops.filter((s) => inRegion(region)(s, st.marks[s.id])).map((s) => ({ s, m: st.marks[s.id] })), [st.stops, st.marks, region]);
@@ -80,7 +81,7 @@ export function FollowUpBookPage() {
   );
 
   const shown = useMemo(() => {
-    const needle = q.trim().toLowerCase();
+    const needle = dq.trim().toLowerCase();
     const test = FOCUS.find((f) => f.key === focus)!.match;
     return visits.filter(r => (!area || areaOf(r) === area) && matchesProduct(r.s,r.m,product)).filter((r) => {
       if (!test(r)) return false;
@@ -88,7 +89,7 @@ export function FollowUpBookPage() {
       return `${r.s.name} ${r.s.makes ?? ""} ${addrOf(r.s, r.m)} ${conOf(r.m).n} ${phoneOf(r.s, r.m)} ${r.m?.note ?? ""}`
         .toLowerCase().includes(needle);
     });
-  }, [visits, focus, q, product, area]);
+  }, [visits, focus, dq, product, area]);
 
   const dueNow = visits.filter((r) => isDue(r.m)).length;
   const starred = visits.filter((r) => r.m?.starred).length;

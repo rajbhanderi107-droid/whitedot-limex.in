@@ -17,12 +17,14 @@ interface Props {
   detail: (r: Row) => ReactNode;
 }
 
+const PAGE = 80;
 const WIDE = "(min-width: 1101px)";
 const isWide = () => typeof window !== "undefined" && !!window.matchMedia?.(WIDE).matches;
 
 export function BookSplit({ rows, label, summary, detail }: Props) {
   const [picked, setPicked] = useState<string | null>(null);
   const [wide, setWide] = useState(isWide);
+  const [limit, setLimit] = useState(PAGE);
   useEffect(() => {
     const mq = window.matchMedia?.(WIDE);
     const on = () => setWide(!!mq?.matches);
@@ -45,7 +47,7 @@ export function BookSplit({ rows, label, summary, detail }: Props) {
     <div className={`rb-split rb-booksplit${sheet ? " has-open" : ""}`}>
       <div className="rb-split-body">
         <div className="rb-rows" role="list" aria-label={label}>
-          {rows.map((r) => {
+          {rows.slice(0, limit).map((r) => {
             const { sub, pills } = summary(r);
             const selected = open?.s.id === r.s.id;
             return (
@@ -60,6 +62,13 @@ export function BookSplit({ rows, label, summary, detail }: Props) {
               </div>
             );
           })}
+          {rows.length > limit && (
+            <div role="listitem" className="rb-rows-foot">
+              <button type="button" className="wd-ghost-btn rb-more" onClick={() => setLimit((l) => l + PAGE)}>
+                Show {Math.min(PAGE, rows.length - limit)} more of {rows.length - limit}
+              </button>
+            </div>
+          )}
         </div>
 
         <aside className="rb-detail" aria-label={open ? `${open.s.name} details` : `${label} details`}>

@@ -30,11 +30,24 @@ const AREAS: [string, RegExp][] = [
   ['Surat / South Gujarat', /surat|vapi|valsad|ankleshwar|bharuch|umbergaon/i],
   ['Bhavnagar', /bhavnagar/i],
 ];
+// An area depends only on the company's tags and address, so it is worked out
+// once per company (per address override) instead of on every keystroke.
+const AREA_CACHE = new WeakMap<object, { addr: string | undefined; area: string }>();
 export function areaOf(row: Row): string {
+  const hit = AREA_CACHE.get(row.s);
+  const ov = row.m?.addrOverride ?? undefined;
+  if (hit && hit.addr === ov) return hit.area;
   const address = addrOf(row.s, row.m) ?? '';
-  if (isCanadian(row.s, row.m)) return CA_AREAS.find(([,pattern]) => pattern.test(address))?.[0] ?? 'Canada — address to confirm';
-  return AREAS.find(([,pattern]) => pattern.test(address))?.[0] ?? 'Other / address needs checking';
+  const area = isCanadian(row.s, row.m)
+    ? (CA_AREAS.find(([,pattern]) => pattern.test(address))?.[0] ?? 'Canada — address to confirm')
+    : (AREAS.find(([,pattern]) => pattern.test(address))?.[0] ?? 'Other / address needs checking');
+  AREA_CACHE.set(row.s, { addr: ov, area });
+  return area;
 }
+// The option list is rebuilt only when the rows array itself changes.
+const OPTIONS_CACHE = new WeakMap<Row[], { id: string; name: string }[]>();
 export function areaOptions(rows: Row[]) {
-  return [...new Set(rows.map(areaOf))].sort().map(name => ({id:name,name}));
+  let o = OPTIONS_CACHE.get(rows);
+  if (!o) { o = [...new Set(rows.map(areaOf))].sort().map(name => ({id:name,name})); OPTIONS_CACHE.set(rows, o); }
+  return o;
 }

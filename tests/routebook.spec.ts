@@ -112,6 +112,38 @@ test.describe("LIMEX Route Book", () => {
     await expect(page.getByTestId("rb-leg")).toHaveCount(1);
   });
 
+  test("when local storage is full the offline copy moves to IndexedDB and still opens offline", async ({ page }) => {
+    // The register has outgrown what localStorage will hold, so refuse the write.
+    await page.addInitScript(() => {
+      const set = Storage.prototype.setItem;
+      Storage.prototype.setItem = function (k: string, v: string) {
+        if (k === "wd_rb_cache_v2") throw new DOMException("full", "QuotaExceededError");
+        return set.call(this, k, v);
+      };
+    });
+    await mockPortal(page);
+    await page.goto("/#/admin/route-book");
+    await expect(page.getByTestId("rb-page")).toBeVisible();
+    await expect.poll(() => page.evaluate(() => new Promise<boolean>((resolve) => {
+      const open = indexedDB.open("wd_rb", 1);
+      open.onerror = () => resolve(false);
+      open.onsuccess = () => {
+        const db = open.result;
+        if (!db.objectStoreNames.contains("cache")) { resolve(false); return; }
+        const r = db.transaction("cache").objectStore("cache").get("wd_rb_cache_v2");
+        r.onsuccess = () => resolve(!!r.result && Array.isArray(r.result.stops) && r.result.stops.length > 0);
+        r.onerror = () => resolve(false);
+      };
+    })), { timeout: 8000 }).toBe(true);
+    expect(await page.evaluate(() => localStorage.getItem("wd_rb_cache_v2"))).toBeNull();
+
+    // Reload with the book's server request failing: it must open from the IndexedDB copy.
+    await page.route("**/api/portal/route-book/bootstrap", (r) => r.abort("connectionfailed"));
+    await page.reload();
+    await expect(page.getByTestId("rb-page")).toBeVisible({ timeout: 10000 });
+    await expect(page.locator(".rb-head p")).toContainText("4 companies");
+  });
+
   test("tick, outcome, note and undo round-trip through the API", async ({ page }) => {
     const mock = await mockPortal(page);
     await page.goto("/#/admin/route-book");
