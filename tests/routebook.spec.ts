@@ -319,6 +319,7 @@ test.describe("LIMEX Route Book", () => {
     // The old filter rail is gone; the shared panel is always on screen.
     await expect(page.getByTestId("company-filters")).toBeVisible();
     await expect(page.locator(".rb-rail, .rb-railbtn")).toHaveCount(0);
+    await page.getByRole("button", { name: "More books and settings" }).click();
     await page.getByRole("link", { name: "Settings" }).last().click();
     await expect(page.getByTestId("rb-ratebox")).toBeVisible();
   });
@@ -632,6 +633,7 @@ test('mobile filters fit within the screen and tools stay separate', async ({ pa
   expect(await panel.evaluate(el=>el.scrollWidth <= el.clientWidth)).toBe(true);
   // Settings is its own page; the filters stay the only panel on Companies.
   await expect(page.getByTestId('company-filters')).toHaveCount(1);
+  await page.getByRole('button',{name:'More books and settings'}).click();
   await page.getByRole('link',{name:'Settings'}).last().click();
   await expect(page.getByTestId('rb-ratebox')).toBeVisible();
 });

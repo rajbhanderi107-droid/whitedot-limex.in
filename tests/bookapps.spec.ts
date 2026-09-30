@@ -2,12 +2,13 @@ import { test, expect, type Page } from "@playwright/test";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 
-/* The four books as standalone installable apps.
+/* The WhiteDot Portal as one installable app.
  *
- * /route/, /visits/, /leads/ and /customers/ are separate entry pages with their own
- * name, icon and manifest, running the same code against the same records as
- * the portal. These checks are about the doorway, not the books themselves —
- * those are covered in books.spec.ts. */
+ * /portal/ is a single entry page with its own name, icon and manifest, running
+ * the same code against the same records as the website portal: Today, the five
+ * books and Settings. /route/, /visits/, /leads/ and /customers/ are only
+ * redirects into it. These checks are about the doorway, not the books
+ * themselves - those are covered in books.spec.ts. */
 
 const me = { id: "u1", name: "Test Admin", email: "admin@whitedot.in", role: "SUPER_ADMIN" };
 
@@ -48,13 +49,6 @@ function expectHashMatchesFile(src: string) {
     .toBe(`v=${want}`);
 }
 
-const APPS = [
-  { dir: "route", title: "LIMEX Route Book", nav: "Companies", page: "rb-page", short: "Route Book" },
-  { dir: "visits", title: "LIMEX Visit Follow-ups", nav: "Visits", page: "followup-book", short: "Visit Follow-ups" },
-  { dir: "leads", title: "LIMEX Lead Book", nav: "Leads", page: "lead-book", short: "Lead Book" },
-  { dir: "customers", title: "LIMEX Customer Book", nav: "Customers", page: "customer-book", short: "Customer Book" },
-] as const;
-
 /** The portal's menu link for a book (the sidebar on a desktop viewport). */
 const navLink = (page: Page, name: string) => page.locator(".wd-sidebar.adm-sidebar .wd-nav").getByRole("link", { name, exact: true });
 
@@ -67,49 +61,58 @@ test.describe("Standalone book apps", () => {
     });
   });
 
-  for (const app of APPS) {
-    test(`/${app.dir}/ is its own app and opens on the ${app.short}`, async ({ page }) => {
+  test("/portal/ is one installable app named WhiteDot Portal and opens on Today", async ({ page }) => {
+    await mockApi(page);
+    await page.goto("/portal/");
+
+    await expect(page).toHaveTitle("WhiteDot Portal");
+    await expect(page.getByTestId("books-app")).toBeVisible();
+    await expect(page.locator(".bd-books").first()).toBeVisible();
+    await expect(navLink(page, "Today")).toHaveClass(/active/);
+    for (const name of ["Companies", "Visits", "Leads", "Customers", "Trials"]) {
+      await expect(navLink(page, name)).toBeVisible();
+    }
+
+    const manifestHref = await page.locator("link[rel=manifest]").getAttribute("href");
+    expect(manifestHref).toBe("manifest.webmanifest");
+    const manifest = await page.request.get("/portal/manifest.webmanifest").then((r) => r.json());
+    expect(manifest.name).toBe("WhiteDot Portal");
+    expect(manifest.short_name).toBe("WhiteDot Portal");
+    expect(manifest.start_url).toBe("/portal/");
+    expect(manifest.scope).toBe("/portal/");
+    expect(manifest.display).toBe("standalone");
+    expect(manifest.icons.some((i: { sizes: string }) => i.sizes === "512x512")).toBe(true);
+    for (const icon of manifest.icons) {
+      expect((await page.request.get(icon.src)).status(), `${icon.src} must exist`).toBe(200);
+      // nginx serves /assets/ as `immutable` for a year and these filenames
+      // never change, so the ?v= hash is the only thing that lets a new icon
+      // reach a phone that already has the old one.
+      expect(icon.src, `${icon.src} must be versioned`).toMatch(/\?v=[0-9a-f]{8}$/);
+      expectHashMatchesFile(icon.src);
+    }
+    await expect(page.locator(".adm.wd-portal")).toHaveCount(1);
+    const font = await page.locator(".adm.wd-portal").evaluate((el) => getComputedStyle(el).fontFamily);
+    expect(font).toMatch(/^Inter/);
+  });
+
+  for (const [old, screen, testid] of [
+    ["route", "route-book", "rb-page"],
+    ["visits", "visit-followups", "followup-book"],
+    ["leads", "lead-book", "lead-book"],
+    ["customers", "customer-book", "customer-book"],
+  ] as const) {
+    test(`the old /${old}/ address opens the same screen in the portal app`, async ({ page }) => {
       await mockApi(page);
-      await page.goto(`/${app.dir}/`);
-
-      await expect(page).toHaveTitle(new RegExp(app.title));
-      await expect(page.getByTestId("books-app")).toBeVisible();
-      await expect(page.getByTestId(app.page)).toBeVisible();
-      await expect(page.getByTestId("company-filters")).toHaveCount(1);
-      await expect(page.getByLabel("Source", {exact:true})).toBeVisible();
-      await expect(page.getByLabel("Source", {exact:true}).locator('option')).toContainText(['All sources', 'GPT Leads', 'Claude Leads', 'Team Leads', 'Unassigned']);
-      await expect(navLink(page, app.nav)).toHaveClass(/active/);
-
-      // Its own installable identity, not the main site's.
-      const manifestHref = await page.locator("link[rel=manifest]").getAttribute("href");
-      expect(manifestHref).toBe("manifest.webmanifest");
-      const manifest = await page.request.get(`/${app.dir}/manifest.webmanifest`).then((r) => r.json());
-      expect(manifest.start_url).toBe(`/${app.dir}/`);
-      expect(manifest.scope).toBe(`/${app.dir}/`);
-      expect(manifest.display).toBe("standalone");
-      expect(manifest.icons.some((i: { sizes: string }) => i.sizes === "512x512")).toBe(true);
-      for (const icon of manifest.icons) {
-        expect((await page.request.get(icon.src)).status(), `${icon.src} must exist`).toBe(200);
-        // nginx serves /assets/ as `immutable` for a year, and these filenames
-        // never change — so the ?v= hash is the only thing that lets a new
-        // icon reach a phone that already has the old one. If it does not
-        // match the bytes on disk, the icons were rebuilt without rerunning
-        // scripts/build-book-apps.mjs and the change would deploy unreachable.
-        expect(icon.src, `${icon.src} must be versioned`).toMatch(/\?v=[0-9a-f]{8}$/);
-        expectHashMatchesFile(icon.src);
-      }
-      // The installed app wears the portal's own shell, so it looks the same
-      // as whitedotindia.in. Outside that shell it lost the portal font and
-      // phones drew every book in Times.
-      await expect(page.locator(".adm.wd-portal")).toHaveCount(1);
-      const font = await page.getByTestId(app.page).evaluate((el) => getComputedStyle(el).fontFamily);
-      expect(font).toMatch(/^Inter/);
+      // The dev server maps a bare /route/ to the website; nginx serves the folder's index.html.
+      await page.goto(`/${old}/index.html`);
+      await expect(page).toHaveURL(new RegExp(`/portal/#/admin/${screen}`));
+      await expect(page.getByTestId(testid)).toBeVisible();
     });
   }
 
-  test("the four books are one app you can move between, and the portal is one tap away", async ({ page }) => {
+  test("the books are one app you can move between", async ({ page }) => {
     await mockApi(page);
-    await page.goto("/leads/");
+    await page.goto("/portal/#/admin/lead-book");
     await expect(page.getByTestId("lead-book")).toBeVisible();
 
     await navLink(page, "Customers").click();
@@ -129,15 +132,15 @@ test.describe("Standalone book apps", () => {
   test("signed out, the app asks for the same portal login", async ({ page }) => {
     await mockApi(page);
     await page.addInitScript(() => localStorage.removeItem("wd_admin_token"));
-    await page.goto("/customers/");
+    await page.goto("/portal/");
     await expect(page.locator("input[type=password]")).toBeVisible();
-    await expect(page.getByTestId("customer-book")).toHaveCount(0);
+    await expect(page.getByTestId("books-app")).toHaveCount(0);
   });
 
   test("fits a small phone without scrolling sideways, with the portal's tab bar", async ({ page }) => {
     await page.setViewportSize({ width: 320, height: 568 });
     await mockApi(page);
-    await page.goto("/route/");
+    await page.goto("/portal/#/admin/route-book");
     await expect(page.getByTestId("books-app")).toBeVisible();
     await expect(page.getByTestId("rb-page")).toBeVisible();
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
@@ -153,7 +156,7 @@ test.describe("Standalone book apps", () => {
   test("the ⋯ menu stays on a small phone's screen and closes on a tap elsewhere", async ({ page }) => {
     await page.setViewportSize({ width: 320, height: 568 });
     await mockApi(page);
-    await page.goto("/visits/");
+    await page.goto("/portal/#/admin/visit-followups");
     await expect(page.getByTestId("followup-book")).toBeVisible();
     const menu = page.locator(".rb-more-menu").first();
     await menu.locator("summary").click();
@@ -165,19 +168,19 @@ test.describe("Standalone book apps", () => {
   });
 });
 
-test('standalone sign-in returns to the chosen book and password recovery opens', async ({ page }) => {
+test('app sign-in lands on Today and password recovery opens', async ({ page }) => {
   await mockApi(page);
   await page.route('**/api/auth/login', r => r.fulfill(ok({ ...me, token: 'mock-jwt' })));
-  await page.goto('/customers/');
+  await page.goto('/portal/');
   await page.getByText('Forgot password?').click();
   await expect(page.locator('input[type=email]')).toBeVisible();
   await expect(page).toHaveURL(/forgot-password/);
-  await page.goto('/customers/');
+  await page.goto('/portal/');
   await page.locator('input[type=email]').fill('admin@whitedot.in');
   await page.locator('input[type=password]').fill('mock-password');
   await page.getByRole('button', { name: 'Sign in with email', exact: true }).click();
-  await expect(page.getByTestId('customer-book')).toBeVisible();
-  await expect(page).toHaveURL(/customers\/.*customer-book/);
+  await expect(page.locator('.bd-books').first()).toBeVisible();
+  await expect(page).toHaveURL(/portal\/.*dashboard/);
 });
 
 test("a signed-in phone opens its book at once on a failing network, and stays signed in", async ({ page }) => {
@@ -188,7 +191,7 @@ test("a signed-in phone opens its book at once on a failing network, and stays s
   }, me);
   // The server cannot be reached for the session check.
   await page.route("**/api/auth/me", (r) => r.abort("connectionfailed"));
-  await page.goto("/route/");
+  await page.goto("/portal/#/admin/route-book");
   // No "Connecting…" wait: the remembered user opens the book straight away.
   await expect(page.getByTestId("rb-page")).toBeVisible({ timeout: 5000 });
   // And the failed check did not sign them out.
@@ -207,7 +210,7 @@ test("a rejected session still signs the user out", async ({ page }) => {
     localStorage.setItem("wd_admin_user", JSON.stringify(u));
   }, me);
   await page.route("**/api/auth/me", (r) => r.fulfill({ status: 401, contentType: "application/json", body: JSON.stringify({ success: false, error: { code: "UNAUTHORIZED", message: "no" } }) }));
-  await page.goto("/route/");
+  await page.goto("/portal/#/admin/route-book");
   await expect(page.locator("input[type=password]")).toBeVisible();
   expect(await page.evaluate(() => localStorage.getItem("wd_admin_token"))).toBeNull();
 });
@@ -215,7 +218,7 @@ test("a rejected session still signs the user out", async ({ page }) => {
 test("every company has a Photos button that searches its name and town", async ({ page }) => {
   await mockApi(page);
   await page.addInitScript(() => localStorage.setItem("wd_admin_token", "mock-jwt"));
-  await page.goto("/route/");
+  await page.goto("/portal/#/admin/route-book");
   await page.getByTestId("rb-row").first().locator(".rb-row-main").click();
   const photos = page.getByTestId("rb-photos").first();
   await expect(photos).toBeVisible();

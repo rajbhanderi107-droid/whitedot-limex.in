@@ -25,7 +25,7 @@ import { useMemo, useState, useEffect, useDeferredValue } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight, CalendarClock, ClipboardCheck, FileSpreadsheet, FileText, FlaskConical,
-  Handshake, MapPin, MessageCircle, Phone, Route as RouteIcon, Search, Star, ThumbsDown, X,
+  MapPin, MessageCircle, Phone, Route as Search, Star, ThumbsDown, X,
 } from "lucide-react";
 import type { Row } from "./logic.js";
 import {
@@ -34,7 +34,7 @@ import {
 import { patchMark, setStage } from "./store.js";
 import { toast } from "./ctx.js";
 import { BookSplit, type RowSummary } from "./BookSplit.js";
-import { BookShell, Empty, MoreMenu, OpenAsApp, useBook } from "./BookBits.js";
+import { BookShell, Empty, MoreMenu, useBook } from "./BookBits.js";
 import { exportFollowUpBookDocx, exportFollowUpBookXlsx } from "./exports.js";
 
 /** Pushing a date forward is the commonest act on this page, so it is one tap
@@ -135,9 +135,6 @@ export function FollowUpBookPage() {
         : "Tick or star a company in the Route Book and it appears here."}
       actions={
         <MoreMenu>
-          <Link className="wd-ghost-btn" to="/admin/route-book"><RouteIcon size={13} /> Companies</Link>
-          <Link className="wd-ghost-btn" to="/admin/lead-book"><Handshake size={13} /> Leads</Link>
-          <OpenAsApp dir="visits" label="Visit Follow-ups" />
           <button type="button" className="wd-ghost-btn" disabled={!visits.length}
             onClick={() => exportFollowUpBookXlsx(visits, st.index.legById)} data-testid="fb-xlsx">
             <FileSpreadsheet size={13} /> Excel

@@ -16,7 +16,7 @@ import { useMemo, useState, useEffect, useDeferredValue } from "react";
 import { Link } from "react-router-dom";
 import {
   BadgeCheck, FileSpreadsheet, FileText, Phone, MapPin, Plus, Trash2, Search, X,
-  Handshake, PackageCheck, Truck, Undo2,
+  PackageCheck, Truck, Undo2,
 } from "lucide-react";
 import type { RbOrder } from "./types.js";
 import { ORDER_STATUSES, ORDER_STATUS_LABEL } from "./types.js";
@@ -27,7 +27,7 @@ import {
 import { editOrder, patchMark, removeOrder, useRb } from "./store.js";
 import { toast } from "./ctx.js";
 import { BookSplit, type RowSummary } from "./BookSplit.js";
-import { BookShell, MoreMenu, Empty, Field, OpenAsApp, useBook } from "./BookBits.js";
+import { BookShell, MoreMenu, Empty, Field, useBook } from "./BookBits.js";
 import { exportCustomerBookDocx, exportCustomerBookXlsx, exportCustomerStatement } from "./exports.js";
 import { OrderDialog } from "./OrderDialog.js";
 
@@ -122,8 +122,6 @@ export function CustomerBookPage() {
         : "Companies arrive here from the Lead Book the moment you record an order."}
       actions={
         <MoreMenu>
-          <Link className="wd-ghost-btn" to="/admin/lead-book"><Handshake size={13} /> Leads</Link>
-          <OpenAsApp dir="customers" label="Customer Book" />
           <button type="button" className="wd-ghost-btn" disabled={!customers.length}
             onClick={() => exportCustomerBookXlsx(customers, st.index.legById, st.settings)} data-testid="cb-xlsx">
             <FileSpreadsheet size={13} /> Excel

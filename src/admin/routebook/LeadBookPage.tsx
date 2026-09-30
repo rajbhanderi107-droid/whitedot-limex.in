@@ -16,7 +16,7 @@ import { useMemo, useState, useEffect, useDeferredValue } from "react";
 import { Link } from "react-router-dom";
 import {
   Handshake, Phone, MessageCircle, MapPin, FileSpreadsheet, ArrowRight, Undo2,
-  FlaskConical, CalendarClock, TrendingUp, Route as RouteIcon, Search, X,
+  FlaskConical, CalendarClock, TrendingUp, Route as Search, X,
 } from "lucide-react";
 import type { Row } from "./logic.js";
 import {
@@ -25,7 +25,7 @@ import {
 import { patchMark, setStage, useRb } from "./store.js";
 import { toast } from "./ctx.js";
 import { BookSplit, type RowSummary } from "./BookSplit.js";
-import { BookShell, MoreMenu, Empty, Field, OpenAsApp, useBook } from "./BookBits.js";
+import { BookShell, MoreMenu, Empty, Field, useBook } from "./BookBits.js";
 import { exportLeadBook } from "./exports.js";
 import { OrderDialog } from "./OrderDialog.js";
 
@@ -107,8 +107,6 @@ export function LeadBookPage() {
         : "Companies move here from Visit Follow-ups once a visit turns into a real deal."}
       actions={
         <MoreMenu>
-          <Link className="wd-ghost-btn" to="/admin/route-book"><RouteIcon size={13} /> Companies</Link>
-          <OpenAsApp dir="leads" label="Lead Book" />
           <button type="button" className="wd-ghost-btn" disabled={!leads.length}
             onClick={() => exportLeadBook(leads, st.index.legById)}>
             <FileSpreadsheet size={13} /> Excel

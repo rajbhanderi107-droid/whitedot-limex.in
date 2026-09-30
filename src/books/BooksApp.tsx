@@ -1,4 +1,4 @@
-/* The four books as standalone apps.
+/* The WhiteDot Portal as one installable app.
  *
  * Same login, same server, same records as the portal — this is a different
  * doorway into them, not a different copy. It exists because a salesperson
@@ -11,8 +11,8 @@
  * own; outside the portal's `.adm` root the pages lost their font (phones fell
  * back to Times) and their menu styles, and the two drifted apart.
  *
- * Everything portal-only (the CRM, Companies, Follow-ups) hands off to the
- * full portal rather than being half-rebuilt here. */
+ * Everything else in the full admin (the CRM and the website tools) hands off
+ * to the full portal rather than being half-rebuilt here. */
 
 import { useEffect } from "react";
 import { ForgotPasswordPage } from "../admin/pages/ForgotPasswordPage.js";
@@ -40,21 +40,8 @@ startTheme();
 
 warmUpBackend();
 
-export type BookKey = "route" | "visits" | "leads" | "customers";
-
-export const BOOKS: { key: BookKey; path: string; label: string }[] = [
-  { key: "route", path: "/admin/route-book", label: "Route Book" },
-  { key: "visits", path: "/admin/visit-followups", label: "Visit Follow-ups" },
-  { key: "leads", path: "/admin/lead-book", label: "Lead Book" },
-  { key: "customers", path: "/admin/customer-book", label: "Customer Book" },
-];
-
-/** Which book this build of the page opens into, set by its own HTML. */
-function defaultBook(): BookKey {
-  const attr = document.documentElement.dataset.book as BookKey | undefined;
-  return BOOKS.some((b) => b.key === attr) ? (attr as BookKey) : "route";
-}
-const homePath = () => BOOKS.find((b) => b.key === defaultBook())!.path;
+/** Where the installed app opens: the Today desk, with every book one tap away. */
+const HOME_PATH = "/admin/dashboard";
 
 const PORTAL_ORIGIN = window.location.origin;
 
@@ -90,8 +77,8 @@ export default function BooksApp() {
         <Route path="/admin/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/admin/reset-password" element={<ResetPasswordPage />} />
         <Route path="*" element={<LoginPage onLogin={login} onGoogleLogin={googleLogin}
-          redirectTo={homePath()} title={`LIMEX ${BOOKS.find((b) => b.key === defaultBook())!.label}`}
-          description="Sign in with your WhiteDot account to open your book." />} />
+          redirectTo={HOME_PATH} title="WhiteDot Portal"
+          description="Sign in with your WhiteDot account to open your books." />} />
       </Routes>
     );
   }
@@ -110,7 +97,7 @@ export default function BooksApp() {
             <Route path="/admin/book-settings" element={<SettingsPage />} />
             <Route path="/admin/*" element={<ToPortal />} />
           </Route>
-          <Route path="*" element={<Navigate to={homePath()} replace />} />
+          <Route path="*" element={<Navigate to={HOME_PATH} replace />} />
         </Routes>
       </PortalProvider>
     </div>
