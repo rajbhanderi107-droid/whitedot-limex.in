@@ -9,7 +9,7 @@ import { sourceFolderOf } from "./sources.js";
  * 1,438 Gujarat plastics manufacturers in drivable legs, every mark shared
  * with the whole team and journaled by day, with the CRM one tap away. */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   Plus, Sparkles, Route as RouteIcon, History, CloudOff, Cloud, CloudUpload, AlertTriangle, Settings,
@@ -70,7 +70,11 @@ export function RouteBookPage() {
   useEffect(() => { setProduct("all"); }, [region]);
   const rows = useMemo(() => allSourceRows.filter(r => folder === "ALL" || sourceFolderOf(r.s, r.m) === folder), [allSourceRows, folder]);
   const rowsByLeg = useMemo(() => { const mp = new Map<string, Row[]>(); for (const r of rows) (mp.get(r.s.legId) ?? mp.set(r.s.legId, []).get(r.s.legId)!).push(r); return mp; }, [rows]);
-  const visible = useMemo(() => rows.filter((r) => matchesProduct(r.s, r.m, product) && matchStop(r.s, r.m, filters, st.index.legById[r.s.legId], areaOf(r))), [rows, filters, product, st.index.legById]);
+  // Typing updates the box at once; the 4,000-company filter runs a beat behind
+  // at low priority so keystrokes never wait on it.
+  const deferredFilters = useDeferredValue(filters);
+  const deferredProduct = useDeferredValue(product);
+  const visible = useMemo(() => rows.filter((r) => matchesProduct(r.s, r.m, deferredProduct) && matchStop(r.s, r.m, deferredFilters, st.index.legById[r.s.legId], areaOf(r))), [rows, deferredFilters, deferredProduct, st.index.legById]);
   const visibleByLeg = useMemo(() => { const mp = new Map<string, Row[]>(); for (const r of visible) (mp.get(r.s.legId) ?? mp.set(r.s.legId, []).get(r.s.legId)!).push(r); return mp; }, [visible]);
   const sellable = useMemo(() => rows.filter((r) => !PARKED(r.s) && !isRemoved(r.m)), [rows]);
   const ticked = sellable.filter((r) => isTicked(r.m)).length;

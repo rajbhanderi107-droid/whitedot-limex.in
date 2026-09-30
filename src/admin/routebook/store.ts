@@ -103,9 +103,45 @@ interface CacheShape {
   legMarks: Record<string, RbLegMark>; views: RbView[]; prefs: RbPrefs;
   me: RbState["me"]; userLeg: string; settings: RbSettings | null;
 }
-function readCache(): CacheShape | null {
-  try { const raw = localStorage.getItem(CACHE_KEY); return raw ? (JSON.parse(raw) as CacheShape) : null; }
-  catch { return null; }
+/* The offline copy normally lives in localStorage, which stops at about five
+ * million characters and is already near four million with the whole register.
+ * When the browser refuses the write, the copy moves to IndexedDB, which has no
+ * such ceiling, so a growing register never quietly loses its offline copy. */
+const IDB_NAME = "wd_rb", IDB_STORE = "cache";
+function idb(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = () => req.result.createObjectStore(IDB_STORE);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function idbGet(): Promise<CacheShape | null> {
+  try {
+    const db = await idb();
+    return await new Promise((resolve) => {
+      const r = db.transaction(IDB_STORE).objectStore(IDB_STORE).get(CACHE_KEY);
+      r.onsuccess = () => resolve((r.result as CacheShape | undefined) ?? null);
+      r.onerror = () => resolve(null);
+    });
+  } catch { return null; }
+}
+async function idbPut(c: CacheShape): Promise<void> {
+  try {
+    const db = await idb();
+    await new Promise<void>((resolve) => {
+      const tx = db.transaction(IDB_STORE, "readwrite");
+      tx.objectStore(IDB_STORE).put(c, CACHE_KEY);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => resolve();
+      tx.onabort = () => resolve();
+    });
+  } catch { /* private mode — the server copy is authoritative anyway */ }
+}
+async function readCache(): Promise<CacheShape | null> {
+  try { const raw = localStorage.getItem(CACHE_KEY); if (raw) return JSON.parse(raw) as CacheShape; }
+  catch { /* fall through to IndexedDB */ }
+  return idbGet();
 }
 let cacheTimer: number | undefined;
 function writeCacheSoon() {
@@ -117,8 +153,14 @@ function writeCacheSoon() {
         legMarks: state.legMarks, views: state.views, prefs: state.prefs, me: state.me, userLeg: state.userLeg,
         settings: state.settings,
       };
-      localStorage.setItem(CACHE_KEY, JSON.stringify(c));
-    } catch { /* quota or private mode — the server copy is authoritative anyway */ }
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify(c)); }
+      catch {
+        // Over the localStorage limit: keep the copy in IndexedDB instead, and
+        // drop the old small copy so a stale one is never read first.
+        try { localStorage.removeItem(CACHE_KEY); } catch { /* ignore */ }
+        void idbPut(c);
+      }
+    } catch { /* private mode — the server copy is authoritative anyway */ }
   }, 1500);
 }
 
@@ -317,7 +359,7 @@ export function load(force = false): Promise<void> {
   if (loading && !force) return loading;
   loading = (async () => {
     if (state.status === "idle") {
-      const c = readCache();
+      const c = await readCache();
       if (c) {
         adopt({ fams: c.fams, legs: c.legs, stops: c.stops, marks: Object.values(c.marks),
           legMarks: Object.values(c.legMarks), views: c.views, prefs: c.prefs, me: c.me ?? { id: "", name: "", role: "" },

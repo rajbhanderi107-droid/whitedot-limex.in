@@ -2,7 +2,7 @@
  * a panel beside it (a sheet over the list on a phone). Sorting, the call
  * queue, starring and export sit in one small toolbar above the list. */
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Star, Download, Phone, ListChecks, X, MousePointerClick } from "lucide-react";
 import type { Row, SortMode } from "./logic.js";
 import { sortRows, buildCSV, downloadText, today, isStar } from "./logic.js";
@@ -18,7 +18,8 @@ export function StopsView({ rows, sort, setSort }: { rows: Row[]; sort: SortMode
   const st = useRb();
   const [limit, setLimit] = useState(PAGE);
   const [openId, setOpenId] = useState<string | null>(null);
-  const sorted = sortRows(rows, sort);
+  const sorted = useMemo(() => sortRows(rows, sort), [rows, sort]);
+  const toggleOpen = useCallback((id: string) => setOpenId((cur) => (cur === id ? null : id)), []);
   const shown = sorted.slice(0, limit);
   const open = openId ? st.index.stopById[openId] : undefined;
 
@@ -61,7 +62,7 @@ export function StopsView({ rows, sort, setSort }: { rows: Row[]; sort: SortMode
         <div className="rb-rows" role="list" aria-label="Companies">
           {shown.length ? shown.map((r) => (
             <div role="listitem" key={r.s.id}>
-              <CompanyRow s={r.s} m={r.m} selected={openId === r.s.id} onOpen={(id) => setOpenId((cur) => (cur === id ? null : id))} />
+              <CompanyRow s={r.s} m={r.m} selected={openId === r.s.id} onOpen={toggleOpen} />
             </div>
           )) : <div role="listitem" className="rb-rows-foot"><div className="wd-empty-state"><ListChecks size={26} /><p>No company matches these filters.</p></div></div>}
           {sorted.length > limit && (

@@ -12,7 +12,7 @@ import { sourceFolderOf, SOURCE_LABEL } from "./sources.js";
  * LEAD, so promoting one here changes the same row the Route Book shows and
  * the CRM pipeline draws. Nothing to reconcile, nothing to drift. */
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useDeferredValue } from "react";
 import { Link } from "react-router-dom";
 import {
   Handshake, Phone, MessageCircle, MapPin, FileSpreadsheet, ArrowRight, Undo2,
@@ -37,6 +37,7 @@ export function LeadBookPage() {
   const rb = useRb();
   const [focus, setFocus] = useState("all");
   const [q, setQ] = useState("");
+  const dq = useDeferredValue(q);
   const [winning, setWinning] = useState<Row | null>(null);
 
   const [region] = useRegion();
@@ -51,7 +52,7 @@ export function LeadBookPage() {
   );
   const ready = useMemo(() => rows.filter((r) => looksPositive(r.m)), [rows]);
   const shown = useMemo(() => {
-    const needle = q.trim().toLowerCase();
+    const needle = dq.trim().toLowerCase();
     return leads.filter(({ s, m }) => {
       if (area && areaOf({s,m}) !== area) return false;
       if (!matchesProduct(s,m,product)) return false;
@@ -62,7 +63,7 @@ export function LeadBookPage() {
       if (focus === "nostep") return noNextStep(m);
       return true;
     });
-  }, [leads, q, focus, product, area]);
+  }, [leads, dq, focus, product, area]);
 
   const expected = leads.reduce((a, r) => a + (expectedMtOf(r.m) ?? 0), 0);
   const openTrials = leads.reduce((a, r) => a + openSamplesOf(r.m).length, 0);
