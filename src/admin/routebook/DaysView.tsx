@@ -36,6 +36,7 @@ export function DaysView({ rows }: { rows: Row[] }) {
   const [eventErrors, setEventErrors] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState<string | null>(null);
   const [importing, setImporting] = useState(false);
+  const [planLimit, setPlanLimit] = useState(20);
   const [openDays, setOpenDays] = useState<Set<string>>(new Set());
   const [events, setEvents] = useState<Record<string, RbEvent[]>>({});
   const asked = useRef<Set<string>>(new Set());   // days already requested
@@ -127,7 +128,7 @@ ol{padding-left:22px}li{margin:0 0 12px;page-break-inside:avoid}li b{display:blo
               <button type="button" className="wd-ghost-btn" onClick={printSheet}><Printer size={13} /> Run sheet</button>
               <button type="button" className="wd-ghost-btn" onClick={clearStars}><Star size={13} /> Clear stars</button>
             </div>
-            {plan.map((r, i) => (
+            {plan.slice(0, planLimit).map((r, i) => (
               <div key={r.s.id} className="rb-planrow">
                 <span className="rb-pmove">
                   <button type="button" onClick={() => move(r.s.id, -1)} disabled={i === 0} aria-label="Move up"><ArrowUp size={12} /></button>
@@ -136,6 +137,11 @@ ol{padding-left:22px}li{margin:0 0 12px;page-break-inside:avoid}li b{display:blo
                 <StopCard s={r.s} m={r.m} withLeg compact={ui.density === "compact"} />
               </div>
             ))}
+            {plan.length > planLimit && (
+              <button type="button" className="wd-ghost-btn rb-more" onClick={() => setPlanLimit((n) => n + 20)}>
+                Show {Math.min(20, plan.length - planLimit)} more of {plan.length - planLimit}
+              </button>
+            )}
           </>
         )}
       </section>

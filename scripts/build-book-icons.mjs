@@ -1,4 +1,4 @@
-/* Home-screen icons for the four standalone book apps.
+/* Home-screen icon for the WhiteDot Portal app.
  *
  * Run with `node scripts/build-book-icons.mjs`. The PNGs it writes are
  * committed, so a deploy never depends on sharp being installed.
@@ -23,12 +23,9 @@ const OUT = resolve(ROOT, "public/assets/icons");
 const LOGO = resolve(ROOT, "public/assets/whitedot-main-logo.png");
 const TILE = "#0f1210";
 
-/** One colour each, far enough apart in hue to read at 40 px. */
+/** The portal is one app, so it carries one accent bar. */
 const BOOKS = {
-  route: "#5cb43c",
-  visits: "#9b7fd4",
-  leads: "#e0a040",
-  customers: "#33b0d4",
+  portal: "#5cb43c",
 };
 
 /* Drawn on a 512 grid. The logo occupies 392 px centred a little high, which

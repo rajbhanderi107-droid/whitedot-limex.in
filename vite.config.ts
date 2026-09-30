@@ -19,10 +19,7 @@ export default defineConfig({
       // scripts/build-book-apps.mjs — do not hand-edit those pages.
       input: {
         main: resolve(__dirname, "index.html"),
-        route: resolve(__dirname, "route/index.html"),
-        visits: resolve(__dirname, "visits/index.html"),
-        leads: resolve(__dirname, "leads/index.html"),
-        customers: resolve(__dirname, "customers/index.html"),
+        portal: resolve(__dirname, "portal/index.html"),
       },
     },
   },

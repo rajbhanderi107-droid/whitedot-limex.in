@@ -10,9 +10,9 @@ import { sourceFolderOf } from "./sources.js";
  * with the whole team and journaled by day, with the CRM one tap away. */
 
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import {
-  Plus, Sparkles, Route as RouteIcon, History, CloudOff, Cloud, CloudUpload, AlertTriangle, Settings,
+  Plus, Sparkles, Route as RouteIcon, History, CloudOff, Cloud, CloudUpload, AlertTriangle,
 } from "lucide-react";
 import type { RbView } from "./types.js";
 import {
@@ -22,7 +22,7 @@ import {
 import { useRb, load, setPrefs, saveView, reseed, getRb, startLiveSync } from "./store.js";
 import { backupBook, exportContactsVcf, exportWholeBookCSV, getHome, restoreFromFile } from "./bookData.js";
 import { UICtx, type UIApi, toast } from "./ctx.js";
-import { MoreMenu, OpenAsApp } from "./BookBits.js";
+import { MoreMenu } from "./BookBits.js";
 import { RouteView } from "./RouteView.js";
 import { StopsView } from "./StopsView.js";
 import { DaysView } from "./DaysView.js";
@@ -186,7 +186,6 @@ export function RouteBookPage() {
             <MoreMenu label="More actions for the book">
               <button type="button" className="wd-ghost-btn" onClick={() => setPalette(true)} title="Actions (.)"><Sparkles size={13} /> All actions</button>
               <button type="button" className="wd-ghost-btn" onClick={() => setHistoryOpen((o) => !o)}><History size={13} /> Undo history</button>
-              <OpenAsApp dir="route" label="Route Book" />
             </MoreMenu>
           </div>
         </div>
@@ -202,7 +201,6 @@ export function RouteBookPage() {
               {st.views.map((v) => <option key={v.id} value={v.id}>{v.name}</option>)}
               <option value="__save">Save current filters as a view…</option>
             </select>
-            <Link className="wd-ghost-btn" to="/admin/book-settings"><Settings size={13} /> Settings</Link>
           </div>
         </div>
         <CompanyFilters rows={rows} product={product} onProduct={setProduct} q={filters.q}

@@ -16,7 +16,7 @@
 .bd-tabs { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0; }
 .bd-tabs button { min-height:44px; padding:10px 14px; border:1px solid var(--adm-border); border-radius:24px; color:var(--adm-text); background:transparent; font:inherit; font-size:.8rem; cursor:pointer; }
 .bd-tabs button[aria-pressed="true"] { background:var(--adm-text); color:var(--adm-bg); }
-.bd-tabs span { margin-left:8px; opacity:.7; }
+.bd-tabs span { margin-left:8px; font-weight:600; }
 .bd-search { display:flex; align-items:center; gap:10px; max-width:440px; padding:0 12px; border:1px solid var(--adm-border); border-radius:10px; }
 .bd-search input { min-width:0; width:100%; min-height:44px; background:transparent; color:var(--adm-text); border:0; font:inherit; font-size:16px; }
 .bd-row { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px 0; border-top:1px solid var(--adm-border); }

@@ -1,8 +1,9 @@
-/* Entry point shared by /route/, /leads/ and /customers/.
+/* Entry point of the installable WhiteDot Portal app (/portal/).
  *
- * Each of those pages is its own installable app with its own name and icon,
- * but they are one build: the HTML sets data-book and this mounts the same
- * React app, which opens on that book.
+ * It is the whole portal in a phone shell: Today, the five books and Settings
+ * behind one login. The HTML sets data-book so the pages know they are the
+ * installed app, and this mounts the same React app the website portal uses,
+ * opening on the Today desk.
  *
  * Deliberately no service worker. The main site retires any it finds (see
  * src/main.tsx), so one registered here would be unregistered the next time

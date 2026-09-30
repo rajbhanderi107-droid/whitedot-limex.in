@@ -81,13 +81,10 @@ export function SettingsPage() {
         </section>
 
         <section className="st-sec" aria-labelledby="st-apps">
-          <h2 id="st-apps"><Smartphone size={16} /> Phone apps</h2>
-          <p className="st-note">Open a book as its own app, then use your browser's “Add to Home screen”.</p>
+          <h2 id="st-apps"><Smartphone size={16} /> Phone app</h2>
+          <p className="st-note">Every book is in one app, WhiteDot Portal. Open it, then use your browser's “Add to Home screen”.</p>
           <div className="st-actions">
-            <OpenAsApp dir="route" label="Route Book" named />
-            <OpenAsApp dir="visits" label="Visit Follow-ups" named />
-            <OpenAsApp dir="leads" label="Lead Book" named />
-            <OpenAsApp dir="customers" label="Customer Book" named />
+            <OpenAsApp />
           </div>
         </section>
 
