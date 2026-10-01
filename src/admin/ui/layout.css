@@ -25,6 +25,35 @@
 }
 .rb-fchips select:hover { border-style: solid; }
 .rb-fchips select.is-set { border: 1px solid var(--wd-sage-line); background-color: var(--wd-sage); color: var(--wd-sage-ink); font-weight: 600; }
+/* Product multi-select: a chip like the selects, opening a tick list. */
+.rb-pick { position: relative; min-width: 0; }
+.rb-pick > summary { list-style: none; }
+.rb-pick > summary::-webkit-details-marker { display: none; }
+.rb-pick-btn {
+  display: flex; align-items: center; height: 34px; max-width: 168px; padding: 0 1.9rem 0 .8rem; border-radius: 999px;
+  border: 1px dashed var(--wd-linen); background-color: var(--wd-milk); color: var(--wd-slate);
+  font-size: .8rem; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 14px) 15px, calc(100% - 10px) 15px; background-size: 4px 4px; background-repeat: no-repeat;
+}
+.rb-pick-btn:hover { border-style: solid; }
+.rb-pick-btn.is-set { border: 1px solid var(--wd-sage-line); background-color: var(--wd-sage); color: var(--wd-sage-ink); font-weight: 600; }
+.rb-pick-panel {
+  position: absolute; left: 0; top: calc(100% + 6px); z-index: 30; min-width: 240px; display: grid; gap: 2px; padding: .4rem;
+  background: var(--wd-milk); border: 1px solid var(--wd-linen); border-radius: 12px; box-shadow: var(--wd-shadow);
+}
+.rb-pick-opt { display: flex; align-items: center; gap: .6rem; min-height: 40px; padding: 0 .6rem; border-radius: 8px; cursor: pointer; font-size: .86rem; color: var(--wd-graphite); }
+.rb-pick-opt:hover { background: var(--wd-linen-soft); }
+.rb-pick-opt input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.rb-pick-opt input:focus-visible + .rb-pick-box { outline: 2px solid var(--wd-sage-ink); outline-offset: 2px; }
+.rb-pick-box { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--wd-slate); background: var(--wd-milk); color: var(--wd-milk); }
+.rb-pick-opt.is-on { color: var(--wd-sage-ink); font-weight: 600; }
+.rb-pick-opt.is-on .rb-pick-box { background: var(--wd-sage-ink); border-color: var(--wd-sage-ink); }
+.rb-pick-clear { margin-top: .2rem; min-height: 40px; border: 0; border-top: 1px solid var(--wd-linen-soft); background: none; color: var(--wd-slate); font: inherit; font-size: .8rem; cursor: pointer; text-align: left; padding: 0 .6rem; }
+@media (max-width: 640px) {
+  .rb-pick-btn { max-width: none; width: 100%; height: 40px; font-size: 14px; }
+  .rb-pick-panel { min-width: min(300px, calc(100vw - 32px)); }
+}
 .rb-filter-end { display: flex; align-items: center; gap: .5rem; margin-left: auto; }
 .rb-company-filters .rb-showing { margin: 0; font-family: var(--adm-font-mono, ui-monospace, monospace); font-size: .74rem; color: var(--wd-slate); white-space: nowrap; }
 .rb-reset {
