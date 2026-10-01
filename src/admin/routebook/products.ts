@@ -9,7 +9,13 @@ export const PRODUCTS = [
   ['dairy', 'Ice-cream & curd tubs, disposable cups'], ['bottles', 'Blow-moulded bottles'], ['jars', 'Plastic jars'],
 ] as const;
 export type Product = typeof PRODUCTS[number][0];
-export type ProductFilter = 'all' | Product | CanadaProduct;
+/** 'all', or one or more product ids joined by commas ('toys,jars'). A company
+ *  matches when it makes ANY of the chosen products. Kept as one string so a
+ *  saved team view written before multi-select still applies unchanged. */
+export type ProductFilter = 'all' | string;
+export const productList = (f: ProductFilter): (Product | CanadaProduct)[] =>
+  f === 'all' || !f ? [] : (f.split(',').filter(Boolean) as (Product | CanadaProduct)[]);
+export const productFilterOf = (ids: readonly string[]): ProductFilter => (ids.length ? ids.join(',') : 'all');
 export type ReviewFilter = 'verified' | 'review' | 'excluded' | 'all';
 export interface ProductProfile {
   categories: Product[];
@@ -88,6 +94,13 @@ export function reviewState(s: RbStop, m?: RbMark): ReviewFilter {
   return 'review';
 }
 export function matchesProduct(s: RbStop, m: RbMark|undefined, product: ProductFilter, review: ReviewFilter='all') {
-  const hit = product==='all' || (product.startsWith('ca-') ? canadaCategories(s).includes(product as CanadaProduct) : categoriesOf(s,m).includes(product as Product));
+  const want = productList(product);
+  let hit = !want.length;
+  if (!hit) {
+    const ca = want.some((p) => p.startsWith('ca-')) ? canadaCategories(s) : [];
+    const india = want.some((p) => !p.startsWith('ca-')) ? categoriesOf(s, m) : [];
+    hit = want.some((p) => (p.startsWith('ca-') ? (ca as string[]).includes(p) : (india as string[]).includes(p)));
+  }
   return hit && (review==='all' || reviewState(s,m)===review);
 }
+

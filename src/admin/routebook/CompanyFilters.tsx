@@ -1,7 +1,7 @@
-import { useState, type Ref } from 'react';
-import { Search, X, RotateCcw, SlidersHorizontal } from 'lucide-react';
+import { useEffect, useRef, useState, type Ref } from 'react';
+import { Search, X, RotateCcw, SlidersHorizontal, Check } from 'lucide-react';
 import type { Row } from './logic.js';
-import { PRODUCTS, type ProductFilter } from './products.js';
+import { PRODUCTS, productList, productFilterOf, type ProductFilter } from './products.js';
 import { CANADA_PRODUCTS, useRegion } from './region.js';
 import { SOURCE_LABEL, type FolderFilter } from './sources.js';
 
@@ -30,7 +30,7 @@ interface Props {
 export function CompanyFilters(p: Props) {
   const allStatus = p.statuses[0]?.[0] ?? 'all';
   const [region] = useRegion();
-  const productList: readonly (readonly [string, string])[] = region === 'CA' ? CANADA_PRODUCTS : PRODUCTS;
+  const productChoices: readonly (readonly [string, string])[] = region === 'CA' ? CANADA_PRODUCTS : PRODUCTS;
   // On a phone the four selects fold behind one button, so the list starts
   // right under the search box. On a wider screen they are always shown.
   const [open, setOpen] = useState(false);
@@ -46,10 +46,7 @@ export function CompanyFilters(p: Props) {
       <SlidersHorizontal size={15} /> Filters{setCount ? <b>{setCount}</b> : null}
     </button>
     <div className="rb-fchips">
-      <select aria-label="Product" className={p.product !== 'all' ? 'is-set' : ''} value={p.product}
-        onChange={e => p.onProduct(e.target.value as ProductFilter)}>
-        <option value="all">All products</option>{productList.map(([id, label]) => <option key={id} value={id}>{label}</option>)}
-      </select>
+      <ProductPicker value={p.product} options={productChoices} onChange={p.onProduct} />
       {p.areas && <select aria-label="Area" className={p.area ? 'is-set' : ''} value={p.area} onChange={e => p.onArea?.(e.target.value)}>
         <option value="">All areas</option>{p.areas.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
       </select>}
@@ -66,4 +63,55 @@ export function CompanyFilters(p: Props) {
         aria-label="Reset filters" title="Reset filters"><RotateCcw size={13} /> Reset</button>
     </div>
   </section>;
+}
+
+/** Product as a multi-select: tick any number; a company shows when it makes
+ *  any of them. The button names what is chosen, and turns sage when set,
+ *  like the other filters. It closes on a tap outside or Escape, and stays on
+ *  a phone's screen. */
+function ProductPicker({ value, options, onChange }: { value: ProductFilter; options: readonly (readonly [string, string])[]; onChange: (v: ProductFilter) => void }) {
+  const ref = useRef<HTMLDetailsElement>(null);
+  const [open, setOpen] = useState(false);
+  const chosen = productList(value).filter((id) => options.some(([k]) => k === id));
+  const label = !chosen.length ? 'All products'
+    : chosen.length === 1 ? options.find(([k]) => k === chosen[0])![1]
+    : `${chosen.length} products`;
+
+  useEffect(() => {
+    const d = ref.current;
+    const panel = d?.querySelector<HTMLElement>('.rb-pick-panel');
+    if (!d || !panel) return;
+    panel.style.transform = '';
+    if (!open) return;
+    const gap = 8, vw = document.documentElement.clientWidth, r = panel.getBoundingClientRect();
+    const shift = r.left < gap ? gap - r.left : r.right > vw - gap ? vw - gap - r.right : 0;
+    if (shift) panel.style.transform = `translateX(${Math.round(shift)}px)`;
+    const close = () => { d.open = false; };
+    const onDown = (e: PointerEvent) => { if (!d.contains(e.target as Node)) close(); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
+    document.addEventListener('pointerdown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('pointerdown', onDown); document.removeEventListener('keydown', onKey); };
+  }, [open]);
+
+  const toggle = (id: string) => onChange(productFilterOf(chosen.includes(id as never) ? chosen.filter((x) => x !== id) : [...chosen, id as never]));
+
+  return (
+    <details ref={ref} className="rb-pick" onToggle={(e) => setOpen(e.currentTarget.open)}>
+      <summary className={`rb-pick-btn${chosen.length ? ' is-set' : ''}`} aria-label={`Product: ${label}`} data-testid="product-picker">{label}</summary>
+      <div className="rb-pick-panel" role="group" aria-label="Products">
+        {options.map(([id, name]) => {
+          const on = chosen.includes(id as never);
+          return (
+            <label key={id} className={`rb-pick-opt${on ? ' is-on' : ''}`}>
+              <input type="checkbox" checked={on} onChange={() => toggle(id)} />
+              <span className="rb-pick-box" aria-hidden="true">{on && <Check size={12} />}</span>
+              {name}
+            </label>
+          );
+        })}
+        {chosen.length > 0 && <button type="button" className="rb-pick-clear" onClick={() => onChange('all')}>Show all products</button>}
+      </div>
+    </details>
+  );
 }

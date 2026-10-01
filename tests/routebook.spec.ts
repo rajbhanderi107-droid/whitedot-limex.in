@@ -96,6 +96,14 @@ async function openActions(card: import("@playwright/test").Locator) {
   if (await toggle.count()) await toggle.click();
 }
 
+/** Tick products in the multi-select Product filter, then close it. */
+async function pickProducts(page: import("@playwright/test").Page, ...names: string[]) {
+  await page.getByTestId("product-picker").first().click();
+  for (const n of names) await page.locator(".rb-pick-panel").getByText(n, { exact: true }).click();
+  await page.keyboard.press("Escape");
+}
+const productPicker = (page: import("@playwright/test").Page) => page.getByTestId("product-picker").first();
+
 test.describe("LIMEX Route Book", () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => { localStorage.setItem("wd_admin_token", "mock-jwt"); localStorage.removeItem("wd_rb_cache_v2"); localStorage.removeItem("wd_rb_outbox_v2"); });
@@ -558,7 +566,7 @@ test('one panel replaces the old product, trade and state rails', async ({ page 
   await page.goto('/#/admin/route-book');
   await expect(page.getByTestId('company-filters')).toHaveCount(1);
   await expect(page.locator('.rb-rail, .rb-products-filter, .rb-review-tabs')).toHaveCount(0);
-  await expect(page.getByLabel('Product', {exact:true})).toBeVisible();
+  await expect(productPicker(page)).toBeVisible();
   await expect(page.getByLabel('Area', {exact:true})).toBeVisible();
   await expect(page.getByLabel('Follow-up status')).toBeVisible();
   await expect(page.locator('.rb-showing')).toHaveText('4 of 4');
@@ -573,7 +581,7 @@ test('product, area and source combine and reset together', async ({ page }) => 
     stop('c','N1','Bag Factory Two','good',{addr:'Vatva, Ahmedabad',makes:'HM HDPE carry bags'})
   ]})));
   await page.goto('/#/admin/route-book');
-  await page.getByLabel('Product',{exact:true}).selectOption('hm-bags');
+  await pickProducts(page, 'HM / HDPE bags');
   await expect(page.locator('.rb-showing')).toHaveText('2 of 3');
   await page.getByLabel('Area',{exact:true}).selectOption('Naroda');
   await expect(page.locator('.rb-showing')).toHaveText('1 of 3');
@@ -584,7 +592,7 @@ test('product, area and source combine and reset together', async ({ page }) => 
   await page.getByTestId('rb-clear').click();
   await expect(page.locator('.rb-showing')).toHaveText('3 of 3');
   await expect(page.getByLabel('Area',{exact:true})).toHaveValue('');
-  await expect(page.getByLabel('Product',{exact:true})).toHaveValue('all');
+  await expect(productPicker(page)).toHaveText('All products');
   await expect(page.getByLabel('Source',{exact:true})).toHaveValue('ALL');
 });
 
@@ -613,14 +621,14 @@ test('one filter asks what a company makes, and reset gives the whole book back'
   // it could only empty the book.
   const panel = page.getByTestId('company-filters');
   await expect(panel.getByLabel('Manufacturer check')).toHaveCount(0);
-  await expect(panel.getByLabel('Product', { exact: true })).toHaveCount(1);
+  await expect(panel.getByTestId('product-picker')).toHaveCount(1);
 
   await expect(page.locator('.rb-showing')).toHaveText('4 of 4');
-  await panel.getByLabel('Product', { exact: true }).selectOption('toys');
+  await pickProducts(page, 'Plastic toys');
   await expect(page.locator('.rb-showing'), 'the fixture makes tubs, not toys').toHaveText('0 of 4');
   await page.getByTestId('rb-clear').click();
   await expect(page.locator('.rb-showing')).toHaveText('4 of 4');
-  await expect(panel.getByLabel('Product', { exact: true })).toHaveValue('all');
+  await expect(productPicker(page)).toHaveText('All products');
 });
 
 test('mobile filters fit within the screen and tools stay separate', async ({ page }) => {
@@ -699,13 +707,56 @@ test('the Canada region shows only Canadian companies with its own products', as
 
   await page.getByTestId('region-CA').first().click();
   await expect(page.locator('.rb-showing')).toHaveText('2 of 2');
-  const product = page.getByLabel('Product', { exact: true });
-  await expect(product.locator('option')).toHaveText(['All products', 'Use-and-throw bags', 'Thin-wall containers', 'Food containers (thermoforming)']);
-  await product.selectOption('ca-thermo');
+  await productPicker(page).click();
+  await expect(page.locator('.rb-pick-opt')).toHaveText(['Use-and-throw bags', 'Thin-wall containers', 'Food containers (thermoforming)']);
+  await page.keyboard.press('Escape');
+  await pickProducts(page, 'Food containers (thermoforming)');
   await expect(page.locator('.rb-showing')).toHaveText('1 of 2');
   await expect(page.getByLabel('Area', { exact: true }).locator('option')).toContainText(['Canada — Quebec', 'Canada — Toronto area (GTA)']);
 
   await page.getByTestId('region-IN').first().click();
   await expect(page.locator('.rb-showing')).toHaveText('1 of 1');
-  await expect(page.getByLabel('Product', { exact: true })).toHaveValue('all');
+  await expect(productPicker(page)).toHaveText('All products');
+});
+
+test('two or more products can be chosen at once and a company matching any of them shows', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  await mockPortal(page);
+  await page.route('**/api/portal/route-book/bootstrap', r => r.fulfill(ok({...bootstrap, stops:[
+    stop('a','N1','Bag Factory','good',{addr:'Naroda, Ahmedabad',makes:'HM HDPE carry bags'}),
+    stop('b','N1','Jar Factory','good',{addr:'Vatva, Ahmedabad',makes:'HDPE jars'}),
+    stop('c','N1','Toy Factory','good',{addr:'Vatva, Ahmedabad',makes:'plastic toys'}),
+  ]})));
+  await page.goto('/#/admin/route-book');
+  await expect(page.locator('.rb-showing')).toHaveText('3 of 3');
+
+  await pickProducts(page, 'HM / HDPE bags', 'Plastic jars');
+  await expect(productPicker(page)).toHaveText('2 products');
+  await expect(productPicker(page)).toHaveClass(/is-set/);
+  await expect(page.locator('.rb-showing')).toHaveText('2 of 3');
+
+  // Unticking one narrows back to the other.
+  await pickProducts(page, 'Plastic jars');
+  await expect(productPicker(page)).toHaveText('HM / HDPE bags');
+  await expect(page.locator('.rb-showing')).toHaveText('1 of 3');
+
+  // "Show all products" in the list clears the choice.
+  await productPicker(page).click();
+  await page.getByRole('button', { name: 'Show all products' }).click();
+  await expect(productPicker(page)).toHaveText('All products');
+  await expect(page.locator('.rb-showing')).toHaveText('3 of 3');
+});
+
+test('the product list stays on a phone screen', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await page.addInitScript(() => localStorage.setItem('wd_admin_token', 'mock-jwt'));
+  await mockPortal(page);
+  await page.goto('/#/admin/route-book');
+  await page.getByRole('button', { name: /Filters/ }).click();
+  await productPicker(page).click();
+  const box = await page.locator('.rb-pick-panel').boundingBox();
+  expect(box!.x).toBeGreaterThanOrEqual(0);
+  expect(box!.x + box!.width).toBeLessThanOrEqual(360);
+  const opt = await page.locator('.rb-pick-opt').first().boundingBox();
+  expect(opt!.height).toBeGreaterThanOrEqual(40);
 });
