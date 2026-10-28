@@ -1,4 +1,4 @@
-# Thin Wall Circle Dish
+# Thermoforming Dish
 
 - **id:** `lightWeightDish`
 - **index:** 28

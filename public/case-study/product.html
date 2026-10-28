@@ -494,6 +494,8 @@
     @keyframes specIn { from { opacity: 0; transform: translateY(-7px); } to { opacity: 1; transform: translateY(0); } }
     @media (prefers-reduced-motion: reduce) { .material-reference[open] .spec-grid { animation: none; } }
     .spec-grid { display: flex; flex-direction: column; gap: 8px; padding: 12px 0 4px; }
+    .material-brief { padding: 14px 0 6px; }
+    .stage-retry { margin-top: 14px; padding: 10px 18px; min-height: 44px; border-radius: 999px; border: 1px solid var(--wd-line, rgba(0,0,0,.12)); background: #fff; color: #111; font: 600 12px/1 Inter, sans-serif; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
     .spec-item { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 8px; border-bottom: 1px solid var(--wd-line); }
     .spec-item:last-child { border-bottom: none; }
     .spec-label { font-size: 9.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--wd-faint); }
@@ -751,20 +753,6 @@
 
         <div id="compositionSlot"><!-- comp-bar / comp-stats OR pending-note --></div>
 
-        <div id="statsGridSlot"><!-- glass-stats-grid OR omitted --></div>
-
-        <details class="material-reference" id="materialReference" style="display:none;">
-          <summary>
-            <span>View Full Technical Data</span>
-            <span class="chev">⌄</span>
-          </summary>
-          <div class="spec-grid" id="specGrid"></div>
-          <div class="tds-verified" data-tds-verified-slot></div>
-          <a class="tds-download" href="#" data-download-tds hidden>
-            <span>Download Technical Data Sheet (PDF)</span>
-          </a>
-        </details>
-
         <div class="glass-cta-stacked">
           <a class="cta-btn primary" href="/#contact">
             <span id="ctaLabel">Request a Sample</span>
@@ -850,11 +838,11 @@
   const full = isLive ? (specData[entry.id] || {}) : {};
 
   const MODEL_SRC = {
-    toiletBrushHandle: './model/case-40-toilet-brush-handle.glb?v=slim-side-20260926',
-    carryHandleCap: './model/case-39-carry-handle-cap.glb',
-    thinWallContainer: './model/case-38-thin-wall-container.glb',
-    ballValve: './model/case-37-ball-valve.glb?v=smooth-20260924',
-    bottleCap: './model/case-36-bottle-cap.glb',
+    toiletBrushHandle: './model/case-40-toilet-brush-handle.glb?v=draco-20261028',
+    carryHandleCap: './model/case-39-carry-handle-cap.glb?v=draco-20261028',
+    thinWallContainer: './model/case-38-thin-wall-container.glb?v=draco-20261028',
+    ballValve: './model/case-37-ball-valve.glb?v=draco-20261028',
+    bottleCap: './model/case-36-bottle-cap.glb?v=draco-20261028',
     bobbin: './model/bobbin.glb',
     container: './model/paint-container-procedural-red-white.glb',
     motorCover: './model/motor-cover-procedural-black.glb',
@@ -989,7 +977,35 @@
   // ── 3D stage ──
   const stageContent = document.getElementById('stageContent');
   let mv = null;
-  if (isLive || hasModel) {
+  const mono = entry.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  function showStagePlaceholder(caption, retry) {
+    document.getElementById('spinControls').style.display = 'none';
+    stageContent.innerHTML = `
+      <div class="rotator-wrap">
+        <div class="stage-placeholder">
+          <div class="stage-placeholder-circle">
+            <span class="stage-placeholder-mono">${mono}</span>
+          </div>
+          <span class="stage-placeholder-caption">${caption}</span>
+          ${retry ? '<button type="button" class="stage-retry" id="stageRetry">Try 3D again</button>' : ''}
+        </div>
+      </div>`;
+    if (retry) document.getElementById('stageRetry').addEventListener('click', () => location.reload());
+  }
+  // Low-spec phones/laptops: no WebGL (old GPU driver, blocklisted device) means
+  // model-viewer renders nothing at all — show the placeholder instead of an
+  // empty stage, and don't download the GLB.
+  const canRender3D = (() => {
+    try {
+      const c = document.createElement('canvas');
+      const gl = c.getContext('webgl2') || c.getContext('webgl');
+      if (gl && gl.getExtension('WEBGL_lose_context')) gl.getExtension('WEBGL_lose_context').loseContext();
+      return Boolean(gl);
+    } catch (e) { return false; }
+  })();
+  if ((isLive || hasModel) && !canRender3D) {
+    showStagePlaceholder('3D view is not supported on this device');
+  } else if (isLive || hasModel) {
     document.getElementById('spinControls').style.display = '';
     stageContent.innerHTML = `
       <div class="rotator-wrap" id="rotatorWrap">
@@ -1020,6 +1036,19 @@
       </div>`;
     mv = document.getElementById('productModel');
 
+    // A failed GLB fetch/parse, or a browser too old to run the model-viewer
+    // module, used to leave the stage blank forever.
+    let modelLoaded = false;
+    mv.addEventListener('load', () => { modelLoaded = true; }, { once: true });
+    mv.addEventListener('error', () => {
+      if (!modelLoaded) { showStagePlaceholder('3D model could not load', true); }
+    });
+    setTimeout(() => {
+      if (!customElements.get('model-viewer') && !modelLoaded) {
+        showStagePlaceholder('3D view is not supported in this browser');
+      }
+    }, 10000);
+
     const MATERIAL_COLOR_OVERRIDE = {
       foodTrayDish: [0.02, 0.02, 0.02, 1],
     };
@@ -1039,100 +1068,55 @@
       }, 150);
     }
   } else {
-    const mono = entry.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-    stageContent.innerHTML = `
-      <div class="rotator-wrap">
-        <div class="stage-placeholder">
-          <div class="stage-placeholder-circle">
-            <span class="stage-placeholder-mono">${mono}</span>
-          </div>
-          <span class="stage-placeholder-caption">3D Model — Coming Soon</span>
-        </div>
-      </div>`;
+    showStagePlaceholder('3D Model — Coming Soon');
   }
 
-  // ── Sidebar: composition ──
+  // ── Sidebar: material brief — LIMEX grade, blend partner and LIMEX % only ──
+  // Mirrors deriveBrief() in src/cinematic-v2/caseStudyComposition.tsx.
+  function materialBrief(p) {
+    const segs = (p.composition || []).filter(c => c && c.name);
+    const limex = segs.find(c => /limex/i.test(c.name)) || null;
+    const rawGrade = String(p.referenceGrade || '').trim();
+    const grade = /per lot|review|^$/i.test(rawGrade) ? '' : rawGrade;
+    const pct = typeof p.limexPct === 'number' ? p.limexPct : (limex && typeof limex.pct === 'number' ? limex.pct : null);
+    const blend = (p.blendWith || segs.filter(c => c !== limex).map(c => c.name).join(' + ')).replace(/\s*Homo-Polymer/i, '');
+    return (grade || pct != null || blend) ? { grade, pct, blend } : null;
+  }
+  const esc = (v) => String(v).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
   const compositionSlot = document.getElementById('compositionSlot');
-  if (full.dataKind === 'photo-reference') {
-    const features = document.createElement('p');
-    features.className = 'pending-note';
-    features.textContent = 'Raised circular top · Pivoting carry handle · Inner sealing ring';
-    compositionSlot.replaceChildren(features);
-  } else if (isLive && full.composition && full.composition.length) {
-    const [a, b] = full.composition;
-    compositionSlot.innerHTML = `
+  const brief = isLive ? materialBrief(full) : null;
+  if (brief) {
+    const rows = [
+      brief.grade && ['LIMEX Grade', brief.grade, true],
+      brief.blend && ['Blended With', brief.blend, false],
+      brief.pct != null && ['LIMEX Used', `${brief.pct}%`, true],
+    ].filter(Boolean);
+    const bar = brief.pct != null ? `
       <div class="comp-bar">
-        ${full.composition.map(c => `<div class="comp-seg" data-pct="${c.pct}" style="background:${c.color};"></div>`).join('')}
-      </div>
-      <div style="display:flex;justify-content:space-between;margin-top:6px;margin-bottom:12px;">
-        <span style="font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);">${a.pct}% ${a.name}</span>
-        ${b ? `<span style="font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--wd-faint);">${b.pct}% ${b.name}</span>` : ''}
-      </div>
-      <div class="comp-stats">
-        <div class="comp-stat">
-          <span class="stat-num accent"><span class="num" data-to="${a.pct}">0</span><small>%</small></span>
-          <span class="stat-label">${(a.name || '').split(' ')[0] || 'LIMEX'}</span>
-        </div>
-        ${b ? `<div class="comp-stat">
-          <span class="stat-num"><span class="num" data-to="${b.pct}">0</span><small>%</small></span>
-          <span class="stat-label">${(b.name || '').split(' ')[0] || 'PP'}</span>
-        </div>` : ''}
+        <div class="comp-seg" data-pct="${brief.pct}" style="background:#4f9a35;"></div>
+        <div class="comp-seg" data-pct="${100 - brief.pct}" style="background:#c4c7c0;"></div>
+      </div>` : '';
+    compositionSlot.innerHTML = `${bar}
+      <div class="spec-grid material-brief">
+        ${rows.map(([label, val, hi]) => `<div class="spec-item"><span class="spec-label">${label}</span><span class="spec-val${hi ? ' highlight' : ''}">${esc(val)}</span></div>`).join('')}
       </div>`;
+  } else if (full.dataKind === 'photo-reference') {
+    compositionSlot.innerHTML = '';
   } else {
     compositionSlot.innerHTML = `
-      <div class="pending-note"><span class="dot"></span> Verified LIMEX composition data is in progress for this product — no figures are published until confirmed.</div>`;
+      <div class="pending-note"><span class="dot"></span> LIMEX grade and blend details for this product will be published once confirmed.</div>`;
   }
 
-  if (full.compositionNote) {
-    const note = document.createElement('div');
-    note.className = 'pending-note';
-    note.textContent = full.compositionNote;
-    compositionSlot.replaceChildren(note);
-  }
-
-  // ── Sidebar: 3 highlight stats ──
-  const statsGridSlot = document.getElementById('statsGridSlot');
-  if (isLive && full.highlights && full.highlights.length) {
-    statsGridSlot.innerHTML = `<div class="glass-stats-grid">
-      ${full.highlights.slice(0, 3).map(h => `
-        <div class="glass-stat-box">
-          <span class="stat-box-num">${h.num}${h.unit ? `<small style="font-size:10px;font-weight:500;margin-left:2px;">${h.unit}</small>` : ''}</span>
-          <span class="stat-box-label">${h.label}</span>
-        </div>`).join('')}
-    </div>`;
-  }
-
-  // ── Description ──
-  document.getElementById('glassDesc').innerHTML = full.description ||
-    (isLive ? entry.category : `We haven't published verified LIMEX composition data for the ${entry.name.toLowerCase()} yet. This case study will go live once supplier TDS data is confirmed — no figures are estimated or guessed in the meantime.`);
+  // ── Description: hero subtitle already carries the one-line summary ──
+  const glassDesc = document.getElementById('glassDesc');
+  if (isLive) glassDesc.style.display = 'none';
+  else glassDesc.textContent = `LIMEX grade and blend details for the ${entry.name.toLowerCase()} will be published once confirmed.`;
 
   // ── Header ──
   document.getElementById('glassEyebrow').textContent = entry.category;
   document.getElementById('glassProductName').textContent = entry.name;
   document.getElementById('glassTag').textContent = full.dataKind === 'photo-reference' ? 'Packaging Design' : isLive ? 'LIMEX Composite' : 'Coming Soon';
   document.getElementById('glassIndexMark').textContent = entry.index;
-
-  // ── Material Reference accordion (deep spec table) ──
-  if (isLive && full.specs && full.specs.length) {
-    const ACCENT_LABELS = new Set(['Mixing Ratio', 'Effective Limestone (CaCO3)', 'Effective Limestone']);
-    document.getElementById('specGrid').innerHTML = full.specs.map(s => {
-      const val = s.value + (s.unit ? ' ' + s.unit : '');
-      const cls = ACCENT_LABELS.has(s.label) ? 'spec-val highlight' : 'spec-val';
-      return `<div class="spec-item"><span class="spec-label">${s.label}</span><span class="${cls}">${val}</span></div>`;
-    }).join('');
-    document.getElementById('materialReference').style.display = '';
-
-    // TDS engine reads document.body.dataset.product at load time, so it can only
-    // be injected AFTER the render above has set it — a plain <script> tag in the
-    // head would always fall back to the "bobbin" default.
-    if (!document.querySelector('script[data-tds-engine]')) {
-      const tds = document.createElement('script');
-      tds.src = './js/tds-engine.js?v=superadmin-20260924';
-      tds.defer = true;
-      tds.dataset.tdsEngine = '1';
-      document.body.appendChild(tds);
-    }
-  }
 
   // ── Real Product Photography gallery (branches on photos.length, like the 3D stage) ──
   (function renderPhotoGallery() {

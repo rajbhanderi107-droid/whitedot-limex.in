@@ -189,10 +189,37 @@ function enqueueActivation(viewer: HTMLElement, src: string) {
 export const MAX_MOBILE_ACTIVE_MODELS = 10;
 export const MAX_DESKTOP_ACTIVE_MODELS = 12;
 
+// Low-spec phones/laptops (<=4 GB RAM or <=4 cores) ran out of GPU memory with
+// 10-12 live scenes: the tab silently lost its WebGL context and every card went
+// blank. They get a smaller pool; devices with no WebGL at all get none, so the
+// cards keep their static placeholder instead of an empty box.
+let webglSupport: boolean | null = null;
+export function hasWebGL() {
+  if (webglSupport !== null) return webglSupport;
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = (canvas.getContext('webgl2') || canvas.getContext('webgl')) as WebGLRenderingContext | null;
+    webglSupport = Boolean(gl);
+    gl?.getExtension('WEBGL_lose_context')?.loseContext();
+  } catch {
+    webglSupport = false;
+  }
+  return webglSupport;
+}
+
+export function isLowEndDevice() {
+  if (typeof navigator === 'undefined') return false;
+  const mem = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
+  const cores = navigator.hardwareConcurrency;
+  return (typeof mem === 'number' && mem <= 4) || (typeof cores === 'number' && cores > 0 && cores <= 4);
+}
+
 export function maxActiveModels() {
-  return typeof window !== 'undefined' && window.innerWidth < 1024
-    ? MAX_MOBILE_ACTIVE_MODELS
-    : MAX_DESKTOP_ACTIVE_MODELS;
+  if (typeof window === 'undefined') return MAX_DESKTOP_ACTIVE_MODELS;
+  if (!hasWebGL()) return 0;
+  const small = window.innerWidth < 1024;
+  if (isLowEndDevice()) return small ? 4 : 6;
+  return small ? MAX_MOBILE_ACTIVE_MODELS : MAX_DESKTOP_ACTIVE_MODELS;
 }
 
 // NOTE: there was briefly an initialMobileModelPool() here that pre-seeded this

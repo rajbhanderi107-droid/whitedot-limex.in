@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { observeMobileModelPool, warmCaseStudyModelCache, activateMountedModels } from '../productModelPreload';
 import './CaseStudyPage.css';
-import { Composition } from '../caseStudyComposition';
+import { Composition, useBriefStats } from '../caseStudyComposition';
 
 const basePath = window.location.hostname.endsWith('github.io') ? '/whitedot-limex.in' : '';
 
@@ -66,15 +66,15 @@ const darkTalpatriModel = `${basePath}/case-study/model/product-37-dark-plastic-
 const circleContainerHref = `${basePath}/case-study/product.html?p=circle-container`;
 const circleContainerModel = `${basePath}/case-study/model/product-38-circle-container.glb?v=white-20260728`;
 const bottleCapHref = `${basePath}/case-study/product.html?p=bottle-cap`;
-const bottleCapModel = `${basePath}/case-study/model/case-36-bottle-cap.glb`;
+const bottleCapModel = `${basePath}/case-study/model/case-36-bottle-cap.glb?v=draco-20261028`;
 const ballValveHref = `${basePath}/case-study/product.html?p=ball-valve`;
-const ballValveModel = `${basePath}/case-study/model/case-37-ball-valve.glb?v=smooth-20260924`;
+const ballValveModel = `${basePath}/case-study/model/case-37-ball-valve.glb?v=draco-20261028`;
 const thinWallContainerHref = `${basePath}/case-study/product.html?p=thin-wall-container`;
-const thinWallContainerModel = `${basePath}/case-study/model/case-38-thin-wall-container.glb`;
+const thinWallContainerModel = `${basePath}/case-study/model/case-38-thin-wall-container.glb?v=draco-20261028`;
 const carryHandleCapHref = `${basePath}/case-study/product.html?p=carry-handle-cap`;
-const carryHandleCapModel = `${basePath}/case-study/model/case-39-carry-handle-cap.glb`;
+const carryHandleCapModel = `${basePath}/case-study/model/case-39-carry-handle-cap.glb?v=draco-20261028`;
 const toiletBrushHandleHref = `${basePath}/case-study/product.html?p=toilet-brush-handle`;
-const toiletBrushHandleModel = `${basePath}/case-study/model/case-40-toilet-brush-handle.glb?v=slim-side-20260926`;
+const toiletBrushHandleModel = `${basePath}/case-study/model/case-40-toilet-brush-handle.glb?v=draco-20261028`;
 type ProductKey = 'overview' | 'bobbin' | 'container' | 'motorCover' | 'handWashBottle' | 'hardDish' | 'consilePipe' | 'soapStand' | 'foodOilCan' | 'dairyProductsContainer' | 'lunchBox' | 'dairySweetContainer' | 'dairyRoundContainer' | 'rectangleContainer' | 'hook20mm' | 'roundPipe' | 'applianceTray' | 'motorFanBlade' | 'cupContainer' | 'toothBrush' | 'petrolPipe' | 'proteinContainer' | 'rectangleBox' | 'smallRoundBottle' | 'saltBottle' | 'lightWeightContainer' | 'foodTrayDish' | 'lightWeightDish' | 'dermicoolPowderBottle' | 'wovenThread' | 'toiletSeat' | 'nonWovenBag' | 'courierBag' | 'stripTape' | 'darkTalpatri' | 'circleContainer' | 'bottleCap' | 'ballValve' | 'thinWallContainer' | 'carryHandleCap' | 'toiletBrushHandle';
 const liveProductKeys = new Set<ProductKey>(['bobbin', 'container', 'motorCover', 'handWashBottle', 'hardDish', 'consilePipe', 'soapStand', 'foodOilCan', 'dairyProductsContainer', 'lunchBox', 'dairySweetContainer', 'dairyRoundContainer', 'rectangleContainer', 'hook20mm', 'roundPipe', 'applianceTray', 'motorFanBlade', 'cupContainer', 'toothBrush', 'petrolPipe', 'proteinContainer', 'rectangleBox', 'smallRoundBottle', 'saltBottle', 'lightWeightContainer', 'foodTrayDish', 'lightWeightDish', 'dermicoolPowderBottle', 'wovenThread', 'toiletSeat', 'nonWovenBag', 'courierBag', 'stripTape', 'darkTalpatri', 'circleContainer', 'bottleCap', 'ballValve', 'thinWallContainer', 'carryHandleCap', 'toiletBrushHandle']);
 
@@ -252,7 +252,7 @@ const productStats: Record<ProductKey, { value: ReactNode; label: string; green?
     { value: 'Live', label: 'Product 26', green: true },
 ],
   lightWeightDish: [
-    { value: '27', label: 'Thin Wall Circle Dish' },
+    { value: '27', label: 'Thermoforming Dish' },
     { value: '3D', label: 'Interactive Model' },
     { value: 'Pending', label: 'Verified Specs' },
     { value: 'Live', label: 'Product 27', green: true },
@@ -345,6 +345,7 @@ export default function CaseStudyFeature() {
   const activeProductRef = useRef<ProductKey>('overview');
   const allProductsOpenRef = useRef(false);
   const [activeProduct, setActiveProduct] = useState<ProductKey>('overview');
+  const activeStats = useBriefStats(activeProduct, productStats[activeProduct]);
   // Which products currently get a live <model-viewer>, on EVERY viewport (the
   // pool used to be mobile-only; 70 mounted viewers froze desktop too). Starts
   // EMPTY on purpose — pre-seeding it made the page build WebGL contexts during
@@ -1284,18 +1285,18 @@ export default function CaseStudyFeature() {
         <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Food Tray Dish</div><div className="csp-ptag">Food Packaging - Interactive 3D Model</div><Composition k="foodTrayDish">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
-      {/* 27 Thin Wall Circle Dish - model live, verified composition pending */}
+      {/* 27 Thermoforming Dish - model live, verified composition pending */}
       <a className="csp-pcard featured live" href={`${basePath}/case-study/product.html?p=light-weight-dish`} data-product="lightWeightDish">
         <div className="csp-border-beam" /><div className="csp-pglass" /><div className="csp-pglow" />
         <div className="csp-pmedia"><span className="csp-pidx">27</span>
           {(activeModels.has('lightWeightDish')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={lightWeightDishModel} alt="Thin Wall Circle Dish kitchenware 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 66deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={lightWeightDishModel} alt="Thermoforming Dish kitchenware 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 66deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
         </div>
-        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Thin Wall Circle Dish</div><div className="csp-ptag">Kitchenware - Interactive 3D Model</div><Composition k="lightWeightDish">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
+        <div className="csp-pinfo"><div><div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}><span className="csp-pfeatured">New Model</span></div><div className="csp-pname">Thermoforming Dish</div><div className="csp-ptag">Kitchenware - Interactive 3D Model</div><Composition k="lightWeightDish">Material spec pending</Composition></div><span className="csp-pgo">-&gt;</span></div>
       </a>
 
       {/* 28 Dermicool Powder Bottle - model live, verified composition pending */}
@@ -1541,7 +1542,7 @@ export default function CaseStudyFeature() {
             </h2>
             <p className="csp-hsub">Everyday plastic parts, rebuilt with limestone-based material. Select a product to explore it in 3D and see how its composition changes.</p>
             <div className="csp-hstats" data-active-product={activeProduct}>
-              {productStats[activeProduct].map((stat, index) => (
+              {activeStats.map((stat, index) => (
                 <div className="csp-hs-cell" key={`${activeProduct}-${index}`}>
                   {index > 0 && <div className="csp-hs-div" />}
                   <div className="csp-hs-item">

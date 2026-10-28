@@ -9,7 +9,7 @@
   "htmlPage": "product.html?p=light-weight-container  (generic template, no dedicated file)",
   "composition": [
     {
-      "name": "LIMEX PE78-29L",
+      "name": "LIMEX PE26-F51",
       "pct": 25,
       "color": "#4f9a35",
       "verified": true,
@@ -26,7 +26,7 @@
   "specs": [
     {
       "label": "Material Base",
-      "value": "LIMEX PE78-29L + PP Homo-Polymer",
+      "value": "LIMEX PE26-F51 + PP Homo-Polymer",
       "verified": true,
       "source": "wd-pp-limex-notebook-2026-07-20"
     },
@@ -38,11 +38,11 @@
     },
     {
       "label": "LIMEX Grade",
-      "value": "PE78-29L",
+      "value": "PE26-F51",
       "verified": true,
       "source": "wd-pp-limex-notebook-2026-07-20"
     }
   ],
-  "referenceGrade": "PE78-29L",
-  "mixRatio": "25% LIMEX PE78-29L + 75% PP Homo-Polymer"
+  "referenceGrade": "PE26-F51",
+  "mixRatio": "25% LIMEX PE26-F51 + 75% PP Homo-Polymer"
 }

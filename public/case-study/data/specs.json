@@ -52,6 +52,8 @@
       "moulding": "Injection Moulding",
       "application": "Toilet Brush Handle",
       "composition": [],
+      "limexPct": 20,
+      "blendWith": "PP + CP",
       "compositionNote": "The form states 20% LIMEX use. Recorded masses are 2,500 g PP + 2,500 g CP + 500 g LIMEX in a 5,500 g batch, equivalent to 9.09% LIMEX by recorded batch mass.",
       "specs": [
         {
@@ -2730,11 +2732,11 @@
     },
     "lightWeightContainer": {
       "id": "lightWeightContainer",
-      "referenceGrade": "PE78-29L",
-      "mixRatio": "25% LIMEX PE78-29L + 75% PP Homo-Polymer",
+      "referenceGrade": "PE26-F51",
+      "mixRatio": "25% LIMEX PE26-F51 + 75% PP Homo-Polymer",
       "composition": [
         {
-          "name": "LIMEX PE78-29L",
+          "name": "LIMEX PE26-F51",
           "pct": 25,
           "color": "#4f9a35",
           "verified": true,
@@ -2751,7 +2753,7 @@
       "specs": [
         {
           "label": "Material Base",
-          "value": "LIMEX PE78-29L + PP Homo-Polymer",
+          "value": "LIMEX PE26-F51 + PP Homo-Polymer",
           "verified": true,
           "source": "wd-pp-limex-notebook-2026-07-20"
         },
@@ -2763,13 +2765,13 @@
         },
         {
           "label": "LIMEX Grade",
-          "value": "PE78-29L",
+          "value": "PE26-F51",
           "verified": true,
           "source": "wd-pp-limex-notebook-2026-07-20"
         }
       ],
-      "tagline": "A lightweight general-purpose container, moulded from a 25% LIMEX PE78-29L + 75% PP blend.",
-      "description": "A lightweight general-purpose packaging container, moulded from a 25% LIMEX PE78-29L + 75% PP blend.",
+      "tagline": "A lightweight general-purpose container, moulded from a 25% LIMEX PE26-F51 + 75% PP blend.",
+      "description": "A lightweight general-purpose packaging container, moulded from a 25% LIMEX PE26-F51 + 75% PP blend.",
       "index": "25",
       "name": "Lightweight Container",
       "category": "General Packaging",
@@ -2913,10 +2915,10 @@
           "source": "wd-pp-limex-notebook-2026-07-20"
         }
       ],
-      "tagline": "A thin-wall circular dish, moulded from a 30% LIMEX PP24 Y-51 + 70% PP blend.",
-      "description": "A thin-wall circular kitchenware dish, moulded from a 30% LIMEX PP24 Y-51 + 70% PP blend.",
+      "tagline": "A thermoforming dish, made from a 30% LIMEX PP24 Y-51 + 70% PP blend.",
+      "description": "A thermoforming kitchenware dish, made from a 30% LIMEX PP24 Y-51 + 70% PP blend.",
       "index": "27",
-      "name": "Lightweight Dish",
+      "name": "Thermoforming Dish",
       "category": "Food Packaging",
       "application": "Thin-Wall Circular Dish",
       "moulding": "Thin-Wall Injection Moulding",

@@ -832,11 +832,11 @@
   const isMobileViewport = window.innerWidth <= 760;
 
   const MODEL_SRC = {
-    toiletBrushHandle: './model/case-40-toilet-brush-handle.glb?v=slim-side-20260926',
-    carryHandleCap: './model/case-39-carry-handle-cap.glb',
-    thinWallContainer: './model/case-38-thin-wall-container.glb',
-    ballValve: './model/case-37-ball-valve.glb?v=smooth-20260924',
-    bottleCap: './model/case-36-bottle-cap.glb',
+    toiletBrushHandle: './model/case-40-toilet-brush-handle.glb?v=draco-20261028',
+    carryHandleCap: './model/case-39-carry-handle-cap.glb?v=draco-20261028',
+    thinWallContainer: './model/case-38-thin-wall-container.glb?v=draco-20261028',
+    ballValve: './model/case-37-ball-valve.glb?v=draco-20261028',
+    bottleCap: './model/case-36-bottle-cap.glb?v=draco-20261028',
     bobbin: './model/bobbin.glb',
     container: './model/paint-container-procedural-red-white.glb',
     motorCover: './model/motor-cover-procedural-black.glb',
@@ -1047,6 +1047,12 @@
   // each one to the browser during idle time, and only activate a model once its
   // card nears the viewport. Mirrors src/cinematic-v2/productModelPreload.ts.
   (function lazyActivateModels(root) {
+    // No WebGL (old GPU driver / blocklisted device): model-viewer can't render,
+    // so don't download any GLBs at all.
+    try {
+      const c = document.createElement('canvas');
+      if (!(c.getContext('webgl2') || c.getContext('webgl'))) return;
+    } catch (e) { return; }
     const MAX_CONCURRENT = 2;
     const LOAD_TIMEOUT_MS = 8000;
     // Hard cap on how many <model-viewer> scenes stay alive at once. This grid
@@ -1056,7 +1062,11 @@
     // bound because nothing ever tore a viewer back down, so the live count only
     // ever grew as the user scrolled. Mirrors the LRU pool the React grid uses
     // (src/cinematic-v2/productModelPreload.ts).
-    const MAX_LIVE_MODELS = window.innerWidth < 1024 ? 6 : 12;
+    // Low-spec devices (<=4 GB RAM / <=4 cores) lost their WebGL context with
+    // 6-12 live scenes and every card went blank — they get a smaller pool.
+    const lowEnd = (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+    const MAX_LIVE_MODELS = window.innerWidth < 1024 ? (lowEnd ? 3 : 6) : (lowEnd ? 6 : 12);
     const liveViewers = [];
     const queue = [];
     const queued = new WeakSet();

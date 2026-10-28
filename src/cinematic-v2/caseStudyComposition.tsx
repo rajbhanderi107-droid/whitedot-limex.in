@@ -19,7 +19,16 @@ const basePath = window.location.hostname.endsWith('github.io') ? '/whitedot-lim
 type Segment = { name: string; pct: number };
 type RawSegment = { name?: string; pct?: number | null };
 
+export type Brief = { grade: string; pct: number | null; blend: string };
+type RawProduct = {
+  referenceGrade?: string;
+  composition?: RawSegment[];
+  limexPct?: number;
+  blendWith?: string;
+};
+
 let comps: Record<string, Segment[]> | null = null;
+let briefs: Record<string, Brief> = {};
 let started = false;
 const listeners = new Set<() => void>();
 
@@ -30,13 +39,17 @@ function load() {
     .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
     .then((db) => {
       const next: Record<string, Segment[]> = {};
+      const nextBriefs: Record<string, Brief> = {};
       Object.keys(db.products || {}).forEach((id) => {
         const raw: RawSegment[] = (db.products[id] && db.products[id].composition) || [];
         const segs = raw
           .filter((c) => typeof c.pct === 'number' && c.pct != null && c.name)
           .map((c) => ({ name: String(c.name), pct: Number(c.pct) }));
         if (segs.length) next[id] = segs;
+        const b = deriveBrief(db.products[id] || {});
+        if (b) nextBriefs[id] = b;
       });
+      briefs = nextBriefs;
       comps = next;
       listeners.forEach((fn) => fn());
     })
@@ -45,6 +58,22 @@ function load() {
       comps = {};
       listeners.forEach((fn) => fn());
     });
+}
+
+/**
+ * The only technical detail the case studies publish: LIMEX grade, what it is
+ * blended with, and how much LIMEX is used. Mirrors materialBrief() in
+ * public/case-study/product.html — keep the two in step.
+ */
+export function deriveBrief(p: RawProduct): Brief | null {
+  const segs = (p.composition || []).filter((c) => c && c.name);
+  const limex = segs.find((c) => /limex/i.test(String(c.name))) || null;
+  const rawGrade = String(p.referenceGrade || '').trim();
+  const grade = /per lot|review|^$/i.test(rawGrade) ? '' : rawGrade;
+  const pct = typeof p.limexPct === 'number' ? p.limexPct : limex && typeof limex.pct === 'number' ? limex.pct : null;
+  const blend = p.blendWith || segs.filter((c) => c !== limex).map((c) => String(c.name)).join(' + ');
+  if (!grade && pct == null && !blend) return null;
+  return { grade, pct, blend };
 }
 
 function subscribe(fn: () => void) {
@@ -70,6 +99,25 @@ function useComposition(k: string): Segment[] | null {
   const map = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
   if (!map) return null;
   return map[ALIASES[k] || k] || map[k] || null;
+}
+
+type Stat = { value: React.ReactNode; label: string; green?: boolean };
+
+/**
+ * Hero stats strip for the hovered card: keeps the hand-written first cell
+ * (index + name) and replaces the rest with grade / LIMEX % / blend from
+ * specs.json, so no card can surface trial weights or batch records.
+ */
+export function useBriefStats(k: string, fallback: Stat[]): Stat[] {
+  const map = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+  if (!map || k === 'overview') return fallback;
+  const b = briefs[ALIASES[k] || k] || briefs[k];
+  if (!b) return fallback;
+  const out: Stat[] = [fallback[0]];
+  if (b.grade) out.push({ value: b.grade, label: 'LIMEX Grade', green: true });
+  if (b.pct != null) out.push({ value: `${b.pct}%`, label: 'LIMEX Used' });
+  if (b.blend) out.push({ value: b.blend.replace(/\s*Homo-Polymer/i, ''), label: 'Blended With' });
+  return out;
 }
 
 /** Renders the split ratio bar and its caption, matching cards 01–18. */
