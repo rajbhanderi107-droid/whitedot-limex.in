@@ -49,6 +49,8 @@ jobs:
                 ["Thin Wall Circle Dish", "Thermoforming Dish"],
                 ["Thin-Wall Circle Dish", "Thermoforming Dish"],
                 ["Thinwall Circle Dish", "Thermoforming Dish"],
+                ["Lightweight Dish", "Thermoforming Dish"],
+                ["Light Weight Dish", "Thermoforming Dish"],
               ],
             };
 
