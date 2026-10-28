@@ -20,6 +20,10 @@ cinematic/premium design. Full mission and design rules: `CLAUDE.md` (repo root)
   resulting `dist/` to the VPS via `appleboy/scp-action`. **The repo's own committed
   `dist/` folder is never actually deployed** — CI rebuilds it from scratch every time.
 - Never suggest Render, Vercel, Railway, Heroku, Fly.io, or hosted Supabase for this project.
+- **DNS**: authoritative on **Cloudflare** (`noel`/`fiona.ns.cloudflare.com`), not at
+  Hostinger. DNS edits made anywhere else have no effect. This includes the mail
+  records — see `docs/EMAIL_DNS.md`, and note that the domain's SPF/DKIM/DMARC are
+  currently misconfigured in a way that blocks mail.
 
 ## Known gotchas (read before editing product/case-study data)
 
@@ -103,5 +107,6 @@ succeed and deploy can complete while the file itself is still broken.
 - `CLAUDE.md` — full mission, design standards, and operating rules (read this too).
 - `docs/runbook.md` — performance budgets, feature-flag/kill-switch reference, rollback steps.
 - `docs/CACHE_AND_DEPLOY.md`, `docs/PREVIEW_DEPLOYS.md` — caching and preview-deploy details.
+- `docs/EMAIL_DNS.md` — SPF/DKIM/DMARC for the domain, why mail is currently broken, and how to fix it.
 - `docs/products/` — per-product research/build notes.
 - `docs/brain/`, `docs/whitedot brain/` — Obsidian-based project memory (human-curated).
