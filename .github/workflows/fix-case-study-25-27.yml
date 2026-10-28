@@ -1,0 +1,116 @@
+name: Fix case studies 25 & 27 in portal DB (VPS)
+
+# One-off maintenance. The site now ships:
+#   #25 lightWeightContainer -> LIMEX grade PE26-F51 (was PE78-29L)
+#   #27 lightWeightDish      -> name "Thermoforming Dish" (was "Thin Wall Circle Dish")
+# The admin portal merges stored rows from the case_study_products blob on top
+# of specs.json, so a row saved before that change would still show the old
+# values in the portal. This rewrites ONLY those strings, ONLY inside those two
+# products. Every other product and field is left untouched.
+#
+# Run with apply=false first: it prints what would change and writes nothing.
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "false = dry run (default), true = write the corrected blob"
+        required: true
+        default: "false"
+
+concurrency:
+  group: fix-case-study-25-27
+  cancel-in-progress: false
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Correct #25 and #27 in case_study_products blob
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: root
+          key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 10m
+          script: |
+            set -e
+            cd /opt/whitedot-backend
+
+            cat > /tmp/fix-case-25-27.mjs <<'MJS'
+            import { PrismaClient } from "@prisma/client";
+            import { writeFileSync } from "node:fs";
+
+            const KEY = "case_study_products";
+            const APPLY = process.env.APPLY === "true";
+            const FIXES = {
+              lightWeightContainer: [["PE78-29L", "PE26-F51"]],
+              lightWeightDish: [
+                ["Thin Wall Circle Dish", "Thermoforming Dish"],
+                ["Thin-Wall Circle Dish", "Thermoforming Dish"],
+                ["Thinwall Circle Dish", "Thermoforming Dish"],
+              ],
+            };
+
+            let changes = 0;
+            function fix(v, rules, path) {
+              if (typeof v === "string") {
+                let out = v;
+                for (const [from, to] of rules) out = out.split(from).join(to);
+                if (out !== v) { changes++; console.log(`  ${path}: "${v}" -> "${out}"`); }
+                return out;
+              }
+              if (Array.isArray(v)) return v.map((x, i) => fix(x, rules, `${path}[${i}]`));
+              if (v && typeof v === "object") {
+                const o = {};
+                for (const [k, x] of Object.entries(v)) o[k] = fix(x, rules, `${path}.${k}`);
+                return o;
+              }
+              return v;
+            }
+
+            const prisma = new PrismaClient();
+            const row = await prisma.websiteSetting.findUnique({ where: { key: KEY } });
+            if (!row || !row.value) {
+              console.log("no stored blob — portal uses shipped specs.json, nothing to fix");
+              process.exit(0);
+            }
+
+            const parsed = JSON.parse(row.value);
+            const products = parsed.products ?? {};
+            console.log("stored products:", Object.keys(products).length);
+            for (const id of Object.keys(FIXES)) {
+              const p = products[id];
+              console.log(`${id}: ${p ? `stored row present (name="${p.name}", grade="${p.referenceGrade}")` : "no stored row — already shows shipped values"}`);
+            }
+
+            writeFileSync("/tmp/case-study-backup.json", row.value);
+            console.log("backup written to /tmp/case-study-backup.json");
+
+            const next = { ...products };
+            for (const [id, rules] of Object.entries(FIXES)) {
+              if (next[id]) next[id] = fix(next[id], rules, id);
+            }
+
+            console.log("fields to change:", changes);
+            if (changes === 0) { console.log("nothing stale — no write needed"); process.exit(0); }
+            if (!APPLY) { console.log("DRY RUN — nothing written. Re-run with apply=true to commit."); process.exit(0); }
+
+            await prisma.websiteSetting.update({
+              where: { key: KEY },
+              data: { value: JSON.stringify({ ...parsed, products: next }) },
+            });
+            console.log("WRITTEN");
+            MJS
+
+            # script must sit in the app dir so @prisma/client resolves
+            APPDIR=$(docker compose exec -T api sh -lc 'pwd' | tr -d '\r')
+            echo "container workdir: $APPDIR"
+            docker compose cp /tmp/fix-case-25-27.mjs api:"$APPDIR/fix-case-25-27.mjs"
+            docker compose exec -T -e APPLY=${{ github.event.inputs.apply }} api node "$APPDIR/fix-case-25-27.mjs"
+            docker compose exec -T api rm -f "$APPDIR/fix-case-25-27.mjs" || true
+
+            mkdir -p /opt/whitedot-backend/backups
+            TS=$(date +%Y%m%d-%H%M%S)
+            docker compose cp api:/tmp/case-study-backup.json "/opt/whitedot-backend/backups/case_study_products-$TS.json" || true
+            ls -la /opt/whitedot-backend/backups/ | tail -5
