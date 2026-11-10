@@ -9,6 +9,7 @@ declare global {
   interface Window {
     dataLayer?: Array<Record<string, unknown>>;
     gtag?: (...args: unknown[]) => void;
+    WD_ADS?: { lead: string; contact: string };
     fbq?: (...args: unknown[]) => void;
   }
 }
@@ -134,6 +135,9 @@ export function trackLeadConversion(endpoint: string): void {
 
   window.dataLayer?.push(payload);
   window.gtag?.("event", "generate_lead", payload);
+  // Google Ads "Submit lead form" conversion; the label is set in index.html.
+  const adsLead = window.WD_ADS?.lead;
+  if (adsLead) window.gtag?.("event", "conversion", { send_to: adsLead });
   window.fbq?.("track", "Lead", {
     content_name: leadType,
     content_category: payload.lead_source,

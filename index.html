@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://accounts.google.com https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com https://static.cloudflareinsights.com https://www.googleadservices.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline' https://api.fontshare.com https://fonts.googleapis.com; font-src 'self' data: https://api.fontshare.com https://cdn.fontshare.com https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://api.whitedotindia.in http://localhost:4000 https://accounts.google.com https://api.fontshare.com https://www.google-analytics.com https://analytics.google.com https://www.gstatic.com https://static.cloudflareinsights.com blob: https://*.google-analytics.com https://*.analytics.google.com https://stats.g.doubleclick.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://pagead2.googlesyndication.com https://www.google.com https://www.google.co.in https://formsubmit.co; frame-src 'self' https://accounts.google.com https://www.youtube.com https://www.youtube-nocookie.com blob: https://td.doubleclick.net https://www.googletagmanager.com; worker-src 'self' blob:; child-src 'self' https://accounts.google.com blob:; media-src 'self' https:; object-src 'none'; base-uri 'self';"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://accounts.google.com https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com https://static.cloudflareinsights.com https://www.googleadservices.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline' https://api.fontshare.com https://fonts.googleapis.com; font-src 'self' data: https://api.fontshare.com https://cdn.fontshare.com https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://api.whitedotindia.in http://localhost:4000 https://accounts.google.com https://api.fontshare.com https://www.google-analytics.com https://analytics.google.com https://www.gstatic.com https://static.cloudflareinsights.com blob: https://*.google-analytics.com https://*.analytics.google.com https://*.doubleclick.net https://www.googleadservices.com https://pagead2.googlesyndication.com https://www.google.com https://www.google.co.in https://formsubmit.co; frame-src 'self' https://accounts.google.com https://www.youtube.com https://www.youtube-nocookie.com blob: https://td.doubleclick.net https://www.googletagmanager.com; worker-src 'self' blob:; child-src 'self' https://accounts.google.com blob:; media-src 'self' https:; object-src 'none'; base-uri 'self';"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
@@ -94,6 +94,14 @@
         analytics_storage: 'granted',
       });
       gtag('config', 'G-0S4VPW9RGE');
+      // Google Ads account. The two labels below are that account's own
+      // "Submit lead form" and "Contact" conversion actions; the form one is
+      // sent from src/shared/publicApi.ts when a submission succeeds.
+      gtag('config', 'AW-18566651437');
+      window.WD_ADS = {
+        lead: 'AW-18566651437/t5XECKHNt7UdEK28opVF',
+        contact: 'AW-18566651437/Nl5ECL_Nt7UdEK28opVF',
+      };
 
       // Most buyers reach out on WhatsApp or by phone rather than the form, so
       // those clicks are counted too. Mark "contact_click" as a key event in
@@ -105,7 +113,9 @@
         var method = /wa\.me|whatsapp\.com/i.test(href) ? 'whatsapp'
           : /^tel:/i.test(href) ? 'phone'
           : /^mailto:/i.test(href) ? 'email' : '';
-        if (method) gtag('event', 'contact_click', { method: method, page_path: location.pathname });
+        if (!method) return;
+        gtag('event', 'contact_click', { method: method, page_path: location.pathname });
+        gtag('event', 'conversion', { send_to: window.WD_ADS.contact });
       }, true);
     </script>
 
