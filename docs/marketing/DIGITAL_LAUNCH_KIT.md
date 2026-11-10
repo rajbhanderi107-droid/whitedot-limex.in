@@ -154,13 +154,8 @@ stored, and the site reports two events to Google —
 | `generate_lead` | a consultation, quote or sample form is sent successfully |
 | `contact_click` | a WhatsApp, phone or email link is clicked |
 
-Three steps remain, all inside Raj's own Google accounts:
-
-1. **Google Analytics → Admin → Events:** mark `generate_lead` and `contact_click` as
-   key events. (They appear in the list a day after the first one happens.)
-2. **Google Ads → Tools → Data manager:** link Google Analytics property `G-0S4VPW9RGE`.
-3. **Google Ads → Goals → Conversions → New → Import → Google Analytics 4:** choose the
-   two events. Set `generate_lead` as primary and `contact_click` as secondary.
+The site also reports both straight to Google Ads account 704-544-1713, to its
+"Submit lead form" and "Contact" conversion actions, so no linking step is needed.
 
 To confirm it end to end: click your own ad (or open the site with `?gclid=test` added),
 send the form, and within a few hours the conversion shows under Goals → Conversions.

@@ -24,6 +24,10 @@
   });
   gtag('js', new Date());
   gtag('config', GA_ID);
+  // Google Ads account and its "Contact" conversion action (see index.html).
+  // send_page_view off: the Ads tag is silent until a conversion happens.
+  gtag('config', 'AW-18566651437', { send_page_view: false });
+  var ADS_CONTACT = 'AW-18566651437/Nl5ECL_Nt7UdEK28opVF';
   // Most buyers reach out on WhatsApp or by phone rather than the form, so
   // those clicks are counted too. Mark "contact_click" as a key event in
   // Google Analytics to use it as an ad conversion alongside generate_lead.
@@ -34,7 +38,9 @@
     var method = /wa\.me|whatsapp\.com/i.test(href) ? 'whatsapp'
       : /^tel:/i.test(href) ? 'phone'
       : /^mailto:/i.test(href) ? 'email' : '';
-    if (method) gtag('event', 'contact_click', { method: method, page_path: location.pathname });
+    if (!method) return;
+    gtag('event', 'contact_click', { method: method, page_path: location.pathname, send_to: GA_ID });
+    gtag('event', 'conversion', { send_to: ADS_CONTACT });
   }, true);
 
   var s = document.createElement('script');
