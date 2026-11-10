@@ -9,13 +9,16 @@
 //   2. a share image, dist/case-study/og/<slug>.jpg — the committed 3D render
 //      if there is one (npm run og:render), otherwise a name card drawn here.
 //   3. a line in dist/sitemap.xml.
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { ROOT, SITE, loadCaseStudies, composeCard, escapeXml } from "./lib/case-study-seo.mjs";
 
 const dist = resolve(ROOT, "dist");
 const templatePath = resolve(dist, "case-study/product.html");
-if (!existsSync(templatePath)) {
+let template;
+try {
+  template = readFileSync(templatePath, "utf8");
+} catch {
   console.error("[build-seo] dist/case-study/product.html is missing — run vite build first.");
   process.exit(1);
 }
@@ -27,7 +30,6 @@ if (studies.length === 0) {
 }
 
 // ── 1. Per-product pages ────────────────────────────────────────────────────
-const template = readFileSync(templatePath, "utf8");
 const HEAD_TAGS = [
   /[ \t]*<title\b[^>]*>[\s\S]*?<\/title>[ \t]*\n?/i,
   /[ \t]*<meta\b[^>]*\bname="description"[^>]*>[ \t]*\n?/i,
@@ -66,13 +68,15 @@ function pageFor(study) {
   return html.slice(0, end) + head + html.slice(end);
 }
 
-mkdirSync(resolve(dist, "case-study/og"), { recursive: true });
+const ogDir = resolve(dist, "case-study/og");
+mkdirSync(ogDir, { recursive: true });
+// Share images already there are the committed 3D renders, copied from public/.
+const rendered = new Set(readdirSync(ogDir));
 let drawn = 0;
 for (const study of studies) {
   writeFileSync(resolve(dist, `case-study/${study.slug}.html`), pageFor(study));
-  const image = resolve(dist, `case-study/og/${study.slug}.jpg`);
-  if (!existsSync(image)) {
-    writeFileSync(image, await composeCard(study, null));
+  if (!rendered.has(`${study.slug}.jpg`)) {
+    writeFileSync(resolve(ogDir, `${study.slug}.jpg`), await composeCard(study, null));
     drawn += 1;
   }
 }

@@ -11,7 +11,7 @@
 // show the product itself. It opens the real product page, so the model and
 // camera angle are exactly what a visitor sees.
 import { createServer } from "node:http";
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { extname, resolve, sep } from "node:path";
 import { chromium } from "playwright";
 import { ROOT, loadCaseStudies, composeCard } from "./lib/case-study-seo.mjs";
@@ -29,20 +29,29 @@ const TYPES = {
 };
 const server = createServer((req, res) => {
   const path = resolve(publicDir, "." + decodeURIComponent(new URL(req.url, "http://x").pathname));
-  if (!(path === publicDir || path.startsWith(publicDir + sep)) || !existsSync(path) || !statSync(path).isFile()) {
+  let body = null;
+  if (path.startsWith(publicDir + sep)) {
+    try {
+      body = readFileSync(path);
+    } catch {
+      body = null; // missing, or a directory
+    }
+  }
+  if (!body) {
     res.writeHead(404).end();
     return;
   }
   res.writeHead(200, { "content-type": TYPES[extname(path)] || "application/octet-stream" });
-  res.end(readFileSync(path));
+  res.end(body);
 });
 await new Promise((done) => server.listen(0, "127.0.0.1", done));
 const base = `http://127.0.0.1:${server.address().port}`;
 
-const studies = loadCaseStudies().filter((s) =>
-  named.length ? named.includes(s.slug) : all || !existsSync(resolve(outDir, `${s.slug}.jpg`)),
-);
 mkdirSync(outDir, { recursive: true });
+const done = new Set(readdirSync(outDir));
+const studies = loadCaseStudies().filter((s) =>
+  named.length ? named.includes(s.slug) : all || !done.has(`${s.slug}.jpg`),
+);
 console.log(`[og:render] ${studies.length} case stud${studies.length === 1 ? "y" : "ies"} to render`);
 
 const browser = await chromium.launch({
