@@ -134,7 +134,9 @@ export function trackLeadConversion(endpoint: string): void {
   };
 
   window.dataLayer?.push(payload);
-  window.gtag?.("event", "generate_lead", payload);
+  // send_to keeps this an Analytics event only; the Ads tag gets just the
+  // conversion below, not a copy of every event.
+  window.gtag?.("event", "generate_lead", { ...payload, send_to: "G-0S4VPW9RGE" });
   // Google Ads "Submit lead form" conversion; the label is set in index.html.
   const adsLead = window.WD_ADS?.lead;
   if (adsLead) window.gtag?.("event", "conversion", { send_to: adsLead });

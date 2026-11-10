@@ -97,7 +97,10 @@
       // Google Ads account. The two labels below are that account's own
       // "Submit lead form" and "Contact" conversion actions; the form one is
       // sent from src/shared/publicApi.ts when a submission succeeds.
-      gtag('config', 'AW-18566651437');
+      // send_page_view is off so the Ads tag does nothing on page load: no
+      // remarketing hit and no third-party advertising cookie for ordinary
+      // visitors. It only speaks when one of the two conversions happens.
+      gtag('config', 'AW-18566651437', { send_page_view: false });
       window.WD_ADS = {
         lead: 'AW-18566651437/t5XECKHNt7UdEK28opVF',
         contact: 'AW-18566651437/Nl5ECL_Nt7UdEK28opVF',
@@ -114,7 +117,7 @@
           : /^tel:/i.test(href) ? 'phone'
           : /^mailto:/i.test(href) ? 'email' : '';
         if (!method) return;
-        gtag('event', 'contact_click', { method: method, page_path: location.pathname });
+        gtag('event', 'contact_click', { method: method, page_path: location.pathname, send_to: 'G-0S4VPW9RGE' });
         gtag('event', 'conversion', { send_to: window.WD_ADS.contact });
       }, true);
     </script>
