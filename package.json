@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "npm run guard:admin-google && tsc -b && vite build",
+    "build": "npm run guard:admin-google && tsc -b && vite build && node scripts/build-seo.mjs",
+    "og:render": "node scripts/render-case-study-og.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "backend:dev": "npm --prefix server run dev",
     "backend:build": "npm --prefix server run build",

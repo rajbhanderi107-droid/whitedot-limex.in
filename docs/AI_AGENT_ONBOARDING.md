@@ -87,6 +87,22 @@ cinematic/premium design. Full mission and design rules: `CLAUDE.md` (repo root)
   per-product page) has its own separate `MODEL_SRC` / `CAMERA_ORBIT` maps inline
   in a `<script>` tag — keep both in sync manually when changing a model path.
 
+## Sitemap, share previews and per-product pages (generated — do not hand-edit)
+
+`npm run build` ends with `scripts/build-seo.mjs`, which reads `products.json` and
+writes, for every `"live"` product: `dist/case-study/<slug>.html` (product.html with
+that product's title, description and share image in the HTML, because WhatsApp and
+LinkedIn previews do not run JavaScript), a share image at `case-study/og/<slug>.jpg`,
+and a line in `dist/sitemap.xml`. There is no `public/sitemap.xml` any more. Adding a
+product to `products.json` is all a new case study needs.
+
+A new product's share image starts as a name-only card. `npm run og:render` renders
+its real 3D model into `public/case-study/og/<slug>.jpg` — run it and commit the file.
+
+Social links: the footer (`Footer.tsx`) shows only profiles marked `live: true`, and
+`"sameAs"` in `index.html` lists the same ones. Ready-to-paste channel text is in
+`docs/marketing/DIGITAL_LAUNCH_KIT.md`.
+
 ## Verifying a fix actually went live
 
 Don't trust "the deploy succeeded" alone — verify the served content directly:

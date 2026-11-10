@@ -17,14 +17,17 @@ const NAV = [
   { label: 'Consultation', href: '#inquiry' },
 ] as const;
 
-// Placeholder handles — update each href once the live profiles exist.
-const SOCIAL = [
-  { label: 'Instagram', href: 'https://instagram.com/whitedotindia', Icon: Instagram },
-  { label: 'Facebook', href: 'https://facebook.com/whitedotindia', Icon: Facebook },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/whitedotindia', Icon: Linkedin },
-  { label: 'X (Twitter)', href: 'https://x.com/whitedotindia', Icon: Twitter },
-  { label: 'Email office@whitedotindia.in', href: 'mailto:office@whitedotindia.in', Icon: Mail },
+// Only profiles that really exist are shown — a link to a missing page looks
+// worse to a buyer than no link. When a profile is created, set its `live`
+// to true here and add the same URL to "sameAs" in index.html.
+const SOCIAL_PROFILES = [
+  { label: 'Instagram', href: 'https://www.instagram.com/whitedotindia', Icon: Instagram, live: true },
+  { label: 'Facebook', href: 'https://facebook.com/whitedotindia', Icon: Facebook, live: false },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/whitedotindia', Icon: Linkedin, live: false },
+  { label: 'X (Twitter)', href: 'https://x.com/whitedotindia', Icon: Twitter, live: false },
+  { label: 'Email office@whitedotindia.in', href: 'mailto:office@whitedotindia.in', Icon: Mail, live: true },
 ] as const;
+const SOCIAL = SOCIAL_PROFILES.filter((profile) => profile.live);
 
 export default function Footer() {
   // Muted, looping background video — decorative only, same policy as the

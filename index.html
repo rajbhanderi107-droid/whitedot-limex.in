@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://accounts.google.com https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://api.fontshare.com https://fonts.googleapis.com; font-src 'self' data: https://api.fontshare.com https://cdn.fontshare.com https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://api.whitedotindia.in http://localhost:4000 https://accounts.google.com https://api.fontshare.com https://www.google-analytics.com https://analytics.google.com https://www.gstatic.com https://static.cloudflareinsights.com blob:; frame-src 'self' https://accounts.google.com https://www.youtube.com https://www.youtube-nocookie.com blob:; worker-src 'self' blob:; child-src 'self' https://accounts.google.com blob:; media-src 'self' https:; object-src 'none'; base-uri 'self';"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://accounts.google.com https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com https://static.cloudflareinsights.com https://www.googleadservices.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline' https://api.fontshare.com https://fonts.googleapis.com; font-src 'self' data: https://api.fontshare.com https://cdn.fontshare.com https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://api.whitedotindia.in http://localhost:4000 https://accounts.google.com https://api.fontshare.com https://www.google-analytics.com https://analytics.google.com https://www.gstatic.com https://static.cloudflareinsights.com blob: https://*.google-analytics.com https://*.analytics.google.com https://stats.g.doubleclick.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://pagead2.googlesyndication.com https://www.google.com https://www.google.co.in; frame-src 'self' https://accounts.google.com https://www.youtube.com https://www.youtube-nocookie.com blob: https://td.doubleclick.net https://www.googletagmanager.com; worker-src 'self' blob:; child-src 'self' https://accounts.google.com blob:; media-src 'self' https:; object-src 'none'; base-uri 'self';"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
@@ -78,22 +78,25 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      /* WhiteDot runs no advertising, so no visitor should be measured for
-         it. Denying the ad grants by default is what actually stops gtag
-         reaching stats.g.doubleclick.net — a host this site's CSP forbids,
-         so every visitor was getting a blocked request and a console error
-         for a beacon the business has no use for. Analytics storage stays
-         granted: page and event measurement are unaffected. */
+      /* Advertising measurement is on, so Google Ads can count enquiries
+         (the generate_lead event) and build audiences. Visitors in the EEA,
+         UK and Switzerland stay opted out by default, as the law there
+         requires consent first. The ad hosts this needs are allowed in the
+         Content-Security-Policy above. Keep in step with
+         public/case-study/js/analytics.js. */
+      gtag('consent', 'default', {
+        ad_storage: 'granted',
+        ad_user_data: 'granted',
+        ad_personalization: 'granted',
+        analytics_storage: 'granted',
+      });
       gtag('consent', 'default', {
         ad_storage: 'denied',
         ad_user_data: 'denied',
         ad_personalization: 'denied',
-        analytics_storage: 'granted',
+        region: ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH'],
       });
-      gtag('config', 'G-0S4VPW9RGE', {
-        allow_google_signals: false,
-        allow_ad_personalization_signals: false,
-      });
+      gtag('config', 'G-0S4VPW9RGE');
     </script>
 
     <!-- Structured Data (JSON-LD) for Search Engines -->
@@ -120,7 +123,7 @@
         "areaServed": "IN",
         "availableLanguage": ["English", "Hindi"]
       },
-      "sameAs": [],
+      "sameAs": ["https://www.instagram.com/whitedotindia"],
       "knowsAbout": ["LIMEX material", "plastic replacement", "sustainable packaging", "limestone-based materials", "eco-friendly alternatives"]
     }
     </script>
