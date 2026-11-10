@@ -1358,7 +1358,18 @@
         io.unobserve(en.target);
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-    revealTargets.forEach(el => io.observe(el));
+    // The product grid gets its own observer with no threshold. On a phone its
+    // 40 stacked cards make the section many screens tall, so 12% of it can
+    // never be on screen at once — the reveal never fired and every card
+    // stayed invisible while scrolling. Any overlap is enough to show it.
+    const gridIo = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('in-view');
+        gridIo.unobserve(en.target);
+      });
+    }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
+    revealTargets.forEach(el => (el === gridSection ? gridIo : io).observe(el));
   })();
 
   // Analytics
