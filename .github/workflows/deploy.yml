@@ -26,6 +26,11 @@ jobs:
           VITE_API_URL: ""
         run: |
           npm ci
+          # A case study added without a committed share image gets its 3D
+          # model rendered here, using the runner's own Chrome. Never blocks a
+          # deploy: if it fails, the build draws a name card instead.
+          CHROME_PATH="$(command -v google-chrome || command -v chromium-browser || true)" \
+            timeout 600 npm run og:render || echo "::warning::share-image render skipped; name cards will be used"
           npm run build
 
       - name: Configure VPS SSH

@@ -146,7 +146,21 @@ added to `"sameAs"` in `index.html`. Until then the footer shows Instagram and e
 
 ## 8. Google Ads (when you are ready to spend)
 
-The site now allows ad measurement. In Google Ads: **Tools → Data manager → link Google
-Analytics (property G-0S4VPW9RGE)**, then **Goals → Conversions → Import → Google
-Analytics 4** and choose the `generate_lead` event. Every consultation form sent from
-the site then counts as a conversion for the campaign that brought the visitor.
+The site side is done and tested: a visitor arriving from an ad link has the ad click
+stored, and the site reports two events to Google —
+
+| Event | Fires when |
+|---|---|
+| `generate_lead` | a consultation, quote or sample form is sent successfully |
+| `contact_click` | a WhatsApp, phone or email link is clicked |
+
+Three steps remain, all inside Raj's own Google accounts:
+
+1. **Google Analytics → Admin → Events:** mark `generate_lead` and `contact_click` as
+   key events. (They appear in the list a day after the first one happens.)
+2. **Google Ads → Tools → Data manager:** link Google Analytics property `G-0S4VPW9RGE`.
+3. **Google Ads → Goals → Conversions → New → Import → Google Analytics 4:** choose the
+   two events. Set `generate_lead` as primary and `contact_click` as secondary.
+
+To confirm it end to end: click your own ad (or open the site with `?gclid=test` added),
+send the form, and within a few hours the conversion shows under Goals → Conversions.
