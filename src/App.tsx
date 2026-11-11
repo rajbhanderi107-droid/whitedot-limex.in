@@ -32,7 +32,7 @@ import "./god-wd/god-wd.css";
 // GOD-WD-END imports
 import "./mobile.css";
 
-const whatsappNumber = "918849728938";
+const whatsappNumber = "919879811180";
 const whatsappMessage =
   "Hello White Dot, I want to discuss LIMEX material supply, samples, and pricing for my business.";
 const whatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
@@ -679,7 +679,7 @@ function App() {
             </div>
             <div>
               <dt>WhatsApp</dt>
-              <dd>+91 88497 28938</dd>
+              <dd>+91 98798 11180</dd>
             </div>
             <div>
               <dt>Email</dt>

@@ -58,8 +58,8 @@ interface WebsiteSetting {
 const DEFAULT_SETTINGS: Array<{ key: string; value: string; type: string; description: string }> = [
   { key: "company_name", value: "White Dot", type: "TEXT", description: "Company display name" },
   { key: "company_email", value: "office@whitedotindia.in", type: "EMAIL", description: "Primary contact email" },
-  { key: "company_phone", value: "+918849728938", type: "TEXT", description: "Primary contact phone" },
-  { key: "whatsapp_number", value: "918849728938", type: "TEXT", description: "WhatsApp number (digits only, with country code)" },
+  { key: "company_phone", value: "+919879811180", type: "TEXT", description: "Primary contact phone" },
+  { key: "whatsapp_number", value: "919879811180", type: "TEXT", description: "WhatsApp number (digits only, with country code)" },
   { key: "company_address", value: "Gujarat, India", type: "TEXT", description: "Company address shown on the website" },
   { key: "gst_number", value: "", type: "TEXT", description: "GST registration number" },
   { key: "public_loading_enabled", value: "false", type: "BOOLEAN", description: "Show the Coming Soon / loading page to public visitors" },

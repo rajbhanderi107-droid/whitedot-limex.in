@@ -14,7 +14,7 @@ certifications that are not on the site or in a TBM document.
 | Name | White Dot |
 | What you do | Authorized marketing, distribution and sales of LIMEX raw material (TBM Co., Ltd., Japan) |
 | Territory | Gujarat, Rajasthan, Goa, Diu and Daman |
-| Phone / WhatsApp | +91 88497 28938 |
+| Phone / WhatsApp | +91 98798 11180 |
 | Email | office@whitedotindia.in |
 | Website | https://whitedotindia.in |
 | Case studies | https://whitedotindia.in/case-study/ |
@@ -46,7 +46,7 @@ Each case study now shows its own name and 3D image when pasted into WhatsApp or
 - **Website:** the Google Business Profile link above
 - **Description (750 characters max):**
 
-> White Dot is the authorized marketing and sales partner for LIMEX raw material in Gujarat, Rajasthan, Goa, Diu and Daman. LIMEX is a limestone-based compound developed by TBM Co., Ltd., Japan, supplied as masterbatch pellets that are designed to run on existing plastic lines after proper blending. We help moulders, packaging converters and FMCG brands reduce plastic content through material consultation, samples and guided product trials. See 40 product case studies in interactive 3D — bobbins, paint buckets, dairy containers, pipes, courier bags and more — at whitedotindia.in. Call or WhatsApp +91 88497 28938.
+> White Dot is the authorized marketing and sales partner for LIMEX raw material in Gujarat, Rajasthan, Goa, Diu and Daman. LIMEX is a limestone-based compound developed by TBM Co., Ltd., Japan, supplied as masterbatch pellets that are designed to run on existing plastic lines after proper blending. We help moulders, packaging converters and FMCG brands reduce plastic content through material consultation, samples and guided product trials. See 40 product case studies in interactive 3D — bobbins, paint buckets, dairy containers, pipes, courier bags and more — at whitedotindia.in. Call or WhatsApp +91 98798 11180.
 
 - **Photos:** logo, 5–10 real product photos, pellets, any trial at a customer's machine.
 - Google posts a verification code or asks for a video — only Raj can complete that.
@@ -89,7 +89,7 @@ Create at linkedin.com/company/setup/new. A company page needs a personal profil
 3. *Buyer question*
    > "Local CaCO₃ filler is cheaper per kg" — the question we hear most.
    > What matters is the cost of the finished part: how much you can load, what it does to your mould, and whether the data behind it is consistent lot to lot.
-   > Happy to walk through the comparison for your product. Message us or WhatsApp +91 88497 28938.
+   > Happy to walk through the comparison for your product. Message us or WhatsApp +91 98798 11180.
 
 ## 4. WhatsApp Business
 
