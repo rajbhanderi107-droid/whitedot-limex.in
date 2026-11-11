@@ -2,7 +2,7 @@ import './Material.css';
 import { useReveal, useStaggerGroup } from '../motion';
 
 const whatsappHref =
-  'https://wa.me/918849728938?text=' +
+  'https://wa.me/919879811180?text=' +
   encodeURIComponent(
     "Hello White Dot, I'd like to explore LIMEX material for my business."
   );

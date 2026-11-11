@@ -16,7 +16,7 @@ import {
 const CONTINUITY_ENABLED =
   import.meta.env.VITE_WD_CONTINUITY_ENABLED !== "false";
 
-const WA_NUMBER = "918849728938";
+const WA_NUMBER = "919879811180";
 const WA_BASE_MESSAGE =
   "Hello White Dot, I want to discuss LIMEX material supply, samples, and pricing for my business.";
 

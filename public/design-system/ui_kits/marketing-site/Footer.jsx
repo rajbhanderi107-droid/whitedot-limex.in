@@ -26,7 +26,7 @@ const Footer = () => (
       </div>
       <div className="cine-footer-col">
         <h3>Contact</h3>
-        <a href="https://wa.me/918849728938">+91 88497 28938</a>
+        <a href="https://wa.me/919879811180">+91 98798 11180</a>
         <a>office@whitedotindia.in</a>
         <a>Gujarat · Rajasthan · Diu · Daman</a>
       </div>
