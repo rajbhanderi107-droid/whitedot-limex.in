@@ -1,0 +1,38 @@
+name: Render social images
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - scripts/render-social-posts.mjs
+      - .github/workflows/social-images.yml
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Validate blend data
+        run: node scripts/render-social-posts.mjs --all --dry-run
+      - name: Render every material blend
+        run: |
+          CHROME_PATH="$(command -v google-chrome)" npm run social:render -- --all
+      - name: Build site
+        run: npm run build
+      - name: Save rendered images
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: social-material-blends
+          path: public/social/*.jpg
+          if-no-files-found: error
+          retention-days: 7
