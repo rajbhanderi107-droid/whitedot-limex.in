@@ -92,7 +92,7 @@ for (const p of todo) {
     const html = `<!doctype html><html><head><meta charset="utf-8"><style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{width:1080px;height:1350px;font-family:Inter,sans-serif;position:relative;overflow:hidden;background:#f7f6f2;color:#2f3231}
-.d{font-family:"Inter Display",Inter}
+.d{font-family:"Inter Display",Inter,Arial,sans-serif}
 .blob{position:absolute;border-radius:50%;background:#e9e7e1}
 .top{position:absolute;top:60px;left:72px;right:72px;display:flex;justify-content:space-between;align-items:center}
 .brand{display:flex;align-items:center;gap:14px;font-size:28px;font-weight:600;letter-spacing:-.3px;color:#2f3231}.brand svg{width:50px;height:50px}
