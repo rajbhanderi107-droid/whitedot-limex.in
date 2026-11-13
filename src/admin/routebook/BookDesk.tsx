@@ -176,7 +176,7 @@ export function BookDesk() {
               <div className="bd-row" key={r.s.id} data-testid="bd-row">
                 <div>
                   <strong>{r.s.name}</strong>
-                  <span>{current.detail(r)}</span>
+                  <span className={filter === "due" ? `bd-due${(r.m?.dueOn ?? today()) < today() ? " is-late" : ""}` : undefined}>{current.detail(r)}</span>
                   {r.m?.nextStep && <p>{r.m.nextStep}</p>}
                   <div className="bd-snooze">
                     <span>Follow up</span>

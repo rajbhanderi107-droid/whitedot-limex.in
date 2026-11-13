@@ -46,6 +46,7 @@ import { warmUpBackend } from "./lib/api.js";
 import "./admin.css";
 import "./ui/theme.css";
 import "./ui/layout.css";
+import "./ui/polish.css";
 import { startTheme } from "./ui/themeMode.js";
 
 startTheme();
