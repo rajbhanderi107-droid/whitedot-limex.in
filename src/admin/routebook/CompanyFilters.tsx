@@ -97,7 +97,11 @@ function ProductPicker({ value, options, onChange }: { value: ProductFilter; opt
   const toggle = (id: string) => onChange(productFilterOf(chosen.includes(id as never) ? chosen.filter((x) => x !== id) : [...chosen, id as never]));
 
   return (
-    <details ref={ref} className="rb-pick" onToggle={(e) => setOpen(e.currentTarget.open)}>
+    /* Escape is also handled here, not only by the document listener above:
+       that one is attached after the toggle event and a render, so an Escape
+       pressed straight after opening used to be missed and the list stayed open. */
+    <details ref={ref} className="rb-pick" onToggle={(e) => setOpen(e.currentTarget.open)}
+      onKeyDown={(e) => { if (e.key === 'Escape') e.currentTarget.open = false; }}>
       <summary className={`rb-pick-btn${chosen.length ? ' is-set' : ''}`} aria-label={`Product: ${label}`} data-testid="product-picker">{label}</summary>
       <div className="rb-pick-panel" role="group" aria-label="Products">
         {options.map(([id, name]) => {
