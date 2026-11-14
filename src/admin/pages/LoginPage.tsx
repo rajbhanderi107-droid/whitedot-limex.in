@@ -158,8 +158,8 @@ export function LoginPage({ onLogin, onGoogleLogin, redirectTo = "/admin/dashboa
   return (
     <div className="adm-login">
       <div className="adm-login-card">
-        <div style={{ textAlign: "center", marginBottom: "1rem" }}>
-          <img src={brandLogo} alt="" width={48} height={48} />
+        <div className="adm-login-logo">
+          <img src={brandLogo} alt="" width={40} height={40} />
         </div>
         <h1>{title}</h1>
         <p>{description}</p>
@@ -191,16 +191,7 @@ export function LoginPage({ onLogin, onGoogleLogin, redirectTo = "/admin/dashboa
         <button
           type="button"
           onClick={() => navigate("/admin/forgot-password")}
-          style={{
-            display: "block",
-            margin: ".9rem auto 0",
-            background: "none",
-            border: "none",
-            color: "var(--adm-muted)",
-            cursor: "pointer",
-            fontSize: ".8rem",
-            textDecoration: "underline",
-          }}
+          className="adm-login-forgot"
         >
           Forgot password?
         </button>

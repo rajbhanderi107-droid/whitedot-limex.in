@@ -22,10 +22,18 @@ import "./portal.css";
 import "./book-workspace.css";
 import "../ui/theme.css";
 import "../ui/layout.css";
+import "../ui/polish.css";
 
 interface Props {
   user: { name: string; email: string; role: string };
   onLogout: () => void;
+}
+
+/** "Raj Bhanderi" → "RB". One name gives its first two letters. */
+function initials(name: string): string {
+  const parts = (name ?? "").trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return "WD";
+  return (parts.length === 1 ? parts[0].slice(0, 2) : parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
 function NavGroups({ onNav, isSuperAdmin }: { onNav?: () => void; isSuperAdmin: boolean }) {
@@ -76,8 +84,11 @@ export function PortalShell({ user, onLogout }: Props) {
       <NavGroups onNav={onNav} isSuperAdmin={isSuperAdmin} />
       <div className="wd-sidebar-footer">
         <div className="wd-user">
-          <span className="wd-user-name">{user.name}</span>
-          <span className="wd-user-role">{(user.role ?? "").toLowerCase().replace(/_/g, " ")}</span>
+          <span className="wd-avatar" aria-hidden="true">{initials(user.name)}</span>
+          <span className="wd-user-text">
+            <span className="wd-user-name">{user.name}</span>
+            <span className="wd-user-role">{(user.role ?? "").toLowerCase().replace(/_/g, " ")}</span>
+          </span>
         </div>
         <button onClick={handleLogout}><LogOut size={14} /> Sign out</button>
       </div>
