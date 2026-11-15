@@ -1,5 +1,6 @@
 // Draws the weekly social post image for each case study:
-// public/social/<index>-<slug>.jpg (1080x1350, JPEG so Instagram accepts it).
+// public/social/<index>-<slug>.jpg (1080x1350, JPEG so Instagram accepts it),
+// plus public/social/stories/<index>-<slug>.jpg, the same card padded to 1080x1920.
 //
 //   npm run social:render            only the case studies with no image yet
 //   npm run social:render -- --all   redo every one
@@ -84,6 +85,14 @@ const facts = (p) => [
   [ic('M11 23V17M17 23V11M23 23v-9'), 'Up to 80% loading', 'In selected grades, confirmed by trial'],
   [ic('M11 17.5l4 4 8-9'), 'Backed by data', 'TBM-authorized data to support EPR claims'],
 ];
+/** The same card on a 1080x1920 story canvas: padded, never cropped, so Instagram shows all of it. */
+export const story = async (card) => {
+  const top = await sharp({ create: { width: 1080, height: 285, channels: 3, background: '#f7f6f2' } }).png().toBuffer();
+  return sharp({ create: { width: 1080, height: 1920, channels: 3, background: '#3a3d3c' } })
+    .composite([{ input: top, top: 0, left: 0 }, { input: await sharp(card).resize(1080, 1350).toBuffer(), top: 285, left: 0 }])
+    .jpeg({ quality: 90, mozjpeg: true }).toBuffer();
+};
+mkdirSync(resolve(outDir, 'stories'), { recursive: true });
 const failed = [];
 for (const p of todo) {
   try {
@@ -147,6 +156,7 @@ h1 b{font-weight:700}
     await c.setContent(html, { waitUntil: 'load' }); await c.waitForTimeout(400);
     const png = await c.screenshot({ type: 'png' }); await c.close();
     writeFileSync(resolve(outDir, `${p.n}-${p.slug}.jpg`), await sharp(png).jpeg({ quality: 90, mozjpeg: true }).toBuffer());
+    writeFileSync(resolve(outDir, 'stories', `${p.n}-${p.slug}.jpg`), await story(png));
     console.log('  ✓', p.n, p.slug);
   } catch (e) { failed.push(p.slug); console.warn('  ✗', p.slug, e.message); }
 }
