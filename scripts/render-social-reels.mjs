@@ -1,6 +1,8 @@
-// Draws a short vertical video for each case study, the product's real 3D
-// model turning once: public/social/reels/<index>-<slug>.mp4 (1080x1920, 6 s,
-// H.264 + silent AAC so Instagram Reels and Facebook accept it).
+// Draws a short vertical story video for each case study:
+// public/social/reels/<index>-<slug>.mp4 (1080x1920, about 12 s, H.264 + silent
+// AAC so Instagram Reels and Facebook accept it). Five scenes cross-fade: the
+// question, the product (its real 3D model, turning), the blend, the process,
+// and how to ask for a sample.
 //
 //   npm run social:reels            only the case studies with no video yet
 //   npm run social:reels -- --all   redo every one
@@ -96,51 +98,67 @@ async function turn(slug, dir) {
   return { x: x0, y: y0, w: (x1 - x0) & ~1, h: (y1 - y0) & ~1 };
 }
 
-/** The still part of the frame: everything except the turning product. */
-const backdrop = (p) => `<!doctype html><html><head><meta charset="utf-8"><style>
-*{box-sizing:border-box;margin:0;padding:0}
+const CSS = `*{box-sizing:border-box;margin:0;padding:0}
 body{width:1080px;height:1920px;font-family:Inter,sans-serif;position:relative;overflow:hidden;background:#f7f6f2;color:#2f3231}
+body.dark{background:#3a3d3c;color:#fff}
 .blob{position:absolute;border-radius:50%;background:#e9e7e1}
 .top{position:absolute;top:150px;left:72px;right:72px;display:flex;justify-content:space-between;align-items:center}
 .brand{display:flex;align-items:center;gap:14px;font-size:30px;font-weight:600;letter-spacing:-.3px}.brand svg{width:54px;height:54px}
 .auth{font-size:15px;letter-spacing:4px;font-weight:600;color:#6b706e;border-bottom:1px solid #b9bcb8;padding-bottom:8px}
-h1{position:absolute;top:262px;left:72px;font-size:88px;line-height:1.02;font-weight:300;letter-spacing:-4px}h1 b{font-weight:700}
-.rule{position:absolute;left:72px;top:474px;width:64px;height:3px;background:#2f3231}
+.dark .auth{color:#c3c7c4;border-color:#6b706e}
 .stage{position:absolute;left:${(1080 - STAGE) / 2}px;top:${STAGE_TOP}px;width:${STAGE}px;height:${STAGE}px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fbfaf8 0%,#e6e3dc 70%,#d9d6ce 100%)}
-.name{position:absolute;left:72px;right:72px;top:1376px;font-size:46px;font-weight:600;letter-spacing:-1px}
-.name small{display:block;font-size:16px;letter-spacing:4px;font-weight:600;color:#8a8f8c;margin-bottom:10px}
-.mix{position:absolute;left:72px;right:72px;top:1486px;font-size:40px;font-weight:300;letter-spacing:-.5px;color:#2f3231}
-.mix b{font-weight:700}.mix .l{color:#3f8f63}.mix i{font-style:normal;color:#a9aeab;margin:0 10px}
-.bar{position:absolute;left:72px;right:72px;top:1556px;display:flex;height:10px;border-radius:999px;overflow:hidden;background:#dcdad4}
+.step{position:absolute;left:72px;top:296px;font-size:16px;letter-spacing:4px;font-weight:600;color:#8a8f8c}
+.cap{position:absolute;left:72px;right:72px;top:1384px}
+.cap small{display:block;font-size:17px;letter-spacing:4px;font-weight:600;color:#8a8f8c;margin-bottom:14px}
+.cap h2{font-size:64px;line-height:1.05;font-weight:300;letter-spacing:-2.5px}.cap h2 b{font-weight:700}.cap h2 .l{color:#3f8f63;font-weight:700}.cap h2 i{font-style:normal;color:#a9aeab;margin:0 6px}
+.cap p{font-size:30px;line-height:1.3;color:#5f6562;margin-top:16px}
+.bar{display:flex;height:12px;border-radius:999px;overflow:hidden;background:#dcdad4;margin-top:26px}
 .bar div{height:100%}.bar .l{background:#3f8f63}.bar .o{background:#c4c7c2}
-.cta{position:absolute;left:0;right:0;bottom:0;height:300px;background:#3a3d3c;color:#fff;padding:36px 72px 0;display:flex;justify-content:space-between;align-items:flex-start}
-.cta small{display:block;font-size:20px;color:#c3c7c4;margin-bottom:6px}.cta .ph{font-size:50px;font-weight:300;letter-spacing:-1px}.cta .ph b{font-weight:600}
-.mat{display:flex;align-items:center;gap:20px;margin-top:22px}.mat img{height:22px;filter:brightness(0) invert(1);opacity:.85}.mat img.l{height:26px}.mat span{font-size:14px;letter-spacing:3px;color:#aeb3b0}
-</style></head><body>
-<div class="blob" style="width:380px;height:380px;right:-220px;top:240px"></div><div class="blob" style="width:280px;height:280px;left:-140px;top:1240px;opacity:.7"></div>
-<div class="top"><div class="brand">${logo}White Dot</div><div class="auth">AUTHORIZED LIMEX PARTNER</div></div>
-<h1>Less plastic.<br><b>Same machine.</b></h1><div class="rule"></div>
-<div class="stage"></div>
-<div class="name"><small>CASE STUDY ${p.n} · ${p.proc.toUpperCase()}</small>${p.name}</div>
-<div class="mix">${p.parts.map((x, k) => `${k ? '<i>+</i>' : ''}<b class="${x.label === 'LIMEX' ? 'l' : ''}">${x.pct}%</b> ${x.label}`).join('')}</div>
-<div class="bar">${p.parts.map((x) => `<div class="${x.label === 'LIMEX' ? 'l' : 'o'}" style="width:${x.pct}%"></div>`).join('')}</div>
-<div class="cta"><div><small>Samples and trial support · whitedotindia.in</small><div class="ph">${PHONE[0]} <b>${PHONE[1]}</b></div></div>
-<div class="mat"><span>MATERIAL BY</span><img src="${tbm}"><img class="l" src="${limex}"></div></div>
-</body></html>`;
+.big{position:absolute;left:72px;right:72px;top:620px;font-size:112px;line-height:1.02;font-weight:300;letter-spacing:-5px}.big b{font-weight:700;display:block;margin-top:36px}
+.rule{position:absolute;left:72px;top:560px;width:64px;height:3px;background:currentColor}
+.end{position:absolute;left:72px;right:72px;top:980px;letter-spacing:0}
+.end small{display:block;font-size:30px;color:#c3c7c4}.end .ph{font-size:92px;font-weight:300;letter-spacing:-3px;margin-top:10px;white-space:nowrap}.end .ph b{font-weight:600}
+.end .web{font-size:38px;font-weight:500;margin-top:26px}
+.mat{position:absolute;left:72px;bottom:400px;display:flex;align-items:center;gap:22px}.mat img{height:28px;filter:brightness(0) invert(1);opacity:.85}.mat img.l{height:32px}.mat span{font-size:15px;letter-spacing:3px;color:#aeb3b0}`;
+const page = (cls, body) => `<!doctype html><html><head><meta charset="utf-8"><style>${CSS}</style></head><body class="${cls}">
+<div class="top"><div class="brand">${logo}White Dot</div><div class="auth">AUTHORIZED LIMEX PARTNER</div></div>${body}</body></html>`;
+const blobs = '<div class="blob" style="width:380px;height:380px;right:-220px;top:240px"></div><div class="blob" style="width:280px;height:280px;left:-140px;top:1240px;opacity:.7"></div>';
+const withProduct = (n, cap) => page('', `${blobs}<div class="step">CASE STUDY ${n}</div><div class="stage"></div><div class="cap">${cap}</div>`);
+
+/** The five scenes, in order: [seconds on screen, html]. The product is laid over scenes 2-4. */
+const scenes = (p) => [
+  [2.7, page('', `${blobs}<div class="rule"></div><div class="big">Most of a plastic part is polymer.<b>It does not have to be.</b></div>`)],
+  [3.2, withProduct(p.n, `<small>THE PRODUCT</small><h2><b>${p.name}</b></h2><p>${p.use}</p>`)],
+  [3.2, withProduct(p.n, `<small>THE BLEND</small><h2>${p.parts.map((x, k) => `${k ? '<i>+</i>' : ''}<span class="${x.label === 'LIMEX' ? 'l' : ''}"><b>${x.pct}%</b></span> ${x.label}`).join('')}</h2>
+<div class="bar">${p.parts.map((x) => `<div class="${x.label === 'LIMEX' ? 'l' : 'o'}" style="width:${x.pct}%"></div>`).join('')}</div><p>LIMEX is a limestone-based compound developed by TBM, Japan</p>`)],
+  [2.4, withProduct(p.n, `<small>THE PROCESS</small><h2>Less plastic. <b>Same machine.</b></h2><p>${p.proc}, on a standard line once blended</p>`)],
+  [2.5, page('dark', `<div class="rule"></div><div class="big">Request<b>a sample.</b></div><div class="end"><small>Samples and trial support</small><div class="ph">${PHONE[0]} <b>${PHONE[1]}</b></div><div class="web">whitedotindia.in</div></div>
+<div class="mat"><span>MATERIAL BY</span><img src="${tbm}"><img class="l" src="${limex}"></div>`)],
+];
+const FADE = 0.4;
 
 const failed = [];
 for (const p of todo) {
   const dir = mkdtempSync(join(tmpdir(), 'wd-reel-'));
   try {
     const box = await turn(p.slug, dir);
-    const c = await b.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
-    await c.setContent(backdrop(p), { waitUntil: 'load' }); await c.waitForTimeout(400);
-    await c.screenshot({ type: 'png', path: join(dir, 'bg.png') }); await c.close();
-    const cy = STAGE_TOP + STAGE / 2;
-    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-loop', '1', '-framerate', String(FPS), '-i', join(dir, 'bg.png'),
-      '-framerate', String(FPS), '-i', join(dir, '%03d.png'), '-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo',
-      '-filter_complex', `[1:v]crop=${box.w}:${box.h}:${box.x}:${box.y},scale=${BOX}:${BOX}:force_original_aspect_ratio=decrease[p];[0:v][p]overlay=(W-w)/2:${cy}-h/2:shortest=1,format=yuv420p[v]`,
-      '-map', '[v]', '-map', '2:a', '-t', String(SECONDS), '-r', String(FPS), '-c:v', 'libx264', '-preset', 'slow', '-crf', '21', '-c:a', 'aac', '-b:a', '64k', '-movflags', '+faststart',
+    const sc = scenes(p), c = await b.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
+    for (const [k, [, html]] of sc.entries()) { await c.setContent(html, { waitUntil: 'load' }); await c.waitForTimeout(250); await c.screenshot({ type: 'png', path: join(dir, `s${k}.png`) }); }
+    await c.close();
+    // Cross-fade the scene stills, then lay the turning product over scenes 2-4.
+    const inputs = sc.flatMap(([d], k) => ['-loop', '1', '-framerate', String(FPS), '-t', String(d), '-i', join(dir, `s${k}.png`)]);
+    let at = 0, chain = '', last = '[0:v]';
+    const starts = [0];
+    for (let k = 1; k < sc.length; k++) {
+      at += sc[k - 1][0] - FADE; starts.push(at);
+      chain += `${last}[${k}:v]xfade=transition=fade:duration=${FADE}:offset=${at.toFixed(2)}[x${k}];`; last = `[x${k}]`;
+    }
+    const total = at + sc[sc.length - 1][0], show = starts[1], hide = starts[4];
+    const cy = STAGE_TOP + STAGE / 2, P = sc.length;
+    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...inputs,
+      '-stream_loop', '-1', '-framerate', String(FPS), '-i', join(dir, '%03d.png'), '-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo',
+      '-filter_complex', `${chain}[${P}:v]crop=${box.w}:${box.h}:${box.x}:${box.y},scale=${BOX}:${BOX}:force_original_aspect_ratio=decrease,format=rgba,fade=in:st=${show.toFixed(2)}:d=${FADE}:alpha=1,fade=out:st=${hide.toFixed(2)}:d=${FADE}:alpha=1[p];${last}[p]overlay=(W-w)/2:${cy}-h/2:enable='between(t,${show.toFixed(2)},${(hide + FADE).toFixed(2)})',format=yuv420p[v]`,
+      '-map', '[v]', '-map', `${P + 1}:a`, '-t', total.toFixed(2), '-r', String(FPS), '-c:v', 'libx264', '-preset', 'slow', '-crf', '21', '-c:a', 'aac', '-b:a', '64k', '-movflags', '+faststart',
       resolve(outDir, `${p.n}-${p.slug}.mp4`)]);
     console.log('  ✓', p.n, p.slug);
   } catch (e) { failed.push(p.slug); console.warn('  ✗', p.slug, e.message); }
