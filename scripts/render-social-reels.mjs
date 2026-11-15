@@ -20,7 +20,7 @@ import sharp from 'sharp';
 
 const pub = resolve('public'), outDir = resolve(pub, 'social/reels');
 const PHONE = ['+91', '98798 11180'];
-const FPS = 24, SECONDS = 6, FRAMES = FPS * SECONDS, VIEW = 900, BOX = 660, STAGE_TOP = 560, STAGE = 780;
+const FPS = 24, SECONDS = 6, FRAMES = FPS * SECONDS, VIEW = 1400, BOX = 660, STAGE_TOP = 560, STAGE = 780;
 const json = (f) => JSON.parse(readFileSync(resolve(pub, 'case-study/data', f), 'utf8')).products;
 const specs = json('specs.json');
 const short = (s) => String(s || '').replace(/ ?Homo-Polymer/g, '').trim();
@@ -69,7 +69,7 @@ async function turn(slug, dir) {
   await pg.goto(`${base}/case-study/product.html?p=${slug}`, { waitUntil: 'domcontentloaded' });
   const mv = pg.locator('model-viewer').first(); await mv.waitFor({ state: 'attached', timeout: 20000 });
   await mv.evaluate((el) => new Promise((d, f) => { el.removeAttribute('auto-rotate'); if (el.loaded) return d(); el.addEventListener('load', () => d(), { once: true }); setTimeout(() => f(new Error('timeout')), 60000); }));
-  await pg.addStyleTag({ content: `html,body{background:transparent!important;animation:none!important;overflow:hidden!important}body *{visibility:hidden!important}model-viewer{visibility:visible!important;background:transparent!important;opacity:1!important;position:fixed!important;inset:0!important;width:${VIEW}px!important;height:${VIEW}px!important;z-index:99999}` });
+  await pg.addStyleTag({ content: `html,body{background:transparent!important;animation:none!important}body *{visibility:hidden!important}model-viewer{visibility:visible!important;background:transparent!important;opacity:1!important}` });
   const start = await mv.evaluate(async (el) => {
     const [t, p] = (el.getAttribute('camera-orbit') || '0deg 76deg').split(/\s+/);
     el.setAttribute('max-camera-orbit', 'auto auto 400%'); el.setAttribute('interaction-prompt', 'none'); el.setAttribute('shadow-intensity', '0');
@@ -77,10 +77,12 @@ async function turn(slug, dir) {
     return { t: parseFloat(t) || 0, p };
   });
   await pg.waitForTimeout(1500);
+  const clip = await mv.evaluate((el, V) => { el.scrollIntoView({ block: 'center', inline: 'center' }); const r = el.getBoundingClientRect(); const x = Math.max(0, r.x), y = Math.max(0, r.y); return { x, y, width: Math.floor(Math.min(r.width, V - x)), height: Math.floor(Math.min(r.height, V - y)) }; }, VIEW);
+  if (clip.width < 50 || clip.height < 50) throw new Error('3D viewer has no size on the page');
   let x0 = VIEW, y0 = VIEW, x1 = 0, y1 = 0;
   for (let i = 0; i < FRAMES; i++) {
     await mv.evaluate(async (el, o) => { el.setAttribute('camera-orbit', `${o.t}deg ${o.p} 150%`); await el.updateComplete; el.jumpCameraToGoal?.(); await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))); }, { t: start.t + (i * 360) / FRAMES, p: start.p });
-    const png = await pg.screenshot({ omitBackground: true, type: 'png' });
+    const png = await pg.screenshot({ omitBackground: true, type: 'png', clip });
     writeFileSync(join(dir, `${String(i).padStart(3, '0')}.png`), png);
     if (i % 2 === 0) {
       const { info } = await sharp(png).trim().toBuffer({ resolveWithObject: true });
@@ -89,7 +91,7 @@ async function turn(slug, dir) {
     }
   }
   await pg.close();
-  const pad = 12; x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad); x1 = Math.min(VIEW, x1 + pad); y1 = Math.min(VIEW, y1 + pad);
+  const pad = 12; x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad); x1 = Math.min(clip.width, x1 + pad); y1 = Math.min(clip.height, y1 + pad);
   if (x1 - x0 < 40 || y1 - y0 < 40) throw new Error('model did not render');
   return { x: x0, y: y0, w: (x1 - x0) & ~1, h: (y1 - y0) & ~1 };
 }
