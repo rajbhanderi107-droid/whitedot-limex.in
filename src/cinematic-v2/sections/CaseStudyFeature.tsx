@@ -8,6 +8,7 @@ const basePath = window.location.hostname.endsWith('github.io') ? '/whitedot-lim
 // iOS Safari crashes when multiple WebGL contexts (model-viewer) are active simultaneously.
 // Serve static placeholders on mobile; interactive 3D only on desktop (≥1024px).
 const isMobileViewport = typeof window !== 'undefined' && window.innerWidth < 1024;
+const studioEnvironment = `${basePath}/case-study/img/studio-softboxes.hdr`;
 const bobbinHref  = `${basePath}/case-study/bobbin.html`;
 const bobbinModel = `${basePath}/case-study/model/bobbin.glb`;
 const containerHref  = `${basePath}/case-study/container.html`;
@@ -640,7 +641,7 @@ export default function CaseStudyFeature() {
               shadow-intensity="0"
               exposure="1.15"
               tone-mapping="neutral"
-              environment-image="neutral"
+              environment-image={studioEnvironment}
               camera-orbit="30deg 75deg 105%"
               style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
             />
@@ -686,7 +687,7 @@ export default function CaseStudyFeature() {
               shadow-intensity="0"
               exposure="1.08"
               tone-mapping="neutral"
-              environment-image="neutral"
+              environment-image={studioEnvironment}
               camera-orbit="28deg 72deg 108%"
               style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
             />
@@ -731,7 +732,7 @@ export default function CaseStudyFeature() {
               shadow-intensity="0"
               exposure="1.16"
               tone-mapping="neutral"
-              environment-image="neutral"
+              environment-image={studioEnvironment}
               camera-orbit="25deg 78deg 112%"
               style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
             />
@@ -779,7 +780,7 @@ export default function CaseStudyFeature() {
               shadow-softness="0.8"
               exposure="1.22"
               tone-mapping="neutral"
-              environment-image="legacy"
+              environment-image={studioEnvironment}
               camera-orbit="20deg 78deg 120%"
               style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
             />
@@ -826,7 +827,7 @@ export default function CaseStudyFeature() {
               shadow-softness="0.8"
               exposure="1.22"
               tone-mapping="neutral"
-              environment-image="legacy"
+              environment-image={studioEnvironment}
               camera-orbit="20deg 80deg 115%"
               style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
             />
@@ -874,7 +875,7 @@ export default function CaseStudyFeature() {
               shadow-intensity="0"
               exposure="1.15"
               tone-mapping="neutral"
-              environment-image="neutral"
+              environment-image={studioEnvironment}
               camera-orbit="80deg 76deg 60%"
               style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
             />
@@ -912,7 +913,7 @@ export default function CaseStudyFeature() {
               shadow-intensity="0"
               exposure="1.1"
               tone-mapping="neutral"
-              environment-image="neutral"
+              environment-image={studioEnvironment}
               camera-orbit="35deg 70deg 92%"
               autoplay
               animation-name="Explode"
@@ -959,7 +960,7 @@ export default function CaseStudyFeature() {
               shadow-softness="0.8"
               exposure="1.0"
               tone-mapping="neutral"
-              environment-image="neutral"
+              environment-image={studioEnvironment}
               camera-orbit="22deg 72deg 108%"
               style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
             />
@@ -998,7 +999,7 @@ export default function CaseStudyFeature() {
               shadow-softness="0.8"
               exposure="1.0"
               tone-mapping="neutral"
-              environment-image="neutral"
+              environment-image={studioEnvironment}
               camera-orbit="18deg 74deg 108%"
               style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
             />
@@ -1025,7 +1026,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">10</span>
           {(activeModels.has('lunchBox')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={lunchBoxModel} alt="Lunch Box mini bento container 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="38deg 68deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={lunchBoxModel} alt="Lunch Box mini bento container 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="38deg 68deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1055,7 +1056,7 @@ export default function CaseStudyFeature() {
                 shadow-softness="0.8"
                 exposure="1.0"
                 tone-mapping="neutral"
-                environment-image="legacy"
+                environment-image={studioEnvironment}
                 camera-orbit="18deg 76deg 112%"
                 style={{ width: '100%', height: '100%', background: 'transparent', outline: 'none', pointerEvents: 'none' }}
               />
@@ -1081,7 +1082,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">12</span>
           {(activeModels.has('dairyRoundContainer')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={dairyRoundContainerModel} alt="D500 Bowl 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.08" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 72deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={dairyRoundContainerModel} alt="D500 Bowl 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.08" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="18deg 72deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1095,7 +1096,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">13</span>
           {(activeModels.has('rectangleContainer')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={rectangleContainerModel} alt="D-250 rectangular container 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.75" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 70deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={rectangleContainerModel} alt="D-250 rectangular container 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.75" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="18deg 70deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1109,7 +1110,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">14</span>
           {(activeModels.has('hook20mm')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={hook20mmModel} alt="20 mm hook plastic 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="0.85" tone-mapping="neutral" environment-image="neutral" camera-orbit="42deg 68deg 105%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={hook20mmModel} alt="20 mm hook plastic 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="0.85" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="42deg 68deg 105%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1123,7 +1124,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">15</span>
           {(activeModels.has('roundPipe')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={roundPipeModel} alt="Round Pipe molded plastic 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="80deg 76deg 92%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={roundPipeModel} alt="Round Pipe molded plastic 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="80deg 76deg 92%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1137,7 +1138,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">16</span>
           {(activeModels.has('applianceTray')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={applianceTrayModel} alt="Fridge / Washing Machine Tray molded plastic 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="28deg 74deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={applianceTrayModel} alt="Fridge / Washing Machine Tray molded plastic 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="28deg 74deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1151,7 +1152,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">17</span>
           {(activeModels.has('motorFanBlade')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={motorFanBladeModel} alt="12-blade industrial motor fan blade impeller 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="28deg 62deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={motorFanBladeModel} alt="12-blade industrial motor fan blade impeller 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="28deg 62deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1165,7 +1166,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">18</span>
           {(activeModels.has('cupContainer')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={cupContainerModel} alt="Cup Container food-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 78deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={cupContainerModel} alt="Cup Container food-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="20deg 78deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1179,7 +1180,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">19</span>
           {(activeModels.has('toothBrush')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={toothBrushModel} alt="Tooth Brush Collection personal-care 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 78deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={toothBrushModel} alt="Tooth Brush Collection personal-care 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="20deg 78deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1193,7 +1194,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">20</span>
           {(activeModels.has('petrolPipe')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={petrolPipeModel} alt="Petrol Pipe automotive 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 78deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={petrolPipeModel} alt="Petrol Pipe automotive 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="20deg 78deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1207,7 +1208,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">21</span>
           {(activeModels.has('proteinContainer')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={proteinContainerModel} alt="Unbranded tall round protein-container 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="22deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={proteinContainerModel} alt="Unbranded tall round protein-container 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="22deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1221,7 +1222,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">22</span>
           {(activeModels.has('rectangleBox')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={rectangleBoxModel} alt="Rectangle Container general-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 70deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={rectangleBoxModel} alt="Rectangle Container general-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="18deg 70deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1235,7 +1236,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">23</span>
           {(activeModels.has('smallRoundBottle')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={smallRoundBottleModel} alt="Small round bottle general-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.25" tone-mapping="neutral" environment-image="legacy" camera-orbit="20deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={smallRoundBottleModel} alt="Small round bottle general-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.9" shadow-softness="0.8" exposure="1.25" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="20deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1249,7 +1250,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">24</span>
           {(activeModels.has('saltBottle')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={saltBottleModel} alt="Salt Bottle food-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={saltBottleModel} alt="Salt Bottle food-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="20deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1263,7 +1264,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">25</span>
           {(activeModels.has('lightWeightContainer')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={lightWeightContainerModel} alt="Light Weight Container general-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 74deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={lightWeightContainerModel} alt="Light Weight Container general-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="24deg 74deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1277,7 +1278,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">26</span>
           {(activeModels.has('foodTrayDish')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={foodTrayDishModel} alt="Food Tray Dish food-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="26deg 60deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={foodTrayDishModel} alt="Food Tray Dish food-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="26deg 60deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1291,7 +1292,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">27</span>
           {(activeModels.has('lightWeightDish')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={lightWeightDishModel} alt="Thermoforming Dish kitchenware 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 66deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={lightWeightDishModel} alt="Thermoforming Dish kitchenware 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="24deg 66deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1305,7 +1306,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">28</span>
           {(activeModels.has('dermicoolPowderBottle')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={dermicoolPowderBottleModel} alt="Powder Bottle personal-care 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 74deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={dermicoolPowderBottleModel} alt="Powder Bottle personal-care 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="20deg 74deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1319,7 +1320,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">29</span>
           {(activeModels.has('wovenThread')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={wovenThreadModel} alt="Woven Thread textile material 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="30deg 75deg 105%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={wovenThreadModel} alt="Woven Thread textile material 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="30deg 75deg 105%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1339,7 +1340,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">30</span>
           {(activeModels.has('toiletSeat')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={toiletSeatModel} alt="Toilet Seat sanitaryware 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="22deg 72deg 115%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={toiletSeatModel} alt="Toilet Seat sanitaryware 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="22deg 72deg 115%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1353,7 +1354,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">31</span>
           {(activeModels.has('nonWovenBag')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={nonWovenBagModel} alt="Non Woven Bag packaging-textile 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 76deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={nonWovenBagModel} alt="Non Woven Bag packaging-textile 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="24deg 76deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1367,7 +1368,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">32</span>
           {(activeModels.has('courierBag')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={courierBagModel} alt="Courier Bag logistics-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 76deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={courierBagModel} alt="Courier Bag logistics-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="24deg 76deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1381,7 +1382,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">33</span>
           {(activeModels.has('stripTape')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={stripTapeModel} alt="Strip Tape industrial-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="24deg 68deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={stripTapeModel} alt="Strip Tape industrial-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="24deg 68deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1395,7 +1396,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">34</span>
           {(activeModels.has('darkTalpatri')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={darkTalpatriModel} alt="Dark Plastic Talpatri industrial-sheeting 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 48deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={darkTalpatriModel} alt="Dark Plastic Talpatri industrial-sheeting 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="20deg 48deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1409,7 +1410,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">35</span>
           {(activeModels.has('circleContainer')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={circleContainerModel} alt="Circle Container general-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="20deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={circleContainerModel} alt="Circle Container general-packaging 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="20deg 76deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1423,7 +1424,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">36</span>
           {(activeModels.has('bottleCap')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={bottleCapModel} alt="Bottle Cap ribbed closure 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="25deg 72deg 120%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={bottleCapModel} alt="Bottle Cap ribbed closure 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="25deg 72deg 120%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1437,7 +1438,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">37</span>
           {(activeModels.has('ballValve')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={ballValveModel} alt="Ball Valve smooth pipe fitting 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="-12deg 78deg 115%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={ballValveModel} alt="Ball Valve smooth pipe fitting 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="-12deg 78deg 115%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1451,7 +1452,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">38</span>
           {(activeModels.has('thinWallContainer')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={thinWallContainerModel} alt="Thin Wall Container open tapered bowl 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="18deg 66deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={thinWallContainerModel} alt="Thin Wall Container open tapered bowl 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="18deg 66deg 108%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1465,7 +1466,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">39</span>
           {(activeModels.has('carryHandleCap')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={carryHandleCapModel} alt="Carry Handle Cap orange jar closure with folding handle 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="25deg 62deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={carryHandleCapModel} alt="Carry Handle Cap orange jar closure with folding handle 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="25deg 62deg 110%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
@@ -1479,7 +1480,7 @@ export default function CaseStudyFeature() {
         <div className="csp-pmedia"><span className="csp-pidx">40</span>
           {(activeModels.has('toiletBrushHandle')) ? (
             // @ts-ignore custom element
-            <model-viewer data-model-src={toiletBrushHandleModel} alt="Toilet Brush Handle long moulded cleaning handle 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image="neutral" camera-orbit="40deg 78deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
+            <model-viewer data-model-src={toiletBrushHandleModel} alt="Toilet Brush Handle long moulded cleaning handle 3D model" loading="lazy" interaction-prompt="none" shadow-intensity="0.85" shadow-softness="0.8" exposure="1.0" tone-mapping="neutral" environment-image={studioEnvironment} camera-orbit="40deg 78deg 112%" style={{ width:'100%', height:'100%', background:'transparent', outline:'none', pointerEvents:'none' }} />
           ) : (
             <div className="csp-soon-placeholder" aria-hidden="true">3D</div>
           )}
